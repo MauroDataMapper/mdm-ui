@@ -104,6 +104,14 @@ import './js/controllers/newDataType/newDataTypeStep0Ctrl'
 import './js/controllers/newDataType/newDataTypeStep1Ctrl'
 import './js/controllers/newDataType/newDataTypeStep2Ctrl'
 
+import './js/controllers/simpleView/app'
+import './js/controllers/simpleView/element'
+import './js/controllers/simpleView/filter'
+import './js/controllers/simpleView/home'
+import './js/controllers/simpleView/result'
+import './js/controllers/simpleView/submission'
+
+
 
 import constantsModule from './js/constants/constantsModule'
 import './js/constants/roles'

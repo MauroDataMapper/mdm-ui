@@ -1,4 +1,4 @@
-angular.module('controllers').controller('dataElementCtrl',  function ($scope, $state, $stateParams,resources,$window,selectionHandler, stateHandler, $rootScope) {
+angular.module('controllers').controller('dataElementCtrl',  function ($scope, $state, $stateParams,resources,$window, stateHandler, $rootScope) {
         $scope.activeTab = {index:-1};
 
         $scope.initialize = function(){

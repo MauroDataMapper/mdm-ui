@@ -266,7 +266,6 @@ import './js/services/jointDiagramServiceDC2DCDataFlow'
 import './js/services/jointDiagramServiceRecursiveDataflow'
 import './js/services/jQueryExtender'
 import './js/services/mcHttpInterceptor'
-import './js/services/selectionHandler'
 import './js/services/topicViewHandler'
 
 

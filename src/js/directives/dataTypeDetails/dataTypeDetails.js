@@ -1,4 +1,4 @@
-angular.module('directives').directive('datatypeDetails', function (selectionHandler, $state) {
+angular.module('directives').directive('datatypeDetails', function () {
 	return{
 		restrict: 'E',
 		replace: true,

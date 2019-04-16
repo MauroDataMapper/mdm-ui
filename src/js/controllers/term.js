@@ -1,4 +1,4 @@
-angular.module('controllers').controller('termCtrl',  function ($scope, $state, $stateParams, resources, $window, selectionHandler, $rootScope, jointDiagramService3, $q, elementTypes, stateHandler) {
+angular.module('controllers').controller('termCtrl',  function ($scope, $state, $stateParams, resources, $window, $rootScope, jointDiagramService3, $q, elementTypes, stateHandler) {
         $scope.activeTab = {index: -1};
 
         $scope.initialize = function () {

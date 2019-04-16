@@ -1,4 +1,4 @@
-angular.module('controllers').controller('folderCtrl', function ($scope, $state, $stateParams, resources,$window, selectionHandler, ngToast, $rootScope, jointDiagramService3, $q, elementTypes, stateHandler) {
+angular.module('controllers').controller('folderCtrl', function ($scope, $state, $stateParams, resources,$window, ngToast, $rootScope, jointDiagramService3, $q, elementTypes, stateHandler) {
         $scope.activeTab = {index:-1};
 
         $scope.initialize = function(){

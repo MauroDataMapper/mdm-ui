@@ -88,7 +88,10 @@ import './js/controllers/newDataClass/newDataClassStep0Ctrl'
 import './js/controllers/newDataClass/newDataClassStep1Ctrl'
 import './js/controllers/newDataClass/newDataClassStep2Ctrl'
 
-
+import './js/controllers/newDataElement/newDataElement'
+import './js/controllers/newDataElement/newDataElementStep0Ctrl'
+import './js/controllers/newDataElement/newDataElementStep1Ctrl'
+import './js/controllers/newDataElement/newDataElementStep2Ctrl'
 
 
 

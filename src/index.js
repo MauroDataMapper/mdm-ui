@@ -22,6 +22,7 @@ import 'ng-toast/dist/ngToast-animations.css';
 window.zxcvbn = require('zxcvbn/dist/zxcvbn');
 window.marked = require('marked/marked.min');
 
+import 'angular-bootstrap-contextmenu/contextMenu'
 
 
 
@@ -315,7 +316,8 @@ angular.module(MODULE_NAME, [
     modalsModule,
     handlersModule,
     'ngSanitize',
-    multiStepForm.name
+    multiStepForm.name,
+    'ui.bootstrap.contextMenu'
 ]).config(($stateProvider, appSettingProvider, stateRoleAccessProvider, ngToastProvider) => {
     $stateProvider.state("appContainer", {
         abstract: true,

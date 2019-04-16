@@ -20,6 +20,7 @@ import 'ng-toast/dist/ngToast.css';
 import 'ng-toast/dist/ngToast-animations.css';
 
 window.zxcvbn = require('zxcvbn/dist/zxcvbn');
+window.marked = require('marked/marked.min');
 
 
 // Our modules

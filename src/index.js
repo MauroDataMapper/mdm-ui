@@ -331,10 +331,96 @@ angular.module(MODULE_NAME, [
         url: "/home",
         templateUrl: "./views/home.html",
         controller: "homeCtrl"
+    }).state("appContainer.mainApp.about", {
+        url: "/about",
+        templateUrl: "./views/about.html",
+        controller: "aboutTSCtrl"
+    }).state("appContainer.mainApp.modelsComparison", {
+        url: "/modelsComparison/:sourceId/:targetId",
+        templateUrl: "./views/modelsComparison.html",
+        controller: "modelsComparisonCtrl"
+    }).state("appContainer.mainApp.linkSuggestion", {
+        url: "/linkSuggestion/:sourceDMId?&targetDMId&sourceDCId&sourceDEId",
+        templateUrl: "./views/linkSuggestion.html",
+        controller: "linkSuggestionCtrl"
+    }).state("appContainer.mainApp.diagram", {
+        url: "/diagram/:id",
+        templateUrl: "./views/diagram.html",
+        controller: "diagramCtrl"
+    }).state("appContainer.simpleApp", {
+        abstract: true,
+        templateUrl: "./views/simpleView/appContainer.html",
+        controller: 'simpleViewAppCtrl'
+    }).state("appContainer.simpleApp.home", {
+        url: "/simpleView/home",
+        templateUrl: "./views/simpleView/home.html",
+        controller: "simpleViewHomeCtrl"
+    }).state("appContainer.simpleApp.filter", {
+        url: "/simpleView/filter",
+        templateUrl: "./views/simpleView/filter.html",
+        controller: "simpleViewFilterCtrl"
+    }).state("appContainer.simpleApp.submission", {
+        url: "/simpleView/submission",
+        templateUrl: "./views/simpleView/submission.html",
+        controller: "simpleViewSubmissionCtrl"
+    }).state("appContainer.simpleApp.result", {
+        url: "/simpleView/result?criteria&pageSize&pageIndex&offset&id&domainType&dataModelType",
+        templateUrl: "./views/simpleView/result.html",
+        controller: "simpleViewResultCtrl"
+    }).state("appContainer.simpleApp.element", {
+        url: "/simpleView/element?criteria&pageSize&pageIndex&offset&id&terminologyId&dataModelId&dataClassId&domainType",
+        templateUrl: "./views/simpleView/element.html",
+        controller: "simpleViewElementCtrl"
+    }).state("appContainer.simpleApp.notImplemented", {
+        url: '/simpleView/notImplemented',
+        templateUrl: './views/notImplemented.html'
+    }).state("appContainer.simpleApp.resourceNotFound", {
+        url: '/simpleView/resourceNotFound',
+        templateUrl: './views/resourceNotFound.html'
+    }).state("appContainer.simpleApp.notAuthorized", {
+        url: '/simpleView/notAuthorized',
+        templateUrl: './views/notAuthorized.html'
+    }).state("appContainer.simpleApp.serverError", {
+        url: '/simpleView/serverError',
+        templateUrl: './views/serverError.html',
+        controller: "serverErrorCtrl",
+    }).state("appContainer.mainApp.dataFlowTransformation", {
+        url: "/dataFlow/transformation/:targetDataModel/:targetDataClass/:id",
+        templateUrl: "./views/dataFlow.html",
+        controller: "dataFlowCtrl"
+    }).state("appContainer.mainApp.dataFlowChain", {
+        url: "/dataFlow/:dataModelId",
+        templateUrl: "./views/dataFlowChain.html",
+        controller: "dataFlowChainCtrl"
+    }).state("appContainer.mainApp.topicView", {
+        url: "/topicview",
+        templateUrl: "./views/topicView.html",
+        controller: "topicViewCtrl"
     }).state("appContainer.mainApp.register", {
         url: "/register",
         templateUrl: "./views/register.html",
         controller: "registerCtrl"
+    }).state("appContainer.mainApp.resetPassword", {
+        url: "/resetpassword?uid&token",
+        templateUrl: "./views/resetPassword.html",
+        controller: "resetPasswordCtrl"
+    }).state("appContainer.userArea", {
+        url: '/user',
+        abstract: true,
+        templateUrl: "./views/userArea/appContainer.html",
+        controller: "userAreaCtrl"
+    }).state("appContainer.userArea.profile", {
+        url: '/profile',
+        templateUrl: './views/userArea/profile.html',
+        controller: "profileCtrl"
+    }).state("appContainer.userArea.changePassword", {
+        url: '/profile/changePassword',
+        templateUrl: './views/userArea/changePassword.html',
+        controller: "changePasswordCtrl"
+    }).state("appContainer.userArea.settings", {
+        url: '/profile/settings',
+        templateUrl: './views/userArea/settings.html',
+        controller: "userSettingsCtrl"
     }).state("appContainer.mainApp.twoSidePanel", {
         abstract: true,
         templateUrl: "./views/twoSidePanel.html",
@@ -356,9 +442,149 @@ angular.module(MODULE_NAME, [
         templateUrl: './views/dataModelDefault.html',
         controller: 'modelsHomeCtrl',
         // params: { hideExpandBtn: true }
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.NewDataModel", {
+        url: '/dataModel/new?parentFolderId',
+        templateUrl: './views/newDataModel/main.html',
+        controller: "newDataModelCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.NewDataClass", {
+        url: '/dataClass/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
+        templateUrl: './views/newDataClass/main.html',
+        controller: "newDataClassCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.NewDataElement", {
+        url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
+        templateUrl: './views/newDataElement/main.html',
+        controller: "newDataElementCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.NewDataType", {
+        url: '/dataType/new?parentDataModelId',
+        templateUrl: './views/newDataType/main.html',
+        controller: "newDataTypeCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.NewClassifier", {
+        url: '/classifier/new?parentId',
+        templateUrl: './views/newClassifier/main.html',
+        controller: "newClassifierCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.dataModel", {
+        url: '/dataModel/:id/{tabView:string}',
+        templateUrl: './views/dataModel.html',
+        controller: "dataModelCtrl",
+        params: {tabView: {value: null, squash: true}}
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.terminology", {
+        url: '/terminology/:id/{tabView:string}',
+        templateUrl: './views/terminology.html',
+        controller: "terminologyCtrl",
+        params: {tabView: {value: null, squash: true}}
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.term", {
+        url: '/term/:terminologyId/:id/{tabView:string}',
+        templateUrl: './views/term.html',
+        controller: "termCtrl",
+        params: {tabView: {value: null, squash: true}}
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.folder", {
+        url: '/folder/:id/{tabView:string}?edit',
+        templateUrl: './views/folder.html',
+        controller: "folderCtrl",
+        params: {tabView: {value: null, squash: true}}
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.dataClass", {
+        url: '/dataClass/:dataModelId/:dataClassId/:id/{tabView:string}',
+        templateUrl: './views/dataClass.html',
+        controller: "dataClassCtrl",
+        params: {tabView: {value: null, squash: true}}
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.dataElement", {
+        url: '/dataElement/:dataModelId/:dataClassId/:id/{tabView:string}?parentId',
+        templateUrl: './views/dataElement.html',
+        controller: "dataElementCtrl",
+        params: {tabView: {value: null, squash: true}}
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.dataType", {
+        url: '/dataType/:dataModelId/:id/{tabView:string}',
+        templateUrl: './views/dataType.html',
+        controller: "dataTypeCtrl",
+        params: {
+            tabView: {value: null, squash: true}
+        }
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.classification", {
+        url: '/classification/:id/{tabView:string}',
+        templateUrl: './views/classification.html',
+        controller: "classificationCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.resourceNotFound", {
+        url: '/resourceNotFound',
+        templateUrl: './views/resourceNotFound.html'
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.serverError", {
+        url: '/serverError',
+        templateUrl: './views/serverError.html',
+        controller: "serverErrorCtrl",
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.notImplemented", {
+        url: '/notImplemented',
+        templateUrl: './views/notImplemented.html'
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.notAuthorized", {
+        url: '/notAuthorized',
+        templateUrl: './views/notAuthorized.html'
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.search", {
+        url: '/search',
+        templateUrl: './views/search.html',
+        controller: "searchCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport", {
+        url: '/dataModelsExport',
+        templateUrl: './views/dataModelsExport.html',
+        controller: "dataModelsExportCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.import", {
+        url: '/import',
+        templateUrl: './views/import.html',
+        controller: "importCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel", {
+        url: '/newVersion/dataModel/:dataModelId',
+        templateUrl: './views/newVersionDataModel.html',
+        controller: "newVersionDataModelCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology", {
+        url: '/newVersion/terminology/:id',
+        templateUrl: './views/newVersionTerminology.html',
+        controller: "newVersionTerminologyCtrl"
+    }).state("appContainer.adminArea", {
+        url: '/admin',
+        abstract: true,
+        templateUrl: "./views/admin/appContainer.html",
+        controller: "adminCtrl"
+    }).state("appContainer.adminArea.home", {
+        url: '/home',
+        templateUrl: './views/admin/home.html',
+        controller: "adminHomeCtrl"
+    }).state("appContainer.adminArea.emails", {
+        url: '/emails',
+        templateUrl: './views/admin/emails.html',
+        controller: "emailsCtrl"
+    }).state("appContainer.adminArea.modelManagement", {
+        url: '/modelManagement',
+        templateUrl: './views/admin/modelManagement.html',
+        controller: "modelManagementCtrl"
+    }).state("appContainer.adminArea.users", {
+        url: '/users',
+        templateUrl: './views/admin/users.html',
+        controller: "usersCtrl"
+    }).state("appContainer.adminArea.user", {
+        url: '/user/{id}',
+        params: {id: {value: null, squash: true}},
+        templateUrl: './views/admin/user.html',
+        controller: "userCtrl"
+    }).state("appContainer.adminArea.groups", {
+        url: '/groups',
+        templateUrl: './views/admin/groups.html',
+        controller: "groupsCtrl"
+    }).state("appContainer.adminArea.group", {
+        url: '/group/{id}',
+        params: {id: {value: null, squash: true}},
+        templateUrl: './views/admin/group.html',
+        controller: "groupCtrl"
+    }).state("appContainer.adminArea.pendingUsers", {
+        url: '/pendingUsers',
+        templateUrl: './views/admin/pendingUsers.html',
+        controller: "pendingUsersCtrl"
+    }).state("appContainer.adminArea.configuration", {
+        url: '/configuration',
+        templateUrl: './views/admin/configuration.html',
+        controller: "configurationCtrl"
+    }).state("appContainer.adminArea.resourceNotFound", {
+        url: '/resourceNotFound',
+        templateUrl: './views/resourceNotFound.html'
     }).state("otherwise", {
         url: "*path",
-        templateUrl: "./notfound.html"
+        templateUrl: "./views/notFound.html"
     });
 
 
@@ -456,10 +682,6 @@ angular.module(MODULE_NAME, [
     stateRoleAccessProvider.add("appContainer.userArea.changePassword", ['Administrator', 'Editor']);
     stateRoleAccessProvider.add("appContainer.userArea.settings", ['Administrator', 'Editor']);
 
-
-    stateRoleAccessProvider.add("appContainer.mainApp.menuTwoSidePanel.help", ['public']);
-    stateRoleAccessProvider.add("appContainer.mainApp.menuTwoSidePanel.help.index", ['public']);
-    stateRoleAccessProvider.add("appContainer.mainApp.menuTwoSidePanel.help.page", ['public']);
 
     stateRoleAccessProvider.add("appContainer.mainApp.diagram", ['public']);
     stateRoleAccessProvider.add("appContainer.mainApp.dataFlowTransformation", ['public']);

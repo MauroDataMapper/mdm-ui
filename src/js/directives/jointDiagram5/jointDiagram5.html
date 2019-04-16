@@ -1,0 +1,272 @@
+<div>
+    <div style="">
+
+        <div style="border: 1px solid #DDD;width: 100%; height:30px;padding: 3px;">
+
+            <div class="btn-group" role="group" aria-label="..." style="float:left;">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="previous()" type="button" ng-disabled="currentLevel === 0" style="outline: none;">
+                    <i class="fa fa-arrow-left themeColor"></i>
+                </button>
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="next()" type="button" ng-disabled="(currentLevel === 0 && !selectedDF)  || (currentLevel === 1 && !currentDataClass) || currentLevel === 2 " style="outline: none;">
+                    <i class="fa fa-arrow-right themeColor"></i>
+                </button>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="..."  style="float:left;margin-left: 5px;">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="zoomOut()" type="button" title="Zoom Out" style="outline: none;">
+                    <i class="fa fa-minus-circle themeColor"></i>
+                </button>
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="resetZoom()" type="button" title="Reset Zoom" style="outline: none;">
+                    Reset
+                </button>
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="zoomIn()" type="button" title="Zoom In" style="outline: none;">
+                    <i class="fa fa-plus-circle themeColor"></i>
+                </button>
+            </div>
+
+            <div style="float:left;margin-left: 5px;">
+
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        Dropdown
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+                    </ul>
+                </div>
+
+
+                <!--<button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="toggleConfig()" type="button" title="Reload" style="outline: none;">-->
+                    <!--<i class="fa fa-cog themeColor"></i>-->
+                <!--</button>-->
+
+
+                <div style="float: right;margin-bottom: 3px;margin-left: 5px;"  uib-dropdown is-open="false">
+                    <button type="button"
+                            class="btn btn-default btn-xs dropdown-toggle"
+                            uib-dropdown-toggle>
+                        <i class="fa fa-cog themeColor" aria-hidden="true"></i>
+                        <span class="caret" style="margin-right: 2px;"></span>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu style="right: 0; left: auto; padding: 10px; width:150px;" role="menu" aria-labelledby="single-button">
+                            <li class="modelFilterItem" style="text-align:left;">
+                                <a ng-click="diagramSettingsReset($event)" style="padding:7px 0px; text-decoration: underline">Reset</a>
+                            </li>
+                            <li class="modelFilterItem">
+                                Rank <i class="fa fa-info-circle themeColor" style="font-size: 14px;" tooltip-placement="top" uib-tooltip="Space between Rank" ></i>
+                                <input id="ranksep1" type="range" min="1" max="200" value="50" style="padding: 5px" ng-click="diagramSettingsUpdate($event)" ng-model="diagramSettings.rankSep">
+                            </li>
+                            <li class="modelFilterItem">
+                                Edge <i class="fa fa-info-circle themeColor" style="font-size: 14px;" tooltip-placement="top" uib-tooltip="Space between Links" ></i>
+                                <input id="ranksep2" type="range" min="1" max="200" value="50" style="padding: 5px" ng-click="diagramSettingsUpdate($event)" ng-model="diagramSettings.edgeSep">
+                            </li>
+                            <li class="modelFilterItem">
+                                Node <i class="fa fa-info-circle themeColor" style="font-size: 14px;" tooltip-placement="top" uib-tooltip="Space between Nodes" ></i>
+                                <input id="ranksep3" type="range" min="1" max="200" value="50" style="padding: 5px" ng-click="diagramSettingsUpdate($event)" ng-model="diagramSettings.nodeSep">
+                            </li>
+                            <li class="modelFilterItem" style="margin-top: 5px;">
+                                Layout Direction
+                                <div>
+                                    <select ng-model="diagramSettings.rankDir" ng-click="diagramSettingsUpdate($event)" ng-change="diagramSettingsUpdate($event)">
+                                        <option value="TB">TB</option>
+                                        <option value="BT">BT</option>
+                                        <option value="RL">RL</option>
+                                        <option value="LR" selected>LR</option>
+                                    </select>
+                                </div>
+                            </li>
+                    </ul>
+                </div>
+
+
+            </div>
+
+
+            <div style="float:left;margin-left: 5px;">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="reload()" type="button" title="Reload" style="outline: none;">
+                    <i class="fa fa-refresh themeColor"></i>
+                </button>
+            </div>
+
+
+            <div style="float:left;margin-left: 5px;">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="addDF()" type="button" title="Add Dataflow" ng-if="currentLevel === 0" style="outline: none;">
+                    <i class="fa fa-plus themeColor"></i>
+                </button>
+            </div>
+
+            <div style="float:left;margin-left: 5px;"  ng-if="selectedDF && selectedDF.editable">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="addTransformation()" type="button" title="Add Transformation" ng-if="currentLevel === 1" style="outline: none;">
+                    <i class="fa fa-plus themeColor"></i>
+                </button>
+            </div>
+
+            <div style="float:left;margin-left: 5px;"   ng-if="currentLevel === 0">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon"
+                        ng-click="deleteDF()"
+                        type="button"
+                        title="Delete Dataflow"
+                        ng-disabled="!selectedDF || (selectedDF && !selectedDF.editable)"
+                        style="outline: none;">
+                    <i class="fa fa-trash-o deleteButton"></i>
+                </button>
+            </div>
+
+            <div style="float:left;margin-left: 5px;"  ng-if="currentLevel === 0">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon"
+                        ng-click="editDF()"
+                        type="button"
+                        title="Edit Dataflow"
+                        ng-disabled="!selectedDF || (selectedDF && !selectedDF.editable)"
+                        style="outline: none;">
+                    <i class="fa fa-edit themeColor"></i>
+                </button>
+            </div>
+
+
+            <a ng-click="maximize()" uib-tooltip="Maximize" tooltip-placement="left" target="_blank" ng-hide="hideMaximize" style="float: right; cursor: pointer;" >
+                <i class="fa fa-window-maximize diagram-tool-box-icon" aria-hidden="true" title="Maximize" ></i>
+            </a>
+
+            <div style="float: left;margin-left: 5px;" ng-if="currentLevel === 0">
+                <div style="float:left;">
+                    <form id="dataFlowImportForm">
+                        <input type="file" style="position: fixed; top: -100em" id="dataFlowImportFile" file-on-change="import"/>
+                        <button type="reset" id="dataFlowImportFormReset" style="display:none"/>
+                    </form>
+                </div>
+
+                <div style="float:left;" ng-if="access && access.showEdit">
+                    <div class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; margin-right:4px;">
+                        <button type="button"
+                                class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                uib-tooltip="Import a Dataflow"
+                                tooltip-class="infoText"
+                                tooltip-placement="right"
+                                uib-dropdown-toggle>
+                            <i class="fa fa-upload themeColor" aria-hidden="true"></i>
+                            <span class="caret" style="margin-right: 2px;"></span>
+                        </button>
+                        <ul class="dropdown-menu-left" uib-dropdown-menu
+                            role="menu" aria-labelledby="single-button">
+                            <li ng-repeat="importer in importersList" class="modelFilterItem" ng-click="openImportDialogue(importer)">
+                                <a title="{{importer.displayName}}">{{importer.displayName}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="float:left;" ng-if="dataFlowChain && dataFlowChain.count > 0">
+                    <div class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: left; margin-right:4px;">
+                        <button type="button"
+                                class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                tooltip-class="infoText"
+                                tooltip-placement="right"
+                                uib-tooltip="Export Dataflow(s)"
+                                uib-dropdown-toggle>
+                            <i class="fa fa-download themeColor" aria-hidden="true"></i>
+                            <span class="caret" style="margin-right: 2px;"></span>
+                        </button>
+                        <ul class="dropdown-menu" uib-dropdown-menu
+                            role="menu" aria-labelledby="single-button">
+                            <li ng-repeat="exporter in exportersList" class="modelFilterItem" ng-click="export(exporter)">
+                                <a title="{{exporter.displayName}}">{{exporter.displayName}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="float:left;" ng-if="dataFlowProcessing">
+                    <div style="width:100%;min-width:200px;">
+                        <uib-progressbar max="100" value="100" class="progress-striped active" style="margin-bottom: 0px;width:100%">
+                            <span style="color:white; white-space:nowrap;"></span>
+                        </uib-progressbar>
+                    </div>
+                </div>
+                <div style="float: left;margin-left: 5px;" ng-show="exportedFileIsReady">
+                    <div id="exportDataFlowFileDownload"></div>
+                </div>
+            </div>
+
+
+            <div style="float: left;margin-left: 5px;" ng-if="currentLevel === 2">
+                <button class="btn btn-xs btn-default diagram-tool-box-icon"
+                        ng-click="editTransformation()"
+                        type="button"
+                        title="Edit Transformations"
+                        ng-hide="!selectedDF || (selectedDF && !selectedDF.editable)"
+                        style="outline: none;">
+                    <i class="fa fa-edit themeColor"></i>
+                </button>
+            </div>
+            <div style="float: left;margin-left: 5px;font-weight: bold;" ng-if="currentLevel === 1">
+                {{selectedDF.label}}
+            </div>
+            <div style="float: left;margin-left: 5px;font-weight: bold;" ng-if="currentLevel === 2">
+                {{selectedDF.label}}
+            </div>
+
+        </div>
+
+        <div  ng-style="{'min-height':minHeight? minHeight : '500px', 'overflow': currentLevel === 2 ? 'none' : 'scroll'}" style="width: 100%;position: relative;float: left;border: 1px solid #DDD; margin-top: -2px;" id="holder"> <!-- ng-class="{'editDataflowPanelBackground':editDataflowMode}"> -->
+            <div ng-if="!editDataflowMode">
+                <div ng-if="noDF" style="margin: 5px;">
+                    <div  class="noDataModel" ng-if="currentLevel === 0">
+                        <div class="title">
+                            There are no Dataflows.
+                        </div>
+                        <div class="content">
+                            * Add new Dataflow by clicking on <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+
+                    <div  class="noDataModel" ng-if="currentLevel === 1">
+                        <div class="title">
+                            There are no Transformations in this Dataflow.
+                        </div>
+                        <div class="content" ng-if="selectedDF && selectedDF.editable">
+                            * Add new Transformation by clicking on <i class="fa fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 100%;height: 100%;" ng-show="loading">
+                    <div style="position: absolute;top:30%;left:40%;">
+                        <a style="font-size: 75px;">
+                            <i class="fa fa-refresh fa-spin diagramSpinner themeColor"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="jointDiagramHolder" style="position: relative"></div>
+                <transformations-readonly
+                        ng-if="currentLevel === 2"
+                        refresher="transformationRefresher"
+                        is-editable="access.showEdit"
+                        target-data-model="targetDataModel.id"
+                        target-data-class="targetDataClass.id"
+                        on-element-click="onClick"
+                        flow-id="dataFlowId"></transformations-readonly>
+            </div>
+            <div style="max-width: 700px; width:100%; margin:5% auto;position: relative" ng-show="selectedDF && editDataflowMode"  id="editDataflowPanel">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="min-height: 35px;">
+                        <strong>Dataflow</strong>
+                        <button type="button" class="btn btn-default btn-xs pull-right" ng-click="closeEditDataflow()"
+                                aria-hidden="false" aria-disabled="false" title="close">
+                            <i class="fa fa-times themeColor"></i>
+                        </button>
+                    </div>
+                    <div class="panel-body" style="background-color: #FFF">
+                        <edit-dataflow mc-data-flow="selectedDF" on-cancel="closeEditDataflow"></edit-dataflow>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span id="textSampling" style="display: none"></span>
+</div>
+
+
+

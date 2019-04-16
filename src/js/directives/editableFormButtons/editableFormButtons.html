@@ -1,0 +1,63 @@
+<div style="text-align: right">
+    <!-- Edit -->
+    <button type="button"
+            uib-tooltip="{{displayEditTitle}}"
+            class="btn btn-default btn-xs"
+            ng-disabled="processing"
+            ng-show="!editable.$visible && !editable.$deletePending && !hideEdit"
+            ng-click="editClicked()">
+        <i class="fa fa-pencil-square-o editButton themeColor"></i>
+    </button>
+
+    <!-- Delete -->
+    <button type="button"
+            uib-tooltip="{{displayDeleteTitle}}"
+            class="btn btn-default btn-xs"
+            ng-disabled="editable.$waiting || processing"
+            ng-if="!editable.$visible && !editable.$deletePending && !hideDelete"
+            ng-click="deleteClicked()">
+        <i ng-class="!displayDeleteIcon ? ['fa','displayDeleteIcon','deleteButton','themeColor']: ['fa','fa-trash-o','deleteButton']"></i>
+    </button>
+
+
+    <div ng-show="editable.$deletePending">
+
+        <span  ng-show="textLocation == 'left'"  style="font-size: 11px;">Are you sure?</span>
+        <!-- Confirm Delete -->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                ng-click="confirmDeleteClicked()">
+            <i class="fa fa-check saveButton"></i>
+        </button>
+
+        <!-- Cancel Delete-->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                ng-click="cancelDeleteClicked()">
+            <i class="fa fa-times cancelButton"></i>
+        </button>
+
+        <span  ng-show="textLocation == 'bottom'"  style="font-size: 11px;"><br>Are you sure?</span>
+    </div>
+
+
+    <!-- Save -->
+    <button type="submit"
+            class="btn btn-default btn-xs"
+            ng-disabled="editable.$waiting"
+            ng-show="editable.$visible"
+            ng-click="saveClicked()">
+        <i class="fa fa-check saveButton"></i>
+    </button>
+
+    <!--edit Cancel -->
+    <button type="button"
+            class="btn btn-default btn-xs"
+            ng-disabled="editable.$waiting || processing"
+            ng-show="editable.$visible && !hideCancel"
+            ng-click="cancelEditClicked()">
+        <i class="fa fa-times cancelEditButton themeColor"></i>
+    </button>
+
+
+</div>

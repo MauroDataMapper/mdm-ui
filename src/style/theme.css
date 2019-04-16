@@ -1,0 +1,56 @@
+.themeBackgroundColor{
+  background-color: #205081 !important;
+}
+
+.themeBackground{
+  background: #205081 !important;
+}
+
+.themeColor{
+  color: #205081 !important;
+}
+
+.themeBorderColor{
+  border-color: #205081 !important;
+}
+
+.themeHeaderBottomBorder {
+  border-bottom: 4px solid #205081 !important;
+  border-top:    3px solid #205081 !important;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+  background-color: #205081 !important;
+  border-color: #205081 !important;
+}
+
+
+.btn-primary {
+  background-color: #205081 !important;
+  border-color: #205081 !important;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  opacity: 0.80;
+  background-color: #205081 !important;
+  border-color: #205081 !important;
+}
+
+
+.main-menu > ul > li > a:hover{
+  background-color: #205081 !important;
+}
+
+.menuTwoSidePanel > .leftPanel > .leftMenu > .list-group-item:hover{
+  border-left-color: #205081 !important;
+}
+
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color: #205081  !important;
+}
+
+label.container input:checked ~ .checkmark {
+  background-color: #205081  !important;
+}

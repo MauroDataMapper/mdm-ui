@@ -1,0 +1,79 @@
+<div style="position: relative;">
+
+    <div ng-show="multiple && selectedElements && selectedElements.length > 0 && !hideSelectedElements">
+        <div class="modelSelectorTree" ng-repeat="element in selectedElements" style="background-color: #f5f5f5; position: relative;display: inline-block;border: 1px solid #DDD;border-radius: 5px; padding: 3px 6px;margin: 2px; ">
+            <span style="padding-right: 20px;">
+                 {{element.label}}
+            </span>
+            <i style="color:#c62828; position: absolute;height: 1px;top: 22%;right:5px;"
+               ng-class="{'fa':true,'fa-times':true, 'not-allowed-cursor':processing}" aria-hidden="true"
+               ng-click="remove($event, element)"></i>
+        </div>
+    </div>
+
+    <div class="modelSelectorTree" style="position: relative;">
+        <div ng-class="{'input-group':true,'has-error': hasValidationError}" >
+            <input type="text"
+                   ng-readonly="readOnlySearchInput"
+                   ng-disabled="processing"
+                   ng-class="{'form-control input-sm':true}"
+                   ng-model="searchCriteria"
+                   ng-model-options='{ debounce: 500 }'
+                   ng-focus="inputClick()"
+                   placeholder="{{placeholderStr}}"
+                   ng-required="isRequired">
+            <span class="input-group-btn">
+                <button
+                        ng-disabled="processing"
+                        ng-if="!multiple"
+                        ng-class="{'btn btn-default btn-sm':true, 'foldersTreeSelectorButton removeButton hasError': hasValidationError}"
+                        type="button"
+                        ng-click="cleanSelection()">
+                    <i class="fa fa-times" ng-style="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
+                </button>
+                <button ng-disabled="processing"
+                        ng-class="{'btn btn-default btn-sm':true, 'foldersTreeSelectorButton openButton hasError': hasValidationError}"
+                        type="button"
+                        ng-click="toggleTree()">
+                    <i class="fa fa-list" ng-style="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
+                </button>
+            </span>
+        </div>
+
+        <div class="has-error">
+            <span class="control-label" ng-show="hasValidationError">This field is required.</span>
+        </div>
+
+        <div ng-show="showTree" ng-style="{'position': alwaysShowTree ? 'relative' : 'absolute', 'top': alwaysShowTree ? '0px' : '29px'}"  style="padding-top: 2px; border: 1px solid #ccc;background-color:#FFF; width:100%;z-index: 900;">
+            <div style="width: 100%; height: 400px;overflow-y: auto">
+                <folders-tree-2
+                        in-search-mode="inSearchMode"
+                        do-not-make-selected-bold="true"
+                        do-not-show-data-classes="doNotShowDataClasses"
+                        do-not-show-terms="doNotShowTerms"
+                        just-show-folders="justShowFolders"
+                        enable-local-storage="false"
+                        default-checked-map="defaultCheckedMap"
+                        show-checkbox-for="showCheckboxFor"
+                        propagate-checkbox="propagateCheckbox"
+                        enable-local-storage="false"
+                        search-criteria="searchCriteria"
+                        node="filteredRootNode"
+                        on-node-checked="onNodeChecked"
+                        on-node-expand="onNodeExpand"
+                        on-compare-to="onCompareTo"
+                        on-node-click="onNodeClick"
+                        on-node-db-click="onNodeDbClick"
+                        load-models-to-compare="loadModelsToCompare">
+                </folders-tree-2>
+
+            </div>
+
+            <div class="noFilterResult"
+                 ng-if="filteredRootNode && filteredRootNode.children && filteredRootNode.children.length === 0">
+                No Result
+            </div>
+        </div>
+    </div>
+
+</div>

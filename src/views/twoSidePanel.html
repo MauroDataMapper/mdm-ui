@@ -1,0 +1,97 @@
+<div class="row" style="padding: 10px 10px 0 10px;">
+
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 themeBackgroundColor hideShowLeftPaneBtn visible-xs visible-sm"  onclick="hideShowLeftPane();">
+        <i id="showHideLeftPane" class="fa fa-chevron-down"></i><small id="showHidePaneText" style="font-style: italic;padding-left: 5px;">Show Models Tree</small>
+    </div>
+
+    <div ng-show="!expand" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 resizableLeft"  style="height: calc(100vh - 75px); padding-top: 0px !important;">
+        <div style="text-align: right; padding: 0px 2px;cursor: pointer;" ng-click="toggle()" ng-show="!expand" title="Minimize">
+            <!--<i class="fa fa-window-close themeColor" style="font-size: 16px;"></i>-->
+            <i class="fa fa-bars themeColor" style="font-size: 17px; padding: 2px;"></i>
+        </div>
+        <div ui-view="left"></div>
+    </div>
+
+    <div  ng-class="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-12':!expand }" class="" style="min-height: calc(100vh - 75px);">
+        <!--<div style="padding: 0px 5px;">-->
+            <!--<i class="fa fa-bars themeColor" style="font-size: 16px;"></i>-->
+        <!--</div>-->
+        <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" ng-click="toggle()" ng-show="expand" title="Minimize">
+            <!--<i class="fa fa-window-maximize themeColor" style="font-size: 16px;"></i>-->
+            <i class="fa fa-bars themeColor" style="font-size: 17px;"></i>
+        </div>
+
+        <div ui-view="" style="margin-bottom: 30px;"></div>
+        <div style="position: absolute;bottom:0;">
+            <div mc-footer></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    //be default, show the left pane
+    jQuery(document).ready(function(){
+
+        if($(window).width() >  800){
+            jQuery("div.resizableLeft").show();
+            jQuery("#showHideLeftPane").removeClass("fa-chevron-down");
+            jQuery("#showHideLeftPane").addClass("fa-chevron-up");
+            jQuery("#showHidePaneText").text("Minimise Models Tree");
+
+        }else{
+            jQuery("div.resizableLeft").hide();
+            jQuery("#showHideLeftPane").removeClass("fa-chevron-up");
+            jQuery("#showHideLeftPane").addClass("fa-chevron-down");
+            jQuery("#showHidePaneText").text("Show Models Tree");
+        }
+    });
+
+
+    function hideShowLeftPane(){
+
+        jQuery("div.resizableLeft").slideToggle("slow");
+        if(jQuery("#showHideLeftPane").hasClass("fa-chevron-up")) {
+            jQuery("#showHideLeftPane").removeClass("fa-chevron-up");
+            jQuery("#showHideLeftPane").addClass("fa-chevron-down");
+            jQuery("#showHidePaneText").text("Show Models Tree");
+        }else{
+            jQuery("#showHideLeftPane").removeClass("fa-chevron-down");
+            jQuery("#showHideLeftPane").addClass("fa-chevron-up");
+            jQuery("#showHidePaneText").text("Minimise Models Tree");
+        }
+    }
+
+    //when page is re-sized, if it is in Desktop and Screen
+    //Show the leftPane
+    $(window).resize(function() {
+
+        //resizeLeftPane();
+
+        if($(window).width() >  800){
+            jQuery("div.resizableLeft").show();
+            jQuery("#showHideLeftPane").removeClass("fa-chevron-down");
+            jQuery("#showHideLeftPane").addClass("fa-chevron-up");
+            jQuery("#showHidePaneText").text("Minimise Models Tree");
+        }else{
+            jQuery("div.resizableLeft").hide();
+            jQuery("#showHideLeftPane").removeClass("fa-chevron-up");
+            jQuery("#showHideLeftPane").addClass("fa-chevron-down");
+            jQuery("#showHidePaneText").text("Show Models Tree");
+        }
+    });
+
+
+//    //This function will keep the height of the left panel as windowHeight - 100px
+//    //and updates it automatically when the user re-sizes the page
+//    //and also we had to add these :  <div class="treeHolder" style="height: 800px;overflow-y:scroll">
+//    //to the left panes (model and classification trees) that hold the TreeView
+//    function resizeLeftPane() {
+//        //resize the left pane that holds the treeViews
+//        var height = $(window).height() - 100;
+//        jQuery("div.treeHolder").css("height",height + "px");
+//    }
+
+
+</script>

@@ -1,0 +1,59 @@
+<div>
+    <mc-table
+            mc-name="my"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="contentFetch"
+
+            mc-show-filter-inputs="true"
+
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Terms</span>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th  style="cursor:pointer;max-width: 30px;width: 30px;" columnName="code" sortable="true" filterable="true">
+                                Code
+                            </th>
+                            <th  style="cursor:pointer;max-width: 30%;width: 30%;"  columnName="definition" sortable="true" filterable="true">
+                                Definition
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td colspan="2" style="cursor:pointer;max-width: 30%;width: 30%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off" placeholder="Search for Term">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in mcDisplayRecords track by record.id" ng-class="{'dataClassRecord contentTable': record.domainType == 'DataClass'}">
+                            <td style="max-width: 30px;width: 30px;;word-wrap: break-word;overflow: hidden;">
+                                <div>
+                                    <element-link mc-element="record" just-show-code-for-term="true" search-criteria="searchTerm"></element-link>
+                                </div>
+                            </td>
+                            <td style="max-width: 30%;width: 30%;word-wrap: break-word;overflow: hidden;">
+                                <div>
+                                    <span ng-bind-html="record.definition| mchighlighter:searchTerm"></span>
+                                    <div title="Aliases">
+                                        <element-alias aliases="record.aliases"></element-alias>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

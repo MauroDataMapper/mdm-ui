@@ -1,0 +1,24 @@
+<div>
+    <!-- //Async call .................................................................................... -->
+    <!--{{model.selectedAddress.label}}-->
+    <!--<ui-select ng-model="model.selectedAddress" tagging tagging-label="(custom 'new' label)">-->
+
+    <ui-select ng-model="$parent.selectedAddress" tagging tagging-label="(custom 'new' label)">
+        <ui-select-match placeholder="Search...">
+            {{$select.selected.label}}
+        </ui-select-match>
+        <ui-select-choices repeat="row in model.addresses"
+                           refresh="refreshAddresses($select.search)"
+                           refresh-delay="delay">
+            <div style="border-bottom: 1px dotted #ddd; width: 100%; position: relative">
+                <span ng-bind-html="row.label | mchighlighter: $select.search" style="position: relative; display:block;width:200px;white-space: pre-line !important;"></span>
+                    <span class="searchResultMCType">{{row.dtype}}</span>
+                    <br>
+                <span ng-show="row.breadcrumbs && row.breadcrumbs.length > 0">
+                    <model-path path="::row.breadcrumbs"></model-path>
+                </span>
+            </div>
+
+        </ui-select-choices>
+    </ui-select>
+</div>

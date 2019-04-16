@@ -1,0 +1,118 @@
+<div>
+    <div class="form-group">
+        <table class="table table-bordered table-condensed dataModelDetailTable">
+            <tbody>
+                <tr class="parent" ng-if="showParentDataModel">
+                    <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Data Model *</th>
+                    <td>
+                        <model-path path="[parentDataModel]"></model-path>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
+                    <td>
+                        <input type="text" class="form-control wizardInput" id="label" ng-model="model.label"
+                               required="Name can not be Empty">
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader col-md-2">Description</th>
+                    <td>
+                            <textarea type="text" class="form-control" id="description"
+                                      ng-model="model.description"></textarea>
+                    </td>
+                </tr>
+                <tr ng-if="showClassification">
+                    <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
+                    <td>
+                        <element-classifications
+                                classifications="model.classifiers"
+                                editable="{$visible :true}"></element-classifications>
+                    </td>
+                </tr>
+                <tr class="type" style="border-top: 0px;">
+                    <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Type *</th>
+                    <td>
+                        <select class="form-control  wizardInput mcSelect"
+                                id="dataModelType"
+                                ng-model="model.domainType"
+                                ng-change="typeChanged()"
+                                required="Type can not be Empty">
+                            <option value="{{dt.id}}" ng-repeat="dt in allDataTypes" ng-selected="$first">{{dt.displayLabel}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="type" ng-if="model.domainType != 'PrimitiveType'">
+                    <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">
+                        <label ng-show="model.domainType === 'EnumerationType'">Enumeration (key,value) *</label>
+                        <label ng-show="model.domainType === 'ReferenceType'">Reference *</label>
+                        <label ng-show="model.domainType === 'TerminologyType'">Terminology *</label>
+                        <div style="font-weight: normal;font-style: italic;  padding-top: 8px; color: #c7254e;">
+                            <div ng-show="model.domainType === 'ReferenceType' && !model.referencedDataClass && childDataClasses.length > 0">
+                                Please select the reference DataClass.
+                            </div>
+
+                            <div ng-show="model.domainType === 'TerminologyType' && !model.referencedTerminology && terminologies.length == 0">
+                                There are not any Terminologies available, so you can not define Terminology DataType!
+                            </div>
+
+                            <div ng-show="model.domainType === 'ReferenceType' && !model.referencedDataClass && childDataClasses.length == 0">
+                                The DataModel does not have any DataClass, so you can not define Reference DataType!
+                            </div>
+
+                            <div ng-show="model.domainType === 'EnumerationType' && model.enumerationValues == 0">
+                                At least one enumeration key/value should be added.
+                            </div>
+                        </div>
+                    </th>
+                    <td>
+
+                        <div ng-if="model.domainType === 'TerminologyType'">
+                            <mc-select-2
+                                    width="'100%'"
+                                    accept-typed-input="false"
+                                    value-type="'static'"
+                                    static-values="terminologies"
+                                    id-property="'id'"
+                                    display-property="'label'"
+                                    search-property="'label'"
+                                    on-select="onTerminologySelect">
+                                <div>
+                                    <span ng-bind-html="$item.label | mchighlighter:$inputText"></span>
+                                </div>
+                            </mc-select-2>
+                        </div>
+
+                        <div ng-if="model.domainType === 'ReferenceType'">
+
+                                <model-selector-tree
+                                        default-elements="[model.referencedDataClass]"
+                                        ng-model="model.referencedDataClass"
+                                        root="parentDataModel"
+                                        on-select="onDataClassSelect"
+                                        placeholder="'Select Data Class'"
+                                        read-only-search-input="true"
+                                        accepts="['DataClass']">
+                                </model-selector-tree>
+
+                        </div>
+                        <div style="margin-top: 5px;" ng-show="model.domainType === 'EnumerationType'">
+                            <!--<mc-enumeration-list-->
+                                    <!--loading-data="false"-->
+                                    <!--client-side="true"-->
+                                    <!--enumeration-values="model.enumerationValues"-->
+                                    <!--type="'static'"></mc-enumeration-list>-->
+
+
+                            <mc-enumeration-list-with-category
+                                    on-update="onEnumListUpdated"
+                                    client-side="true"
+                                    enumeration-values="model.enumerationValues"></mc-enumeration-list-with-category>
+
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

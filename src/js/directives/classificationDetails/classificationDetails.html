@@ -1,0 +1,85 @@
+<div>
+
+    <div class="panel panel-default">
+        <div>
+            <form editable-form name="editableForm" onaftersave="formAfterSave()" onbeforesave="formBeforeSave()"  disable-submit-on-enter>
+                <div class="panel-body panel-table">
+                    <h4>
+                        <div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
+                                <span class="xeditableInput">
+                                    <span editable-text="mcClassification.label"
+                                          e-name="label"
+                                          e-style="width: 99%"
+                                          class="classificationDetailsLabel"
+                                          onbeforesave="validateEmpty('Label', $data)">{{mcClassification.label}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </h4>
+                    <small class="elementDetailMCType">Classifier</small>
+                    <br>
+                    <span class="classificationDetailsLastUpdate" style="font-size: 11px;font-style: italic">Last Update: {{::mcClassification.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                </div>
+                <table class="table table-bordered table-condensed dataClassDetailTable">
+                    <tbody>
+                    <tr>
+                        <th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2 col-lg-2">Description</th>
+                        <td class="elementDetailDescription">
+
+                            <markdown-text-area mc-editable-form="editableForm" mc-element="mcClassification" mc-property="'description'"></markdown-text-area>
+                            <!--<span class="xeditableTextArea">-->
+                                <!--<span editable-textarea="mcClassification.description"-->
+                                      <!--e-name="description"-->
+                                      <!--e-style="width: 99%"-->
+                                      <!--e-rows="5">-->
+                                    <!--<p class="classificationDetailsDescription"-->
+                                       <!--ng-bind-html="mcClassification.description"></p>-->
+                                <!--</span>-->
+                            <!--</span>-->
+                        </td>
+                    </tr>
+
+                    <tr show-if-role-is-writable mc-element="mcClassification">
+                        <td colspan="2" style="text-align: right;">
+                            <div>
+                                <div style="float: right;margin-bottom: 3px">
+                                    <editable-form-buttons editable="editableForm"
+                                                           on-confirm-delete="delete"
+                                                           text-location="left"></editable-form-buttons>
+                                </div>
+                                <div class="btn-group-xs"
+                                     style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;"
+                                     title="User Access" ng-show="!editableForm.$visible && !editableForm.$deletePending">
+                                    <button class="btn btn-xs btn-default addNewModelButton themeColor"
+                                            uib-tooltip="User & Group Access"
+                                            ng-click="toggleSecuritySection()" type="button">
+                                        <i class="fa fa-user userAccess"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <div show-if-role-is-writable mc-element="mcClassification" class="userAccess"
+             ng-show="securitySection && !editableForm.$visible && !editable.$deletePending"
+             style="margin: 10px 0px 50px 0px">
+
+            <share-with mc-element="mcClassification" mc-domain-type="'Classifier'"></share-with>
+            <div colspan="2">
+                <div style="margin-top: 10px">
+                    <user-access-new parent="mcClassification" parent-type="'Classifier'"></user-access-new>
+                </div>
+                <div style="margin-top: 50px">
+                    <group-access-new parent="mcClassification" parent-type="'Classifier'"></group-access-new>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

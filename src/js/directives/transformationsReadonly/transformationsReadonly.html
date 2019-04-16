@@ -1,0 +1,208 @@
+
+<style media="screen" type="text/css">
+
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+        border: 1px solid #205081 !important;
+        background: #205081 !important;
+    }
+
+
+    .ui-dialog-titlebar-close{
+        display: none;
+    }
+
+    .dataFlowSelectedElement {
+        border: 1px solid #ff9933 !important;
+        background-color: #fff2e6 !important;
+    }
+
+    .transformationToolBox {
+        border: 1px dashed #5f6060;
+        color: #205081;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        -khtml-border-radius: 2px;
+        margin: 5px;
+        cursor: move;
+        width: 140px;
+        text-align: center;
+    }
+
+    .transformationName {
+        font-size: 14px;
+        font-weight: bold;
+        color: #205081;
+        margin: 5px;
+        text-align: center;
+    }
+
+    .dataFlow.deleteButton {
+        font-size: 18px;
+        position: absolute;
+        top: -13px;
+        left: -10px;
+        color: red;
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    span.deleteIconContainer{
+        background-color: transparent;
+        line-height: 40%;
+    }
+
+    span.deleteIconContainer > i {
+        padding: 0px;
+        margin: 0px;
+        display: inline-block;
+        width: auto;
+        height: auto;
+        line-height: inherit;
+        vertical-align: baseline;
+        background-color: white;
+    }
+
+
+    .deleteButtonHide{
+        display: none;
+    }
+
+
+    dataModel{
+        border:  1px solid #DDD;
+        width:150px;
+        background-color: #FFF;
+        min-height: 80px;
+        text-align: center;
+        cursor: move;
+    }
+
+    .dataModelTitle{
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+
+    .dataClass{
+        border: 1px solid #d8d8d8;
+        background-color: #f9f9f9;
+        width:200px;
+        min-height:100px;
+    }
+
+
+    .dataClassTitle{
+        border-bottom: 2px solid #DDD;
+        background-color: #e5e5e5;
+        font-weight: bold;
+        height:30px;
+        text-align:center;
+        padding: 5px;
+        cursor: move;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dataElement{
+        padding-left: 3px;
+        border-bottom:  1px solid #d8d8d8;
+        cursor: pointer;
+    }
+
+    .dataElementContainer {
+        width:100%;
+        position: absolute;
+        top: 40px;
+        bottom: 0px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+
+    .transformation{
+        border: 2px solid #205081;
+        background-color: #e0edf9;
+        padding: 10px;
+        cursor: move;
+    }
+
+    .transformationTitle {
+        cursor: pointer;
+    }
+
+    div.designerContainer{
+        width:  calc(99vw - 20px);
+        height: calc(90vh - 5px);
+        overflow: scroll;
+    }
+
+    div.designer{
+        width: calc(200vw - 20px);
+        height: calc(100vh - 10px);
+        position:relative;
+    }
+
+    svg.designer {
+        width: calc(200vw - 20px);
+        height: calc(100vh - 10px);
+        /*border: 1px solid black;*/
+    }
+
+
+    path.deletePath{
+        cursor: pointer;
+    }
+
+    path.deletePathHide{
+        display: none;
+    }
+
+    circle.middleCircle{
+        cursor: pointer;
+    }
+
+    circle.middleCircleHide{
+        display: none;
+    }
+
+    .fatPath {
+        stroke: gray;
+        stroke-width: 20px;
+        fill: none;
+        opacity:0.1;
+        cursor: pointer;
+    }
+
+    .fatPath.hideFatPath{
+        stroke: transparent;
+    }
+
+</style>
+
+
+
+<div style="width: 100%; margin: 5px auto;height: 100%;">
+    <div style="width: 100%;height: 100%;" ng-show="loadingDiagram">
+        <div style="position: absolute;top:10%;left:40%;">
+            <a style="font-size: 75px;">
+                <i class="fa fa-refresh fa-spin diagramSpinner themeColor"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="designerContainer">
+        <div class="designer">
+            <svg class="designer" xmlns="http://www.w3.org/2000/svg">
+            </svg>
+        </div>
+    </div>
+</div>

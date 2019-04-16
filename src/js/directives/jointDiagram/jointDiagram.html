@@ -1,0 +1,82 @@
+<div>
+    <div style="border: 1px solid #DDD;">
+        <div>
+            <div style="width: 99%; height:3vh;padding: 5px;">
+               <i class="fa fa-plus-circle diagram-tool-box-icon"  aria-hidden="true" title="Zoom In" ng-click="zoomIn()"></i>
+               <i class="fa fa-undo diagram-tool-box-icon"      aria-hidden="true" title="Reset Zoom" ng-click="resetZoom()"></i>
+               <i class="fa fa-minus-circle diagram-tool-box-icon" aria-hidden="true" title="Zoom Out" ng-click="zoomOut()"></i>
+
+               <i class="fa fa-sitemap diagram-tool-box-icon" style="margin-left: 10px;"     aria-hidden="true" title="Rearrange the Diagram" ng-click="reOrder()"></i>
+               <i class="fa fa-refresh diagram-tool-box-icon"  aria-hidden="true" title="Reload" ng-click="resetZoom()"></i>
+               <span style="cursor: pointer;margin-left: 10px;" title="Show `Satisfies` Links">&nbsp;<input type="checkbox" ng-model="showSameAs" ng-change="showSameAsLinks()"><span style="font-size: 10px">&nbsp;Satisfies</span></span>
+               <span style="cursor: pointer;" title="Show `Don't Satisfies` Links"><input type="checkbox" ng-model="showNotSameAs" ng-change="showNotSameAsLinks()"><span style="font-size: 10px">&nbsp;Don't Satisfies</span></span>
+
+
+
+                <!--<div><i class="fa fa-minus-circle diagram-tool-box-icon" aria-hidden="true" ng-click="zoomOut()"></i></div>-->
+                <!--<div><i class="fa fa-sitemap diagram-tool-box-icon" aria-hidden="true" ng-click="reOrder()"></i></div>-->
+                <!--<div class="diagram-tool-box-icon" style="font-weight: bold; font-size: 16px;border-top: 1px solid;margin-top: 5px;">-->
+                <!--<input type="checkbox" ng-model="showSameAs" ng-change="showSameAsLinks()"><br><span style="font-size: 10px">Satisfies</span>-->
+                <!--</div>-->
+                <!--<div class="diagram-tool-box-icon" style="font-weight: bold; font-size: 16px;border-top: 1px solid;margin-top: 5px;">-->
+                <!--<input type="checkbox" ng-model="showNotSameAs" ng-change="showNotSameAsLinks()"><br><span style="font-size: 10px">Don't<br>Satisfies</span>-->
+                    <!--&lt;!&ndash;&#8800;&ndash;&gt;-->
+                <!--</div>-->
+             </div>
+        </div>
+           <div style="width: 100%; overflow: scroll;position: relative;float: left;border: 1px solid #DDD;">
+               <div id="jointDiagramHolder" style="position: relative"></div>
+           </div>
+        </div>
+        <!--<div style="width: 6%;height: 90vh;" class="diagram-tool-box">-->
+        <!--<div><i class="fa fa-plus-circle diagram-tool-box-icon" aria-hidden="true" ng-click="zoomIn()"></i></div>-->
+        <!--<div><i class="fa fa-refresh diagram-tool-box-icon" aria-hidden="true" ng-click="resetZoom()"></i></div>-->
+        <!--<div><i class="fa fa-minus-circle diagram-tool-box-icon" aria-hidden="true" ng-click="zoomOut()"></i></div>-->
+        <!--<div><i class="fa fa-sitemap diagram-tool-box-icon" aria-hidden="true" ng-click="reOrder()"></i></div>-->
+        <!--<div class="diagram-tool-box-icon" style="font-weight: bold; font-size: 16px;border-top: 1px solid;margin-top: 5px;">-->
+        <!--<input type="checkbox" ng-model="showSameAs" ng-change="showSameAsLinks()"><br><span style="font-size: 10px">Satisfies</span>-->
+        <!--</div>-->
+        <!--<div class="diagram-tool-box-icon" style="font-weight: bold; font-size: 16px;border-top: 1px solid;margin-top: 5px;">-->
+        <!--<input type="checkbox" ng-model="showNotSameAs" ng-change="showNotSameAsLinks()"><br><span style="font-size: 10px">Don't<br>Satisfies</span>-->
+        <!--&lt;!&ndash;&#8800;&ndash;&gt;-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+
+
+
+
+
+
+<!--<div>-->
+    <!--<div style="border: 1px solid #DDD;">-->
+        <!--<div>-->
+            <!--<div style="width: 94%; height:3vh;padding: 5px;">-->
+               <!--<element-link mc-element="diagram.mcElement" show-type-title="'true'"></element-link>-->
+            <!--</div>-->
+            <!--<div style="width: 94%; height:90vh; overflow: scroll;position: relative;float: left;border: 1px solid #DDD;">-->
+                <!--<div id="jointDiagramHolder" style="position: relative"></div>-->
+                <!--&lt;!&ndash;<div style="border: 1px solid yellow; width: 200px;height: 200px;position: absolute;right:0;bottom:0">&ndash;&gt;-->
+                        <!--&lt;!&ndash;AAAA&ndash;&gt;-->
+                        <!--&lt;!&ndash;AAAA&ndash;&gt;-->
+                        <!--&lt;!&ndash;AAAA&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div style="width: 6%;height: 90vh;" class="diagram-tool-box">-->
+            <!--<div><i class="fa fa-plus-circle diagram-tool-box-icon" aria-hidden="true" ng-click="zoomIn()"></i></div>-->
+            <!--<div><i class="fa fa-refresh diagram-tool-box-icon" aria-hidden="true" ng-click="resetZoom()"></i></div>-->
+            <!--<div><i class="fa fa-minus-circle diagram-tool-box-icon" aria-hidden="true" ng-click="zoomOut()"></i></div>-->
+            <!--<div><i class="fa fa-sitemap diagram-tool-box-icon" aria-hidden="true" ng-click="reOrder()"></i></div>-->
+            <!--<div class="diagram-tool-box-icon" style="font-weight: bold; font-size: 16px;border-top: 1px solid;margin-top: 5px;">-->
+                <!--<input type="checkbox" ng-model="showSameAs" ng-change="showSameAsLinks()"><br><span style="font-size: 10px">Satisfies</span>-->
+            <!--</div>-->
+            <!--<div class="diagram-tool-box-icon" style="font-weight: bold; font-size: 16px;border-top: 1px solid;margin-top: 5px;">-->
+                <!--<input type="checkbox" ng-model="showNotSameAs" ng-change="showNotSameAsLinks()"><br><span style="font-size: 10px">Don't<br>Satisfies</span>-->
+                <!--&lt;!&ndash;&#8800;&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+

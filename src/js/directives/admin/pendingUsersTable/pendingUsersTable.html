@@ -1,0 +1,104 @@
+<div>
+    <mc-table
+            mc-name="pendingUserTable"
+            id="pendingUserTable"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="pendingUserFetch"
+
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Pending Users</span>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <!--<th style="cursor:pointer;max-width: 5%;width: 5%;" columnName="disabled" sortable="true" filterable="true">-->
+                                <!--Status-->
+                            <!--</th>-->
+                            <th style="cursor:pointer;max-width: 12%;width: 12%;" columnName="emailAddress" sortable="true" filterable="true">
+                                Email
+                            </th>
+                            <th style="cursor:pointer;max-width: 10%;width: 10%;"  columnName="firstName" sortable="true" filterable="true">
+                                First Name
+                            </th>
+                            <th style="cursor:pointer;max-width: 10%;width: 10%;"  columnName="lastName" sortable="true" filterable="true">
+                                Last Name
+                            </th>
+                            <th style="cursor:pointer;max-width: 10%;width: 10%;"  columnName="organisation" sortable="true" filterable="true">
+                                Organisation
+                            </th>
+                            <th style="cursor:pointer;max-width: 45px;width: 45px" >
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <!--<td style="max-width: 5%;width: 5%;">-->
+                                <!--<select class="form-control input-sm mcSelect">-->
+                                    <!--<option value=""></option>-->
+                                    <!--<option value="true">Rejected</option>-->
+                                    <!--<option value="false">Pending</option>-->
+                                <!--</select>-->
+                            <!--</td>-->
+                            <td style="max-width: 15%;width: 15%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 10%;width: 10%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 10%;width: 10%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 10%;width: 10%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 45px;width: 45px;">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in mcDisplayRecords">
+                        <!--<td style="max-width: 5%;width: 5%;text-align: left;word-wrap: break-word;">-->
+                            <!--<span ng-if="record.disabled" style="font-size:11px;color: #a94442; font-weight: bold;">Rejected</span>-->
+                            <!--<span ng-if="!record.disabled" style="font-size:11px">Pending</span>-->
+                        <!--</td>-->
+                        <td style="max-width: 12%;width: 12%;text-align: left;word-wrap: break-word;">
+                            {{record.emailAddress}}
+                        </td>
+                        <td style="max-width: 10%;width: 10%;text-align: left;word-wrap: break-word;">
+                            {{record.firstName}}
+                        </td>
+                        <td style="max-width: 10%;width: 10%;text-align: left;word-wrap: break-word;">
+                            {{record.lastName}}
+                        </td>
+                        <td style="max-width: 10%;width: 10%;text-align: left;word-wrap: break-word;">
+                            {{record.organisation}}
+                        </td>
+                        <td style="max-width: 45px;width: 45px;text-align: center;">
+                            <div style="text-align: center" ng-if="!record.disabled">
+                                <approve-button text-location="bottom"
+                                                input-element="record"
+                                                on-confirm-approve="approve($index, record)"
+                                                on-confirm-reject="reject($index, record)"></approve-button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+
+
+
+
+

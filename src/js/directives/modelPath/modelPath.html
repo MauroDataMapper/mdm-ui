@@ -1,0 +1,13 @@
+<ul ng-class="{'breadcrumbClassification':true, 'emptyBackground':showAsSimpleText}" ng-show="updatedPath && updatedPath.length>0">
+    <li class="breadcrumbItem modelPathSimple" ng-repeat="p in updatedPath">
+        <i class="fa fa-sitemap modelPathIcon" aria-hidden="true" title="Parent Hierarchy" ng-show="$index == 0"></i>
+        <span ng-if="!doNotDisplayStatus && $index == 0 && !p.finalised" class="label label-warning" style="vertical-align: middle;font-size: 9px;">Draft</span>
+        <span ng-if="!doNotDisplayStatus && $index == 0 &&  p.finalised" class="label label-success" style="vertical-align: middle;font-size: 9px;">Finalised</span>
+
+        <span ng-hide="doNotShowParentDataModel && $index == 0">
+            <a ng-if="p.domainType=='DataModel'"  ng-click="click($event,p,$index)"  ng-href="{{p.link}}" target="{{targetWindow}}">{{::p.label}}</a>
+            <a ng-if="$index == 1 || $index > 1" ng-click="click($event,p,$index)" ng-href="{{p.link}}" target="{{targetWindow}}">{{::p.label}}</a>
+        </span>
+    </li>
+</ul>
+

@@ -1,0 +1,156 @@
+<div>
+    <mc-table
+            mc-name="metadataTable"
+            id="metadataTable"
+            mc-record-type="type"
+            mc-fetch-method="metadataFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Properties</span>
+
+                <div ng-if="access && access.canAddMetadata" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="!clientSide">
+                    <i id="helpIcon1" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp($event)" tooltip-placement="left" uib-tooltip="Help"></i>
+                    <button type="button" uib-tooltip="Add Property"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="clientSide">
+                    <i id="helpIcon2" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp($event)" tooltip-placement="left" uib-tooltip="Help"></i>
+                    <button type="button" uib-tooltip="Add Property"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th style="cursor:pointer;max-width: 30%;width: 30%;" columnName="namespace" sortable="true" filterable="true">
+                                Namespace
+                            </th>
+                            <th style="cursor:pointer;max-width: 18%;width: 18%;"  columnName="key" sortable="true" filterable="true">
+                                Key
+                            </th>
+                            <th style="cursor:pointer;max-width: 22%;width: 22%;"  columnName="value" sortable="true" filterable="true">
+                                Value
+                            </th>
+                            <th style="cursor:pointer;max-width: 8%;width: 8%;" >
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td style="max-width: 30%;width: 30%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 18%;width: 18%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 22%;width: 2%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 8%;width: 8%;">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in mcDisplayRecords">
+                        <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                            <div ng-show="!record.inEdit">
+                                {{record.namespace}}
+                            </div>
+                            <div ng-if="record.inEdit">
+                                <mc-select-2
+                                        width="'100%'"
+                                        accept-typed-input="true"
+                                        value-type="'static'"
+                                        static-values="namespaces"
+                                        default-value="record.namespace"
+                                        has-error="record.edit.errors && record.edit.errors['namespace']"
+                                        record="record"
+                                        min-input-length="0"
+                                        id-property="'id'"
+                                        display-property="'namespace'"
+                                        search-property="'namespace'"
+                                        on-select="onNamespaceSelect">
+                                    <div>
+                                        <div>{{$item.namespace}}</div>
+                                    </div>
+                                </mc-select-2>
+                                <!--<div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['namespace']}">-->
+                                <!--<input type="text" class="form-control input-sm"  ng-model="record.edit.namespace">-->
+                                <small  ng-show="record.edit.errors && record.edit.errors['namespace']" class="errorMessage">{{record.edit.errors['namespace']}}</small>
+                                <!--</div>-->
+                            </div>
+                        </td>
+                        <td style="max-width: 18%;width: 18%;text-align: left;word-wrap: break-word;">
+                            <div ng-show="!record.inEdit">
+                                {{record.key}}
+                            </div>
+                            <div ng-if="record.inEdit">
+                                <mc-select-2
+                                        width="'100%'"
+                                        accept-typed-input="true"
+                                        value-type="'static'"
+                                        static-values="record.metadataKeys"
+                                        default-value="record.key"
+                                        has-error="record.edit.errors && record.edit.errors['key']"
+                                        record="record"
+                                        min-input-length="0"
+                                        id-property="'id'"
+                                        display-property="'key'"
+                                        search-property="'key'"
+                                        on-select="onKeySelect">
+                                    <div>
+                                        <div>{{$item.key}}</div>
+                                    </div>
+                                </mc-select-2>
+                                <!--<div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['key']}">-->
+                                <!--<input type="text" class="form-control input-sm"  ng-model="record.edit.key">-->
+                                <small  ng-show="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
+                                <!--</div>-->
+                            </div>
+                        </td>
+                        <td style="max-width: 22%;width: 22%;text-align: left;word-wrap: break-word;">
+                            <div ng-if="!record.inEdit">
+                                <more-description description="{{::record.value}}" length="100"></more-description>
+                            </div>
+                            <div ng-if="record.inEdit">
+                                <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['value']}">
+
+                                    <!--<textarea rows="4" class="form-control input-sm" type="text" ng-model="record.edit.value"></textarea>-->
+                                    <markdown-text-area rows="'4'" description="record.edit.value" in-edit-mode="true" hide-help-text="true"></markdown-text-area>
+
+                                    <small  ng-show="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
+                            <div ng-if="access && access.canAddMetadata">
+                                <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit"></mc-table-button>
+                            </div>
+
+                            <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="clientSide">
+                                <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit"></mc-table-button>
+                            </div>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+

@@ -1,0 +1,158 @@
+<div>
+    <mc-table
+            mc-name="semanticLinkTable"
+            id="semanticLinkTable"
+            mc-record-type="type"
+
+            mc-fetch-method="semanticLinkFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Links</span>
+                <div id="addContent" class="btn-group-xs" uib-dropdown is-open="false" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="access && access.canAddLink">
+                    <button uib-tooltip="Add"  type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                            uib-dropdown-toggle>
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu style="right: 0; left: auto;" role="menu" aria-labelledby="single-button">
+                        <li class="modelFilterItem" ng-click="add()">
+                            <a>Add Link</a>
+                        </li>
+                        <li class="modelFilterItem" ng-click="linkSuggestion()" ng-if="showLinkSuggestion">
+                            <a>Link Suggestions</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div ng-if="access && !access.canAddLink && showLinkSuggestion"  style="float: right; margin-top: -2px; margin-left: 9px; cursor: pointer; font-size: 12px; font-style: italic !important; font-weight: normal !important;">
+                    <a ng-click="linkSuggestion()">Link Suggestions</a>
+                </div>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                    <tr class="mcTableHeader">
+                        <th style="cursor:pointer;max-width: 25%;width: 25%;" columnName="source" sortable="true" filterable="true">
+                            Source
+                        </th>
+                        <th style="cursor:pointer;max-width: 15%;width: 15%;"  columnName="linkType" sortable="true" filterable="true">
+                            Link
+                        </th>
+                        <th style="cursor:pointer;max-width: 22%;width: 22%;"  columnName="target" sortable="true" filterable="true">
+                            Target
+                        </th>
+                        <th style="cursor:pointer;max-width: 8%;width: 8%;" >
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in mcDisplayRecords">
+                        <td style="max-width: 25%;width: 25%;text-align: left;word-wrap: break-word;">
+                            <div>
+                                <div ng-show="record.status == 'source'">
+                                    <span style="font-size: 13px;color:#777;font-style: italic" ng-bind-html="record.source.label| mchighlighter:$root.searchCriteria"></span>
+                                </div>
+                                <div ng-show="record.status == 'target'">
+                                    <element-link
+                                            show-parent-data-model-name="true"
+                                            mc-element="record.source"
+                                            mc-parent-data-model="record.source.dataModel"
+                                            mc-parent-data-class="record.source.dataClass"
+                                            show-type-title="'true'"></element-link>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
+                            <div ng-show="!record.inEdit">
+                                {{semanticLinkTypes[record.linkType].title}}
+                            </div>
+                            <div ng-show="record.inEdit">
+                                <select class="form-control wizardInput mcSelect" ng-model="record.edit.linkType">
+                                    <option ng-if="linkType.editable" ng-repeat="(name, linkType) in semanticLinkTypes" value="{{name}}">{{linkType.title}}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td style="max-width: 22%;width: 22%;text-align: left;word-wrap: break-word;">
+
+
+                            <div>
+                                <div style="float:left; width:80%;">
+                                    <div ng-show="!record.inEdit">
+                                        <div ng-show="record.status == 'source'">
+                                            <element-link mc-element="record.target" show-parent-data-model-name="true" show-type-title="'true'"></element-link>
+                                        </div>
+                                        <div ng-show="record.status == 'target'">
+                                            <span style="font-size: 13px;color:#777;font-style: italic" ng-bind-html="record.target.label| mchighlighter:$root.searchCriteria"></span>
+                                        </div>
+                                    </div>
+                                    <div ng-show="record.inEdit">
+                                        <div ng-show="record.status == 'source'">
+                                            <element-link mc-element="record.edit.target" show-parent-data-model-name="true" show-type-title="'true'"></element-link>
+                                        </div>
+                                        <div ng-show="record.status == 'target'">
+                                            <span style="font-size: 13px;color:#777;font-style: italic" ng-bind-html="record.target.label| mchighlighter:$root.searchCriteria"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="float:right">
+                                    <div ng-show="record.inEdit">
+                                        <button class="btn btn-default btn-xs themeColor" type="button" ng-click="findElement(record)">
+                                            <i class="glyphicon glyphicon-search"></i> ...
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ng-show="record.inEdit">
+                                <!--<mc-select-2-->
+                                        <!--width="'100%'"-->
+                                        <!--accept-typed-input="false"-->
+                                        <!--value-type="'dynamic'"-->
+                                        <!--default-value="record.target"-->
+                                        <!--load-dynamic-values="fetch"-->
+                                        <!--min-input-length="3"-->
+                                        <!--has-error="record.edit.errors && record.edit.errors['target']"-->
+                                        <!--record="record"-->
+                                        <!--id-property="'id'"-->
+                                        <!--display-property="'label'"-->
+                                        <!--search-property="'label'"-->
+                                        <!--on-select="onTargetSelect">-->
+                                    <!--<div>-->
+                                        <!--<div ng-bind-html="$item.label | mchighlighter:searchTerm"></div>-->
+                                        <!--<div>-->
+                                            <!--<element-link mc-element="$item" show-type-title="true" show-link="false"></element-link>-->
+                                            <!--<div>-->
+                                                <!--<model-path do-not-display-status="true" path="::$item.breadcrumbs" show-as-simple-text="true"></model-path>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</mc-select-2>-->
+                                <small ng-show="record.edit.errors && record.edit.errors['target']" class="errorMessage">{{record.edit.errors['target']}}</small>
+                            </div>
+                        </td>
+                        <td style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
+                            <div ng-show="record.status == 'source' && semanticLinkTypes[record.linkType].editable == true" ng-if="access && access.canAddLink">
+                                <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit"></mc-table-button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+
+
+

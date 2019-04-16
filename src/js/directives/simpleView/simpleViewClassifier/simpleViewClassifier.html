@@ -1,0 +1,59 @@
+<div>
+    <div class="panel panel-default">
+        <div class="panel-body panel-table">
+            <h4>
+                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;">
+                    {{parent.label}}
+                </div>
+            </h4>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
+                <small class="simpleView elementType">Classifier</small>
+                <div class="advancedViewLink" ng-if="!hideMoreDetailsLink">
+                    <a ng-href="{{advancedViewLink}}" target="_blank">More Details</a>
+                </div>
+            </div>
+        </div>
+        <table class="table table-condensed simpleViewDetailTable">
+            <tbody>
+            <tr>
+                <td class="simpleViewDetailHeader col-md-2">Description</td>
+                <td class="elementDetailDescription">
+                    <markdown-text-area description="parent.description" in-edit-mode="false"
+                                        hide-help-text="true"></markdown-text-area>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <uib-tabset active="activeTab.index">
+            <uib-tab>
+                <uib-tab-heading>
+                    Classified Elements
+                </uib-tab-heading>
+                <div style="width:100%;" ng-if="parent">
+                    <classified-elements-list parent="parent" classified-element-type="'catalogueItems'"></classified-elements-list>
+                </div>
+            </uib-tab>
+
+            <uib-tab>
+                <uib-tab-heading>
+                    Classified Terminologies
+                </uib-tab-heading>
+                <div style="width:100%;" ng-if="parent">
+                    <classified-elements-list parent="parent"  classified-element-type="'terminologies'"></classified-elements-list>
+                </div>
+            </uib-tab>
+
+            <uib-tab select="tabSelected('classifiedTerms')">
+                <uib-tab-heading>
+                    Classified Terms
+                </uib-tab-heading>
+                <div style="width:100%;">
+                    <classified-elements-list parent="parent" classified-element-type="'terms'"></classified-elements-list>
+                </div>
+            </uib-tab>
+
+        </uib-tabset>
+    </div>
+</div>

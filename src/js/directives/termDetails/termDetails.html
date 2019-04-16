@@ -1,0 +1,122 @@
+<div>
+    <div class="panel panel-default">
+        <form editable-form
+              name="editableForm"
+              onaftersave="onAfterSave()"
+              onbeforesave="formBeforeSave()"
+              onkeypress="return event.keyCode !== 13;">
+            <div class="panel-body panel-table">
+                <h4>
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;">
+                        <span ng-class="{'deletedDataModelTitle':mcTerm.deleted, 'xeditableInput':true}">
+                            <span ng-if="mcTerm"
+                                  ng-bind-html="mcTerm.label | mchighlighter:$root.searchCriteria"
+                                  class="dataModelDetailsLabel">
+                            </span>
+                            <i ng-class="{'fa fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
+                               ng-click="toggleFavourite()"
+                               uib-tooltip="Favourite"></i>
+                            <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;"
+                               ng-click="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+                        </span>
+                            <span class="publiclyReadable" ng-show="mcTerm.readableByEveryone">
+                            <i class="fa fa-globe themeColor" aria-hidden="true" title="Publicly Readable"></i>
+                        </span>
+                    </div>
+                </h4>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
+                    <small class="elementDetailMCType">Term</small>
+                    <span ng-if="mcTerm.deleted" class="label label-danger"
+                          style="vertical-align: middle;font-size: 9px;">Deleted</span>
+                    <div>
+                        <span style="font-size: 11px;font-style: italic" class="dataModelDetailsLastUpdate">Created on: {{::mcTerm.dateCreated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-condensed dataModelDetailTable">
+                <tbody>
+                    <tr>
+                        <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                        <td>
+                            <div style="width:50%">
+                                <element-alias
+                                        in-edit-mode="editableForm.$visible"
+                                        aliases="mcTerm.editAliases"></element-alias>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="detailsRowHeader col-md-2">Terminology</td>
+                        <td class="elementDetailDescription">
+                            <span ng-show="mcTerminology">
+                                <span ng-if="!mcTerminology.finalised" class="label label-warning" style="vertical-align: middle;font-size: 9px;">Draft</span>
+                                <span ng-if="mcTerminology.finalised"  class="label label-success" style="vertical-align: middle;font-size: 9px;">Finalised</span>
+                            </span>
+                            <element-link mc-element="mcTerminology" show-link="true" new-window="false"></element-link>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="detailsRowHeader col-md-2">Description</td>
+                        <td class="elementDetailDescription">
+                            <markdown-text-area mc-editable-form="editableForm" mc-element="mcTerm" mc-property="'description'"></markdown-text-area>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="detailsRowHeader col-md-2">URL</td>
+                        <td class="elementDetailDescription">
+                            <a href="{{mcTerm.url}}" target="_blank"> {{mcTerm.url}}</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</td>
+                        <td>
+                            <element-classifications classifications="mcTerm.classifiers"
+                                                     editable="editableForm"></element-classifications>
+                        </td>
+                    </tr>
+                    <!--<tr>-->
+                        <!--<td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">-->
+                            <!--Links-->
+                        <!--</td>-->
+                        <!--<td>-->
+                            <!--<div style="width: 100%;" ng-if="mcTerm">-->
+                                <!--<all-links-in-paged-list-->
+                                        <!--parent="mcTerm"-->
+                                        <!--show-description="true"-->
+                                        <!--show-no-links-message="true"-->
+                                        <!--type="'static'"></all-links-in-paged-list>-->
+
+                            <!--</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <tr show-if-role-is-writable mc-element="mcTerm">
+                        <td colspan="2" style="text-align: right;">
+                            <div style="float: right">
+                                <editable-form-buttons
+                                        hide-edit="true"
+                                        on-cancel-edit="onCancelEdit"
+                                        editable="editableForm"
+                                        text-location="left"
+                                        on-confirm-delete="delete">
+                                </editable-form-buttons>
+                            </div>
+                            <div style="float: right">
+                                <div  ng-show="!editableForm.$visible && !editableForm.$deletePending" class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                    <button uib-tooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                            ng-click="editableForm.$show();"
+                                            ng-show="!editableForm.$visible && !editable.$deletePending" ng-disabled="deleteInProgress" uib-dropdown-toggle>
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

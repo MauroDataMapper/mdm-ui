@@ -1,0 +1,70 @@
+<div>
+    <div class="container-fluid content">
+        <nav class="main-menu" ng-cloak>
+            <ul>
+                <li>
+                    <a ui-sref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-table fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Models</span>
+                    </a>
+                </li>
+                <li class="has-subnav">
+                    <a ui-sref="appContainer.mainApp.twoSidePanel.catalogue.search">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-search fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Search</span>
+                    </a>
+
+                </li>
+                <li class="has-subnav">
+                    <a ui-sref="appContainer.adminArea.home" ng-show="isAdmin()">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-user-circle-o fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Admin</span>
+                    </a>
+
+                </li>
+                <li class="has-subnav">
+                    <a ui-sref="appContainer.mainApp.about">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-info-circle fa-2x"></i>
+                        </div>
+                        <span class="nav-text">About</span>
+                    </a>
+
+                </li>
+                <li ng-show="isLoggedIn()">
+                    <a ui-sref="appContainer.userArea.profile">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-address-card-o fa-2x"></i>
+                        </div>
+                        <span class="nav-text">My Profile</span>
+                    </a>
+                </li>
+                <li ng-show="isLoggedIn()">
+                    <a ui-sref="appContainer.userArea.settings">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-cog fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Preferences</span>
+                    </a>
+                </li>
+                <li ng-show="isLoggedIn()">
+                    <a href ng-click="logout()">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-sign-out fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="withSideMenu" id="mainContent" ng-cloak ui-view>
+        </div>
+    </div>
+</div>

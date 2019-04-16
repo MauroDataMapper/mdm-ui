@@ -1,0 +1,37 @@
+<div id="{{model.name}}" tabindex='-1'>
+    <form role='form' onkeypress='return event.keyCode != 13;'>
+        <div class='modal-header'>
+            <h4 class='modal-title'>{{model.summary.name}}</h4>
+            <h7 class='modal-title'>{{model.summary.description}}</h7>
+        </div>
+        <div class='modal-body'>
+
+            <div class="row" ng-if="model.summary.type != 'number'">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div>
+                        <div style="float:left;padding-top: 5px;">Diagram:</div>
+                        <div style="float:left;margin-left: 5px;width: 100px;">
+                            <select class="form-control input-sm" ng-model="model.currentChartType">
+                                <option value="bar">Bar</option>
+                                <!--<option value="doughnut">Doughnut</option>-->
+                                <!--<option value="pie">Pie</option>-->
+                                <option value="line">Line</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <summary-metadata-map summary="model.summary" chart-type="model.currentChartType" show-more-details-btn="false"></summary-metadata-map>
+                </div>
+            </div>
+        </div>
+        <div class='modal-footer'>
+            <button class='btn btn-default' ng-click='close()'>Close</button>
+        </div>
+    </form>
+
+</div>
+

@@ -1,0 +1,107 @@
+<div>
+    <mc-table
+            mc-name="attachmentTable"
+            id="attachmentTable"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="attachmentFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Attachments</span>
+                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="access && access.showEdit">
+                    <button type="button" uib-tooltip="Add Comment"
+                            class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName" sortable="true" filterable="true">
+                                File Name
+                            </th>
+                            <th style="cursor:pointer;max-width: 20%;width: 20%;" columnName="fileSize" sortable="true" filterable="false">
+                                Size
+                            </th>
+                            <th style="cursor:pointer;max-width: 20%;width: 20%;" columnName="lastUpdated" sortable="true" filterable="false">
+                                Uploaded
+                            </th>
+                            <th style="cursor:pointer;max-width: 10%;width: 10%;text-align: center;" >
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td style="max-width: 50%;width: 50%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 20%;width: 20%;">
+                            </td>
+                            <td style="max-width: 20%;width: 20%;">
+                            </td>
+                            <td style="max-width: 10%;width: 10%;text-align: center;">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in mcDisplayRecords">
+                            <td style="max-width: 50%;width: 50%;text-align: left;word-wrap: break-word;">
+                                <div ng-show="!record.inEdit">
+                                    <div>
+                                        <a href="{{download(record)}}">{{record.fileName}}</a>
+                                    </div>
+                                </div>
+                                <!--<div ng-show="record.inEdit && !record.isNew" >-->
+                                    <!--<input ng-model="record.edit.fileName" style="width:50%;" class="form-control"/>-->
+                                <!--</div>-->
+                                <div ng-show="record.isNew">
+                                    <div style="width:100%;">
+                                        <form>
+                                            <input type="file" name="pic" id="File{{$index}}" class="form-control" id="file">
+                                            <!--<input type="button" ng-click="save(record, $index)">-->
+                                            <!--<div class="form-group">-->
+                                                <!--<label for="name">Name</label>-->
+                                                <!--<input ng-model="record.edit.fileName" style="width:50%;" class="form-control" id="name"/>-->
+                                            <!--</div>-->
+
+                                            <!--<div class="form-group">-->
+                                                <!--<label for="file">File</label>-->
+                                                <!--<input type="file" name="pic" id="File1" class="form-control" id="file">-->
+                                                <!--<input type="button" ng-click="save(record, $index)">-->
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="max-width: 20%;width: 20%;text-align: left;">
+                                <div ng-if="!record.inEdit">
+                                    {{record.fileSize | fileSize}}
+                                </div>
+                            </td>
+                            <td style="max-width: 20%;width: 20%;text-align: left;">
+                                <div ng-if="!record.inEdit">
+                                    {{record.lastUpdated  | date:"dd/MM/yyyy h:mm a" }}
+                                </div>
+                            </td>
+                            <td style="max-width: 10%;width: 10%;text-align: center;">
+                                <div ng-if="access && access.showEdit">
+                                    <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit" hide-edit="true"></mc-table-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+

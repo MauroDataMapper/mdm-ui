@@ -1,0 +1,35 @@
+<div style="text-align: right">
+
+    <!-- Approve -->
+    <button type="button"
+            class="btn btn-default btn-xs"
+            uib-tooltip="Approve"
+            ng-show="!pending"
+            ng-click="approveClicked()">
+        <i style="color: green" class="fa fa-check"></i>
+    </button>
+    <!-- Reject -->
+    <button type="button"
+            class="btn btn-default btn-xs"
+            uib-tooltip="Reject"
+            ng-show="!pending"
+            ng-click="rejectClicked()">
+        <i class="fa fa-ban confirmDeleteButton"></i>
+    </button>
+    <div ng-show="pending">
+        <span  ng-show="textLocation == 'left'"  style="font-size: 11px;">Are you sure?</span>
+        <!-- Confirm Approve -->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                ng-click="confirmClicked()">
+            <i class="fa fa-check" style="color: green;"></i>
+        </button>
+        <!-- Cancel Approve-->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                ng-click="cancelClicked()">
+            <i class="fa fa-times cancelButton"></i>
+        </button>
+        <span  ng-show="textLocation == 'bottom'"  style="font-size: 11px;"><br>Are you sure?</span>
+    </div>
+</div>

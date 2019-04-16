@@ -1,0 +1,31 @@
+<div>
+    <div style="width: 100%;height: 100%; text-align: center;" class="treeWaitingSpinner" ng-if="loading && showLoadingSpinner">
+        <div style="">
+            <a style="font-size: 75px;" class="themeColor">
+                <i class="fa fa-refresh fa-spin"></i>
+            </a>
+        </div>
+    </div>
+
+    <div ng-repeat="linkType in linkTypes | orderBy" ng-if="total > 0">
+        <mc-paged-list
+                name="linkType"
+                mc-title="linkType"
+                type="'static'"
+                items="allLinksMap[linkType].links"
+                page-size="3">
+            <div class="pagedElement"  style="word-break: break-all;word-wrap: break-word;">
+                <element-link mc-element="$item.target"
+                              show-parent-data-model-name="true"
+                              show-link="true"
+                              show-type-title="true"></element-link>
+                <div style="padding-left: 3px" ng-if="showDescription && $item.target.description && $item.target.description.length>0">
+                    <more-description description="{{$item.source.description}}"></more-description>
+                </div>
+            </div>
+        </mc-paged-list>
+    </div>
+    <div ng-if="total == 0 && showNoLinksMessage" style="font-style: italic; font-size: 14px;padding-left: 2px;">
+        No Links
+    </div>
+</div>

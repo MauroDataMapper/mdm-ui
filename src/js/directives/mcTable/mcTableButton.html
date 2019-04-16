@@ -1,0 +1,27 @@
+<div>
+    <div>
+        <small ng-show="record.inDelete">
+            Are you sure?
+        </small>
+    </div>
+    <button class="btn btn-default btn-xs" ng-show="!hideEdit && !record.inEdit && !record.inDelete" ng-click="editClicked(record, index)" type="button">
+        <i class="fa fa-pencil-square-o editButton themeColor"></i>
+    </button>
+    <button class="btn btn-default btn-xs"  ng-show="record.inEdit"  ng-click="saveClicked(record, index)" type="button">
+        <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
+    </button>
+    <button class="btn btn-default btn-xs"  ng-show="record.inEdit"  ng-click="editCancelled(record, index)" type="button">
+        <i class="fa fa-times editButton themeColor"></i>
+    </button>
+
+    <button class="btn btn-default btn-xs" ng-show="!hideDelete && !record.inEdit && !record.inDelete" ng-click="deleteClicked(record, index)" type="button">
+         <i class="fa fa-trash-o mcTableDeleteBtn"></i>
+    </button>
+    <button class="btn btn-default btn-xs"  ng-show="record.inDelete"  ng-click="deleteApproved(record, index)" type="button">
+        <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
+    </button>
+    <button class="btn btn-default btn-xs"  ng-show="record.inDelete"  ng-click="deleteCancelled(record, index)" type="button">
+        <i class="fa fa-times editButton"></i>
+    </button>
+
+</div>

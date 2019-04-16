@@ -1,0 +1,293 @@
+
+<style media="screen" type="text/css">
+
+
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+        border: 1px solid #205081 !important;
+        background: #205081 !important;
+    }
+
+
+    .dataFlowSelectedElement {
+        border: 1px solid #ff9933 !important;
+        background-color: #fff2e6 !important;
+    }
+
+    .transformationToolBox {
+        border: 1px dashed #5f6060;
+        color: #205081;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        -khtml-border-radius: 2px;
+        margin: 10px;
+        cursor: move;
+        width: 140px;
+        text-align: center;
+    }
+
+    .dataFlow.deleteButton {
+        font-size:18px;
+        position: absolute;
+        top:0;
+        left:0;
+        color: red;
+        background-color: transparent;
+        top:-11px;
+        left:-11px;
+        cursor: pointer;
+    }
+
+    span.deleteIconContainer{
+        background-color: white;
+        line-height: 40%;
+    }
+
+    span.deleteIconContainer > i {
+        padding: 0px;
+        margin: 0px;
+        display: inline-block;
+        width: auto;
+        height: auto;
+        line-height: inherit;
+        vertical-align: baseline;
+        background-color: white;
+    }
+
+
+    .deleteButtonHide{
+        display: none;
+    }
+
+
+    .rootDataModel{
+        border: 3px solid #205081 !important;
+        background-color: #e0edf9 !important;
+    }
+
+    .rootDataModel > .dataModelTitle{
+        background-color: #e0edf9 !important;
+    }
+    .dataModel{
+        border:  2px solid #d8d8d8;
+        width:150px;
+        height:60px;
+        text-align: center;
+        cursor: move;
+        overflow: hidden;
+        padding-top: 5px;
+        background-color: #ededed;
+    }
+    .dataModelSelected {
+        border-color: #ff9933 !important;
+        background-color: #fff2e6 !important;
+    }
+
+    .dataModelSelected > .dataModelTitle{
+        background-color: #fff2e6 !important;
+    }
+
+    .dataModelTitle{
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+
+    .dataClass{
+        border:  1px solid #DDD;
+        width:200px;
+        background-color: #FFF;
+        min-height:100px;
+    }
+    .dataClassTitle{
+        border-bottom: 1px solid #DDD;
+        font-weight: bold;
+        height:30px;
+        text-align:center;
+        padding: 5px;
+        cursor: move;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .dataElement{
+        border-bottom:  1px solid #DDD;
+        cursor: pointer;
+    }
+
+    .dataElementContainer {
+        width:100%;
+        position: absolute;
+        top: 40px;
+        bottom: 0px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+
+    .transformation{
+        border: 1px solid #DDD;
+        padding: 10px;
+        background-color: #FFF;
+        cursor: move;
+    }
+
+    .transformationTitle {
+        cursor: pointer;
+    }
+
+    div.designerContainer{
+        border: 1px solid #DDD;
+        width:  100%;
+        height: calc(40vh - 1px);
+        overflow: scroll;
+    }
+
+    div.designer{
+        width: calc(200vw - 20px);
+        height: calc(180vh - 10px);
+        /*border: 1px solid GREEN;*/
+        position:relative;
+    }
+
+    svg.designer {
+        width: calc(200vw - 20px);
+        height: calc(180vh - 10px);
+        /*border: 1px solid black;*/
+    }
+
+
+    path.deletePath{
+        cursor: pointer;
+    }
+
+    path.deletePathHide{
+        display: none;
+    }
+
+    circle.middleCircle{
+        cursor: pointer;
+    }
+
+    circle.middleCircleHide{
+        display: none;
+    }
+
+    .fatPath {
+        stroke: gray;
+        stroke-width: 20;
+        fill: none;
+        opacity:0.1;
+        cursor: pointer;
+    }
+
+    .fatPathSelected {
+        stroke: orange !important;
+        stroke-width: 20;
+        fill: none;
+        opacity:0.2;
+        cursor: pointer;
+    }
+
+    .fatPath.hideFatPath{
+        stroke: transparent;
+    }
+
+</style>
+
+<div style="width: 100%; margin: 0px auto;height: 100%;border: 1px solid #DDD;">
+    <div>
+        <div style="padding: 4px;">
+            <div style="float:left;">
+                <form id="dataFlowImportForm">
+                    <input type="file" style="position: fixed; top: -100em" id="dataFlowImportFile" file-on-change="import"/>
+                    <button type="reset" id="dataFlowImportFormReset" style="display:none"></button>
+                </form>
+            </div>
+
+
+            <div ng-if="access && access.showEdit"
+                class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: left; margin-right:4px;">
+                <button type="button"
+                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                        uib-tooltip="Import Dataflow(s)"
+                        uib-dropdown-toggle>
+                    <i class="fa fa-upload themeColor" aria-hidden="true"></i>
+                    <span class="caret" style="margin-right: 2px;"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu style="right: 0; left: auto;" role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="importer in importersList" class="modelFilterItem" ng-click="openImportDialogue(importer)">
+                        <a title="{{importer.displayName}}">{{importer.displayName}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="sourcesForDF && targetsForDF && targetsForDF.length + sourcesForDF.length >0"
+                 class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: left; margin-right:4px;">
+                <button type="button"
+                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                        uib-tooltip="Export Dataflow(s)"
+                        uib-dropdown-toggle>
+                    <i class="fa fa-download themeColor" aria-hidden="true"></i>
+                    <span class="caret" style="margin-right: 2px;"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu style="right: 0; left: auto;" role="menu" aria-labelledby="single-button">
+                    <li ng-repeat="exporter in exportersList" class="modelFilterItem" ng-click="export(exporter)">
+                        <a title="{{exporter.displayName}}">{{exporter.displayName}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group-xs" uib-dropdown is-open="false"
+                 style="margin-bottom: 3px;position: relative; float: left; margin-right:4px;">
+                <button type="button"
+                        ng-click="refreshDataFlow()"
+                        class="btn btn-xs btn-default addNewModelButton themeColor"
+                        uib-tooltip="Reload Dataflows">
+                    <i class="fa fa-refresh themeColor" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div ng-if="access && access.showEdit" style="margin-bottom: 3px;position: relative; float: left; margin-right:4px;">
+                <i id="helpDFImportIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+            </div>
+
+            <div style="width:50%;float: left;" ng-show="dataFlowProcessing">
+                <uib-progressbar max="100" value="100" class="progress-striped active" style="margin-bottom: 0px;">
+                    <span style="color:white; white-space:nowrap;"></span>
+                </uib-progressbar>
+            </div>
+            <div style="float: left;margin-left: 5px;"
+                 ng-show="exportedFileIsReady">
+                <div id="exportDataFlowFileDownload"></div>
+            </div>
+            <a uib-tooltip-html="'{{help}}'"
+               tooltip-placement="left"
+               tooltip-class="infoText"
+               class="btn btn-default btn-xs"
+               style="margin: 2px 2px 2px 2px;float:right;">
+                <i class="fa fa-info themeColor"></i>
+            </a>
+        </div>
+        <div class="designerContainer">
+            <div class="designer zoom" ng-dblclick="divDbClick($event)">
+                <svg class="designer" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="markerCircle" markerWidth="8" markerHeight="8" refX="5" refY="5">
+                            <circle cx="5" cy="5" r="3" style="stroke: none; fill:#000000;"/>
+                        </marker>
+                        <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
+                            <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+

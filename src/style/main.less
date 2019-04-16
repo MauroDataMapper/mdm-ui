@@ -1,0 +1,2471 @@
+@baseColor: #205081; //MAIN #205081 PA #1A98C5
+@headerBackground:#FFF;  //MAIN #FFF PA #000
+@navTextColor: #FFF; //MAIN #FFF    PA #000
+@stateLoadingSpinnerColor: #FFF;
+
+// .main-nav-bar-ul .dropdown-submenu > a:after {
+  // font-family: 'FontAwesome' !important;
+// }
+
+
+.themeBackground{
+  background: @baseColor;
+}
+.themeBackgroundColor{
+  background-color: @baseColor;
+}
+.themeColor{
+  color: @baseColor;
+}
+.themeBorderColor{
+  border-color: @baseColor;
+}
+
+.themeHeaderBottomBorder{
+  border-bottom: 4px solid @baseColor;
+  border-top:    3px solid @baseColor;
+}
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+html, body {
+  padding: 0;
+  margin:		0;
+  // font-family:'Arial Bold', 'Arial';
+  height: 100%;
+}
+
+.content {
+  height: 100%;
+}
+
+/* Custom page header */
+.header {
+  /*border-bottom: 1px solid @headerBackground;
+  margin-bottom: 5px;*/
+  background-color: @headerBackground !important;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 2400px) {
+  .resizableLeft {
+	min-height:800px;
+  }
+  .resizableRight {
+	min-height: 800px;
+  }
+  div.scrollPanel{
+	max-height: 800px !important;
+  }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+  .resizableLeft {
+	min-height:800px;
+  }
+  .resizableRight {
+	min-height: 800px;
+  }
+  div.scrollPanel{
+	max-height: 800px !important;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+  .resizableLeft {
+	min-height:400px;
+  }
+  .resizableRight {
+	min-height: 400px;
+  }
+  div.scrollPanel{
+	max-height: 800px !important;
+  }
+}
+
+@media only screen and (max-width : 960px) {
+  .leftMenu {
+      h4 {
+        font-size: 1.2em;
+      }
+      .list-group-item {
+        text-align: center;
+        div {
+          i {
+            font-size: 1.5em;
+            display:block;
+          }
+          span {
+            font-size: .9em;
+          }
+        }
+      }
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+  .resizableLeft {
+	min-height:400px;
+  }
+  .resizableRight {
+	min-height: 400px;
+  }
+  div.scrollPanel{
+	max-height: 800px !important;
+  }
+}
+
+
+
+@media only screen and (max-width : 480px) {
+  /* CSS goes here */
+  .resizableLeft {
+	min-height: 400px;
+  }
+  .resizableRight {
+	min-height: 400px;
+  }
+  div.scrollPanel{
+	max-height: 800px !important;
+  }
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px) {
+  /* CSS goes here */
+  .resizableLeft {
+	min-height: 400px;
+  }
+  .resizableRight {
+	min-height: 400px;
+  }
+  div.scrollPanel{
+	max-height: 800px !important;
+  }
+}
+
+.detailsRowHeader {
+	font-weight: bold;
+    background-color: #f9f9f9;
+   }
+
+.detailsTableCaption{
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.tableTitle{
+	font-weight: bold;
+	background-color: #E8E8E8;
+}
+
+.jqueryLayoutPane{
+	width:  100%;
+	height: 100%;
+	overflow: hidden;
+	min-width:400px;
+	_width:700px;
+}
+
+.treeFont {
+	font-size: 12px !important;
+	// font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/*We had to add this, as jquery-layout needs all parent elements have height
+As angular adds ng-scope on the background we had to add this to fix the problem,
+we might be able to fix this by adding the jQuery layout in a directive instead
+*/
+// .ng-scope{ 
+// 	height: 100%;
+// }
+
+
+.dashboardPanelHeader{
+ font-weight: bold;
+}
+
+.hideForSecurity{
+	display: none !important;
+}
+
+
+a.moreLink {
+	// font-size: 10px;
+  font-size: .9em;
+	text-decoration:none;
+	outline: none;
+}
+
+a.moreLink:hover,
+a.moreLink:active,
+a.moreLink:visited {
+	text-decoration: none;
+	color: #337ab7 !important;
+}
+
+.morecontent span {
+	display: none;
+}
+.comment {
+}
+
+.addToSelectionIcon{
+	color:#ddd;
+	cursor: pointer;
+}
+
+.modelIcon{
+	color: #205081;
+	font-size: 9px;
+}
+
+
+.recently-viewed-name {
+	cursor: pointer;
+}
+
+.recently-viewed-date {
+	color: #707070;
+	font-size: 12px;
+}
+.recently-viewed-user {
+	color: #707070;
+	font-size: 12px;
+}
+.recently-viewed-desc{
+	font-size: 12px;
+}
+
+.childDataElementsCount{
+	font-size: 10px;
+	font-style: italic;
+	font-weight: normal !important;
+}
+
+.elementAddedToSelection{
+	color: Green;
+}
+
+.elementNotAddedToSelection{
+	color: #ddd;
+}
+
+
+.inBasketText{
+	font-size: 10px;
+	font-style: italic;
+	font-weight: normal !important;
+}
+
+.breadcrumb > li + li:before {
+	padding: 0px 0px 0px 5px !important;
+	content: "/" !important;
+	color: #707070 !important;
+	max-width: 2px;
+	max-height: 2px;
+}
+
+.breadcrumb {
+	padding: 5px 10px !important;
+	margin-bottom: 2px !important;
+	display: inline-block;
+}
+
+.breadcrumbItem{
+	font-size: 12px !important;
+}
+
+.userLoggedInIcon{
+	font-size: 16px !important;
+}
+
+.deleteRowConfirmMessage{
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.deleteRowConfirmButton{
+	font-size: 11px;
+	padding: 2px 3px !important;
+	font-weight: normal !important;
+}
+
+
+.modelPathSimple{
+	font-size: 11px;
+	text-decoration:none;
+	color: #707070 !important;
+}
+
+
+.classificationIcon{
+	color: #205081;
+	font-size: 9px;
+}
+
+.command-icon {
+    outline: none !important;
+}
+
+.command-icon-danger {
+    color: #cc0000;
+}
+
+.editing-background {
+    background: #eee;
+}
+
+.panel-table {
+    padding: 5px 10px !important;
+}
+
+.element-count {
+    font-size: .6em;
+    font-style: italic;
+    font-weight: normal !important;
+    background-color: #777777 !important;
+}
+
+.command-column {
+    width: 35px;
+    text-align: center;
+    padding: 0 !important;
+}
+
+.searchResultDescription{
+	font-size: 11px;
+	text-decoration:none;
+	color: #707070 !important;
+}
+
+.searchResultMCType {
+	font-size: 11px;
+	text-decoration: none;
+	font-style: italic;
+	color: #4cae4c !important;
+}
+
+
+.annotation-date {
+  color: #707070;
+  font-size: 0.8em;
+  font-style: italic;
+  padding-left: 5px;
+}
+
+.annotation-username {
+  color: #707070;
+  font-size: 0.8em;
+}
+
+.annotation-child-item-header {
+  background-color:#f9f9f9;
+  padding:3px;
+}
+
+.annotation-item-header {
+	padding:3px;
+}
+
+.annotation-item {
+  border: 1px solid #ddd;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+
+.annotation-description{
+  margin: 5px 0px;
+  width: 99%;
+}
+
+.annotation-item-bottom-line {
+  border-left: 2px solid #ddd;
+  margin-left: 18px;
+  max-height: 5px;
+  width:100%;
+}
+
+
+[ui-view].ng-enter {
+    transition:0.5s ease-in-out all;
+}
+
+[ui-view].ng-enter {
+    opacity: 0;
+}
+
+[ui-view].ng-enter.ng-enter-active {
+    margin-left: 0;
+    opacity: 1;
+}
+
+.modelsFilter{
+	height: 25px !important;
+	margin-top: 5px !important;
+}
+
+
+.enabledFilter{
+	cursor: pointer;
+}
+
+.disabledFilter{
+	color:  #777777;
+	cursor: pointer;
+}
+
+
+.breadcrumbSimple {
+	padding: 2px 2px;
+	margin-bottom: 2px;
+	list-style: none;
+	font-size: 12px;
+	font-style: italic;
+}
+.breadcrumbSimple > li {
+	display: inline-block;
+}
+.breadcrumbSimple > li + li:before {
+	padding: 0px 1px 0px 1px;
+	color: #ccc;
+	content: "/";
+}
+.breadcrumbSimple > .active {
+	color: #777;
+}
+
+
+
+ul.changeTrackList{
+	list-style: none;
+}
+
+ul.changeTrackList > li {
+	list-style-type: none;
+
+	border-radius: 5px;
+	margin-bottom: 2px;
+	padding: 2px;
+}
+ul.changeTrackList > li:hover {
+	background-color: #707070;
+}
+
+.elementDetailMCType {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: italic;
+	color: #4cae4c !important;
+}
+
+
+
+.breadcrumbClassification.emptyBackground{
+  background-color: transparent !important;
+}
+
+
+.breadcrumbClassification {
+	margin-right: 8px;
+	padding: 2px 8px;
+	margin-bottom: 2px;
+	list-style: none;
+	font-size: 12px;
+	background-color: #f5f5f5;
+	border-radius: 4px;
+	display: inline-block;
+
+  > li {
+    display: inline-block;
+
+    .breadcrumbRemoveButton {
+      &:before {
+        content: none;
+      }
+
+      padding-left: 3px; 
+      color: #c62828;
+    }
+  }
+}
+// .breadcrumbClassification > li {
+// 	display: inline-block;
+// }
+.breadcrumbClassification > li + li:before {
+	padding: 0px 0px 0px 3px;
+	color: #000;
+	content: "/";
+}
+
+// .breadcrumbClassification > li.breadcrumbRemoveButton:before {
+//   content: none;
+// }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
+.blurSearchResult{
+  opacity: 0.7;
+}
+
+.elementDetailDescription{
+  word-break: keep-all !important;
+  word-wrap: break-word;
+}
+
+.metadataValue{
+  word-break: keep-all !important;
+  word-wrap: break-word;
+}
+
+span.core {
+  white-space: pre-line;
+}
+
+span.preformatText {
+  white-space: pre-line;
+}
+
+.table .table {
+  background-color: transparent;
+}
+
+.enumerationKeyValueTable {
+  margin-bottom: 0;
+  tr {
+    th {
+      text-align: left;
+      font-style: normal;
+      font-weight: normal;
+      font-size: .9em;
+    }
+
+    .enumerationKey {
+      font-weight: bold;
+      width: 1px;
+      white-space: nowrap;
+    }
+
+    .enumerationValue{ 
+        word-break: keep-all; 
+        word-wrap: break-word;
+        font-style: italic;
+        // border-left: 1px solid #bbb;
+    }
+
+    .showMoreEnumerations {
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      padding: 2px;
+      transition: background-color .5s;
+
+      &:hover {
+        background-color: #eee;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+// .enumerationValue{ 
+//   word-break: keep-all !important;
+//   word-wrap: break-word;
+// }
+
+.dataTypeLabel {
+  font-style: italic;
+  font-size: 11px;
+  color: #4cae4c;
+  padding-left: 5px;
+}
+
+.dataTypeLabelSimple {
+  font-style: italic;
+  font-size: 10px;
+  color: #4cae4c;
+}
+
+.enumCaretShow{
+  color: #4cae4c;
+}
+// .showMoreEnumerations{
+//   text-decoration: none !important;
+//   cursor: pointer !important;
+// }
+
+
+.hiddenMoreEnumerationKeyValue {
+  display: none;
+}
+
+
+// .enumerationKeyValueTable{
+//    margin-left: 20px;
+//  }
+
+// .enumerationKey{
+//    margin-left: 10px;
+//   vertical-align: top;
+// }
+// .enumerationValue{
+//   margin-left: 10px;
+// }
+
+.stateLoadingSpinner{
+  color: @stateLoadingSpinnerColor !important;
+}
+
+ul.myTree, ul.myTree ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.myTree:focus {
+  outline-width: 0;
+}
+
+ul.myTree ul {
+  margin-left: 10px;
+}
+ul.myTree li {
+  margin: 0;
+  padding: 0 5px;
+  line-height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+}
+
+ul.myTree li:focus {
+  outline-width: 0;
+}
+
+.plusMinusElement{
+}
+
+.myTreeEmptyRoot{
+}
+
+.hideShowLeftPaneBtn{
+  color: @navTextColor;
+  cursor: pointer;
+  text-align: center;
+  padding: 2px;
+  margin-bottom: 5px;
+
+  -webkit-border-radius: 4px !important;
+  -moz-border-radius: 4px !important;
+  border-radius: 4px !important;
+  -webkit-border-top: 4px !important;
+  -moz-border-top: 4px !important;
+  border-top: 4px !important;
+  -webkit-border-bottom: 4px !important;
+  -moz-border-bottom: 4px !important;
+  border-bottom: 4px !important;
+}
+
+.hideShowLeftPaneBtn > i {
+  font-size: 18px;
+}
+
+div.resizableLeft{
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 3px;
+}
+
+div.deleteInProgressSpinner  a {
+  color:  #c62828 !important;
+}
+.deleteInProgressSpinner  a {
+  color:  #c62828 !important;
+}
+
+.editButton{
+  cursor: pointer;
+}
+
+.deleteButton{
+  cursor: pointer;
+  color: #d9534f;
+}
+
+.saveButton{
+  cursor: pointer;
+  color:  #267526
+}
+
+.cancelButton{
+  cursor: pointer;
+}
+
+.confirmDeleteButton{
+  cursor: pointer;
+  color: #9C231F // #267526
+}
+
+
+.addNewModelButton{
+  cursor: pointer;
+  font-style: normal;
+  font-size: 10px;
+}
+
+
+.dataModelDetailTable{
+  margin-bottom: 0px;
+  border-bottom: none;
+
+  .detailsRowHeader {
+    background-color: #fff;
+    border-right: 1px solid #eeeeee;
+    padding-left: 10px;
+  }
+
+  td {
+    padding-left: 5px;
+  }
+
+  .dataModelDetailsDescription {
+    white-space: pre-line;
+    word-break: break-all;
+  }
+
+}
+
+.dataClassDetailTable{
+  margin-bottom: 0px !important;
+}
+
+
+.dataClassDetailsDescription {
+  white-space: pre-line;
+  word-break: break-all;
+}
+
+
+.dataElementDetailTable{
+  margin-bottom: 0px !important;
+}
+
+.dataElementDetailsDescription{
+  white-space: pre-line;
+  word-break: break-all;
+}
+
+.classificationDetailsDescription{
+  white-space: pre-line;
+  word-break: break-all;
+}
+
+.dataTypeDetailTable{
+  margin-bottom: 0px !important;
+}
+
+.dataTypeDetailsDescription{
+  white-space: pre-line;
+  word-break: break-all;
+}
+
+
+.dataElementsTable {
+ table-layout:fixed;
+ width:100%;
+}
+
+.wizardInput{
+  padding: 6px !important;
+  height: 30px !important;
+}
+
+
+div.ui-select-container  input.wizardInput{
+  padding: 6px !important;
+  height: 30px !important;
+}
+
+
+.sample-show-hide {
+  padding:10px;
+  border:1px solid black;
+  background:white;
+}
+
+.my-tree-fade.ng-hide-remove {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+}
+
+.my-tree-fade.ng-hide {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+  opacity:0;
+}
+
+.editable-click {
+  color: #000000;
+  border-bottom: none;
+}
+
+.editable-textarea {
+  width: 100%;
+  .editable-controls {
+    width: 100%;
+    textarea.editable-input {
+      width: 80%;
+    }     
+  }
+}
+
+.menuTwoSidePanel {
+  .leftPanel {
+    height: 100%;
+    padding: 0;
+
+    .leftMenu {
+      position:fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 100% / 6; //maching col-XX-2
+      padding-top: 56px;
+      background-color: #222d32;
+      border-color: #222d32;
+      height: 100%;
+      h4 {
+        color: #4b646f;
+        margin-left: 10px;
+      }
+      .list-group-item {
+        border: none;
+        background-color: transparent;
+        border-radius: 0;
+        transition: border-color .5s, background-color .5s;
+
+        &:hover {
+          border-left: 5px solid;
+          border-left-color: darker(#4b646f,5%);
+          padding-left: 10px;
+          background-color: lighten(#222d32, 10%);
+        }
+
+        a {
+          width: 100%;
+          color: #b8c7ce;
+          text-decoration: none;
+
+          &:hover {
+            color: #ffffff;
+          }
+        }
+      }
+
+      .rightPanel {
+        height: 100%;
+      }
+
+      .resultsTitle {
+        margin-top: 10px;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+li.modelFilterItem{
+  cursor: pointer;
+}
+
+span.publiclyReadable{
+  vertical-align: middle;
+}
+
+div.publiclyReadableCheckBox{
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+
+
+span.deletedElement {
+  background-color: #f2dede;
+  border: 1px solid #FFF;
+  text-decoration: line-through;
+  padding: 2px;
+}
+
+span.newElement {
+  background-color: #dff0d8;
+  border: 1px solid #FFF;
+  padding: 2px;
+}
+
+span.updatedElement {
+  background-color: #fcf8e3;
+  border: 1px solid #FFF;
+  padding: 2px;
+}
+
+
+
+div.deletedElementTip{
+  background-color: #f2dede;
+  width:10px;
+  height:10px;
+}
+div.newElementTip{
+  background-color: #dff0d8;
+  width:10px;
+  height:10px;
+}
+
+div.updatedElementTip{
+  background-color: #fcf8e3;
+  width:10px;
+  height:10px;
+}
+
+.mcHighlighter {
+    background-color: yellow !important;
+}
+
+/*** Style the buttons ***/
+
+span.userSelector{
+  color:#777777;
+  font-style: italic;
+}
+span.userSelectorDetail{
+  font-size: 12px;
+}
+
+span.groupSelectorDetail{
+  color:#777777;
+  font-style: italic;
+  font-size: 12px;
+}
+
+span.newUserInviteEmail {
+  color:#777777;
+  font-style: italic;
+}
+
+
+.group {
+  margin-right: 2px;
+  padding: 2px 4px;
+  margin-bottom: 2px;
+  list-style: none;
+  font-size: 12px;
+  background-color: #ddd;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.searchResults {
+  .ng-table-header {
+    text-align: left;
+    font-size: 1.1em;
+  }
+  
+  .ng-table-sort-header {
+    [title] {
+      border: none;
+      pointer-events: none;
+      cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+.withSideMenu {
+  margin-left: 60px;
+}
+
+#mainContent {
+  padding-top: 56px;
+}
+
+nav {
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  -o-user-select:none;
+  user-select:none;
+
+  &.main-menu {
+    background: #222d32;
+    border-right:1px solid lighten(#222d32, 20%);
+    position:fixed;
+    padding-top: 5px;
+    top:0;
+    bottom:0;
+    height:100%;
+    left:0;
+    width:60px;
+    overflow:hidden;
+    -webkit-transition:width .05s ease;
+    transition:width .05s ease;
+    -webkit-transform:translateZ(0) scale(1,1);
+    z-index:900;
+    pointer-events:none; //Disable Hover on any sub items, except for i
+
+
+    .divider {
+      margin: 10px 0;
+    }
+
+    .fa-2x {
+      font-size: 2em;
+    }
+    
+    .fa {
+      position: relative;
+      display: table-cell;
+      width: 60px;
+      height: 36px;
+      text-align: center;
+      vertical-align: middle;
+      font-size:20px;
+    }
+
+    &:hover {
+      width:250px;
+      overflow:visible;
+    }
+
+    > ul {
+      margin:7px 0;
+
+      &.logout {
+        position:absolute;
+        left:0;
+        bottom:56px;
+      }
+
+      li {
+        position:relative;
+        display:block;
+        width:250px;
+
+        > a {
+          position:relative;
+          display:table;
+          border-collapse:collapse;
+          border-spacing:0;
+          color:#999;
+          font-family: arial;
+          font-size: 14px;
+          text-decoration:none;
+          -webkit-transform:translateZ(0) scale(1,1);
+          -webkit-transition:all .1s linear;
+          transition:all .1s linear;
+
+           > div > i {
+             pointer-events:all; //enable hover just on i
+           }
+        }
+      }
+    }
+
+    ul {
+      outline:0;
+      margin-top:56px;
+      padding:0;
+    }
+
+    li {
+      outline:0;
+      margin:0;
+      padding:0;
+
+      &:hover, &:active {
+        > a {
+          color:#fff;
+          background-color: @baseColor;
+        }
+      }
+
+    }
+
+    a {
+      &:hover, &:focus {
+        text-decoration:none;
+      }
+    }
+
+    .expanded {
+      width:250px;
+      overflow:visible;
+    }
+
+    .nav-icon {
+      position:relative;
+      display:table-cell;
+      width:60px;
+      height:36px;
+      text-align:center;
+      vertical-align:middle;
+      font-size:18px;
+    }
+
+    .nav-text {
+      position:relative;
+      display:table-cell;
+      vertical-align:middle;
+      width:190px;
+    }
+
+    .area {
+      float: left;
+      background: #e2e2e2;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.onlineUser{
+  color: #268c21;
+}
+
+.globalAccessText {
+  font-size: 12px;
+  font-style: italic;
+}
+
+
+.rebuildingIndexInProgress {
+   font-size: 75px;
+}
+
+
+.rebuildingIndexSuccess {
+  font-size: 75px;
+  color: #5cb85c;
+}
+
+
+.rebuildingIndexError {
+  font-size: 75px;
+  color: #d9534f;
+}
+
+
+.importForm {
+  font-size: 12px;
+  font-style: italic;
+}
+
+
+.importFormStep{
+  font-size: 11px;
+}
+
+.importFormStepTitle {
+  font-size: 1.1em;
+}
+
+.informationText {
+  font-size: 12px;
+  font-style: italic;
+  padding-left: 5px;
+}
+
+
+
+.foundCount{
+  background-color: yellow;
+  color: #000;
+  font-style: italic;
+  font-weight: normal;
+  font-size: 10px;
+  padding: 3px 5px !important;
+  border: 1px solid #000 ;
+  padding-left: 20px;
+}
+
+
+
+.MCElementType {
+  font-size: 11px;
+  text-decoration: none;
+  font-style: italic;
+  margin-left: 5px;
+  color: #4cae4c !important;
+}
+
+
+span.metadataNamespace{
+  font-style: italic;
+}
+
+
+th.metadataNamespaceHeader{
+  font-style: italic !important;
+}
+
+
+//This will remove the focus line around elements in Safari
+*:focus {
+  outline: none;
+}
+
+
+.multiplicity{
+  font-style: italic;
+  font-size: 12px;
+  background-color: #E8E8E8;
+  border-radius: 20%;
+  padding: 2px;
+}
+
+.unboundMultiplicity{
+  font-size:14px !important;
+  font-weight:bold !important;
+}
+
+.modelPathIcon{
+  color: #000;
+}
+
+
+
+
+#paper-html-elements {
+  position: relative;
+  border: 1px solid gray;
+  display: inline-block;
+  background: transparent;
+  overflow: hidden;
+}
+#paper-html-elements svg {
+  background: transparent;
+}
+#paper-html-elements svg .link {
+  z-index: 2;
+}
+.html-element {
+  position: absolute;
+  background: #3498DB;
+  /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
+  pointer-events: none;
+  -webkit-user-select: none;
+  border-radius: 4px;
+  border: 2px solid #2980B9;
+  box-shadow: inset 0 0 5px black, 2px 2px 1px gray;
+  padding: 5px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+.html-element select,
+.html-element input,
+.html-element button {
+  /* Enable interacting with inputs only. */
+  pointer-events: auto;
+}
+.html-element button.delete {
+  color: white;
+  border: none;
+  background-color: #C0392B;
+  border-radius: 20px;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  text-align: middle;
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+  cursor: pointer;
+}
+.html-element button.delete:hover {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+.html-element select {
+  position: absolute;
+  right: 2px;
+  bottom: 28px;
+}
+.html-element input {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: none;
+  color: #333;
+  padding: 5px;
+  height: 16px;
+}
+.html-element label {
+  color: #333;
+  text-shadow: 1px 0 0 lightgray;
+  font-weight: bold;
+}
+.html-element span {
+  position: absolute;
+  top: 2px;
+  right: 9px;
+  color: white;
+  font-size: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+.data-model-element {
+  position: absolute;
+  background: #FFF;
+  /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
+  pointer-events: none;
+  -webkit-user-select: none;
+  border: 1px solid #000;
+  z-index: 2;
+  padding: 3px;
+}
+
+.data-model-element-selected {
+  border: 2px solid #000;
+}
+
+
+.data-model-element select,
+.data-model-element input,
+.data-model-element button,
+.data-model-element span a.linkToElement{
+  /* Enable interacting with inputs only. */
+  pointer-events: auto;
+}
+
+.data-model-element div.title {
+  font-size: 11px;
+  border-bottom: 1px solid #000;
+  padding: 3px;
+}
+
+div.diagram-tool-box {
+  color: #000;
+  background-color: #DDD;
+  border: 1px solid #c4c4c4;
+  float: left;
+  font-size: 16px;
+  text-align: center;
+}
+
+div.diagram-tool-box-icon{
+  cursor: pointer;
+}
+
+
+
+//Splitter Style .................................................................
+.split p {
+  padding: 20px;
+}
+
+.split {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('../images/grips/vertical.png');
+  cursor: ew-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('../images/grips/horizontal.png');
+  cursor: ns-resize;
+}
+
+.split.split-horizontal, .gutter.gutter-horizontal {
+  height: 100%;
+  float: left;
+}
+//...............................................................................
+
+//Fix for UI problem in jointjs
+//https://stackoverflow.com/questions/34767763/jointjs-using-router-on-links-behaves-weird
+//Generally it should not happen!
+.connection-wrap{
+  fill:none;
+}
+.connection{
+  fill:none;
+}
+
+
+div.mcSelectItem {
+ padding: 3px;
+ margin: 2px;
+ cursor: pointer;
+ border: 1px solid #FFF;
+ background-color: #FFF;
+}
+
+div.mcSelectItem:hover {
+  background-color: #DDD;
+  cursor: pointer;
+}
+div.mcSelectItem.current {
+  background-color: #d9e9f7;
+  color: #000;
+  cursor: pointer;
+}
+
+div.mcSelectHolder{
+  border: 1px solid #DDD;
+  max-height:200px;
+  overflow-y:scroll;
+  position: absolute;
+  background-color: #ffffff;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.mcSelectHasError{
+  border: 1px solid #a94442;
+}
+
+
+.hasNoDataClasses{
+  font-size: 16px;
+  font-weight: bold;
+  color: #838384;
+  padding-top: 10px;
+}
+
+.hasNoDataFlow{
+  font-weight: bold;
+  color: #838384;
+  padding-top: 10px;
+}
+
+
+///...NEW MC-TABLE.....................................................................
+
+.mcTableTitle{
+  width: 100%;
+  border: 1px solid #DDD;
+  background-color: #E8E8E8;
+  line-height: 18px;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.mcTableContainer{
+  width: 100%;
+  position: relative;
+}
+
+.mcTable{
+  table-layout:fixed;
+  width: 100%;
+  margin-bottom: 5px !important;
+}
+
+ul.mcTablePagination{
+   margin:0px 0 !important;
+}
+
+
+.mcTableDeleteBtn{
+  color: #d9534f;
+}
+
+.mcTableApproveBtn{
+  color: #267526;
+}
+
+
+div.mcTablePageIndexHolder{
+  float: left;
+}
+
+div.mcTablePageSizesHolder{
+  float: right;
+}
+
+a.mcTablePaginationLink{
+  cursor:pointer;
+}
+
+
+
+i.graySort{
+  color: #DDD;
+}
+
+i.blackSort{
+  color: #000;
+}
+
+
+
+.mcTooltip{
+  min-width:250px;
+}
+
+div.noDataModel{
+  color: #686868;
+  padding: 5px;
+  .title{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .content{
+    font-style: italic;
+    padding-left: 3px;
+  }
+}
+
+div.noClassification{
+  color: #686868;
+  padding: 5px;
+  .title{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .content{
+    font-style: italic;
+    padding-left: 3px;
+  }
+}
+
+div.noFavourites{
+  color: #686868;
+  padding: 5px;
+  .title{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .content{
+    font-style: italic;
+    padding-left: 3px;
+  }
+}
+
+
+
+div.pageListBtn{
+  display: inline-block;
+  width:20px;
+  height:100%;
+  border:1px solid #DDD;
+  text-align: center;
+  margin-top:1px;
+  cursor: pointer;
+  color: #205081;
+}
+
+div.disabledPageListBtn{
+  cursor: not-allowed;
+  color: #A0A0A0;
+}
+
+i.pageListRightBtn{
+  margin-right: -2px;
+}
+
+
+i.pageListLeftBtn{
+  margin-left: -2px;
+}
+
+
+div.pageList.displayItems{
+  padding-left: 5px;
+}
+
+div.pageList.editBtn{
+  display: inline-block;
+  color: #205081;
+
+  margin-right: 3px;
+  padding:1px;
+  height:100%;
+
+  text-align: center;
+  font-size: 13px !important;
+
+  cursor: pointer;
+
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+
+}
+
+
+div.pageList.displayItems > div.pagedElement {
+  border-bottom: 1px dotted #DDD;
+  margin-bottom: 2px;
+}
+
+div.pageList.displayItems > div.pagedElement:last-of-type {
+    border-bottom: none !important;
+}
+
+
+
+tr.contentTable.dataClassRecord {
+  background-color: #F5F5F5;
+}
+
+
+.errorMessage {
+  color: #a94442
+}
+
+img.profilePicture {
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+.tooltip.profilePictureToolTip .tooltip-inner {
+  text-align: left;
+  //color: #880000;
+  //background-color: #ffff66;
+  //box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+
+.selectedDataTypesToolTip .tooltip-inner{
+  text-align: left;
+}
+
+.deletedDataModelTitle{
+  text-decoration: line-through;
+}
+
+
+.errorSubmitted {
+  font-size: 35px;
+  color: #5cb85c;
+}
+
+
+select.mcSelect {
+  text-indent: 1px;
+  text-overflow: '';
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0px 2px 2px 5px;
+  background: transparent url("data:image/svg+xml;charset=utf-8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20fill%3D%22%23555555%22%20%0A%09%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%22-261%20145.2%2024%2024%22%20style%3D%22enable-background%3Anew%20-261%20145.2%2024%2024%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cpath%20d%3D%22M-245.3%2C156.1l-3.6-6.5l-3.7%2C6.5%20M-252.7%2C159l3.7%2C6.5l3.6-6.5%22%2F%3E%0A%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+  border: 1px solid #ddd;
+
+}
+
+select.mcSelect::-ms-expand {
+  display: none;
+}
+
+
+.deletedTreeItem {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.supersededByItem {
+  opacity: 0.6;
+}
+
+.dataModelTypeIcon {
+  position:absolute;
+  top:20px;
+  right:30px;
+  cursor:pointer;
+}
+
+.filterIcon{
+  color: #777;
+}
+
+.newlyAddedDataModel{
+  border: 1px solid #ff9933;
+  border-radius: 3px;
+  padding: 1px;
+  background-color: #FFFF99;
+}
+
+.newlyAddedDataModel::after {
+  content: "New";
+  color: #ff9933;
+  font-size: 12px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+
+.tooltip.infoText .tooltip-inner{
+   text-align: left;
+}
+
+.not-allowed-cursor{
+  cursor: not-allowed;
+}
+
+.comparisonTree.hide {
+ display: none;
+}
+
+.comparisonTree.deleted {
+  text-decoration: line-through;
+  opacity: 0.6;
+  background-color: #ffbbba
+}
+
+.comparisonTree.created {
+  background-color: #c2f9c2;
+  border: 1px dashed #DDD;
+}
+
+.comparisonTree.isGhost {
+  background-color: #DDD;
+  border: 1px dashed #DDD;
+}
+
+.comparisonTree.modified {
+  background-color: #f9f9c7;
+  border: 1px dashed #DDD;
+}
+
+
+
+.comparisonRow.modified{
+  background-color: #f9f9c7;
+}
+.comparisonRow.deleted{
+  background-color: #ffbbba
+}
+.comparisonRow.created{
+  background-color: #c2f9c2;
+}
+
+
+
+.comparisonTree.nodeLabel{
+  padding: 2px;
+}
+
+.comparisonTree.nodeLabel.selected{
+  font-weight: bold;
+}
+
+.comparisonTree.node{
+  margin: 2px;
+}
+
+
+.comparisonTree.plusMinusElement{
+}
+
+.diffStatusCount{
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+
+
+
+
+
+.alias {
+  margin-right: 8px;
+  padding: 2px 8px;
+  margin-bottom: 2px;
+  list-style: none;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  display: inline-block;
+
+  > li {
+    display: inline-block;
+
+    .aliasButton {
+      &:before {
+        content: none;
+      }
+
+      padding-left: 3px;
+      color: #c62828;
+    }
+  }
+}
+.alias > li + li:before {
+  padding: 0px 0px 0px 3px;
+  color: #000;
+  content: "/";
+}
+
+
+
+ul.aliasSearchResult{
+  padding: 0px;
+  margin:2px 0px !important;
+}
+li.aliasSearchResult{
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background-color: #efefef;
+  display: inline-block;
+  margin-right: 3px;
+}
+
+
+ul.context-menu-list:not(.context-menu-root) {
+  list-style: none;
+  width: 100%;
+}
+ul.context-menu-list:not(.context-menu-root) > li {
+  width: auto;
+  padding: 5px;
+  display: block;
+  position:relative;
+  border-bottom: 1px solid #DDD;
+  font-size: 12px;
+}
+ul.context-menu-list:not(.context-menu-root) > li:last-child {
+  border-bottom: none;
+}
+
+
+.descTopBorder {
+  border-top: 1px solid #DDD;
+}
+
+//ul.context-menu-list:not(.context-menu-root) {
+//  list-style:none;
+//  width:300px;
+//}
+//ul.context-menu-list:not(.context-menu-root)  > li{
+//  width: auto;
+//  padding:5px;
+//  display:block;
+//}
+
+//ul.context-menu-list:not(.context-menu-root) {
+//  //width: 300px !important;
+//  //min-width: 300px !important;
+//  white-space: nowrap;
+//}
+
+//ul.context-menu-list:not(.context-menu-root)  > li{
+//  display: inline-block;
+//}
+
+
+
+/*****************************************************************/
+.foldersTree.hide {
+  display: none;
+}
+
+.foldersTree.deleted {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.foldersTree.nodeLabel{
+  padding: 2px 20px 2px 2px;
+  min-width: 30px;
+  //border: 1px solid red;
+}
+
+.foldersTree.nodeLabel.draggableHover{
+  padding: 1px !important;
+  border: 1px solid #ff9933;
+  //border-radius: 3px;
+  background-color: #FFFF99;
+}
+
+.foldersTree.nodeLabel.selected{
+  font-weight: bold;
+}
+
+.foldersTree.node{
+  margin: 2px;
+}
+
+.foldersTree.plusMinusElement{
+}
+
+.foldersTree.folderTreeIcon{
+  padding-right: 2px;
+}
+
+.foldersTree.deletedFolder{
+  color:#aaa;
+}
+
+
+.foldersTreeSelectorButton.removeButton.hasError{
+  border-top:1px solid #a94442;
+  border-bottom:1px solid #a94442;
+}
+
+.foldersTreeSelectorButton.openButton.hasError{
+  border-top:1px solid #a94442;
+  border-bottom:1px solid #a94442;
+  border-right:1px solid #a94442;
+}
+
+/*****************************************************************/
+div.noFilterResult{
+  color: #686868;
+  font-style: italic;
+  padding: 5px;
+}
+ul.favourites, ul.favourites ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul.favourites:focus {
+  outline-width: 0;
+}
+ul.favourites ul {
+  margin-left: 10px;
+}
+ul.favourites li {
+  margin: 0;
+  padding: 0 5px;
+  line-height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+}
+ul.favourites li:focus {
+  outline-width: 0;
+}
+.favourites.deleted {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.favourites.nodeLabel{
+  padding: 2px 20px 2px 2px;
+  min-width: 30px;
+  //border: 1px solid red;
+}
+.favourites.nodeLabel.selected{
+  font-weight: bold;
+}
+/*****************************************************************/
+.favouritesIcon {
+  color:#aaa;
+  cursor: pointer;
+}
+
+.favouritesIcon.addedToFavourite{
+  color: #ff9933;
+}
+
+a.forgotPassword:focus {
+  outline-width: 0;
+}
+
+.copyElementSuccess {
+  color: #5cb85c;
+  font-size: 26px;
+}
+
+.copyElementError {
+  color: #d9534f;
+  font-size: 26px;
+}
+
+
+.mcLinkHighlight {
+  stroke-width: 3 !important;
+  stroke: #ff9933 !important;
+}
+
+
+.dataModel.addNewDataflow{
+  border:  2px solid #d8d8d8;
+  width:200px;
+  height:50px;
+  text-align: center;
+  overflow: hidden;
+  padding-top: 5px;
+  background-color: #ededed;
+}
+
+.dataModel.addNewDataflow.rootDataModel{
+  border: 3px solid #205081 !important;
+  background-color: #e0edf9 !important;
+}
+
+
+.dataModelTitle.addNewDataflow{
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+
+.linkSuggestion.fadeOut{
+  opacity: 0.1;
+  transition: opacity 300ms linear;
+}
+
+.modelSelectorDialogueBtn{
+  font-size: 11px !important;
+}
+//
+//.editDataflowPanelBackground{
+//  background-color:#f4f4f4;
+//}
+
+.ui-dialog {
+  z-index: 9999 !important;
+}
+
+
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  -webkit-border-radius: 0 6px 6px 6px;
+  -moz-border-radius: 0 6px 6px;
+  border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+.dropdown-submenu > a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #ccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+
+.dropdown-submenu:hover > a:after {
+  border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+  float: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  -webkit-border-radius: 6px 0 6px 6px;
+  -moz-border-radius: 6px 0 6px 6px;
+  border-radius: 6px 0 6px 6px;
+}
+
+
+
+
+ul.elementHierarchy, ul.elementHierarchy ul {
+  list-style-type: none;
+  background: url(../images/simpleView/elementHierarchy/vline.png) repeat-y;
+  margin: 0;
+  padding: 0;
+}
+
+ul.elementHierarchy ul {
+  margin-left: 10px;
+}
+
+ul.elementHierarchy li {
+  margin: 0;
+  padding: 0 12px;
+  line-height: 20px;
+  background: url(../images/simpleView/elementHierarchy/node.png) no-repeat;
+  color: #369;
+}
+
+ul.elementHierarchy li.last {
+  background: #fff url(../images/simpleView/elementHierarchy/lastnode.png) no-repeat;
+}
+
+ul.elementHierarchy li:last-child {
+  background: #fff url(../images/simpleView/elementHierarchy/lastnode.png) no-repeat;
+}
+
+ul.elementHierarchy .root {
+  background: #fff !important;
+}
+
+ul.elementHierarchy li.root {
+ padding-left: 0px !important;
+}
+
+
+small.simpleView.elementType {
+  font-size: 16px;
+  text-decoration: none;
+  font-style: italic;
+  color: #4cae4c !important;
+}
+
+.simpleView.selectedResult {
+  background-color: #F5F5F5 !important;
+}
+.simpleViewHomeContainer {
+  height: calc(100vh);
+  min-height: calc(100vh);
+}
+
+/* This is used to create a fix element page on simpleViewResultElement*/
+div.simpleViewResultElement.affix{
+  top: 70px; /* Set the top position of pinned element */
+  margin-right:15px;
+
+}
+
+
+div.advancedViewLink{
+  padding: 0px !important;
+  font-size: 11px !important;
+  float:right;
+}
+
+h4.simpleViewMainLabel {
+  padding-top: 20px !important;
+}
+
+//These all handles the elementHierarchy directive .....................................................................
+div.hierarchyTree ul.hierarchyElement {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+div.hierarchyTree ul.hierarchyElement li.hierarchyElement {
+  margin-left: 15px;
+  position: relative;
+  padding-left: 5px;
+}
+div.hierarchyTree ul.hierarchyElement li.hierarchyElement.root {
+  margin-left: 0px !important;
+}
+
+ul.hierarchyElement:not(.root) li.hierarchyElement::before {
+  content: " ";
+  position: absolute;
+  width: 1px;
+  background-color: #000;
+  top: 0;
+  bottom: -12px;
+  left: -10px;
+}
+div.hierarchyTree > ul.hierarchyElement > li.hierarchyElement:first-child::before {
+  top: 12px;
+}
+ul.hierarchyElement li.hierarchyElement:not(:first-child):last-child::before {
+  display: none;
+}
+ul.hierarchyElement:not(.root) li.hierarchyElement:only-child::before {
+  display: list-item;
+  content: " ";
+  position: absolute;
+  width: 1px;
+  background-color: #000;
+  top: 0px;
+  bottom: 0px;
+  height: 13px;
+  left: -10px;
+}
+ul.hierarchyElement:not(.root) li.hierarchyElement::after {
+  content: " ";
+  position: absolute;
+  left: -10px;
+  width: 10px;
+  height: 1px;
+  background-color: #000;
+  top: 12px;
+}
+a.hierarchyElementLabel{
+  text-decoration: none;
+}
+div.hierarchyTree div.description {
+  margin-left: 5px;
+  font-style:italic;
+  font-size: 12px;
+  color: #000;
+  padding-left:20px;
+}
+div.hierarchyTree div.descriptionBorder {
+  border-left: 1px solid black;
+}
+//......................................................................................................................
+
+.simpleViewDetailTable {
+  margin-bottom: 0px;
+  border-bottom: none;
+  .simpleViewDetailHeader {
+    border-right: 1px solid #eeeeee;
+    border-left: 1px solid #eeeeee;
+    padding-left: 10px;
+    background-color: #fff;
+    font-weight: bold;
+  }
+}
+
+div.descriptionHolder p{
+ padding: 0px !important;;
+}
+
+
+
+.sortable-placeholder{
+  background-color:#f2f2f2;
+}
+
+.sortableHandler{
+  background-color: #f7f7f7;
+}
+
+i.sortableIcon{
+  color: #777777 !important;
+}
+
+
+
+
+
+///.....................................................................................................................
+
+/* The container */
+label.container {
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+label.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+label.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+label.container input:checked ~ .checkmark {
+  background-color: @baseColor;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+label.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+label.container .checkmark:after {
+  left: 8px;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
+.simpleViewFilter.dataModelItem{
+  background-color:#f9f9f9;
+}
+.simpleViewFilter.dataModelItem.selected{
+  background-color:#e8e8e8;
+}
+
+tr.simpleViewFilterTableTr td  ul {
+  padding: 0px 0px 0px 20px !important;
+}
+
+tr.simpleViewFilterTableTr > td {
+  border: 1px solid black !important;
+}
+
+tr.simpleViewFilterTableTr > th {
+  border: 1px solid black !important;
+}
+
+.flat-slider.ui-corner-all,
+.flat-slider .ui-corner-all {
+  border-radius: 0;
+}
+
+.flat-slider.ui-slider {
+  border: 0;
+  background: #DDD;
+  border-radius: 7px;
+}
+
+.flat-slider.ui-slider-horizontal {
+  height: 4px;
+}
+
+.flat-slider.ui-slider-vertical {
+  height: 15em;
+  width: 4px;
+}
+
+.flat-slider .ui-slider-handle {
+  width: 12px;
+  height: 12px;
+  background: @baseColor;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.flat-slider.ui-slider-horizontal .ui-slider-handle {
+  top: 50%;
+  margin-top: -6px;
+}
+
+.flat-slider.ui-slider-vertical .ui-slider-handle {
+  left: 50%;
+  margin-left: -6px;
+}
+
+.flat-slider .ui-slider-handle:hover {
+  opacity: 0.99;
+}
+
+.flat-slider .ui-slider-range {
+  border: 0;
+  border-radius: 7;
+  background: #a8a6a6;
+}
+
+.flat-slider.ui-slider-horizontal .ui-slider-range {
+  top: 0;
+  height: 4px;
+}
+
+.flat-slider.ui-slider-vertical .ui-slider-range {
+  left: 0;
+  width: 6px;
+}

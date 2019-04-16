@@ -1,0 +1,110 @@
+<div>
+    <mc-table
+            mc-name="metadataTable"
+            id="metadataTable"
+            mc-record-type="type"
+            mc-fetch-method="enumValuesFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Enumerations</span>
+                <div show-if-role-is-writable mc-element="parent" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="!clientSide">
+                    <button type="button" uib-tooltip="Add Enumeration"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+
+                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="clientSide">
+                    <button type="button" uib-tooltip="Add Enumeration"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+
+
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th style="max-width: 2%;width: 2%;" class="sortableHandler" show-if-role-is-writable mc-element="parent">
+                            </th>
+                            <th style="max-width: 10%;width: 10%;" show-if-role-is-writable>
+                                Group
+                            </th>
+                            <th style="cursor:pointer;max-width: 18%;width: 18%;overflow:hidden;"  columnName="key" sortable="true" filterable="true">
+                                Key
+                            </th>
+                            <th style="cursor:pointer;max-width: 22%;width: 22%;overflow:hidden;"  columnName="value" sortable="true" filterable="true">
+                                Value
+                            </th>
+                            <th style="cursor:pointer;max-width: 8%;width: 8%;overflow:hidden;" >
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="sortable">
+                    <tr ng-repeat="record in mcDisplayRecords"  ng-init="$last ? applySortable()  : angular.noop()" style="background-color: #FFF;" id="{{record.id}}">
+                        <td  show-if-role-is-writable mc-element="parent" style="max-width: 2%;width: 2%;word-wrap: break-word; cursor: move; text-align: center;" class="handle sortableHandler" title="Reorder">
+                            <i ng-if="mcTableHandler && mcTableHandler.sortType ==='' "  class="fa fa-bars sortableIcon"></i>
+                            <!--<i class="fa fa-ellipsis-v themeColor"></i>-->
+                            <!--<i class="fa fa-ellipsis-h themeColor"></i>-->
+                            <!--<i class="fa fa-arrows themeColor"></i>-->
+                        </td>
+
+                        <td  show-if-role-is-writable style="max-width: 10%;width: 10%;word-wrap: break-word; text-align: center;">
+                            <div ng-show="!record.inEdit">
+                                {{record.category}}
+                            </div>
+                            <div ng-if="record.inEdit">
+                                <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['category']}">
+                                    <input class="form-control input-sm" type="text" ng-model="record.edit.category" autocomplete="off"/>
+                                    <small ng-show="record.edit.errors && record.edit.errors['category']" class="errorMessage">{{record.edit.errors['category']}}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 18%;width: 18%;text-align: left;word-wrap: break-word;overflow:hidden;">
+                            <div ng-show="!record.inEdit">
+                                {{record.key}}
+                            </div>
+                            <div ng-if="record.inEdit">
+                                <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['key']}">
+                                    <input class="form-control input-sm" type="text" ng-model="record.edit.key" autocomplete="off"/>
+                                    <small ng-show="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 22%;width: 22%;overflow: scroll;text-align: left;word-wrap: break-word;overflow:hidden;">
+                            <div ng-show="!record.inEdit">
+                                {{record.value}}
+                            </div>
+                            <div ng-show="record.inEdit">
+                                <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['value']}">
+                                    <textarea rows="4" class="form-control input-sm" type="text" ng-model="record.edit.value"></textarea>
+                                    <small  ng-show="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 8%;width: 8%;overflow: scroll;text-align: center;word-wrap: break-word;overflow:hidden;">
+                            <div show-if-role-is-writable mc-element="parent">
+                                <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit"></mc-table-button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+

@@ -1,0 +1,16 @@
+<div style="width: 100%;">
+    <ui-select ng-model="$parent.selectedUser" tagging tagging-label="(custom 'new' label)" on-select="onSelected($item)">
+        <ui-select-match placeholder="Email address">
+            {{$select.selected.emailAddress}}
+        </ui-select-match>
+        <ui-select-choices repeat="user in model.users"
+                           refresh="refreshUsers($select.search)"
+                           refresh-delay="0">
+            <span style="margin-bottom: 5px; width:100%">
+                <span ng-bind-html="user.emailAddress | mcBold: $select.search"></span>
+                <span ng-bind-html="user.firstName | mcBold: $select.search"   class="userSelector userSelectorDetail" style="margin-left: 5px;"></span>
+                <span ng-bind-html="user.lastName | mcBold: $select.search"    class="userSelector userSelectorDetail"></span>
+            </span>
+        </ui-select-choices>
+    </ui-select>
+</div>

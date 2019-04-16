@@ -1,0 +1,205 @@
+<div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <div class="input-group">
+                    <input type="text"
+                           id="searchInput"
+                           class="form-control input-sm"
+                           autocomplete="off"
+                           ng-model="searchInput"
+                           ng-model-options='{ debounce: 500 }'
+                           placeholder="{{placeHolderText}}">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default btn-sm" type="button" ng-click="search(true)">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                    <button class="btn btn-default btn-sm"
+                            id="helpButton"
+                            ng-click="loadHelp()"
+                            type="button">
+                         <i class="fa fa-info-circle"></i>
+                    </button>
+                    <button class="btn btn-default btn-sm" type="button" ng-click="toggleAdvancedSearch()">
+                        Advanced
+                    </button>
+                </span>
+                </div>
+                <div style="width:99%">
+                    <div class="row" style="padding-top: 5px;padding-left: 15px;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div ng-if="advancedSearch" style="background-color: #efefef; margin: 0px 1px 5px 1px;border-radius: 4px;">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="showRestrictTo">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Restrict your search to:</span>
+                    <br>
+                    <div style="margin-right: 10px; width:60%;">
+                        <model-selector-tree
+                                ng-model="context"
+                                on-select="onContextSelected"
+                                placeholder="'Choose a Folder, Data Model or Data Class'"
+                                accepts="['Folder', 'DataModel', 'DataClass']">
+                        </model-selector-tree>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Domain Types</span>
+                    <br>
+                    <div style="margin-right: 10px;" ng-if="!hideDM"><input style="cursor: pointer;" type="checkbox"
+                                                                            ng-model="formData.selectedDomainTypes.DataModel"
+                                                                            ng-true-value="true" ng-false-value="false"
+                                                                            name="DataModel" ng-change="search(true)">
+                        Data Model
+                    </div>
+                    <div style="margin-right: 10px;" ng-if="!hideDC"><input style="cursor: pointer;" type="checkbox"
+                                                                            ng-model="formData.selectedDomainTypes.DataClass"
+                                                                            name="DataClass" ng-change="search(true)">
+                        Data Class
+                    </div>
+                    <div style="margin-right: 10px;" ng-if="!hideDE"><input style="cursor: pointer;"
+                                                                            type="checkbox"
+                                                                            ng-model="formData.selectedDomainTypes.DataElement"
+                                                                            name="DataElement"
+                                                                            ng-change="search()"> Data Element
+                    </div>
+                    <div style="margin-right: 10px;" ng-if="!hideDT"><input style="cursor: pointer;" type="checkbox"
+                                                                            ng-model="formData.selectedDomainTypes.DataType"
+                                                                            name="DataType" ng-change="search(true)"> Data
+                        Type
+                    </div>
+
+                    <div style="margin-right: 10px;" ng-if="!hideEV"><input style="cursor: pointer;" type="checkbox"
+                                                                            ng-model="formData.selectedDomainTypes.EnumerationValue"
+                                                                            name="DataType" ng-change="search(true)"> Enumeration Value
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Search Type</span>
+                    <br>
+                    <div style="margin-right: 10px;"><input style="cursor: pointer;" type="checkbox"
+                                                            ng-model="formData.labelOnly" name="labelOnly"
+                                                            ng-change="search(true)"> Title only <i class="fa fa-info-circle"
+                                                                                                    style="cursor: pointer;"
+                                                                                                    tooltip-placement="right"
+                                                                                                    uib-tooltip="Just search in title of the elements. Not in descriptions, metadata and aliases."></i>
+                    </div>
+                    <div style="margin-right: 10px;"><input style="cursor: pointer;" type="checkbox"
+                                                            ng-model="formData.exactMatch" name="matchCase"
+                                                            ng-change="search(true)"> Exact match
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div style="padding: 0px 10px;">
+                    <span style="font-weight: bold;">Last Updated</span>
+                    <div>
+                        <date-from-to on-select="onLastUpdatedSelect"></date-from-to>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div style="padding: 0px 10px;">
+                    <span style="font-weight: bold;">Created</span>
+                    <date-from-to on-select="onCreatedSelect"></date-from-to>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" ng-if="context && context.domainType === 'Folder'">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Classifiers</span>
+                    <br>
+                    <span style="font-size: 12px; font-style: italic;">Filter result based on the following classifier(s):</span>
+                    <div>
+                        <element-classifications
+                                on-change="onClassifierChange"
+                                classifications="formData.classifiers"
+                                editable="{$visible :true}"></element-classifications>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div>
+                <div class="mcTableTitle" ng-if="formData.showSearchResult">
+                    <span class="title">Search Result <span class="badge element-count ng-binding" style="margin:0px 3px; font-size: 12px;" aria-hidden="false">{{mcTableHandler.totalItemCount}}</span> </span>
+                </div>
+                <div class="ngTable">
+                    <div><mc-table
+                                mc-name="metadataTable"
+                                id="metadataTable"
+                                mc-record-type="'dynamic'"
+                                mc-fetch-method="fetch"
+                                mc-table-handler="mcTableHandler"
+                                mc-display-records="mcDisplayRecords"
+                                mc-page-size-input="pageSize"
+                                mc-page-number="pageIndex">
+                            <div class="mcTableMain">
+                                <div class="mcTableContainer">
+                                    <table class="table table-condensed table-bordered mcTable">
+                                        <tbody>
+                                        <tr ng-repeat="record in mcDisplayRecords">
+                                            <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                                                <div style="padding: 2px 0px">
+                                                    <div>
+                                                        <div>
+                                                            <element-link
+                                                                    show-type-title = "true"
+                                                                    new-window="!doNotOpenLinkInNewWindow"
+                                                                    mc-parent-data-model="{id:record.dataModel}"
+                                                                    mc-parent-data-class="{id:record.dataClass}"
+                                                                    mc-element="record"></element-link>
+                                                        </div>
+                                                        <div ng-if="record.aliases">
+                                                            <ul class="aliasSearchResult">
+                                                                <li style="font-size: 12px;display: inline-block;font-style: italic;">Aliases:</li>
+                                                                <li ng-repeat="alias in record.aliases"
+                                                                    class="aliasSearchResult">
+                                                                    <span class="themeColor" ng-bind-html="alias"></span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <model-path path="record.breadcrumbs"  new-window="!doNotOpenLinkInNewWindow" do-not-display-status="doNotDisplayModelPathStatus"></model-path>
+
+                                                    </div>
+                                                    <!--<span ng-if="formData.labelOnly" class="preformatText" ng-bind-html="(record.description || '(no description)')"></span>-->
+                                                    <!--<span ng-if="!formData.labelOnly" class="preformatText" ng-bind-html="(record.description || '(no description)')"></span>-->
+                                                    <markdown-text-area rows="'4'" description="record.description" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                    <!--<more-description description="{{::record.description}}"></more-description>-->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="paginationContainer">
+                                    <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+                                </div>
+                            </div>
+                        </mc-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

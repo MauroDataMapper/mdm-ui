@@ -1,0 +1,71 @@
+<div class="ngTable">
+    <table ng-table="tableParams" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td style="width:10px;text-align: left" data-title="'Status'" sortable="'disabled'" >
+                <span ng-if="row.disabled" style="font-size:11px;color: #a94442; font-weight: bold;">Disabled</span>
+                <span ng-if="!row.disabled" style="font-size:11px">Active</span>
+            </td>
+            <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3" data-title="'Email'" filter="{emailAddress: 'text'}" sortable="'emailAddress'" >
+                <a ui-sref="appContainer.adminArea.user({ id: row.id })">{{ row.emailAddress }}</a>
+            </td>
+            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'First Name'" filter="{firstName: 'text'}" sortable="'firstName'">
+                {{ row.firstName }}
+            </td>
+            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Last Name'" filter="{lastName: 'text'}" sortable="'lastName'">
+               {{ row.lastName }}
+            </td>
+            <td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-3 col-lg-3" data-title="'Organisation'" filter="{organisation: 'text'}" sortable="'organisation'">
+               {{ row.organisation }}
+            </td>
+            <!--<td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-3 col-lg-3" data-title="'Role in Organisation'" filter="{jobTitle: 'text'}">-->
+                <!--{{ row.jobTitle }}-->
+            <!--</td>-->
+            <td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-3 col-lg-3" data-title="'Groups'">
+                <span ng-repeat="group in row.groups">
+                    <div class="group">
+                        <a ui-sref="appContainer.adminArea.group({ id: group.id })">{{ group.label }}</a>
+                    </div>
+                </span>
+            </td>
+            <td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-2 col-lg-2" data-title="'Role'" sortable="'userRole'">
+                {{ROLES[row.userRole]}}
+            </td>
+            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="white-space: nowrap">
+                <div style="float: right;margin-bottom: 3px">
+
+                    <button type="button"
+                            class="btn btn-default btn-xs"
+                            uib-tooltip="Reset Password"
+                            ng-click="resetPassword(row)">
+                        <i class="fa fa-key editButton themeColor"></i>
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-default btn-xs"
+                            uib-tooltip="Edit"
+                            ng-click="edit(row)">
+                        <i class="fa fa-edit editButton themeColor"></i>
+                    </button>
+
+                    <button ng-if="!row.disabled"
+                            type="button"
+                            class="btn btn-default btn-xs"
+                            uib-tooltip="Deactivate"
+                            ng-click="toggleDeactivate(row, $index)">
+                        <i class="fa fa-ban confirmDeleteButton"></i>
+                    </button>
+
+                    <button ng-if="row.disabled"
+                            type="button"
+                            class="btn btn-default btn-xs"
+                            uib-tooltip="Activate"
+                            ng-click="toggleDeactivate(row, $index)">
+                        <i class="fa fa-check saveButton"></i>
+                    </button>
+
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

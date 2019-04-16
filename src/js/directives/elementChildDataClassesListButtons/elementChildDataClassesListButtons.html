@@ -1,0 +1,46 @@
+<div>
+
+    <div style="float: left;" ng-show="deletePending">
+
+        <span  ng-show="textLocation == 'left'"  style="font-size: 11px !important;">Are you sure?</span>
+
+        <!-- Cancel Delete-->
+        <button type="button"
+                class="btn btn-default btn-xs themeColor"
+                ng-click="cancelDeleteClicked()">
+            <i class="fa fa-times cancelButton"></i>
+        </button>
+
+        <!-- Confirm Delete -->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                ng-click="confirmDeleteClicked()">
+            <i class="fa fa-check saveButton"></i>
+        </button>
+
+
+        <span  ng-show="textLocation == 'bottom'"  style="font-size: 11px !important;"><br>Are you sure?</span>
+    </div>
+
+
+    <div class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; float: left; margin-right:8px;" ng-if="deleteInProgress">
+        <a style="font-size: 14px; text-decoration: none;">
+            <i class="fa fa-refresh fa-spin"></i>
+        </a>
+    </div>
+
+    <div style="float: left;" ng-hide="deletePending">
+        <button type="button" class="btn btn-default btn-xs" ng-click="onAskDelete()" ng-disabled="deleteInProgress">
+            <i class="fa fa-trash-o deleteButton"></i>
+        </button>
+    </div>
+
+
+    <div  id="addContent" style="float: left;" ng-hide="deletePending">
+        <div style="float: right; margin-left: 2px;">
+            <button type="button" class="btn btn-default btn-xs" ng-click="add()" ng-disabled="deleteInProgress">
+                <i class="fa fa-plus themeColor"></i>
+            </button>
+        </div>
+    </div>
+</div>

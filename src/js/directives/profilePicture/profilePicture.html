@@ -1,0 +1,13 @@
+
+<div>
+    <img ng-if="user.profilePicture"
+         class="profilePicture"
+         uib-tooltip-html="'{{dynamicTooltipText}}'"
+         tooltip-class = "profilePictureToolTip"
+         ng-src="data:{{user.profilePicture.fileType}};base64,{{user.profilePicture.fileContents | byteArrayToBase64}}"/>
+    <span ng-if="!user.profilePicture"
+       style="cursor: pointer; font-size: 18px;"
+       uib-tooltip-html="'{{dynamicTooltipText}}'"
+       tooltip-class = "profilePictureToolTip"
+       class="glyphicon glyphicon-user profilePicture themeColor"></span>
+</div>

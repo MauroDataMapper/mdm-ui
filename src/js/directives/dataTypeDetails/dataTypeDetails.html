@@ -1,0 +1,146 @@
+<div class="panel panel-default">
+    <form editable-form name="editableForm" onaftersave="formAfterSave()" onbeforesave="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body panel-table">
+            <h4>
+                <div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
+                        <span class="xeditableInput">
+                            <span editable-text="mcDataTypeObject.label"
+                                  e-name="label"
+                                  e-style="width: 99%"
+                                  class="dataTypeDetailsLabel"
+                                  ng-bind-html="mcDataTypeObject.label | mchighlighter:$root.searchCriteria"
+                                  onbeforesave="validateLabel($data)"></span>
+                        </span>
+                    </div>
+                </div>
+            </h4>
+
+            <small class="elementDetailMCType">Data Type</small><br>
+            <span style="font-size: 11px;font-style: italic" class="dataTypeDetailsLastUpdate">Last Update: {{::mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+        </div>
+        <table class="table table-bordered table-condensed dataTypeDetailTable">
+            <tbody>
+                <tr>
+                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                    <td>
+                        <div style="width:50%">
+                            <element-alias
+                                    in-edit-mode="editableForm.$visible"
+                                    aliases="mcDataTypeObject.editAliases"></element-alias>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader  col-md-2">Description</th>
+                    <td class="elementDetailDescription">
+
+                        <markdown-text-area mc-editable-form="editableForm" mc-element="mcDataTypeObject" mc-property="'description'"></markdown-text-area>
+
+                        <!--<span class="xeditableTextArea">-->
+                            <!--<span  ng-show="editableForm.$visible"-->
+                                   <!--editable-textarea="mcDataTypeObject.description"-->
+                                   <!--e-name="description"-->
+                                   <!--e-style="width: 99%;"-->
+                                   <!--e-rows="10"-->
+                                   <!--e-ng-keyup="descriptionKeyUp($event)"-->
+                                   <!--onbeforesave="validateValue($data,row)"><p class="dataClassDetailsDescription" ng-bind-html="mcDataTypeObject.description  | mchighlighter:$root.searchCriteria"></p></span>-->
+                             <!--</span>-->
+                        <!--<div style="font-style: italic; cursor: pointer;font-size: 11px; color: #777777;">-->
+                            <!--<div style="float: left; margin-bottom: 10px;" ng-show="editableForm.$visible" >-->
+                                <!--<span><input type="checkbox" style="font-style: italic; cursor: pointer;" ng-model="showMarkDownPreview"> Show Markdown Preview</span>-->
+                                <!--<span style="padding-left: 10px;"><a ng-click="showAddElementToMarkdown()">Add Element</a> </span>-->
+                            <!--</div>-->
+                            <!--<div style="float: right; margin-bottom: 10px;margin-right: 15px;" ng-show="editableForm.$visible">-->
+                                <!--[Alt text](attachment.png)&nbsp;&nbsp;**Strong**&nbsp;&nbsp;#Heading-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div style="clear: both;">-->
+                            <!--<span markdown="editableForm.$data.description" ng-show="(showMarkDownPreview && editableForm.$visible) || (!editableForm.$visible)" makdown></span>-->
+                        <!--</div>-->
+                        
+                        <!--<span class="xeditableTextArea">-->
+                            <!--<span editable-textarea="mcDataTypeObject.description"-->
+                                  <!--e-name="description"-->
+                                  <!--e-style="width: 99%"-->
+                                  <!--e-rows="5">-->
+                                    <!--<p ng-bind-html="mcDataTypeObject.description  | mchighlighter:$root.searchCriteria" class="dataTypeDetailsDescription"></p>-->
+                            <!--</span>-->
+                        <!--</span>-->
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader  col-md-2">DataModel</th>
+                    <td class="elementDetailDescription">
+                        <model-path path="::mcDataTypeObject.breadcrumbs"></model-path>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader  col-md-2">Type</th>
+                    <td>
+                        {{allDataTypesMap[mcDataTypeObject.domainType]["displayLabel"]}}
+                        <element-data-type element-data-type="mcDataTypeObject"
+                                           hide-name="true"
+                                           show-type-name="true"
+                                           only-show-ref-data-class="true"
+                                           hide-enum-list="true"></element-data-type>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
+                    <td>
+                        <element-classifications classifications="mcDataTypeObject.classifiers" editable="editableForm"></element-classifications>
+                    </td>
+                </tr>
+
+
+                <!--<tr ng-show="!editableForm.$visible">-->
+                    <!--<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">-->
+                        <!--Links-->
+                    <!--</th>-->
+                    <!--<td>-->
+                        <!--<div style="width: 100%;" ng-if="mcDataTypeObject">-->
+                            <!--<all-links-in-paged-list parent="mcDataTypeObject" show-description="true" show-no-links-message="true" type="'dynamic'"></all-links-in-paged-list>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+
+
+                <tr show-if-role-is-writable mc-element="mcDataTypeObject">
+                    <td colspan="2" style="text-align: right;">
+                        <div style="float: right">
+                            <editable-form-buttons
+                                    hide-edit="true"
+                                    hide-delete="true"
+                                    on-cancel-edit="onCancelEdit"
+                                    editable="editableForm"
+                                    text-location="left">
+                            </editable-form-buttons>
+                        </div>
+                        <div style="float: right">
+                            <div  ng-show="!editableForm.$visible && !editableForm.$deletePending" class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                <button uib-tooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                        ng-click="editableForm.$show();"
+                                        ng-show="!editableForm.$visible && !editable.$deletePending" ng-disabled="deleteInProgress" uib-dropdown-toggle>
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div style="float: right">
+                            <div  ng-show="!editableForm.$visible && !editableForm.$deletePending" class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                <button uib-tooltip="Delete" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                        ng-click="askToDelete()"
+                                        ng-show="!editableForm.$visible && !editable.$deletePending" ng-disabled="deleteInProgress" uib-dropdown-toggle>
+                                    <i class="fa fa-trash-o deleteButton" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </form>
+</div>

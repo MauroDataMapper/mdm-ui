@@ -1,0 +1,23 @@
+<div>
+    <ui-select ng-model="$parent.selectedElement"
+               theme="bootstrap"
+               ng-disabled="disabled || allElements.length == 0"
+               style="min-width: 300px;"
+               on-select="onSelect($item, $model)"
+               ng-required="true" >
+
+        <ui-select-match allow-clear="true" placeholder="Select or search ...">
+            {{$select.selected.label}}
+        </ui-select-match>
+
+        <ui-select-choices
+                repeat="element in $parent.allElements | propsFilter: {label: $select.search, description: $select.search}">
+            <span ng-bind-html="element.label | highlight: $select.search"></span>
+            <div>
+                <small style="font-style: italic;">
+                    <span ng-bind-html="element.description | highlight: $select.search"></span>
+                </small>
+            </div>
+        </ui-select-choices>
+    </ui-select>
+</div>

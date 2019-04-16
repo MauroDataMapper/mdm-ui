@@ -1,0 +1,131 @@
+<div>
+    <mc-table
+            mc-name="annotationTable"
+            id="annotationTable"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="annotationFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Comments</span>
+                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+                    <button type="button" uib-tooltip="Add Comment"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()" ng-if="access && access.canAddAnnotation">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th style="cursor:pointer;max-width: 90%;width: 90%;" columnName="lastUpdated" sortable="true" filterable="false">
+                            </th>
+                        </tr>
+                        <!--<tr class="mcTableFilter">-->
+                            <!--<td style="cursor:pointer;max-width: 90%;width: 90%;">-->
+                                <!--<input class="form-control input-sm" type="text">-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in mcDisplayRecords">
+                            <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                                <div ng-show="!record.inEdit">
+                                    <div class="annotation-item-header">
+                                        <profile-picture user="record.createdBy"></profile-picture>
+                                        <span class="annotation-username">{{record.createdBy.firstName}}&nbsp;{{record.createdBy.lastName}}</span>
+                                        <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
+                                    </div>
+                                    <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
+                                    <div style="margin-left: 5px;"><markdown-text-area description="record.description" in-edit-mode="false" rows="'4'"></markdown-text-area></div>
+                                    <div>
+                                        <button class="btn btn-xs btn-default" ng-click="showChildren(record)" ng-hide="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
+                                            <i class="fa fa-comment themeColor"></i>&nbsp;<span ng-show="record.childAnnotations.length != 0">{{record.childAnnotations.length}}</span> ...
+                                        </button>
+                                    </div>
+                                    <div style="padding-top: 5px;">
+                                        <div ng-repeat="childAnnotation in record.childAnnotations" ng-show="record.show">
+                                            <div class="annotation-item">
+                                                <div class="annotation-child-item-header">
+                                                    <profile-picture user="childAnnotation.createdBy"></profile-picture>
+                                                    <span class="annotation-username">{{childAnnotation.createdBy.firstName}}&nbsp;{{childAnnotation.createdBy.lastName}}</span>
+                                                    <span class="annotation-date">{{::childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
+                                                    <div style="float: right;margin-right: 5px">
+                                                    </div>
+                                                </div>
+                                                <div style="padding:5px 5px 5px 10px;">
+                                                    <markdown-text-area description="childAnnotation.description" in-edit-mode="false" rows="'4'"></markdown-text-area>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="annotation-item-bottom-line" ng-if="access && access.canAddAnnotation">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="annotation-item" ng-if="record.show && access && access.canAddAnnotation">
+                                            <div class="annotation-child-item-header">
+                                                <span ng-if="currentUser">
+                                                    <span class="annotation-username">{{currentUser.firstName}}&nbsp;{{currentUser.lastName}}</span>
+                                                </span>
+                                                <span ng-if="!currentUser">
+                                                    <span class="annotation-username">Guest</span>
+                                                </span>
+
+                                            </div>
+                                            <div style="padding-left: 10px;">
+                                                <!--<textarea rows="'4'" class="form-control annotation-description" ng-model="record.newChildText"></textarea>-->
+                                                <markdown-text-area description="record.newChildText" in-edit-mode="true" rows="'4'"></markdown-text-area>
+                                                <div style="margin:3px 0px;">
+                                                    <button class="btn btn-xs btn-default" ng-click="addChild(record)"
+                                                            ng-disabled="record.newChildText.length == 0">
+                                                        <i class="fa fa-check saveButton"></i>&nbsp;Submit
+                                                    </button>
+                                                    <button class="btn btn-xs btn-default" ng-click="showChildren(record)">
+                                                        <i class="fa fa-times"></i>&nbsp;Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-show="record.inEdit">
+                                    <div>
+                                        <label>Title * :</label>
+                                        <input class="form-control" ng-model="record.edit.label" autocomplete="off"/>
+                                    </div>
+                                    <div>
+                                        <label>Description :</label>
+                                        <markdown-text-area description="record.edit.description" in-edit-mode="true" rows="'4'"></markdown-text-area>
+
+                                        <!--<textarea rows="'4'" class="form-control annotation-description"-->
+                                                  <!--ng-model="record.edit.description"></textarea>-->
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        <mc-table-button
+                                                record="record"
+                                                index="$index"
+                                                save="saveParent"
+                                                cancel-edit="cancelEdit">
+                                        </mc-table-button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+

@@ -1,0 +1,47 @@
+<div style="min-width: 400px;">
+    <div style="float:left; margin-left: 10px;">
+        <p class="input-group" style="width:160px;">
+            <input type="text" class="form-control input-sm"
+                   uib-datepicker-popup="{{format}}"
+                   ng-model="dtFrom"
+                   is-open="popup1.opened"
+                   datepicker-options="date1Options"
+                   ng-required="true"
+                   show-button-bar="false"
+                   date-disabled="disabled(date, mode)"
+                   show-weeks="false"
+                   alt-input-formats="altInputFormats"/>
+            <span class="input-group-btn">
+             <button type="button" class="btn btn-default btn-sm" ng-click="clear1()"><i
+                     class="glyphicon glyphicon-remove"></i></button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+
+          </span>
+        </p>
+    </div>
+    <div  style="float:left; margin-left: 10px;padding-top: 5px;">
+        <span>To</span><br>
+    </div>
+    <div  style="float:left; margin-left: 10px;">
+        <p class="input-group" style="width:160px;">
+            <input type="text" class="form-control input-sm"
+                   uib-datepicker-popup="{{format}}"
+                   ng-model="dtTo"
+                   is-open="popup2.opened"
+                   datepicker-options="date2Options"
+                   ng-required="true"
+                   show-button-bar="false"
+                   date-disabled="disabled(date, mode)"
+                   show-weeks="false"
+                   alt-input-formats="altInputFormats"/>
+            <span class="input-group-btn">
+            <button type="button" class="btn btn-default btn-sm" ng-click="clear2()"><i
+                    class="glyphicon glyphicon-remove"></i></button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="open2()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+
+          </span>
+        </p>
+    </div>
+</div>

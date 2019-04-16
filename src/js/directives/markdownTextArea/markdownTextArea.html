@@ -1,0 +1,64 @@
+<div>
+
+    <div ng-if="!mcEditableForm">
+        <div>
+            <textarea class="markdownTextArea form-control"
+                      ng-if="inEditMode"
+                      ng-model="formData.description"
+                      style="width:99%;"
+                      ng-keyup="descriptionKeyUp($event)"
+                      ng-change="onDescriptionChange($event)"
+                      ng-attr-rows="{{rows ? rows : '10'}}">
+            </textarea>
+        </div>
+        <div style="font-style: italic; cursor: pointer;font-size: 11px; color: #777777;">
+            <div style="float: left; margin-bottom: 10px;" ng-if="inEditMode">
+            <span><input type="checkbox" style="font-style: italic; cursor: pointer;"
+                         ng-model="formData.showMarkDownPreview"> Show Markdown Preview</span>
+                <span style="padding-left: 10px;"><a ng-click="showAddElementToMarkdown()">Add Element</a> </span>
+            </div>
+
+            <div ng-if="!hideHelpText">
+                <div style="float: right; margin-bottom: 10px;margin-right: 15px;"
+                     ng-if="inEditMode">
+                    [Alt text](attachment.png)&nbsp;&nbsp;**Strong**&nbsp;&nbsp;#Heading
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;">
+            <span markdown="formData.description" ng-if="(formData.showMarkDownPreview && inEditMode) || (!inEditMode)" makdown></span>
+        </div>
+    </div>
+
+
+    <div ng-if="mcEditableForm">
+        <div class="xeditableTextArea">
+            <span   ng-if="mcEditableForm.$visible"
+                    editable-textarea="mcElement[mcProperty]"
+                    e-name="{{mcProperty}}"
+                    e-style="width: 99%;"
+                    e-rows="{{rows ? rows : '10'}}"
+                    e-class="form-control"
+                    e-ng-keyup="descriptionKeyUp($event)"></span>
+            </span>
+        </div>
+
+        <div style="font-style: italic; cursor: pointer;font-size: 12px; color: #777777;">
+            <div style="float: left; margin-bottom: 10px;" ng-if="mcEditableForm.$visible">
+            <span><input type="checkbox" style="font-style: italic; cursor: pointer;"
+                         ng-model="formData.showMarkDownPreview"> Show Markdown Preview</span>
+                <span style="padding-left: 10px;"><a ng-click="showAddElementToMarkdown()">Add Element</a> </span>
+            </div>
+            <div ng-if="!hideHelpText">
+                <div style="float: right; margin-bottom: 10px;margin-right: 15px;" ng-if="inEditMode || mcEditableForm.$visible">
+                    <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">GitHub Markdown guide</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="clear: both;">
+            <span markdown="mcEditableForm.$data[mcProperty]" ng-if="mcEditableForm.$visible && formData.showMarkDownPreview" makdown></span>
+            <span markdown="mcElement[mcProperty]" ng-if="!mcEditableForm.$visible" makdown></span>
+        </div>
+    </div>
+</div>

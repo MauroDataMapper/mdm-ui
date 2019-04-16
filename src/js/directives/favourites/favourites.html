@@ -1,0 +1,64 @@
+<div style="padding: 5px 2px;">
+    <div class="input-group">
+        <input type="text"
+               class="form-control input-sm"
+               ng-model="formData.filterCriteria"
+               placeholder="Search for..."
+               ng-keyup="onSearchInputKeyDown($event)">
+        <span class="input-group-btn">
+            <button class="btn btn-default btn-sm themeColor"
+                    type="button"
+                    ng-click="search()">
+                <i class="glyphicon glyphicon-search"></i>
+            </button>
+        </span>
+    </div>
+    <ul class="favourites" style="padding: 5px;">
+        <li class="favourites" ng-repeat="favourite in favourites">
+
+            <element-icon element="favourite" >
+            </element-icon>
+
+            <!--<i ng-click='nodeClick($event, favourite)'-->
+               <!--ng-dblclick='nodeDbClick($event, favourite)'-->
+               <!--ng-if="favourite.domainType === 'Folder'"-->
+               <!--ng-class="{'foldersTree folderTreeIcon fa':true,'themeColor': !favourite.deleted, 'deletedFolder':favourite.deleted , 'fa-folder':!isOpen(favourite), 'fa-folder-open':isOpen(favourite)}"></i>-->
+
+            <!--<i ng-click='nodeClick($event, favourite)'-->
+               <!--ng-dblclick='nodeDbClick($event, favourite)'-->
+               <!--ng-if="favourite.domainType === 'DataModel' && favourite.type==='Data Standard'"-->
+               <!--ng-class="{'foldersTree folderTreeIcon fa fa-file-text-o':true,'themeColor': !favourite.deleted, 'deletedFolder':favourite.deleted}"></i>-->
+
+            <!--<i ng-click='nodeClick($event, favourite)'-->
+               <!--ng-dblclick='nodeDbClick($event, favourite)'-->
+               <!--ng-if="favourite.domainType === 'DataModel' && favourite.type==='Data Asset'"-->
+               <!--ng-class="{'foldersTree folderTreeIcon fa fa-database':true,'themeColor': !favourite.deleted, 'deletedFolder':favourite.deleted}"></i>-->
+
+            <!--<i ng-click='nodeClick($event, favourite)'-->
+               <!--ng-dblclick='nodeDbClick($event, favourite)'-->
+               <!--ng-if="favourite.domainType === 'Terminology'"-->
+               <!--ng-class="{'foldersTree folderTreeIcon fa fa-book':true,'themeColor': !favourite.deleted, 'deletedFolder':favourite.deleted}"></i>-->
+
+            <span
+                    context-menu="menuOptions"
+                    ng-right-click="rightClick(favourite)"
+                    ng-click='nodeClick($event, favourite)'
+                    ng-dblclick='nodeDbClick($event, favourite)'
+                    ng-class="{'nodeLabel favourites':true, 'deleted':favourite.deleted, 'selected':favourite.selected, 'supersededByItem':favourite.superseded}"
+                    ng-bind-html="favourite.label | mchighlighter:formData.filterCriteria">
+            </span>
+
+        </li>
+    </ul>
+    <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" ng-if="reloading">
+        <div style="position: absolute;top:30%;left:40%;">
+            <a style="font-size: 75px;" class="themeColor">
+                <i class="fa fa-refresh fa-spin"></i>
+            </a>
+        </div>
+    </div>
+    <div ng-if="favourites && favourites.length ===0 && !reloading" class="noFavourites">
+        <div class="title">You don't currently have any favourite Data Models.</div>
+        <div class="content">* To add a favourite, click on the star beside its name in the details panel, or right-click on the model in Models tree view.</div>
+    </div>
+</div>

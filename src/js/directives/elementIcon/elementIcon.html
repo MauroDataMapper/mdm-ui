@@ -1,0 +1,7 @@
+<i ng-class="{'foldersTree folderTreeIcon fa':true,
+              'themeColor': !element.deleted,
+              'deletedFolder':element.deleted ,
+              'fa-database':    element.domainType === 'DataModel' && element.type === 'Data Asset',
+              'fa-file-text-o': element.domainType === 'DataModel' && element.type === 'Data Standard',
+              'fa-book': element.domainType === 'Terminology',
+              'fa-folder':   element.domainType === 'Folder'}"></i>

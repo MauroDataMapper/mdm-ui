@@ -1,0 +1,268 @@
+<div class="leftTab">
+    <div class="container-inner">
+        <uib-tabset active="activeTab">
+            <uib-tab select="tabSelected('models')">
+                <uib-tab-heading>
+                    <i class="fa fa-list"></i> Models
+                </uib-tab-heading>
+                <div  style="margin-top: 2px;">
+                    <div style="position: relative;">
+                        <div style="width: 100%;float: left;">
+                            <div class="input-group" >
+                                <input type="text"
+                                       class="form-control input-sm"
+                                       ng-model="formData.filterCriteria"
+                                       ng-disabled="levels.current === 1"
+                                       placeholder="Search for..."
+                                       ng-keyup="onSearchInputKeyDown($event)">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-sm themeColor"
+                                            type="button"
+                                            ng-disabled="levels.current === 1"
+                                            ng-click="search()"
+                                            uib-tooltip="Search">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                    <button ng-if="isLoggedIn()"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            ng-disabled="levels.current === 1"
+                                            ng-click="toggleFilterMenu()"
+                                            uib-tooltip="Filters">
+                                        <i class="fa fa-filter" ng-class="{'themeColor':!showFilters, 'filterIcon':showFilters}"></i>
+                                    </button>
+
+                                    <button ng-if="isLoggedIn()"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            ng-disabled="levels.current === 1"
+                                            ng-click="reloadTree()">
+                                        <i class="fa fa-refresh themeColor" uib-tooltip="Reload Data Models Tree" tooltip-placement="bottom-left"></i>
+                                    </button>
+
+                                    <!--<button class="btn btn-default btn-sm"-->
+                                            <!--type="button"-->
+                                            <!--ng-click="back()">-->
+                                        <!--<i class="fa fa-arrow-left themeColor"></i>-->
+                                    <!--</button>-->
+
+                                    <!--<button class="btn btn-default btn-sm"-->
+                                            <!--type="button"-->
+                                            <!--ng-click="changeState('modelscomparison', true)">-->
+                                        <!--<i class="fa fa-arrow-right themeColor"></i>-->
+                                    <!--</button>-->
+
+                                    <button show-if-role-is-writable
+                                            tooltip-placement="top-left"
+                                            uib-tooltip="Export DataModel(s)"
+                                            tooltip-class="mcTooltip"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            ng-click="changeState('datamodelsexport')">
+                                        <i class="fa fa-download addNewModelButton themeColor"></i>
+                                    </button>
+
+                                    <button show-if-role-is-writable
+                                            tooltip-placement="top-left"
+                                            uib-tooltip="Import a DataModel from JSON, SQL,..."
+                                            tooltip-class="mcTooltip"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            ng-click="changeState('import')">
+                                        <i class="fa fa-upload addNewModelButton themeColor"></i>
+                                    </button>
+                                    <button show-if-role-is-writable
+                                            tooltip-placement="top-left"
+                                            uib-tooltip="Create a new Folder"
+                                            tooltip-class="mcTooltip"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            ng-disabled="levels.current === 1"
+                                            ng-click="onAddFolder()">
+                                        <i class="fa fa-plus addNewModelButton themeColor"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div ng-if="isLoggedIn() && showFilters"
+                             style="z-index: 100;background-color: #f9f9f9;clear: both; padding: 2px; border: 1px solid #DDD;font-size: 12px; cursor: pointer;position: absolute;top: 28px;width: 100%;">
+                            <div style="padding: 3px;">
+                                <input type="checkbox"
+                                       style="cursor:pointer;"
+                                       name="showSupersededModels"
+                                       ng-change="toggleFilters('showSupersededModels')"
+                                       ng-model="showSupersededModels"> Show <strong>Superseded</strong> Data Models
+                            </div>
+                            <div ng-if="isAdmin" style="padding: 3px;">
+                                <input type="checkbox"
+                                       style="cursor:pointer;"
+                                       name="showDeletedModels"
+                                       ng-change="toggleFilters('showDeletedModels')"
+                                       ng-model="showDeletedModels"> Show <strong>Deleted</strong> Data Models
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div  style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: scroll">
+
+                    <div style="margin:3px 0px 0px 0px" ng-show="filteredModels && filteredModels.children && filteredModels.children.length!=0">
+                        <button class="btn btn-default btn-xs"
+                                type="button"
+                                ng-disabled="levels.current === 0"
+                                ng-click="levels.folders()">
+                            <i class="fa fa-arrow-left themeColor"></i>
+                        </button>
+
+                        <button class="btn btn-default btn-xs"
+                                type="button"
+                                ng-disabled="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
+                                ng-click="levels.focusedElement()">
+                            <i class="fa fa-arrow-right themeColor"></i>
+                        </button>
+                    </div>
+
+
+
+                    <div ng-if="filteredModels && !reloading">
+
+
+
+                        <folders-tree-2
+                                      in-search-mode="inSearchMode"
+                                      enable-local-storage="true"
+                                      node="filteredModels"
+                                      search-criteria="searchText"
+                                      tree-name="'folders'"
+                                      on-compare-to="onCompareTo"
+                                      load-models-to-compare="loadModelsToCompare"
+                                      enable-drag="true"
+                                      enable-drop="true"
+                                      enable-context-menu="true"
+                                      on-add-folder="onAddFolder"
+                                      on-delete-folder="onDeleteFolder"
+                                      on-add-data-model="onAddDataModel"
+                                      on-add-child-data-class="onAddChildDataClass"
+                                      on-add-child-data-element="onAddChildDataElement"
+                                      on-add-child-data-type="onAddChildDataType"
+                                      on-node-db-click="onNodeDbClick"
+                                      on-node-click="onNodeClick"></folders-tree-2>
+                    </div>
+                    <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" ng-if="reloading">
+                        <div style="position: absolute;top:30%;left:40%;">
+                            <a style="font-size: 75px;" class="themeColor">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!--<div my-tree-multi-level-->
+                         <!--tree-name="'models'"-->
+                         <!--children="filteredModels"-->
+                         <!--style="padding-top: 4px;"-->
+                         <!--on-select="modelTreeOnSelect"-->
+                         <!--on-db-click="modelTreeOnDbClick"-->
+                         <!--on-add-data-model="addDataModel"-->
+                         <!--on-add-child-data-class="modelTreeOnAddChildDataClass"-->
+                         <!--on-add-data-element="modelTreeOnAddDataElement"-->
+                         <!--on-add-data-type="modelTreeOnAddDataType"-->
+                         <!--on-compare-to="modelTreeOnCompareTo"-->
+                         <!--load-models-to-compare="modelTreeLoadModelsToCompare"-->
+                         <!--hide-spinner="!reloading"-->
+                         <!--select-on-state-change="true">-->
+                    <!--</div>-->
+                    <div ng-show="filteredModels && filteredModels.children && filteredModels.children.length==0">
+                        <div ng-if="!isLoggedIn()">
+                            <div  class="noDataModel">
+                                <div class="title">
+                                    There are no Data Models to display publicly.
+                                </div>
+                                <div class="content">
+                                    * Please login or register to view Data Models.
+                                </div>
+                            </div>
+
+                        </div>
+                        <div ng-if="isLoggedIn()">
+                            <div  class="noDataModel">
+                                <div class="title">
+                                    There are no Data Models to display.
+                                </div>
+                                <div class="content">
+                                    Please ask Administrator (or Data Model owner) to grant you access.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab select="tabSelected('classifications')">
+                <uib-tab-heading>
+                    <i class="fa fa-sitemap"></i> Classifications
+                </uib-tab-heading>
+                <div  style="margin-top: 2px;">
+                    <div>
+                        <div style="width: 100%;float: left;">
+                            <div class="input-group" >
+                                <input type="text" class="form-control input-sm" ng-model="formData.ClassificationFilterCriteria" placeholder="Search for..." ng-change="filterClassifications()">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-sm themeColor" type="button" ng-click="filterClassifications()">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                    <button show-if-role-is-writable class="btn btn-default btn-sm" type="button" uib-tooltip="Create a new Classification" tooltip-class="mcTooltip" ng-click="addClassifier()">
+                                        <i class="fa fa-plus addNewModelButton themeColor"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 0px);overflow-y: scroll">
+                    <div my-tree
+                         tree-name="'classifiers'"
+                         children="allClassifiers"
+                         style="padding-top: 4px;"
+                         on-select="classifierTreeOnSelect"
+                         select-on-state-change="true">
+                    </div>
+                    <div ng-show="allClassifiers && allClassifiers.length==0">
+                        <div ng-if="!isLoggedIn()">
+                            <div  class="noClassification">
+                                <div class="title">
+                                    There are no Classifications to display publicly.
+                                </div>
+                                <div class="content">
+                                    * Please login or register to view Classifications.
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="isLoggedIn()">
+                            <div  class="noClassification">
+                                <div class="title">
+                                    There are no Classifications to display.
+                                </div>
+                                <div class="content">
+                                    Please ask Administrator (or Classification owner) to grant you access.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </uib-tab>
+            <uib-tab select="tabSelected('favourites')" ng-if="isLoggedIn()">
+                <uib-tab-heading>
+                    <i class="fa fa-star"></i> Favourites
+                </uib-tab-heading>
+                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 0px);overflow-y: scroll" ng-if="currentTab === 'favourites'">
+                    <favourites
+                            on-favourite-db-click="onFavouriteDbClick"
+                            on-favourite-click="onFavouriteClick"
+                            favourites="allFavourites">
+                    </favourites>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+<div>
+    <div>
+        <div style="margin:12px 10px !important;" ng-if="showRangeSlider">
+            <date-range-slider min="0" max="100" values="chartData.originalLabels" on-stop="onStop"></date-range-slider>
+        </div>
+    </div>
+    <div style="width:100% !important; height: 200px !important">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <div style="width:100%; text-align: right;" ng-if="showMoreDetailsBtn">
+        <button type="button" class="btn btn-default btn-xs" ng-click="moreDetails()">
+            More Details
+        </button>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+<div>
+    <span ng-show="elementDataType.domainType == 'PrimitiveType'">
+        <a class="dataTypePrimitive" ng-href="{{link}}"  ng-hide="hideName"><span ng-bind-html="elementDataType.label | mchighlighter:$root.searchCriteria"></span></a><span class="dataTypeLabel dataTypePrimitive" ng-hide="hideName">(Primitive)</span>
+    </span>
+
+
+    <span ng-show="elementDataType.domainType == 'EnumerationType'">
+        <a class="dataTypeEnumeration" ng-href="{{link}}"
+           ng-hide="hideName">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration" ng-hide="hideName">(Enumeration)</span><span ng-if="!hideEnumList" class="enumCaretShow" style="margin-right: 2px;cursor: pointer; width:40px;" ng-click="showEnums()" uib-tooltip="Show Enumerations">
+        <span class="caret"></span>
+        &nbsp;&nbsp;&nbsp;
+    </span>
+
+        <table class="table table-condensed enumerationKeyValueTable" ng-show="elementDataType.enumerationValues && !hideEnumList && toggleShowEnums">
+            <thead>
+                <tr>
+                    <th  ng-if="hasCategory">Group</th>
+                    <th >Key</th>
+                    <th >Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="record in allRecordsWithGroups" 
+                    ng-class="{'moreEnumerationKeyValue': $index >= showCount,'hiddenMoreEnumerationKeyValue': $index >= showCount}" 
+                    ng-if="!record.isCategoryRow || (record.isCategoryRow && hasCategory)">
+
+                    <td style="width:100%" ng-if="hasCategory && record.isCategoryRow" colspan="{{(hasCategory && record.isCategoryRow) ? 3 : 1}}">
+                        <div ng-if="record.isCategoryRow" style="font-weight: bold; font-style: italic;">
+                            {{record.category}}
+                        </div>
+                        <div ng-if="!record.category">&nbsp;</div>
+                    </td>
+                    <td ng-if="hasCategory && !record.isCategoryRow" style="width:15%">
+                    </td>
+
+                    <td  style="width:30%;word-break:break-all;" class="enumerationKey" ng-if="!record.isCategoryRow">
+                        <div ng-if="!record.isCategoryRow">
+                            <span  style="margin: 0px !important; width:100%; padding-left: 2px; word-wrap: break-word;white-space: normal;max-width:100px;min-width:50px;" ng-bind-html="record.key | mchighlighter:$root.searchCriteria">
+                            </span>
+                        </div>
+                    </td>
+                    <td  style="width:40%;word-break:break-all;" class="enumerationValue"  ng-if="!record.isCategoryRow" >
+                        <span  style="word-wrap: break-word;white-space: normal;display:block;max-width: 400px;" ng-bind-html="record.value | mchighlighter:$root.searchCriteria">
+                        </span>
+                    </td>
+
+                </tr>
+                <tr ng-show="showMoreIcon" style="list-style: none;">
+                    <td colspan="{{hasCategory ? 3 : 2}}">
+                        <a class="showMoreEnumerations" ng-click="showMore()">... more <span class="fa fa-caret-down"></span></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </span>
+    <span ng-show="elementDataType.domainType == 'ReferenceType'">
+        <span ng-show="!onlyShowRefDataClass">
+            <div><a ng-href="{{link}}" title="DataType">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Reference)</span></div>
+            <div ng-show="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span><element-link mc-element="elementDataType.referenceClass" new-window="newWindow"></element-link>]</span></div>
+        </span>
+        <span ng-show="onlyShowRefDataClass">
+           <element-link mc-element="elementDataType.referenceClass" new-window="newWindow"></element-link>
+        </span>
+    </span>
+
+    <span ng-show="elementDataType.domainType == 'TerminologyType'">
+        <span ng-show="!onlyShowRefDataClass">
+            <div><a ng-href="{{link}}" title="DataType">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Terminology)</span></div>
+            <div ng-show="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span><element-link mc-element="elementDataType.terminology" new-window="newWindow"></element-link>]</span></div>
+        </span>
+        <span ng-show="onlyShowRefDataClass">
+           <element-link mc-element="elementDataType.terminology" new-window="newWindow"></element-link>
+        </span>
+    </span>
+
+</div>
+

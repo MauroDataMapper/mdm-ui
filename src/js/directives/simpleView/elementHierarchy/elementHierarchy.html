@@ -1,0 +1,35 @@
+<script type="text/ng-template" id="elementHierarchyRecursive.html">
+    <div>
+        <a ng-href="{{updatedPath[$index].link}}">{{::updatedPath[$index].label}}</a>
+        <ul class="hierarchyElement" ng-if="$index < updatedPath.length -1">
+            <li class="hierarchyElement"
+                ng-init="$index=$index+1"
+                ng-include
+                src="'elementHierarchyRecursive.html'">
+            </li>
+        </ul>
+    </div>
+</script>
+
+<div class="hierarchyTree">
+    <ul class="root hierarchyElement">
+        <li class="root hierarchyElement">
+                <div style="margin-left: -2px;">
+                    <i class="fa fa-sitemap modelPathIcon" style="padding-right: 4px;"></i>
+                    <a ng-href="{{updatedPath[0].link}}">{{::updatedPath[0].label}}</a>
+                </div>
+                <div ng-class="{'description':true, 'descriptionBorder': updatedPath.length > 1}">
+                    <more-description description="{{::updatedPath[0].description}}" length="200"></more-description>
+                    <!--<markdown-text-area rows="'4'" description="updatedPath[0].description" in-edit-mode="false"></markdown-text-area>-->
+                </div>
+                <ul class="hierarchyElement">
+                    <li     class="hierarchyElement"
+                            ng-init="$index=1"
+                            ng-if="updatedPath.length > 1"
+                            ng-include
+                            src="'elementHierarchyRecursive.html'">
+                    </li>
+                </ul>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,141 @@
+<div>
+    <mc-table
+            mc-name="groupMembersTable"
+            id="groupMembersTable"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="groupMembersFetch"
+
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Members</span>
+                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+                    <button type="button" uib-tooltip="Add Member"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                    <tr class="mcTableHeader">
+                        <th style="cursor:pointer;max-width: 10%;width: 10%;" columnName="disabled" sortable="true" filterable="true">
+                            Status
+                        </th>
+                        <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3" columnName="emailAddress" sortable="true" filterable="true">
+                            Email
+                        </th>
+                        <th class="hidden-xs col-sm-2 col-md-2 col-lg-2"  columnName="firstName" sortable="true" filterable="true">
+                            First Name
+                        </th>
+                        <th class="hidden-xs col-sm-2 col-md-2 col-lg-2"  columnName="lastName" sortable="true" filterable="true">
+                            Last Name
+                        </th>
+                        <th class="hidden-xs hidden-sm col-md-3 col-lg-3"  columnName="organisation" sortable="true" filterable="true">
+                            Organisation
+                        </th>
+                        <th class="hidden-sm hidden-xs hidden-sm col-md-3 col-lg-3"  columnName="userRole" sortable="true" filterable="true">
+                            Role
+                        </th>
+                        <th style="width:80px;text-align: center">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in mcDisplayRecords">
+                        <td  style="cursor:pointer;max-width: 10%;width: 10%;">
+                            <span ng-if="!record.isNew && record.disabled" style="font-size:11px;color: #a94442; font-weight: bold;">Disabled</span>
+                            <span ng-if="!record.isNew && !record.disabled" style="font-size:11px">Active</span>
+                        </td>
+                        <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+
+                            <div ng-show="!record.isNew">
+                                <a ui-sref="appContainer.adminArea({ id: record.id })">{{ record.emailAddress }}</a>
+                            </div>
+                            <div ng-show="record.isNew">
+                                <mc-select-2
+                                        width="'100%'"
+                                        value-type="'dynamic'"
+                                        load-dynamic-values="fetchUser"
+                                        min-input-length="1"
+                                        record="record"
+                                        id-property="'id'"
+                                        display-property="'emailAddress'"
+                                        search-property="'emailAddress'"
+                                        on-select="onUserSelect">
+                                    <div>
+                                        <div>{{$item.emailAddress}}</div>
+                                    </div>
+                                </mc-select-2>
+                            </div>
+                        <td class="hidden-xs col-sm-2 col-md-2 col-lg-2" >
+                            {{record.firstName}}
+                        </td>
+                        <td class="hidden-xs col-sm-2 col-md-2 col-lg-2">
+                            {{record.lastName}}
+                        </td>
+                        <td class="hidden-xs hidden-sm col-md-3 col-lg-3">
+                            {{record.organisation}}
+                        </td>
+                        <td class="hidden-sm hidden-xs hidden-sm col-md-3 col-lg-3">
+                            {{ROLES[record.userRole]}}
+                        </td>
+                        <td style="width:80px;text-align: center">
+                            <div ng-if="parent.createdBy && parent.createdBy.id != record.id">
+                                <div ng-if="record.isNew">
+                                    <button type="button"
+                                            class="btn btn-default btn-xs"
+                                            ng-click="cancelEdit(record, $index)">
+                                        <i class="fa fa-times cancelEditButton"></i>
+                                    </button>
+                                    <button type="submit"
+                                            class="btn btn-default btn-xs"
+                                            ng-click="confirmAddMember(record, $index)">
+                                        <i class="fa fa-check saveButton"></i>
+                                    </button>
+                                </div>
+                                <div ng-if="!record.isNew">
+                                    <button
+                                            ng-if="!record.deletePending"
+                                            type="button"
+                                            class="btn btn-default btn-xs"
+                                            uib-tooltip="Remove from Group"
+                                            ng-click="removeMember(record, $index)">
+                                        <i class="fa fa-trash-o confirmDeleteButton"></i>
+                                    </button>
+
+                                    <span  ng-if="record.deletePending"  style="font-size: 11px;">Are you sure?</span>
+                                    <!-- Confirm Delete -->
+                                    <button type="button"
+                                            ng-if="record.deletePending"
+                                            class="btn btn-default btn-xs"
+                                            ng-click="confirmRemove(record, $index)">
+                                        <i class="fa fa-check editButton themeColor mcTableApproveBtn"></i>
+                                    </button>
+
+                                    <!-- Cancel Delete-->
+                                    <button type="button"
+                                            ng-if="record.deletePending"
+                                            class="btn btn-default btn-xs"
+                                            ng-click="cancelRemove(record, $index)">
+                                        <i class="fa fa-times cancelButton"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div style="font-style: italic;" ng-if="parent.createdBy && parent.createdBy.id == record.id">
+                                <smal>Owner</smal>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

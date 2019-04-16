@@ -1,0 +1,192 @@
+<div>
+    <table class="table table-condensed table-bordered mcTable">
+        <thead>
+            <tr>
+                <th colspan="4" class="mcTableTitle">
+                    <span class="title">Enumerations <strong ng-if="enumsCount>0">({{enumsCount}})</strong></span>
+                    <div show-if-role-is-writable mc-element="parent" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="!clientSide">
+                        <button type="button" uib-tooltip="Add Enumeration"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="clientSide">
+                        <button type="button" uib-tooltip="Add Enumeration"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </th>
+            </tr>
+            <tr class="mcTableHeader">
+                <th style="min-width:25px;max-width: 10%;width: 10%;" ng-click="groupSortClicked()">
+                    Group
+
+                    <i class="fa fa-sort-desc icon blackSort" ng-if="sortBy === 'group' && sortType == 'desc'"></i>
+                    <i class="fa fa-sort-asc icon blackSort"  ng-if="sortBy === 'group' && sortType == 'asc'"></i>
+                    <i class="fa fa-sort icon graySort"       ng-if="sortBy === 'group' && sortType == ''"></i>
+
+
+                </th>
+                <th style="cursor:pointer;max-width: 18%;width: 18%;overflow:hidden;"  columnName="key" sortable="true" filterable="true">
+                    Key
+                </th>
+                <th style="cursor:pointer;max-width: 22%;width: 22%;overflow:hidden;"  columnName="value" sortable="true" filterable="true">
+                    Value
+                </th>
+                <th style="cursor:pointer;max-width: 5%;width: 5%;overflow:hidden;" >
+                </th>
+            </tr>
+        </thead>
+        <tbody class="sortable">
+            <tr ng-repeat="record in displayItems track by record.id" ng-if="!record.isCategoryRow || (record.isCategoryRow && hasCategory)" ng-init="$last ? applySortable()  : angular.noop()"   style="background-color: #FFF;"  id="{{record.id}}"  data-category="{{record.category}}" data-index="{{record.index}}" data-isCategoryRow="{{record.isCategoryRow}}" data-isNew="{{record.isNew}}">
+                <td  style="min-width:25px;max-width: 10%;width: 10%;;word-wrap: break-word; text-align: center;" colspan="{{record.isCategoryRow ? 4 : 1}}">
+                    <div ng-if="record.isCategoryRow" style="float:left">
+                        <div ng-if="record.category" style="padding-left: 2px;font-weight: bold; font-style: italic;">{{record.category}}</div>
+                        <div ng-if="!record.category">&nbsp;</div>
+                    </div>
+
+                    <div ng-if="!record.isCategoryRow && !record.inEdit" style="float:right; cursor: move;">
+                        <i class="fa fa-bars sortableIcon handle"></i>
+                    </div>
+
+                    <div ng-if="record.inEdit">
+                        <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['category']}">
+                            <!--<input class="form-control input-sm" type="text" ng-model="record.edit.category" autocomplete="off"/>-->
+                            <!--<select class="form-control input-sm" ng-model="record.edit.category">-->
+                                <!--<option value="">Select...</option>-->
+                                <!--<option ng-repeat="cat in categories" value="{{cat}}">{{cat}}</option>-->
+                            <!--</select>-->
+
+                            <mc-select-2
+                                    width="'100%'"
+                                    accept-typed-input="true"
+                                    value-type="'static'"
+                                    default-value="{key:record.edit.category, value:record.edit.category}"
+                                    static-values="categories"
+                                    show-all-static-values="true"
+
+                                    id-property="'key'"
+                                    display-property= "'value'"
+                                    search-property="'key'"
+
+                                    record="record.edit"
+                                    extra-css-class="'input-sm'"
+
+                                    on-text-updated="onCategoryTextUpdated"
+                                    on-select="onCategorySelect">
+                                <div>
+                                    <div style="text-align: left;">{{$item.value}}</div>
+                                </div>
+                            </mc-select-2>
+
+
+                            <small ng-show="record.edit.errors && record.edit.errors['category']" class="errorMessage">{{record.edit.errors['category']}}</small>
+                        </div>
+                    </div>
+                </td>
+                <td style="max-width: 18%;width: 18%;text-align: left;word-wrap: break-word;overflow:hidden;" ng-if="!record.isCategoryRow">
+                    <div ng-if="!record.isCategoryRow">
+                        <div ng-if="!record.inEdit">
+                            {{record.key}}
+                        </div>
+                        <div ng-if="record.inEdit">
+                            <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['key']}">
+                                <input class="form-control input-sm" type="text" ng-model="record.edit.key" autocomplete="off"/>
+                                <small ng-show="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="max-width: 22%;width: 22%;text-align: left;word-wrap: break-word;overflow:hidden;" ng-if="!record.isCategoryRow">
+                    <div ng-if="!record.inEdit">
+                        {{record.value}}
+                    </div>
+                    <div ng-if="record.inEdit">
+                        <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['value']}">
+                            <input class="form-control input-sm" type="text" ng-model="record.edit.value" autocomplete="off"/>
+                            <small ng-show="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
+                        </div>
+                    </div>
+                </td>
+
+
+
+
+                <td style="max-width: 5%;width: 5%;text-align: center;word-wrap: break-word;overflow:hidden;" ng-if="!record.isCategoryRow">
+                    <div show-if-role-is-writable mc-element="parent">
+                        <!-- Edit -->
+                        <button type="button"
+                                class="btn btn-default btn-xs"
+                                ng-hide="record.inEdit || record.inDelete"
+                                ng-click="editClicked(record)">
+                            <i class="fa fa-pencil-square-o editButton themeColor"></i>
+                        </button>
+                        <!-- Delete -->
+                        <button type="button"
+                                class="btn btn-default btn-xs"
+                                ng-hide="record.inEdit || record.inDelete"
+                                ng-click="deleteClicked(record)">
+                            <i class="fa fa-trash-o deleteButton"></i>
+                        </button>
+
+                        <div ng-if="record.inDelete">
+                            <!-- Confirm Delete -->
+                            <button type="button"
+                                    class="btn btn-default btn-xs"
+                                    ng-click="confirmDeleteClicked(record, $index)">
+                                <i class="fa fa-check saveButton"></i>
+                            </button>
+                            <!-- Cancel Delete-->
+                            <button type="button"
+                                    class="btn btn-default btn-xs"
+                                    ng-click="cancelDeleteClicked(record)">
+                                <i class="fa fa-times cancelButton"></i>
+                            </button>
+                            <span style="font-size: 11px;"><br>Are you sure?</span>
+                        </div>
+
+
+                        <div ng-if="record.inEdit">
+                           <!-- Save -->
+                           <button type="submit"
+                                   class="btn btn-default btn-xs"
+                                   ng-click="saveClicked(record, $index)">
+                               <i class="fa fa-check saveButton"></i>
+                           </button>
+                           <!--edit Cancel -->
+                           <button type="button"
+                                   class="btn btn-default btn-xs"
+                                   ng-click="cancelEditClicked(record, $index)">
+                               <i class="fa fa-times cancelEditButton themeColor"></i>
+                           </button>
+                       </div>
+
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="vertical-align:baseline;width: 100%;-moz-border-radius: 2px;border-radius: 2px;margin: 1px 0px 3px 0px;" ng-if="allRecords.length >=5 ">
+        <div style="float: left;">
+            <div ng-class="{'disabledPageListBtn':disablePrev, 'pageListBtn':true}" ng-click="prev()">
+                <i aria-hidden="true" class="fa fa-chevron-left pageListLeftBtn"></i>
+            </div>
+            <div ng-class="{'disabledPageListBtn':disableNext, 'pageListBtn':true}" ng-click="next()">
+                <i aria-hidden="true" class="fa fa-chevron-right pageListRightBtn"></i>
+            </div>
+        </div>
+        <div style="float:right;">
+            <ul class="pagination pagination-sm mcTablePagination" >
+                <li ng-repeat="size in pageSizes"
+                    ng-class="{'active': size == pageSize}"
+                    ng-click="pageSizeClicked(size)">
+                    <a class="mcTablePaginationLink">{{size}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+

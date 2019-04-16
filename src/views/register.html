@@ -1,0 +1,127 @@
+<div class="container">
+    <div class="row" style="text-align: center;margin-top: 10px;">
+        <div class="col-lg-offset-2 col-lg-8 col-md-10 col-xs-12 col-sm-12" ng-show="!confirmed">
+            <form name="editableForm">
+                <table class="table table-bordered table-condensed dataModelDetailTable">
+                    <tbody>
+                        <tr>
+                            <td class="col-xs-1 col-sm-1 col-md-2 mcTableTitle" colspan="2">
+                                Registration <i id="helpIcon1" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp($event, 'Registering_as_a_new_user')" tooltip-placement="left" uib-tooltip="Help"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-lg-1 col-xs-1 col-sm-1 col-md-1" style="text-align: left">Email*</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['emailAddress']}">
+                                    <input type="text" class="form-control wizardInput" ng-model="user.emailAddress">
+                                    <small  ng-if="errors && errors['emailAddress']" class="errorMessage">{{errors['emailAddress']}}</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-xs-1 col-sm-1 col-md-1" style="text-align: left">First Name*</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['firstName']}">
+                                    <input type="text" class="form-control wizardInput" ng-model="user.firstName">
+                                    <small  ng-show="errors && errors['firstName']" class="errorMessage">{{errors['firstName']}}</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-xs-1 col-sm-1 col-md-1" style="text-align: left">Last Name*</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['lastName']}">
+                                    <input type="text" class="form-control wizardInput" ng-model="user.lastName">
+                                    <small  ng-show="errors && errors['lastName']" class="errorMessage">{{errors['lastName']}}</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-xs-1 col-sm-1 col-md-1" style="text-align: left">Organisation</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['organisation']}">
+                                    <input type="text" class="form-control wizardInput" ng-model="user.organisation">
+                                    <small  ng-show="errors && errors['organisation']" class="errorMessage">{{errors['organisation']}}</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-xs-1 col-sm-1 col-md-1" style="text-align: left">Role in Organisation</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['role']}">
+                                    <input type="text" class="form-control wizardInput" ng-model="user.role">
+                                    <small  ng-show="errors && errors['role']" class="errorMessage">{{errors['role']}}</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-xs-1 col-sm-1 col-md-1" style="text-align: left">Password*</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['password']}">
+                                    <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left: 0px;">
+                                        <input type="password" class="form-control wizardInput" ng-model="user.password">
+                                        <password-strenghtometer password="user.password"></password-strenghtometer>
+                                        <small  ng-show="errors && errors['password']" class="errorMessage">{{errors['password']}}</small>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-xs-1 col-sm-1 col-md-1" style="text-align: left">Confirm Password*</td>
+                            <td style="text-align: left">
+                                <div class="form-group" ng-class="{'has-error':errors && errors['confirmPassword']}">
+                                    <div class="col-sm-6 col-md-6 col-lg-6" style="padding-left: 0px;">
+                                        <input type="password" class="form-control wizardInput" ng-model="user.confirmPassword">
+                                        <small  ng-show="errors && errors['confirmPassword']" class="errorMessage">{{errors['confirmPassword']}}</small>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: right;">
+                                <div style="float: right;margin-bottom: 3px">
+                                    <button type="button"
+                                            ng-disabled="processing"
+                                            class="btn btn-success btn-xs"
+                                            ng-click="save()">
+                                        Submit
+                                    </button>
+                                    <button type="button"
+                                            ng-disabled="processing"
+                                            class="btn btn-default btn-xs"
+                                            ng-click="cancel()">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10" ng-show="confirmed">
+            <div class="panel panel-default">
+                <div class="panel-body" style="font-size: 16px;">
+                    <p>Thank you for registering. <i id="helpIcon2" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp($event, 'Responding_to_an_email_invitation')" tooltip-placement="left" uib-tooltip="Help"></i></p>
+                    <p>You will receive a confirmation email shortly.</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6" ng-show="isLoggedIn()">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2>You are already logged in!</h2>
+                    </div>
+                    <div class="panel-body">
+                        <p>You need to log out in order to be able to create an account.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

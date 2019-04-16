@@ -1,0 +1,104 @@
+<div>
+    <mc-table
+            mc-name="dataTypesTable"
+
+            mc-record-type="type"
+            mc-fetch-method="dataTypesFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-has-checkbox="true"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Data Types</span>
+                <div style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="parent.editable && !parent.finalised">
+                    <mc-data-type-list-buttons
+                            parent="parent"
+                            mc-display-records="mcTableHandler.mcDisplayRecords"
+                            delete-rows="deleteRows"
+                            add="add"></mc-data-type-list-buttons>
+                </div>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th  style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" checkboxAll="true" class="mcTableCheckbox" ng-show="parent.editable && !parent.finalised">
+                                <input type="checkbox" class="checkboxAll" style="cursor:pointer;">
+                            </th>
+                            <th style="cursor:pointer;max-width: 15%;width: 15%;"  columnName="label" sortable="true" filterable="true">
+                                Name
+                            </th>
+                            <th style="cursor:pointer;max-width: 20%;width: 20%;"  columnName="description" sortable="true" filterable="true">
+                                Description
+                            </th>
+                            <th style="cursor:pointer;max-width: 25%;width: 25%;"  columnName="domainType" sortable="true" filterable="true">
+                                Type
+                            </th>
+                            <th style="cursor:pointer;max-width: 4%;width: 4%">
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td style="max-width: 3%;width: 3%;text-align: center;" class="mcTableCheckbox" ng-show="parent.editable && !parent.finalised">
+                            </td>
+                            <td style="cursor:pointer;max-width: 15%;width: 15%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="cursor:pointer;max-width: 20%;width: 20%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="cursor:pointer;max-width: 25%;width: 25%;">
+                                <select class="form-control input-sm mcSelect">
+                                    <option value=""></option>
+                                    <option value="{{dt.id}}" ng-repeat="dt in allDataTypes">{{dt.displayLabel}}</option>
+                                </select>
+                            </td>
+                            <td style="cursor:pointer;max-width: 4%;width: 4%">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="record in mcDisplayRecords">
+                          <td style="max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox" ng-show="parent.editable && !parent.finalised">
+                              <input style="cursor:pointer;" type="checkbox" ng-model="record.checked">
+                          </td>
+                        <td style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
+                            <div>
+                                <element-link mc-element="record" mc-data-model-parent="{id:record.dataModel}"></element-link>
+                            </div>
+                        </td>
+                          <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                              <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;">
+                                  <more-description description="{{::record.description}}"></more-description>
+                              </div>
+                          </td>
+                        <td style="max-width: 25%;width: 25%;text-align: left;word-wrap: break-word;">
+                            <div style="font-weight: bold;">
+                                {{allDataTypesMap[record.domainType]["displayLabel"]}}
+                            </div>
+                            <div style="width: 100%;">
+                                <element-data-type element-data-type="record" hide-name="true" only-show-ref-data-class="true"
+                                                   hide-enum-list="false"></element-data-type>
+                            </div>
+                        </td>
+                        <td style="max-width: 4%;width: 4%;text-align: center;">
+                            <button class="btn btn-xs btn-default addNewModelButton  themeColor ng-click-active"
+                                    ng-if="parentDataModel.editable"
+                                    ng-click="openEdit(record)"
+                                    type="button" aria-disabled="false">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

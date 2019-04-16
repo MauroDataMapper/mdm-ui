@@ -1,0 +1,44 @@
+<div>
+    <div style="border: 1px solid #DDD;">
+
+            <div style="width: 100%; height:30px;padding: 5px;">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="zoomOut()" type="button" title="Zoom Out">
+                        <i class="fa fa-minus-circle"></i>
+                    </button>
+                    <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="resetZoom()" type="button" title="Reset Zoom">
+                        Reset
+                    </button>
+                    <button class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="zoomIn()" type="button" title="Zoom In">
+                        <i class="fa fa-plus-circle"></i>
+                    </button>
+                </div>
+                <button style="margin-left: 10px;" class="btn btn-xs btn-default diagram-tool-box-icon" ng-click="reOrder()" type="button" title="Auto Layout">
+                    <i class="fa fa-sitemap"></i>
+                </button>
+               <!--<i class="fa fa-refresh diagram-tool-box-icon"  aria-hidden="true" title="Reload" ng-click="resetZoom()"></i>-->
+               <!--<span style="cursor: pointer;margin-left: 10px;" title="Show `Satisfies` Links">&nbsp;<input type="checkbox" ng-model="showSameAs" ng-change="showSameAsLinks()"><span style="font-size: 10px">&nbsp;Satisfies</span></span>-->
+               <!--<span style="cursor: pointer;" title="Show `Don't Satisfies` Links"><input type="checkbox" ng-model="showNotSameAs" ng-change="showNotSameAsLinks()"><span style="font-size: 10px">&nbsp;Don't Satisfies</span></span>-->
+               <span style="cursor: pointer;margin-left: 10px;" title="Show `DataType Reference` Links">&nbsp;<input type="checkbox"  ng-model="dataTypeReference" ng-change="showDataTypeReferenceLinks()"><span style="font-size: 10px">&nbsp;DataType Reference</span></span>
+               <a href="{{expandLink}}"  ng-hide="hideExpand" style="float: right;" >
+                 <i class="fa fa-window-maximize diagram-tool-box-icon" aria-hidden="true" title="Maximize" ></i>
+               </a>
+            </div>
+
+
+        <div  ng-style="{'min-height':minHeight? minHeight : '500px'}" style=";width: 100%; overflow: scroll;position: relative;float: left;border: 1px solid #DDD;" id="holder">
+           <div style="width: 100%;height: 100%;" >
+               <div style="position: absolute;top:30%;left:40%;">
+                   <a style="font-size: 75px;">
+                       <i class="fa fa-refresh fa-spin diagramSpinner themeColor"></i>
+                   </a>
+               </div>
+           </div>
+           <div id="jointDiagramHolder" style="position: relative"></div>
+        </div>
+    </div>
+        <span id="textSampling" style="display: none"></span>
+</div>
+
+
+

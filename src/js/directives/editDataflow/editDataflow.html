@@ -1,0 +1,51 @@
+<div>
+    <uib-tabset active="activeTab.index">
+        <uib-tab select="tabSelected('details')">
+            <uib-tab-heading>
+                Details
+            </uib-tab-heading>
+            <div style="width:100%;" >
+                <form style="margin: 10px;">
+                    <div class="form-group">
+                        <label for="dataFlowName">Name</label>
+                        <input ng-disabled="form.isReadOnly"
+                               class="form-control form-control-sm"
+                               id="dataFlowName"
+                               aria-describedby="dataFlowName"
+                               placeholder="DataFlow Name"
+                               ng-model="mcDataFlow.label">
+                    </div>
+                    <div class="form-group">
+                        <label for="dataFlowDescription">Description</label>
+                        <textarea ng-disabled="form.isReadOnly"
+                                  class="form-control form-control-sm"
+                                  id="dataFlowDescription"
+                                  placeholder="DataFlow Description"
+                                  ng-model="mcDataFlow.description"></textarea>
+                    </div>
+                    <button ng-disabled="form.isReadOnly" type="button" class="btn btn-primary btn-sm" ng-click="saveForm()">Save</button>
+                    <button ng-disabled="form.isReadOnly" type="button" class="btn btn-default btn-sm" ng-click="cancelForm()">Cancel</button>
+                </form>
+            </div>
+        </uib-tab>
+        <uib-tab select="tabSelected('properties')">
+            <uib-tab-heading>
+                Properties
+            </uib-tab-heading>
+            <div style="width:100%;" ng-if="activeTab.name == 'properties'">
+                <mc-data-set-metadata
+                        parent="mcDataFlow"
+                        type = "'dynamic'"
+                        loading-data="loadingData"></mc-data-set-metadata>
+            </div>
+        </uib-tab>
+        <uib-tab select="tabSelected('comments')">
+            <uib-tab-heading>
+                Comments
+            </uib-tab-heading>
+            <div style="width:100%;"  ng-if="activeTab.name == 'comments'">
+                <annotation-list parent="mcDataFlow" loading-data="loadingData" type="'dynamic'"></annotation-list>
+            </div>
+        </uib-tab>
+    </uib-tabset>
+</div>

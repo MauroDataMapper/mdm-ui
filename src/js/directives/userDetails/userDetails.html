@@ -1,0 +1,109 @@
+<form editable-form name="editableForm" onaftersave="onAfterSave()" onbeforesave="formBeforeSave()">
+    <div class="panel-body panel-table" ng-if="!editUsername">
+        <h4>{{user.emailAddress}}</h4>
+        <!--<div>-->
+            <!--<em style="font-size: 11px;" ng-hide="hideUpdated">Last Update: {{::user.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</em>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<em style="font-size: 12px;" ng-hide="hideUpdated">Last Login:&nbsp;&nbsp;{{::user.lastLogin | date:"yyyy-MM-dd HH:mm:ss" }}</em>-->
+        <!--</div>-->
+    </div>
+    <table class="table table-bordered table-condensed dataModelDetailTable">
+        <tbody>
+            <tr ng-if="editUsername">
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Email*</th>
+                <td>
+                    <span class="xeditableInput">
+                        <span editable-text="user.username"
+                              e-name="username"
+                              e-type="email"
+                              onbeforesave="vm.checkEmailExists($data)">{{user.username}}</span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">First Name*</th>
+                <td>
+                    <span class="xeditableInput">
+                        <span editable-text="user.firstName"
+                              e-name="firstName"
+                              onbeforesave="vm.validate('First Name', $data)">{{user.firstName}}</span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Last Name*</th>
+                <td>
+                    <span class="xeditableInput">
+                        <span editable-text="user.lastName"
+                              e-name="lastName"
+                              onbeforesave="vm.validate('Last Name', $data)">{{user.lastName}}</span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation</th>
+                <td>
+                    <span class="xeditableInput">
+                        <span editable-text="user.organisation"
+                              e-name="organisation">{{user.organisation}}</span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Role in Organisation</th>
+                <td>
+                    <span class="xeditableInput">
+                        <span editable-text="user.jobTitle"
+                              e-name="role">{{user.jobTitle}}</span>
+                    </span>
+                </td>
+            </tr>
+            <tr ng-if="!public">
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Role</th>
+                <td>
+                    <span class="xeditableInput">
+                        {{user.userRole}}
+                    </span>
+                </td>
+            </tr>
+            <tr ng-if="!public">
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Groups</th>
+                <td>
+                     <span ng-repeat="group in user.groups" title="{{group.description}}">
+                        <div class="group">
+                            {{group.label}}
+                            <span ng-show="group.description && group.description.length > 0" style="cursor: pointer">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                     </span>
+                </td>
+            </tr>
+            <tr show-if-role-is-writable mc-element="user" ng-if="!public">
+                <td colspan="2" style="text-align: right;">
+                    <div style="float: right;margin-bottom: 3px">
+                        <editable-form-buttons
+                            editable="editableForm"
+                            text-location="left"
+                            hide-delete="true"
+                            hide-cancel="hideCancelButton"
+                            on-edit-clicked="onEditClicked()"></editable-form-buttons>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="public">
+                <td colspan="2" style="text-align: right;">
+                    <div style="float: right;margin-bottom: 3px">
+                        <editable-form-buttons
+                            editable="editableForm"
+                            text-location="left"
+                            hide-delete="true"
+                            hide-cancel="hideCancelButton"
+                            on-edit-clicked="onEditClicked()"></editable-form-buttons>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>

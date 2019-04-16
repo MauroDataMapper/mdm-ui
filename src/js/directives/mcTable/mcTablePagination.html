@@ -1,0 +1,31 @@
+<div>
+    <div class="mcTablePageIndexHolder">
+        <ul class="pagination pagination-sm mcTablePagination"  ng-if="totalItemCount >= mcPageSize">
+            <li ng-click="previousPage()"  ng-Class="{disabled:isFirstPage}">
+                <a  aria-label="Previous"  ng-Class="{disabled:isFirstPage}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li ng-repeat="page in pages track by $index"
+                ng-class="{'active':page == mcPageNumber, 'disabled': page == '...'}"
+                ng-click="selectPage(page)">
+                <a  ng-class="{'disabled': page == '...', 'mcTablePaginationLink':true}">{{page}}</a>
+            </li>
+            <li ng-click="nextPage()"
+                ng-class="{'disabled':isLastPage}">
+                <a aria-label="Next"  ng-class="{'disabled':isLastPage, 'mcTablePaginationLink':true}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="mcTablePageSizesHolder">
+        <ul class="pagination pagination-sm mcTablePagination"  ng-if="mcPageSizes && mcPageSizes.length > 0 && mcPageSizes[0] < totalItemCount">
+            <li ng-repeat="size in mcPageSizes"
+                ng-class="{'active': size == mcPageSize}"
+                ng-click="pageSizeClicked(size)">
+                <a class="mcTablePaginationLink">{{size}}</a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div>
+    <div ng-repeat="alias in aliases">
+        <div style="float: left;">
+            <ul class="alias">
+                <li>
+                    <span ng-show="!inEditMode">
+                        <span class="themeColor">{{alias}}</span>
+                    </span>
+                    <span ng-show="inEditMode">
+                        <span>{{alias}}</span>
+                    </span>
+                    <span class="aliasButton"
+                          ng-show="inEditMode"
+                          ng-click="remove($index)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div ng-show="inEditMode" style="clear: both;">
+        <div class="input-group">
+            <input type="text"
+                   id="aliasInput"
+                   ng-keyup="keyup($event)"
+                   ng-model="typedAlias"
+                   class="form-control input-sm">
+            <span class="input-group-btn">
+                <button class="btn btn-default btn-sm themeColor"
+                        ng-disabled="typedAlias.trim().length === 0"
+                        type="button"
+                        ng-click="add()">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>

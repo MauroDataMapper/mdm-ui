@@ -1,0 +1,100 @@
+<div>
+    <toast></toast>
+    <div class="header">
+        <div ng-controller="navbarCtrl">
+            <nav class="navbar navbar-default themeBackgroundColor themeBackground " style="border: 0;" role="navigation"  ng-cloak>
+                <div class="themeHeaderBottomBorder">
+                    <div  class="navbar-header" >
+                        <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" ui-sref="appContainer.mainApp.home"><strong>Metadata</strong><span style=" font-weight: 100;">Catalogue</span></a>
+                    </div>
+
+                    <div class="collapse navbar-collapse themeBackgroundColor" ng-class="!navCollapsed && 'in'" ng-if="isLoggedIn()">
+                        <ul class="nav navbar-nav" style="float: right;">
+                            <li ng-if="simpleViewSupport && $state.current.name.indexOf('appContainer.simpleApp') === -1">
+                                <a ui-sref="appContainer.simpleApp.home">
+                                    Simple View
+                                </a>
+                            </li>
+                            <li ng-if="simpleViewSupport && $state.current.name.indexOf('appContainer.simpleApp') !== -1">
+                                <a ui-sref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                                    Advanced View
+                                </a>
+                            </li>
+                            <li uib-dropdown on-toggle="toggled(open)">
+                                <a href="#" uib-dropdown-toggle style="padding-top: 14px  !important;padding-bottom: 9px  !important;">
+                                    <div style="height: 100%">
+                                        <div style="float: left; padding-right: 5px; cursor: pointer;"
+                                             uib-tooltip="{{profile.email}}"
+                                             ng-click="openProfile()"
+                                             tooltip-placement="bottom">
+                                            <img class="img-rounded"  style="width: 30px; height: auto;" ng-src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}">
+                                        </div>
+                                        <div style="float:right">
+                                            <div>{{profile.firstName + " " + profile.lastName}}</div>
+                                            <div style="font-style: italic; font-size: 10px;">
+                                                {{profile.role | capitalize}} <i class='fa fa-caret-down' style="float: right;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown" style="width:100%">
+                                    <li>
+                                        <a ui-sref="appContainer.userArea.profile" style="text-align: left">
+                                            <i class="fa fa-address-card-o"></i> My Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a ui-sref="appContainer.userArea.settings" style="text-align: left">
+                                            <i class="fa fa-cog"></i> Preferences
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="btn" ng-click="logout()" style="text-align: left">
+                                            <i class="fa fa-sign-in"></i> Log out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="collapse navbar-collapse themeBackgroundColor" ng-class="!navCollapsed && 'in'" ng-if="!isLoggedIn()">
+                        <ul class="nav navbar-nav" style="float: right;">
+                            <li ng-if="simpleViewSupport && $state.current.name.indexOf('appContainer.simpleApp') === -1">
+                                <a ui-sref="appContainer.simpleApp.home">
+                                    Simple View
+                                </a>
+                            </li>
+                            <li ng-if="simpleViewSupport && $state.current.name.indexOf('appContainer.simpleApp') !== -1">
+                                <a ui-sref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                                    Advanced View
+                                </a>
+                            </li>
+                            <li ng-if="HDFLink && HDFLink.length>0">
+                                <a ng-href="{{HDFLink}}" uib-dropdown-toggle>
+                                    Return to Health Data Finder
+                                </a>
+                            </li>
+                            <li on-toggle="toggled(open)" >
+                                <a class="btn" ng-click="login()">
+                                    <i class="fa fa-sign-in"></i> Log in
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </nav>
+        </div>
+
+    </div>
+    <div  style="padding-top: 5px;" ng-cloak ui-view>
+    </div>
+</div>

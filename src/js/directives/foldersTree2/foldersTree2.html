@@ -1,0 +1,81 @@
+<script type="text/ng-template" id="child-map.html">
+
+    <div
+         class="draggableNode"
+         data-id="{{child.id}}"
+         data-label="{{child.label}}"
+         data-domainType="{{child.domainType}}">
+    <span ng-if="hasChildren(child)">
+        <span ng-if="!child.processing">
+            <i ng-if="!isOpen(child)" ng-hide=" (child.domainType === 'DataModel' && doNotShowDataClasses) || (child.domainType === 'Terminology' && doNotShowTerms)" class="fa fa-plus plusMinusElement foldersTree"
+               style="margin-right: 3px; font-size: 10px;font-weight: normal" ng-click='toggleExpand(child)'></i>
+            <i ng-if="isOpen(child)" class="fa fa-minus plusMinusElement foldersTree"
+               style="margin-right: 3px; font-size: 10px;font-weight: normal" ng-click='toggleExpand(child)'></i>
+        </span>
+        <span ng-if="child.processing">
+            <i class="fa fa-refresh fa-spin foldersTree themeColor"
+               style="margin-right: 3px; font-size: 9px;font-weight: normal;"></i>
+        </span>
+
+    </span>
+    <span ng-if="!hasChildren(child)">
+        <span style="padding-left:14px;"></span>
+    </span>
+        <span ng-if="showCheckboxFor && showCheckboxFor.indexOf(child.domainType)!=-1">
+            <input type="checkbox" ng-model="child.checked" ng-click="nodeChecked(child)" ng-disabled="child.disableChecked" style="cursor: pointer;">
+        </span>
+
+
+    <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'Folder'" ng-class="{'foldersTree folderTreeIcon fa':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted , 'fa-folder':!isOpen(child), 'fa-folder-open':isOpen(child)}"></i>
+    <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'DataModel' && child.type==='Data Standard'" ng-class="{'foldersTree folderTreeIcon fa fa-file-text-o':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
+    <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'DataModel' && child.type==='Data Asset'"    ng-class="{'foldersTree folderTreeIcon fa fa-database':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
+    <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'Terminology'"    ng-class="{'foldersTree folderTreeIcon fa fa-book ':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
+
+
+    <span context-menu="menuOptions"
+          ng-right-click="rightClick(child)"
+          data-id="{{child.id}}"
+          data-label="{{child.label}}"
+          data-domainType="{{child.domainType}}"
+          ng-class="{'nodeLabel foldersTree':true, 'deleted':child.deleted, 'selected':child.selected, 'supersededByItem':child.superseded}"
+          ng-click='nodeClick($event, child)'
+          ng-dblclick='nodeDbClick($event, child)'>
+        <span ng-bind-html="child.label | mchighlighter:searchCriteria" style="word-break: break-all;"></span>
+        <span ng-if="child.superseded" style='font-size: 11px'>
+            ({{child.documentationVersion}})
+        </span>
+        <i style="font-size: 10px;"
+           uib-tooltip="Favourite"
+           ng-class="{'fa fa-star favouritesIcon addedToFavourite':true}"
+           ng-if="favourites[child.id]"></i>
+    </span>
+    </div>
+
+    <ul class="myTree foldersTree"
+        ng-show="isOpen(child)"
+        ng-if="hasChildren(child)">
+        <li class="myTreeEmptyRoot foldersTree node"
+            ng-repeat="child in child.children"
+            ng-include
+            src="'child-map.html'">
+        </li>
+    </ul>
+</script>
+
+
+<div class="foldersTree" style="background-color: #FFF;">
+    <!--{{node.label}}-->
+    <ul class="myTree foldersTree" ng-if="node.children && node.children.length > 0">
+        <li class="myTreeEmptyRoot foldersTree node"
+            ng-repeat="child in node.children"
+            ng-include
+            src="'child-map.html'">
+        </li>
+    </ul>
+    <div class="draggableNode"  style="background-color: #FFF; padding-bottom: 50px;" ng-if="node.children && node.children.length > 0">
+        <!--This is used for dropping an element into Root-->
+    </div>
+</div>
+
+
+

@@ -1,0 +1,65 @@
+<div>
+    <mc-table
+            mc-name="dataClassesTable"
+
+            mc-record-type="'dynamic'"
+            mc-fetch-method="summaryMetadataFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-has-checkbox="true"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Summary Metadata</span>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th style="cursor:pointer;max-width: 30%;width: 30%;" columnName="name" sortable="true" filterable="true">
+                                Name
+                            </th>
+                            <th style="cursor:pointer;max-width: 65%;width: 65%;"  columnName="description">
+                                Description
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td style="cursor:pointer;max-width: 30%;width: 30%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="cursor:pointer;max-width: 65%;width: 65%;">
+
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in mcDisplayRecords">
+                            <td style="max-width: 30%;width: 30%;;text-align: left;">
+                                <div>{{record.name}}</div>
+                                <div>{{record.description}}</div>
+                            </td>
+                            <td style="max-width: 65%;width: 65%;text-align: left;word-wrap: break-word;">
+                                <div ng-if="record.summaryMetadataType === 'map'">
+                                    <summary-metadata-map summary="record" chart-type="'bar'"  show-more-details-btn="true"></summary-metadata-map>
+                                </div>
+
+                                <div ng-if="record.summaryMetadataType === 'number' ">
+                                    <summary-metadata-map summary="record" chart-type="'line'"  show-more-details-btn="true"></summary-metadata-map>
+                                </div>
+
+
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

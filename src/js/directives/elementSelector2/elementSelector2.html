@@ -1,0 +1,348 @@
+<div style="width: 100% !important;">
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 10px;" ng-if="formData.step === 0">
+            What type of element are you looking for?
+            <div style="margin-top: 10px;">
+                <ul class="list-group" style="cursor: pointer;">
+                    <li class="list-group-item" ng-hide="hideOptions['Folder']">
+                        <div class="radio" style="margin: 0px !important;" ng-click="onElementTypeSelect('Folder')">
+                            <label><input type="radio"
+                                          ng-model="formData.selectedType"
+                                          style="cursor: pointer;"
+                                          ng-value="'Folder'">Folder</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-hide="hideOptions['DataType']">
+                        <div class="radio" style="margin: 0px !important;" ng-click="onElementTypeSelect('DataType')">
+                            <label><input type="radio"
+                                          ng-model="formData.selectedType"
+                                          style="cursor: pointer;"
+                                          ng-value="'DataType'">Data Type</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-hide="hideOptions['DataModel']">
+                        <div class="radio" style="margin: 0px !important;" ng-click="onElementTypeSelect('DataModel')">
+                            <label><input type="radio"
+                                          ng-model="formData.selectedType"
+                                          style="cursor: pointer;"
+                                          ng-value="'DataModel'">Data Model</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-hide="hideOptions['DataClass']">
+                        <div class="radio" style="margin: 0px !important;" ng-click="onElementTypeSelect('DataClass')">
+                            <label><input type="radio"
+                                          ng-model="formData.selectedType"
+                                          style="cursor: pointer;"
+                                          ng-value="'DataClass'">Data Class</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-hide="hideOptions['DataElement']">
+                        <div class="radio" style="margin: 0px !important;" ng-click="onElementTypeSelect('DataElement')">
+                            <label><input type="radio"
+                                          ng-model="formData.selectedType"
+                                          style="cursor: pointer;"
+                                          ng-value="'DataElement'">Data Element</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-hide="hideOptions['Term']">
+                        <div class="radio" style="margin: 0px !important;" ng-click="onElementTypeSelect('Term')">
+                            <label><input type="radio"
+                                          ng-model="formData.selectedType"
+                                          style="cursor: pointer;"
+                                          ng-value="'Term'">Term</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 10px;padding-right: 0px;padding-left: 0px;" ng-if="formData.step === 1">
+
+            <div ng-if="formData.selectedType ===  'DataModel'">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div style="margin-bottom: 10px;">
+                        Please select a {{formData.selectedType}} ?
+                    </div>
+
+                    <input type="text"
+                           class="form-control input-sm"
+                           ng-model="formData.treeSearchText"
+                           placeholder="Search"
+                           ng-change="searchInTree('DataModel')"
+                           ng-model-options='{ debounce: 500 }'>
+                    <div style="width: 100%; height: 300px;overflow-y: auto;border: 1px solid #DDD;">
+                        <div>
+                            <folders-tree-2
+                                    in-search-mode="formData.inSearchMode"
+                                    do-not-make-selected-bold="true"
+                                    expand-on-node-click-for="['Folder']"
+                                    do-not-show-data-classes="true"
+                                    search-criteria="formData.treeSearchText"
+                                    on-node-click="onNodeInTreeSelect"
+                                    node="rootNode"></folders-tree-2>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;"  ng-if="showPrevBtn">
+                        <button class="btn btn-default btn-xs modelSelectorDialogueBtn" ng-click="previousStep()">&lt; Previous</button>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="formData.selectedType ===  'DataClass'">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div style="margin-bottom: 10px;">
+                        Please select a {{formData.selectedType}} ?
+                    </div>
+
+                    <input type="text"
+                           class="form-control input-sm"
+                           ng-model="formData.treeSearchText"
+                           placeholder="Search"
+                           ng-change="searchInTree('DataClass')"
+                           ng-model-options='{ debounce: 500 }'>
+                    <div style="width: 100%; height: 300px;overflow-y: auto;border: 1px solid #DDD;">
+                        <div>
+                            <folders-tree-2
+                                    in-search-mode="formData.inSearchMode"
+                                    do-not-make-selected-bold="true"
+                                    expand-on-node-click-for="['Folder', 'DataModel']"
+                                    search-criteria="formData.treeSearchText"
+                                    on-node-click="onNodeInTreeSelect"
+                                    node="rootNode"></folders-tree-2>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;" ng-if="showPrevBtn">
+                        <button class="btn btn-default btn-xs modelSelectorDialogueBtn" ng-click="previousStep()">&lt; Previous</button>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="formData.selectedType == 'Folder'">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div style="margin-bottom: 10px;margin-left: 5px;">
+                        Please select a Folder:
+                    </div>
+
+                    <div style="width: 100%; height: 300px;overflow-y: auto; border: 1px solid #DDD;">
+                        <div>
+                            <folders-tree-2
+                                    do-not-make-selected-bold="true"
+                                    just-show-folders="true"
+                                    do-not-show-data-classes="true"
+                                    enable-local-storage="false"
+                                    on-node-click="onNodeInTreeSelect"
+                                    node="rootNode"></folders-tree-2>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;" ng-if="showPrevBtn">
+                        <button class="btn btn-default btn-xs modelSelectorDialogueBtn" ng-click="previousStep()">&lt; Previous</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div ng-if="formData.selectedType === 'Term'">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div>
+                        Please select a Term ?
+                    </div>
+                    <div style="margin-top: 5px;">
+                        Terminology*
+                        <mc-select-2
+                                width="'100%'"
+                                accept-typed-input="false"
+                                value-type="'static'"
+                                static-values="terminologies"
+                                id-property="'id'"
+                                display-property="'label'"
+                                search-property="'label'"
+                                on-select="onTerminologySelect">
+                            <div>
+                                <div>{{$item.label}}</div>
+                            </div>
+                        </mc-select-2>
+                    </div>
+                    <div>
+                        <div style="margin-top: 5px;">
+                            Term
+                            <input type="text"
+                                   class="form-control input-sm"
+                                   ng-model="formData.treeSearchText"
+                                   ng-disabled="(!formData.currentContext) || (formData.currentContext && formData.currentContext.domainType !== 'Terminology')"
+                                   ng-change="runContextSearch()"
+                                   ng-model-options='{ debounce: 500 }'
+                                   placeholder="Search for Terms...">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 5px;">
+                        <mc-infinite-scroll-list
+                                start-fetching="formData.startFetching"
+                                fetch-initially="false"
+                                fetch-method="fetch"
+                                height="240"
+                                page-size="formData.searchResultPageSize">
+                            <div style="padding: 5px 5px; border-bottom: 1px solid #DDD; cursor: pointer;"
+                                 ng-click="onSearchResultSelect($item, $event)">
+                                <div style="width:90%;">
+                                    <element-link
+                                            mc-parent-data-model="{id:$item.dataModel}"
+                                            mc-parent-data-class="{id:$item.dataClass}"
+                                            new-window="true"
+                                            mc-element="$item"></element-link>
+                                </div>
+                            </div>
+                        </mc-infinite-scroll-list>
+                    </div>
+                    <div ng-if="formData.searchResultTotal > 0" style="float: right;">
+                        <span ng-if="loading">
+                            <i class="fa fa-refresh fa-spin themeColor"></i>
+                        </span>
+                        <span style="font-size: 11px; font-style: italic;" class="themeColor">
+                            {{formData.searchResultDisplayedSoFar}} / {{formData.searchResultTotal}}
+                        </span>
+                    </div>
+                    <div style="margin-top: 10px;" ng-if="showPrevBtn">
+                        <button class="btn btn-default btn-xs modelSelectorDialogueBtn" ng-click="previousStep()">&lt; Previous</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div ng-if="formData.selectedType ===  'DataElement'" style="background-color: #FFF;">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div style="margin-bottom: 10px;margin-left: 5px;">
+                       Please select a {{formData.selectedType}} ?
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="formData.treeSearchText"
+                               placeholder="{{ ( (formData.currentContext)? ('Search within ' + formData.currentContext.label) : 'Search...' )}}"
+                               ng-change="runContextSearch()"
+                               ng-model-options='{ debounce: 500 }'>
+                    </div>
+
+                    <div style="margin-top: 5px;">
+                        <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
+                        <div style="margin-top: 2px;">
+                            <model-selector-tree
+                                    ng-model="context"
+                                    on-select="onContextSelected"
+                                    placeholder="'Choose a Folder, Data Model or Data Class '"
+                                    accepts="['Folder', 'DataModel', 'DataClass']"
+                                    used-in-modal-dialogue="true">
+                            </model-selector-tree>
+                        </div>
+                    </div>
+                    <div style="margin-top:2px;width:99.8%;">
+                        <mc-infinite-scroll-list
+                                start-fetching="formData.startFetching"
+                                fetch-initially="false"
+                                fetch-method="fetch"
+                                height="260"
+                                page-size="formData.searchResultPageSize">
+                            <div style="padding: 5px 5px; border-bottom: 1px solid #DDD; cursor: pointer;"
+                                 ng-click="onSearchResultSelect($item, $event)">
+                                <div style="width:90%;" ng-mouseover="$item.showBreadcrumbs = true"
+                                      ng-mouseleave="$item.showBreadcrumbs = false">
+                                    <element-link
+                                            mc-parent-data-model="{id:$item.dataModel}"
+                                            mc-parent-data-class="{id:$item.dataClass}"
+                                            new-window="true"
+                                            mc-element="$item"></element-link>
+                                    <model-path new-window="true" path="$item.breadcrumbs" ng-if="$item.showBreadcrumbs"></model-path>
+                                </div>
+                            </div>
+                        </mc-infinite-scroll-list>
+                    </div>
+                    <div ng-if="formData.searchResultTotal > 0" style="float: right;">
+                        <span ng-if="loading">
+                            <i class="fa fa-refresh fa-spin themeColor"></i>
+                        </span>
+                        <span style="font-size: 11px; font-style: italic;" class="themeColor">
+                            {{formData.searchResultDisplayedSoFar}} / {{formData.searchResultTotal}}
+                        </span>
+                    </div>
+                    <div style="margin-top: 10px;" ng-if="showPrevBtn">
+                        <button class="btn btn-default btn-xs modelSelectorDialogueBtn" ng-click="previousStep()">&lt; Previous</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div ng-if="formData.selectedType ===  'DataType'" style="background-color: #FFF;">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div style="margin-left: 5px;">
+                        Please select a DataType ?
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="formData.treeSearchText"
+                               placeholder="{{ ( (formData.currentContext)? ('Search within ' + formData.currentContext.label) : 'Search...' )}}"
+                               ng-change="runContextSearch()"
+                               ng-model-options='{ debounce: 500 }'>
+                    </div>
+
+                    <div style="margin-top: 5px;">
+                        <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
+                        <div style="margin-top: 2px;">
+                            <model-selector-tree
+                                    ng-model="context"
+                                    on-select="onContextSelected"
+                                    placeholder="'Choose a Folder or Data Model'"
+                                    accepts="['Folder', 'DataModel']"
+                                    do-not-show-data-classes="true"
+                                    used-in-modal-dialogue="true">
+                            </model-selector-tree>
+                        </div>
+                    </div>
+                    <div style="margin-top:2px;width:99.8%;">
+                        <mc-infinite-scroll-list
+                                start-fetching="formData.startFetching"
+                                fetch-initially="false"
+                                fetch-method="fetch"
+                                height="260"
+                                page-size="formData.searchResultPageSize">
+                            <div style="padding: 5px 5px; border-bottom: 1px solid #DDD; cursor: pointer;"
+                                 ng-click="onSearchResultSelect($item, $event)">
+                                <div style="width:90%;" ng-mouseover="$item.showBreadcrumbs = true"
+                                     ng-mouseleave="$item.showBreadcrumbs = false">
+                                    <element-link
+                                            mc-parent-data-model="{id:$item.dataModel}"
+                                            mc-parent-data-class="{id:$item.dataClass}"
+                                            new-window="true"
+                                            mc-element="$item"></element-link>
+                                    <model-path new-window="true" path="$item.breadcrumbs" ng-if="$item.showBreadcrumbs"></model-path>
+                                </div>
+                            </div>
+                        </mc-infinite-scroll-list>
+                    </div>
+
+
+
+
+                    <div ng-if="formData.searchResultTotal > 0" style="float: right;">
+                        <span ng-if="loading">
+                            <i class="fa fa-refresh fa-spin themeColor"></i>
+                        </span>
+                        <span style="font-size: 11px; font-style: italic;" class="themeColor">
+                            {{formData.searchResultDisplayedSoFar}} / {{formData.searchResultTotal}}
+                        </span>
+                    </div>
+                    <div style="margin-top: 10px;" ng-if="showPrevBtn">
+                        <button class="btn btn-default btn-xs modelSelectorDialogueBtn" ng-click="previousStep()">&lt; Previous</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+</div>

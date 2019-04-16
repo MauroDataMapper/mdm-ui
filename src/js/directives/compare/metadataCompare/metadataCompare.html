@@ -1,0 +1,66 @@
+
+
+<div>
+    <table class="table table-bordered table-condensed" style="table-layout: fixed;width: 100%;">
+        <thead>
+            <th ng-style="{'min-width': diffColumnWidthIn+'px', 'width':diffColumnWidthIn+'px'}"></th>
+            <th style="min-width: 8px;">Namespace</th>
+            <th style="min-width: 8px;">Key</th>
+            <th style="min-width: 8px;">Value</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="metadata in diffs">
+                <td ng-class="{'comparisonRow':true, 'deleted':metadata.deleted, 'modified':metadata.modified, 'created':metadata.created}">
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                </td>
+                <td style="word-break: break-all;">{{metadata.namespace}}</td>
+                <td style="word-break: break-all;">{{metadata.key}}</td>
+                <td style="word-break: break-all;">
+                    <div>{{metadata.value}}</div>
+                    <div><span style="border-bottom: 1px dashed #000;opacity: 0.6;">{{metadata.left}}</span></div>
+                    <div><span style="border-bottom: 1px dashed #000;">{{metadata.right}}</span></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+    <!--<div>-->
+    <!--<div ng-repeat="metadata in diffs">-->
+    <!--<div ng-if="metadata.created">-->
+    <!--<span class="comparisonRow created" style="margin-right: 5px">-->
+    <!--&nbsp;&nbsp;&nbsp;-->
+    <!--</span>-->
+    <!--{{metadata.namespace}}|{{metadata.key}}|{{metadata.value}}-->
+    <!--</div>-->
+    <!--<div ng-if="metadata.modified">-->
+
+    <!--<div style="display: table-cell;width:20px;" class="comparisonRow modified">-->
+    <!--</div>-->
+    <!--<div style="display: table-cell;padding-left: 5px;">-->
+    <!--<table style="padding: 2px;">-->
+    <!--<tr style="margin-bottom: 2px;font-size: 12px;font-style: italic;text-align: left;border-bottom: 1px solid #DDD">-->
+    <!--<td style="padding-left:3px;min-width: 50px;">Namespace</td>-->
+    <!--<td style="padding-left:3px;min-width: 50px;argin-left: 5px;">Key</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td style="min-width: 50px;padding-right: 15px;">{{metadata.namespace}}</td>-->
+    <!--<td style="min-width: 50px;margin-left: 5px;">{{metadata.key}}</td>-->
+    <!--</tr>-->
+    <!--</table>-->
+    <!--<div style="padding-left: 12px">{{metadata.left}}</div>-->
+    <!--<div style="padding-left: 12px">{{metadata.right}}</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div ng-if="metadata.deleted">-->
+    <!--<span class="comparisonRow deleted" style="margin-right: 5px">-->
+    <!--&nbsp;&nbsp;&nbsp;-->
+    <!--</span>-->
+    <!--{{metadata.namespace}}|{{metadata.key}}|{{metadata.value}}-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+</div>

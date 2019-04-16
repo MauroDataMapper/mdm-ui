@@ -1,0 +1,78 @@
+<div>
+    <mc-table
+            mc-name="elementsTable"
+            id="elementsTable"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="elementsFetch"
+
+            mc-records="records"
+            mc-static-loading-in-progress="loading"
+
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Classified Elements</span>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th style="cursor:pointer;max-width: 10%;width: 10%;"  columnName="domainType" sortable="true" filterable="true">
+                                Type
+                            </th>
+                            <th style="cursor:pointer;max-width: 30%;width: 30%;"  columnName="label" sortable="true" filterable="true">
+                                Name
+                            </th>
+                            <th style="cursor:pointer;max-width: 30%;width: 30%;"  columnName="description" sortable="true" filterable="true">
+                                Description
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td style="cursor:pointer;max-width: 10%;width: 10%;">
+                                <select class="form-control input-sm mcSelect">
+                                    <option ng-repeat="baseType in classifiableBaseTypes" value="{{baseType.id}}">{{baseType.title}}</option>
+                                </select>
+                            </td>
+                            <td style="cursor:pointer;max-width: 25px;width: 25px;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="cursor:pointer;max-width: 20%;width: 20%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in mcDisplayRecords">
+                            <td style="max-width: 10%;width: 10%;text-align: left;word-wrap: break-word;">
+                                <element-link mc-element="record" show-link="false" show-type-title="true"></element-link>
+                            </td>
+                            <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                                <element-link
+                                        mc-parent-data-model="{id:record.dataModel}"
+                                        mc-parent-data-class="{id:record.dataClass}"
+                                        mc-element="record"></element-link>
+                                <br>
+                                <model-path path="record.breadcrumbs"></model-path>
+                            </td>
+                            <td  style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                                <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;">
+                                    <more-description description="{{::record.description}}"></more-description>
+                                </div>
+                                <div>
+                                    <all-links-in-paged-list parent="record" type="'static'"></all-links-in-paged-list>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

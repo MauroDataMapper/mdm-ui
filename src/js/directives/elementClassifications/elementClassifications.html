@@ -1,0 +1,43 @@
+<div>
+    <div ng-if="(!editable) || (editable && !editable.$visible)">
+        <div ng-repeat="path in classifications">
+            <div style="float: left;">
+                <ul class="breadcrumbClassification">
+                    <li>
+                    <span ng-show="!editable || !editable.$visible">
+                        <a ng-href="{{path.link}}" target="{{target}}" >
+                            <span>{{::path.label}} </span>
+                            <i ng-hide="editable && editable.$visible" class="fa fa-tags" aria-hidden="false"></i>
+                        </a>
+                    </span>
+                        <span ng-show="editable && editable.$visible">
+                        <span>{{::path.label}} </span>
+                    </span>
+                        <span class="breadcrumbRemoveButton"
+                              ng-disabled="editable && editable.$waiting"
+                              ng-show="editable && editable.$visible" ng-click="remove($index)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                    </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div ng-show="editable && editable.$visible" style="clear: both;">
+        <mc-select-2
+                width="'100%'"
+                multi-select="true"
+                accept-typed-input="false"
+                value-type="'static'"
+                static-values="allClassifications"
+                default-value="classifications"
+                id-property="'id'"
+                display-property="'label'"
+                search-property="'label'"
+                on-select="onClassifierSelect">
+            <div>
+                <span ng-bind-html="$item.label | mchighlighter:$inputText"></span>
+            </div>
+        </mc-select-2>
+    </div>
+</div>

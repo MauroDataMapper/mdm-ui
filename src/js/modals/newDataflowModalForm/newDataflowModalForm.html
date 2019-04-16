@@ -1,0 +1,144 @@
+<form role='form' onkeypress='return event.keyCode != 13;'>
+    <div class='modal-header'>
+        <h3 class='modal-title'>New Dataflow</h3>
+    </div>
+    <div class='modal-body'>
+
+            <div style="margin-bottom: 5px">
+                <span class="badge importFormStep themeBackgroundColor">1</span>
+                <span class="importFormStepTitle">&nbsp;<strong>Please enter Dataflow details:</strong></span>
+            </div>
+            <div class="form-group">
+                <label for="name">Name*</label>
+                <input type="text" class="form-control" id="name" ng-model="model.label" ng-change="validate()">
+            </div>
+            <div class="form-group">
+                <label for="desc">Description:</label>
+                <textarea class="form-control" id="desc"  ng-model="model.description"></textarea>
+            </div>
+            <hr>
+            <div style="margin-bottom: 5px">
+                <span class="badge importFormStep themeBackgroundColor">2</span>
+                <span class="importFormStepTitle">&nbsp;<strong>Please select Dataflow direction:</strong></span>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="radio" style="margin-left: 10px;">
+                        <label style="margin-bottom: 5px;cursor:pointer;">
+                            <input type="radio" name="direction" ng-model="model.direction" value="'from'" ng-value="'from'" style="cursor:pointer;" ng-change="directionChanged()"> <strong>From</strong>
+                        </label>
+                        <model-selector-tree
+                                enable-local-storage = "false"
+                                on-select="onSelect"
+                                placeholder="'Select Source Data Model'"
+                                do-not-show-data-classes="true"
+                                ng-model="model.otherDataModel"
+                                processing="model.direction !== 'from'"
+                                tree-search-domain-type="'DataModel'"
+                                accepts="['DataModel']">
+                        </model-selector-tree>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-style="{'opacity': model.direction === 'from' ? 1 : 0.3 }">
+                    <div style="margin-left: 10px;">
+                        <div class="addNewDataflow dataModel" style="float:left;">
+                            <span ng-if="model.direction === 'from'">
+                                {{model.otherDataModel.label}}
+                            </span>
+                            <span ng-if="model.direction === 'to' || !model.otherDataModel">
+                                ...
+                            </span>
+                        </div>
+                        <div style="float:left;">
+                            <svg width="50px" height="50px">
+                                <defs>
+                                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" viewBox="0 0 20 20">
+                                        <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+                                    </marker>
+                                </defs>
+                                <line x1="0" y1="27" x2="42" y2="27" stroke="#000" stroke-width="2" marker-end="url(#arrow)" />
+                            </svg>
+                        </div>
+                        <div class="addNewDataflow dataModel rootDataModel"  style="float:left;">
+                            {{model.dataModel.label}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="radio">
+                        <label style="margin-bottom: 5px;cursor:pointer;">
+                            <input type="radio" name="direction" ng-model="model.direction" value="'to'" ng-value="'to'" style="cursor:pointer;" ng-change="directionChanged()"> <strong>To</strong>
+                        </label>
+                        <div style="margin-left: 10px;">
+                            <model-selector-tree
+                                    enable-local-storage = "false"
+                                    on-select="onSelect"
+                                    placeholder="'Select Target Data Model'"
+                                    do-not-show-data-classes="true"
+                                    ng-model="model.otherDataModel"
+                                    processing="model.direction !== 'to'"
+                                    tree-search-domain-type="'DataModel'"
+                                    accepts="['DataModel']">
+                            </model-selector-tree>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-style="{'opacity': model.direction === 'to' ? 1 : 0.3 }">
+                    <div style="margin-left: 10px;">
+                        <div class="addNewDataflow dataModel rootDataModel"  style="float:left;">
+                            {{model.dataModel.label}}
+                        </div>
+                        <div style="float:left;">
+                            <svg width="50px" height="50px">
+                                <defs>
+                                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth" viewBox="0 0 20 20">
+                                        <path d="M0,0 L0,6 L9,3 z" fill="#000" />
+                                    </marker>
+                                </defs>
+                                <line x1="0" y1="27" x2="42" y2="27" stroke="#000" stroke-width="2" marker-end="url(#arrow)" />
+                            </svg>
+                        </div>
+                        <div class="addNewDataflow dataModel" style="float:left;">
+                            <span ng-if="model.direction === 'to'">
+                                {{model.otherDataModel.label}}
+                            </span>
+                            <span ng-if="model.direction === 'from' || !model.otherDataModel">
+                                ...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 10px;" ng-if="model.hasError">
+                    <div class="alert alert-danger">
+                       <span ng-bind-html="model.errorMessage"></span>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 10px;" ng-if="model.processing">
+                    <uib-progressbar max="max" value="dynamic" class="progress-striped active">
+                        <span style="color:white; white-space:nowrap;"></span>
+                    </uib-progressbar>
+                </div>
+            </div>
+
+
+
+    </div>
+
+    <div class='modal-footer'>
+        <button type='button'
+                class='btn btn-success'
+                ng-click='save()'
+                ng-disabled="!model.isValid"><span
+                class='glyphicon glyphicon-ok'></span>
+            Save
+        </button>
+        <button class='btn btn-default' ng-click='close()'>Close</button>
+    </div>
+</form>
+
+

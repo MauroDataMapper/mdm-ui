@@ -1,0 +1,220 @@
+<div class="panel panel-default">
+    <form editable-form name="editableForm" onaftersave="formAfterSave()" onbeforesave="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body panel-table">
+            <h4>
+                <div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
+                        <span class="xeditableInput">
+                            <span editable-text="mcDataElement.label"
+                                  e-name="label"
+                                  e-style="width: 99%"
+                                  class="dataElementDetailsLabel"
+                                  ng-bind-html="mcDataElement.label | mchighlighter:$root.searchCriteria"
+                                  onbeforesave="validateLabel($data)"></span>
+                        </span>
+                    </div>
+                </div>
+            </h4>
+            <small class="elementDetailMCType">Data Element</small><br>
+            <span style="font-size: 11px;font-style: italic" class="dataElementDetailsLastUpdate">Last Update: {{::mcDataElement.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+        </div>
+        <table class="table table-bordered table-condensed dataElementDetailTable">
+            <tbody>
+            <tr>
+                <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                <td>
+                    <div style="width:50%">
+                        <element-alias
+                                in-edit-mode="editableForm.$visible"
+                                aliases="mcDataElement.editAliases"></element-alias>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-md-2">Description</th>
+                <td class="elementDetailDescription">
+
+                    <markdown-text-area mc-editable-form="editableForm" mc-element="mcDataElement" mc-property="'description'"></markdown-text-area>
+
+
+                    <!--<span class="xeditableTextArea">-->
+                            <!--<span  ng-show="editableForm.$visible"-->
+                                   <!--editable-textarea="mcDataElement.description"-->
+                                   <!--e-name="description"-->
+                                   <!--e-style="width: 99%;"-->
+                                   <!--e-rows="10"-->
+                                   <!--e-ng-keyup="descriptionKeyUp($event)"-->
+                                   <!--onbeforesave="validateValue($data,row)"><p class="dataClassDetailsDescription" ng-bind-html="mcDataElement.description  | mchighlighter:$root.searchCriteria"></p></span>-->
+                             <!--</span>-->
+                    <!--<div style="font-style: italic; cursor: pointer;font-size: 11px; color: #777777;">-->
+                        <!--<div style="float: left; margin-bottom: 10px;" ng-show="editableForm.$visible" >-->
+                            <!--<span><input type="checkbox" style="font-style: italic; cursor: pointer;" ng-model="showMarkDownPreview"> Show Markdown Preview</span>-->
+                            <!--<span style="padding-left: 10px;"><a ng-click="showAddElementToMarkdown()">Add Element</a> </span>-->
+                        <!--</div>-->
+                        <!--<div style="float: right; margin-bottom: 10px;margin-right: 15px;" ng-show="editableForm.$visible">-->
+                            <!--[Alt text](attachment.png)&nbsp;&nbsp;**Strong**&nbsp;&nbsp;#Heading-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div style="clear: both;">-->
+                        <!--<span markdown="editableForm.$data.description" ng-show="(showMarkDownPreview && editableForm.$visible) || (!editableForm.$visible)" makdown></span>-->
+                    <!--</div>-->
+                    
+                        <!--<span class="xeditableTextArea">-->
+                            <!--<span editable-textarea="mcDataElement.description"-->
+                                  <!--e-name="description"-->
+                                  <!--e-style="width: 99%"-->
+                                  <!--e-rows="5">-->
+                                <!--<p ng-bind-html="mcDataElement.description | mchighlighter:$root.searchCriteria" class="dataElementDetailsDescription"></p>-->
+                            <!--</span>-->
+                        <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-md-2">Data Type</th>
+                <td>
+                    <div ng-if="!editableForm.$visible && mcDataElement">
+                        <element-data-type element-data-type="mcDataElement.dataType" mc-parent-data-model="mcParentDataModel"></element-data-type>
+                    </div>
+                    <div ng-if="editableForm.$visible">
+
+
+                        <label ng-if="!showNewInlineDataType">Please select a Data Type or <a style="cursor: pointer;" ng-click="toggleShowNewInlineDataType()">Add a new one</a>:</label>
+                        <label ng-if="showNewInlineDataType">Please <a style="cursor: pointer;" ng-click="toggleShowNewInlineDataType()">select a Data Type </a> or Add a new one:</label>
+
+                        <div ng-if="showNewInlineDataType">
+                            <new-data-type-inline
+                                    parent-scope-handler="parentScopeHandler"
+                                    model="newlyAddedDataType"
+                                    parent-data-model="mcParentDataModel"
+                                    show-classification="false"
+                                    show-parent-data-model="false">
+                            </new-data-type-inline>
+                        </div>
+
+
+                        <div ng-if="!showNewInlineDataType">
+                            <mc-select-2
+                                    width="'100%'"
+                                    has-error="errors.dataType"
+                                    accept-typed-input="false"
+                                    value-type="'dynamic'"
+                                    default-value="mcDataElement.dataType"
+                                    load-dynamic-values="fetchDataTypes"
+                                    min-input-length="1"
+                                    record="model"
+                                    id-property="'id'"
+                                    display-property="'label'"
+                                    search-property="'label'"
+                                    load-all-on-click="true"
+                                    on-select="onDataTypeSelect">
+                                <div>
+                                    <div>{{$item.label}}</div>
+                                    <div>
+                                        <element-link mc-element="$item" show-type-title="true" show-link="false"></element-link>
+                                    </div>
+                                </div>
+                            </mc-select-2>
+                         </div>
+                        <span class="help-block errorMessage" ng-if="errors && errors.dataType"><small>{{errors.dataType}}</small></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-md-2">Parent Hierarchy</th>
+                <td><model-path  path="::mcDataElement.breadcrumbs"></model-path></td>
+            </tr>
+
+            <tr>
+                <th class="detailsRowHeader  col-md-2">Multiplicity</th>
+                <td class="dataClassDetailsModelPath">
+
+                    <div ng-hide="editableForm.$visible">
+                        <multiplicity min="mcDataElement.minMultiplicity" max="mcDataElement.maxMultiplicity"></multiplicity>
+                    </div>
+                    <div ng-show="editableForm.$visible">
+                        <div style="float: left;margin-right: 13px;">
+                            <div style="padding-left: 8px">Min</div>
+                            <div><span editable-text="mcDataElement.minMultiplicity"
+                                       e-name="minMultiplicity"
+                                       e-style="width: 50px"
+                                       ng-bind-html="mcDataElement.minMultiplicity"
+                                       onbeforesave="validateMinMultiplicity($data)"></span>
+                            </div>
+                        </div>
+
+                        <div style="float: left;margin-right: 13px;">
+                            <div style="padding-left: 6px">Max</div>
+                            <div><span editable-text="mcDataElement.maxMultiplicity"
+                                       e-name="maxMultiplicity"
+                                       e-style="width: 50px"
+                                       ng-bind-html="mcDataElement.maxMultiplicity"
+                                       onbeforesave="validateMaxMultiplicity($data)"></span>
+                            </div>
+                        </div>
+
+                        <div style="clear: both;font-size: 11px;font-style: italic;">
+                            Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <th class="detailsRowHeader  col-md-2">Classifications</th>
+                <td>
+                    <element-classifications classifications="mcDataElement.classifiers" editable="editableForm"></element-classifications>
+                </td>
+            </tr>
+
+            <!--<tr ng-show="!editableForm.$visible">-->
+                <!--<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">-->
+                    <!--Links-->
+                <!--</th>-->
+                <!--<td>-->
+                    <!--<div style="width: 100%;" ng-if="mcDataElement">-->
+                        <!--<all-links-in-paged-list parent="mcDataElement" show-description="true" show-no-links-message="true" type="'dynamic'"></all-links-in-paged-list>-->
+                    <!--</div>-->
+                <!--</td>-->
+            <!--</tr>-->
+
+
+            <tr show-if-role-is-writable mc-element="mcDataElement">
+                <td colspan="2" style="text-align: right;">
+
+                    <div style="float: right">
+                        <editable-form-buttons
+                                hide-edit="true"
+                                on-cancel-edit="onCancelEdit"
+                                editable="editableForm"
+                                text-location="left"
+                                on-confirm-delete="delete">
+                        </editable-form-buttons>
+                    </div>
+                    <div style="float: right">
+                        <div  ng-show="!editableForm.$visible && !editableForm.$deletePending" class="btn-group-xs" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                            <button uib-tooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                    ng-click="editableForm.$show();"
+                                    ng-show="!editableForm.$visible && !editable.$deletePending" ng-disabled="deleteInProgress" uib-dropdown-toggle>
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                <!--<span class="caret" style="margin-right: 2px;"></span>-->
+                            </button>
+                            <!--<ul class="dropdown-menu" uib-dropdown-menu style="right: 0; left: auto;" role="menu" aria-labelledby="single-button">-->
+                                <!--<li class="modelFilterItem" ng-click="editableForm.$show();">-->
+                                    <!--<a title="Edit details such as Name, Descriptions,...">Details</a>-->
+                                <!--</li>-->
+                                <!--<li class="modelFilterItem" ng-click="openEditForm('links')">-->
+                                    <!--<a title="Add/Edit Links">Links</a>-->
+                                <!--</li>-->
+                            <!--</ul>-->
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    </form>
+</div>

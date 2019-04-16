@@ -1,0 +1,8 @@
+<span ng-show="description && description.length != 0">
+    <div ng-if="showMore">
+        <span ng-bind-html="fullDesc | mchighlighter:$root.searchCriteria"></span>&nbsp;<a style="cursor: pointer;text-decoration:none;" ng-click="toggle()"  ng-show="fullDesc && fullDesc.length > 0 && fullDesc.length > maxLength">close</a>
+    </div>
+    <div ng-if="!showMore">
+        <span ng-bind-html="shortDesc  | mchighlighter:$root.searchCriteria"></span>&nbsp;<a style="cursor: pointer;text-decoration:none;" ng-click="toggle()"   ng-show="shortDesc && shortDesc.length > 0  && fullDesc.length > maxLength">more</a>
+    </div>
+</span>

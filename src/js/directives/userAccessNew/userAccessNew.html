@@ -1,0 +1,155 @@
+<div>
+    <mc-table
+            mc-name="usersAccessTable"
+            id="usersAccessTable"
+            mc-record-type="'static'"
+            mc-records="users"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">User Access</span>
+
+                <div ng-if="parent.editable" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+                    <button type="button" uib-tooltip="Add User"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;" ng-if="clientSide">
+                    <button type="button" uib-tooltip="Add User"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                    <tr class="mcTableHeader">
+                        <th style="cursor:pointer;max-width: 30%;width: 30%;" columnName="user.emailAddress" sortable="true" filterable="true">
+                            User
+                        </th>
+                        <th style="cursor:pointer;max-width: 20%;width: 20%;" columnName="user.emailAddress" sortable="true" filterable="true">
+                            First Name
+                        </th>
+                        <th style="cursor:pointer;max-width: 20%;width: 20%;" columnName="user.emailAddress" sortable="true" filterable="true">
+                            Last Name
+                        </th>
+                        <th style="cursor:pointer;max-width: 8%;width: 8%;"  columnName="readAccess" sortable="true" filterable="true">
+                            Read
+                        </th>
+                        <th style="cursor:pointer;max-width: 8%;width: 8%;"  columnName="writeAccess" sortable="true" filterable="true">
+                            Write
+                        </th>
+                        <th style="cursor:pointer;max-width: 8%;width: 8%;" >
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in mcDisplayRecords">
+                        <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                            <div ng-show="!record.inEdit">
+                                {{record.user.emailAddress}}
+                            </div>
+
+                            <div ng-show="record.inEdit">
+                                <div ng-show="!record.isNew">
+                                    {{record.user.emailAddress}}
+                                </div>
+                                <div ng-show="record.isNew">
+                                    <mc-select-2
+                                            width="'100%'"
+                                            accept-typed-input="true"
+                                            value-type="'dynamic'"
+                                            default-value="record.user"
+                                            load-dynamic-values="fetchUser"
+                                            min-input-length="1"
+                                            has-error="record.edit.errors && record.edit.errors['user']"
+                                            record="record"
+                                            id-property="'id'"
+                                            display-property="'emailAddress'"
+                                            search-property="'emailAddress'"
+                                            on-select="onUserSelect">
+                                        <div>
+                                            <div>{{$item.emailAddress}}</div>
+                                        </div>
+                                    </mc-select-2>
+                                    <small  ng-show="record.edit.errors && record.edit.errors['user']" class="errorMessage">{{record.edit.errors['user']}}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                            <div ng-show="!record.inEdit">
+                                {{record.user.firstName}}
+                            </div>
+
+                            <div ng-show="record.inEdit">
+                                <div ng-show="!record.isNew">
+                                    {{record.user.firstName}}
+                                </div>
+                                <div ng-show="record.isNew">
+                                    <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['firstName']}">
+                                        <input type="text" class="form-control input-sm" type="text" ng-model="record.edit.user.firstName"/>
+                                        <small  ng-show="record.edit.errors && record.edit.errors['firstName']" class="errorMessage">{{record.edit.errors['firstName']}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                            <div ng-show="!record.inEdit">
+                                {{record.user.lastName}}
+                            </div>
+
+                            <div ng-show="record.inEdit">
+                                <div ng-show="!record.isNew">
+                                    {{record.user.lastName}}
+                                </div>
+                                <div ng-show="record.isNew">
+                                    <div class="form-group" ng-class="{'has-error':record.edit.errors && record.edit.errors['lastName']}">
+                                        <input type="text" class="form-control input-sm" type="text" ng-model="record.edit.user.lastName"/>
+                                        <small  ng-show="record.edit.errors && record.edit.errors['lastName']" class="errorMessage">{{record.edit.errors['lastName']}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
+                            <span ng-show="record.readAccess && record.user.userRole == 'ADMINISTRATOR'">
+                                <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                            </span>
+                            <span ng-show="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
+                                <input type="checkbox" ng-model="record.edit.readAccess" ng-change="readAccessChecked(record, $index)">
+                            </span>
+                        </td>
+                        <td style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
+                            <span ng-show="record.writeAccess && record.user.userRole == 'ADMINISTRATOR'">
+                                <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                            </span>
+                            <span ng-show="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
+                                <input type="checkbox" ng-model="record.edit.writeAccess"  ng-change="writeAccessChecked(record, $index)">
+                            </span>
+                        </td>
+                        <td style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
+                            <div ng-if="record.isNew">
+                                <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit" hide-delete="true"></mc-table-button>
+                            </div>
+
+                            <div ng-if="!record.isNew && record.inEdit">
+                                <div ng-if="record.user.userRole === 'ADMINISTRATOR'">
+                                    <small style="font-style: italic">Admin</small>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

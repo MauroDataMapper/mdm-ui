@@ -6,6 +6,8 @@ import angularAnimate from 'angular-animate';
 // Router
 import angularUIRouter from 'angular-ui-router';
 
+import multiStepForm from 'angular-multi-step-form';
+
 
 import {ngSanitize} from 'angular-sanitize/angular-sanitize'
 
@@ -277,7 +279,8 @@ angular.module(MODULE_NAME, [
     servicesModule,
     modalsModule,
     handlersModule,
-    'ngSanitize'
+    'ngSanitize',
+    multiStepForm.name
 ]).config(($stateProvider, appSettingProvider, stateRoleAccessProvider, ngToastProvider) => {
     $stateProvider.state("appContainer", {
         abstract: true,

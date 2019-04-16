@@ -13,7 +13,7 @@ angular.module('directives')
         link: function (scope, element, attrs) {
 
         },
-        controller: function () {
+        controller: function ($scope, resources, elementTypes) {
 
             $scope.baseTypes = [{id:"", title:""}].concat(elementTypes.getBaseTypesAsArray());
             $scope.classifiableBaseTypes = _.filter($scope.baseTypes, function (type) {

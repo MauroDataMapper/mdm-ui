@@ -24,6 +24,14 @@ window.marked = require('marked/marked.min');
 
 import 'angular-bootstrap-contextmenu/contextMenu'
 
+import 'angular-animate/angular-animate'
+import 'angular-aria/angular-aria'
+import 'angular-cookies/angular-cookies'
+import 'angular-touch/angular-touch'
+
+import 'croppie/croppie.js'
+import 'angular-xeditable/dist/js/xeditable'
+import 'angular-xeditable/dist/css/xeditable.css'
 
 
 // Our modules
@@ -317,7 +325,14 @@ angular.module(MODULE_NAME, [
     handlersModule,
     'ngSanitize',
     multiStepForm.name,
-    'ui.bootstrap.contextMenu'
+    'ui.bootstrap',
+    'ui.bootstrap.contextMenu',
+    'xeditable',
+    'ngAnimate',
+    'ngAria',
+    'ngCookies',
+    'ngTouch'
+
 ]).config(($stateProvider, appSettingProvider, stateRoleAccessProvider, ngToastProvider) => {
     $stateProvider.state("appContainer", {
         abstract: true,
@@ -720,7 +735,13 @@ angular.module(MODULE_NAME, [
 
 
 
-}).run(function ($rootScope, $state, $stateParams, $cookies, $window, securityHandler, ngToast, modalHandler, stateRoleAccess, authService, appSetting, userSettingsHandler, stateHandler) {
+}).run(function ($rootScope, $state, $stateParams, $cookies, $window, securityHandler, ngToast, modalHandler, stateRoleAccess, authService, appSetting, userSettingsHandler, stateHandler, editableOptions) {
+
+
+
+    //assign Bootstrap3 theme to Angular-xEditable plugin
+    //editableThemes.bs3.inputClass = 'input-sm col-sm-12 col-xs-12 col-md-12 col-lg-12';
+    editableOptions.theme = 'bs3';
 
     const ENV = window.globalConfig;
 

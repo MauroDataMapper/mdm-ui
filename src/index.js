@@ -75,6 +75,9 @@ import './js/controllers/admin/modelManagement'
 import './js/controllers/admin/pendingUsers'
 import './js/controllers/admin/user'
 import './js/controllers/admin/users'
+import './js/controllers/dataFlow/dataFlow'
+import './js/controllers/dataFlow/dataFlowChain'
+import './js/controllers/dataFlow/dataFlowDM2DM'
 
 
 

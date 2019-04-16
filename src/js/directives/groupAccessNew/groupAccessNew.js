@@ -10,10 +10,9 @@ angular.module('directives').directive('groupAccessNew', function () {
 
         link: function (scope, element, attrs) {},
 
-        controller: function($scope,ngTableParams, securityHandler, $q, resources, messageHandler){
+        controller: function($scope, securityHandler, $q, resources, messageHandler){
             $scope.groups = [];
             $scope.allGroups = [];
-
             $scope.supportedDomainTypes = {
                 "DataModel":   {name:"dataModel",   message:"Data Model"},
                 "Classifier":  {name:"classifier",  message:"Classifier"},

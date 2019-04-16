@@ -8,7 +8,7 @@ angular.module('directives').directive('pendingUsersTable', function () {
 
         },
 
-        controller: ['$scope', 'securityHandler', 'NgTableParams', 'resources', 'messageHandler', '$rootScope', function ($scope, securityHandler, ngTableParams, resources, messageHandler, $rootScope) {
+        controller:  function ($scope, securityHandler, resources, messageHandler, $rootScope) {
             $scope.pendingUserFetch = function (pageSize, pageIndex, sortBy, sortType, filters) {
                 var options = {
                     pageSize: pageSize,
@@ -43,7 +43,7 @@ angular.module('directives').directive('pendingUsersTable', function () {
                 });
             };
 
-        }]
+        }
     };
 });
 

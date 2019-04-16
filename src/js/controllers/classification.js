@@ -1,4 +1,4 @@
-angular.module('controllers').controller('classificationCtrl', function ($scope, $state, $stateParams, resources, $window, ngTableParams, $q, elementTypes, userSettingsHandler, stateHandler) {
+angular.module('controllers').controller('classificationCtrl', function ($scope, $state, $stateParams, resources, $window, $q, elementTypes, userSettingsHandler, stateHandler) {
 
         $scope.activeTab = {index:-1};
 

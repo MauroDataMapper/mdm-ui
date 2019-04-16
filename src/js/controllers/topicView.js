@@ -1,4 +1,4 @@
-angular.module('controllers').controller('topicViewCtrl', function ($scope, $state, $stateParams, resources, $window, ngTableParams, $q, elementTypes, userSettingsHandler,topicViewHandler,$filter) {
+angular.module('controllers').controller('topicViewCtrl', function ($scope, $state, $stateParams, resources, $window, $q, elementTypes, userSettingsHandler,topicViewHandler,$filter) {
 
         $window.document.title = "TopicView";
         $scope.targetTreeLoading = true;

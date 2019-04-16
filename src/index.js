@@ -83,6 +83,13 @@ import './js/controllers/dataFlow/dataFlowDM2DM'
 import './js/controllers/newClassifier/newClassifier'
 import './js/controllers/newClassifier/newClassifierStep1Ctrl'
 
+import './js/controllers/newDataClass/newDataClass'
+import './js/controllers/newDataClass/newDataClassStep0Ctrl'
+import './js/controllers/newDataClass/newDataClassStep1Ctrl'
+import './js/controllers/newDataClass/newDataClassStep2Ctrl'
+
+
+
 
 
 

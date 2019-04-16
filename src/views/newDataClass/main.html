@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        <multi-step-container
+                steps="steps"
+                class="simple-prev-next"
+                on-cancel="cancel()">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <step-container></step-container>
+                </div>
+            </div>
+            <div class="row" ng-hide="$isLast()">
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <button ng-disabled="$isFirst()" class="btn btn-default btn-sm" ng-click="$previousStep()">
+                        <span class="fa fa-chevron-left"></span>
+                        Previous
+                    </button>
+                    <button  ng-hide="$isLast()" class="btn btn-default btn-sm" ng-click="cancelWizard()">
+                        Cancel
+                    </button>
+                </div>
+
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
+                    <strong ng-bind-template="{{$getActiveIndex()}} / {{$getSteps().length}}"></strong>
+                </div>
+
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
+                    <button ng-hide="$isLast() "
+                            ng-disabled="$isLast() || ($getActiveStep().hasForm && !$getActiveStep().valid)"
+                            class="btn btn-default btn-sm" ng-click="$nextStep()">
+                        Next
+                        <span class="fa fa-chevron-right"></span>
+                    </button>
+                </div>
+            </div>
+        </multi-step-container>
+    </div>
+</div>

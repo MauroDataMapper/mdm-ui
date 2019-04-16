@@ -1,0 +1,251 @@
+<div class="row" style="padding: 5px">
+    <div class="row" style="padding-top:5px">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="margin-top:5px">
+            <div style="text-align: left;margin-left: 10px;">
+
+                    <uib-tabset>
+                        <uib-tab index="0" heading="Email">
+                            <form name="configForm" ng-submit="submit()">
+                                    <h4>Admin Confirm User Registration Email</h4>
+                                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Subject<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="adminConfirmSubject" type="text" class="form-control" ng-model="properties['email.admin_confirm_registration.subject']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.adminConfirmSubject.$error.required" class="text-warning">
+                                                        Subject content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Body<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <textarea name="adminConfirmBody"  rows="9" class="form-control" ng-model="properties['email.admin_confirm_registration.body']" required></textarea>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.adminConfirmBody.$error.required" class="text-warning">
+                                                        Body content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <h4>Admin Registered User</h4>
+                                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Subject<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="adminRegisterSubject" type="text" class="form-control" ng-model="properties['email.admin_register.subject']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.adminRegisterSubject.$error.required" class="text-warning">
+                                                        Subject content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Body<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <textarea name="adminRegisterBody"  rows="9" class="form-control" ng-model="properties['email.admin_register.body']" required></textarea>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.adminRegisterBody.$error.required" class="text-warning">
+                                                        Body content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <h4>From Address</h4>
+                                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Email Address<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="fromAddress" type="email" class="form-control" ng-model="properties['email.from.address']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.fromAddress.$error.required" class="text-warning">
+                                                        Email address required
+                                                    </small>
+                                                    <small ng-show="configForm.fromAddress.$error.email" class="text-warning">
+                                                        Email formatting invalid
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Name<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="fromName" type="text" class="form-control" ng-model="properties['email.from.name']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.fromName.$error.required" class="text-warning">
+                                                        Name of sender required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <h4>User Invited to Edit</h4>
+                                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Subject<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="inviteEditSubject" type="text" class="form-control" ng-model="properties['email.invite_edit.subject']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.inviteEditSubject.$error.required" class="text-warning">
+                                                        Subject content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Body<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <textarea name="inviteEditBody" rows="9" class="form-control" ng-model="properties['email.invite_edit.body']" required></textarea>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.inviteEditBody.$error.required" class="text-warning">
+                                                        Body content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <h4>User Invited to View</h4>
+                                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Subject<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="inviteViewSubject" type="text" class="form-control" ng-model="properties['email.invite_view.subject']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.inviteViewSubject.$error.required" class="text-warning">
+                                                        Subject content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Body<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <textarea name="inviteViewBody"   rows="9"  class="form-control" ng-model="properties['email.invite_view.body']" required></textarea>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.inviteViewBody.$error.required" class="text-warning">
+                                                        Body content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <h4>User Self Registered</h4>
+                                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Subject<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <input name="selfRegisterSubject" type="text" class="form-control" ng-model="properties['email.self_register.subject']" required>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.selfRegisterSubject.$error.required" class="text-warning">
+                                                        Subject content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                                Body<sup>*</sup>
+                                            </th>
+                                            <td>
+                                                <textarea name="selfRegisterBody"  rows="9" class="form-control" ng-model="properties['email.self_register.body']" required></textarea>
+                                                <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                    <small ng-show="configForm.selfRegisterBody.$error.required" class="text-warning">
+                                                        Body content required
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                <p class="text-right" style="margin-top: 15px;">
+                                    <button type="submit" class="btn btn-primary"
+                                            ng-disabled="configForm.$invalid || same() || saving">
+                                        {{ saving ? 'Saving...' : 'Save' }}
+                                    </button>
+                                </p>
+                            </form>
+                        </uib-tab>
+                        <uib-tab index="2" heading="Lucene">
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <h4>Lucene Index</h4>
+                                    <p>Please press the following button to rebuild Lucene Search Index.</p>
+                                     <p>While reindexing in in progress, some functionalities such as search might not work as expected.
+                                        <br>Once it is complete, you will be notified in this page.
+                                        <br>Please be patient and don't leave this page while reindexing is in progress.
+                                     </p>
+                                    <input ng-disabled="indexingStatus == 'start'"  type="button" class="btn btn-primary" ng-click="rebuildIndex()" value="Rebuild Index"/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="text-align: center;">
+                                    <div ng-show="indexingStatus == 'start'">
+                                        <div style="margin-left: 30%">
+                                            <p  class="rebuildingIndexInProgress themeColor">
+                                                <i class="fa fa-refresh fa-spin"></i>
+                                            </p>
+                                        </div>
+                                        <div style="margin-left: 35%;">
+                                            <p style="font-weight: bold;">MetadataCatalogue is rebuilding indices.<br>Please wait...</p>
+                                        </div>
+                                    </div>
+                                    <div ng-show="indexingStatus == 'success'">
+                                        <div style="margin-left: 30%">
+                                            <p  class="rebuildingIndexSuccess">
+                                                <i class="fa fa-check"></i>
+                                            </p>
+                                        </div>
+                                        <div style="margin-left: 35%; font-weight: bold;">
+                                            <p>Successfully ReIndexed {{indexingTime}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div ng-show="indexingStatus == 'error'">
+                                        <div style="margin-left: 30%">
+                                            <p  class="rebuildingIndexError">
+                                                <i class="fa fa-times"></i>
+                                            </p>
+                                        </div>
+                                        <div style="margin-left: 35%">
+                                            <p>Error in indexing process!</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </uib-tab>
+
+                    </uib-tabset>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+<div class="panel panel-default">
+    <table class="table table-bordered table-condensed ">
+        <thead>
+            <tr>
+                <th class="detailsRowHeader" colspan="3">New Version</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <div style="margin-bottom: 10px">
+                    <div style="margin-bottom: 10px">
+                        <span class="badge importFormStep themeBackgroundColor">1</span>
+                        <span class="importFormStepTitle">&nbsp;Please select type of the new version you want to create:</span>
+                        <div style="margin-left: 30px;">
+                            <small>A new version of the Terminology, keeps all Terms and Term Relations of the current Terminology </small>
+                            <small>(<element-link
+                                    mc-parent-data-model="{id:terminology.id}"
+                                    mc-element="terminology"></element-link>)</small>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="panel panel-default" style="margin-left: 10px;">
+                                <div class="panel-body">
+                                    <div>
+                                        <div style="float: left;font-size: 16px;">
+                                            <i class="fa fa-list themeColor"></i>
+                                        </div>
+                                        <div>
+                                            &nbsp;
+                                            <input type="radio" ng-model="versionType" value="newElementVersion" checked ng-change="versionTypeChecked()" style="cursor: pointer" ng-disabled="processing">
+                                            <label>&nbsp;New Terminology Version</label>
+                                            <br>
+                                            <small>This will create a new version of <element-link
+                                                    mc-parent-data-model="{id:terminology.id}"
+                                                    mc-element="terminology"></element-link>, You must choose a different name for the new Terminology.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="panel panel-default" style="margin-right: 10px;">
+                                    <div class="panel-body">
+                                        <div>
+                                            <div style="float: left;font-size: 16px;">
+                                                <i class="fa fa-file-text-o themeColor"></i>
+                                            </div>
+                                            <div>
+                                                &nbsp;
+                                                <input type="radio" ng-model="versionType" value="newDocumentVersion" ng-change="versionTypeChecked()" style="cursor: pointer" ng-disabled="processing">
+                                                <label>&nbsp;New Document</label>
+                                                <br>
+                                                <small>This will create a new <strong>Document</strong> for <element-link
+                                                        mc-parent-data-model="{id:terminology.id}"
+                                                        mc-element="terminology"></element-link></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="versionType === 'newElementVersion'">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div style="margin-bottom: 10px">
+                                    <span class="badge importFormStep themeBackgroundColor">2</span>
+                                    <span class="importFormStepTitle">&nbsp;Please provide the following details:</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div ng-class="{'form-group':true, 'has-error': errors && errors.label }">
+                                        <label for="label">Terminology Name*</label>
+                                        <input class="form-control col-lg-6 col-md-6 col-sm-6" id="label" ng-model="form.label" required ng-disabled="processing">
+                                        <span class="help-block" ng-if="errors && errors.label"><small>{{errors.label}}</small></span>
+                                    </div>
+                                    <span class="help-block" style="margin-top:0px;"><small>The name should be different from the current version name '{{terminology.label}}'</small></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div ng-class="{'form-group':true, 'has-error': errors && errors.copyPermissions}" style="margin-bottom: 0px;">
+                                        <input type="checkbox" id="copyPermissions" ng-model="form.copyPermissions"  ng-disabled="processing">
+                                        <label for="copyPermissions">Copy Permissions</label>
+                                        <span class="help-block" ng-if="errors && errors.copyPermissions"><small>{{errors.copyPermissions}}</small></span>
+                                    </div>
+                                    <span class="help-block" style="margin-top:0px;"><small>If checked, all read/write permissions for users and groups of this Terminology will be copied to the new Terminology.</small></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" ng-if="step > 1">
+                        <div class="col-lg-12 col-md-9 col-sm-12">
+                            <button class="btn btn-success btn-sm" ng-click="save()" ng-disabled="processing">
+                                Submit
+                            </button>
+                            <button class="btn btn-default btn-sm" ng-click="cancel()" ng-disabled="processing">
+                                Cancel
+                            </button>
+                            <div style="margin-top: 5px;" ng-if="processing">
+                                <uib-progressbar max="100" value="100" class="progress-striped active">
+                                    <span style="color:white; white-space:nowrap;"></span>
+                                </uib-progressbar>
+                            </div>
+                        </div>
+                    </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

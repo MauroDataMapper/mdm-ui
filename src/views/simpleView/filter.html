@@ -1,0 +1,224 @@
+<div style="padding-bottom:200px;position: relative;" class="simpleViewHomeContainer">
+    <div class="row" style="padding: 5px 0px 5px 0px;">
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: left">
+            <div>
+                <div style="margin-bottom: 5px; font-weight: bold; padding:10px 5px; height: 40px; width:100%;color:#FFF" class="themeBackgroundColor">
+                    <div style="float: left">Filters </div>
+                    <div style="float: right;margin-right: 5px;font-size: 18px;cursor: pointer;" ng-if="isSmallScreen" ng-click="toggleFilterItems()">
+                        <i class="fa fa-bars"></i>
+                    </div>
+                </div>
+                <div ng-repeat="(key, filter) in filters" style="padding-bottom: 20px;padding-top: 10px;" ng-if="!isSmallScreen || (isSmallScreen && showFilterItems)">
+                    <div style="font-size: 16px;" class="themeBorderColor">
+                        <div>
+                            <strong>{{filter.label}} &nbsp;</strong>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <label ng-repeat="value in filter.values" class="container">{{value.displayLabel}}
+                            <input type="checkbox" ng-change="filterUpdated($event, filter, value)" ng-model="value.checked">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12" style="text-align: left">
+            <div>
+                <div style="font-weight: bold; padding:10px 5px; height: 40px; width:100%;color:#FFF" class="themeBackgroundColor">
+                    <span ng-if="resultCount > 0">Result ({{resultCount}})</span>
+                    <span ng-if="resultCount == 0">No Result</span>
+                </div>
+                <div style="margin: 10px 0px;">
+                    <div class="input-group">
+                        <input type="text"
+                               id="searchInput"
+                               class="form-control input-md"
+                               ng-model="searchInput"
+                               ng-model-options='{ debounce: 500 }'
+                               ng-keypress='searchInputKeyPress($event)'
+                               placeholder="Search">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-md" type="button" ng-click="searchInputUpdated()">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+               <div>
+                   <mc-table
+                           mc-name="metadataTable"
+                           id="metadataTable"
+                           mc-record-type="'dynamic'"
+                           mc-fetch-method="dataModelsFetch"
+                           mc-table-handler="mcTableHandler"
+                           mc-display-records="mcDisplayRecords"
+                           mc-page-sizes="[5,10,15,20]"
+                           mc-page-size="5"
+                           mc-page-number="1">
+                       <div class="mcTableMain">
+                           <div class="mcTableContainer">
+                               <table class="table  mcTable">
+                                   <tbody>
+                                   <tr ng-repeat="$item in mcDisplayRecords">
+                                       <td style="max-width: 100%;width: 100%;text-align: left;word-wrap: break-word;border-top: transparent 1px solid !important; padding: 1px !important;">
+                                           <div>
+                                               <div class="row" style="margin-right:0 !important; margin-left:0 !important;height: 100%;width: 100%;position: relative"  ng-class="{'simpleViewFilter': true, 'dataModelItem': true, 'selected': submittedForm.selectedDataModelsMap[$item.id]}">
+                                                   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="text-align: center;padding-top:15px;">
+                                                       <img src="{{$item.picture}}" style="width: 100%;height: 100%;max-width: 100px;max-height: 100px;">
+                                                   </div>
+                                                   <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="font-size: 16px; padding: 5px;">
+                                                       <div>
+                                                           <strong>{{$item.label}}</strong>
+                                                       </div>
+                                                       <div style="width:100%;padding-bottom: 5px;">
+                                                           <markdown-text-area description="$item.description" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                       </div>
+                                                       <div style="margin-top:10px;font-size:14px;cursor: pointer;" >
+                                                           <a style="text-decoration: none; padding-right: 20px;float:left;" ng-click="showMoreDetails($item)">More details <i style="font-size: 12px;" class="fa fa-chevron-down" ng-if="!$item.showMoreDetails"></i> <i style="font-size: 12px;" class="fa fa-chevron-up" ng-if="$item.showMoreDetails"></i>  </a>
+                                                           <a style="text-decoration: none; padding-right: 20px;float:left;" ng-href="{{$item.simpleViewLink}}" target="_blank">View content <i style="font-size: 12px;" class="fa fa-external-link"></i></a>
+                                                           <a style="text-decoration: none;" ng-if="!submittedForm.selectedDataModelsMap[$item.id]" ng-click="addDataModelToBasket($event, $item)">Select <i style="font-size: 12px;" class="fa fa-plus"></i></a>
+                                                           <a style="text-decoration: none;" ng-if="submittedForm.selectedDataModelsMap[$item.id]"  ng-click="removeDataModelFromBasket($event, $item)" >Remove <i style="font-size: 12px;" class="fa fa-times deleteButton"></i></a>
+                                                       </div>
+                                                   </div>
+                                                   <div class="row" ng-class="{'simpleViewFilter': true, 'dataModelItem': true, 'selected': submittedForm.selectedDataModelsMap[$item.id]}" style="margin-top: 10px;margin-bottom: 5px;margin-right:0px !important;margin-left:0px !important;" ng-if="$item.showMoreDetails" >
+                                                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding-bottom: 20px;">
+                                                           <div ng-if="$item.moreDetailsTable['Context of data collected']">
+                                                               <div>
+                                                                   <strong>Context of data collected</strong>
+                                                               </div>
+                                                               <div>
+                                                                   {{$item.moreDetailsTable['Context of data collected']}}
+                                                               </div>
+                                                           </div>
+                                                           <div ng-if="$item.moreDetailsTable['Extraction / data collection']">
+                                                               <div>
+                                                                   <strong>Extraction / data collection</strong>
+                                                               </div>
+                                                               <div>
+                                                                   {{$item.moreDetailsTable['Extraction / data collection']}}
+                                                               </div>
+                                                           </div>
+                                                       </div>
+                                                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+                                                           <table class="table table-condensed table-bordered">
+                                                               <tbody>
+                                                               <tr class="simpleViewFilterTableTr">
+                                                                   <th style="width:25%;">Type of data</th>
+                                                                   <th style="width:25%;">Coverage</th>
+                                                                   <th style="width:25%;">Geography</th>
+                                                                   <th style="width:25%;">Duration</th>
+                                                               </tr>
+                                                               <tr class="simpleViewFilterTableTr">
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Type of data']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Coverage']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Geography']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Duration']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                               </tr>
+                                                               </tbody>
+                                                           </table>
+                                                           <table class="table table-condensed table-bordered">
+                                                               <tbody>
+                                                               <tr class="simpleViewFilterTableTr">
+                                                                   <th style="width:33%;">Volume</th>
+                                                                   <th style="width:33%;">Events for data collected</th>
+                                                                   <th style="width:33%;">Granularity</th>
+                                                               </tr>
+                                                               <tr class="simpleViewFilterTableTr">
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Volumes']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Events']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Granularity']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                               </tr>
+                                                               </tbody>
+                                                           </table>
+                                                           <table class="table table-condensed table-bordered" >
+                                                               <tbody>
+                                                               <tr class="simpleViewFilterTableTr">
+                                                                   <th style="width:33%;">Access</th>
+                                                                   <th style="width:33%;">Consent</th>
+                                                                   <th style="width:33%;">Coding</th>
+                                                               </tr>
+                                                               <tr class="simpleViewFilterTableTr">
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Access']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <markdown-text-area description="$item.moreDetailsTable['Consent']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                   </td>
+                                                                   <td>
+                                                                       <div style="height: 200px;overflow-y: auto">
+                                                                           <markdown-text-area description="$item.moreDetailsTable['Coding']" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                                                                       </div>
+                                                                   </td>
+                                                               </tr>
+                                                               </tbody>
+                                                           </table>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </td>
+                                   </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                           <div class="paginationContainer">
+                               <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+                           </div>
+                       </div>
+                   </mc-table>
+               </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="text-align: left">
+            <div class="simpleViewResultElement" data-spy="affix" data-offset-top="70">
+                <div style="font-weight: bold; padding:10px 5px; height: 40px; width:100%;color:#FFF" class="themeBackgroundColor">
+                    Selected Data Sets&nbsp;<span ng-if="submittedForm.selectedDataModels && submittedForm.selectedDataModels.length>0">{{submittedForm.selectedDataModels.length}}</span>
+                </div>
+                <div style="min-height: 50px;padding: 10px 0px;">
+                    <div ng-repeat="selectedDataModel in submittedForm.selectedDataModels track by selectedDataModel.id" style="font-weight: bold; border-bottom: 1px solid; padding: 8px 2px">
+                        <button type="button" class="btn btn-default btn-xs" ng-click="removeDataModelFromBasket($event, selectedDataModel)"><i class="fa fa-times deleteButton"></i></button>
+                        &nbsp;
+                        <a ng-href="{{selectedDataModel.simpleViewLink}}" target="_blank" style=";text-decoration: none;cursor: pointer;">
+                            {{selectedDataModel.label}}
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    If you want to find out more information about the data sets, or if you want to speak to a data custodian expert to discuss your requirements, please select all the data sets that you are interested in.
+                </div>
+                <div>
+                    Your selected data sets will be added here. Once you have completed your selection, click on the "Submit" button to be provided with further information on how to contact the appropriate data custodian.
+                </div>
+                <div style="margin:10px 0px;">
+                    <button type="button" class="btn btn-primary btn-sm themeBackgroundColor"  ng-disabled="submittedForm.selectedDataModels.length === 0" ng-click="submitRequest()">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

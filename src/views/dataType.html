@@ -1,0 +1,153 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+
+        <div style="width: 100%">
+            <datatype-details hide-edit-button="true" mc-data-type-object="dataType" mc-parent-data-model="dataModel" after-save="Save" open-edit-form="openEditForm"></datatype-details>
+        </div>
+
+
+        <div ng-if="dataType && dataType.semanticLinks && dataType.semanticLinks.length > 0">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Links</strong></div>
+                <div class="panel-body" style="padding-top: 5px !important;">
+                    <all-links-in-paged-list
+                            show-loading-spinner="true"
+                            parent="dataType"
+                            show-description="true"
+                            show-no-links-message="true"
+                            type="'static'"></all-links-in-paged-list>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="width: 100%" ng-if="dataType && dataType.domainType == 'EnumerationType'">
+            <div style="width:100%;margin-bottom: 45px;">
+                <!--<mc-enumeration-list enumerations="dataType.enumerationValues" parent="dataType" loading-data="loadingData"></mc-enumeration-list>-->
+                <!--<mc-enumeration-list-->
+                        <!--parent="dataType"-->
+                        <!--enumeration-values = "dataType.enumerationValues"-->
+                        <!--type = "'static'"-->
+                        <!--loading-data="loadingData"></mc-enumeration-list>-->
+                <mc-enumeration-list-with-category
+                        parent="dataType"
+                        type="'static'"
+                        enumeration-values="dataType.enumerationValues"></mc-enumeration-list-with-category>
+            </div>
+        </div>
+
+
+        <div ng-show="!showEditForm">
+            <uib-tabset active="activeTab.index">
+            <uib-tab select="tabSelected('properties')">
+                <uib-tab-heading>
+                    Properties
+                </uib-tab-heading>
+                <div style="width:100%;" ng-if="activeTab.name == 'properties' && dataType">
+                    <!--<mc-data-set-metadata meta-data-items="properties" parent-type="datatype" loading-data="loadingData"></mc-data-set-metadata>-->
+                    <mc-data-set-metadata
+                            parent="dataType"
+                            type = "'dynamic'"
+                            loading-data="loadingData"></mc-data-set-metadata>
+                </div>
+            </uib-tab>
+            <uib-tab select="tabSelected('dataElements')">
+                <uib-tab-heading>
+                    DataElements
+                </uib-tab-heading>
+                <div style="width:100%;"  ng-if="activeTab.name == 'dataElements' && dataType">
+                    <!--<element-child-data-elements-list child-data-elements="dataElements" parent="dataType" show-add-new-row-button="false" loading-data="loadingData" hide-data-type-column="true"></element-child-data-elements-list>-->
+
+                    <element-child-data-elements-list
+                            parent-data-model="dataModel"
+                            parent-data-type="dataType"
+                            type = "'dynamic'"
+                            loading-data="loadingData"></element-child-data-elements-list>
+
+
+                </div>
+            </uib-tab>
+            <uib-tab select="tabSelected('comments')">
+                <uib-tab-heading>
+                    Comments
+                </uib-tab-heading>
+                <div style="width:100%;"  ng-if="activeTab.name == 'comments' && dataType">
+                    <annotation-list parent="dataType" loading-data="loadingData" type="'dynamic'"></annotation-list>
+                </div>
+            </uib-tab>
+
+            <!--<uib-tab select="tabSelected('links')" ng-if="showExtraTabs">-->
+            <uib-tab select="tabSelected('links')">
+                <uib-tab-heading>
+                    Links
+                </uib-tab-heading>
+                <div>
+                    <div ng-if="activeTab.name == 'links' && dataType">
+                        <element-links-list-new
+                                parent="dataType"
+                                type = "'dynamic'"
+                                loading-data="loadingData"></element-links-list-new>
+                    </div>
+                </div>
+            </uib-tab>
+
+
+            <uib-tab select="tabSelected('attachments')">
+                <uib-tab-heading>
+                    Attachments
+                </uib-tab-heading>
+                <div>
+                    <div ng-if="activeTab.name == 'attachments' && dataType">
+                        <attachment-list parent="dataType" loading-data="loadingData" type="'dynamic'"></attachment-list>
+                    </div>
+                </div>
+            </uib-tab>
+
+
+            <!--<uib-tab select="tabSelected('links')">-->
+                <!--<uib-tab-heading>-->
+                    <!--Links-->
+                <!--</uib-tab-heading>-->
+                <!--<div style="width:100%;">-->
+                    <!--<element-links-list-new  links="links" parent="dataType" parent-type="datatype" loading-data="loadingData"></element-links-list-new>-->
+                <!--</div>-->
+            <!--</uib-tab>-->
+            <!--<uib-tab select="tabSelected('history')">-->
+                <!--<uib-tab-heading>-->
+                    <!--History-->
+                <!--</uib-tab-heading>-->
+                <!--<div style="width:100%;">-->
+                    <!--<history edits="history" parent="dataType" loading-data="loadingData"></history>-->
+                <!--</div>-->
+            <!--</uib-tab>-->
+            <!--<uib-tab select="classificationsTabSelected()">-->
+                <!--<uib-tab-heading>-->
+                   <!--Change History-->
+                <!--</uib-tab-heading>-->
+                <!--<div style="width:100%;">-->
+                    <!--<element-tracked-changes-list tracked-changes="dataType.trackedChanges"></element-tracked-changes-list>-->
+                <!--</div>-->
+            <!--</uib-tab>-->
+        </uib-tabset>
+        </div>
+
+        <div ng-show="showEditForm">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="text-align: right;">
+                    <button type="button" class="btn btn-default btn-xs" ng-click="closeEditForm()" aria-hidden="false" aria-disabled="false" title="close">
+                        <i class="fa fa-times cancelEditButton"></i>
+                    </button>
+                </div>
+                <div class="panel-body" ng-if="editForm == 'links'">
+                    <!--<element-links-list-new  links="links" parent="dataType" parent-type="datatype" loading-data="loadingData"></element-links-list-new>-->
+                    <element-links-list-new
+                            parent="dataType"
+                            type = "'dynamic'"
+                            loading-data="loadingData"></element-links-list-new>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

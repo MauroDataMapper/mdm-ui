@@ -1,0 +1,62 @@
+<div style="width: 100%; margin: 5px auto;height: calc(100vh - 90px);">
+    <div id="one-left" class="split split-horizontal" style="width: calc(20% - 5px);padding-right: 0px !important;padding-left: 0px !important; overflow-y: hidden">
+        <div class="panel panel-default" ng-style="{'height':height+32}">
+            <div class="panel-heading"><strong>Properties</strong></div>
+            <div class="panel-body">
+                <form>
+                    <div class="form-group" ng-if="selectedElement && selectedElement.domainType === 'DataClass'">
+                        <label>Parent</label>
+                        <div>
+                            <model-path path="selectedElement.breadcrumbs"  new-window="true"></model-path>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <div ng-if="selectedElement && (selectedElement.domainType == 'DataClass' || selectedElement.domainType == 'DataModel')">
+                            <element-link
+                                    show-type-title = "true"
+                                    new-window="true"
+                                    mc-element="selectedElement"></element-link>
+                        </div>
+                        <div>
+                            <div ng-if="selectedElement && (selectedElement.domainType != 'DataClass' && selectedElement.domainType != 'DataModel')">
+                                <div>{{selectedElement.label}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group descriptionHolder">
+                        <label>Description</label>
+                        <div ng-if="selectedElement.description">
+                            <markdown-text-area rows="'4'" description="selectedElement.description" in-edit-mode="false" hide-help-text="true"></markdown-text-area>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="one-right" class="split split-horizontal" style="width: calc(80% - 5px); overflow: hidden">
+        <div ng-if="dataModel">
+            <joint-diagram-5 on-element-click="onElementClick"
+                             hide-maximize="true"
+                             diagram-name="'dataModelTab2'"
+                             width="5000"
+                             height="height"
+                             diagram="diagramDF"
+                             test="test"
+                             cells="cellsDF"
+                             root-cell="rootCellDF"
+                             mc-element="dataModel"
+                             grid-size="1"
+                             scale="0.5"></joint-diagram-5>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function() {
+        Split(['#one-left', '#one-right'], {sizes: [20, 80]});
+
+    });
+</script>

@@ -1,0 +1,185 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+
+        <div style="width: 100%">
+            <dataclass-details></dataclass-details>
+        </div>
+
+
+
+        <div ng-if="showSearch">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label>Search</label>
+                    <div style="float:right;">
+                        <button type="button"
+                                class="btn btn-default btn-xs"
+                                ng-click="toggleShowSearch()"
+                                aria-hidden="false"
+                                aria-disabled="false" title="close">
+                            <i class="fa fa-times themeColor"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body panel-table">
+                    <advanced-search-bar
+                            parent="mcClassObject"
+                            show-restrict-to="false"
+                            show-domain-types="['DataClass', 'DataElement']">
+                    </advanced-search-bar>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="!showSearch">
+            <div ng-if="dataClass && dataClass.semanticLinks && dataClass.semanticLinks.length > 0">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Links</strong></div>
+                    <div class="panel-body" style="padding-top: 5px !important;">
+                        <all-links-in-paged-list
+                                show-loading-spinner="true"
+                                parent="dataClass"
+                                show-description="true"
+                                show-no-links-message="true"
+                                type="'static'"></all-links-in-paged-list>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="!showEditForm">
+                <uib-tabset active="activeTab.index">
+                    <uib-tab select="tabSelected('content')">
+                        <uib-tab-heading>
+                            Content
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'content' && dataClass">
+                            <content-table
+                                parent-data-model="parentDataModel"
+                                grand-parent-data-class="parentDataClass"
+                                parent-data-class="dataClass"
+                                loading-data="loadingData">
+                            </content-table>
+                        </div>
+                    </uib-tab>
+
+                    <!--<uib-tab select="tabSelected('dataClasses')">-->
+                        <!--<uib-tab-heading>-->
+                            <!--Data Classes-->
+                        <!--</uib-tab-heading>-->
+                        <!--<div style="width:100%;" ng-if="activeTab.name == 'dataClasses' && dataClass">-->
+                            <!--&lt;!&ndash;<element-child-data-classes-list child-data-classes="dataClasses" parent="currentDataClass" show-add-new-row-button="true" loading-data="loadingData"></element-child-data-classes-list>&ndash;&gt;-->
+                            <!--<element-child-data-classes-list-->
+                                    <!--parent-data-model="parentDataModel"-->
+                                    <!--parent-data-class="dataClass"-->
+                                    <!--type = "'dynamic'"-->
+                                    <!--loading-data="loadingData"></element-child-data-classes-list>-->
+                        <!--</div>-->
+                    <!--</uib-tab>-->
+
+
+                    <!--<uib-tab select="tabSelected('dataElements')">-->
+                        <!--<uib-tab-heading>-->
+                            <!--Data Elements-->
+                        <!--</uib-tab-heading>-->
+                        <!--<div style="width:100%;"  ng-if="activeTab.name == 'dataElements' && dataClass">-->
+                            <!--&lt;!&ndash;<element-child-data-elements-list child-data-elements="dataElements" parent="currentDataClass" show-add-new-row-button="true" loading-data="loadingData"></element-child-data-elements-list>&ndash;&gt;-->
+                            <!--<element-child-data-elements-list-->
+                                    <!--parent-data-model="parentDataModel"-->
+                                    <!--parent-data-class="dataClass"-->
+                                    <!--type = "'dynamic'"-->
+                                    <!--loading-data="loadingData"></element-child-data-elements-list>-->
+
+                        <!--</div>-->
+                    <!--</uib-tab>-->
+
+                    <uib-tab select="tabSelected('properties')">
+                        <uib-tab-heading>
+                            Properties
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'properties' && dataClass">
+                            <!--<mc-data-set-metadata meta-data-items="properties" parent="currentDataClass" parent-type="dataclass" loading-data="loadingData"></mc-data-set-metadata>-->
+                            <mc-data-set-metadata
+                                    parent="dataClass"
+                                    type = "'dynamic'"
+                                    loading-data="loadingData"></mc-data-set-metadata>
+                        </div>
+                    </uib-tab>
+                    <uib-tab select="tabSelected('comments')">
+                        <uib-tab-heading>
+                            Comments
+                        </uib-tab-heading>
+                        <div style="width:100%;"  ng-if="activeTab.name == 'comments' && dataClass">
+                            <annotation-list parent="dataClass" loading-data="loadingData" type="'dynamic'"></annotation-list>
+                        </div>
+                    </uib-tab>
+
+                    <!--<uib-tab select="tabSelected('links')" ng-if="showExtraTabs">-->
+                    <uib-tab select="tabSelected('links')">
+                        <uib-tab-heading>
+                            Links
+                        </uib-tab-heading>
+                        <div>
+                            <div ng-if="activeTab.name == 'links' && dataClass">
+                                <element-links-list-new
+                                        parent="dataClass"
+                                        type = "'dynamic'"
+                                        loading-data="loadingData"></element-links-list-new>
+                            </div>
+                        </div>
+                    </uib-tab>
+
+                    <uib-tab select="tabSelected('summaryMetadata')">
+                        <uib-tab-heading>
+                            Summary
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'summaryMetadata' && dataClass">
+                            <summary-metadata-table
+                                    parent="dataClass"
+                                    loading-data="loadingData"></summary-metadata-table>
+                        </div>
+                    </uib-tab>
+
+                    <uib-tab select="tabSelected('attachments')" ng-if="dataClass">
+                        <uib-tab-heading>
+                            Attachments
+                        </uib-tab-heading>
+                        <div>
+                            <div ng-if="activeTab.name == 'attachments' && dataClass">
+                                <attachment-list parent="dataClass" loading-data="loadingData" type="'dynamic'"></attachment-list>
+                            </div>
+                        </div>
+                    </uib-tab>
+
+
+
+                <!--<uib-tab select="tabSelected('links')">-->
+                    <!--<uib-tab-heading>-->
+                        <!--Links-->
+                    <!--</uib-tab-heading>-->
+                    <!--<div style="width:100%;">-->
+                        <!--<element-links-list-new  links="links" parent="currentDataClass" parent-type="dataclass" loading-data="loadingData"></element-links-list-new>-->
+                    <!--</div>-->
+                <!--</uib-tab>-->
+                <!--<uib-tab select="tabSelected('history')">-->
+                    <!--<uib-tab-heading>-->
+                        <!--History-->
+                    <!--</uib-tab-heading>-->
+                    <!--<div style="width:100%;">-->
+                        <!--<history edits="history" parent="currentDataClass" loading-data="loadingData"></history>-->
+                    <!--</div>-->
+                <!--</uib-tab>-->
+
+                <!--<uib-tab select="classificationsTabSelected()">-->
+                    <!--<uib-tab-heading>-->
+                        <!--Change History-->
+                    <!--</uib-tab-heading>-->
+                    <!--<div style="width:100%;">-->
+                        <!--<element-tracked-changes-list tracked-changes="currentDataClass.trackedChanges"></element-tracked-changes-list>-->
+                    <!--</div>-->
+                <!--</uib-tab>-->
+            </uib-tabset>
+            </div>
+        </div>
+
+    </div>
+</div>
+

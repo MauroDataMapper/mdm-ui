@@ -1,0 +1,305 @@
+<div>
+    <div class="row">
+        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+            <div style="width:100%; margin: 5px 0px;">
+                <strong>Left</strong>
+                <model-selector-tree
+                        tree-search-domain-type="'DataModel'"
+                        ng-model="sourceModel"
+                        processing="processing"
+                        default-elements="[sourceModel]"
+                        on-select="onLeftModelSelect"
+                        accepts="['DataModel']" ></model-selector-tree>
+            </div>
+            <div class="leftTree" ng-if="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
+                <comparison-tree
+                        val="sourceModel"
+                        diff-map="diffMapLeft"
+                        type="'dynamic'"
+                        on-node-expand="onNodeExpand"
+                        tree-name="'left'"
+                        on-node-click="onNodeClick"
+                        child-element-name="'children'">
+                </comparison-tree>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center;">
+            <button class="btn btn-xs btn-default" type="button" style="margin: 25px auto;width:80px;height:30px;"  uib-tooltip="Swap" ng-click="swap()">
+                <i class="fa fa-exchange themeColor" style="font-size: 18px;"></i>
+            </button>
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12" style="float: right;">
+            <div style="width:100%; margin: 5px 0px;">
+                <strong>Right</strong>
+                <model-selector-tree
+                        tree-search-domain-type="'DataModel'"
+                        ng-model="targetModel"
+                        processing="processing"
+                        default-elements="[targetModel]"
+                        on-select="onRightModelSelect"
+                        accepts="['DataModel']" ></model-selector-tree>
+            </div>
+            <div ng-if="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
+                <comparison-tree
+                        val="targetModel"
+                        diff-map="diffMapRight"
+                        type="'dynamic'"
+                        on-node-expand="onNodeExpand"
+                        tree-name="'right'"
+                        on-node-click="onNodeClick"
+                        child-element-name="'children'">
+                </comparison-tree>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin: 10px 0px" ng-if="processing">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px">
+            <div>
+                <uib-progressbar max="max" value="dynamic" class="progress-striped active">
+                    <span style="color:white; white-space:nowrap;"></span>
+                </uib-progressbar>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <uib-tabset ng-show="diffs" active="activeTab.index">
+                <uib-tab index="0" ng-show="diffs.properties.length > 0">
+                    <uib-tab-heading>
+                        Details <span class="badge element-count">{{diffs.properties.length}}</span>
+                    </uib-tab-heading>
+                    <div ng-if="diffs.properties && diffs.properties.length>0" style="width:100%;">
+                        <table class="table table-condensed table-bordered mcTable">
+                            <thead>
+                                <tr class="mcTableHeader">
+                                    <th style="min-width: 18px;width: 18px;">
+                                        &nbsp;&nbsp;
+                                    </th>
+                                    <th style="cursor:pointer;">
+                                        Diffs
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="diff in diffs.properties">
+                                    <td style="min-width: 18px;width: 18px;"
+                                        class="comparisonRow modified">
+                                        &nbsp;&nbsp;&nbsp;
+                                    </td>
+                                    <td style="text-align: left;word-wrap: break-word;">
+                                        <strong style="font-style: italic;">{{diff.title}}:</strong>
+                                        <div><span style="border-bottom: 1px dashed #000;opacity: 0.6;">{{diff.left}}</span></div>
+                                        <div><span style="border-bottom: 1px dashed #000;">{{diff.right}}</span></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" ng-show="diffs.metadata.length > 0">
+                    <uib-tab-heading>
+                        Properties <span class="badge element-count">{{diffs.metadata.length}}</span>
+                    </uib-tab-heading>
+                    <div style="width:100%;">
+                        <div ng-if="diffs.metadata && diffs.metadata.length>0">
+                            <metadata-compare diffs="diffs.metadata"></metadata-compare>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="2" ng-show="diffs.dataTypes.length > 0">
+                    <uib-tab-heading>
+                        Data Types <span class="badge element-count">{{diffs.filteredDataTypes.length}}</span>
+                    </uib-tab-heading>
+                    <div ng-if="diffs.dataTypes.length > 0" style="width:100%;position: relative">
+                        <table class="table table-condensed table-bordered mcTable">
+                                <thead>
+                                    <tr class="mcTableHeader">
+                                        <th style="min-width: 18px;width: 18px;">
+                                            &nbsp;
+                                        </th>
+                                        <th style="cursor:pointer;">
+                                            <div style="float: left; font-weight: normal !important;">
+                                                Filter:
+                                                <select ng-model="form.dataTypeFilter" style="width:150px !important;"
+                                                        class="mcSelect"
+                                                        ng-change="dataTypeFilterChange()">
+                                                    <option value=""></option>
+                                                    <option value="deleted" ng-if="diffs.dataTypesStatus.deleted">Deleted ({{diffs.dataTypesStatus.deleted}})</option>
+                                                    <option value="created" ng-if="diffs.dataTypesStatus.created">Created ({{diffs.dataTypesStatus.created}})</option>
+                                                    <option value="modified" ng-if="diffs.dataTypesStatus.modified">Modified ({{diffs.dataTypesStatus.modified}})</option>
+                                                </select>
+                                            </div>
+
+                                            <div style="float:left" ng-if="diffs.dataTypesStatus.deleted > 0" uib-tooltip="Deleted">
+                                                <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
+                                                     class="diffStatusCount comparisonRow deleted">
+                                                    &nbsp;{{diffs.dataTypesStatus.deleted}}&nbsp;
+                                                </div>
+                                            </div>
+                                            <div style="float:left" ng-if="diffs.dataTypesStatus.created > 0" uib-tooltip="Created">
+                                                <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
+                                                     class="diffStatusCount comparisonRow created">
+                                                    &nbsp;{{diffs.dataTypesStatus.created}}&nbsp;
+                                                </div>
+                                            </div>
+                                            <div style="float:left" ng-if="diffs.dataTypesStatus.modified > 0" uib-tooltip="Modified">
+                                                <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
+                                                     class="diffStatusCount comparisonRow modified">
+                                                    &nbsp;{{diffs.dataTypesStatus.modified}}&nbsp;
+                                                </div>
+                                            </div>
+
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="diff in diffs.filteredDataTypes">
+                                        <td style="min-width: 18px;width: 18px;"
+                                            ng-class="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}">
+                                            &nbsp;
+                                        </td>
+                                        <td style="text-align:left;">
+                                            <div>
+                                                <div ng-if="diff.deleted || diff.created">
+                                                    <element-link new-window="'true'" mc-element="diff"></element-link>
+                                                </div>
+                                                <div ng-if="diff.modified">
+                                                    <element-link  new-window="'true'"
+                                                                   mc-element="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataType'}"></element-link>
+                                                </div>
+                                                <div ng-if="diff.modified" style="padding-top: 5px;">
+
+                                                    <div ng-repeat="prop in diffMap[diff.leftId].diffs.properties">
+                                                        <strong style="font-style: italic">{{prop.title}}:</strong>
+                                                        <div><span style="border-bottom: 1px dashed #000;opacity: 0.6;">{{prop.left}}</span></div>
+                                                        <div><span style="border-bottom: 1px dashed #000;">{{prop.right}}</span></div>
+                                                    </div>
+
+                                                    <div  ng-if="diffMap[diff.leftId].diffs.enumerationValues && diffMap[diff.leftId].diffs.enumerationValues.length>0">
+                                                        <div style="margin-top: 10px;">
+                                                            <strong style="font-style: italic;">Enumerations:</strong>
+                                                        </div>
+                                                        <enumeration-compare diffs="diffMap[diff.leftId].diffs.enumerationValues"></enumeration-compare>
+                                                    </div>
+                                                    <div style="width:80%"
+                                                         ng-if="diffMap[diff.leftId].diffs.metadata && diffMap[diff.leftId].diffs.metadata.length>0">
+                                                        <div style="margin-top: 10px;">
+                                                            <strong style="font-style: italic;">Properties:</strong>
+                                                        </div>
+                                                        <div>
+                                                            <metadata-compare diffs="diffMap[diff.leftId].diffs.metadata"
+                                                                              diff-column-width="20"></metadata-compare>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                </uib-tab>
+                <uib-tab index="3" ng-show="diffs.dataElements.length > 0">
+                    <uib-tab-heading>
+                        Data Elements <span class="badge element-count">{{diffs.filteredDataElements.length}}</span>
+                    </uib-tab-heading>
+                    <div ng-if="diffs.dataElements.length > 0" style="width:100%;">
+                        <table class="table table-condensed table-bordered mcTable">
+                            <thead>
+                            <tr class="mcTableHeader">
+                                <th style="width: 2px;">
+                                    &nbsp;
+                                </th>
+                                <th style="cursor:pointer;max-width: 30%;width: 30%;">
+                                    <div style="float: left; font-weight: normal !important;">
+                                        Filter:
+                                        <select ng-model="form.dataElementFilter" style="width:150px !important;"
+                                                class="mcSelect"
+                                                ng-change="dataElementFilterChange()">
+                                            <option value=""></option>
+                                            <option value="deleted" ng-if="diffs.dataElementsStatus.deleted">Deleted ({{diffs.dataElementsStatus.deleted}})</option>
+                                            <option value="created" ng-if="diffs.dataElementsStatus.created">Created ({{diffs.dataElementsStatus.created}})</option>
+                                            <option value="modified" ng-if="diffs.dataElementsStatus.modified">Modified ({{diffs.dataElementsStatus.modified}})</option>
+                                        </select>
+                                    </div>
+
+                                    <div style="float:left" ng-if="diffs.dataElementsStatus.deleted > 0" uib-tooltip="Deleted">
+                                        <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
+                                             class="diffStatusCount comparisonRow deleted">
+                                            &nbsp;{{diffs.dataElementsStatus.deleted}}&nbsp;
+                                        </div>
+                                    </div>
+                                    <div style="float:left" ng-if="diffs.dataElementsStatus.created > 0" uib-tooltip="Created">
+                                        <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
+                                             class="diffStatusCount comparisonRow created">
+                                            &nbsp;{{diffs.dataElementsStatus.created}}&nbsp;
+                                        </div>
+                                    </div>
+                                    <div style="float:left" ng-if="diffs.dataElementsStatus.modified > 0"  uib-tooltip="Modified">
+                                        <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
+                                             class="diffStatusCount comparisonRow modified">
+                                            &nbsp;{{diffs.dataElementsStatus.modified}}&nbsp;
+                                        </div>
+                                    </div>
+
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="diff in diffs.filteredDataElements">
+                                    <td style="width: 2px;"
+                                        ng-class="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}">
+                                        &nbsp;
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <div>
+                                            <div ng-if="diff.deleted || diff.created">
+                                                <element-link  new-window="'true'"  mc-element="diff"></element-link>
+                                            </div>
+                                            <div ng-if="diff.modified">
+                                                <element-link  new-window="'true'"
+                                                               mc-element="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataElement'}"></element-link>
+                                            </div>
+                                            <div ng-if="diff.modified">
+
+                                                <div ng-repeat="prop in diffMap[diff.leftId].diffs.properties">
+                                                    <strong style="font-style: italic">{{prop.title}}:</strong>
+                                                    <div><span style="border-bottom: 1px dashed #000;opacity: 0.6;">{{prop.left}}</span></div>
+                                                    <div><span style="border-bottom: 1px dashed #000;">{{prop.right}}</span></div>
+                                                </div>
+
+
+                                                <!--<div ng-if="diffMap[diff.leftId].diffs.properties && diffMap[diff.leftId].diffs.properties.length>0">-->
+                                                    <!--<div ng-repeat="change in diffMap[diff.leftId].diffs.properties">-->
+                                                        <!--<strong>{{change.property}}:</strong>-->
+                                                        <!--<div style="padding-left: 12px"><span style="border-bottom: 1px dashed #000;opacity: 0.7;">-->
+                                                            <!--{{change.left}}</span></div>-->
+                                                        <!--<div style="padding-left: 12px"><span style="border-bottom: 1px dashed #000;">{{change.right}}</span></div>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+
+
+                                                <div style="width:80%"
+                                                     ng-if="diffMap[diff.leftId].diffs.metadata && diffMap[diff.leftId].diffs.metadata.length>0">
+                                                    <div style="margin-top: 10px;">
+                                                        <strong style="font-style: italic">Properties:</strong>
+                                                    </div>
+                                                    <div>
+                                                        <metadata-compare
+                                                                diffs="diffMap[diff.leftId].diffs.metadata"
+                                                                diff-column-width="10"></metadata-compare>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+</div>

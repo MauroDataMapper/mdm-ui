@@ -1,0 +1,109 @@
+<div>
+    <div class="row" style="padding: 5px">
+        <div class="col-lg-5 col-md-5 col-xs-12 col-sm-12">
+            <div style="text-align: left;margin-left: 10px;">
+                <h2>Metadata Catalogue <b>Core</b></h2>
+                <p class="lead">Data models and terminologies</p>
+            </div>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <uib-tabset active="activeTab">
+                <uib-tab>
+                    <uib-tab-heading>
+                        <i class="fa fa-users"></i> Active Sessions
+                    </uib-tab-heading>
+                    <div class="ngTable"  style="width: 100%; margin-top: 20px;" activeSessions>
+                        <table ng-table="userTableParams" class="table table-condensed table-bordered table-striped">
+                            <tr ng-repeat="row in $data">
+                                <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" data-title="'Email'" filter="{userEmailAddress: 'text'}"
+                                    sortable="'userEmailAddress'">
+                                    <i class="fa fa-circle onlineUser" aria-hidden="true" title="Online"></i>
+                                    {{ row.userEmailAddress }}
+                                </td>
+                                <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Name'"
+                                    filter="{userName: 'text'}" sortable="'userName'">
+                                    {{ row.userName }}
+                                </td>
+                                <td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-2 col-lg-2"
+                                    data-title="'Organisation'" filter="{userOrganisation: 'text'}" sortable="'userOrganisation'">
+                                    {{ row.userOrganisation }}
+                                </td>
+                                <td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-2 col-lg-2"
+                                    data-title="'Start'" filter="{start: 'text'}" sortable="'start'">
+                                    <span ng-show="isToday(row.start)">
+                                       {{row.start  | date:"h:mm a" }}
+                                    </span>
+                                    <span ng-show="!isToday(row.start)">
+                                       {{row.start  | date:"dd/MM/yyyy h:mm a" }}
+                                    </span>
+                                </td>
+                                <td header-class="'hidden-xs hidden-sm'" class="hidden-xs hidden-sm col-md-2 col-lg-2"
+                                    data-title="'Last Access'" filter="{last: 'text'}" sortable="'last'">
+                                    <span ng-show="isToday(row.last)">
+                                       {{row.start  | date:"h:mm a" }}
+                                    </span>
+                                    <span ng-show="!isToday(row.last)">
+                                       {{row.start  | date:"dd/MM/yyyy h:mm a" }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </uib-tab>
+                <uib-tab>
+                    <uib-tab-heading>
+                        <i class="fa fa-plug" aria-hidden="true"></i> Plugins & Modules
+                    </uib-tab-heading>
+                    <div style="width: 100%; margin-top: 20px;">
+                        <div style="width: 30%;">
+                            <table ng-table="modulesTableParams" class="table table-condensed table-bordered table-striped">
+                                <tr ng-repeat="row in $data">
+                                    <td style="width: 150px;" data-title="'Name'" filter="{displayName: 'text'}"
+                                        sortable="'displayName'">
+                                        {{ row.name }}
+                                    </td>
+                                    <td style="width: 100px;" data-title="'Version'" filter="{version: 'text'}"
+                                        sortable="'version'">
+                                            <span ng-class="{'label label-primary':!row.isUI, 'label label-success': row.isUI == true}" >{{ row.version }}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="width: 80%;">
+                            <table ng-table="pluginTableParams" class="table table-condensed table-bordered table-striped">
+                                <tr ng-repeat="row in $data">
+                                    <td data-title="'Name'" filter="{displayName: 'text'}"
+                                        sortable="'displayName'">
+                                        {{ row.displayName }}
+                                    </td>
+                                    <td data-title="'Version'" filter="{version: 'text'}"
+                                        sortable="'version'">
+                                        {{ row.version }}
+                                    </td>
+                                    <td style="width: 150px;" data-title="'Type'" filter="{pluginType: 'text'}"
+                                        sortable="'pluginType'">
+                                        {{ row.pluginType }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

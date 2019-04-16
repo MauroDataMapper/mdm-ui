@@ -1,0 +1,335 @@
+<div class="row" style="padding: 5px">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <div style="text-align: left;margin-left: 10px;">
+            <h2>Metadata Catalogue &nbsp;<span style="font-size: 14px;">version {{appVersion}}</span></h2>
+            <p class="lead">Data models and terminologies</p>
+        </div>
+    </div>
+
+
+    <!--<div style="width:100% !important; height: 200px !important;">-->
+    <!--<canvas id="myChart"></canvas>-->
+    <!--</div>-->
+
+    <!--<div class="col-lg-3 col-md-3 col-xs-3 col-sm-3">-->
+    <!--<model-selector-tree-->
+    <!--show-checkbox-for="['DataClass']"-->
+    <!--propagate-checkbox="true"-->
+    <!--always-show-tree="true"-->
+    <!--hide-selected-elements="true"-->
+    <!--multiple="true"-->
+    <!--processing="processing"-->
+    <!--on-select="onModelSelect"-->
+    <!--on-check="onCheck"-->
+    <!--accepts="['DataClass']" ></model-selector-tree>-->
+    <!--</div>-->
+
+
+
+    <!--<div ng-if="allModels">-->
+    <!--<folders-tree type="'dynamic'"-->
+    <!--val="allModels"-->
+    <!--child-element-name="'childDataClasses'"-->
+    <!--tree-name="'folders'"-->
+    <!--on-compare-to="onCompareTo"-->
+    <!--load-models-to-compare="loadModelsToCompare"-->
+    <!--on-node-expand="onNodeExpand"-->
+    <!--on-node-click="onNodeClick"></folders-tree>-->
+    <!--</div>-->
+
+    <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">-->
+    <!--<div class="leftTree" ng-if="val1" style="height: calc(40vh - 0px);border: 1px solid red;overflow: scroll;">-->
+    <!--<comparison-tree-->
+    <!--val="val1"-->
+    <!--type="'dynamic'"-->
+    <!--on-node-expand="onNodeExpand"-->
+    <!--tree-name="'left'"-->
+    <!--child-element-name="'childDataClasses'">-->
+    <!--</comparison-tree>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">-->
+    <!--<div ng-if="val2" style="height: calc(40vh - 0px);border: 1px solid red;overflow: scroll;">-->
+    <!--<comparison-tree-->
+    <!--val="val2"-->
+    <!--type="'dynamic'"-->
+    <!--on-node-expand="onNodeExpand"-->
+    <!--tree-name="'right'"-->
+    <!--child-element-name="'childDataClasses'">-->
+    <!--</comparison-tree>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+    <div style="position: absolute;bottom:0; padding-left: 10px;">
+        <div mc-footer></div>
+    </div>
+    <!--<div class="row" style="padding: 5px">-->
+    <!--<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">-->
+    <!--<div style="text-align: left;margin-left: 10px;">-->
+    <!--<h2>Metadata Catalogue &nbsp;<span style="font-size: 14px;">version {{appVersion}}</span></h2>-->
+    <!--<p class="lead">Data models and terminologies</p>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div style="margin: 0px 10px;position: absolute;bottom: 0px;height: 60px;">-->
+    <!--<p class="text-muted">Copyright © 2017 Clinical Informatics, NIHR Oxford Biomedical Research Centre</p>-->
+    <!--</div>-->
+
+
+
+
+
+
+    <!--<style>-->
+
+    <!--th.first {-->
+    <!--max-width: 50%;-->
+    <!--width: 50%;-->
+    <!--}-->
+
+    <!--th.second {-->
+    <!--max-width: 20%;-->
+    <!--width: 20%;-->
+    <!--}-->
+
+    <!--th.third {-->
+    <!--max-width: 25%;-->
+    <!--width: 25%;-->
+    <!--}-->
+
+    <!--th.forth {-->
+    <!--max-width: 5%;-->
+    <!--width: 5%;-->
+    <!--}-->
+
+    <!--td.first {-->
+    <!--overflow: hidden;-->
+    <!--word-wrap: break-word;-->
+    <!--}-->
+
+    <!--td.second {-->
+    <!--overflow: hidden;-->
+    <!--word-wrap: break-word;-->
+    <!--}-->
+
+    <!--td.third {-->
+    <!--overflow: hidden;-->
+    <!--word-wrap: break-word;-->
+    <!--}-->
+
+    <!--td.forth {-->
+    <!--overflow: hidden;-->
+    <!--word-wrap: break-word;-->
+    <!--}-->
+
+    <!--</style>-->
+    <!--<div class="row">-->
+    <!--<div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">-->
+    <!--<mc-table-->
+    <!--mc-name="my"-->
+    <!--mc-record-type="'static'"-->
+    <!--mc-records="records"-->
+    <!--mc-static-loading-in-progress="loading"-->
+
+    <!--mc-display-records="mcDisplayRecords"-->
+    <!--mc-page-sizes="[5,10,15,20]"-->
+    <!--mc-page-size="5"-->
+    <!--mc-page-number="1">-->
+
+    <!--<div class="mcTableTitle">-->
+    <!--<span class="title">Title</span>-->
+    <!--</div>-->
+    <!--<div class="mcTableContainer">-->
+    <!--<table class="table table-condensed table-bordered table-striped mcTable">-->
+    <!--<thead>-->
+    <!--<tr class="mcTableHeader">-->
+    <!--<th  style="cursor:pointer;" class="col-lg-2 col-md-2 col-xs-2 col-sm-2" columnName="id"   sortable="true" filterable="true" columnType="number">-->
+    <!--ID-->
+    <!--</th>-->
+    <!--<th  style="cursor:pointer;" class="col-lg-4 col-md-4 col-xs-4 col-sm-4" columnName="name" sortable="true" filterable="true">-->
+    <!--Name-->
+    <!--</th>-->
+    <!--<th class="col-lg-2 col-md-2 col-xs-2 col-sm-2">-->
+    <!--Value-->
+    <!--</th>-->
+    <!--<th class="col-lg-1 col-md-1 col-xs-1 col-sm-1">-->
+    <!--</th>-->
+    <!--</tr>-->
+    <!--<tr class="mcTableFilter">-->
+    <!--<td class="col-lg-4 col-md-4 col-xs-4 col-sm-4">-->
+    <!--<input class="form-control input-sm" type="text">-->
+    <!--</td>-->
+    <!--<td class="col-lg-2 col-md-2 col-xs-2 col-sm-2">-->
+    <!--<input class="form-control input-sm" type="text">-->
+    <!--</td>-->
+    <!--<td class="col-lg-2 col-md-2 col-xs-2 col-sm-2">-->
+    <!--</td>-->
+    <!--<td class="col-lg-1 col-md-1 col-xs-1 col-sm-1">-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</thead>-->
+
+    <!--<tbody>-->
+    <!--<tr ng-repeat="record in mcDisplayRecords track by record.id">-->
+    <!--<td class="first">-->
+    <!--<div ng-show="!record.inEdit">-->
+    <!--{{record.id}}-->
+    <!--</div>-->
+    <!--<div ng-show="record.inEdit">-->
+    <!--<input class="form-control input-sm" type="text" ng-model="record.edit.id">-->
+    <!--</div>-->
+    <!--</td>-->
+    <!--<td class="second">-->
+    <!--<div ng-show="!record.inEdit">-->
+    <!--{{record.name}}-->
+    <!--</div>-->
+    <!--<div ng-show="record.inEdit">-->
+    <!--<input class="form-control input-sm" type="text" ng-model="record.edit.name">-->
+    <!--</div>-->
+    <!--</td>-->
+    <!--<td class="third">-->
+    <!--{{record.id}}  ||  {{record.name}}-->
+    <!--</td>-->
+    <!--<td class="forth">-->
+    <!--<mc-table-button record="record" save="save" delete="delete" validate="validate"></mc-table-button>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+    <!--</table>-->
+    <!--</div>-->
+    <!--<div class="paginationContainer">-->
+    <!--<mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>-->
+    <!--</div>-->
+
+    <!--</mc-table>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row">-->
+    <!--<div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">-->
+
+    <!--<mc-table-->
+    <!--mc-name="my2"-->
+    <!--mc-record-type="'dynamic'"-->
+    <!--mc-fetch-method="fetch"-->
+
+    <!--mc-display-records="mcDisplayRecordsDynamic"-->
+    <!--mc-page-sizes="[5,10,15,20]"-->
+    <!--mc-page-size="5"-->
+    <!--mc-page-number="1">-->
+    <!--<div class="mcTableMain">-->
+    <!--<div class="mcTableTitle">-->
+    <!--<span class="title">Title</span>-->
+    <!--</div>-->
+    <!--<div class="mcTableContainer">-->
+    <!--<table class="table table-condensed table-bordered table-striped mcTable">-->
+    <!--<thead>-->
+    <!--<tr class="mcTableHeader">-->
+    <!--<th  style="cursor:pointer;" class="col-lg-2 col-md-2 col-xs-2 col-sm-2" columnName="id"   sortable="true" filterable="true" columnType="number">-->
+    <!--ID-->
+    <!--</th>-->
+    <!--<th  style="cursor:pointer;" class="col-lg-4 col-md-4 col-xs-4 col-sm-4" columnName="name" sortable="true" filterable="true">-->
+    <!--Name-->
+    <!--</th>-->
+    <!--<th class="col-lg-2 col-md-2 col-xs-2 col-sm-2">-->
+    <!--Value-->
+    <!--</th>-->
+    <!--<th class="col-lg-1 col-md-1 col-xs-1 col-sm-1">-->
+    <!--</th>-->
+    <!--</tr>-->
+    <!--<tr class="mcTableFilter">-->
+    <!--<td class="col-lg-4 col-md-4 col-xs-4 col-sm-4">-->
+    <!--<input class="form-control input-sm" type="text">-->
+    <!--</td>-->
+    <!--<td class="col-lg-2 col-md-2 col-xs-2 col-sm-2">-->
+    <!--<input class="form-control input-sm" type="text">-->
+    <!--</td>-->
+    <!--<td class="col-lg-2 col-md-2 col-xs-2 col-sm-2">-->
+    <!--</td>-->
+    <!--<td class="col-lg-1 col-md-1 col-xs-1 col-sm-1">-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</thead>-->
+
+    <!--<tbody>-->
+    <!--<tr ng-repeat="record in mcDisplayRecordsDynamic track by record.id">-->
+    <!--<td class="first">-->
+    <!--<div ng-show="!record.inEdit">-->
+    <!--{{record.id}}-->
+    <!--</div>-->
+    <!--<div ng-show="record.inEdit">-->
+    <!--<input class="form-control input-sm" type="text" ng-model="record.edit.id">-->
+    <!--</div>-->
+    <!--</td>-->
+    <!--<td class="second">-->
+    <!--<div ng-show="!record.inEdit">-->
+    <!--{{record.name}}-->
+    <!--</div>-->
+    <!--<div ng-show="record.inEdit">-->
+    <!--<input class="form-control input-sm" type="text" ng-model="record.edit.name">-->
+    <!--</div>-->
+    <!--</td>-->
+    <!--<td class="third">-->
+    <!--{{record.id}}  ||  {{record.name}}-->
+    <!--</td>-->
+    <!--<td class="forth">-->
+    <!--<mc-table-button record="record" save="save" delete="delete" validate="validate"></mc-table-button>-->
+    <!--</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+    <!--</table>-->
+    <!--</div>-->
+    <!--<div class="paginationContainer">-->
+    <!--<mc-table-pagination display-records="mcDisplayRecordsDynamic"></mc-table-pagination>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</mc-table>-->
+
+    <!--</div>-->
+    <!--</div>-->
+
+
+    <!--<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">-->
+    <!--<div style="width:500px">-->
+    <!--<mc-select-2-->
+    <!--width="'100%'"-->
+    <!--multi-select="true"-->
+    <!--accept-typed-input="false"-->
+    <!--value-type="'static'"-->
+    <!--static-values="itemArray"-->
+    <!--default-value="selected"-->
+    <!--id-property="'id'"-->
+    <!--display-property="'name'"-->
+    <!--search-property="'name'"-->
+    <!--on-select="onSelect">-->
+    <!--<div>-->
+    <!--<div>{{$item.id}}||{{$item.name}}AAA</div>-->
+    <!--</div>-->
+    <!--</mc-select-2>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+
+    <!--<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">-->
+    <!--<div style="width:500px">-->
+    <!--<mc-select-2-->
+    <!--width="'100%'"-->
+    <!--multi-select="true"-->
+    <!--accept-typed-input="false"-->
+    <!--value-type="'dynamic'"-->
+    <!--load-dynamic-values="fetch"-->
+    <!--id-property="'id'"-->
+    <!--display-property="'name'"-->
+    <!--search-property="'name'"-->
+    <!--default-value="selected"-->
+    <!--on-select="onSelect">-->
+    <!--<div>-->
+    <!--<div>{{$item.id}}||{{$item.name}}AAA</div>-->
+    <!--</div>-->
+    <!--</mc-select-2>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+</div>

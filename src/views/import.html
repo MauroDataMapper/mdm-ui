@@ -1,0 +1,149 @@
+<div class="panel panel-default">
+    <table class="table table-bordered table-condensed ">
+        <thead>
+            <tr>
+                <th class="detailsRowHeader" colspan="3">
+                    Import <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div style="margin-bottom: 10px">
+                        <div style="margin-bottom: 10px">
+                            <span class="badge importFormStep themeBackgroundColor">1</span>
+                            <span class="importFormStepTitle">&nbsp;Please select an importer:</span>
+                        </div>
+                        <label>Importer *</label> <i ng-if="importerHelp" id="importerHelpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadImporterHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+
+                        <select  ng-model="selectedImporterStr" ng-change="importerChanged()" class="form-control mcSelect" style="width:90%">
+                            <option value="">Select...</option>
+                            <option ng-repeat="item in importers" value="{{item}}">{{item.displayName}}</option>
+                        </select>
+
+
+                    </div>
+                    <div ng-show="step >= 2 && selectedImporterGroups && selectedImporterGroups.length > 0">
+                        <div style="margin-bottom: 15px">
+                            <span class="badge importFormStep themeBackgroundColor">2</span>
+                            <span class="importFormStepTitle">&nbsp;Please fill the following form and press submit button:</span>
+                        </div>
+                        <form name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate  enctype="multipart/form-data" method="POST" >
+
+
+
+
+                            <div  ng-repeat="group in selectedImporterGroups"  class="form-group" style="margin: 0px 0px 20px 10px;">
+
+                                <span style="font-weight: bold; font-style: italic;" class="themeColor">{{group.name}}</span>
+                                <hr style="margin: 1px 0px; border-top: 1px solid" class="themeColor">
+                                <div  ng-repeat="option in group.parameters" style="margin: 0px 0px 0px 20px;">
+
+                                    <label>{{option.displayName}}<span ng-hide="option.optional">*</span></label>
+
+                                    <div class="importForm">{{option.description}}</div>
+
+
+                                    <div ng-if="option.type === 'Folder'">
+                                        <model-selector-tree
+                                                tree-search-domain-type="'Folder'"
+                                                just-show-folders="true"
+                                                ng-model="option.value"
+                                                accepts="['Folder']"
+                                                show-validation-error="option.optional === false"
+                                                is-required="option.optional == false"></model-selector-tree>
+                                    </div>
+
+                                    <div ng-if="option.type === 'DataModel'">
+                                        <model-selector-tree
+                                                tree-search-domain-type="'DataModel'"
+                                                ng-model="option.value"
+                                                accepts="['DataModel']"
+                                                show-validation-error="option.optional === false"
+                                                is-required="option.optional == false"></model-selector-tree>
+                                    </div>
+
+
+                                    <div ng-if="option.type === 'Text'">
+                                        <div ng-class="{'has-error' : !userForm['{{option.name}}'].$valid && userForm['{{option.name}}'].$touched}">
+                                            <textarea
+                                                   ng-model="option.value"
+                                                   ng-attr-name="{{option.name}}"
+                                                   ng-attr-id="{{option.name}}"
+                                                   ng-required="option.optional == false"
+                                                   rows="5"
+                                                   class="form-control">
+                                            </textarea>
+                                        </div>
+                                    </div>
+
+                                    <div ng-if="option.type !== 'Folder' && option.type !== 'DataModel' && option.type != 'Text'">
+                                        <div ng-class="{'has-error' : !userForm['{{option.name}}'].$valid && userForm['{{option.name}}'].$touched}">
+                                            <input type="{{formOptionsMap[option.type]}}"
+                                                   ng-model="option.value"
+                                                   ng-attr-name="{{option.name}}"
+                                                   ng-attr-id="{{option.name}}"
+                                                   ng-class="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
+                                                   ng-required="option.optional == false"
+                                                   ng-attr-valid-file="formOptionsMap[option.type] == 'file'">
+                                        </div>
+                                    </div>
+
+                                    <div class="has-error">
+                                        <span class="control-label" ng-show="userForm['{{option.name}}'].$error.number   && option.type == 'Integer'">This is not a valid number.</span>
+                                        <span class="control-label" ng-show="userForm['{{option.name}}'].$error.required && userForm['{{option.name}}'].$touched">This field is required.</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            <div style="width: 100%;">
+                                <div ng-show="importingInProgress">
+                                    <uib-progressbar max="max" value="dynamic" class="progress-striped active">
+                                        <span style="color:white; white-space:nowrap;"></span>
+                                    </uib-progressbar>
+                                </div>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <button type="submit"  class="btn btn-success" ng-disabled="userForm.$invalid || importingInProgress">Submit</button>
+                                <button type="reset"   class="btn btn-default" ng-disabled="importingInProgress" >Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div ng-if="importCompleted && importResult.count > 1">
+                        <hr>
+                        <span><strong>The following Data Models ({{importResult.count}}) are imported successfully:</strong></span>
+                        <div ng-repeat="import in importResult.items" style="padding-left: 5px;">
+                            <div>
+                                <element-link mc-element="import"></element-link>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="importHasError && importErrors.length > 0" style="margin-top: 10px;">
+                        <div class="alert alert-danger">
+                            <strong>Import Errors ({{importErrors.length}})</strong>
+                            <div ng-repeat="error in importErrors">
+                                <div>{{error.message}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

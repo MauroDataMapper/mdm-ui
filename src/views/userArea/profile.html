@@ -1,0 +1,36 @@
+<div class="row" style="padding: 5px">
+    <div class="col-lg-6 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <div class="pull-left" style="width: 48px; position: relative; margin-right: 10px;">
+                    <div class="btn-group btn-group-xs" style="position: absolute; z-index: 1; overflow: hidden; color: white; text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);" ng-if="imageCropStep !== 2">
+                        <label class="btn btn-xs btn-file" aria-label="Choose Profile Image" style="color: white;">
+                            <span class="glyphicon glyphicon-camera"></span>
+                            <input type="file" style="display: none;" file-on-change="chooseFileImage" accept="image/*">
+                        </label>
+                        <a class="btn btn-xs" ng-click="removeProfileImage()" style="color: white" aria-label="Remove profile image">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </div>
+                    <img class="img-rounded" style="width: 48px; height: auto;" ng-src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?thumnail{{imageVersion}}">
+                </div>
+                <div>
+                    <h2 class="panel-title">Profile</h2> <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+                </div>
+            </div>
+            <mc-image-croppie
+                    ng-if="cropped.source"
+                    src="cropped.source"
+                    ng-model="cropped.image"
+                    thumbnail="cropped.thumbnail"
+                    thumbnail-size="69"
+                    options="{viewport: {width:200, height:200}, boundary:{width:300, height:300}}"></mc-image-croppie>
+            <div ng-if="cropped.source" class="pull-right" style="margin: 5px;">
+                <button ng-click="clear()"  type="button" class="btn btn-default btn-xs">Cancel</button>
+                <button ng-click="savePicture()" type="button" class="btn btn-primary btn-xs">Save</button>
+            </div>
+            <user-details user="profile" on-after-save="onAfterSave"></user-details>
+        </div>
+    </div>
+
+</div>

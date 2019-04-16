@@ -1,0 +1,95 @@
+<div class="panel panel-default">
+    <table class="table table-bordered table-condensed ">
+        <thead>
+        <tr>
+            <th class="detailsRowHeader" colspan="3">
+                Data Model(s) Export <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" ng-click="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div>
+                        <div style="margin-bottom: 10px">
+                            <span class="badge importFormStep themeBackgroundColor">1</span>
+                            <span class="importFormStepTitle">&nbsp;Please select Data Model(s):</span>
+                            <div style="margin: 10px 5px">
+                                <div style="width:70%">
+
+                                    <model-selector-tree
+                                            ng-model="selectedDataModels"
+                                            on-select="onSelect"
+                                            multiple="true"
+                                            tree-search-domain-type="'DataModel'"
+                                            accepts="['DataModel']" ></model-selector-tree>
+
+                                    <!--<mc-select-2-->
+                                            <!--width="'100%'"-->
+                                            <!--multi-select="true"-->
+                                            <!--accept-typed-input="false"-->
+                                            <!--value-type="'static'"-->
+                                            <!--default-value="defaultModels"-->
+                                            <!--static-values="allDataModels"-->
+                                            <!--id-property="'id'"-->
+                                            <!--display-property="'label'"-->
+                                            <!--search-property="'label'"-->
+                                            <!--processing="processing"-->
+                                            <!--on-select="onSelect">-->
+                                        <!--<div>-->
+                                            <!--<div>-->
+                                                <!--{{$item.label}}-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</mc-select-2>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px" ng-if="step == 2">
+                            <div style="margin-bottom: 10px">
+                                <span class="badge importFormStep themeBackgroundColor">2</span>
+                                <span class="importFormStepTitle">&nbsp;Please select an exporter:</span>
+                            </div>
+                            <div style="margin-left: 5px;">
+                                <label>Exporter *</label>
+                                <select ng-model="form.selectedExporterStr" ng-change="exporterChanged()"  ng-disabled="processing" class="form-control mcSelect" style="width:35%">
+                                    <option value="">Select...</option>
+                                    <option ng-repeat="item in exportersList" value="{{item}}">{{item.displayName}}</option>
+                                </select>
+                            </div>
+                            <div style="text-align: left" ng-if="selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1">
+                                <div class="errorMessage" style="padding-top: 5px;padding-left: 6px;font-style: italic;">
+                                    <strong>{{selectedExporterObj.displayName}}</strong> does not support multiple Data Models export!<br>
+                                    <div ng-repeat="item in exportersList | filter:{ canExportMultipleDomains: true } ">
+                                        <span ng-if="$index==0">
+                                            The following exporters support multiple Data Models export:
+                                        </span>
+                                        <div style="padding-left: 3px;">
+                                            &#8226 {{item.displayName}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 5px;clear: both;">
+                                <button type="submit"
+                                        class="btn btn-success"
+                                        ng-click="export()"
+                                        ng-disabled="!selectedExporterObj  || (selectedDataModels && selectedDataModels.length==0) || processing || (selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1)">
+                                    Export</button>
+                                <button type="reset" class="btn btn-default" ng-disabled="processing" ng-click="reset()">Reset</button>
+                            </div>
+                            <div style="clear: both;" ng-if="processing">
+                                <uib-progressbar max="100" value="100" class="progress-striped active">
+                                    <span style="color:white; white-space:nowrap;"></span>
+                                </uib-progressbar>
+                            </div>
+                            <div style="margin-bottom: 3px;padding-left: 5px;" ng-show="exportedFileIsReady">
+                                <div id="exportFileDownload"></div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,83 @@
+<div style="margin-top: 10px;">
+    <mc-table
+            mc-name="emailTable"
+            id="emailTable"
+            mc-record-type="'static'"
+            mc-records="emails"
+            mc-static-loading-in-progress="loading"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Emails</span>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                    <tr class="mcTableHeader">
+                        <th style="cursor:pointer;max-width: 3%;width: 3%;" columnName="sentToEmailAddress" sortable="true" filterable="true">
+                            To
+                        </th>
+                        <th style="cursor:pointer;max-width: 2%;width: 2%;"  columnName="dateTimeSentString" sortable="true">
+                            Date/Time
+                        </th>
+                        <th style="cursor:pointer;max-width: 6%;width: 6%;"  columnName="body" sortable="true" filterable="true">
+                            Subject/Body
+                        </th>
+                        <th style="cursor:pointer;max-width: 2%;width: 2%;"  columnName="successfullySent" sortable="true">
+                            Delivery Status
+                        </th>
+                    </tr>
+                    <tr class="mcTableFilter">
+                        <td style="max-width: 3%;width: 3%;">
+                            <input class="form-control input-sm" type="text" autocomplete="off">
+                        </td>
+                        <td style="max-width: 2%;width: 2%;">
+                            <!--<input class="form-control input-sm" type="text" autocomplete="off">-->
+                        </td>
+                        <td style="max-width: 6%;width: 6%;">
+                            <input class="form-control input-sm" type="text" autocomplete="off">
+                        </td>
+                        <td style="max-width: 2%;width: 2%;">
+                            <!--<input class="form-control input-sm" type="text" autocomplete="off">-->
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="record in mcDisplayRecords">
+                        <td style="max-width: 3%;width: 3%;text-align: left;word-wrap: break-word;">
+                            {{record.sentToEmailAddress}}
+                        </td>
+                        <td style="max-width: 2%;width: 2%;text-align: left;word-wrap: break-word;">
+                            {{dateToString(record.dateTimeSent)}}
+                        </td>
+                        <td style="max-width: 6%;width: 6%;text-align: left;word-wrap: break-word;">
+                            <span style="font-weight: bold;">{{record.subject}}</span>
+                            <br>
+                            <more-description description="{{::record.body}}" length="200"></more-description>
+                        </td>
+                        <td style="max-width: 2%;width: 2%;text-align: left;word-wrap: break-word;">
+                            <a ng-if="record.successfullySent">
+                                Successful
+                            </a>
+                            <a ng-if="!record.successfullySent" ng-click="toggleMessage(record)" style="text-decoration: none; cursor: pointer;">
+                                Failed
+                            </a>
+                            <div ng-if="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
+                                {{record.failureReason}}
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>
+

@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top:10px;">
+        <div class="simpleViewResultElement">
+            <div ng-if="element.domainType === 'DataModel'">
+                <simple-view-data-model parent="element"></simple-view-data-model>
+            </div>
+            <div ng-if="element.domainType === 'DataElement'">
+                <simple-view-data-element parent="element"></simple-view-data-element>
+            </div>
+            <div ng-if="element.domainType === 'DataClass'">
+                <simple-view-data-class parent="element"></simple-view-data-class>
+            </div>
+            <div ng-if="element && (allDataTypes[element.domainType] || element.domainType === 'EnumerationValue')">
+                <simple-view-data-type parent="element"></simple-view-data-type>
+            </div>
+            <div ng-if="element.domainType === 'Terminology'">
+                <simple-view-terminology parent="element"></simple-view-terminology>
+            </div>
+            <div ng-if="element.domainType === 'Term'">
+                <simple-view-term parent="element"></simple-view-term>
+            </div>
+            <div ng-if="element.domainType === 'Classifier'">
+                <simple-view-classifier parent="element"></simple-view-classifier>
+            </div>
+        </div>
+    </div>
+</div>

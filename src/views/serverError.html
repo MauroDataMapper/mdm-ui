@@ -1,0 +1,34 @@
+<div style="text-align: left;">
+    <h3>Server Error<span ng-if="latestError.response.data.errorCode" style="font-size: 12px !important; font-style: italic !important;">&nbsp;&nbsp;error code: {{latestError.response.data.errorCode}}</span></h3>
+    <h5>We're sorry, but the server did not respond as we expected! <a ng-click="toggleLatestError()" style="cursor: pointer;" ng-show="isAdmin">View details...</a>
+        <br>Please try again later.</h5>
+    <div ng-if="showError" style="padding-bottom: 10px;">
+        <div>
+            <a clipboard supported="supported" text="latestErrorStr" on-copied="success()" on-error="fail(err)" style="font-size: 12px; font-weight: bold; cursor: pointer;">Copy</a>
+        </div>
+        <div>
+            <textarea ng-model="latestErrorStr"  id="latestErrorStr" ng-show="false"></textarea>
+            <json-formatter json="latestError" open="2"></json-formatter>
+        </div>
+    </div>
+    <div ng-if="showYouTrackLink()">
+        <div>
+            If this is the first time you have encountered this error please report the issue to YouTrack using the link
+            below.
+        </div>
+        <a ng-click="report()" style="cursor: pointer;" ng-hide="processing || sentSuccessfully">Report Issue</a>
+
+        <uib-progressbar max="100" value="100" class="progress-striped active" ng-if="processing">
+            <span style="color:white; white-space:nowrap;"></span>
+        </uib-progressbar>
+        <h4 ng-if="sentSuccessfully">
+            Your request submitted successfully.
+            <p  class="errorSubmitted">
+                <i class="fa fa-check"></i>
+            </p>
+        </h4>
+        <h5 ng-if="errorInSubmit">
+            YouTrack server does not response as we expect!<br>Please report the issue again later.
+        </h5>
+    </div>
+</div>

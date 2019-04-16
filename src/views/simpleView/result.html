@@ -1,0 +1,119 @@
+<div>
+    <div class="row" style="padding: 10px 0px 5px 10px;">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="text-align: left">
+            <div>
+                <div class="input-group">
+                    <input type="text"
+                           id="searchInput"
+                           class="form-control"
+                           ng-model="searchInput"
+                           ng-model-options='{ debounce: 500 }'
+                           placeholder="Search for...">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="search()">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </span>
+                </div>
+                <div style="padding: 5px 0px 10px 5px">
+                    <label class="radio-inline" ><input type="radio" style="cursor: pointer" name="optradio" ng-model="dataModelType" value="Data Asset" ng-change="dataModelTypeChange()"><i style="font-size: 15px;" class="fa fa-database themeColor"></i> Data Asset</label>
+                    <label class="radio-inline" ><input type="radio" style="cursor: pointer" name="optradio" ng-model="dataModelType" value="Data Standard" ng-change="dataModelTypeChange()"> <i style="font-size: 15px;" class="fa fa-file-text-o themeColor"></i> Data Standard </label>
+                </div>
+            </div>
+            <div style="margin-top: 10px">
+                <div class="mcTableTitle" ng-if="formData.showSearchResult">
+                    <span class="title">Search Result <span class="badge element-count ng-binding" style="margin:0px 3px; font-size: 12px;" aria-hidden="false">{{mcTableHandler.totalItemCount}}</span> </span>
+                </div>
+                <div class="ngTable">
+                    <div>
+                        <mc-table
+                            mc-name="metadataTable"
+                            id="metadataTable"
+                            mc-record-type="'dynamic'"
+                            mc-fetch-method="fetch"
+                            mc-on-fetch-called="onFetchCalled"
+                            mc-table-handler="mcTableHandler"
+                            mc-display-records="mcDisplayRecords"
+                            mc-page-size-input="pageSize"
+                            mc-page-number="pageIndex">
+                                <div class="mcTableMain">
+                                    <div class="mcTableContainer">
+                                        <table class="table table-condensed mcTable">
+                                            <tbody>
+                                                <tr ng-repeat="record in mcDisplayRecords"
+                                                    style="cursor: pointer;">
+                                                    <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;"
+                                                        ng-class="{'simpleView selectedResult': (record.id === selectedElementId)}"
+                                                        ng-click="onElementClick($event, record)">
+                                                        <div style="padding: 8px 5px">
+                                                            <div style="font-size: 17px;">
+                                                                <div style="font-size: 17px;">
+                                                                    <element-link
+                                                                            disable-link = "true"
+                                                                            show-type-title = "true"
+                                                                            new-window="true"
+                                                                            mc-parent-data-model="{id:record.dataModel}"
+                                                                            mc-parent-data-class="{id:record.dataClass}"
+                                                                            mc-element="record"></element-link>
+                                                                </div>
+                                                                <div ng-if="record.aliases">
+                                                                    <ul class="aliasSearchResult">
+                                                                        <li style="font-size: 12px;display: inline-block;font-style: italic;">Aliases:</li>
+                                                                        <li ng-repeat="alias in record.aliases"
+                                                                            class="aliasSearchResult">
+                                                                            <span class="themeColor" ng-bind-html="alias"></span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <!--<model-path path="record.breadcrumbs"  new-window="true"></model-path>-->
+                                                                <!--<span ng-repeat="item in record.breadcrumbs" style="color:#4cae4c; font-size: 12px; font-style: italic;">{{item.label}}/</span>-->
+                                                            </div>
+                                                            <!--<more-description length="300" description="{{::record.description}}"></more-description>-->
+                                                            <markdown-text-area  description="record.description" in-edit-mode="false"></markdown-text-area>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="paginationContainer">
+                                        <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+                                    </div>
+                                </div>
+                        </mc-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 visible-lg visible-md" style="padding-top:80px;">
+            <div class="simpleViewResultElement" data-spy="affix" data-offset-top="70">
+                <div ng-if="loadedElement.domainType === 'DataModel'">
+                    <simple-view-data-model
+                            parent="loadedElement"
+                            hide-search="true"
+                            show-label-as-link="true"
+                            hide-more-details-link="true"></simple-view-data-model>
+                </div>
+                <div ng-if="loadedElement.domainType === 'DataElement'">
+                    <simple-view-data-element parent="loadedElement"></simple-view-data-element>
+                </div>
+                <div ng-if="loadedElement.domainType === 'DataClass'">
+                    <simple-view-data-class parent="loadedElement"></simple-view-data-class>
+                </div>
+                <div ng-if="loadedElement && (allDataTypes[loadedElement.domainType] || loadedElement.domainType === 'EnumerationValue')">
+                    <simple-view-data-type parent="loadedElement"></simple-view-data-type>
+                </div>
+                <div ng-if="loadedElement.domainType === 'Terminology'">
+                    <simple-view-terminology parent="loadedElement"></simple-view-terminology>
+                </div>
+                <div ng-if="loadedElement.domainType === 'Term'">
+                    <simple-view-term parent="loadedElement"></simple-view-term>
+                </div>
+                <div ng-if="loadedElement.domainType === 'Classifier'">
+                    <simple-view-classifier parent="loadedElement"></simple-view-classifier>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

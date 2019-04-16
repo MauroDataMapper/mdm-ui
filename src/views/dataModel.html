@@ -1,0 +1,206 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+
+        <div style="width: 100%">
+            <datamodel-details></datamodel-details>
+        </div>
+
+
+        <div ng-if="showSearch">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label>Search</label>
+                    <div style="float:right;">
+                        <button type="button"
+                                class="btn btn-default btn-xs"
+                                ng-click="toggleShowSearch()"
+                                aria-hidden="false"
+                                aria-disabled="false" title="close">
+                            <i class="fa fa-times themeColor"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body panel-table">
+                    <advanced-search-bar
+                            parent="dataModel"
+                            show-restrict-to="false"
+                            show-domain-types="['DataClass', 'DataType', 'DataElement', 'EnumerationValue']">
+                    </advanced-search-bar>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="!showSearch">
+            <div ng-if="dataModel && dataModel.semanticLinks && dataModel.semanticLinks.length > 0">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Links</strong></div>
+                    <div class="panel-body" style="padding-top: 5px !important;">
+                        <all-links-in-paged-list
+                                show-loading-spinner="true"
+                                parent="dataModel"
+                                show-description="true"
+                                show-no-links-message="true"
+                                type="'static'"></all-links-in-paged-list>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="!showEditForm">
+                <uib-tabset active="activeTab.index">
+                    <uib-tab select="tabSelected('dataClasses')">
+                        <uib-tab-heading>
+                            Data Classes
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'dataClasses' && dataModel">
+                            <div>
+                                <element-child-data-classes-list
+                                        parent-data-model="dataModel"
+                                        parent-data-class="{id:null}"
+                                        mc-data-class="{id:null}"
+                                        type = "'dynamic'"
+                                        loading-data="loadingData"></element-child-data-classes-list>
+                            </div>
+                        </div>
+                    </uib-tab>
+                    <uib-tab select="tabSelected('types')">
+                        <uib-tab-heading>
+                            Types
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'types' && dataModel">
+                            <!--<element-owned-data-types-list owned-data-types="types" parent="dataModel" loading-data="loadingData"></element-owned-data-types-list>-->
+                            <element-owned-data-types-list
+                                    parent="dataModel"
+                                    type = "'dynamic'"
+                                    loading-data="loadingData"></element-owned-data-types-list>
+                        </div>
+                    </uib-tab>
+                    <uib-tab select="tabSelected('properties')">
+                        <uib-tab-heading>
+                            Properties
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'properties' && dataModel">
+                            <!--<mc-data-set-metadata meta-data-items="properties" parent="dataModel" parent-type="datamodel" show-add-new-row-button="true" loading-data="loadingData"></mc-data-set-metadata>-->
+                            <mc-data-set-metadata
+                                    parent="dataModel"
+                                    type = "'dynamic'"
+                                    loading-data="loadingData"></mc-data-set-metadata>
+                        </div>
+                    </uib-tab>
+
+                    <uib-tab select="tabSelected('summaryMetadata')">
+                        <uib-tab-heading>
+                            Summary
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'summaryMetadata' && dataModel">
+                            <summary-metadata-table
+                                    parent="dataModel"
+                                    loading-data="loadingData"></summary-metadata-table>
+                        </div>
+                    </uib-tab>
+
+
+                    <uib-tab select="tabSelected('comments')">
+                        <uib-tab-heading>
+                            Comments
+                        </uib-tab-heading>
+                        <div style="width:100%;"  ng-if="activeTab.name == 'comments' && dataModel">
+                            <annotation-list parent="dataModel" loading-data="loadingData" type="'dynamic'"></annotation-list>
+                        </div>
+                    </uib-tab>
+
+                    <uib-tab select="tabSelected('history')">
+                        <uib-tab-heading>
+                            History
+                        </uib-tab-heading>
+                        <div style="width:100%;" ng-if="activeTab.name == 'history' && dataModel">
+                            <history parent="dataModel"  parent-type="'DataModel'"></history>
+                        </div>
+                    </uib-tab>
+                    <uib-tab select="tabSelected('diagram')">
+                        <uib-tab-heading>
+                            Diagram
+                        </uib-tab-heading>
+                        <div>
+                            <div ng-if="activeTab.name == 'diagram' && dataModel">
+                                <joint-diagram-3 diagram-name="'dataModelTab'" width="5000" height="800" diagram="diagram" test="test" cells="cells" root-cell="rootCell" mc-element="dataModel4Diagram" grid-size="1" scale="0.5"></joint-diagram-3>
+                            </div>
+                        </div>
+                    </uib-tab>
+
+
+                    <!--<uib-tab select="tabSelected('links')" ng-if="showExtraTabs">-->
+                    <uib-tab select="tabSelected('links')">
+                        <uib-tab-heading>
+                            Links
+                        </uib-tab-heading>
+                        <div>
+                            <div ng-if="activeTab.name == 'links' && dataModel">
+                                <element-links-list-new
+                                        parent="dataModel"
+                                        type = "'dynamic'"
+                                        loading-data="loadingData"></element-links-list-new>
+                            </div>
+                        </div>
+                    </uib-tab>
+
+                    <uib-tab select="tabSelected('attachments')" ng-if="dataModel">
+                        <uib-tab-heading>
+                            Attachments
+                        </uib-tab-heading>
+                        <div>
+                            <div ng-if="activeTab.name == 'attachments' && dataModel">
+                                <attachment-list parent="dataModel" loading-data="loadingData" type="'dynamic'"></attachment-list>
+                            </div>
+                        </div>
+                    </uib-tab>
+
+
+                    <!--<uib-tab select="tabSelected('dataflow')" ng-if="showExtraTabs">-->
+                    <uib-tab select="tabSelected('dataflow')" ng-if="dataModel && dataModel.type === 'Data Asset'">
+                        <uib-tab-heading>
+                            Dataflow
+                        </uib-tab-heading>
+                        <div>
+                            <div ng-if="activeTab.name == 'dataflow' && dataModel">
+                                <!--<mc-data-flow-small parent="dataModel" style="width:100%;"></mc-data-flow-small>-->
+                                <joint-diagram-5 diagram-name="'dataModelTab2'"
+                                                 width="5000"
+                                                 height="800"
+                                                 diagram="diagramDF"
+                                                 test="test"
+                                                 cells="cellsDF"
+                                                 root-cell="rootCellDF"
+                                                 mc-element="dataModel"
+                                                 grid-size="1"
+                                                 scale="0.5"></joint-diagram-5>
+                            </div>
+                        </div>
+                    </uib-tab>
+
+                </uib-tabset>
+            </div>
+        </div>
+        <!--<div ng-if="showEditForm">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading" style="text-align: right;">-->
+                    <!--<button type="button" class="btn btn-default btn-xs" ng-click="closeEditForm()" aria-hidden="false" aria-disabled="false" title="close">-->
+                        <!--<i class="fa fa-times cancelEditButton"></i>-->
+                    <!--</button>-->
+                <!--</div>-->
+                <!--<div class="panel-body" ng-if="editForm == 'links'">-->
+                    <!--<element-links-list-new-->
+                            <!--parent="dataModel"-->
+                            <!--type = "'dynamic'"-->
+                            <!--loading-data="loadingData"></element-links-list-new>-->
+
+
+                <!--</div>-->
+                <!--<div class="panel-body" ng-if="editForm == 'dataflows'" style="margin:0px !important;padding:0px !important;">-->
+                    <!--<mc-data-flow-small parent="dataModel" style="width:100%;"></mc-data-flow-small>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+    </div>
+</div>

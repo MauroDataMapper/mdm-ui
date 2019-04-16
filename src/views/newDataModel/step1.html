@@ -1,0 +1,77 @@
+<div class="form-group">
+    <form name="detailForm" form-step-validity>
+
+        <label>Please enter Data Model details:<i id="helpIcon" class="fa fa-info-circle themeColor" style="margin: 5px;"  ng-click="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i></label>
+        </b>
+
+        <table class="table table-bordered table-condensed dataModelDetailTable">
+            <tbody>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Folder *</th>
+                <td>
+                    <element-link
+                            show-type-title = "false"
+                            new-window="true"
+                            mc-element="parentFolder"></element-link>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="label" ng-model="model.label"
+                           required="Name can not be Empty">
+                </td>
+            </tr>
+
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Author *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="author" ng-model="model.author"
+                           required="Author can not be Empty">
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="organisation" ng-model="model.organisation"
+                           required="Organisation can not be Empty">
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-md-2">Description</th>
+                <td>
+                    <textarea type="text" class="form-control" id="description" ng-model="model.description"></textarea>
+                </td>
+            </tr>
+
+            <tr class="type">
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Type *</th>
+                <td>
+                    <select class="form-control  wizardInput mcSelect" id="dataModelType" ng-model="model.dataModelType" required="DataModel Type can not be Empty">
+                        <option value="" selected="selected"></option>
+                        <option ng-repeat="option in allDataModelTypes" value="{{option}}">{{option}}</option>
+                    </select>
+                </td>
+
+            </tr>
+
+            <tr class="type" ng-if="model.dataModelType == 'Database'">
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Database Dialect*</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="databaseDialect" ng-model="model.dialect"
+                           required="Database Dialect can not be Empty">
+                </td>
+            </tr>
+
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
+                <td>
+                    <element-classifications
+                            classifications="model.classifiers"
+                            editable="{$visible :true}"></element-classifications>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

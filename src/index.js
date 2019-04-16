@@ -93,7 +93,10 @@ import './js/controllers/newDataElement/newDataElementStep0Ctrl'
 import './js/controllers/newDataElement/newDataElementStep1Ctrl'
 import './js/controllers/newDataElement/newDataElementStep2Ctrl'
 
-
+import './js/controllers/newDataModel/newDataModel'
+import './js/controllers/newDataModel/newDataModelStep1Ctrl'
+import './js/controllers/newDataModel/newDataModelStep2Ctrl'
+import './js/controllers/newDataModel/newDataModelStep3Ctrl'
 
 
 import constantsModule from './js/constants/constantsModule'

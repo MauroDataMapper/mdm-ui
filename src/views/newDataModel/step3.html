@@ -1,0 +1,40 @@
+<div class="form-group">
+    <label>Please add Properties:</label>
+    <!--<mc-data-set-metadata meta-data-items="model.metadata" client-side="true"></mc-data-set-metadata>-->
+
+
+    <mc-data-set-metadata
+            parent="model"
+            type = "'static'"
+            meta-data-items="model.metadata"
+            client-side = "true"
+            loading-data="false"></mc-data-set-metadata>
+
+
+    <div class="form-group has-error">
+        <div class="editable-error help-block">
+            {{saveErrorMessages}}
+        </div>
+    </div>
+
+    <div class="row" ng-show="$isLast()">
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+            <button ng-disabled="$isFirst()" class="btn btn-default btn-sm" ng-click="$previousStep()">
+                <span class="fa fa-chevron-left"></span>
+                Previous
+            </button>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
+            <strong ng-bind-template="{{$getActiveIndex()}} / {{$getSteps().length}}"></strong>
+        </div>
+
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
+            <button ng-show="$isLast()" class="btn btn-success btn-sm" ng-click="save()">
+                Submit
+            </button>
+            <button ng-show="$isLast()" class="btn btn-default btn-sm" ng-click="cancel()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

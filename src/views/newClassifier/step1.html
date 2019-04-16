@@ -1,0 +1,46 @@
+
+<div class="form-group">
+    <form name="detailForm" style="width: 100%; table-layout:fixed;" form-step-validity>
+        <label>Please enter Classifier details:</label>
+        </b>
+        <table class="table table-bordered table-condensed dataModelDetailTable">
+            <tbody>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="label" ng-model="model.label"
+                           required="Name can not be Empty">
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-md-2">Description</th>
+                <td>
+                    <textarea type="text" class="form-control" id="description" ng-model="model.description"></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+
+<div class="row" ng-show="$isLast()">
+    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+        <button ng-disabled="$isFirst()" class="btn btn-default btn-sm" ng-click="$previousStep()">
+            <span class="fa fa-chevron-left"></span>
+            Previous
+        </button>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
+        <strong ng-bind-template="{{$getActiveIndex()}} / {{$getSteps().length}}"></strong>
+    </div>
+
+    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
+        <button ng-show="$isLast()" class="btn btn-success btn-sm" ng-click="save()">
+            Submit
+        </button>
+        <button ng-show="$isLast()" class="btn btn-default btn-sm" ng-click="cancelWizard()">
+            Cancel
+        </button>
+    </div>
+</div>

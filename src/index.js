@@ -80,7 +80,8 @@ import './js/controllers/admin/users'
 import './js/controllers/dataFlow/dataFlow'
 import './js/controllers/dataFlow/dataFlowChain'
 import './js/controllers/dataFlow/dataFlowDM2DM'
-
+import './js/controllers/newClassifier/newClassifier'
+import './js/controllers/newClassifier/newClassifierStep1Ctrl'
 
 
 

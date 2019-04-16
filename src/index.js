@@ -99,6 +99,12 @@ import './js/controllers/newDataModel/newDataModelStep2Ctrl'
 import './js/controllers/newDataModel/newDataModelStep3Ctrl'
 
 
+import './js/controllers/newDataType/newDataType'
+import './js/controllers/newDataType/newDataTypeStep0Ctrl'
+import './js/controllers/newDataType/newDataTypeStep1Ctrl'
+import './js/controllers/newDataType/newDataTypeStep2Ctrl'
+
+
 import constantsModule from './js/constants/constantsModule'
 import './js/constants/roles'
 

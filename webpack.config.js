@@ -132,15 +132,15 @@ module.exports = (env, options) => {
                 {
                     from: './src/favicon.ico',
                     to: '.'
-                },
-                {
-                    from: './src/style/jointjs/joint.css',
-                    to: './jointjs/'
-                },
-                {
-                    from: './src/js/jointjs/joint-min.js',
-                    to: './jointjs/'
                 }
+                // {
+                //     from: './src/style/jointjs/joint.css',
+                //     to: './jointjs/'
+                // },
+                // {
+                //     from: './src/js/jointjs/joint-min.js',
+                //     to: './jointjs/'
+                // }
             ]),
             new CopyWebpackPlugin([
                 {

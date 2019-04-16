@@ -1,7 +1,7 @@
 //This should be loaded before loading AngularJs
 //so AngularJs would be able to use jQuery instead of jqlite
 import './jQueryLoader'
-
+import './jointLoader'
 import 'zone.js';
 import 'reflect-metadata';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

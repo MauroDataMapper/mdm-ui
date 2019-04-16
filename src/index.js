@@ -111,6 +111,11 @@ import './js/controllers/simpleView/home'
 import './js/controllers/simpleView/result'
 import './js/controllers/simpleView/submission'
 
+import './js/controllers/userArea/changePassword'
+import './js/controllers/userArea/leftMenu'
+import './js/controllers/userArea/profile'
+import './js/controllers/userArea/userSettings'
+
 
 
 import constantsModule from './js/constants/constantsModule'

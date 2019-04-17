@@ -20,6 +20,11 @@ import {IRootScopeService} from "@angular/upgrade/static/src/common/angular1";
     entryComponents:[
         HeroDetailComponent
     ],
+    providers: [{
+        provide: '$rootScope',
+        useFactory: ($injector: any) => $injector.get('$rootScope'),
+        deps: ['$injector']
+    }]
 })
 
 export class AppModule {

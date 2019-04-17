@@ -353,7 +353,7 @@ angular.module(MODULE_NAME, [
     }).state("appContainer.mainApp.about", {
         url: "/about",
         templateUrl: "./views/about.html",
-        controller: "aboutTSCtrl"
+        controller: "aboutCtrl"
     }).state("appContainer.mainApp.modelsComparison", {
         url: "/modelsComparison/:sourceId/:targetId",
         templateUrl: "./views/modelsComparison.html",

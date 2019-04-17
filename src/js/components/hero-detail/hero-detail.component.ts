@@ -1,5 +1,5 @@
 import { downgradeComponent } from '@angular/upgrade/static'; declare var angular: angular.IAngularStatic;
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,  EventEmitter, Output } from '@angular/core';
 
 
 import moduleName from '../../../index';
@@ -13,7 +13,17 @@ import './hero-detail.component.css'
 export class HeroDetailComponent {
 
   @Input()
-  name: string;
+  nameForName: string;
+
+  @Output() deleted = new EventEmitter<string>();
+
+
+    onDelete() {
+      console.log('hey I am  clicked in child');
+      debugger
+      this.deleted.emit("Hi");
+  }
+
 
   constructor() {
 

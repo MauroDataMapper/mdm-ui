@@ -20,13 +20,28 @@ angular.module('directives').directive('mcTable', function () {
         },
 
         link: function (scope, element, attrs) {
-            scope.showFilter = false;
-            scope.sortBy   = null;
-            scope.sortType = "";
-            scope.headers = [];
 
 
-            scope.debounce = function (func, wait, immediate) {
+        },
+        controller: function ($scope, $element, userSettingsHandler) {
+
+            $scope.showFilter = false;
+            $scope.sortBy   = null;
+            $scope.sortType = "";
+            $scope.headers = [];
+
+            $scope.safeApply = function(fn) {
+                var phase = $scope.$root.$$phase;
+                if(phase == '$apply' || phase == '$digest') {
+                    if(fn && (typeof(fn) === 'function')) {
+                        fn();
+                    }
+                } else {
+                    $scope.$apply(fn);
+                }
+            };
+
+            $scope.debounce = function (func, wait, immediate) {
                 var timeout;
                 return function() {
                     var context = this, args = arguments;
@@ -41,28 +56,28 @@ angular.module('directives').directive('mcTable', function () {
                 };
             };
 
-            scope.handleCount = function () {
-                var tableTitle = $(element).find("div.mcTableTitle > span.title");
+            $scope.handleCount = function () {
+                var tableTitle = $($element).find("div.mcTableTitle > span.title");
                 var span = $('<span class="badge element-count ng-binding" style="margin:0px 3px;" aria-hidden="false"></span>');
                 $(tableTitle).append(span);
             };
 
-            scope.handleFilterIcon = function () {
+            $scope.handleFilterIcon = function () {
 
-                if($(element).find("tr.mcTableFilter").length === 0){
+                if($($element).find("tr.mcTableFilter").length === 0){
                     return
                 }
 
-                var tableTitle = $(element).find("div.mcTableTitle > span.title");
+                var tableTitle = $($element).find("div.mcTableTitle > span.title");
                 var filterIcon = $('<i class="fa fa-filter themeColor" style="cursor: pointer;margin-left: 2px;"></i>');
 
                 //Hide filter row
-                $(element).find("tr.mcTableFilter").hide();
+                $($element).find("tr.mcTableFilter").hide();
 
                 filterIcon.on("click", function () {
-                    scope.showFilter = !scope.showFilter;
-                    $(element).find("tr.mcTableFilter").toggle();
-                    if(scope.showFilter){
+                    $scope.showFilter = !$scope.showFilter;
+                    $($element).find("tr.mcTableFilter").toggle();
+                    if($scope.showFilter){
                         filterIcon.removeClass("themeColor");
                         filterIcon.addClass("filterIcon");
                     }else{
@@ -73,17 +88,17 @@ angular.module('directives').directive('mcTable', function () {
                 $(tableTitle).append(filterIcon);
 
 
-                if(scope.mcShowFilterInputs){
-                    scope.showFilter = true;
-                    $(element).find("tr.mcTableFilter").toggle();
+                if($scope.mcShowFilterInputs){
+                    $scope.showFilter = true;
+                    $($element).find("tr.mcTableFilter").toggle();
                     filterIcon.removeClass("themeColor");
                     filterIcon.addClass("filterIcon");
                 }
             };
 
 
-            scope.updateCount = function (count) {
-                var span = $(element).find("div.mcTableTitle > span.title > span.badge");
+            $scope.updateCount = function (count) {
+                var span = $($element).find("div.mcTableTitle > span.title > span.badge");
                 if(count == null || count == 0){
                     span.hide();
                 }else {
@@ -91,27 +106,27 @@ angular.module('directives').directive('mcTable', function () {
                     span.text(count);
                 }
             };
-            scope.handleColumns = function () {
+            $scope.handleColumns = function () {
                 var index = 0;
                 //find all columns
-                $(element).find("thead tr.mcTableHeader th").each(function (i, th) {
+                $($element).find("thead tr.mcTableHeader th").each(function (i, th) {
 
 
 
-                    if(scope.mcHasCheckbox){
+                    if($scope.mcHasCheckbox){
                         if($(th).attr("checkboxAll")){
                             var checkboxAll = $(th).find("input.checkboxAll");
                             checkboxAll.on("change", function () {
                                 if(this.checked === true) {
-                                   angular.forEach(scope.mcDisplayRecords, function (mcDisplayRecord) {
-                                       mcDisplayRecord.checked = true;
-                                   });
+                                    angular.forEach(scope.mcDisplayRecords, function (mcDisplayRecord) {
+                                        mcDisplayRecord.checked = true;
+                                    });
                                 }else if(this.checked === false) {
                                     angular.forEach(scope.mcDisplayRecords, function (mcDisplayRecord) {
                                         mcDisplayRecord.checked = false;
                                     });
                                 }
-                                scope.safeApply();
+                                $scope.safeApply();
                             });
                         }
                     }
@@ -126,7 +141,7 @@ angular.module('directives').directive('mcTable', function () {
                         type: $(th).attr("columnType")!=undefined ? $(th).attr("columnType") : "string",
                         filter: ""
                     };
-                    scope.headers[header.column] = header;
+                    $scope.headers[header.column] = header;
                     index++;
 
                     if(header.sortable) {
@@ -134,57 +149,57 @@ angular.module('directives').directive('mcTable', function () {
                         $(th).data("mc", header);
                         $(th).on("click", function (event) {
                             var mc = $(this).data("mc");
-                            for (var header in scope.headers) {
-                                if (scope.headers.hasOwnProperty(header)) {
-                                    if(scope.headers[header].sortable){
-                                        scope.headers[header].el.find("i.icon").remove();
-                                        scope.headers[header].el.append('<i class="fa fa-sort icon graySort" aria-hidden="true"></i>');
+                            for (var header in $scope.headers) {
+                                if ($scope.headers.hasOwnProperty(header)) {
+                                    if($scope.headers[header].sortable){
+                                        $scope.headers[header].el.find("i.icon").remove();
+                                        $scope.headers[header].el.append('<i class="fa fa-sort icon graySort" aria-hidden="true"></i>');
                                     }
                                 }
                             }
-                            scope.sortBy = mc.column;
-                            if (scope.sortType == "") {
+                            $scope.sortBy = mc.column;
+                            if ($scope.sortType == "") {
                                 $(this).find("i.icon").remove();
                                 $(this).append('<i class="fa fa-sort-desc icon blackSort" aria-hidden="true"></i>');
-                                scope.sortType = "asc";
-                            } else if (scope.sortType == "asc") {
+                                $scope.sortType = "asc";
+                            } else if ($scope.sortType == "asc") {
                                 $(this).find("i.icon").remove();
                                 $(this).append('<i class="fa fa-sort-asc icon blackSort" aria-hidden="true"></i>');
-                                scope.sortType = "desc";
-                            } else if (scope.sortType == "desc") {
+                                $scope.sortType = "desc";
+                            } else if ($scope.sortType == "desc") {
                                 $(this).find("i.icon").remove();
                                 $(this).append('<i class="fa fa-sort icon graySort" aria-hidden="true"></i>');
-                                scope.sortType = "";
+                                $scope.sortType = "";
                             }
-                            
 
-                            scope.mcPageNumber = 1;
-                            scope.applyFilter(); //filteredRecords
-                            scope.sort();        //sortedRecords
-                            scope.pagedList();   //mcDisplayRecords
-                            scope.safeApply();
+
+                            $scope.mcPageNumber = 1;
+                            $scope.applyFilter(); //filteredRecords
+                            $scope.sort();        //sortedRecords
+                            $scope.pagedList();   //mcDisplayRecords
+                            $scope.safeApply();
                         });
                     }
 
-                    
+
                     if(header.filterable) {
                         var filterTD = $($(th).parent("tr").parent("thead").find("tr.mcTableFilter td")[header.index]);
                         //it's an input filter
                         if(filterTD.find("input").length > 0){
                             filterTD.find("input").data("mc", header);
 
-                            filterTD.find("input").on("keyup", scope.debounce(function (event) {
+                            filterTD.find("input").on("keyup", $scope.debounce(function (event) {
                                 var header = $(this).data("mc");
-                                scope.headers[header.column].filter = $(this).val();
-                                scope.mcPageNumber = 1;
+                                $scope.headers[header.column].filter = $(this).val();
+                                $scope.mcPageNumber = 1;
 
-                                if(scope.mcRecordType == "static"){
-                                    scope.applyFilter(); //filteredRecords
-                                    scope.sort();  //sortedRecords
-                                    scope.pagedList();   //mcDisplayRecords
-                                    scope.safeApply();
+                                if($scope.mcRecordType == "static"){
+                                    $scope.applyFilter(); //filteredRecords
+                                    $scope.sort();  //sortedRecords
+                                    $scope.pagedList();   //mcDisplayRecords
+                                    $scope.safeApply();
                                 }else{
-                                    scope.fetchForDynamic();
+                                    $scope.fetchForDynamic();
                                 }
 
                             },500));
@@ -208,18 +223,18 @@ angular.module('directives').directive('mcTable', function () {
 
 
 
-                            filterTD.find("select").on("change", scope.debounce(function (event) {
+                            filterTD.find("select").on("change", $scope.debounce(function (event) {
                                 var header = $(this).data("mc");
-                                scope.headers[header.column].filter = $(this).val();
-                                scope.mcPageNumber = 1;
+                                $scope.headers[header.column].filter = $(this).val();
+                                $scope.mcPageNumber = 1;
 
-                                if(scope.mcRecordType == "static"){
-                                    scope.applyFilter(); //filteredRecords
-                                    scope.sort();  //sortedRecords
-                                    scope.pagedList();   //mcDisplayRecords
-                                    scope.safeApply();
+                                if($scope.mcRecordType == "static"){
+                                    $scope.applyFilter(); //filteredRecords
+                                    $scope.sort();  //sortedRecords
+                                    $scope.pagedList();   //mcDisplayRecords
+                                    $scope.safeApply();
                                 }else{
-                                    scope.fetchForDynamic();
+                                    $scope.fetchForDynamic();
                                 }
                             }, 500));
 
@@ -243,25 +258,27 @@ angular.module('directives').directive('mcTable', function () {
 
                 });
 
-                $(element).find("thead tr.mcTableHeader th")
+                $($element).find("thead tr.mcTableHeader th")
 
             };
-            
 
-            
-            scope.handleColumns();
 
-            scope.handleCount();
-            scope.updateCount(null);
+            $scope.handleColumns();
 
-            scope.handleFilterIcon();
+            $scope.handleCount();
+            $scope.updateCount(null);
 
-            scope.$watch('mcStaticLoadingInProgress', function (newValue, oldValue, scope) {
-                scope.handleSpinner(element, scope.mcStaticLoadingInProgress, true);
+            $scope.handleFilterIcon();
+
+            $scope.$watch('mcStaticLoadingInProgress', function (newValue, oldValue, scope) {
+                $scope.handleSpinner($element, $scope.mcStaticLoadingInProgress, true);
             });
 
-        },
-        controller: function ($scope, $element, userSettingsHandler) {
+
+
+
+
+
 
             //---------------------------------------------------------------------------------------
             //If pageSize and pageSizes are not provided explicitly, load them from UserSettings
@@ -355,6 +372,135 @@ angular.module('directives').directive('mcTable', function () {
                 }
                 return filterStr;
             };
+
+
+            $scope.pagedList = function () {
+                if ($scope.mcRecordType == 'static') {
+
+                    $scope.totalItemCount =  $scope.sortedRecords == null ? 0 : $scope.sortedRecords.length;
+
+                    $scope.pageCount = $scope.totalItemCount > 0 ? Math.ceil($scope.totalItemCount / $scope.mcPageSize) : 0;
+
+
+                    $scope.hasPreviousPage = $scope.mcPageNumber > 1;
+                    $scope.hasNextPage = $scope.mcPageNumber < $scope.pageCount;
+
+
+                    $scope.isFirstPage = $scope.mcPageNumber == 1;
+                    $scope.isLastPage = $scope.mcPageNumber >= $scope.pageCount;
+
+
+                    $scope.firstItemOnPage = ($scope.mcPageNumber - 1) * $scope.mcPageSize + 1;
+                    $scope.numberOfLastItemOnPage = $scope.firstItemOnPage + $scope.mcPageSize - 1;
+
+
+                    $scope.lastItemOnPage = $scope.numberOfLastItemOnPage > $scope.totalItemCount
+                        ? $scope.totalItemCount
+                        : $scope.numberOfLastItemOnPage;
+
+                    $scope.updateCount($scope.sortedRecords.length);
+                    $scope.mcDisplayRecords = $scope.sortedRecords.slice().splice($scope.firstItemOnPage - 1, $scope.mcPageSize);
+
+
+                    $scope.pages = [];
+                    if ($scope.pageCount > 7) {
+
+                        if ($scope.isFirstPage || $scope.mcPageNumber < 7) {
+                            for (var i = 0; i < 7; i++) {
+                                $scope.pages.push(i + 1);
+                            }
+                            $scope.pages.push("...");
+                            $scope.pages.push($scope.pageCount);
+                        } else if ($scope.isLastPage || $scope.mcPageNumber > $scope.pageCount - 5) {
+                            $scope.pages.push(1);
+                            $scope.pages.push("...");
+                            for (var i = $scope.pageCount - 5; i <= $scope.pageCount; i++) {
+                                $scope.pages.push(i);
+                            }
+                        } else {
+
+                            $scope.pages.push(1);
+                            $scope.pages.push("...");
+
+
+                            $scope.pages.push($scope.mcPageNumber - 1);
+                            $scope.pages.push($scope.mcPageNumber);
+                            $scope.pages.push($scope.mcPageNumber + 1);
+
+
+                            $scope.pages.push("...");
+                            $scope.pages.push($scope.pageCount);
+                        }
+
+                    } else {
+                        for (var i = 0; i < $scope.pageCount; i++) {
+                            $scope.pages.push(i + 1);
+                        }
+                    }
+                }
+                else if ($scope.mcRecordType == 'dynamic') {
+
+
+
+                    $scope.pageCount = $scope.totalItemCount > 0 ? Math.ceil($scope.totalItemCount / $scope.mcPageSize) : 0;
+
+                    $scope.hasPreviousPage = $scope.mcPageNumber > 1;
+                    $scope.hasNextPage = $scope.mcPageNumber < $scope.pageCount;
+
+
+                    $scope.isFirstPage = $scope.mcPageNumber == 1;
+                    $scope.isLastPage = $scope.mcPageNumber >= $scope.pageCount;
+
+
+                    $scope.firstItemOnPage = ($scope.mcPageNumber - 1) * $scope.mcPageSize + 1;
+                    $scope.numberOfLastItemOnPage = $scope.firstItemOnPage + $scope.mcPageSize - 1;
+
+
+                    $scope.lastItemOnPage = $scope.numberOfLastItemOnPage > $scope.totalItemCount
+                        ? $scope.totalItemCount
+                        : $scope.numberOfLastItemOnPage;
+
+                    $scope.updateCount($scope.totalItemCount);
+
+
+                    $scope.pages = [];
+                    if ($scope.pageCount > 7) {
+
+                        if ($scope.isFirstPage || $scope.mcPageNumber < 7) {
+                            for (var i = 0; i < 7; i++) {
+                                $scope.pages.push(i + 1);
+                            }
+                            $scope.pages.push("...");
+                            $scope.pages.push($scope.pageCount);
+                        } else if ($scope.isLastPage || $scope.mcPageNumber > $scope.pageCount - 5) {
+                            $scope.pages.push(1);
+                            $scope.pages.push("...");
+                            for (var i = $scope.pageCount - 5; i <= $scope.pageCount; i++) {
+                                $scope.pages.push(i);
+                            }
+                        } else {
+
+                            $scope.pages.push(1);
+                            $scope.pages.push("...");
+
+
+                            $scope.pages.push($scope.mcPageNumber - 1);
+                            $scope.pages.push($scope.mcPageNumber);
+                            $scope.pages.push($scope.mcPageNumber + 1);
+
+
+                            $scope.pages.push("...");
+                            $scope.pages.push($scope.pageCount);
+                        }
+
+                    } else {
+                        for (var i = 0; i < $scope.pageCount; i++) {
+                            $scope.pages.push(i + 1);
+                        }
+                    }
+                }
+            };
+
 
 
             $scope.firstFetch = true;
@@ -488,132 +634,6 @@ angular.module('directives').directive('mcTable', function () {
                 }
             };
 
-            $scope.pagedList = function () {
-                if ($scope.mcRecordType == 'static') {
-
-                    $scope.totalItemCount =  $scope.sortedRecords == null ? 0 : $scope.sortedRecords.length;
-
-                    $scope.pageCount = $scope.totalItemCount > 0 ? Math.ceil($scope.totalItemCount / $scope.mcPageSize) : 0;
-
-
-                    $scope.hasPreviousPage = $scope.mcPageNumber > 1;
-                    $scope.hasNextPage = $scope.mcPageNumber < $scope.pageCount;
-
-
-                    $scope.isFirstPage = $scope.mcPageNumber == 1;
-                    $scope.isLastPage = $scope.mcPageNumber >= $scope.pageCount;
-
-
-                    $scope.firstItemOnPage = ($scope.mcPageNumber - 1) * $scope.mcPageSize + 1;
-                    $scope.numberOfLastItemOnPage = $scope.firstItemOnPage + $scope.mcPageSize - 1;
-
-
-                    $scope.lastItemOnPage = $scope.numberOfLastItemOnPage > $scope.totalItemCount
-                        ? $scope.totalItemCount
-                        : $scope.numberOfLastItemOnPage;
-
-                    $scope.updateCount($scope.sortedRecords.length);
-                    $scope.mcDisplayRecords = $scope.sortedRecords.slice().splice($scope.firstItemOnPage - 1, $scope.mcPageSize);
-
-
-                    $scope.pages = [];
-                    if ($scope.pageCount > 7) {
-
-                        if ($scope.isFirstPage || $scope.mcPageNumber < 7) {
-                            for (var i = 0; i < 7; i++) {
-                                $scope.pages.push(i + 1);
-                            }
-                            $scope.pages.push("...");
-                            $scope.pages.push($scope.pageCount);
-                        } else if ($scope.isLastPage || $scope.mcPageNumber > $scope.pageCount - 5) {
-                            $scope.pages.push(1);
-                            $scope.pages.push("...");
-                            for (var i = $scope.pageCount - 5; i <= $scope.pageCount; i++) {
-                                $scope.pages.push(i);
-                            }
-                        } else {
-
-                            $scope.pages.push(1);
-                            $scope.pages.push("...");
-
-
-                            $scope.pages.push($scope.mcPageNumber - 1);
-                            $scope.pages.push($scope.mcPageNumber);
-                            $scope.pages.push($scope.mcPageNumber + 1);
-
-
-                            $scope.pages.push("...");
-                            $scope.pages.push($scope.pageCount);
-                        }
-
-                    } else {
-                        for (var i = 0; i < $scope.pageCount; i++) {
-                            $scope.pages.push(i + 1);
-                        }
-                    }
-                }
-                else if ($scope.mcRecordType == 'dynamic') {
-
-                    
-
-                    $scope.pageCount = $scope.totalItemCount > 0 ? Math.ceil($scope.totalItemCount / $scope.mcPageSize) : 0;
-
-                    $scope.hasPreviousPage = $scope.mcPageNumber > 1;
-                    $scope.hasNextPage = $scope.mcPageNumber < $scope.pageCount;
-
-
-                    $scope.isFirstPage = $scope.mcPageNumber == 1;
-                    $scope.isLastPage = $scope.mcPageNumber >= $scope.pageCount;
-
-
-                    $scope.firstItemOnPage = ($scope.mcPageNumber - 1) * $scope.mcPageSize + 1;
-                    $scope.numberOfLastItemOnPage = $scope.firstItemOnPage + $scope.mcPageSize - 1;
-
-
-                    $scope.lastItemOnPage = $scope.numberOfLastItemOnPage > $scope.totalItemCount
-                        ? $scope.totalItemCount
-                        : $scope.numberOfLastItemOnPage;
-
-                    $scope.updateCount($scope.totalItemCount);
-
-
-                    $scope.pages = [];
-                    if ($scope.pageCount > 7) {
-
-                        if ($scope.isFirstPage || $scope.mcPageNumber < 7) {
-                            for (var i = 0; i < 7; i++) {
-                                $scope.pages.push(i + 1);
-                            }
-                            $scope.pages.push("...");
-                            $scope.pages.push($scope.pageCount);
-                        } else if ($scope.isLastPage || $scope.mcPageNumber > $scope.pageCount - 5) {
-                            $scope.pages.push(1);
-                            $scope.pages.push("...");
-                            for (var i = $scope.pageCount - 5; i <= $scope.pageCount; i++) {
-                                $scope.pages.push(i);
-                            }
-                        } else {
-
-                            $scope.pages.push(1);
-                            $scope.pages.push("...");
-
-
-                            $scope.pages.push($scope.mcPageNumber - 1);
-                            $scope.pages.push($scope.mcPageNumber);
-                            $scope.pages.push($scope.mcPageNumber + 1);
-
-
-                            $scope.pages.push("...");
-                            $scope.pages.push($scope.pageCount);
-                        }
-
-                    } else {
-                        for (var i = 0; i < $scope.pageCount; i++) {
-                            $scope.pages.push(i + 1);
-                        }
-                    }
-                }
-            };
 
 
             this.getScope = function () {
@@ -663,16 +683,7 @@ angular.module('directives').directive('mcTable', function () {
 
 
 
-            $scope.safeApply = function(fn) {
-                var phase = $scope.$root.$$phase;
-                if(phase == '$apply' || phase == '$digest') {
-                    if(fn && (typeof(fn) === 'function')) {
-                        fn();
-                    }
-                } else {
-                    $scope.$apply(fn);
-                }
-            };
+
         }
     };
 });

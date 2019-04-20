@@ -7,7 +7,7 @@
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open --port 8005 --mode development",
-    "test": "jest"
+    "test": "karma start"
   },
   "keywords": [],
   "author": "Soheil",
@@ -72,7 +72,8 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "next",
-    "webpack-karma-jasmine": "^3.0.3"
+    "webpack-karma-jasmine": "^3.0.3",
+    "angular-mocks": "~1.4.7"
   },
   "dependencies": {
     "@angular/common": "^5.2.5",

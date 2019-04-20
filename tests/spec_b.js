@@ -10,27 +10,28 @@ import './../src/js/services/utility/stateHandler';
 
 
 
-
 import './../src/js/controllers/_controllersModule';
+import './../src/js/controllers/appContainer';
 import './../src/js/controllers/home';
 
 
 
-describe("homeCtrl", function () {
+describe("homeCtrlTest", function () {
 
-    var securityHandler, scope, $rootScope, resources;
+    var securityHandler, scope, $rootScope, resources, $controller;
     beforeEach(() => {
-        var $injector = angular.injector(['mcControllers', 'services', 'ng', 'ngMock', 'ui.router']);
+        var $injector = angular.injector(['ng', 'ngMock', 'ui.router', 'controllers', 'services']);
 
         securityHandler = $injector.get('securityHandler');
         $rootScope  = $injector.get('$rootScope');
         resources   = $injector.get('resources');
+        $controller   = $injector.get('$controller');
+
         scope = $rootScope.$new();
     });
 
-    function initController ($controller) {
-        debugger
-        controller = $controller('homeCtrl', {
+    function initController () {
+        $controller('appContainerCtrl', {
             $window: window,
             $scope: scope,
             resources: resources,
@@ -38,20 +39,23 @@ describe("homeCtrl", function () {
         });
     }
 
-    it('Initialized correctly',  inject(function ($controller) {
-        debugger
-        initController($controller, []);
-        debugger
+    it('Initialized correctly',  inject(function () {
+        expect(1).toEqual(2);
+
     }));
 
 
 
-    it("some number2", function () {
+    it('Initialized correctly',  inject(function ($controller) {
+        var ctrl = initController();
+
         debugger
-        //console.log(servicesModule);
-        //this is a test
-        var map = service.getAccessMap();
-        console.log("Herere")
-        expect(myModule()).toEqual(160);
-    });
+        scope.$digest();
+        expect(scope.login).toBeDefined();
+        expect(scope.logout).toBeDefined();
+
+    }));
+
+
+
 });

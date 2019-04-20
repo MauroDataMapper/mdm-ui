@@ -23,7 +23,6 @@ describe("Module should return", function () {
     });
 
     it("some number2", function () {
-        debugger
         //console.log(servicesModule);
         //this is a test
         var map = service.getAccessMap();

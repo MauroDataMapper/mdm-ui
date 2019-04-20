@@ -1,6 +1,3 @@
-import 'angular';
-import angularUIRouter from 'angular-ui-router';
-import 'angular-mocks/angular-mocks';
 
 import './../src/js/services/_servicesModule';
 import './../src/js/services/utility/appSetting';
@@ -18,7 +15,7 @@ describe("Module should return", function () {
 
     var service, service2, service3, service4;
     beforeEach(() => {
-        var $injector = angular.injector(['services', 'ng', 'ngMock', angularUIRouter]);
+        var $injector = angular.injector(['services', 'ng', 'ngMock', 'ui.router']);
         service = $injector.get('appSetting');
         service2 = $injector.get('elementTypes');
         service3 = $injector.get('stateHandler');

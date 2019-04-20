@@ -28,7 +28,7 @@ angular.module('services').provider("stateRoleAccess", function () {
 		return mappings;
 	};
 
-	stateRoleAccessProvider.$get =  function ($q, $rootScope,restHandler,$cookies,$state,securityHandler,appSetting) {
+	stateRoleAccessProvider.$get =  function ($q, $rootScope,$cookies,securityHandler) {
         'ngInject'
 
 		var factoryObject = {};

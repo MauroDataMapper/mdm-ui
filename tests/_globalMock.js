@@ -13,6 +13,7 @@ import './../src/js/services/utility/messageHandler';
 import './../src/js/controllers/_controllersModule';
 import './../src/js/controllers/appContainer';
 import './../src/js/controllers/home';
+import './../src/js/controllers/userArea/changePassword';
 
 
 export const mock = {

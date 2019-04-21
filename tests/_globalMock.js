@@ -16,10 +16,21 @@ import './../src/js/controllers/home';
 import './../src/js/controllers/userArea/changePassword';
 
 
+import './../src/js/directives/directivesModule';
+import './../src/js/directives/elementLink/elementLink';
+
+
+import './../src/js/filters/_filtersModule';
+import './../src/js/filters/highlight';
+
+
 export const mock = {
     init: function () {
         beforeEach(angular.mock.module('services'));
         beforeEach(angular.mock.module('controllers'));
+        beforeEach(angular.mock.module('directives'));
+        beforeEach(angular.mock.module('filters'));
+        
         beforeEach(angular.mock.module('ng'));
         beforeEach(angular.mock.module('ngMock'));
         beforeEach(angular.mock.module('ui.router'));

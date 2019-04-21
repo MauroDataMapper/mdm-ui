@@ -1,34 +1,37 @@
-
-import './../src/js/services/_servicesModule';
-import './../src/js/services/utility/securityHandler';
-import './../src/js/services/utility/appSetting';
-import './../src/js/services/utility/restHandler';
-import './../src/js/services/resources';
-import './../src/js/services/utility/validator';
-import './../src/js/services/utility/elementTypes';
-import './../src/js/services/utility/stateHandler';
-
-
-
-import './../src/js/controllers/_controllersModule';
-import './../src/js/controllers/appContainer';
-import './../src/js/controllers/home';
-
-
+import {mock} from './_globalMock';
 
 describe("homeCtrlTest", function () {
 
+
+    // beforeEach(angular.mock.module('services'));
+    // beforeEach(angular.mock.module('controllers'));
+    // beforeEach(angular.mock.module('ng'));
+    // beforeEach(angular.mock.module('ngMock'));
+    // beforeEach(angular.mock.module('ui.router'));
+    debugger
+    mock.init();
+
     var securityHandler, scope, $rootScope, resources, $controller;
-    beforeEach(() => {
-        var $injector = angular.injector(['ng', 'ngMock', 'ui.router', 'controllers', 'services']);
-
-        securityHandler = $injector.get('securityHandler');
-        $rootScope  = $injector.get('$rootScope');
-        resources   = $injector.get('resources');
-        $controller   = $injector.get('$controller');
-
+    beforeEach(inject(function (_securityHandler_, _$rootScope_, _resources_, _$controller_) {
+        securityHandler = _securityHandler_;
+        $rootScope = _$rootScope_;
+        resources = _resources_;
+        $controller = _$controller_;
         scope = $rootScope.$new();
-    });
+    }));
+
+
+    // var securityHandler, scope, $rootScope, resources, $controller;
+    // beforeEach(() => {
+    //     var $injector = angular.injector(['ng', 'ngMock', 'ui.router', 'controllers', 'services']);
+    //
+    //     securityHandler = $injector.get('securityHandler');
+    //     $rootScope  = $injector.get('$rootScope');
+    //     resources   = $injector.get('resources');
+    //     $controller   = $injector.get('$controller');
+    //
+    //     scope = $rootScope.$new();
+    // });
 
     function initController () {
         $controller('appContainerCtrl', {

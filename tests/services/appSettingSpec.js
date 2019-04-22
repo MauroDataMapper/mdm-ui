@@ -1,4 +1,4 @@
-import './_globalMock';
+import '../_globalMock';
 
 
 describe('Provider: appSettingProvider', function () {

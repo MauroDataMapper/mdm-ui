@@ -1,4 +1,4 @@
-import {mock} from './_globalMock';
+import {mock} from '../_globalMock';
 
 describe('Controller: changePasswordCtrl', function () {
 

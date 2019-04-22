@@ -32,6 +32,7 @@ import './../src/js/controllers/admin/user';
 import './../src/js/controllers/newClassifier/newClassifier';
 import './../src/js/controllers/newClassifier/newClassifierStep1Ctrl';
 import './../src/js/controllers/classification';
+import './../src/js/controllers/dataClass';
 
 
 import './../src/js/directives/directivesModule';

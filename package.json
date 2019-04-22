@@ -118,6 +118,7 @@
     "redux": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.6",
+    "split.js": "^1.5.10",
     "underscore": "^1.8.3",
     "universal-cookie": "^3.0.4",
     "zone.js": "^0.8.20",

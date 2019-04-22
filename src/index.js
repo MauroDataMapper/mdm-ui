@@ -22,6 +22,8 @@ import 'ng-toast/dist/ngToast-animations.css';
 window.zxcvbn = require('zxcvbn/dist/zxcvbn');
 window.marked = require('marked/marked.min');
 
+import 'split.js/dist/split.es'
+
 import 'angular-bootstrap-contextmenu/contextMenu'
 
 import 'angular-animate/angular-animate'

@@ -54,11 +54,22 @@ import './../src/js/filters/_filtersModule';
 import './../src/js/filters/highlight';
 
 
-window.joint = require('./../src/js/jointjs/joint-min');
+// window.joint = require('./../src/js/jointjs/joint-min');
 
 export const mock = {
     init: function () {
+
         beforeEach(angular.mock.module('services', function($provide) {
+
+            $provide.value('jointDiagramService3', {
+                DrawDataModel: function () {
+                    return {
+                        cells:[],
+                        rootCell:{}
+                    }
+                }
+            });
+
             //This will get angular injector
             //we have to do this, as CoreCatalogueUI module is not initialized yet
             //this helps us to have access to $q

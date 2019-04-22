@@ -17,20 +17,11 @@ describe('Controller: dataModelCtrl', function () {
         _$rootScope_.isLoggedIn = function () {
             return true;
         };
+        jointDiagramService3 = _jointDiagramService3_;
 		scope = _$rootScope_.$new();
 		stateParams = $stateParams;
 		window = $window;
         $q = _$q_;
-        jointDiagramService3 = _jointDiagramService3_;
-
-        //Mock _jointDiagramService3_
-        _jointDiagramService3_.DrawDataModel = function () {
-            return {
-                cells:[],
-                rootCell:{}
-            }
-        };
-
         spyOn(_securityHandler_, 'isValidSession').and.returnValue($q.when(true));
 	}));
 

@@ -13,6 +13,7 @@ import './../src/js/services/utility/validator';
 import './../src/js/services/utility/elementTypes';
 import './../src/js/services/utility/stateHandler';
 import './../src/js/services/utility/messageHandler';
+import './../src/js/services/utility/userSettingsHandler';
 
 
 import './../src/js/modals/_modalsModule';
@@ -30,6 +31,7 @@ import './../src/js/controllers/admin/modelManagement';
 import './../src/js/controllers/admin/user';
 import './../src/js/controllers/newClassifier/newClassifier';
 import './../src/js/controllers/newClassifier/newClassifierStep1Ctrl';
+import './../src/js/controllers/classification';
 
 
 import './../src/js/directives/directivesModule';

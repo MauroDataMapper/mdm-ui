@@ -11,6 +11,7 @@ module.exports = function(config) {
             './node_modules/angular-ui-router/release/angular-ui-router.js',
             './node_modules/angular-mocks/angular-mocks.js',
             './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
+            './node_modules/angular-multi-step-form/dist/browser/angular-multi-step-form.js',
             {pattern: 'tests/**/*.js',watched:true,served:true,included:true}
             /*parameters:
                 watched: if autoWatch is true all files that have set watched to true will be watched for changes

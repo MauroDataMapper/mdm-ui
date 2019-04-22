@@ -59,6 +59,8 @@ import './../src/js/controllers/userArea/profile';
 import './../src/js/controllers/register';
 import './../src/js/controllers/terminology';
 import './../src/js/controllers/term';
+import './../src/js/controllers/newClassifier/newClassifier';
+import './../src/js/controllers/newClassifier/newClassifierStep1Ctrl';
 
 
 import './../src/js/directives/directivesModule';
@@ -116,5 +118,8 @@ export const mock = {
         beforeEach(angular.mock.module('ng'));
         beforeEach(angular.mock.module('ngMock'));
         beforeEach(angular.mock.module('ui.router'));
+        beforeEach(angular.mock.module('multiStepForm'));
+
+
     }
 };

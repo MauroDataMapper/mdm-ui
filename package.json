@@ -73,6 +73,7 @@
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "next",
     "webpack-karma-jasmine": "^3.0.3",
+    "karma-ng-html2js-preprocessor": "^v0.2.0",
     "angular-mocks": "~1.4.7"
   },
   "dependencies": {

@@ -19,10 +19,17 @@ import './../src/js/services/exportHandler';
 import './../src/js/services/helpDialogueHandler';
 import './../src/js/services/jointDiagramService3';
 import './../src/js/services/utility/modalHandler';
+import './../src/js/services/favouriteHandler';
+
 
 
 import './../src/js/modals/_modalsModule';
 import './../src/js/modals/confirmation';
+
+
+
+import './../src/js/handlers/_handlersModule';
+import './../src/js/handlers/folderHandler';
 
 
 import './../src/js/controllers/_controllersModule';
@@ -44,6 +51,9 @@ import './../src/js/controllers/dataModelsExport';
 import './../src/js/controllers/dataModel';
 import './../src/js/controllers/home';
 import './../src/js/controllers/import';
+import './../src/js/controllers/models';
+import './../src/js/controllers/modelsComparison';
+import './../src/js/controllers/newVersionDataModel';
 
 
 import './../src/js/directives/directivesModule';
@@ -91,6 +101,7 @@ export const mock = {
                 isAdmin: function(){return true;}
             });
         }));
+        beforeEach(angular.mock.module('handlers'));
         beforeEach(angular.mock.module('controllers'));
         beforeEach(angular.mock.module('directives'));
         beforeEach(angular.mock.module('filters'));

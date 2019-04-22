@@ -18,6 +18,7 @@ import './../src/js/services/DM2DMDataFlowHandler';
 import './../src/js/services/exportHandler';
 import './../src/js/services/helpDialogueHandler';
 import './../src/js/services/jointDiagramService3';
+import './../src/js/services/utility/modalHandler';
 
 
 import './../src/js/modals/_modalsModule';
@@ -41,6 +42,7 @@ import './../src/js/controllers/dataElement';
 import './../src/js/controllers/dataFlow/dataFlowDM2DM';
 import './../src/js/controllers/dataModelsExport';
 import './../src/js/controllers/dataModel';
+import './../src/js/controllers/home';
 
 
 import './../src/js/directives/directivesModule';

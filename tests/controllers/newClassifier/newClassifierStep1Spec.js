@@ -6,6 +6,10 @@ describe('Controller: newClassifier (wizard:Step 1)', function () {
 
     mock.init();
 	//load step1
+	beforeEach(module('views/newClassifier/step1.html'));
+	beforeEach(module('views/app.html'));
+	beforeEach(module('views/appContainer.html'));
+
 	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_messageHandler_,_$state_) {
 		//load the template
 		var tempHTML = _$templateCache_.get('../../../views/newClassifier/step1.html');

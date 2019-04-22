@@ -54,6 +54,11 @@ import './../src/js/controllers/import';
 import './../src/js/controllers/models';
 import './../src/js/controllers/modelsComparison';
 import './../src/js/controllers/newVersionDataModel';
+import './../src/js/controllers/newVersionTerminology';
+import './../src/js/controllers/userArea/profile';
+import './../src/js/controllers/register';
+import './../src/js/controllers/terminology';
+import './../src/js/controllers/term';
 
 
 import './../src/js/directives/directivesModule';

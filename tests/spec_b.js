@@ -8,7 +8,6 @@ describe("homeCtrlTest", function () {
     // beforeEach(angular.mock.module('ng'));
     // beforeEach(angular.mock.module('ngMock'));
     // beforeEach(angular.mock.module('ui.router'));
-    debugger
     mock.init();
 
     var securityHandler, scope, $rootScope, resources, $controller;
@@ -52,7 +51,7 @@ describe("homeCtrlTest", function () {
     it('Initialized correctly',  inject(function ($controller) {
         var ctrl = initController();
 
-        debugger
+
         scope.$digest();
         expect(scope.login).toBeDefined();
         expect(scope.logout).toBeDefined();

@@ -49,7 +49,28 @@ import './../src/js/filters/highlight';
 
 export const mock = {
     init: function () {
-        beforeEach(angular.mock.module('services'));
+        beforeEach(angular.mock.module('services', function($provide) {
+            //This will get angular injector
+            //we have to do this, as CoreCatalogueUI module is not initialized yet
+            //this helps us to have access to $q
+            var $injector = angular.injector(['ng']);
+            var $q = $injector.get('$q');
+
+            $provide.value('securityHandler', {
+                showIfRoleIsWritable: function(element){return true;},
+                elementAccess: function(element){return true;},
+                isCurrentSessionExpired: function () {return $q.when(false)},
+                isValidSession: function () { return $q.when(true) },
+                isLoggedIn: function(){return true;},
+                getCurrentUser: function () {return {username:'s@s.com'}},
+                saveLatestURL: function (url) {},
+                getLatestURL: function () {},
+                removeLatestURL: function () {},
+                dataModelAccess: function () {},
+                terminologyAccess: function () {},
+                isAdmin: function(){return true;}
+            });
+        }));
         beforeEach(angular.mock.module('controllers'));
         beforeEach(angular.mock.module('directives'));
         beforeEach(angular.mock.module('filters'));

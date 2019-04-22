@@ -13,8 +13,7 @@ module.exports = function(config) {
             './node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js',
             './node_modules/angular-multi-step-form/dist/browser/angular-multi-step-form.js',
             './node_modules/split.js/dist/split.js',
-            './src/views/newClassifier/step1.html', //add all directive templates for 'ng-html2js'
-            './src/views/newClassifier/main.html', //add all directive templates for 'ng-html2js'
+            './src/views/**/*.html', //add all directive templates for 'ng-html2js'
             {pattern: 'tests/**/*.js',watched:true,served:true,included:true}
             /*parameters:
                 watched: if autoWatch is true all files that have set watched to true will be watched for changes
@@ -106,7 +105,7 @@ module.exports = function(config) {
         preprocessors: {
             //add webpack as preprocessor to support require() in test-suits .js files
             './tests/**/*.js': ['webpack'],
-            './src/views/newClassifier/step1.html': ['ng-html2js']
+            './src/views/**/*.html': ['ng-html2js']
         },
 
         webpackMiddleware: {

@@ -43,6 +43,7 @@ import './../src/js/controllers/dataFlow/dataFlowDM2DM';
 import './../src/js/controllers/dataModelsExport';
 import './../src/js/controllers/dataModel';
 import './../src/js/controllers/home';
+import './../src/js/controllers/import';
 
 
 import './../src/js/directives/directivesModule';

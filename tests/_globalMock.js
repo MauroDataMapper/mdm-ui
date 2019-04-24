@@ -62,6 +62,11 @@ import './../src/js/controllers/term';
 import './../src/js/controllers/newClassifier/newClassifier';
 import './../src/js/controllers/newClassifier/newClassifierStep1Ctrl';
 
+import './../src/js/controllers/newDataClass/newDataClass';
+import './../src/js/controllers/newDataClass/newDataClassStep0Ctrl';
+import './../src/js/controllers/newDataClass/newDataClassStep1Ctrl';
+import './../src/js/controllers/newDataClass/newDataClassStep2Ctrl';
+
 
 import './../src/js/directives/directivesModule';
 import './../src/js/directives/elementLink/elementLink';

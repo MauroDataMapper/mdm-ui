@@ -72,6 +72,11 @@ import './../src/js/controllers/newDataElement/newDataElementStep0Ctrl';
 import './../src/js/controllers/newDataElement/newDataElementStep1Ctrl';
 import './../src/js/controllers/newDataElement/newDataElementStep2Ctrl';
 
+import './../src/js/controllers/newDataModel/newDataModel';
+import './../src/js/controllers/newDataModel/newDataModelStep1Ctrl';
+import './../src/js/controllers/newDataModel/newDataModelStep2Ctrl';
+import './../src/js/controllers/newDataModel/newDataModelStep3Ctrl';
+
 
 import './../src/js/directives/directivesModule';
 import './../src/js/directives/elementLink/elementLink';

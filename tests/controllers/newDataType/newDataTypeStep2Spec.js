@@ -1,3 +1,4 @@
+import {mock} from '../../_globalMock';
 
 describe('Controller: newDataType (wizard:Step 2)', function () {
 	var $rootScope, step, multiStepForm, formStepElement,

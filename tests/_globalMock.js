@@ -20,6 +20,7 @@ import './../src/js/services/helpDialogueHandler';
 import './../src/js/services/jointDiagramService3';
 import './../src/js/services/utility/modalHandler';
 import './../src/js/services/favouriteHandler';
+import './../src/js/services/utility/windowHandler';
 
 
 
@@ -30,6 +31,7 @@ import './../src/js/modals/confirmation';
 
 import './../src/js/handlers/_handlersModule';
 import './../src/js/handlers/folderHandler';
+import './../src/js/handlers/contextSearchHandler';
 
 
 import './../src/js/controllers/_controllersModule';

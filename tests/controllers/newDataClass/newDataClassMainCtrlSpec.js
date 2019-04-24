@@ -63,7 +63,6 @@ describe('Controller: newDataClassCtrl', function () {
 	});
 
 	it('newDataClassCtrl will redirect to resource not found if parentId is not provided',inject(function ($controller, $window) {
-		debugger
 		//create a mock on $state to capture 'go'
 		//noinspection JSUnresolvedFunction
 		spyOn(stateHandler, 'NotFound').and.returnValue({});
@@ -79,7 +78,6 @@ describe('Controller: newDataClassCtrl', function () {
 	it('newDataClassCtrl will redirect to resource not found if parentType is not provided',inject(function ($controller, $window) {
 		spyOn(stateHandler, 'NotFound').and.returnValue({});
 		$stateParams.parentDataModelId = undefined;
-		debugger
 		$controller('newDataClassCtrl', {$scope: scope, $window:$window, $state:$state, $stateParams: $stateParams});
 		scope.$digest();
 		expect(stateHandler.NotFound).toHaveBeenCalledWith({ location: false });

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('controllers').controller('simpleViewResultCtrl', function ($scope, contextSearchHandler, $stateParams, resources, elementTypes, localStorageService, stateHandler, $q, windowHandler, $rootScope) {
+angular.module('controllers').controller('simpleViewResultCtrl', function ($scope, contextSearchHandler, $stateParams, resources, elementTypes, stateHandler, $q, windowHandler, $rootScope) {
 
 	if(!$rootScope.simpleViewSupport){
 		stateHandler.Go("home");

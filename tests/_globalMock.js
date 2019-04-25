@@ -87,6 +87,7 @@ import './../src/js/controllers/newDataType/newDataTypeStep2Ctrl';
 
 import './../src/js/directives/directivesModule';
 import './../src/js/directives/elementLink/elementLink';
+import './../src/js/directives/annotationList/annotationList';
 
 
 import './../src/js/filters/_filtersModule';

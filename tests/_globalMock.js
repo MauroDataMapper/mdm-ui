@@ -86,6 +86,7 @@ import './../src/js/controllers/newDataType/newDataTypeStep1Ctrl';
 import './../src/js/controllers/newDataType/newDataTypeStep2Ctrl';
 
 import './../src/js/directives/directivesModule';
+import './../src/js/directives/mcTable/mcTable';
 import './../src/js/directives/elementLink/elementLink';
 import './../src/js/directives/annotationList/annotationList';
 

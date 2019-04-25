@@ -23,7 +23,8 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
     mock.init();
     //load step1
     beforeEach(angular.mock.module('views/newDataElement/step1.html'));
-
+    beforeEach(angular.mock.module('./mcTableButton.html'));
+    beforeEach(angular.mock.module('./mcTablePagination.html'));
 
     beforeEach(inject(function (_$httpBackend_) {
         _$httpBackend_.whenGET('views/home.html').respond(200, '');

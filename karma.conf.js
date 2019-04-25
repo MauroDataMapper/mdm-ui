@@ -17,7 +17,8 @@ module.exports = function(config) {
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/bootstrap/js/affix.js',
 
-            './src/views/**/*.html', //add all directive templates for 'ng-html2js'
+            './src/views/**/*.html', //add all controller templates and views for 'ng-html2js'
+            './src/js/directives/**/*.html', //add all directive templates for 'ng-html2js'
             {pattern: 'tests/**/*.js',watched:true,served:true,included:true}
             /*parameters:
                 watched: if autoWatch is true all files that have set watched to true will be watched for changes
@@ -96,8 +97,39 @@ module.exports = function(config) {
 
         //Remove prefix ('app/') from created templates by 'ng-html2js'
         ngHtml2JsPreprocessor: {
+
             // strip this from the file path
-            stripPrefix: 'src/'
+            // stripPrefix: 'src/views/directives/',
+            // prependPrefix: './',
+
+            cacheIdFromPath: function(filepath) {
+                // var cacheId = filepath.replace('src/views/directives/', './');
+                //var cacheId = filepath.replace('src/views/directives/', './');
+
+                //OK What does the following mean?
+                //It actually maps directive templates.
+                //if we have a directive like src/js/directives/annotationList/annotationList.js
+                //which has a template in it:
+                // templateUrl: './annotationList.html'
+                //which means the file is located at: src/js/directives/annotationList/annotationList.html
+                //so when ngHtml2Js processes files in specified directories
+                //if it finds a file starts with "src/js/directives/" it gets the file name
+                //by filepath.split('/')[filepath.split('/').length - 1]
+                //and then creates a module name like this './'+HTML_FILE_NAME.html
+                //this helps us to keep the template file paths relative to the directive
+                //so we easily have
+                // src/js/directives/annotationList/annotationList.js
+                // src/js/directives/annotationList/annotationList.html
+
+                //if the files is not in "src/js/directives/" like controller templates
+                //then it simply remove "src/" from the beginning
+                if(filepath.startsWith("src/js/directives/")){
+                    return "./" + filepath.split('/')[filepath.split('/').length - 1];
+                }else{
+                    return filepath.replace('src/', '');
+                }
+            },
+
         },
         // plugins : [
         //     "karma-jasmine-html-reporter",
@@ -109,7 +141,8 @@ module.exports = function(config) {
         preprocessors: {
             //add webpack as preprocessor to support require() in test-suits .js files
             './tests/**/*.js': ['webpack'],
-            './src/views/**/*.html': ['ng-html2js']
+            './src/views/**/*.html': ['ng-html2js'], //add all controller templates and views for 'ng-html2js'
+            './src/js/directives/**/*.html': ['ng-html2js']//add all directive templates for 'ng-html2js'
         },
 
         webpackMiddleware: {

@@ -121,6 +121,8 @@ import './../src/js/directives/foldersTree2/foldersTree2'
 import './../src/js/directives/modelSelectorTree/modelSelectorTree'
 import './../src/js/directives/dataModelDetails/dataModelDetails'
 import './../src/js/directives/dataSetMetadata/dataSetMetadata'
+import './../src/js/directives/dataTypeDetails/dataTypeDetails'
+import './../src/js/directives/elementClassifications/elementClassifications'
 
 
 

@@ -22,11 +22,11 @@ describe("Module should return", function () {
         service4 = $injector.get('securityHandler');
     });
 
-    it("some number2", function () {
-        //console.log(servicesModule);
-        //this is a test
-        var map = service.getAccessMap();
-        console.log("Herere")
-        expect(myModule()).toEqual(160);
-    });
+    // it("some number2", function () {
+    //     //console.log(servicesModule);
+    //     //this is a test
+    //     var map = service.getAccessMap();
+    //     console.log("Herere")
+    //     expect(myModule()).toEqual(160);
+    // });
 });

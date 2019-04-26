@@ -14,6 +14,7 @@ angular.module('directives').directive('contentTable', function () {
 		},
 		controller: function($scope, resources, stateHandler, $q, messageHandler){
 
+
             $scope.contentFetch = function (pageSize, pageIndex, sortBy, sortType, filters) {
 
                 var options = {

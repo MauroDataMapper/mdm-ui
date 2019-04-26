@@ -21,6 +21,7 @@ import './../src/js/services/jointDiagramService3';
 import './../src/js/services/utility/modalHandler';
 import './../src/js/services/favouriteHandler';
 import './../src/js/services/utility/windowHandler';
+import './../src/js/services/utility/markdownParser';
 
 
 
@@ -94,6 +95,13 @@ import './../src/js/directives/editableFormButtons/editableFormButtons';
 import './../src/js/directives/showIfRoleIsWritable/showIfRoleIsWritable';
 import './../src/js/directives/shareWith/shareWith';
 import './../src/js/directives/classificationDetails/classificationDetails';
+import './../src/js/directives/moreDescription/moreDescription';
+import './../src/js/directives/allLinksInPagedList/allLinksInPagedList';
+import './../src/js/directives/mcPagedList/mcPagedList';
+import './../src/js/directives/elementDataType/elementDataType';
+import './../src/js/directives/contentTableButtons/contentTableButtons'
+import './../src/js/directives/multiplicity/multiplicity'
+import './../src/js/directives/contentTable/contentTable'
 
 
 

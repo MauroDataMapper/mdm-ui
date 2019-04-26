@@ -8,6 +8,8 @@ describe('Controller: newDataType (wizard:Step 1)', function () {
 	beforeEach(angular.mock.module('views/newDataType/step1.html'));
     beforeEach(angular.mock.module('./mcTableButton.html'));
     beforeEach(angular.mock.module('./mcTablePagination.html'));
+    beforeEach(angular.mock.module('./moreDescription.html'));
+    beforeEach(angular.mock.module('./elementDataType.html'));
 
 	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_ngToast_,_$state_, _elementTypes_,_$stateParams_) {
 		//load the template

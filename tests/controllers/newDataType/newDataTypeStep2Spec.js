@@ -8,7 +8,9 @@ describe('Controller: newDataType (wizard:Step 2)', function () {
 	beforeEach(angular.mock.module('views/newDataType/step2.html'));
     beforeEach(angular.mock.module('./mcTableButton.html'));
     beforeEach(angular.mock.module('./mcTablePagination.html'));
-    
+    beforeEach(angular.mock.module('./moreDescription.html'));
+    beforeEach(angular.mock.module('./elementDataType.html'));
+
 	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_messageHandler_,_$state_,_stateHandler_, _$stateParams_) {
 		var tempHTML = _$templateCache_.get('views/newDataType/step2.html');
 		$rootScope = _$rootScope_;

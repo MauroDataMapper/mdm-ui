@@ -87,7 +87,7 @@ describe('Directive: classificationDetails', function () {
         scope.currentClassification.readableByEveryone = true;
         scope.$digest();
         var isolateScope = element.isolateScope();
-        debugger
+
         isolateScope.shareReadWithEveryoneChanged();
         scope.$digest();
         expect(resources.classifier.put).toHaveBeenCalledWith("CLF-ID", "readByEveryone");

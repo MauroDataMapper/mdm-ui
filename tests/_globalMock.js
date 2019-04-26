@@ -25,6 +25,7 @@ import './../src/js/services/utility/markdownParser';
 import './../src/js/services/utility/markdownParser';
 import './../src/js/services/utility/objectEnhancer';
 import './../src/js/services/jQueryExtender';
+import './../src/js/services/jointDiagramService';
 
 
 
@@ -118,6 +119,7 @@ import './../src/js/directives/elementSelector/elementSelector'
 import './../src/js/directives/elementSelector2/elementSelector2'
 import './../src/js/directives/foldersTree2/foldersTree2'
 import './../src/js/directives/modelSelectorTree/modelSelectorTree'
+import './../src/js/directives/dataModelDetails/dataModelDetails'
 
 
 
@@ -126,7 +128,7 @@ import './../src/js/filters/highlight';
 import './../src/js/filters/fileSize';
 
 
-// window.joint = require('./../src/js/jointjs/joint-min');
+window.joint = require('./../src/js/jointjs/joint-min');
 
 export const mock = {
     init: function () {

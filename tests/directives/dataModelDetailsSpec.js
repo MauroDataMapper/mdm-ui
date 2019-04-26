@@ -1,4 +1,5 @@
-'use strict';
+import {mock} from '../_globalMock';
+
 
 describe('Directive: dataModelDetails', function () {
 
@@ -6,21 +7,21 @@ describe('Directive: dataModelDetails', function () {
 
     mock.init();
 
-    beforeEach(module('views/directives/modelPath.html'));
-    beforeEach(module('views/directives/editableFormButtons.html'));
-    beforeEach(module('views/directives/dataModelDetails.html'));
-    beforeEach(module('views/directives/elementClassifications.html'));
-    beforeEach(module('views/directives/mcPagedList.html'));
-    beforeEach(module('views/directives/allLinksInPagedList.html'));
-    beforeEach(module('views/directives/userAccessNew.html'));
-    beforeEach(module('views/directives/groupAccessNew.html'));
-    beforeEach(module('views/directives/mcSelect2.html'));
-    beforeEach(module('views/directives/mcTable/mcTableButton.html'));
-    beforeEach(module('views/directives/mcTable/mcTablePagination.html'));
-    beforeEach(module('views/directives/moreDescription.html'));
-    beforeEach(module('views/directives/elementAlias.html'));
-    beforeEach(module('views/directives/shareWith.html'));
-    beforeEach(module('views/directives/markdownTextArea.html'));
+     beforeEach(angular.mock.module('./modelPath.html'));
+     beforeEach(angular.mock.module('./editableFormButtons.html'));
+     beforeEach(angular.mock.module('./dataModelDetails.html'));
+     beforeEach(angular.mock.module('./elementClassifications.html'));
+     beforeEach(angular.mock.module('./mcPagedList.html'));
+     beforeEach(angular.mock.module('./allLinksInPagedList.html'));
+     beforeEach(angular.mock.module('./userAccessNew.html'));
+     beforeEach(angular.mock.module('./groupAccessNew.html'));
+     beforeEach(angular.mock.module('./mcSelect2.html'));
+     beforeEach(angular.mock.module('./mcTableButton.html'));
+     beforeEach(angular.mock.module('./mcTablePagination.html'));
+     beforeEach(angular.mock.module('./moreDescription.html'));
+     beforeEach(angular.mock.module('./elementAlias.html'));
+     beforeEach(angular.mock.module('./shareWith.html'));
+     beforeEach(angular.mock.module('./markdownTextArea.html'));
 
 
     beforeEach(inject(function ($compile,_$httpBackend_,_$rootScope_, _resources_, _messageHandler_, _$q_, _securityHandler_ ,_exportHandler_ ,_confirmationModal_, _stateHandler_) {

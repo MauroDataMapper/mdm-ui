@@ -10,6 +10,11 @@ describe('Controller: newDataType (wizard:Step 2)', function () {
     beforeEach(angular.mock.module('./mcTablePagination.html'));
     beforeEach(angular.mock.module('./moreDescription.html'));
     beforeEach(angular.mock.module('./elementDataType.html'));
+    beforeEach(angular.mock.module('./dataSetMetadata.html'));
+    beforeEach(angular.mock.module('./mcSelect2.html'));
+    beforeEach(angular.mock.module('./markdownTextArea.html'));
+
+
 
 	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_messageHandler_,_$state_,_stateHandler_, _$stateParams_) {
 		var tempHTML = _$templateCache_.get('views/newDataType/step2.html');
@@ -24,12 +29,11 @@ describe('Controller: newDataType (wizard:Step 2)', function () {
 
         $stateParams = _$stateParams_;
         $stateParams.parentDataModelId = "DEFAULT-PARENT-DM-ID";
+        _$httpBackend_.expect("GET", $rootScope.backendURL + '/metadata/namespaces/').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/').respond({});
 
 
-
         _$httpBackend_.whenGET('views/home.html').respond(200, '');
-        _$httpBackend_.expect("GET", $rootScope.backendURL + '/metadata/namespaces/').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/classifiers/?&all=true').respond([]);
 
 		$httpBackend = _$httpBackend_;

@@ -6,9 +6,15 @@ describe('Controller: newDataModel (wizard:Step 3)', function () {
 
     mock.init();
 	beforeEach(angular.mock.module('views/newDataModel/step3.html'));
+    beforeEach(angular.mock.module('./dataSetMetadata.html'));
+    beforeEach(angular.mock.module('./mcSelect2.html'));
+    beforeEach(angular.mock.module('./markdownTextArea.html'));
+    beforeEach(angular.mock.module('./moreDescription.html'));
+    beforeEach(angular.mock.module('./mcTableButton.html'));
+    beforeEach(angular.mock.module('./mcTablePagination.html'));
 
 
-	//noinspection JSUnresolvedFunction
+    //noinspection JSUnresolvedFunction
 	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_messageHandler_,_$state_, _$stateParams_) {
 		//load the template
 		var tempHTML = _$templateCache_.get('views/newDataModel/step3.html');

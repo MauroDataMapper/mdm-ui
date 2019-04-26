@@ -120,6 +120,7 @@ import './../src/js/directives/elementSelector2/elementSelector2'
 import './../src/js/directives/foldersTree2/foldersTree2'
 import './../src/js/directives/modelSelectorTree/modelSelectorTree'
 import './../src/js/directives/dataModelDetails/dataModelDetails'
+import './../src/js/directives/dataSetMetadata/dataSetMetadata'
 
 
 

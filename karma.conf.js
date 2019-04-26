@@ -16,6 +16,7 @@ module.exports = function(config) {
             './node_modules/underscore/underscore.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/bootstrap/js/affix.js',
+            './node_modules/angular-xeditable/dist/js/xeditable.js',
 
             './src/views/**/*.html', //add all controller templates and views for 'ng-html2js'
             './src/js/directives/**/*.html', //add all directive templates for 'ng-html2js'

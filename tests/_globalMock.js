@@ -89,10 +89,17 @@ import './../src/js/directives/directivesModule';
 import './../src/js/directives/mcTable/mcTable';
 import './../src/js/directives/elementLink/elementLink';
 import './../src/js/directives/annotationList/annotationList';
+import './../src/js/directives/attachmentList/attachmentList';
+import './../src/js/directives/editableFormButtons/editableFormButtons';
+import './../src/js/directives/showIfRoleIsWritable/showIfRoleIsWritable';
+import './../src/js/directives/shareWith/shareWith';
+import './../src/js/directives/classificationDetails/classificationDetails';
+
 
 
 import './../src/js/filters/_filtersModule';
 import './../src/js/filters/highlight';
+import './../src/js/filters/fileSize';
 
 
 // window.joint = require('./../src/js/jointjs/joint-min');
@@ -143,6 +150,8 @@ export const mock = {
         beforeEach(angular.mock.module('ngMock'));
         beforeEach(angular.mock.module('ui.router'));
         beforeEach(angular.mock.module('multiStepForm'));
+        beforeEach(angular.mock.module('xeditable'));
+
 
 
     }

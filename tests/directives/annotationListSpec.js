@@ -17,6 +17,10 @@ describe('Directive: annotationList', function () {
     beforeEach(angular.mock.module('./annotationList.html'));
     beforeEach(angular.mock.module('./mcTableButton.html'));
     beforeEach(angular.mock.module('./mcTablePagination.html'));
+    beforeEach(angular.mock.module('./markdownTextArea.html'));
+
+
+
 
     beforeEach(inject(function (_$httpBackend_) {
         $httpBackend = _$httpBackend_;

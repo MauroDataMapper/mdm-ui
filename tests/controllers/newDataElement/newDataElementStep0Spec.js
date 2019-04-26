@@ -22,7 +22,8 @@ describe('Controller: newDataElementCtrl (wizard:Step 0)', function () {
     mock.init();
 	//load step1
 	beforeEach(angular.mock.module('views/newDataElement/step0.html'));
-
+    beforeEach(angular.mock.module('./foldersTree2.html'));
+    beforeEach(angular.mock.module('./modelSelectorTree.html'));
 
 	beforeEach(inject(function (_$httpBackend_) {
 		_$httpBackend_.whenGET('views/home.html').respond(200, '');
@@ -51,12 +52,13 @@ describe('Controller: newDataElementCtrl (wizard:Step 0)', function () {
         $stateParams = _$stateParams_;
         $stateParams.parentDataModelId = "DEFAULT-PARENT-DM-ID";
         $stateParams.parentDataClassId = "DEFAULT-PARENT-DC-ID";
+        _$httpBackend_.expect("GET", $rootScope.backendURL + '/tree/').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/dataClasses/DEFAULT-PARENT-DC-ID/').respond({});
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/dataTypes').respond({});
 
 
 
-        $httpBackend.expect("GET", $rootScope.backendURL + '/tree/').respond([]);
+
 
         //Create steps using FormStep factory and pass its controller, it is does not have a controller, we can pass a default one
 		//controller = ['multiStepFormInstance', function (multiStepFormInstance) {

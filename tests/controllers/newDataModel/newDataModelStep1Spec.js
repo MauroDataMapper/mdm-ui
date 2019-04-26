@@ -24,7 +24,9 @@ describe('Controller: newDataModelCtrl (wizard:Step 1)', function () {
 
     mock.init();	//load step1
 	beforeEach(angular.mock.module('views/newDataModel/step1.html'));
-
+    beforeEach(angular.mock.module('./modelPath.html'));
+    beforeEach(angular.mock.module('./elementClassifications.html'));
+    beforeEach(angular.mock.module('./mcSelect2.html'));
 
 
 	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_, _resources_, _$q_, _$stateParams_) {

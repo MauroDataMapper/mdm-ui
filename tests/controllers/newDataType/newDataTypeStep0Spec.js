@@ -6,7 +6,8 @@ describe('Controller: newDataType (wizard:Step 0)', function () {
 
     mock.init();
     beforeEach(angular.mock.module('views/newDataType/step0.html'));
-
+    beforeEach(angular.mock.module('./modelSelectorTree.html'));
+    beforeEach(angular.mock.module('./foldersTree2.html'));
 
     beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _$httpBackend_, _resources_, _$q_, _ngToast_, _$state_, _$stateParams_) {
         var tempHTML = _$templateCache_.get('views/newDataType/step0.html');
@@ -18,6 +19,7 @@ describe('Controller: newDataType (wizard:Step 0)', function () {
 
         $stateParams = _$stateParams_;
         $stateParams.parentDataModelId = "DEFAULT-PARENT-DM-ID";
+        _$httpBackend_.expect("GET", $rootScope.backendURL + '/tree/').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/').respond({});
 
 
@@ -27,7 +29,7 @@ describe('Controller: newDataType (wizard:Step 0)', function () {
         multiStepForm = _multiStepForm_;
         formStepElement = _formStepElement_;
 
-        _$httpBackend_.expect("GET", $rootScope.backendURL + '/tree/').respond([]);
+
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/classifiers/?&all=true').respond([]);
 
         step = new FormStep({title: 'Step 0', template: tempHTML, controller: "newDataTypeStep0Ctrl"});

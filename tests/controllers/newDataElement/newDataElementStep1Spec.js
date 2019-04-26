@@ -27,6 +27,10 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
     beforeEach(angular.mock.module('./mcTablePagination.html'));
     beforeEach(angular.mock.module('./moreDescription.html'));
     beforeEach(angular.mock.module('./elementDataType.html'));
+    beforeEach(angular.mock.module('./modelPath.html'));
+    beforeEach(angular.mock.module('./elementClassifications.html'));
+    beforeEach(angular.mock.module('./mcSelect2.html'));
+
 
     beforeEach(inject(function (_$httpBackend_) {
         _$httpBackend_.whenGET('views/home.html').respond(200, '');
@@ -46,6 +50,7 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
         $stateParams.parentDataModelId = "DEFAULT-PARENT-DM-ID";
         $stateParams.parentDataClassId = "DEFAULT-PARENT-DC-ID";
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/dataTypes').respond({});
+        _$httpBackend_.expect("GET", $rootScope.backendURL + '/classifiers/?&all=true').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/dataClasses/DEFAULT-PARENT-DC-ID/').respond({});
 
 
@@ -62,7 +67,6 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
 
 
         $httpBackend.expect("GET", $rootScope.backendURL + '/dataModels/dataTypes').respond([]);
-        $httpBackend.expect("GET", $rootScope.backendURL + '/classifiers/?&all=true').respond([]);
 
 
         //Create steps using FormStep factory and pass its controller, it is does not have a controller, we can pass a default one

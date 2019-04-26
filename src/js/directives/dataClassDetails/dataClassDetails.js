@@ -16,7 +16,7 @@ angular.module('directives').directive('dataclassDetails', function () {
 		link: function(scope, element, attrs) {
 
 		},
-		controller: function($scope, validator, $q, stateHandler, $rootScope, messageHandler) {
+		controller: function($scope, validator, $q, stateHandler, $rootScope, messageHandler, resources) {
 
 
         $scope.$watch('mcClassObject', function (newValue, oldValue, scope) {

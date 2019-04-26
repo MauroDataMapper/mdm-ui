@@ -22,11 +22,15 @@ import './../src/js/services/utility/modalHandler';
 import './../src/js/services/favouriteHandler';
 import './../src/js/services/utility/windowHandler';
 import './../src/js/services/utility/markdownParser';
+import './../src/js/services/utility/markdownParser';
+import './../src/js/services/utility/objectEnhancer';
+import './../src/js/services/jQueryExtender';
 
 
 
 import './../src/js/modals/_modalsModule';
 import './../src/js/modals/confirmation';
+import './../src/js/modals/elementSelectorDialogue';
 
 
 
@@ -102,6 +106,18 @@ import './../src/js/directives/elementDataType/elementDataType';
 import './../src/js/directives/contentTableButtons/contentTableButtons'
 import './../src/js/directives/multiplicity/multiplicity'
 import './../src/js/directives/contentTable/contentTable'
+import './../src/js/directives/dataClassDetails/dataClassDetails'
+import './../src/js/directives/modelPath/modelPath'
+import './../src/js/directives/elementClassifications/elementClassifications'
+import './../src/js/directives/mcSelect2/mcSelect2'
+import './../src/js/directives/dataClassDetails/dataClassDetails'
+import './../src/js/directives/dataElementDetails/dataElementDetails'
+import './../src/js/directives/markdownTextArea/markdownTextArea'
+import './../src/js/directives/enumerationListWithCategory/enumerationListWithCategory'
+import './../src/js/directives/elementSelector/elementSelector'
+import './../src/js/directives/elementSelector2/elementSelector2'
+import './../src/js/directives/foldersTree2/foldersTree2'
+import './../src/js/directives/modelSelectorTree/modelSelectorTree'
 
 
 
@@ -159,7 +175,7 @@ export const mock = {
         beforeEach(angular.mock.module('ui.router'));
         beforeEach(angular.mock.module('multiStepForm'));
         beforeEach(angular.mock.module('xeditable'));
-
+        beforeEach(angular.mock.module('ngSanitize'));
 
 
     }

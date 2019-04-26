@@ -6,7 +6,8 @@ describe('Controller: newDataClass (wizard:Step 0)', function () {
 
     mock.init();
     beforeEach(angular.mock.module('views/newDataClass/step0.html'));
-
+    beforeEach(angular.mock.module('./modelSelectorTree.html'));
+    beforeEach(angular.mock.module('./foldersTree2.html'));
 
     beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _$httpBackend_, _resources_, _$q_, _ngToast_, _$state_, _securityHandler_, _$stateParams_) {
         var tempHTML = _$templateCache_.get('views/newDataClass/step0.html');
@@ -18,6 +19,7 @@ describe('Controller: newDataClass (wizard:Step 0)', function () {
 
         $stateParams = _$stateParams_;
         $stateParams.parentDataModelId = "DEFAULT-PARENT-DM-ID";
+        _$httpBackend_.expect("GET", $rootScope.backendURL + '/tree/').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/').respond({});
 
 
@@ -26,7 +28,7 @@ describe('Controller: newDataClass (wizard:Step 0)', function () {
         _$httpBackend_.whenGET('views/home.html').respond(200, '');
         $httpBackend = _$httpBackend_;
 
-        $httpBackend.expect("GET", $rootScope.backendURL + '/tree/').respond([]);
+
 
         multiStepForm = _multiStepForm_;
         formStepElement = _formStepElement_;

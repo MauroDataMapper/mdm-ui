@@ -18,6 +18,7 @@ module.exports = function(config) {
             './node_modules/bootstrap/js/affix.js',
             './node_modules/angular-xeditable/dist/js/xeditable.js',
             './node_modules/angular-sanitize/angular-sanitize.js',
+            './node_modules/jquery-ui-dist/jquery-ui.js',
 
             './src/views/**/*.html', //add all controller templates and views for 'ng-html2js'
             './src/js/directives/**/*.html', //add all directive templates for 'ng-html2js'

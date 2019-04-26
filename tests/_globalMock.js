@@ -29,6 +29,7 @@ import './../src/js/services/jointDiagramService';
 
 
 
+
 import './../src/js/modals/_modalsModule';
 import './../src/js/modals/confirmation';
 import './../src/js/modals/elementSelectorDialogue';
@@ -123,12 +124,15 @@ import './../src/js/directives/dataModelDetails/dataModelDetails'
 import './../src/js/directives/dataSetMetadata/dataSetMetadata'
 import './../src/js/directives/dataTypeDetails/dataTypeDetails'
 import './../src/js/directives/elementClassifications/elementClassifications'
+import './../src/js/directives/profilePicture/profilePicture'
+import './../src/js/directives/dateRangeSlider/dateRangeSlider'
 
 
 
 import './../src/js/filters/_filtersModule';
 import './../src/js/filters/highlight';
 import './../src/js/filters/fileSize';
+import './../src/js/filters/biteArrayToBase64';
 
 
 window.joint = require('./../src/js/jointjs/joint-min');

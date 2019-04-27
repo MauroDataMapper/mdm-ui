@@ -22,7 +22,9 @@ import 'ng-toast/dist/ngToast-animations.css';
 window.zxcvbn = require('zxcvbn/dist/zxcvbn');
 window.marked = require('marked/marked.min');
 
-import 'split.js/dist/split.es'
+
+var splitModule = require('split.js');
+window.Split = splitModule.default;
 
 import 'angular-bootstrap-contextmenu/contextMenu'
 

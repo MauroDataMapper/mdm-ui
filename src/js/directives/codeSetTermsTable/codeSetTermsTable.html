@@ -1,0 +1,90 @@
+<div>
+    <mc-table
+            mc-name="my"
+            mc-record-type="'dynamic'"
+            mc-fetch-method="contentFetch"
+            mc-table-handler="mcTableHandler"
+            mc-display-records="mcDisplayRecords"
+            mc-page-sizes="[5,10,15,20]"
+            mc-page-size="5"
+            mc-page-number="1">
+        <div class="mcTableMain">
+            <div class="mcTableTitle">
+                <span class="title">Terms</span>
+
+                <div ng-if="(access && access.showEdit) || clientSide" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+                    <button type="button"   class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="toggleAddTermsSection()">
+                        <i class="fa fa-plus"  uib-tooltip="Add Term" aria-hidden="true" ng-if="!showAddTerm"></i>
+                        <i class="fa fa-times" uib-tooltip="Close" aria-hidden="true" ng-if="showAddTerm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div style="padding: 10px; border: 1px solid #DDD;margin-right: 0px !important;  margin-left: 0px !important; " class="row" ng-if="showAddTerm">
+                <multiple-terms-selector on-add-button-click="addTerms"></multiple-terms-selector>
+            </div>
+            <div class="mcTableContainer">
+                <table class="table table-condensed table-bordered mcTable">
+                    <thead>
+                        <tr class="mcTableHeader">
+                            <th  style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="terminologyLabel" sortable="true" filterable="true">
+                                Terminology
+                            </th>
+                            <th  style="cursor:pointer;max-width: 20%;width: 20%;" columnName="code" sortable="true" filterable="true">
+                                Term
+                            </th>
+                            <th  style="cursor:pointer;max-width: 30%;width: 30%;" columnName="definition" sortable="true" filterable="true">
+                                Definition
+                            </th>
+                            <th  style="max-width: 8%;width: 8%;">
+                            </th>
+                        </tr>
+                        <tr class="mcTableFilter">
+                            <td style="min-width:80px;max-width: 15%;width: 15%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 20%;width: 20%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 30%;width: 30%;">
+                                <input class="form-control input-sm" type="text" autocomplete="off">
+                            </td>
+                            <td style="max-width: 8%;width: 8%;">
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="record in mcDisplayRecords track by record.id">
+                            <td style="min-width:80px;max-width: 15%;width: 15%;;word-wrap: break-word;overflow: hidden;">
+                                <div>
+                                    <element-link mc-element="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}"  search-criteria="searchTerm"></element-link>
+                                </div>
+                            </td>
+                            <td style="max-width: 20%;width: 20%;;word-wrap: break-word;overflow: hidden;">
+                                <div>
+                                    <element-link mc-element="record" search-criteria="searchTerm"></element-link>
+                                </div>
+                            </td>
+                            <td style="max-width: 30%;width: 30%;word-wrap: break-word;overflow: hidden;">
+                                <div>
+                                    <span ng-bind-html="record.definition| mchighlighter:searchTerm"></span>
+                                    <div title="Aliases">
+                                        <element-alias aliases="record.aliases"></element-alias>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
+                                <div ng-if="access && access.showEdit">
+                                    <mc-table-button record="record" index="$index" delete="delete" hide-edit="true"></mc-table-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="paginationContainer">
+                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+            </div>
+        </div>
+    </mc-table>
+</div>

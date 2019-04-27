@@ -137,6 +137,9 @@ import './../src/js/directives/elementDataType/elementDataType'
 import './../src/js/directives/elementLinksListNew/elementLinksListNew'
 import './../src/js/directives/elementSelector2/elementSelector2'
 import './../src/js/directives/enumerationListWithCategory/enumerationListWithCategory'
+import './../src/js/directives/history/history'
+import './../src/js/directives/linkSuggestion/linkSuggestion'
+import './../src/js/directives/newDataTypeInline/newDataTypeInline'
 
 
 

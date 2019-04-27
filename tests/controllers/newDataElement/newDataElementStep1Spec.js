@@ -30,6 +30,11 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
     beforeEach(angular.mock.module('./modelPath.html'));
     beforeEach(angular.mock.module('./elementClassifications.html'));
     beforeEach(angular.mock.module('./mcSelect2.html'));
+    beforeEach(angular.mock.module('./newDataTypeInline.html'));
+    beforeEach(angular.mock.module('./modelSelectorTree.html'));
+    beforeEach(angular.mock.module('./enumerationListWithCategory.html'));
+    beforeEach(angular.mock.module('./modelPath.html'));
+    beforeEach(angular.mock.module('./foldersTree2.html'));
 
 
     beforeEach(inject(function (_$httpBackend_) {

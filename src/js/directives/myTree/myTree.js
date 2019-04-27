@@ -298,7 +298,7 @@ angular.module('directives').directive('myTree', function ($state, $rootScope, $
 
 					//Show icons for nodes on level 0 as they are dataModels
 					if (level == 0) {
-						var icon = '<i class="modelIcon fa fa-list" style="padding-right: 3px;"></i>';
+						var icon = '<i class="modelIcon fa fa-tags" style="padding-right: 3px;"></i>';
 						li.append(icon);
 					}
 					li.append(elementName);
@@ -321,7 +321,7 @@ angular.module('directives').directive('myTree', function ($state, $rootScope, $
 					var nonPlus = jQuery('<i style="padding: 5px;"></i>');
 					li.append(nonPlus);
 					if (level == 0) {
-						var icon = '<i class="modelIcon fa fa-list" style="padding-right: 3px;"></i>';
+						var icon = '<i class="modelIcon fa fa-tags" style="padding-right: 3px;"></i>';
 						li.append(icon);
 					}
 					li.append(elementName);

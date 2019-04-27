@@ -92,7 +92,10 @@ angular.module('directives').directive('datamodelDetails', function () {
                         $scope.mcModelObject.editAliases =  angular.copy($scope.mcModelObject.aliases);
 
                         messageHandler.showSuccess('Data Model updated successfully.');
-                        $rootScope.$broadcast('$reloadFoldersTree');
+                        //Reload the tree ONLY IF datamodel label is updated
+                        if($scope.mcModelObject.label !== result.label) {
+                            $rootScope.$broadcast('$reloadFoldersTree');
+                        }
                         d.resolve();
                     })
                     .catch(function (error) {

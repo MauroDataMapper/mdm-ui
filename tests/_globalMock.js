@@ -132,6 +132,7 @@ import './../src/js/directives/mcInfiniteScrollList/mcInfiniteScrollList'
 import './../src/js/directives/elementChildDataClassesListButtons/elementChildDataClassesListButtons'
 import './../src/js/directives/elementChildDataClassesList/elementChildDataClassesList'
 import './../src/js/directives/elementClassifications/elementClassifications'
+import './../src/js/directives/elementDataType/elementDataType'
 
 
 

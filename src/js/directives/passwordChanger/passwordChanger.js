@@ -1,4 +1,4 @@
-angular.module('directives').directive('passwordChanger', [
+angular.module('directives').directive('passwordChanger',
 	function () {
 		return {
 			restrict: 'E',
@@ -11,4 +11,4 @@ angular.module('directives').directive('passwordChanger', [
 			}
 		}
 	}
-]);
+);

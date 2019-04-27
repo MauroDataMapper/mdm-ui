@@ -140,7 +140,9 @@ import './../src/js/directives/enumerationListWithCategory/enumerationListWithCa
 import './../src/js/directives/history/history'
 import './../src/js/directives/linkSuggestion/linkSuggestion'
 import './../src/js/directives/newDataTypeInline/newDataTypeInline'
-
+import './../src/js/directives/passwordStrenghtometer/passwordStrenghtometer'
+import './../src/js/directives/passwordChanger/passwordChanger'
+import './../src/js/directives/userDetails/userDetails'
 
 
 import './../src/js/filters/_filtersModule';
@@ -150,6 +152,7 @@ import './../src/js/filters/biteArrayToBase64';
 
 
 // window.joint = require('./../src/js/jointjs/joint-min');
+window.zxcvbn = require('zxcvbn/dist/zxcvbn');
 
 export const mock = {
     init: function () {

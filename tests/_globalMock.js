@@ -39,6 +39,7 @@ import './../src/js/modals/elementSelectorDialogue';
 import './../src/js/handlers/_handlersModule';
 import './../src/js/handlers/folderHandler';
 import './../src/js/handlers/contextSearchHandler';
+import './../src/js/handlers/semanticLinkHandler';
 
 
 import './../src/js/controllers/_controllersModule';
@@ -133,6 +134,7 @@ import './../src/js/directives/elementChildDataClassesListButtons/elementChildDa
 import './../src/js/directives/elementChildDataClassesList/elementChildDataClassesList'
 import './../src/js/directives/elementClassifications/elementClassifications'
 import './../src/js/directives/elementDataType/elementDataType'
+import './../src/js/directives/elementLinksListNew/elementLinksListNew'
 
 
 

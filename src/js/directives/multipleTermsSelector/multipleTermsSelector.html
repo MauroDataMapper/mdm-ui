@@ -1,0 +1,101 @@
+<div>
+   <div style="padding: 10px; border: 1px solid #DDD;margin-right: 0px !important;  margin-left: 0px !important; " class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div>
+                           <div style="font-style: italic;font-size: 14px;"><span class="badge importFormStep themeBackgroundColor">1</span> Please choose a Terminology and then select Term(s):</div>
+                        </div>
+                        <div style="padding-left: 8px;margin-top: 5px;">
+                                <strong>Terminology*</strong>
+                                <mc-select-2
+                                        width="'100%'"
+                                        accept-typed-input="false"
+                                        value-type="'static'"
+                                        static-values="selectorSection.terminologies"
+                                        id-property="'id'"
+                                        display-property="'label'"
+                                        search-property="'label'"
+                                        on-select="onTerminologySelect">
+                                        <div>
+                                           <div>{{$item.label}}</div>
+                                        </div>
+                                </mc-select-2>
+                        </div>
+                        <div style="padding-left: 8px;">
+                                <strong>Term</strong>
+                                <input type="text"
+                                       class="form-control input-sm"
+                                       ng-model="selectorSection.termSearchText"
+                                       ng-disabled="!selectorSection.selectedTerminology"
+                                       ng-change="runTermSearch()"
+                                       ng-model-options='{ debounce: 500 }'
+                                       placeholder="Search for Terms...">
+                                <div style="margin-top: 5px;">
+                                        <mc-infinite-scroll-list
+                                                start-fetching="selectorSection.startFetching"
+                                                fetch-initially="false"
+                                                fetch-method="fetch"
+                                                height="240"
+                                                page-size="selectorSection.searchResultPageSize">
+                                                <div style="padding: 5px 5px; border-bottom: 1px solid #DDD; cursor: pointer;" ng-click="onSearchResultSelect($item, $event)">
+                                                        <div style="width:90%;">
+                                                                <input type="checkbox"
+                                                                       style="cursor:pointer;"
+                                                                       name="showSupersededModels"
+                                                                       ng-change="termToggle($item)"
+                                                                       ng-model="$item.checked">
+                                                                <element-link
+                                                                        new-window="true"
+                                                                        mc-element="$item"></element-link>
+                                                        </div>
+                                                </div>
+                                        </mc-infinite-scroll-list>
+                                </div>
+                        </div>
+                        <div style="float: right;min-height: 20px;">
+                        <span ng-if="selectorSection.searchResultTotal > 0 && selectorSection.loading">
+                            <i class="fa fa-refresh fa-spin themeColor"></i>
+                        </span>
+                                <span ng-if="selectorSection.searchResultTotal > 0" style="font-size: 11px; font-style: italic;" class="themeColor">
+                            {{selectorSection.searchResultDisplayedSoFar}} / {{selectorSection.searchResultTotal}}
+                        </span>
+                        </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div style="font-style: italic;font-size: 14px;"><span class="badge importFormStep themeBackgroundColor">2</span> Press Add button to add selected terms to the Code Set:</div>
+
+                        <div style="padding-left: 10px;margin-top: 5px;">
+                                <div style="font-weight: bold;">Selected Terms</div>
+                                <div  style="min-height: 200px;">
+                                     <div style="position: relative; border: 1px solid #DDD;padding: 5px;" ng-if="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
+                                         <mc-paged-list
+                                                 name="linkType"
+                                                 mc-title="linkType"
+                                                 type="'static'"
+                                                 items="selectorSection.selectedTermsArray"
+                                                 page-size="10">
+                                                      <div class="pagedElement"  style="word-break: break-all;word-wrap: break-word;">
+                                                           <div>
+                                                               <div>
+                                                                    <span>
+                                                                       <i class="fa fa-times deleteButton" ng-click="removeTerm($item)"></i>
+                                                                    </span>
+                                                                    <element-link mc-element="$item"></element-link>
+                                                               </div>
+                                                              <div>
+                                                                  <span style="font-size: 12px; padding-left: 5px;margin-right: 2px; padding-right: 4px;">
+                                                                       <element-link mc-element="$item.terminology"></element-link>
+                                                                  </span>
+                                                              </div>
+                                                           </div>
+                                                      </div>
+                                         </mc-paged-list>
+                                     </div>
+                                     <div style="margin-top: 5px;" ng-if="!hideAddButton">
+                                             <button type="button" class="btn btn-sm btn-default themeColor" ng-disabled="selectorSection.selectedTermsCount === 0" ng-click="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span ng-if="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
+                                     </div>
+                                </div>
+                        </div>
+                </div>
+    </div>
+</div>

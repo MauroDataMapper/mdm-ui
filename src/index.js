@@ -249,9 +249,7 @@ import './js/directives/summaryMetadata/summaryMetadataTable/summaryMetadataTabl
 
 import './js/directives/codeSetDetails/codeSetDetails'
 import './js/directives/codeSetTermsTable/codeSetTermsTable'
-
-
-
+import './js/directives/multipleTermsSelector/multipleTermsSelector'
 
 
 import servicesModule from './js/services/_servicesModule'

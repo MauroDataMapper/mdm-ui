@@ -96,6 +96,7 @@ import './js/controllers/dataFlow/dataFlowChain'
 import './js/controllers/dataFlow/dataFlowDM2DM'
 import './js/controllers/newClassifier/newClassifier'
 import './js/controllers/newClassifier/newClassifierStep1Ctrl'
+import './js/controllers/codeSet'
 
 import './js/controllers/newDataClass/newDataClass'
 import './js/controllers/newDataClass/newDataClassStep0Ctrl'
@@ -483,6 +484,11 @@ angular.module(MODULE_NAME, [
         url: '/classifier/new?parentId',
         templateUrl: './views/newClassifier/main.html',
         controller: "newClassifierCtrl"
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.codeSet", {
+        url: '/codeSet/:id/{tabView:string}',
+        templateUrl: './views/codeSet.html',
+        controller: "codeSetCtrl",
+        params: {tabView: {value: null, squash: true}}
     }).state("appContainer.mainApp.twoSidePanel.catalogue.dataModel", {
         url: '/dataModel/:id/{tabView:string}',
         templateUrl: './views/dataModel.html',
@@ -677,6 +683,7 @@ angular.module(MODULE_NAME, [
 
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.dataType", ['public']);
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.dataModel", ['public']);
+    stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.codeSet", ['public']);
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.terminology", ['public']);
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.term", ['public']);
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.dataElement", ['public']);

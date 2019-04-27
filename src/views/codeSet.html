@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <div style="width: 100%">
+            <code-set-details></code-set-details>
+        </div>
+        <uib-tabset active="activeTab.index">
+            <uib-tab select="tabSelected('terms')">
+                <uib-tab-heading>
+                    Terms
+                </uib-tab-heading>
+                <div style="width:100%;"  ng-if="activeTab.name == 'terms' && mcCodeSetObject">
+                    <code-set-terms-table code-set="mcCodeSetObject"></code-set-terms-table>
+                </div>
+            </uib-tab>
+
+
+            <uib-tab select="tabSelected('properties')">
+                <uib-tab-heading>
+                    Properties
+                </uib-tab-heading>
+                <div style="width:100%;" ng-if="activeTab.name == 'properties' && mcCodeSetObject">
+                    <mc-data-set-metadata
+                            parent="mcCodeSetObject"
+                            type = "'dynamic'"
+                            loading-data="loadingData"></mc-data-set-metadata>
+                </div>
+            </uib-tab>
+
+            <uib-tab select="tabSelected('comments')">
+                <uib-tab-heading>
+                    Comments
+                </uib-tab-heading>
+                <div style="width:100%;"  ng-if="activeTab.name == 'comments' && mcCodeSetObject">
+                    <annotation-list parent="mcCodeSetObject" loading-data="loadingData" type="'dynamic'"></annotation-list>
+                </div>
+            </uib-tab>
+
+            <uib-tab select="tabSelected('history')">
+                <uib-tab-heading>
+                    History
+                </uib-tab-heading>
+                <div style="width:100%;" ng-if="activeTab.name == 'history' && mcCodeSetObject">
+                    <history parent="mcCodeSetObject"  parent-type="'codeSet'"></history>
+                </div>
+            </uib-tab>
+
+            <uib-tab select="tabSelected('links')">
+                <uib-tab-heading>
+                    Links
+                </uib-tab-heading>
+                <div>
+                    <div ng-if="activeTab.name == 'links' && mcCodeSetObject">
+                        <element-links-list-new
+                                parent="mcCodeSetObject"
+                                type = "'dynamic'"
+                                loading-data="loadingData"></element-links-list-new>
+                    </div>
+                </div>
+            </uib-tab>
+
+            <uib-tab select="tabSelected('attachments')" ng-if="mcCodeSetObject">
+                <uib-tab-heading>
+                    Attachments
+                </uib-tab-heading>
+                <div>
+                    <div ng-if="activeTab.name == 'attachments' && mcCodeSetObject">
+                        <attachment-list parent="mcCodeSetObject" loading-data="loadingData" type="'dynamic'"></attachment-list>
+                    </div>
+                </div>
+            </uib-tab>
+
+
+        </uib-tabset>
+    </div>
+</div>

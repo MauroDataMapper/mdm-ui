@@ -71,7 +71,7 @@ angular.module('directives').directive('annotationList', function () {
                         messageHandler.showSuccess('Comment saved successfully.');
                         $scope.mcTableHandler.fetchForDynamic();
                     },function(error) {
-                        messageHandler.saveErrorMessages("There was a problem adding the comment.", error);
+                        messageHandler.showError("There was a problem adding the comment.", error);
                     });
             };
 

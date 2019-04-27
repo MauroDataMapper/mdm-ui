@@ -11,6 +11,7 @@ angular.module('directives').directive('foldersTree2',  function ($state, $rootS
             onNodeChecked:'=',
 
             onAddFolder: '=',
+            onAddCodeSet: '=',
             onAddDataModel: '=',
             onAddChildDataClass: '=',
             onAddChildDataType: '=',
@@ -374,6 +375,38 @@ angular.module('directives').directive('foldersTree2',  function ($state, $rootS
                             }).catch(function (error) {
                                 messageHandler.showError('There was a problem moving the Data Model.', error);
                             });
+                        }else if (source.domainType === "CodeSet" && target.domainType === "Folder"){
+
+                            //do not copy a dataModel to its own parent folder
+                            if(source.element.parent.id === target.id){
+                                event.stopPropagation();
+                                return false;
+                            }
+
+                            resources.codeSet.put(source.id, "folder/"+target.id).then(function (result) {
+                                messageHandler.showSuccess('Code Set moved successfully.');
+
+                                //remove from source parent
+                                var srcIndex =  $scope.findChildIndex(source.element.parent, source.element.node);
+                                source.element.parent.children.splice(srcIndex, 1);
+                                if(source.element.parent.children.length === 0){
+                                    source.element.parent.hasChildren = false;
+                                    $scope.updateOpenNodes(source.element.parent, false);
+                                    source.element.parent.open = false;
+                                }
+                                //add it to target parent
+                                target.element.node.children = target.element.node.children || [];
+                                target.element.node.children.push(source.element.node);
+
+                                $timeout(function () {
+                                    handleDraggable();
+                                    handleDroppable();
+                                }, 400);
+
+
+                            }).catch(function (error) {
+                                messageHandler.showError('There was a problem moving the Code Set.', error);
+                            });
                         }
                         else if (source.domainType === "Terminology" && target.domainType === "Folder"){
 
@@ -444,7 +477,7 @@ angular.module('directives').directive('foldersTree2',  function ($state, $rootS
                         var sourceDomainType = ui.draggable.attr("data-domainType");
                         var targetDomainType  = jQuery(this).attr("data-domainType");
 
-                        if( ["DataModel","Terminology"].indexOf(sourceDomainType) !==-1 && targetDomainType === "Folder"){
+                        if( ["DataModel","Terminology","CodeSet"].indexOf(sourceDomainType) !==-1 && targetDomainType === "Folder"){
                             jQuery(this).find("span.nodeLabel").addClass("draggableHover");
                         }
 
@@ -663,6 +696,13 @@ angular.module('directives').directive('foldersTree2',  function ($state, $rootS
                         function ($itemScope,$event) {
                             if ($scope.onAddDataModel) {
                                 $scope.onAddDataModel($event, folder);
+                            }
+                        }
+                    ],
+                    [   'Add Code Set',
+                        function ($itemScope,$event) {
+                            if ($scope.onAddCodeSet) {
+                                $scope.onAddCodeSet($event, folder);
                             }
                         }
                     ]

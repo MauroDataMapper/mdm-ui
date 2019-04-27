@@ -30,6 +30,7 @@
     <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'DataModel' && child.type==='Data Standard'" ng-class="{'foldersTree folderTreeIcon fa fa-file-text-o':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
     <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'DataModel' && child.type==='Data Asset'"    ng-class="{'foldersTree folderTreeIcon fa fa-database':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
     <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'Terminology'"    ng-class="{'foldersTree folderTreeIcon fa fa-book ':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
+    <i ng-click='nodeClick($event, child)' ng-dblclick='nodeDbClick($event, child)' ng-if="child.domainType === 'CodeSet'"     ng-class="{'foldersTree folderTreeIcon fa fa-list ':true,'themeColor': !child.deleted, 'deletedFolder':child.deleted}"></i>
 
 
     <span context-menu="menuOptions"

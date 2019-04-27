@@ -97,6 +97,7 @@ import './js/controllers/dataFlow/dataFlowDM2DM'
 import './js/controllers/newClassifier/newClassifier'
 import './js/controllers/newClassifier/newClassifierStep1Ctrl'
 import './js/controllers/codeSet'
+import './js/controllers/newCodeSet/main'
 
 import './js/controllers/newDataClass/newDataClass'
 import './js/controllers/newDataClass/newDataClassStep0Ctrl'
@@ -464,6 +465,10 @@ angular.module(MODULE_NAME, [
         templateUrl: './views/dataModelDefault.html',
         controller: 'modelsHomeCtrl',
         // params: { hideExpandBtn: true }
+    }).state("appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet", {
+        url: '/codeSet/new?parentFolderId',
+        templateUrl: './views/newCodeSet/main.html',
+        controller: "newCodeSetCtrl"
     }).state("appContainer.mainApp.twoSidePanel.catalogue.NewDataModel", {
         url: '/dataModel/new?parentFolderId',
         templateUrl: './views/newDataModel/main.html',

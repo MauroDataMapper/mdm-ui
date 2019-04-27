@@ -37,6 +37,8 @@ import 'croppie/croppie.js'
 import 'angular-xeditable/dist/js/xeditable'
 import 'angular-xeditable/dist/css/xeditable.css'
 
+import 'ng-table/dist/ng-table'
+import 'ng-table/dist/ng-table.min.css'
 
 // Our modules
 import home from './js/home/home.module';
@@ -239,6 +241,7 @@ import './js/directives/userSelector/userSelector'
 import './js/directives/codeSetDetails/codeSetDetails'
 import './js/directives/codeSetTermsTable/codeSetTermsTable'
 import './js/directives/terminologyTermsTable/terminologyTermsTable'
+import './js/directives/custom/ng-table-modifier'
 
 
 import './js/directives/simpleView/elementHierarchy/elementHierarchy'
@@ -313,6 +316,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/main.less';
 import './style/bootstrapModifier.less';
 import './style/theme.css';
+import './style/ngTableModifier.less';
 
 
 const MODULE_NAME = 'demo';
@@ -341,8 +345,8 @@ angular.module(MODULE_NAME, [
     'ngAnimate',
     'ngAria',
     'ngCookies',
-    'ngTouch'
-
+    'ngTouch',
+    'ngTable'
 ]).config(($stateProvider, appSettingProvider, stateRoleAccessProvider, ngToastProvider) => {
     $stateProvider.state("appContainer", {
         abstract: true,

@@ -236,6 +236,10 @@ import './js/directives/transformationsReadonly/transformationsReadonly'
 import './js/directives/userAccessNew/userAccessNew'
 import './js/directives/userDetails/userDetails'
 import './js/directives/userSelector/userSelector'
+import './js/directives/codeSetDetails/codeSetDetails'
+import './js/directives/codeSetTermsTable/codeSetTermsTable'
+import './js/directives/terminologyTermsTable/terminologyTermsTable'
+
 
 import './js/directives/simpleView/elementHierarchy/elementHierarchy'
 import './js/directives/simpleView/simpleViewClassifier/simpleViewClassifier'
@@ -730,6 +734,8 @@ angular.module(MODULE_NAME, [
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataClass", ['Administrator', 'Editor']);
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataType", ['Administrator', 'Editor']);
     stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.NewClassifier", ['Administrator', 'Editor']);
+    stateRoleAccessProvider.add("appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet", ['Administrator', 'Editor']);
+
 
     stateRoleAccessProvider.add("appContainer.adminArea", ['Administrator']);
     stateRoleAccessProvider.add("appContainer.adminArea.users", ['Administrator']);

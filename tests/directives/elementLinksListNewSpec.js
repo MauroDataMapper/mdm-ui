@@ -61,8 +61,8 @@ describe('Directive: elementLinksListNew', function () {
         var options = {
             pageSize: 20,
             pageIndex: 0,
-            sortBy: undefined,
-            sortType: undefined,
+            sortBy: null,
+            sortType: '',
             filters: ''
         };
         expect(resources.catalogueItem.get).toHaveBeenCalledWith("DM-ID", "semanticLinks", options)

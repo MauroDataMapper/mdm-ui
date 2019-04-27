@@ -126,6 +126,9 @@ import './../src/js/directives/dataTypeDetails/dataTypeDetails'
 import './../src/js/directives/elementClassifications/elementClassifications'
 import './../src/js/directives/profilePicture/profilePicture'
 import './../src/js/directives/dateRangeSlider/dateRangeSlider'
+import './../src/js/directives/codeSetTermsTable/codeSetTermsTable'
+import './../src/js/directives/multipleTermsSelector/multipleTermsSelector'
+import './../src/js/directives/mcInfiniteScrollList/mcInfiniteScrollList'
 
 
 

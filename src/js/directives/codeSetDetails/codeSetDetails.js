@@ -1,4 +1,4 @@
-angular.module('directives').directive('codeSetDetails', [ function () {
+angular.module('directives').directive('codeSetDetails', function () {
 	return{
 		restrict: 'E',
 		replace: true,
@@ -167,4 +167,4 @@ angular.module('directives').directive('codeSetDetails', [ function () {
 
         }
 	};
-}]);
+});

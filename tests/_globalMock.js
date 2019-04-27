@@ -129,6 +129,8 @@ import './../src/js/directives/dateRangeSlider/dateRangeSlider'
 import './../src/js/directives/codeSetTermsTable/codeSetTermsTable'
 import './../src/js/directives/multipleTermsSelector/multipleTermsSelector'
 import './../src/js/directives/mcInfiniteScrollList/mcInfiniteScrollList'
+import './../src/js/directives/elementChildDataClassesListButtons/elementChildDataClassesListButtons'
+import './../src/js/directives/elementChildDataClassesList/elementChildDataClassesList'
 
 
 
@@ -138,7 +140,7 @@ import './../src/js/filters/fileSize';
 import './../src/js/filters/biteArrayToBase64';
 
 
-window.joint = require('./../src/js/jointjs/joint-min');
+// window.joint = require('./../src/js/jointjs/joint-min');
 
 export const mock = {
     init: function () {

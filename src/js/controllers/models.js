@@ -209,6 +209,10 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
         $scope.onAddDataModel = function (event, folder) {
             stateHandler.Go("NewDataModel", {parentFolderId: folder.id});
         };
+        $scope.onAddCodeSet = function (event, folder) {
+            stateHandler.Go("NewCodeSet", {parentFolderId: folder.id});
+        };
+
         $scope.onAddChildDataClass = function (event, element) {
             stateHandler.Go("NewDataClass", {
                 grandParentDataClassId: element.domainType === "DataClass" ? element.parentDataClass : null,

@@ -1,4 +1,4 @@
-angular.module('controllers').controller('codeSetCtrl', function ($scope, $state, $stateParams, resources,$window, selectionHandler, ngToast, $rootScope, $q, elementTypes, stateHandler) {
+angular.module('controllers').controller('codeSetCtrl', function ($scope, $state, $stateParams, resources,$window, $rootScope, $q, elementTypes, stateHandler) {
         $scope.activeTab = {index:-1};
 
         $scope.initialize = function(){

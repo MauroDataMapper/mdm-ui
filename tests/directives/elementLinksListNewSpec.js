@@ -1,7 +1,4 @@
-'use strict';
-/**
- * Created by soheil on 12/02/2018.
- */
+import {mock} from '../_globalMock';
 
 describe('Directive: elementLinksListNew', function () {
 
@@ -11,12 +8,12 @@ describe('Directive: elementLinksListNew', function () {
 	mock.init();
 
 	//Load required templates
-	beforeEach(module('views/directives/elementLinksListNew.html'));
-    beforeEach(module('views/directives/editableFormButtons.html'));
-    beforeEach(module('views/directives/mcSelect2.html'));
-    beforeEach(module('views/directives/mcTable/mcTableButton.html'));
-    beforeEach(module('views/directives/mcTable/mcTablePagination.html'));
-    beforeEach(module('views/directives/modelPath.html'));
+	beforeEach(angular.mock.module('./elementLinksListNew.html'));
+    beforeEach(angular.mock.module('./editableFormButtons.html'));
+    beforeEach(angular.mock.module('./mcSelect2.html'));
+    beforeEach(angular.mock.module('./mcTableButton.html'));
+    beforeEach(angular.mock.module('./mcTablePagination.html'));
+    beforeEach(angular.mock.module('./modelPath.html'));
 
 	beforeEach(inject(function ($rootScope, $compile,_$httpBackend_,_$rootScope_, _resources_, _$q_, _ngToast_, _userSettingsHandler_) {
 

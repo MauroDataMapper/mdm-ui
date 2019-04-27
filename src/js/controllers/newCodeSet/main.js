@@ -1,4 +1,4 @@
-angular.module('controllers').controller('newCodeSetCtrl', function ($scope, $state, $stateParams, resources, $window, stateHandler, messageHandler) {
+angular.module('controllers').controller('newCodeSetCtrl', function ($scope, $state, $stateParams, resources, $window, stateHandler, messageHandler, $rootScope) {
 
         $scope.savingInProgress = false;
         $scope.model = {
@@ -49,6 +49,7 @@ angular.module('controllers').controller('newCodeSetCtrl', function ($scope, $st
             resources.codeSet.post(null, null, {resource:resource}).then(function (result) {
                 messageHandler.showSuccess('Code Set created successfully.');
                 stateHandler.Go("codeset",{id:result.id});
+                $rootScope.$broadcast('$reloadFoldersTree');
             }, function (error) {
                 messageHandler.showError('There was a problem creating the Code Set.', error);
             });

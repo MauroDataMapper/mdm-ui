@@ -108,7 +108,7 @@ angular.module('directives').directive('elementSelector2', function ($state, res
 
             $scope.loadTerminologies = function(){
                 $scope.reloading = true;
-                resources.terminology.get().then(function (data) {
+                resources.terminology.get(null, null, {all:true}).then(function (data) {
                     if($scope.notAllowedToSelectIds && $scope.notAllowedToSelectIds.length > 0){
                         var i = data.items.length - 1 ;
                         while(i >= 0){
@@ -159,7 +159,7 @@ angular.module('directives').directive('elementSelector2', function ($state, res
             $scope.loadAllDataElements = function (dataClass, pageSize, pageIndex) {
                 var options = {
                     pageSize: pageSize,
-                    pageIndex:pageIndex,
+                    pageIndex:pageIndex * pageSize,
                     sortBy: "label",
                     sortType:"asc"
                 };
@@ -169,7 +169,7 @@ angular.module('directives').directive('elementSelector2', function ($state, res
             $scope.loadAllDataTypes = function (dataModel, pageSize, pageIndex) {
                 var options = {
                     pageSize: pageSize,
-                    pageIndex:pageIndex,
+                    pageIndex:pageIndex * pageSize,
                     sortBy: "label",
                     sortType: "asc"
                 };
@@ -179,7 +179,7 @@ angular.module('directives').directive('elementSelector2', function ($state, res
             $scope.loadAllTerms = function (terminology, pageSize, pageIndex) {
                 var options = {
                     pageSize: pageSize,
-                    pageIndex:pageIndex,
+                    pageIndex:pageIndex * pageSize,
                 };
                 return  resources.terminology.get(terminology.id, "terms", options);
             };

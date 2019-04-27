@@ -247,6 +247,8 @@ import './js/directives/simpleView/simpleViewTerminology/simpleViewTerminology'
 import './js/directives/summaryMetadata/summaryMetadataMap/summaryMetadataMap'
 import './js/directives/summaryMetadata/summaryMetadataTable/summaryMetadataTable'
 
+import './js/directives/codeSetDetails/codeSetDetails'
+
 
 
 

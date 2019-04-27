@@ -1,0 +1,143 @@
+<div>
+    <div class="panel panel-default">
+        <form editable-form name="editableForm" onbeforesave="formBeforeSave()" disable-submit-on-enter>
+            <div class="panel-body panel-table">
+                <h4>
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;">
+                        <span ng-class="{'deletedDataModelTitle':mcCodeSetObject.deleted, 'xeditableInput':true}">
+                            <span class="xeditableInput">
+                                <span editable-text="mcCodeSetObject.label"
+                                      e-name="label"
+                                      e-style="width: 99%"
+                                      class="dataClassDetailsLabel"
+                                      ng-bind-html="mcCodeSetObject.label | mchighlighter:$root.searchCriteria"
+                                      onbeforesave="validateLabel($data)">
+                                </span>
+                            </span>
+                            <i ng-class="{'fa fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
+                               ng-click="toggleFavourite()"
+                               uib-tooltip="Favourite"></i>
+                        </span>
+                        <span class="publiclyReadable" ng-show="mcCodeSetObject.readableByEveryone">
+                            <i class="fa fa-globe themeColor" aria-hidden="true" title="Publicly Readable"></i>
+                        </span>
+                    </div>
+                </h4>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
+                    <small class="elementDetailMCType">Code Set</small>
+                    <element-status mc-element="mcCodeSetObject"></element-status>
+                    <span ng-if="mcCodeSetObject.deleted" class="label label-danger"  style="vertical-align: middle;font-size: 9px;">Deleted</span>
+                    <br>
+                    <div style="font-size: 12px;font-style:italic;">
+                        Version: {{mcCodeSetObject.documentationVersion}}
+                    </div>
+                    <span style="font-size: 11px;font-style: italic" class="dataModelDetailsLastUpdate">Last Update: {{::mcCodeSetObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                </div>
+            </div>
+            <table class="table table-condensed dataModelDetailTable">
+                <tbody>
+                    <tr>
+                        <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                        <td>
+                            <div style="width:50%">
+                                <element-alias
+                                        in-edit-mode="editableForm.$visible"
+                                        aliases="mcCodeSetObject.editAliases"></element-alias>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Author</td>
+                        <td>
+                            <span class="xeditableInput">
+                                <span editable-text="mcCodeSetObject.author"
+                                      e-name="author"
+                                      e-style="width: 99%"
+                                      ng-bind-html="mcCodeSetObject.author | mchighlighter:$root.searchCriteria"
+                                      class="dataModelDetailsAuthor"></span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation</td>
+                        <td>
+                            <span class="xeditableInput">
+                                <span editable-text="mcCodeSetObject.organisation"
+                                      e-name="organisation"
+                                      class="dataModelDetailsOrganisation"
+                                      e-style="width: 99%"
+                                      ng-bind-html="mcCodeSetObject.organisation | mchighlighter:$root.searchCriteria"></span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="detailsRowHeader col-md-2">Description</td>
+                        <td class="elementDetailDescription">
+                            <markdown-text-area mc-editable-form="editableForm" mc-element="mcCodeSetObject" mc-property="'description'"></markdown-text-area>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</td>
+                        <td>
+                            <element-classifications classifications="mcCodeSetObject.classifiers" editable="editableForm"></element-classifications>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: right;">
+                            <div style="float: right;margin-bottom: 3px;margin-left: 5px;" ng-show="!editableForm.$visible && !editable.$deletePending" ng-if="showDelete">
+                                <div style="float: right;margin-bottom: 3px;margin-left: 5px;" ng-show="!editableForm.$visible && !editable.$deletePending" uib-dropdown is-open="false"  ng-if="showDelete">
+                                    <button type="button"
+                                            uib-tooltip="Delete"
+                                            class="btn btn-default btn-xs dropdown-toggle"
+                                            ng-disabled="deleteInProgress || processing"
+                                            uib-dropdown-toggle>
+                                        <i class="fa fa-trash-o deleteButton" aria-hidden="true"></i>
+                                        <span class="caret" style="margin-right: 2px;"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu style="right: 0; left: auto;" role="menu" aria-labelledby="single-button">
+                                        <li class="modelFilterItem" ng-click="askForSoftDelete()" ng-if="!mcCodeSetObject.deleted">
+                                            <a title="Just mark it as deleted">Mark as deleted</a>
+                                        </li>
+                                        <li class="modelFilterItem" ng-click="askForPermanentDelete()">
+                                            <a title="Permanently delete the Data Model">Delete <span class="errorMessage">permanently</span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="float: right;margin-bottom: 3px">
+                                <editable-form-buttons
+
+                                        on-cancel-edit="onCancelEdit"
+                                        editable="editableForm"
+                                        text-location="left"
+                                        hide-delete="true"
+                                        processing="deleteInProgress"></editable-form-buttons>
+                            </div>
+                            <div ng-if="showPermission" uib-tooltip="User & Group Access" class="btn-group-xs" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;"   ng-show="!editableForm.$visible && !editable.$deletePending">
+                                <button  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="toggleSecuritySection()" type="button" ng-disabled="deleteInProgress || processing">
+                                    <i class="fa fa-user userAccess"></i>
+                                </button>
+                            </div>
+                            <div class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;" ng-show="deleteInProgress">
+                                <a style="font-size: 14px; text-decoration: none;">
+                                    <i class="fa fa-refresh fa-spin"></i> Deleting...
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class="userAccess" ng-if="securitySection && !editableForm.$visible && !editable.$deletePending" style="margin: 10px 0px 50px 0px">
+        <share-with mc-element="mcCodeSetObject" mc-domain-type="'DataModel'"></share-with>
+        <div>
+            <div style="margin-top: 10px">
+                <user-access-new parent="mcCodeSetObject" parent-type="'DataModel'"></user-access-new>
+            </div>
+            <div style="margin-top: 50px">
+                <group-access-new parent="mcCodeSetObject" parent-type="'DataModel'"></group-access-new>
+            </div>
+        </div>
+    </div>
+</div>

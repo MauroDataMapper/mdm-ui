@@ -47,7 +47,9 @@ angular.module("modals").config(["modalHandlerProvider", function (modalHandlerP
 						securityHandler.loginModalDisplayed = true;
 						if(error.status === 401){
 							$scope.message = "Invalid username or password!";
-						}else if(error.status === -1){
+						}else if (error.status === 409){
+                            $scope.message = "A user is already logged in, logout first"
+                        }else if(error.status === -1){
 							//$scope.message = "Server is not available!";
 						}
 					});

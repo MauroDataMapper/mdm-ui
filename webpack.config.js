@@ -74,15 +74,11 @@ module.exports = (env, options) => {
                 },
                 {
                     test: /\.(gif|png|jpe?g|svg)$/i,
-                    use: [
-                        'file-loader',
-                        {
-                            loader: 'image-webpack-loader',
-                            options: {
-                                disable: true, // webpack@2.x and newer
-                            },
-                        },
-                    ],
+                    loader: 'file-loader',
+                    options: {
+                        outputPath: 'images',
+                    }
+
                 },
                 {
                     test: /\.(eot|svg|ttf|woff|woff2|otf)$/,

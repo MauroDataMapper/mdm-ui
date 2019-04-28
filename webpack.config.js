@@ -144,12 +144,6 @@ module.exports = (env, options) => {
             ]),
             new CopyWebpackPlugin([
                 {
-                    from: './src/web.config',
-                    to: '.'
-                }
-            ]),
-            new CopyWebpackPlugin([
-                {
                     from: 'src/images',
                     to: 'images'
                 }

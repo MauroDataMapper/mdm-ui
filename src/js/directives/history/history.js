@@ -27,6 +27,7 @@ angular.module('directives').directive('history', function () {
                 // userGroup
                 // Folder
                 // Terminology
+                // CodeSet
 
                 var elementMap = angular.merge(elementTypes.getBaseTypes(), elementTypes.getUserTypes());
 

@@ -625,7 +625,9 @@ angular.module('directives').directive('myTree', function ($state, $rootScope, $
 					//disable context menu
 					var treeItems = jQuery(treeClass + " li.myTreeNode");
 					if(treeItems && treeItems.length > 0){
-						treeItems.contextMenu(false);
+						if(treeItems.contextMenu) {
+                            treeItems.contextMenu(false);
+                        }
 					}
 
 				}

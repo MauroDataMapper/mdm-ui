@@ -57,7 +57,7 @@ angular.module('directives').directive('codeSetDetails', function () {
                     })
                 };
 
-                resources.dataModel.put(resource.id, null, {resource: resource})
+                resources.codeSet.put(resource.id, null, {resource: resource})
                     .then(function (result) {
                         if ($scope.afterSave) {
                             $scope.afterSave(resource);

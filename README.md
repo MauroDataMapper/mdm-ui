@@ -1,5 +1,7 @@
 # MC-UI2 (MetadatCatalogue UI)
 
+Please run `npm install` before running any of the followings:
+
 
 ## Development server
 
@@ -14,7 +16,7 @@ Run `npm build` to build the project. The build artifacts will be stored in the 
 
 ## Running unit tests
 
-Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io) on Chrome.
+Run `npm test` to execute the unit tests via Karma on Chrome.
 
 
 ## Running unit tests in Jenkins (using PhantomJS headless browser)

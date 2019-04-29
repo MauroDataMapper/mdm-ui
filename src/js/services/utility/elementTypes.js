@@ -60,6 +60,7 @@ angular.module('services').provider('elementTypes', function () {
 
         'Terminology':  {id:"Terminology",link: "terminology", title: 'Terminology', resourceName:'terminology', markdown:"TG", classifiable:true},
         'Term':         {id:"Term",link: "term", title: 'Term', resourceName:'term', markdown:"TM", classifiable:true},
+        'CodeSet':      {id:"CodeSet",link: "codeSet", title: 'CodeSet', resourceName:'codeSet', markdown:"CT", classifiable:true},
 
         'Folder':         {id:"Folder",link: "folder", title: 'Folder', resourceName:'folder', markdown:"FD", classifiable:true},
 

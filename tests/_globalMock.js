@@ -151,7 +151,7 @@ import './../src/js/filters/fileSize';
 import './../src/js/filters/biteArrayToBase64';
 
 
-// window.joint = require('./../src/js/jointjs/joint-min');
+window.joint = require('./../src/js/jointjs/joint-min');
 window.zxcvbn = require('zxcvbn/dist/zxcvbn');
 
 export const mock = {

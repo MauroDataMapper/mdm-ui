@@ -26,8 +26,8 @@ pipeline {
                 dir('Core') {
                     sh 'npm install'
                     sh 'npm-check || true'
-                    sh 'npm build'
-                    sh 'npm test:dist'
+                    sh 'npm run-script build'
+                    sh 'npm run-script test:dist'
                 }
             }
             post {

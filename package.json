@@ -4,6 +4,8 @@
   "description": "MetadataCatalogue UI",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf node_modules",
+    "reinstall": "npm run clean && npm install",
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open --port 8081 --mode development",

@@ -10,7 +10,7 @@
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open --port 8081 --mode development",
     "test": "node --max_old_space_size=4096 node_modules/.bin/karma start --browsers Chrome",
-    "test:dist": "node --max_old_space_size=4096 node_modules/.bin/karma start --browsers PhantomJS --singleRun true --reporters junit"
+    "test:jenkins": "node --max_old_space_size=4096 node_modules/.bin/karma start --browsers PhantomJS --singleRun true --reporters junit --log-level info"
   },
   "keywords": [],
   "author": "Soheil",

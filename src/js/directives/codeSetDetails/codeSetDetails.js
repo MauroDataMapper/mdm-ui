@@ -30,6 +30,8 @@ angular.module('directives').directive('codeSetDetails', function () {
                     $scope.showEdit = access.showEdit;
                     $scope.showPermission = access.showPermission;
                     $scope.showDelete =  access.showDelete;
+                    $scope.showNewVersion =  access.showNewVersion;
+                    $scope.showFinalise   =  access.showFinalise;
                     $scope.addedToFavourite = favouriteHandler.isAdded(newValue);
                 }
             });
@@ -165,6 +167,31 @@ angular.module('directives').directive('codeSetDetails', function () {
                 $scope.showSearch = !$scope.showSearch;
             };
 
-        }
+      $scope.finalise = function () {
+        confirmationModal.open(
+          "Are you sure you want to finalise the CodeSet?",
+          "Once you finalise a CodeSet, you can not edit it anymore!<br>" +
+          "but you can create new version of it.")
+          .then(function (result) {
+            if(result.status !== "ok"){
+              return
+            }
+            $scope.processing = true;
+            resources.codeSet.put($scope.mcCodeSetObject.id, "finalise")
+              .then(function (response) {
+                $scope.processing = false;
+                messageHandler.showSuccess('CodeSet finalised successfully.');
+                stateHandler.Go("codeset", {id: $scope.mcCodeSetObject.id}, {reload:true});
+              })
+              .catch(function (error) {
+                $scope.processing = false;
+                messageHandler.showError('There was a problem finalising the CodeSet.', error);
+              });
+          });
+
+      };
+
+
+    }
 	};
 });

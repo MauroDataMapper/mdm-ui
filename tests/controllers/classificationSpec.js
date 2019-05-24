@@ -48,7 +48,7 @@ describe('Controller: classificationCtrl', function () {
         scope.$digest();
 
         expect(resources.classifier.get).toHaveBeenCalledWith(stateParams.id);
-        expect(resources.classifier.get).toHaveBeenCalledTimes(5);
+        expect(resources.classifier.get).toHaveBeenCalledTimes(6);
         expect(window.document.title).toBe("Classifier");
 
         expect(scope.classifier).toBeDefined({id:123});

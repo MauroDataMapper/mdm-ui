@@ -28,11 +28,13 @@ angular.module('controllers').controller('classificationCtrl', function ($scope,
             promises.push(resources.classifier.get($stateParams.id, "catalogueItems"));
             promises.push(resources.classifier.get($stateParams.id, "terminologies"));
             promises.push(resources.classifier.get($stateParams.id, "terms"));
+            promises.push(resources.classifier.get($stateParams.id, "codeSets"));
 
             $q.all(promises).then(function (results) {
                 $scope.catalogueItemsCount = results[0].count;
                 $scope.terminologiesCount  = results[1].count;
                 $scope.termsCount  = results[2].count;
+                $scope.codeSetsCount = results[3].count;
 
                 $scope.loading = false;
                 $scope.activeTab = getTabDetail("classifiedElements");
@@ -50,14 +52,20 @@ angular.module('controllers').controller('classificationCtrl', function ($scope,
             if(tabName === "classifiedTerms"){
                 return {index: 2, name:'classifiedTerms'};
             }
+            if(tabName === "classifiedCodeSets"){
+              return {index: 3, name:'classifiedCodeSets'};
+            }
 
             if(tabName === "history"){
-                var index = 3;
+                var index = 4;
                 if($scope.terminologiesCount === 0){
                     index--;
                 }
                 if($scope.termsCount === 0){
                     index--;
+                }
+                if($scope.codeSetsCount === 0){
+                  index--;
                 }
                 return {index: index, name:'history'};
             }

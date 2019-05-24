@@ -12,7 +12,11 @@ describe('Controller: classificationCtrl', function () {
 	beforeEach(inject(function (_$q_, $controller, _$rootScope_, _resources_, $window, $stateParams, _securityHandler_, _stateHandler_) {
 		resources = _resources_;
 		$rootScope = _$rootScope_;
-		scope = _$rootScope_.$new();
+    _$rootScope_.isLoggedIn = function () {
+      return true;
+    };
+
+    scope = _$rootScope_.$new();
 		stateParams = $stateParams;
 		window = $window;
         stateHandler = _stateHandler_;
@@ -44,7 +48,7 @@ describe('Controller: classificationCtrl', function () {
         scope.$digest();
 
         expect(resources.classifier.get).toHaveBeenCalledWith(stateParams.id);
-        expect(resources.classifier.get).toHaveBeenCalledTimes(4);
+        expect(resources.classifier.get).toHaveBeenCalledTimes(5);
         expect(window.document.title).toBe("Classifier");
 
         expect(scope.classifier).toBeDefined({id:123});

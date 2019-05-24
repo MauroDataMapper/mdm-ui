@@ -17,11 +17,12 @@ angular.module('directives').directive('groupAccessNew', function () {
                 "DataModel":   {name:"dataModel",   message:"Data Model"},
                 "Classifier":  {name:"classifier",  message:"Classifier"},
                 "Folder":      {name:"folder",      message:"Folder"},
-                "Terminology": {name:"terminology", message:"Terminology"}
+                "Terminology": {name:"terminology", message:"Terminology"},
+                "CodeSet":     {name:"codeSet",     message:"CodeSet"}
             };
 
             $scope.$watch('parent.id', function (newValue, oldValue, scope) {
-                if (newValue !== null && newValue !== oldValue ) {
+              if (newValue !== null && newValue !== oldValue ) {
                     $scope.loadAllGroups();
                     $scope.buildGroups();
                 }

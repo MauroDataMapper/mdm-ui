@@ -11,9 +11,17 @@ angular.module('controllers').controller('terminologyCtrl',  function ($scope, $
             $window.document.title = "Terminology";
 
             resources.terminology.get($stateParams.id).then(function (data) {
-                $scope.terminology = data;
-                $scope.terminology.classifiers = $scope.terminology.classifiers || [];
-                $scope.activeTab = getTabDetail($stateParams.tabView);
+              $scope.terminology = data;
+              $scope.terminology.classifiers = $scope.terminology.classifiers || [];
+              if($rootScope.isLoggedIn()) {
+                resources.terminology.get($stateParams.id, 'permissions').then(function(permissions) {
+                  for(var attrname in permissions) {
+                    $scope.terminology[attrname] = permissions[attrname];
+                  }
+                })
+              }
+
+              $scope.activeTab = getTabDetail($stateParams.tabView);
             });
 
         };

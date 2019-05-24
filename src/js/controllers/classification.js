@@ -1,4 +1,4 @@
-angular.module('controllers').controller('classificationCtrl', function ($scope, $state, $stateParams, resources, $window, $q, elementTypes, userSettingsHandler, stateHandler) {
+angular.module('controllers').controller('classificationCtrl', function ($scope, $state, $stateParams, resources, $window, $q, $rootScope, elementTypes, userSettingsHandler, stateHandler) {
 
         $scope.activeTab = {index:-1};
 
@@ -14,6 +14,14 @@ angular.module('controllers').controller('classificationCtrl', function ($scope,
             $scope.loading = true;
             resources.classifier.get($stateParams.id).then(function (result) {
                 $scope.classifier = result;
+                if($rootScope.isLoggedIn()) {
+                  resources.classifier.get($stateParams.id, 'permissions').then(function(permissions){
+                  for (var attrname in permissions) {
+                    $scope.classifier[attrname] = permissions[attrname];
+                  }
+                })
+              }
+
             });
 
             var promises = [];

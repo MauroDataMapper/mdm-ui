@@ -14,7 +14,11 @@ describe('Controller: terminologyCtrl', function () {
 		resources = _resources_;
         stateHandler = _stateHandler_;
 		$rootScope = _$rootScope_;
-		scope = _$rootScope_.$new();
+    _$rootScope_.isLoggedIn = function () {
+      return true;
+    };
+
+    scope = _$rootScope_.$new();
 		stateParams = $stateParams;
 		window = $window;
         $q = _$q_;
@@ -61,7 +65,7 @@ describe('Controller: terminologyCtrl', function () {
         scope.$digest();
 
         expect(resources.terminology.get).toHaveBeenCalledWith(stateParams.id);
-        expect(resources.terminology.get).toHaveBeenCalledTimes(1);
+        expect(resources.terminology.get).toHaveBeenCalledTimes(2); // Once for terminology, once for permissions
 
         expect(window.document.title).toBe("Terminology");
 

@@ -1,8 +1,11 @@
 <div>
 
     <div class="panel panel-default">
-        <div>
-            <form editable-form name="editableForm" onaftersave="formAfterSave()" onbeforesave="formBeforeSave()"  disable-submit-on-enter>
+            <form editable-form
+                  name="editableForm"
+                  onaftersave="formAfterSave()"
+                  onbeforesave="formBeforeSave()"
+                  onkeypress="return event.keyCode != 13;">
                 <div class="panel-body panel-table">
                     <h4>
                         <div>
@@ -63,22 +66,19 @@
                     </tbody>
                 </table>
             </form>
-        </div>
     </div>
 
-    <div>
-        <div show-if-role-is-writable mc-element="mcClassification" class="userAccess"
-             ng-show="securitySection && !editableForm.$visible && !editable.$deletePending"
-             style="margin: 10px 0px 50px 0px">
+    <div show-if-role-is-writable mc-element="mcClassification" class="userAccess"
+         ng-if="securitySection && !editableForm.$visible && !editable.$deletePending"
+         style="margin: 10px 0px 50px 0px">
 
-            <share-with mc-element="mcClassification" mc-domain-type="'Classifier'"></share-with>
-            <div colspan="2">
-                <div style="margin-top: 10px">
-                    <user-access-new parent="mcClassification" parent-type="'Classifier'"></user-access-new>
-                </div>
-                <div style="margin-top: 50px">
-                    <group-access-new parent="mcClassification" parent-type="'Classifier'"></group-access-new>
-                </div>
+        <share-with mc-element="mcClassification" mc-domain-type="'Classifier'"></share-with>
+        <div colspan="2">
+            <div style="margin-top: 10px">
+                <user-access-new parent="mcClassification" parent-type="'Classifier'"></user-access-new>
+            </div>
+            <div style="margin-top: 50px">
+                <group-access-new parent="mcClassification" parent-type="'Classifier'"></group-access-new>
             </div>
         </div>
     </div>

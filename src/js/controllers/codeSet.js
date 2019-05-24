@@ -15,6 +15,13 @@ angular.module('controllers').controller('codeSetCtrl', function ($scope, $state
             resources.codeSet.get($stateParams.id).then(function(data){
                 $scope.mcCodeSetObject = data;
                 $scope.mcCodeSetObject.classifiers = $scope.mcCodeSetObject.classifiers || [];
+                if($rootScope.isLoggedIn()) {
+                  resources.codeSet.get($stateParams.id, 'permissions').then(function(permissions) {
+                    for(var attrname in permissions) {
+                      $scope.mcCodeSetObject[attrname] = permissions[attrname];
+                    }
+                  })
+                }
                 $scope.activeTab = getTabDetail($stateParams.tabView);
             });
 		};

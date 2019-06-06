@@ -35,5 +35,24 @@
                     ></element-owned-data-types-list>
         </div>
     </div>
+    <div class="row" ng-show="$isLast()">
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+            <button ng-disabled="$isFirst()" class="btn btn-default btn-sm" ng-click="$previousStep()">
+                <span class="fa fa-chevron-left"></span>
+                Previous
+            </button>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
+            <strong ng-bind-template="{{$getActiveIndex()}} / {{$getSteps().length}}"></strong>
+        </div>
 
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
+            <button ng-show="$isLast()" class="btn btn-success btn-sm" ng-click="save()">
+                Submit
+            </button>
+            <button ng-show="$isLast()" class="btn btn-default btn-sm" ng-click="cancel()">
+                Cancel
+            </button>
+        </div>
+    </div>
 </div>

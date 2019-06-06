@@ -13,7 +13,7 @@ describe('Controller: newDataClass (wizard:Step 1)', function () {
     beforeEach(angular.mock.module('./foldersTree2.html'));
 
     beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _$httpBackend_, _resources_, _$q_, _ngToast_, _$state_, _securityHandler_, _$stateParams_) {
-
+debugger
     	var tempHTML = _$templateCache_.get('views/newDataClass/step1.html');
         $rootScope = _$rootScope_;
         resources = _resources_;

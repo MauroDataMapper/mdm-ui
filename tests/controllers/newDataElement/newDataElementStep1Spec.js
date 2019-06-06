@@ -44,7 +44,7 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
 
 
     beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _resources_, _$q_, _$stateParams_, _securityHandler_, _$httpBackend_) {
-
+debugger
         //load the template
         var tempHTML = _$templateCache_.get('views/newDataElement/step1.html');
         $rootScope = _$rootScope_;
@@ -97,6 +97,7 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
         formStepElement(step, multiStepForm(), $rootScope)
             .then(function (data) {
                 //get step scope
+                debugger
                 stepScope = data.scope;
                 //get step element (HTML node)
                 stepElement = data.element;

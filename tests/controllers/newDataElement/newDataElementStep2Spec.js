@@ -15,7 +15,7 @@ describe('Controller: newDataElement (wizard:Step 2)', function () {
     beforeEach(angular.mock.module('./markdownTextArea.html'));
 
 
-	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_messageHandler_,_$state_,_securityHandler_,_$stateParams_) {
+	beforeEach(inject(function(_$rootScope_, _multiStepForm_, FormStep, _formStepElement_,_$templateCache_,_$window_,$controller, _$httpBackend_,_resources_, _$q_,_$state_,_securityHandler_,_$stateParams_,_messageHandler_) {
 		//load the template
 		var tempHTML = _$templateCache_.get('views/newDataElement/step2.html');
 		$rootScope = _$rootScope_;

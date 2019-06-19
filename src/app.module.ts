@@ -6,7 +6,7 @@ import { Injectable, Inject } from '@angular/core';
 
 
 import moduleName from './index';
-import {IRootScopeService} from "@angular/upgrade/static/src/common/angular1";
+// import {IRootScopeService} from "@angular/upgrade/static/src/common/angular1";
 
 
 @NgModule({

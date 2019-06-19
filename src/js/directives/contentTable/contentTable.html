@@ -165,11 +165,11 @@
 
 
                         <td style="word-wrap: break-word;overflow: hidden;">
-                            <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;" ng-class="{'descTopBorder':record.domainType == 'DataElement'}">
+                            <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;" >
                                 <span style="font-style: italic;font-size:11px;">Description:</span>
                                 <more-description description="{{::record.description}}"></more-description>
                             </div>
-                            <div ng-if="record.domainType == 'DataElement'" style="margin-bottom:9px;">
+                            <div ng-if="record.domainType == 'DataElement'" style="margin-bottom:9px;" ng-class="{'descTopBorder':record.domainType == 'DataElement'}">
                                 <span style="font-style: italic;font-size:11px;">Data Type:</span>
                                 <element-data-type
                                         hide-enum-list="true"

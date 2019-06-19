@@ -2,10 +2,10 @@
     <table ng-table="tableParams" class="table table-condensed table-bordered table-striped">
         <tr ng-repeat="row in $data">
 
-            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Name'" filter="{label: 'text'}" sortable="'label'">
+            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Name'" filter="{label: 'text'}" sortable="'name'">
                 {{ row.label }}
             </td>
-            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Description'" filter="{description: 'text'}" sortable="'description'">
+            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Description'" >
                 {{ row.description }}
             </td>
 

@@ -12,12 +12,12 @@ angular.module('controllers').controller('newDataElementCtrl', function ($scope,
                     title: 'Element Details',
                     hasForm: 'true',
                     controller: 'newDataElementStep1Ctrl'
-                },
-                {
-                    templateUrl: '../../../views/newDataElement/step2.html',
-                    title: 'Properties',
-                    controller: 'newDataElementStep2Ctrl'
                 }
+                // {
+                //     templateUrl: '../../../views/newDataElement/step2.html',
+                //     title: 'Properties',
+                //     controller: 'newDataElementStep2Ctrl'
+                // }
             ];
             $scope.model = {
                 metadata: [],

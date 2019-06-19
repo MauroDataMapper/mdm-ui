@@ -14,12 +14,12 @@ angular.module('controllers').controller('newDataClassCtrl', function ($scope, $
 				title: 'Element Details',
 				hasForm: 'true',
 				controller: 'newDataClassStep1Ctrl'
-			},
-			{
-				templateUrl: '../../../views/newDataClass/step2.html',
-				title: 'Properties',
-				controller: 'newDataClassStep2Ctrl'
 			}
+			// {
+			// 	templateUrl: '../../../views/newDataClass/step2.html',
+			// 	title: 'Properties',
+			// 	controller: 'newDataClassStep2Ctrl'
+			// }
 		];
 
 		$scope.model = {

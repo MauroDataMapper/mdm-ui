@@ -8,7 +8,9 @@ angular.module('controllers').controller('newDataClassStep0Ctrl',
         }, true);
 
         $scope.onSelect = function (dataModel) {
+            debugger
           $scope.model.selectedDataTypes= [];
+           $scope.model.selectedDataClassesMap = [];
         };
         $scope.validate = function (newValue) {
             var isValid = true;

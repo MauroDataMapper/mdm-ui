@@ -116,10 +116,12 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
                     queryStringParams: {
                         includeDocumentSuperseded: userSettingsHandler.get("includeSupersededDocModels") || false,
                         includeModelSuperseded: userSettingsHandler.get("showSupersededModels") || false,
-                        includeDeleted: userSettingsHandler.get("showDeletedModels") || false,
-                        noCache: noCache
+                        includeDeleted: userSettingsHandler.get("showDeletedModels") || false
                     }
                 };
+            }
+            if(noCache) {
+              options.queryStringParams += { noCache: noCache};
             }
             resources.tree.get(null, null, options).then(function (data) {
                 $scope.allModels = {

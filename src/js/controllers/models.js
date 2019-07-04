@@ -107,7 +107,7 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
                 $scope.classifierLoading = false;
             });
         };
-        $scope.loadFolders = function () {
+        $scope.loadFolders = function (noCache) {
             $scope.reloading = true;
 
             var options = {};
@@ -116,11 +116,11 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
                     queryStringParams: {
                         includeDocumentSuperseded: userSettingsHandler.get("includeSupersededDocModels") || false,
                         includeModelSuperseded: userSettingsHandler.get("showSupersededModels") || false,
-                        includeDeleted: userSettingsHandler.get("showDeletedModels") || false
+                        includeDeleted: userSettingsHandler.get("showDeletedModels") || false,
+                        noCache: noCache
                     }
                 };
             }
-
             resources.tree.get(null, null, options).then(function (data) {
                 $scope.allModels = {
                     "children": data,
@@ -413,7 +413,7 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
         };
 
         $scope.reloadTree = function () {
-            $scope.loadFolders();
+            $scope.loadFolders(true);
         };
 
 

@@ -121,7 +121,7 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
                 };
             }
             if(noCache) {
-              options.queryStringParams += { noCache: noCache};
+              options.queryStringParams.noCache = true;
             }
             resources.tree.get(null, null, options).then(function (data) {
                 $scope.allModels = {

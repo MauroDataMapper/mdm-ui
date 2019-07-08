@@ -33,6 +33,7 @@ import 'angular-aria/angular-aria'
 import 'angular-cookies/angular-cookies'
 import 'angular-touch/angular-touch'
 
+import 'chart.js'
 import 'croppie/croppie.js'
 import 'angular-xeditable/dist/js/xeditable'
 import 'angular-xeditable/dist/css/xeditable.css'

@@ -243,6 +243,7 @@ import './js/directives/codeSetDetails/codeSetDetails'
 import './js/directives/codeSetTermsTable/codeSetTermsTable'
 import './js/directives/terminologyTermsTable/terminologyTermsTable'
 import './js/directives/custom/ng-table-modifier'
+import './js/directives/validFile/validFile'
 
 
 import './js/directives/simpleView/elementHierarchy/elementHierarchy'

@@ -19,84 +19,177 @@
                             new-data-element="newDataElement"></content-table-buttons>
                 </div>
             </div>
+<!--            <div class="mcTableContainer">-->
+<!--                <table class="table table-condensed table-bordered mcTable">-->
+<!--                    <thead>-->
+<!--                        <tr class="mcTableHeader">-->
+<!--                            <th  style="cursor:pointer;max-width: 30px;width: 30px;text-align: center;cursor:pointer;" checkboxAll="true" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">-->
+<!--                                <input type="checkbox" class="checkboxAll" style="cursor:pointer;">-->
+<!--                            </th>-->
+<!--                            <th  style="cursor:pointer;max-width: 80px;width: 80px;" columnName="domainType" sortable="true" filterable="true">-->
+<!--                                Type-->
+<!--                            </th>-->
+<!--                            <th  style="cursor:pointer;max-width: 5%;width: 5%;" columnName="minMultiplicity" sortable="true">-->
+<!--                            </th>-->
+<!--                            <th  style="cursor:pointer;max-width: 30%;width: 30%;"  columnName="label" sortable="true" filterable="true">-->
+<!--                                Name-->
+<!--                            </th>-->
+<!--                            <th  style="cursor:pointer;"  columnName="description" sortable="true" filterable="true">-->
+<!--                                Details-->
+<!--                            </th>-->
+<!--                        </tr>-->
+<!--                        <tr class="mcTableFilter">-->
+<!--                            <td style="max-width: 30px;width: 30px;text-align: center;" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">-->
+<!--                            </td>-->
+<!--                            <td style="max-width: 10%;width: 10%;">-->
+<!--                                <select class="form-control input-sm mcSelect">-->
+<!--                                    <option value=""></option>-->
+<!--                                    <option value="dataClass">DataClass</option>-->
+<!--                                    <option value="dataElement">DataElement</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td style="max-width: 5%;width: 5%;">-->
+<!--                            </td>-->
+<!--                            <td style="cursor:pointer;max-width: 30%;width: 30%;">-->
+<!--                                <input class="form-control input-sm" type="text" autocomplete="off">-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                                <input class="form-control input-sm" type="text" autocomplete="off">-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </thead>-->
+
+<!--                    <tbody>-->
+<!--                        <tr ng-repeat="record in mcDisplayRecords track by record.id" ng-class="{'dataClassRecord contentTable': record.domainType == 'DataClass'}">-->
+<!--                            <td style="max-width: 30px;width: 30px;text-align: center;cursor:pointer;" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">-->
+<!--                                <input style="cursor:pointer;" type="checkbox" ng-model="record.checked">-->
+<!--                            </td>-->
+<!--                            <td style="max-width: 80px;width: 80px;overflow: hidden;word-wrap: break-word;">-->
+<!--                                <small class="elementDetailMCType">{{record.domainType}}</small>-->
+<!--                            </td>-->
+<!--                            <td style="max-width: 5%;width: 5%;text-align: center;">-->
+<!--                                <div>-->
+<!--                                    <multiplicity min="record.minMultiplicity" max="record.maxMultiplicity"></multiplicity>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                            <td style="max-width: 30%;width: 30%;word-wrap: break-word;overflow: hidden;">-->
+<!--                                <div>-->
+<!--                                    <element-link mc-element="record"-->
+<!--                                                  mc-parent-data-model="{id:record.dataModel}"-->
+<!--                                                  mc-parent-data-class="{id:record.dataClassParent}"-->
+<!--                                                  show-link="true"></element-link>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                            <td style="word-wrap: break-word;overflow: hidden;">-->
+<!--                                <div ng-if="record.domainType == 'DataElement'" style="margin-bottom:9px;">-->
+<!--                                    <span style="font-style: italic;font-size:11px;">Data Type:</span>-->
+<!--                                    <element-data-type-->
+<!--                                            hide-enum-list="true"-->
+<!--                                            element-data-type="record.dataType"-->
+<!--                                            mc-parent-data-model="parentDataModel"></element-data-type>-->
+<!--                                </div>-->
+<!--                                <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;" ng-class="{'descTopBorder':record.domainType == 'DataElement'}">-->
+<!--                                    <span style="font-style: italic;font-size:11px;">Description:</span>-->
+<!--                                    <more-description description="{{::record.description}}"></more-description>-->
+<!--                                </div>-->
+<!--                                <div>-->
+<!--                                    <all-links-in-paged-list parent="record" type="'static'" hide-does-not-refine-links="true"></all-links-in-paged-list>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+
             <div class="mcTableContainer">
                 <table class="table table-condensed table-bordered mcTable">
                     <thead>
-                        <tr class="mcTableHeader">
-                            <th  style="cursor:pointer;max-width: 30px;width: 30px;text-align: center;cursor:pointer;" checkboxAll="true" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">
-                                <input type="checkbox" class="checkboxAll" style="cursor:pointer;">
-                            </th>
-                            <th  style="cursor:pointer;max-width: 80px;width: 80px;" columnName="domainType" sortable="true" filterable="true">
-                                Type
-                            </th>
-                            <th  style="cursor:pointer;max-width: 5%;width: 5%;" columnName="minMultiplicity" sortable="true">
-                            </th>
-                            <th  style="cursor:pointer;max-width: 30%;width: 30%;"  columnName="label" sortable="true" filterable="true">
-                                Name
-                            </th>
-                            <th  style="cursor:pointer;"  columnName="description" sortable="true" filterable="true">
-                                Details
-                            </th>
-                        </tr>
-                        <tr class="mcTableFilter">
-                            <td style="max-width: 30px;width: 30px;text-align: center;" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">
-                            </td>
-                            <td style="max-width: 10%;width: 10%;">
-                                <select class="form-control input-sm mcSelect">
-                                    <option value=""></option>
-                                    <option value="dataClass">DataClass</option>
-                                    <option value="dataElement">DataElement</option>
-                                </select>
-                            </td>
-                            <td style="max-width: 5%;width: 5%;">
-                            </td>
-                            <td style="cursor:pointer;max-width: 30%;width: 30%;">
-                                <input class="form-control input-sm" type="text" autocomplete="off">
-                            </td>
-                            <td>
-                                <input class="form-control input-sm" type="text" autocomplete="off">
-                            </td>
-                        </tr>
+                    <tr class="mcTableHeader">
+                        <th  style="cursor:pointer;max-width: 30%;width: 30%;"  columnName="label" sortable="true" filterable="true">
+                            Name
+                        </th>
+<!--                        <th  style="cursor:pointer;max-width: 80px;width: 80px;" columnName="domainType" sortable="true" filterable="true">-->
+<!--                            Type-->
+<!--                        </th>-->
+
+
+                        <th  style="cursor:pointer;"  columnName="description" sortable="true" filterable="true">
+                            Details
+                        </th>
+                        <th  style="cursor:pointer;max-width: 5%;width: 5%;" columnName="minMultiplicity" sortable="true">
+                        </th>
+                        <th  style="cursor:pointer;max-width: 30px;width: 30px;text-align: center;cursor:pointer;" checkboxAll="true" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">
+                            <input type="checkbox" class="checkboxAll" style="cursor:pointer;">
+                        </th>
+                    </tr>
+                    <tr class="mcTableFilter">
+                        <td style="cursor:pointer;max-width: 30%;width: 30%;">
+                            <input class="form-control input-sm" type="text" autocomplete="off">
+                        </td>
+<!--                        <td style="max-width: 10%;width: 10%;">-->
+<!--                            <select class="form-control input-sm mcSelect">-->
+<!--                                <option value=""></option>-->
+<!--                                <option value="dataClass">DataClass</option>-->
+<!--                                <option value="dataElement">DataElement</option>-->
+<!--                            </select>-->
+<!--                        </td>-->
+
+                        <td>
+                            <input class="form-control input-sm" type="text" autocomplete="off">
+                        </td>
+                        <td style="max-width: 5%;width: 5%;">
+                        </td>
+
+                        <td style="max-width: 30px;width: 30px;text-align: center;" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">
+                        </td>
+
+                    </tr>
                     </thead>
 
                     <tbody>
-                        <tr ng-repeat="record in mcDisplayRecords track by record.id" ng-class="{'dataClassRecord contentTable': record.domainType == 'DataClass'}">
-                            <td style="max-width: 30px;width: 30px;text-align: center;cursor:pointer;" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">
-                                <input style="cursor:pointer;" type="checkbox" ng-model="record.checked">
-                            </td>
-                            <td style="max-width: 80px;width: 80px;overflow: hidden;word-wrap: break-word;">
+                    <tr ng-repeat="record in mcDisplayRecords track by record.id" ng-class="{'dataClassRecord contentTable': record.domainType == 'DataClass'}">
+                        <td style="max-width: 30%;width: 30%;word-wrap: break-word;overflow: hidden;">
+                            <div>
+                                <element-link mc-element="record"
+                                              mc-parent-data-model="{id:record.dataModel}"
+                                              mc-parent-data-class="{id:record.dataClassParent}"
+                                              show-link="true"></element-link>
+                            </div>
+                            <div>
                                 <small class="elementDetailMCType">{{record.domainType}}</small>
-                            </td>
-                            <td style="max-width: 5%;width: 5%;text-align: center;">
-                                <div>
-                                    <multiplicity min="record.minMultiplicity" max="record.maxMultiplicity"></multiplicity>
-                                </div>
-                            </td>
-                            <td style="max-width: 30%;width: 30%;word-wrap: break-word;overflow: hidden;">
-                                <div>
-                                    <element-link mc-element="record"
-                                                  mc-parent-data-model="{id:record.dataModel}"
-                                                  mc-parent-data-class="{id:record.dataClassParent}"
-                                                  show-link="true"></element-link>
-                                </div>
-                            </td>
-                            <td style="word-wrap: break-word;overflow: hidden;">
-                                <div ng-if="record.domainType == 'DataElement'" style="margin-bottom:9px;">
-                                    <span style="font-style: italic;font-size:11px;">Data Type:</span>
-                                    <element-data-type
-                                            hide-enum-list="true"
-                                            element-data-type="record.dataType"
-                                            mc-parent-data-model="parentDataModel"></element-data-type>
-                                </div>
-                                <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;" ng-class="{'descTopBorder':record.domainType == 'DataElement'}">
-                                    <span style="font-style: italic;font-size:11px;">Description:</span>
-                                    <more-description description="{{::record.description}}"></more-description>
-                                </div>
-                                <div>
-                                    <all-links-in-paged-list parent="record" type="'static'" hide-does-not-refine-links="true"></all-links-in-paged-list>
-                                </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+<!--                        <td style="max-width: 80px;width: 80px;overflow: hidden;word-wrap: break-word;">-->
+<!--                            <small class="elementDetailMCType">{{record.domainType}}</small>-->
+<!--                        </td>-->
+
+
+                        <td style="word-wrap: break-word;overflow: hidden;">
+                            <div ng-if="record.description && record.description.length>0" style="margin-bottom: 10px;" >
+                                <span style="font-style: italic;font-size:11px;">Description:</span>
+                                <more-description description="{{::record.description}}"></more-description>
+                            </div>
+                            <div ng-if="record.domainType == 'DataElement'" style="margin-bottom:9px;" ng-class="{'descTopBorder':record.domainType == 'DataElement'}">
+                                <span style="font-style: italic;font-size:11px;">Data Type:</span>
+                                <element-data-type
+                                        hide-enum-list="true"
+                                        element-data-type="record.dataType"
+                                        mc-parent-data-model="parentDataModel"></element-data-type>
+                            </div>
+
+                            <div>
+                                <all-links-in-paged-list parent="record" type="'static'" hide-does-not-refine-links="true"></all-links-in-paged-list>
+                            </div>
+                        </td>
+                        <td style="max-width: 5%;width: 5%;text-align: center;">
+                            <div>
+                                <multiplicity min="record.minMultiplicity" max="record.maxMultiplicity"></multiplicity>
+                            </div>
+                        </td>
+                        <td style="max-width: 30px;width: 30px;text-align: center;cursor:pointer;" class="mcTableCheckbox" ng-show="parentDataModel.editable && !parentDataModel.finalised">
+                            <input style="cursor:pointer;" type="checkbox" ng-model="record.checked">
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

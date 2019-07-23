@@ -26,7 +26,7 @@ angular.module('directives').directive('codeSetTermsTable', function () {
 
                 var deferred = $q.defer();
 
-                //Use main codesets/{ID} API endpoint for loading terms of a codeSet .................................
+                //Use main codeSets/{ID} API endpoint for loading terms of a codeSet .................................
                 // resources.codeSet.get($scope.codeSet.id).then(function (result) {
                 //     var terms = {
                 //         count : result.terms.length,
@@ -37,7 +37,7 @@ angular.module('directives').directive('codeSetTermsTable', function () {
                 //     return deferred.reject(response);
                 // });
 
-                //Use codesets/{ID}/terms API endpoint for loading terms of a codeSet.................................
+                //Use codeSets/{ID}/terms API endpoint for loading terms of a codeSet.................................
                 resources.codeSet.get($scope.codeSet.id, "terms", options).then(function (result) {
                     return deferred.resolve(result);
                 }, function (response) {

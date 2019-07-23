@@ -23,6 +23,12 @@ angular.module('controllers').controller('dataModelCtrl', function ($scope, $sta
 
                 //it user is Not loggedIn or has just readAccess, then show extra tabs
                 $scope.showExtraTabs =  !$rootScope.isLoggedIn() || (!$scope.dataModel.editable || $scope.dataModel.finalised);
+                if($rootScope.isLoggedIn()) {
+                  resources.dataModel.get($stateParams.id, 'permissions').then(function(permissions){
+                    for (var attrname in permissions) {
+                      $scope.dataModel[attrname] = permissions[attrname]; }
+                  })
+                }
 
             });
 

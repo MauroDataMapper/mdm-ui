@@ -33,6 +33,7 @@ import 'angular-aria/angular-aria'
 import 'angular-cookies/angular-cookies'
 import 'angular-touch/angular-touch'
 
+import 'chart.js'
 import 'croppie/croppie.js'
 import 'angular-xeditable/dist/js/xeditable'
 import 'angular-xeditable/dist/css/xeditable.css'
@@ -242,6 +243,7 @@ import './js/directives/codeSetDetails/codeSetDetails'
 import './js/directives/codeSetTermsTable/codeSetTermsTable'
 import './js/directives/terminologyTermsTable/terminologyTermsTable'
 import './js/directives/custom/ng-table-modifier'
+import './js/directives/validFile/validFile'
 
 
 import './js/directives/simpleView/elementHierarchy/elementHierarchy'

@@ -398,19 +398,19 @@ angular.module('services').factory('resources', function (restHandler, $rootScop
                     if (['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action) !== -1) {
                         return res.catalogueItem.get(id, action, null, options.contentType);
                     }
-                    return get("codesets", id, action, options);
+                    return get("codeSets", id, action, options);
                 },
 
                 post: function (id, action, options) {
-                    return post("codesets", id , action, options);
+                    return post("codeSets", id , action, options);
                 },
 
                 delete: function (id, action, queryString, resource) {
-                    return httpDelete("codesets", id , action, queryString, resource);
+                    return httpDelete("codeSets", id , action, queryString, resource);
                 },
 
                 put: function (id, action, options) {
-                    return put("codesets", id, action, options);
+                    return put("codeSets", id, action, options);
                 },
             },
 

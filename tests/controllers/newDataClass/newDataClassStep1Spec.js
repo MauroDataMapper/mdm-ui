@@ -2,7 +2,7 @@ import {mock} from '../../_globalMock';
 
 describe('Controller: newDataClass (wizard:Step 1)', function () {
     var $rootScope, step, multiStepForm, formStepElement,
-        mainWizardController, $httpBackend, stepScope, stepElement, resources, $q, ngToast, $state, $stateParams;
+        mainWizardController, $httpBackend, stepScope, stepElement, resources, $q, ngToast, $state, $stateParams, messageHandler;
 
     mock.init();
     beforeEach(angular.mock.module('views/newDataClass/step1.html'));
@@ -12,13 +12,21 @@ describe('Controller: newDataClass (wizard:Step 1)', function () {
     beforeEach(angular.mock.module('./modelSelectorTree.html'));
     beforeEach(angular.mock.module('./foldersTree2.html'));
 
-    beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _$httpBackend_, _resources_, _$q_, _ngToast_, _$state_, _securityHandler_, _$stateParams_) {
+    //AS
+    beforeEach(angular.mock.module('./mcTableButton.html'));
+    beforeEach(angular.mock.module('./mcTablePagination.html'));
+    beforeEach(angular.mock.module('./moreDescription.html'));
+    beforeEach(angular.mock.module('./dataSetMetadata.html'));
+    beforeEach(angular.mock.module('./markdownTextArea.html'));
+
+    beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _$httpBackend_, _resources_, _$q_, _ngToast_, _$state_, _securityHandler_, _$stateParams_ , _messageHandler_) {
 
     	var tempHTML = _$templateCache_.get('views/newDataClass/step1.html');
         $rootScope = _$rootScope_;
         resources = _resources_;
         $q = _$q_;
         ngToast = _ngToast_;
+        messageHandler = _messageHandler_;
         $state = _$state_;
 
 
@@ -94,6 +102,144 @@ describe('Controller: newDataClass (wizard:Step 1)', function () {
         stepScope.model.createType = 'copy';
         stepScope.model.selectedDataClasses = [{id:1,label:"a-dc"}];
         expect(stepScope.validate({})).toBeTruthy();
+    });
+
+    //AS
+    it("saveNewDataClass adds a DataClass to a DataModel", function () {
+        spyOn(messageHandler, 'showSuccess').and.returnValue({});
+        spyOn($state, 'go').and.returnValue({});
+        spyOn($rootScope, '$broadcast').and.returnValue({});
+
+        spyOn(resources.dataModel, 'post').and.callFake(function() {
+            return $q.when({
+                id:'NEWLY-CREATED-DATA-CLASS-ID',
+                dataModel:"DM-ID"
+            });
+        });
+
+        stepScope.model = {
+            createType : 'new',
+            parent:{id:"DM-ID", domainType:"DataModel"},
+            label: "ALabel",
+            description: "ADescription",
+            metadata:[],
+            classifiers:[],
+            minMultiplicity:"1",
+            maxMultiplicity:"-1"
+        };
+        stepScope.$digest();
+        stepScope.save();
+        stepScope.$digest();
+
+        var resource = {
+            label: "ALabel",
+            description: "ADescription",
+            metadata:[],
+            classifiers:[],
+            minMultiplicity:1,
+            maxMultiplicity:-1
+        };
+        expect(resources.dataModel.post).toHaveBeenCalledWith(stepScope.model.parent.id, "dataClasses", {resource:resource});
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('$reloadFoldersTree');
+        expect(messageHandler.showSuccess).toHaveBeenCalledWith('Data Class saved successfully.');
+        expect($state.go).toHaveBeenCalledWith(
+            "appContainer.mainApp.twoSidePanel.catalogue.dataClass",
+            {
+                dataModelId: "DM-ID",
+                dataClassId:undefined,
+                id: 'NEWLY-CREATED-DATA-CLASS-ID'
+            },
+            {reload: true, location: true});
+    });
+
+    it("saveNewDataClass adds a DataClass to a DataClass", function () {
+        spyOn(messageHandler, 'showSuccess').and.returnValue({});
+        spyOn($state, 'go').and.returnValue({});
+        spyOn($rootScope, '$broadcast').and.returnValue({});
+
+        spyOn(resources.dataClass, 'post').and.callFake(function() {
+            return $q.when({
+                id:'NEWLY-CREATED-DATA-CLASS-ID',
+                dataModel:"DM-ID",
+                parentDataClass:"P-DC-ID"
+            });
+        });
+
+        stepScope.model = {
+            createType : 'new',
+            parent:{id:"P-DC-ID", domainType:"DataClass",dataModel:"DM-ID"},
+            label: "ALabel",
+            description: "ADescription",
+            metadata:[],
+            classifiers:[],
+            minMultiplicity:"1",
+            maxMultiplicity:"-1"
+        };
+        stepScope.$digest();
+        stepScope.save();
+        stepScope.$digest();
+
+        var resource = {
+            label: "ALabel",
+            description: "ADescription",
+            metadata:[],
+            classifiers:[],
+            minMultiplicity:1,
+            maxMultiplicity:-1
+        };
+        expect(resources.dataClass.post).toHaveBeenCalledWith(stepScope.model.parent.dataModel, stepScope.model.parent.id,"dataClasses", {resource:resource});
+        expect($rootScope.$broadcast).toHaveBeenCalledWith('$reloadFoldersTree');
+
+        expect(messageHandler.showSuccess).toHaveBeenCalledWith('Data Class saved successfully.');
+        expect($state.go).toHaveBeenCalledWith(
+            "appContainer.mainApp.twoSidePanel.catalogue.dataClass",
+            {
+                dataModelId: "DM-ID",
+                dataClassId: "P-DC-ID",
+                id: 'NEWLY-CREATED-DATA-CLASS-ID'
+            },
+            {reload: true, location: true});
+    });
+
+    it("Failure in save will show proper error message", function () {
+        spyOn(messageHandler, 'showError').and.returnValue({});
+        spyOn($state, 'go').and.returnValue({});
+
+        spyOn(resources.dataModel, 'post').and.callFake(function() {
+            return $q.reject({});
+        });
+
+        //update the fields in the UI
+        stepScope.model = {
+            createType : 'new',
+            parent:{id:"DM-ID", domainType:"DataModel"},
+            label: "ALabel",
+            description: "ADescription",
+            metadata:[],
+            classifiers:[],
+            minMultiplicity:"2",
+            maxMultiplicity:"2"
+        };
+        stepScope.$digest();
+
+        //save button is pressed
+        stepScope.save();
+        stepScope.$digest();
+
+        var resource = {
+            label: "ALabel",
+            description: "ADescription",
+            minMultiplicity:2,
+            maxMultiplicity:2,
+            metadata:[],
+            classifiers:[]
+        };
+        expect(resources.dataModel.post).toHaveBeenCalledWith(stepScope.model.parent.id, "dataClasses", {resource:resource});
+        expect(messageHandler.showError).toHaveBeenCalledWith('There was a problem saving the Data Class.',{});
+        expect($state.go).not.toHaveBeenCalledWith(
+            "appContainer.mainApp.twoSidePanel.catalogue.dataClass",
+            {id: 'NEWLY-CREATED-DATA-CLASS-ID'},
+            {reload: true, location: true});
     });
 
 

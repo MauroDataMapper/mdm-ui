@@ -17,6 +17,7 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
         resources,
         $stateParams,
         $state,
+        messageHandler,
         $httpBackend;
 
 
@@ -36,6 +37,10 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
     beforeEach(angular.mock.module('./modelPath.html'));
     beforeEach(angular.mock.module('./foldersTree2.html'));
 
+    //AS
+    beforeEach(angular.mock.module('./dataSetMetadata.html'));
+    beforeEach(angular.mock.module('./markdownTextArea.html'));
+
 
     beforeEach(inject(function (_$httpBackend_) {
         _$httpBackend_.whenGET('views/home.html').respond(200, '');
@@ -43,14 +48,15 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
     }));
 
 
-    beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _resources_, _$q_, _$stateParams_, _securityHandler_, _$httpBackend_) {
+    beforeEach(inject(function (_$rootScope_, _multiStepForm_, FormStep, _formStepElement_, _$templateCache_, _$window_, $controller, _resources_, _$q_,_$state_, _$stateParams_, _securityHandler_, _$httpBackend_, _messageHandler_) {
 
         //load the template
         var tempHTML = _$templateCache_.get('views/newDataElement/step1.html');
         $rootScope = _$rootScope_;
+        $rootScope.simpleViewSupport = false;
         $q= _$q_;
-
-
+        messageHandler = _messageHandler_;
+        $state = _$state_;
         $stateParams = _$stateParams_;
         $stateParams.parentDataModelId = "DEFAULT-PARENT-DM-ID";
         $stateParams.parentDataClassId = "DEFAULT-PARENT-DC-ID";
@@ -58,6 +64,7 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/classifiers/?&all=true').respond([]);
         _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/dataClasses/DEFAULT-PARENT-DC-ID/').respond({});
 
+        _$httpBackend_.expect("GET", $rootScope.backendURL + '/dataModels/DEFAULT-PARENT-DM-ID/dataTypes').respond({});
 
         spyOn(_securityHandler_, 'isValidSession').and.returnValue($q.when(true));
 
@@ -97,6 +104,7 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
         formStepElement(step, multiStepForm(), $rootScope)
             .then(function (data) {
                 //get step scope
+
                 stepScope = data.scope;
                 //get step element (HTML node)
                 stepElement = data.element;
@@ -189,4 +197,5 @@ describe('Controller: newDataElementCtrl (wizard:Step 1)', function () {
         expect(stepScope.selectedDataElementsStr).toEqual("<div>A2</div>");
     });
 
+    
 });

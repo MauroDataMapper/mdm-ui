@@ -8,7 +8,7 @@ angular.module('directives').directive('moreDescription', function($compile, use
 		},
         templateUrl: './moreDescription.html',
 		link: function(scope, element, attrs){
-			scope.maxLength = 60;
+			scope.maxLength = 100;
 			if(scope.length !== undefined){
                 scope.maxLength = scope.length;
 			}

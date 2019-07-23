@@ -23,8 +23,8 @@ describe('Controller: newDataModelCtrl', function () {
 
 	it('newDataModelCtrl steps are defined properly', function () {
         scope.$digest();
-		//it has 3 steps
-		expect(scope.steps.length).toBe(3,"It should have 3 steps");
+		//it has 2 steps
+		expect(scope.steps.length).toBe(2,"It should have 2 steps");
 		expect(scope.steps[0]).toEqual({
 			templateUrl: '../../../views/newDataModel/step1.html',
 			title: 'Element Details',
@@ -36,11 +36,12 @@ describe('Controller: newDataModelCtrl', function () {
             title: 'Properties',
             controller: 'newDataModelStep2Ctrl'
         });
-		expect(scope.steps[2]).toEqual({
-			templateUrl: '../../../views/newDataModel/step3.html',
-			title: 'Properties',
-			controller: 'newDataModelStep3Ctrl'
-		});
+		//Removed one step -AS
+		// expect(scope.steps[2]).toEqual({
+		// 	templateUrl: '../../../views/newDataModel/step3.html',
+		// 	title: 'Properties',
+		// 	controller: 'newDataModelStep3Ctrl'
+		// });
         expect(resources.folder.get).toHaveBeenCalledWith("Parent-Folder-ID");
     });
 

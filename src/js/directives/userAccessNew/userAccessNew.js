@@ -19,6 +19,7 @@ angular.module('directives').directive('userAccessNew', function () {
                 "Classifier":  {name:"classifier",  message:"Classifier"},
                 "Folder":      {name:"folder",      message:"Folder"},
                 "Terminology": {name:"terminology", message:"Terminology"},
+                "CodeSet":     {name:"codeset",     message:"CodeSet"}
             };
 
             $scope.$watch('parent.id', function (newValue, oldValue, scope) {

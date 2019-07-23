@@ -73,7 +73,7 @@ module.exports = function(config) {
         //how long does Karma wait for a browser to reconnect, 2000 is default
         browserDisconnectTimeout: 5000,
         //how long will Karma wait for a message from a browser before disconnecting from it, 10000 is default
-        browserNoActivityTimeout: 10000,
+      browserNoActivityTimeout: 15000,
         //timeout for capturing a browser, 60000 is default
         captureTimeout: 60000,
 

@@ -53,7 +53,7 @@ describe('Controller: dataModelCtrl', function () {
         scope.$digest();
 
         expect(resources.dataModel.get).toHaveBeenCalledWith(stateParams.id);
-        expect(resources.dataModel.get).toHaveBeenCalledTimes(1);
+        expect(resources.dataModel.get).toHaveBeenCalledTimes(2); // Once for model, once for permissions
         expect(window.document.title).toBe("Data Model");
 
         expect(scope.dataModel).toBeDefined({id:123});

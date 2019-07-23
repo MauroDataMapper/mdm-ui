@@ -30,7 +30,7 @@ describe('Controller: newDataTypeCtrl', function () {
 
 	it('newDataTypeCtrl steps are defined properly', function () {
 		//it has 2 steps
-		expect(scope.steps.length).toBe(3,"It should have 2 steps");
+		expect(scope.steps.length).toBe(2,"It should have 2 steps");
 
         expect(scope.steps[0]).toEqual({
             templateUrl: '../../../views/newDataType/step0.html',
@@ -45,11 +45,12 @@ describe('Controller: newDataTypeCtrl', function () {
 			hasForm: 'true',
 			controller: 'newDataTypeStep1Ctrl'
 		});
-		expect(scope.steps[2]).toEqual({
-			templateUrl: '../../../views/newDataType/step2.html',
-			title: 'Metadata',
-			controller: 'newDataTypeStep2Ctrl'
-		});
+		//Removed one step -AS
+		// expect(scope.steps[2]).toEqual({
+		// 	templateUrl: '../../../views/newDataType/step2.html',
+		// 	title: 'Metadata',
+		// 	controller: 'newDataTypeStep2Ctrl'
+		// });
 	});
 
 	it('newDataTypeCtrl scope is initialized properly', function () {

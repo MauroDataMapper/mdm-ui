@@ -1,0 +1,16 @@
+apply plugin: 'idea'
+idea {
+    module {
+        excludeDirs += file('.idea')
+        excludeDirs += file('.shelf')
+        excludeDirs += file('classes')
+        excludeDirs += file('logs')
+        excludeDirs += file('.ideaDataSources')
+        excludeDirs += file('dataSources')
+    }
+}
+version = file('package.json').text.find(/"version": "(.+)",/) {it[1]}
+
+afterEvaluate {
+    logger.quiet "Project: $name > group: $group, version: $version"
+}

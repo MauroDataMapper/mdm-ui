@@ -1,4 +1,4 @@
-angular.module('controllers').controller('classificationCtrl', function ($scope, $state, $stateParams, resources, $window, $q, elementTypes, userSettingsHandler, stateHandler) {
+angular.module('controllers').controller('classificationCtrl', function ($scope, $state, $stateParams, resources, $window, $q, $rootScope, elementTypes, userSettingsHandler, stateHandler) {
 
         $scope.activeTab = {index:-1};
 
@@ -14,17 +14,27 @@ angular.module('controllers').controller('classificationCtrl', function ($scope,
             $scope.loading = true;
             resources.classifier.get($stateParams.id).then(function (result) {
                 $scope.classifier = result;
+                if($rootScope.isLoggedIn()) {
+                  resources.classifier.get($stateParams.id, 'permissions').then(function(permissions){
+                  for (var attrname in permissions) {
+                    $scope.classifier[attrname] = permissions[attrname];
+                  }
+                })
+              }
+
             });
 
             var promises = [];
             promises.push(resources.classifier.get($stateParams.id, "catalogueItems"));
             promises.push(resources.classifier.get($stateParams.id, "terminologies"));
             promises.push(resources.classifier.get($stateParams.id, "terms"));
+            promises.push(resources.classifier.get($stateParams.id, "codeSets"));
 
             $q.all(promises).then(function (results) {
                 $scope.catalogueItemsCount = results[0].count;
                 $scope.terminologiesCount  = results[1].count;
                 $scope.termsCount  = results[2].count;
+                $scope.codeSetsCount = results[3].count;
 
                 $scope.loading = false;
                 $scope.activeTab = getTabDetail("classifiedElements");
@@ -42,14 +52,20 @@ angular.module('controllers').controller('classificationCtrl', function ($scope,
             if(tabName === "classifiedTerms"){
                 return {index: 2, name:'classifiedTerms'};
             }
+            if(tabName === "classifiedCodeSets"){
+              return {index: 3, name:'classifiedCodeSets'};
+            }
 
             if(tabName === "history"){
-                var index = 3;
+                var index = 4;
                 if($scope.terminologiesCount === 0){
                     index--;
                 }
                 if($scope.termsCount === 0){
                     index--;
+                }
+                if($scope.codeSetsCount === 0){
+                  index--;
                 }
                 return {index: index, name:'history'};
             }

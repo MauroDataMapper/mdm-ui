@@ -12,12 +12,12 @@ angular.module('controllers').controller('newDataTypeCtrl',  function ($scope, $
 				title: 'Data Type Details',
 				hasForm: 'true',
 				controller: 'newDataTypeStep1Ctrl'
-			},
-			{
-				templateUrl: '../../../views/newDataType/step2.html',
-				title: 'Metadata',
-				controller: 'newDataTypeStep2Ctrl'
 			}
+			// {
+			// 	templateUrl: '../../../views/newDataType/step2.html',
+			// 	title: 'Metadata',
+			// 	controller: 'newDataTypeStep2Ctrl'
+			// }
 		];
 
 		$scope.model =  {

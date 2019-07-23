@@ -44,6 +44,8 @@ angular.module('services').provider('elementTypes', function () {
         'Terminology':  {id:"Terminology",link: "terminology", title: 'Terminology', baseTitle: 'Terminology', markdown:"TG", isBase:true},
         'Term':         {id:"Term",       link: "term",        title: 'Term',        baseTitle: 'Term', markdown:"TM",        isBase:true},
 
+        'CodeSet':         {id:"CodeSet",       link: "codeSet",        title: 'CodeSet',        baseTitle: 'CodeSet', markdown:"CT",        isBase:true},
+
 
         'Classifier':    {id:"Classifier",link: "classification", title: 'Classifier', resourceName:'classifier', markdown:"CS",  isBase:true},
 

@@ -19,10 +19,16 @@ angular.module('controllers').controller('folderCtrl', function ($scope, $state,
             $window.document.title = "Folder";
 
             resources.folder.get($stateParams.id).then(function(data){
-                $scope.folder = data;
-                $scope.mcFolderObject = data;
-
-                $scope.activeTab = getTabDetail($stateParams.tabView);
+              $scope.folder = data;
+              $scope.mcFolderObject = data;
+              if($rootScope.isLoggedIn()) {
+                resources.folder.get($stateParams.id, 'permissions').then(function(permissions) {
+                  for (var attrname in permissions) {
+                    $scope.folder[attrname] = permissions[attrname];
+                  }
+                })
+              }
+              $scope.activeTab = getTabDetail($stateParams.tabView);
             });
 		};
 

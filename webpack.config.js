@@ -13,6 +13,7 @@ module.exports = (env, options) => {
 
     return {
         entry: './src/main.ts',
+        devtool: 'source-map',
         output: {
             path: path.join(__dirname, 'dist'),
             filename: '[name].[contenthash].js',

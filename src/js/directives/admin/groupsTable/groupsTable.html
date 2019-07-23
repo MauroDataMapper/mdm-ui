@@ -1,60 +1,35 @@
-<div>
-    <mc-table
-            mc-name="groupsTable"
-            id="groupsTable"
-            mc-record-type="'static'"
-            mc-records="groups"
+<div class="ngTable">
+    <table ng-table="tableParams" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
 
-            mc-static-loading-in-progress="loading"
-            mc-table-handler="mcTableHandler"
-            mc-display-records="mcDisplayRecords"
-            mc-page-sizes="[5,10,15,20]"
-            mc-page-size="5"
-            mc-page-number="1">
-        <div class="mcTableMain">
-            <div class="mcTableTitle">
-                <span class="title">Groups</span>
-                <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
-                    <button type="button" uib-tooltip="Add Group"  class="btn btn-xs btn-default addNewModelButton themeColor" ng-click="add()">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
+            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Name'" filter="{label: 'text'}" sortable="'name'">
+                {{ row.label }}
+            </td>
+            <td header-class="'hidden-xs'" class="hidden-xs col-sm-2 col-md-2 col-lg-2" data-title="'Description'" >
+                {{ row.description }}
+            </td>
+
+            <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="white-space: nowrap">
+                <div style="float: right;margin-bottom: 3px">
+
+
+                    <button type="button"
+                            class="btn btn-default btn-xs"
+                            uib-tooltip="Edit"
+                            ng-click="onEdit(row)">
+                        <i class="fa fa-edit editButton themeColor"></i>
                     </button>
-                </div>
-            </div>
-            <div class="mcTableContainer">
-                <table class="table table-condensed table-bordered mcTable">
-                    <thead>
-                        <tr class="mcTableHeader">
-                            <th style="cursor:pointer;max-width: 30%;width: 30%;" columnName="label" sortable="true" filterable="true">
-                                Name
-                            </th>
-                            <th style="cursor:pointer;max-width: 18%;width: 18%;"  columnName="description">
-                                Description
-                            </th>
-                            <th style="cursor:pointer;max-width: 8%;width: 8%;" >
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="record in mcDisplayRecords">
-                        <td>
-                             {{record.label}}
-                        </td>
-                        <td>
-                            {{record.description}}
-                        </td>
-                        <td style="text-align: center">
-                            <div class="btn-group-xs" style="text-align: center; margin-top: -2px; margin-left: 9px;">
-                                <mc-table-button record="record" index="$index" save="save" delete="delete" validate="validate" cancel-edit="cancelEdit" on-edit="onEdit"></mc-table-button>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="paginationContainer">
-                <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
-            </div>
-        </div>
-    </mc-table>
-</div>
 
+                    <button type="button"
+                            class="btn btn-default btn-xs"
+                            uib-tooltip="Delete"
+                            ng-click="delete(row, $index)">
+                        <i class="fa fa-trash-o mcTableDeleteBtn"></i>
+                    </button>
+
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

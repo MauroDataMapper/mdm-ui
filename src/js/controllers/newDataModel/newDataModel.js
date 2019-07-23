@@ -13,12 +13,12 @@ angular.module('controllers').controller('newDataModelCtrl', function ($scope, $
 				templateUrl: '../../../views/newDataModel/step2.html',
 				title: 'Properties',
 				controller: 'newDataModelStep2Ctrl'
-			},
-            {
-                templateUrl: '../../../views/newDataModel/step3.html',
-                title: 'Properties',
-                controller: 'newDataModelStep3Ctrl'
-            }
+			}
+            // {
+            //     templateUrl: '../../../views/newDataModel/step3.html',
+            //     title: 'Properties',
+            //     controller: 'newDataModelStep3Ctrl'
+            // }
 		];
 		$scope.model = {
             metadata: [],

@@ -28,7 +28,7 @@ describe('Controller: newDataClassCtrl', function () {
 
 	it('newDataClassCtrl steps are defined properly', function () {
 		//it has 2 step
-		expect(scope.steps.length).toBe(3, "It should have 2 steps");
+		expect(scope.steps.length).toBe(2, "It should have 2 steps");
 
         expect(scope.steps[0]).toEqual({
             templateUrl: '../../../views/newDataClass/step0.html',
@@ -43,12 +43,12 @@ describe('Controller: newDataClassCtrl', function () {
 			hasForm: 'true',
 			controller: 'newDataClassStep1Ctrl'
 		});
-
-		expect(scope.steps[2]).toEqual({
-			templateUrl: '../../../views/newDataClass/step2.html',
-			title: 'Properties',
-			controller: 'newDataClassStep2Ctrl'
-		});
+		//Removed one step -AS
+		// expect(scope.steps[2]).toEqual({
+		// 	templateUrl: '../../../views/newDataClass/step2.html',
+		// 	title: 'Properties',
+		// 	controller: 'newDataClassStep2Ctrl'
+		// });
 
 		expect($window.document.title).toBe("New DataClass");
 	});

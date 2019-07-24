@@ -1,6 +1,6 @@
 {
   "name": "MetadataCatalogueUI",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "MetadataCatalogue UI",
   "main": "index.js",
   "scripts": {

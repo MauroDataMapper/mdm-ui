@@ -103,8 +103,8 @@ angular.module('directives').directive('summaryMetadataMap',  function () {
                         dataSetsArray.push({
                             label:row.displayLabel,
                             data: row.data,
-                            backgroundColor: index>=$scope.backgroundColor.length ? null :$scope.backgroundColor[index],
-                            borderColor:     index>=$scope.borderColor[index] ? null : $scope.borderColor[index],
+                            backgroundColor: index>=$scope.backgroundColor.length ? $scope.random_rgba() : $scope.backgroundColor[index],
+                            borderColor:     index>=$scope.borderColor[index] ? $scope.random_rgba() : $scope.borderColor[index],
                             borderWidth: 1,
                         });
                         index++;
@@ -223,8 +223,8 @@ angular.module('directives').directive('summaryMetadataMap',  function () {
                         },
                         tooltips: {
                             callbacks: {
-                                label: function () {
-
+                                label: function (tooltipItem, data) {
+                                    return data.datasets[tooltipItem.datasetIndex].label + " : " + tooltipItem.yLabel
                                 }
                             },
 
@@ -241,6 +241,10 @@ angular.module('directives').directive('summaryMetadataMap',  function () {
                 });
             };
 
+          $scope.random_rgba = function() {
+            var o = Math.round, r = Math.random, s = 255;
+            return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
+          }
         }
     };
 });

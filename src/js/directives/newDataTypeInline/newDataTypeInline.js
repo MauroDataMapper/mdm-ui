@@ -74,6 +74,7 @@ angular.module('directives').directive('newDataTypeInline', function () {
 
                 $scope.onTerminologySelect = function (terminology) {
                     $scope.model.referencedTerminology = terminology;
+                    $scope.model.terminology = terminology;
                 };
 
                 $scope.onEnumListUpdated = function (newEnumList) {

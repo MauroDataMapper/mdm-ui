@@ -107,7 +107,7 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
                 $scope.classifierLoading = false;
             });
         };
-        $scope.loadFolders = function () {
+        $scope.loadFolders = function (noCache) {
             $scope.reloading = true;
 
             var options = {};
@@ -120,7 +120,9 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
                     }
                 };
             }
-
+            if(noCache) {
+              options.queryStringParams.noCache = true;
+            }
             resources.tree.get(null, null, options).then(function (data) {
                 $scope.allModels = {
                     "children": data,
@@ -413,7 +415,7 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
         };
 
         $scope.reloadTree = function () {
-            $scope.loadFolders();
+            $scope.loadFolders(true);
         };
 
 

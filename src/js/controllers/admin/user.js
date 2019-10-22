@@ -24,9 +24,23 @@ angular.module('controllers').controller('userCtrl', function (resources, $scope
             });
         }
         //get all groups
-		resources.userGroup.get().then(function (data) {
-            $scope.allGroups = data;
-		});
+		// resources.userGroup.get().then(function (data) {
+        //     $scope.allGroups = data;
+		// });
+    var limit  =   0;
+    var offset =  0;
+    var options = {
+        pageSize: limit,
+        pageIndex: offset,
+        filters: null,
+        // sortBy: "label",
+        sortType: "asc"
+    };
+    resources.userGroup.get(null, null,options).then(function (data) {
+        $scope.allGroups = data.items;
+    }).catch(function (error) {
+        messageHandler.showError('There was a problem getting the group list.', error);
+    });
 
         $scope.validate = function() {
             var isValid = true;

@@ -276,6 +276,7 @@ describe('Controller: modelsCtrl', function () {
         scope.$digest();
         expect(stateHandler.Go).toHaveBeenCalledWith("DataModel", {
             id: "Model-ID1",
+            edit: false,
             dataModelId: undefined,
             dataClassId: undefined,
             terminologyId: undefined

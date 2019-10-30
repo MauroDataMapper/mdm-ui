@@ -47,11 +47,11 @@ describe('Controller: userCtrl', function () {
 
 	it('will initialize the create user page',  inject(function ($controller) {
 		//initialise the controller
-		initController($controller, []);
+		initController($controller, [null, null, Object({ pageSize: 0, pageIndex: 0, filters: null, sortType: 'asc' })]);
 		scope.$digest();
 		expect(scope.user).toBeDefined();
 		expect(window.document.title).toBe("Admin - Create User");
-        expect(resources.userGroup.get).toHaveBeenCalledWith();
+        expect(resources.userGroup.get).toHaveBeenCalledWith(null, null, Object({ pageSize: 0, pageIndex: 0, filters: null, sortType: 'asc' }));
         expect(resources.userGroup.get).toHaveBeenCalledTimes(1);
 	}));
 
@@ -63,7 +63,7 @@ describe('Controller: userCtrl', function () {
 		initController($controller);
 		scope.$digest();
 
-        expect(resources.userGroup.get).toHaveBeenCalledWith();
+        expect(resources.userGroup.get).toHaveBeenCalledWith(null, null, Object({ pageSize: 0, pageIndex: 0, filters: null, sortType: 'asc' }));
         expect(resources.userGroup.get).toHaveBeenCalledTimes(1);
         expect(resources.catalogueUser.get).toHaveBeenCalledWith($stateParams.id);
         expect(resources.catalogueUser.get).toHaveBeenCalledTimes(1);

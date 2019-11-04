@@ -6,7 +6,56 @@
                     <uib-tabset>
                         <uib-tab index="0" heading="Email">
                             <form name="configForm" ng-submit="submit()">
-                                    <h4>Admin Confirm User Registration Email</h4>
+                                <h4>Site Url</h4>
+                                <table class="table table-bordered table-condensed dataModelDetailTable">
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Site Url
+                                        </th>
+                                        <td>
+                                            <input name="siteUrl" type="text" class="form-control" ng-model="properties['site.url']">
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.fromAddress.$error.required" class="text-warning">
+                                                    Site url required
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <h4>From Address</h4>
+                                <table class="table table-bordered table-condensed dataModelDetailTable">
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Email Address<sup>*</sup>
+                                        </th>
+                                        <td>
+                                            <input name="fromAddress" type="email" class="form-control" ng-model="properties['email.from.address']" required>
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.fromAddress.$error.required" class="text-warning">
+                                                    Email address required
+                                                </small>
+                                                <small ng-show="configForm.fromAddress.$error.email" class="text-warning">
+                                                    Email formatting invalid
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Name<sup>*</sup>
+                                        </th>
+                                        <td>
+                                            <input name="fromName" type="text" class="form-control" ng-model="properties['email.from.name']" required>
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.fromName.$error.required" class="text-warning">
+                                                    Name of sender required
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <h4>Admin Confirm User Registration Email</h4>
                                     <table class="table table-bordered table-condensed dataModelDetailTable">
                                         <tr>
                                             <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
@@ -59,38 +108,6 @@
                                                 <div ng-show="configForm.$dirty && configForm.$invalid">
                                                     <small ng-show="configForm.adminRegisterBody.$error.required" class="text-warning">
                                                         Body content required
-                                                    </small>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <h4>From Address</h4>
-                                    <table class="table table-bordered table-condensed dataModelDetailTable">
-                                        <tr>
-                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-                                                Email Address<sup>*</sup>
-                                            </th>
-                                            <td>
-                                                <input name="fromAddress" type="email" class="form-control" ng-model="properties['email.from.address']" required>
-                                                <div ng-show="configForm.$dirty && configForm.$invalid">
-                                                    <small ng-show="configForm.fromAddress.$error.required" class="text-warning">
-                                                        Email address required
-                                                    </small>
-                                                    <small ng-show="configForm.fromAddress.$error.email" class="text-warning">
-                                                        Email formatting invalid
-                                                    </small>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-                                                Name<sup>*</sup>
-                                            </th>
-                                            <td>
-                                                <input name="fromName" type="text" class="form-control" ng-model="properties['email.from.name']" required>
-                                                <div ng-show="configForm.$dirty && configForm.$invalid">
-                                                    <small ng-show="configForm.fromName.$error.required" class="text-warning">
-                                                        Name of sender required
                                                     </small>
                                                 </div>
                                             </td>
@@ -183,6 +200,68 @@
                                             </td>
                                         </tr>
                                     </table>
+                                <h4>Forgotten Password</h4>
+                                <table class="table table-bordered table-condensed dataModelDetailTable">
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Subject<sup>*</sup>
+                                        </th>
+                                        <td>
+                                            <input name="forgottenPasswordSubject" type="text" class="form-control"
+                                                   ng-model="properties['email.forgotten_password.subject']" required>
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.selfRegisterSubject.$error.required" class="text-warning">
+                                                    Subject content required
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Body<sup>*</sup>
+                                        </th>
+                                        <td>
+                                            <textarea name="forgottenPasswordBody"  rows="9" class="form-control"
+                                                      ng-model="properties['email.forgotten_password.body']" required></textarea>
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.selfRegisterBody.$error.required" class="text-warning">
+                                                    Body content required
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <h4>Reset Password</h4>
+                                <table class="table table-bordered table-condensed dataModelDetailTable">
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Subject<sup>*</sup>
+                                        </th>
+                                        <td>
+                                            <input name="resetPasswordSubject" type="text" class="form-control"
+                                                   ng-model="properties['email.password_reset.subject']" required>
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.selfRegisterSubject.$error.required" class="text-warning">
+                                                    Subject content required
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
+                                            Body<sup>*</sup>
+                                        </th>
+                                        <td>
+                                            <textarea name="resetPasswordBody"  rows="9" class="form-control"
+                                                      ng-model="properties['email.password_reset.body']" required></textarea>
+                                            <div ng-show="configForm.$dirty && configForm.$invalid">
+                                                <small ng-show="configForm.selfRegisterBody.$error.required" class="text-warning">
+                                                    Body content required
+                                                </small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
                                 <p class="text-right" style="margin-top: 15px;">
                                     <button type="submit" class="btn btn-primary"
                                             ng-disabled="configForm.$invalid || same() || saving">

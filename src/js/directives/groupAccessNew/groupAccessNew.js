@@ -28,17 +28,34 @@ angular.module('directives').directive('groupAccessNew', function () {
                 }
             });
 
-            $scope.loadAllGroups = function(){
-                $scope.allGroups = [];
-                securityHandler.isValidSession().then(function (result) {
-                    if(result === false){
-                        return;
-                    }
-                    resources.userGroup.get().then(function (data) {
-                        $scope.allGroups = data;
-                    }).catch(function (error) {
-                        messageHandler.showError('There was a problem getting the group list.', error);
-                    });
+            // $scope.loadAllGroups = function(){
+            //     $scope.allGroups = [];
+            //     securityHandler.isValidSession().then(function (result) {
+            //         if(result === false){
+            //             return;
+            //         }
+            //         resources.userGroup.get().then(function (data) {
+            //             $scope.allGroups = data;
+            //         }).catch(function (error) {
+            //             messageHandler.showError('There was a problem getting the group list.', error);
+            //         });
+            //     });
+            // };
+
+            $scope.loadAllGroups = function (text, offset, limit) {
+                limit  = limit ? limit : 0;
+                offset = offset ? offset : 0;
+                var options = {
+                    pageSize: limit,
+                    pageIndex: offset,
+                    filters: null,
+                   // sortBy: "label",
+                    sortType: "asc"
+                };
+                resources.userGroup.get(null, null,options).then(function (data) {
+                    $scope.allGroups = data.items;
+                }).catch(function (error) {
+                    messageHandler.showError('There was a problem getting the group list.', error);
                 });
             };
 

@@ -139,6 +139,7 @@ angular.module('controllers').controller('modelsCtrl',  function ($scope, $state
         $scope.onNodeClick = function (node) {
             stateHandler.Go(node.domainType, {
                 id: node.id,
+                edit: false,
                 dataModelId: node.dataModel,
                 dataClassId: node.parentDataClass,
                 terminologyId: node.terminology

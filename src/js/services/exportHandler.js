@@ -14,7 +14,7 @@ angular.module('services').factory('exportHandler', function ($q, resources) {
         exportDataModel: function (dataModels, exporter) {
             var deferred = $q.defer();
             resources.dataModel.export(dataModels, exporter, exporter.fileType).then(function (fileBlob) {
-                var label = dataModels.length === 1 ? dataModels[0].label : data_models;
+                var label = dataModels.length === 1 ? dataModels[0].label : "data_model_export";
                 var fileName = createFileName(label, exporter);
                 return deferred.resolve({fileBlob: fileBlob, fileName: fileName});
             }, function (response) {

@@ -1,6 +1,6 @@
 //Production
 window.globalConfig = window.globalConfig || {
-    version: '3.2.1-SNAPSHOT',
+    version: '3.3.0',
     apiEndpoint: 'http://localhost:8080/api',
     HDFLink:'',
     appTitle:'Metadata Catalogue',

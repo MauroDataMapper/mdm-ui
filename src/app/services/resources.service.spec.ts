@@ -194,11 +194,9 @@ describe('ResourcesService', () =>
     it('should PUT to a Folder', async () => testPUTRequest("300", "folder"))
     it('should PUT to a Terminology', async () => testPUTRequest("301", "terminology"))
     it('should PUT to a CatalogueUser', async () => testPUTRequest("302", "catalogueUser"))
-    // stack overflow - TODO Fix it:
     it('should PUT to a CatalogueItem', async () => testPUTRequest("303", "catalogueItem"))
     it('should PUT to a UserGroup', async () => testPUTRequest("304", "userGroup"))
 
     it('should DELETE a Folder', async () => testDELETERequest("400", "folder"))
-    // Fails because no querystring in use - TODO: check this
     it('should DELETE a UserGroup', async () => testDELETERequest("401", "userGroup"))
 });

@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalSettingsService {
   globalSettings = {
-    "appIsEditable": { value: true, access: "public" }, //TODO remove this default, copied from index.js
+    "appIsEditable": { value: true, access: "public" }
   }
   constructor() { }
   getGlobalSettings(val)

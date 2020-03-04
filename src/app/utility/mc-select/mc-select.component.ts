@@ -405,7 +405,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    remove(event, element?) { //TODO CHECK THIS ELEMENT
+    remove(event, element?) { 
         if (this.processing) {
             return;
         }

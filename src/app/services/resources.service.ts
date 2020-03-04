@@ -476,7 +476,7 @@ class CatalogueItem {
         id = !id ? "" : id;
         action = !action ? "" : action + "/";
         childId = !childId ? "" : childId;
-        return this.resourcesService.delete("catalogueItems", id, action + childId, null, null);//TODO check this delete method
+        return this.resourcesService.delete("catalogueItems", id, action + childId, null, null);
     }
 }
 

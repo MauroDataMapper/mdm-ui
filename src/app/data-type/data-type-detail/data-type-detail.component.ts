@@ -21,8 +21,6 @@ export class DataTypeDetailComponent implements OnInit {
   @Input() hideEditButton: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
 
-  deleteInProgress: boolean //TODO
-
   constructor(
     private dialog: MatDialog,
     private sharedService: SharedService,

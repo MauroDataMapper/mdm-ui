@@ -36,7 +36,7 @@ export class LinkSuggestionComponent implements OnInit {
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
-  doNotSuggest: any; //TODO
+  doNotSuggest: any;
 
   model = {
     source: null,

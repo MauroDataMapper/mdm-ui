@@ -5,10 +5,8 @@
         <span *ngIf="!doNotDisplayStatus && i == 0 &&  p.finalised" class="label label-success" style="vertical-align: middle;font-size: 9px;">Finalised</span>
 
         <span [hidden]="!doNotShowParentDataModel && i == 0">
-<!--            <a *ngIf="p.domainType=='DataModel' && showHref" (click)="click($event,p,i)" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>-->
-<!--            <a *ngIf="i >= 1 && showHref"  href="{{p.link}}" (click)="click($event,p,$index)" target="{{targetWindow}}">{{p.label}}</a>-->
-            <a *ngIf="p.domainType=='DataModel' && showHref" (click)="click($event,p,i)" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
-             <a *ngIf="i >= 1 && showHref" (click)="click($event,p,i)" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
+            <a *ngIf="p.domainType=='DataModel' && showHref" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
+             <a *ngIf="i >= 1 && showHref" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
             <a *ngIf="p.domainType=='DataModel' && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
             <a *ngIf="i >= 1 && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
         </span>

@@ -22,7 +22,6 @@ export class NewDataTypeInlineComponent implements OnInit {
 		referencedTerminology: ""
 	}
 
-	childDataClasses:any; // TODO - FIGURE OUT IF NEEDED
 
 	@Input("parent-scope-handler") parentScopeHandler;
 	allDataTypes;

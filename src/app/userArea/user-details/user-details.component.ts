@@ -30,12 +30,13 @@ export class UserDetailsComponent implements OnInit {
 	subscription: Subscription;
 	isWritable: boolean;
 	errorMessage = '';
-	editUsername: any; // TODO - CHECK THIS
+	
 	deleteInProgress: boolean;
 	exporting: boolean;
 
 	@Input('after-save') afterSave: any;
 	@Input() editMode = false;
+	@Input() editUsername: boolean;
 
 	@ViewChildren('editableText') editForm: QueryList<any>;
 

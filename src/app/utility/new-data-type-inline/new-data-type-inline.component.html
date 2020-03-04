@@ -47,7 +47,7 @@
 						<label *ngIf="model.domainType === 'ReferenceType'">Reference *</label>
 						<label *ngIf="model.domainType === 'TerminologyType'">Terminology *</label>
 						<div style="font-weight: normal;font-style: italic;  padding-top: 8px; color: #c7254e;">
-							<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass && childDataClasses != null && childDataClasses.length > 0">
+							<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass">
 								Please select the reference DataClass.
 							</div>
 
@@ -55,7 +55,7 @@
 								There are not any Terminologies available, so you can not define Terminology DataType!
 							</div>
 
-							<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass && childDataClasses != null && childDataClasses.length == 0">
+							<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass">
 								The DataModel does not have any DataClass, so you can not define Reference DataType!
 							</div>
 

@@ -18,6 +18,8 @@ export class DataTypeComponent implements OnInit {
   tabView: any;
   activeTab: any;
   showExtraTabs: boolean;
+  showEditForm = false;
+  editForm = null;
 
   loadingData = false;
 
@@ -99,11 +101,8 @@ getTabDetail = (tabName) => {
     }
   }
 
-  Save = () =>{
-    //TODO
-  }
-
-  openEditForm = () =>{
-    //TODO
+  openEditForm = (formName: any) =>{
+    this.showEditForm = true;
+    this.editForm = formName;
   }
 }

@@ -70,7 +70,7 @@
                             <div *ngIf="!editableForm.visible && !editableForm.deletePending" class="btn-group-xs" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                                 <button matTooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
                                         (click)="editableForm.show();"
-                                        [hidden]="!editableForm.visible || !editableForm.deletePending" [disabled]="deleteInProgress">
+                                        [hidden]="!editableForm.visible || !editableForm.deletePending">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -80,7 +80,7 @@
                                 <button matTooltip="Delete" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
                                         (click)="askToDelete()"
                                         *ngIf="!editableForm.visible && !editableForm.deletePending"
-                                        [disabled]="deleteInProgress" >
+                                         >
                                     <i class="fa fa-trash-o deleteButton" aria-hidden="true"></i>
                                 </button>
                             </div>

@@ -2,7 +2,7 @@
 	<span class="title">
 		Active Sessions
 		<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-		<!--<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>-->
+		<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
 	</span>
 </div>
 <div class="mcTableContainer">
@@ -19,7 +19,8 @@
 			</th>
 			<td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word;">
 				<div>
-					<a href="#" (click)="editUser(record)">{{record.userEmailAddress}}</a>
+					<i class="fa fa-circle onlineUser" aria-hidden="true" title="Online"></i>
+					{{ record.userEmailAddress }}
 				</div>
 			</td>
 		</ng-container>

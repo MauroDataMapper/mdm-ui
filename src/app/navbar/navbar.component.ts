@@ -21,9 +21,8 @@ export class NavbarComponent implements OnInit {
 
     backendURL: any;
     simpleViewSupport: any;
-    current:any; //TODO
+    current:any; 
     HDFLink: any;
-    open:any; //TODO
     sideNav: any;
 
     constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService) { }
@@ -39,6 +38,7 @@ export class NavbarComponent implements OnInit {
         }
         this.backendURL = this.sharedService.backendURL;
         this.HDFLink = this.sharedService.HDFLink;
+        this.current = this.sharedService.current;
     }
 
     openProfile = () => {
@@ -95,14 +95,5 @@ export class NavbarComponent implements OnInit {
 
             }
         });
-    }
-
-    // TODO
-    toggled = (open:any) => {
-
-    }
-
-    register = () => {
-
     }
 }

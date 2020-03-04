@@ -20,7 +20,6 @@ export class ModelManagementComponent implements OnInit {
   reloading = false;
   deleteInProgress = false;
   deleteSuccessMessage: string;
-  inSearchMode: any; //TODO FIX
   folders: any;
 
   constructor(
@@ -238,7 +237,6 @@ export class ModelManagementComponent implements OnInit {
     return promise;
   }
 
-  // TODO: Messages to be set
   askForPermanentDelete() {
     const promise = new Promise((resolve, reject) => {
       if (!this.securityHandler.isAdmin()) {

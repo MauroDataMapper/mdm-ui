@@ -63,7 +63,9 @@ export class AppModule {
 
     this.trans.onStart({}, state => {
       console.log(state);
+      this.sharedService.current = state.$to().name;
       return this.rolesService.hasAccess(state.$to().name);
+    
     });
 
     this.sharedService.handleExpiredSession(true);

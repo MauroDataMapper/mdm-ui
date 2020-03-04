@@ -88,8 +88,8 @@ export class HistoryComponent implements OnInit {
 
             });
         } else {
-            this.resourcesService.dataModel.get(this.parent, 'edits', this.options).subscribe(result => {// TODO Add DataModel.get
-                this.result = result;
+            this.resourcesService.dataModel.get(this.parent, 'edits', this.options).subscribe(result => {
+                this.result = result.body;
             });
 
         }

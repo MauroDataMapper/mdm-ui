@@ -39,6 +39,7 @@ import {TermComponent} from './term/term/term.component';
 import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import {CodeSetMainComponent} from './wizards/codeSet/code-set-main/code-set-main.component';
+import {CodeSetComponent} from "./code-set/code-set/code-set.component";
 
 export const PagesRoutes = {
   states: [
@@ -217,12 +218,12 @@ export const PagesRoutes = {
       params: { tabView: { dynamic: true, value: null, squash: true } }
     },
     {
-      name:'appContainer.mainApp.linkSuggestion',
+      name: 'appContainer.mainApp.linkSuggestion',
       url: '/linkSuggestion/:sourceDMId?&targetDMId&sourceDCId&sourceDEId',
       component: LinkSuggestionComponent
     },
     {
-      name:'appContainer.mainApp.modelsComparison',
+      name: 'appContainer.mainApp.modelsComparison',
       url: '/modelsComparison/:sourceId/:targetId',
       component: ModelComparisonComponent
     },
@@ -230,7 +231,15 @@ export const PagesRoutes = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
       url: '/codeSet/new?parentFolderId',
       component: CodeSetMainComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
+      url: '/codeSet/:id/{tabView:string}',
+      component: CodeSetComponent,
+      params: { tabView: { dynamic: true, value: null, squash: true } }
+
     }
+
 
   ]
 };

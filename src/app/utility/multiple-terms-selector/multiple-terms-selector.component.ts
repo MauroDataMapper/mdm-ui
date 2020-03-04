@@ -11,9 +11,9 @@ import {MatTableDataSource} from "@angular/material/table";
   styleUrls: ['./multiple-terms-selector.component.scss']
 })
 export class MultipleTermsSelectorComponent implements OnInit {
-  pageSize = 40;
+  pageSize: number = 40;
   displayedColumns: string[] = ['label'];
-  hideAddButton = true;
+  @Input() hideAddButton = true;
   selectorSection = {
     terminologies:[],
     selectedTerminology:null,
@@ -32,14 +32,13 @@ export class MultipleTermsSelectorComponent implements OnInit {
   };
   loading = false;
   @Output() onSelectedTermsChange = new EventEmitter<any[]>();
-  onAddButtonClick: any;
+  @Input("on-add-button-click") onAddButtonClick: any;
   dataSource = new MatTableDataSource();
   currentRecord: number;
   totalItemCount: number;
   isProcessing: boolean = false;
   private searchControlInput: ElementRef;
   selectedItems : any;
-  linkType: any;
   //@Input() selectedTerms: any;
   @Input()
   get selectedTerms() {
@@ -258,8 +257,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
   //  if(this.onSelectedTermsChange){
       this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     //}
-    if(this.selectorSection.selectedTermsCount >0)
-      this.hideAddButton = false;
+    // if(this.selectorSection.selectedTermsCount >0)
+    //   this.hideAddButton = false;
    // this.cd.detectChanges();
 
   };

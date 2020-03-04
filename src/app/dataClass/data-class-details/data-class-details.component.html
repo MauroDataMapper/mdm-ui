@@ -1,0 +1,163 @@
+<div>
+    <div class="panel panel-default">
+        <form name="form"
+              onaftersave="onAfterSave()"
+              (ngSubmit)="formBeforeSave()"
+              disable-submit-on-enter>
+            <div class="panel-body panel-table">
+
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
+                        <h4> <span class="xeditableInput">
+                                <div [ngClass]="{ 'has-error': errorMessage != ''}">
+                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20" style="width: 45%"  ></app-inline-text-edit>
+                                <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
+                              <span class="help-block">{{errorMessage}}</span>
+                            </div>
+                            </div>
+                        </span></h4>
+                        <small class="elementDetailMCType">Data Class</small>
+                        <div>
+                            <span *ngIf="result" style="font-size: 11px;font-style: italic" class="dataClassDetailsLastUpdate">Last Update: {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                            <span *ngIf="result && result.finalised && result.dateFinalised" style="font-size: 11px;font-style: italic; margin-left: 10px" class="dataModelDetailsLastUpdate">Finalised On: {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </div>
+                    </div>
+            </div>
+            <table class="table table-condensed dataModelDetailTable">
+                <tbody>
+                <tr>
+                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                    <td>
+                        <div style="width:50%">
+                            <app-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="detailsRowHeader col-md-2">Description</td>
+                    <td class="elementDetailDescription">
+                        <div *ngIf="result">
+                            <markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></markdown-text-area>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Parent Hierarchy</td>
+                    <td *ngIf="result">
+                        <model-path [path]="result.breadcrumbs"></model-path>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="detailsRowHeader  col-md-2">Multiplicity</th>
+                    <td class="dataClassDetailsModelPath">
+
+                       <div *ngIf="!editableForm.visible && result">
+                           <multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity"></multiplicity>
+                        </div> 
+                        <div *ngIf="result">
+                            <div style="float: left;">
+                                <div *ngIf="editableForm.visible" style="padding-left: 8px">Min
+                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" style="width: 45%" size="5" ></app-inline-text-edit>
+                             
+                            </div>
+                                <span *ngIf="!editableForm.visible && (result.minMultiplicity && result.minMultiplicity == 0)">..</span>
+                                <span *ngIf="editableForm.visible" style="padding-right: 10px"></span>
+                            </div>
+
+                            <div style="float: left;margin-right: 13px;">
+                                <div *ngIf="editableForm.visible" style="padding-left: 6px">Max
+                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="max" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20" style="width: 45%" size="5" ></app-inline-text-edit>
+                            </div>
+                            </div>
+                            <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
+                                <span class="help-block">{{error}}</span>
+                            </div>
+
+                            <div style="clear: both;font-size: 11px;font-style: italic;" *ngIf="editableForm.visible" >
+                                Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</td>
+                    <td *ngIf="result">
+                        <app-element-classifications [classifications]="result.classifiers" [editable-form]="editableForm" [element]="result" [property]="'classifiers'"></app-element-classifications>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+
+
+                        <div *ngIf="result" appShowIfRolesWritable [result]="result" style="float: right;margin-bottom: 3px">
+                            <div style="float: right">
+                            <editable-form-buttons [hidden]="editableForm.visible"
+                                                   [on-cancel-edit]="onCancelEdit"
+                                                   [editable]="editableForm"
+                                                   [text-location]="'left'"
+                                                   [hide-delete]="false"
+                                                   [hide-cancel]="false"
+                                                   [hide-edit] = "true"
+                                                   (delete)="delete()"
+                                                   [processing]="deleteInProgress"></editable-form-buttons>
+                            </div>
+                            <div [hidden]="editableForm.visible || editableForm.deletePending"
+                                 class="btn-group-xs" uib-dropdown is-open="false"
+                                 style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                <button id="singleX-button" type="button"
+                                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                        [hidden]="editableForm.visible || editableForm.deletePending"
+                                        [disabled]="deleteInProgress"
+                                        matTooltip="Edit"
+                                        (click)="showForm();"
+                                        uib-dropdown-toggle>
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <editable-form-buttons [hidden]="!editableForm.visible"
+                                                   [on-cancel-edit]="onCancelEdit"
+                                                   [editable]="editableForm"
+                                                   [text-location]="'left'"
+                                                   [hide-delete]="true"
+                                                   [hide-cancel]="false"
+                                                   [processing]="deleteInProgress"></editable-form-buttons>
+                        </div>
+
+
+                        <div matTooltip="Search" class="btn-group-xs" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button class="btn btn-xs btn-default addNewModelButton themeColor" type="button" (click)="toggleShowSearch()" [disabled]="processing">
+                                <i class="fa fa-search themeColor"></i>
+                            </button>
+                        </div>
+
+                        <div style="clear: both;" *ngIf="processing">
+                            <mat-progress-bar
+                                    value="50"
+                                    bufferValue="75"
+                                    color="primary"
+                                    mode="indeterminate">
+                            </mat-progress-bar>
+                        </div>
+                        <div style="text-align: left" *ngIf="exportError">
+                            <div style="padding-top: 25px;">
+                                <div class="alert alert-danger">
+                                    <a class="close" ng-click="resetExportError()" aria-label="close">&times;</a>
+                                    <strong>Error!</strong> {{exportError}}
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </form>
+    </div>
+
+
+
+</div>

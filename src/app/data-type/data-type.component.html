@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+    <div style="width: 100%">
+      <app-data-type-detail
+        *ngIf="dataType"
+        [hideEditButton]="true"
+        [mcDataTypeObject]="dataType"
+        [mcParentDataModel]="dataModel"
+        [afterSave]="Save"
+        [openEditForm]="openEditForm"
+      ></app-data-type-detail>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+    <div
+      style="width: 100%"
+      *ngIf="dataType && dataType.domainType == 'EnumerationType'"
+    >
+      <div style="width:100%;margin-bottom: 45px;">
+        <app-mc-enumeration-list-with-category
+          [parent]="dataType"
+          [type]="'static'"
+          [enumeration-values]="dataType.enumerationValues"
+        ></app-mc-enumeration-list-with-category>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+    <mat-tab-group #tab>
+      <mat-tab label="Properties">
+        <ng-template matTabContent>
+          <div style="width: 100%;">
+            <mc-data-set-metadata
+              *ngIf="dataType"
+              [parent]="dataType"
+              [type]="'dynamic'"
+            ></mc-data-set-metadata>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Data Elements">
+        <ng-template matTabContent>
+          <div style="width: 100%;" *ngIf="dataType">
+          <app-element-child-data-elements-list    [parentDataModel]="dataModel"
+          [parentDataType]="dataType"
+          [type] = "'dynamic'"
+          [loadingData]="loadingData"></app-element-child-data-elements-list>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Comments">
+        <ng-template matTabContent>
+          <div style="width: 100%;">
+            <annotation-list
+              *ngIf="dataType"
+              [parent]="dataType"
+            ></annotation-list>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Links">
+        <ng-template matTabContent>
+          <div style="width: 100%;">
+            <element-link-list
+              *ngIf="dataType"
+              [parent]="dataType"
+            ></element-link-list>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Attachments">
+        <ng-template matTabContent>
+          <div style="width: 100%;">
+            <attachment-list
+              *ngIf="dataType"
+              [parent]="dataType"
+            ></attachment-list>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<nav class="navbar navbar-default themeBackgroundColor themeBackground " style="border: 0;" role="navigation">
+    <div class="themeHeaderBottomBorder">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" (click)="navCollapsed = !navCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" uiSref="appContainer.mainApp.home"><strong>Metadata</strong><span style=" font-weight: 100;">Catalogue</span></a>
+        </div>
+
+        <div class="collapse navbar-collapse themeBackgroundColor" [ngClass]="!navCollapsed && 'in'" *ngIf="isLoggedIn()">
+            <ul class="nav navbar-nav" style="float: right;">
+                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') === -1">
+                    <a ui-sref="appContainer.simpleApp.home">
+                        Simple View
+                    </a>
+                </li>
+                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') !== -1">
+                    <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                        Advanced View
+                    </a>
+                </li>
+                <li [matMenuTriggerFor]="menu" >
+                    <a *ngIf="profile"  uib-dropdown-toggle style="padding-top: 14px  !important;padding-bottom: 9px  !important;">
+                        <div style="height: 100%">
+                            <div style="float: left; padding-right: 5px; cursor: pointer;"
+                                 matTooltip="{{profile.email}}"
+                                 (click)="openProfile()"
+                                 mattTooltipPostion="bottom">
+                                <img class="img-rounded" style="width: 30px; height: auto;" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}">
+                            </div>
+                            <div style="float:right">
+                                <div>{{profile.firstName + " " + profile.lastName}}</div>
+                                <div style="font-style: italic; font-size: 10px;">
+                                    {{profile.role | capitalize}} <i class='fa fa-caret-down' style="float: right;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <mat-menu #menu="matMenu" style="width:100%" yPosition="below">
+                        <a mat-menu-item uiSref="appContainer.userArea.profile" style="text-align: left">
+                            <i class="fa fa-address-card-o"></i> My Profile
+                        </a>
+
+                        <a mat-menu-item uiSref="appContainer.userArea.settings" style="text-align: left">
+                            <i class="fa fa-cog"></i> Preferences
+                        </a>
+
+                        <a mat-menu-item class="btn" (click)="logout()" style="text-align: left">
+                            <i class="fa fa-sign-in"></i> Log out
+                        </a>
+
+                    </mat-menu>
+                </li>
+            </ul>
+        </div>
+
+        <div class="collapse navbar-collapse themeBackgroundColor" [ngClass]="!navCollapsed && 'in'" *ngIf="!isLoggedIn()">
+            <ul class="nav navbar-nav" style="float: right;">
+                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') === -1">
+                    <a uiSref="appContainer.simpleApp.home">
+                        Simple View
+                    </a>
+                </li>
+                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') !== -1">
+                    <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                        Advanced View
+                    </a>
+                </li>
+                <li *ngIf="HDFLink && HDFLink.length>0">
+                    <a href="{{HDFLink}}" uib-dropdown-toggle>
+                        Return to Health Data Finder
+                    </a>
+                </li>
+                <li on-toggle="toggled(open)">
+                    <a class="btn" (click)="login()">
+                        <i class="fa fa-sign-in"></i> Log in
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+</nav>

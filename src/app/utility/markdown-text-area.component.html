@@ -1,0 +1,69 @@
+<div>
+      <div *ngIf="!editableForm">
+        <div>
+            <textarea class="markdownTextArea form-control"
+                      *ngIf="inEditMode"
+                      [(ngModel)]="formData.description"
+                      style="width:99%;"
+                      (keyup)="descriptionKeyUp($event)"
+                      (ngModelChange)="onDescriptionChange()"
+                      #editableTextArea
+                      rows="{{rows ? rows : '10'}}">
+           </textarea>
+        </div>
+        <div style="font-style: italic; cursor: pointer;font-size: 11px; color: #777777;">
+            <div style="float: left; margin-bottom: 10px;" *ngIf="inEditMode">
+                <span>
+                    <input type="checkbox" style="font-style: italic; cursor: pointer;"
+                           [(ngModel)]="formData.showMarkDownPreview"> Show Markdown Preview
+                </span>
+                <span style="padding-left: 10px;"><a (click)="showAddElementToMarkdown()">Add Element</a> </span>
+            </div>
+
+            <div *ngIf="!hideHelpText">
+                <div style="float: right; margin-bottom: 10px;margin-right: 15px;"
+                     *ngIf="inEditMode">
+                    [Alt text](attachment.png)&nbsp;&nbsp;**Strong**&nbsp;&nbsp;#Heading
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;">
+            <span appMarkdown [markdown]="formData.description" *ngIf="(formData.showMarkDownPreview && inEditMode) || (!inEditMode)" makdown></span>
+        </div>
+    </div>
+
+
+    <div *ngIf="editableForm">
+        <div class="xeditableTextArea">
+            <textarea   *ngIf="editableForm.visible"
+                        [(ngModel)]="editableForm[property]"
+                        name="{{property}}"
+                        style="width: 99%;"
+                        rows="{{rows ? rows : '10'}}"
+                        class="form-control"
+                        #editableTextArea
+                        (keyup)="descriptionKeyUp($event)"></textarea>
+           <!-- <inline-editor #editableText *ngIf="editableForm.visible" [(ngModel)]="element[property]" type="textarea" rows="{{rows ? rows : '10'}}" class="form-control" name="{{property}}"></inline-editor>-->
+        </div>
+
+        <div style="font-style: italic; cursor: pointer;font-size: 12px; color: #777777;">
+            <div style="float: left; margin-bottom: 10px;" *ngIf="editableForm.visible">
+                <span>
+                    <input type="checkbox" style="font-style: italic; cursor: pointer;"
+                           [(ngModel)]="formData.showMarkDownPreview" name="showMarkdown"> Show Markdown Preview
+                </span>
+                <span style="padding-left: 10px;"><a (click)="showAddElementToMarkdown()">Add Element</a> </span>
+            </div>
+            <div *ngIf="!hideHelpText">
+                <div style="float: right; margin-bottom: 10px;margin-right: 15px;" *ngIf="inEditMode || editableForm.visible">
+                    <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">GitHub Markdown guide</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="clear: both;">
+            <span appMarkdown [markdown]="editableForm[property]" *ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
+            <span appMarkdown [markdown]="element[property]" *ngIf="!editableForm.visible"></span>
+        </div>
+    </div>
+</div>

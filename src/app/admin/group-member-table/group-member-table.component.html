@@ -1,0 +1,152 @@
+<div class="mcTableMain">
+    <div class="mcTableTitle">
+        <span class="title">Members<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span></span>
+
+        <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parent.editable && !parent.finalised">
+
+        </div>
+    </div>
+    
+    <div class="mcTableContainer">
+        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+            <ng-container matColumnDef="disabled">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                  Status
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    <span *ngIf="!record.isNew && record.disabled" style="font-size:11px;color: #a94442; font-weight: bold;">Disabled</span>
+                    <span *ngIf="!record.isNew && !record.disabled" style="font-size:11px">Active</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="emailAddress">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                    Email
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    <div *ngIf="!record.isNew">
+                        <a uiSref="appContainer.adminArea({ id: record.id })">{{record.emailAddress}}</a>
+                    </div>
+                    <div *ngIf="record.isNew">
+                        <mc-select
+                                [width]="'100%'"
+                                [value-type]="'dynamic'"
+                                [load-dynamic-values]="fetchUser"
+                                [min-input-length]="1"
+                                [record]="record"
+                                [id-property]="'id'"
+                                [display-property]="'emailAddress'"
+                                [search-property]="'emailAddress'"
+                                [(pagination)]="pagination"
+                                (on-select)="onUserSelect">
+                            <div>
+                                <ng-template #lineContent let-item>
+                                    <div>{{item.emailAddress}}</div>
+                                </ng-template>                      
+                            </div>
+                        </mc-select>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                    First Name
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    {{record.firstName}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                    Last Name
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    {{record.lastName}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="organisation">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                    Organisation
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    {{record.organisation}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="userRole">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                    Role
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    {{ROLES[record.userRole]}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="empty">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+            
+                </th>
+                <td mat-cell *matCellDef="let record; let i = index" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    <div *ngIf="parent.createdBy && parent.createdBy.id != record.id">
+                        <div *ngIf="record.isNew">
+                            <button type="button"
+                                    class="btn btn-default btn-xs"
+                                    (click)="cancelEdit(record, i)">
+                                <i class="fa fa-times cancelEditButton"></i>
+                            </button>
+                            <button type="submit"
+                                    class="btn btn-default btn-xs"
+                                    (click)="confirmAddMember(record, i)">
+                                <i class="fa fa-check saveButton"></i>
+                            </button>
+                        </div>
+                        <div *ngIf="!record.isNew">
+                            <button
+                                    *ngIf="!record.deletePending"
+                                    type="button"
+                                    class="btn btn-default btn-xs"
+                                    matTooltip="Remove from Group"
+                                    (click)="removeMember(record)">
+                                <i class="fa fa-trash-o confirmDeleteButton"></i>
+                            </button>
+
+                            <span  *ngIf="record.deletePending"  style="font-size: 11px;">Are you sure?</span>
+                            <!-- Confirm Delete -->
+                            <button type="button"
+                                    *ngIf="record.deletePending"
+                                    class="btn btn-default btn-xs"
+                                    (click)="confirmRemove(record,i)">
+                                <i class="fa fa-check editButton themeColor mcTableApproveBtn"></i>
+                            </button>
+
+                            <!-- Cancel Delete-->
+                            <button type="button"
+                                    *ngIf="record.deletePending"
+                                    class="btn btn-default btn-xs"
+                                    (click)="cancelRemove(record)">
+                                <i class="fa fa-times cancelButton"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div style="font-style: italic;" *ngIf="parent.createdBy && parent.createdBy.id == record.id">
+                        <small>Owner</small>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+
+        </table>
+        
+        <mat-card *ngIf="isLoadingResults"
+                  style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
+            <mat-progress-spinner color="primary"
+                                  mode="indeterminate">
+            </mat-progress-spinner>
+        </mat-card>
+    </div>
+    
+    <div class="d-flex justify-content-between p-2">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
+

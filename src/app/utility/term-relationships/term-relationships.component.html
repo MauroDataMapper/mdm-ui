@@ -1,0 +1,44 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><strong>Relationships</strong></div>
+    <div class="panel-body" style="padding-top: 5px !important;">
+
+        <div style="width: 100%;height: 100%; text-align: center;" class="treeWaitingSpinner" *ngIf="loading">
+            <div style="">
+                <a style="font-size: 75px;" class="themeColor">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </a>
+            </div>
+        </div>
+
+        <div *ngIf="!loading">
+        <div *ngFor="let relationshipType of relationshipTypes" class="row"  ng-style="{'border-top': ($index !== 0 ? '1px solid #DDDDDD' : none) }" >
+            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2" style="font-weight: bold;">
+                {{relationshipType}}
+            </div>
+            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10" style="border-left: 1px solid #DDDDDD;padding:5px;">
+
+                <mc-paged-list [name]="relationshipType"
+                               [mc-title]="relationshipType"
+                               [type]="'static'"
+                               [items]="relationshipTypes"
+                               [page-size]="10">
+
+                    <ng-template #pageListTemplate let-item>
+                        <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
+                            <element-link [element]="item.targetTerm"
+                                          [show-parent-data-model-name]="true"
+                                          [show-link]="true"
+                                          [show-type-title]="true"
+                                          [new-window]="false"></element-link>
+
+                        </div>
+                    </ng-template>
+
+                </mc-paged-list>
+
+            </div>
+        </div>
+        </div>
+
+    </div>
+</div>

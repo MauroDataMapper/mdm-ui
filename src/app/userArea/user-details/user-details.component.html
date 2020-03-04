@@ -1,0 +1,99 @@
+<form editable-form name="form"
+	  onaftersave="onAfterSave()"
+	  (ngSubmit)="formBeforeSave()"
+	  disable-submit-on-enter 
+	  *ngIf="user"
+	  #userDetailsForm="ngForm">
+	<div class="panel-body panel-table" *ngIf="!editUsername">
+		<h4>{{user.emailAddress}}</h4>
+	</div>
+	<table class="table table-bordered table-condensed dataModelDetailTable">
+		<tbody>
+			<tr *ngIf="editUsername">
+				<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Email*</th>
+				<td>
+					<app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.username" [name]="'username'" size="20" [styleCss]="'dataModelDetailsLabel'"  ></app-inline-text-edit>
+				</td>
+			</tr>
+			<tr>
+				<th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2">First Name*</th>
+				<td>		
+					<app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.firstName"  (keyup)="validateInput(this)"  [name]="'firstName'" size="20" [styleCss]="'dataModelDetailsLabel'" name="firstName"  id="firstName" required #firstName="ngModel"></app-inline-text-edit>
+					<div *ngIf="firstName.invalid && editableForm.validationError" [ngClass]="{'has-error': true }">
+						<div *ngIf="firstName.errors.required">
+							<span class="help-block">User "First Name" can not be empty.</span>
+						</div>
+					</div> 
+				</td>
+			</tr>
+			<tr>
+				<th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2">Last Name*</th>
+				<td>
+					<app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.lastName"  (keyup)="validateInput(this)"  [name]="'lastName'" size="20" [styleCss]="'dataModelDetailsLabel'" name="lastName"  id="lastName" required #lastName="ngModel" ></app-inline-text-edit>
+					<div *ngIf="lastName.invalid" [ngClass]="{'has-error': true }">
+						<div *ngIf="lastName.errors.required">
+							<span class="help-block">User "Last Name" can not be empty.</span>
+						</div>
+					</div> 
+				</td>
+			</tr>
+			<tr>
+				<th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2">Organisation</th>
+				<td>
+					<app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.organisation" [name]="'organisation'" size="20" [styleCss]="'dataModelDetailsLabel'" name="organisation" ></app-inline-text-edit>
+				</td>
+			</tr>
+			<tr>
+				<th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2">Role in Organisation</th>
+				<td>
+					<app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.jobTitle" [name]="'jobTitle'" size="20" [styleCss]="'dataModelDetailsLabel'" name="jobTitle" ></app-inline-text-edit>
+				</td>
+			</tr>
+			<tr *ngIf="!public">
+				<th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2">Role</th>
+				<td>
+					<span [innerHTML]="user.userRole"></span>
+				</td>
+			</tr>
+			<tr *ngIf="!public">
+				<th class="detailsRowHeader col-xs-2 col-sm-2 col-md-2">Groups</th>
+				<td>
+					<span *ngFor="let group of user.groups;" title="{{group.description}}">
+						<div class="group">
+							{{group.label}}
+							<span *ngIf="group.description && group.description.length > 0" style="cursor: pointer">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            </span>
+						</div>
+					</span>
+				</td>
+			</tr>
+			<tr *ngIf="!public">
+				<td colspan="2" style="text-align: right;">
+					<div style="float: right; margin-bottom: 3px">
+						<div *ngIf="!isWritable" [hidden]="editableForm.visible || editableForm.deletePending"
+							 class="btn-group-xs" uib-dropdown is-open="false"
+							 style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;">
+							<button id="singleX-button" type="button"
+									class="btn btn-xs dropdown-toggle btn-default themeColor"
+									[hidden]="editableForm.visible || editableForm.deletePending"
+									[disabled]="deleteInProgress || exporting"
+									matTooltip="Edit"
+									(click)="showForm();"
+									uib-dropdown-toggle>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							</button>
+						</div>
+						<editable-form-buttons [hidden]="!editableForm.visible"
+						                       [on-cancel-edit]="onCancelEdit"
+						                       [editable]="editableForm"
+						                       [text-location]="'left'"
+						                       [hide-delete]="true"
+						                       [hide-cancel]="false"
+						                       [processing]="deleteInProgress"></editable-form-buttons>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>

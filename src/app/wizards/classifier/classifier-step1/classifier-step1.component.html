@@ -1,0 +1,30 @@
+<div class="form-group">
+
+
+    <label>Please enter Classifier details:</label>
+    <form #myForm="ngForm" ngNativeValidate>
+
+        <table class="table table-bordered table-condensed dataModelDetailTable" ngModelGroup="model">
+            <tbody>
+
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" name="label" [(ngModel)]="model.label"
+                           required="Name can not be Empty">
+                </td>
+            </tr>
+
+
+            <tr>
+                <th class="detailsRowHeader col-md-2">Description</th>
+                <td>
+                    <textarea type="text" class="form-control" name="description" [(ngModel)]="model.description"></textarea>
+                </td>
+            </tr>
+
+
+            </tbody>
+        </table>
+    </form>
+</div>

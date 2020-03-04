@@ -1,0 +1,43 @@
+<div style="position: relative;width: 100%;">
+
+    <div *ngIf="selectedValue && selectedValue.length>0">
+        <div *ngFor="let element of selectedValue" style="background-color: #f5f5f5; position: relative;display: inline-block;border: 1px solid #DDD;border-radius: 5px; padding: 3px 6px;margin: 2px; ">
+            <span style="padding-right: 20px;">
+                {{getDisplayValue(element, displayProperty)}}
+            </span>
+            <i style="color:#c62828; position: absolute;height: 1px;top: 22%;right:5px;"
+               [ngClass]="{'fa':true,'fa-times':true, 'not-allowed-cursor':processing}" aria-hidden="true"
+               (click)="remove($event, element)"></i>
+        </div>
+    </div>
+
+    <div style="position: relative;">
+        <span [hidden]="!loadingDynamicData" style="position: absolute;cursor: pointer;top: 25%;right: 10px;margin-top: -2px;">
+            <i class="fa fa-refresh fa-spin themeColor" aria-hidden="true"></i>
+        </span>
+
+        <i [hidden]="!(!show && !loadingDynamicData && showCaret)" style="position: absolute;height: 10px;top: 40%;right: 10px;margin-top: -2px;cursor: pointer;" class="fa fa-caret-down mcSelect2" #mcSelect2 aria-hidden="true"></i>
+
+        <i [hidden]="!(!show && selectedValue && !multiSelect)" style="position: absolute;height: 10px;top: 35%;right: 25px;margin-top: -2px;cursor: pointer;" class="fa fa-times mcSelect2Delete" #mcSelect2Delete aria-hidden="true" (click)="remove($event)"></i>
+
+        <input [ngClass]="{ 'extraCssClass':true,  'form-control' :true, 'mcSelectHasError': hasError}"
+               type="text"
+               placeholder="{{defaultPlaceholder}}"
+               [ngStyle]="inputStyle"
+               #input
+               (keyup)="textUpdated()"
+               (keydown)="onInputKeyDown($event)"
+               [(ngModel)]="inputText"
+               [ngModelOptions]='{ debounce: 300 }'
+               autocomplete="off"
+               [disabled]="processing" />
+    </div>
+
+    <div #mcSelectHolder class="mcSelectHolder" id="my" [ngStyle]="holderStyle" (scroll)="onScroll($event)" style="width: 100%" [hidden]="!(show && displayValues && displayValues.length > 0)" >
+       <div *ngFor="let item of displayValues">
+           <div (click)="itemClicked($event,item)" class="mcSelectItem" #mcSelectItem>
+               <ng-container *ngTemplateOutlet="lineContentTmpl, context: { $implicit: item, inputText: inputText }"></ng-container>
+           </div>
+       </div>
+    </div>
+</div>

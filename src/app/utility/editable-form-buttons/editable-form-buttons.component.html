@@ -1,0 +1,63 @@
+<div style="text-align: right">
+    <!-- Edit -->
+    <button type="button"
+            matTooltip="{{displayEditTitle}}"
+            class="btn btn-default btn-xs"
+            [disabled]="processing"
+            *ngIf="!editable.visible && !editable.deletePending && !hideEdit"
+            (click)="editClicked()">
+        <i class="fa fa-pencil-square-o editButton themeColor"></i>
+    </button>
+
+    <!-- Delete -->
+      <button type="button"
+            matTooltip="Delete"
+            class="btn btn-default btn-xs"
+            [disabled]="editable.waiting || processing"
+            *ngIf= "!hideDelete && !editable.deletePending"
+            (click)="deleteClicked()">
+        <i [ngClass]="!displayDeleteIcon ? ['fa','displayDeleteIcon','deleteButton','themeColor']: ['fa','fa-trash-o','deleteButton']"></i>
+    </button>
+
+
+    <div *ngIf="!hideDelete && editable.deletePending">
+
+        <span (show)="textLocation == 'left'" style="font-size: 11px;">Are you sure?</span>
+        <!-- Confirm Delete -->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                (click)="confirmDeleteClicked()">
+            <i class="fa fa-check saveButton"></i>
+        </button>
+
+        <!-- Cancel Delete-->
+        <button type="button"
+                class="btn btn-default btn-xs"
+                (click)="cancelDeleteClicked()">
+            <i class="fa fa-times cancelButton"></i>
+        </button>
+
+        <span [hidden]="textLocation != 'bottom'" style="font-size: 11px;"><br>Are you sure?</span>
+    </div>
+
+
+    <!-- Save -->
+    <button type="submit"
+            class="btn btn-default btn-xs"
+            [disabled]="editable.waiting || editable.validationError"
+            *ngIf="editable.visible"
+            (click)="saveClicked()">
+        <i class="fa fa-check saveButton"></i>
+    </button>
+
+    <!--edit Cancel -->
+    <button type="button"
+            class="btn btn-default btn-xs"
+            [disabled]="editable.waiting || processing"
+            *ngIf="editable.visible && !hideCancel"
+            (click)="cancelEditClicked()">
+        <i class="fa fa-times cancelEditButton themeColor"></i>
+    </button>
+
+
+</div>

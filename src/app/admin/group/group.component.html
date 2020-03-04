@@ -1,0 +1,70 @@
+<div style="margin-top: 10px">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+          <div style="text-align: left;">
+            <form name="editableForm">
+                <table class="table table-bordered table-condensed dataModelDetailTable">
+                    <tbody>
+                        <tr>
+                            <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Name*</td>
+                            <td>
+                                <div class="form-group" [ngClass]="{'has-error':errors && errors['label']}">
+                                    <input type="text" name="label" class="form-control wizardInput" [(ngModel)]="group.label">
+                                    <small  *ngIf="errors && errors['label']" class="errorMessage">{{errors['label']}}</small>
+                                </div>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Description</td>
+                            <td>
+                                <div class="form-group" [ngClass]="{'has-error':errors && errors['description']}">
+                                    <textarea rows="3" name="description" class="form-control" [(ngModel)]="group.description"></textarea>
+                                    <small  *ngIf="errors && errors['description']" class="errorMessage">{{errors['description']}}</small>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: right;">
+                                <div style="float: right;margin-bottom: 3px">
+                                    <button type="button"
+                                            class="btn btn-default btn-xs"
+                                            (click)="cancel()">
+                                        <i class="fa fa-times cancelEditButton"></i>
+                                    </button>
+                                    <button type="submit"
+                                            class="btn btn-default btn-xs"
+                                            (click)="save()">
+                                        <i class="fa fa-check saveButton"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div *ngIf="group && group.id">
+                <mat-tab-group>
+                    <mat-tab label="Members">
+                        <ng-template matTabContent>
+                            <div style="width: 100%;">              
+                           <app-group-member-table [parent]="group" ></app-group-member-table> 
+                           </div>
+                        </ng-template>           
+                    </mat-tab>
+                    <mat-tab label="History">
+                        <ng-template matTabContent>
+                            <div style="width: 100%;">
+                                <app-history [parent]="group" [parentType]="'UserGroup'" ></app-history>
+                            </div>
+                        </ng-template>
+                        </mat-tab>
+                    </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <div style="width: 100%">
+            <app-folder-detail [after-save]="afterSave" [editMode]="editMode"></app-folder-detail>
+        </div>
+
+        <div *ngIf="showSearch">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label>Search</label>
+                    <div style="float:right;">
+                        <button type="button"
+                                class="btn btn-default btn-xs"
+                                (click)="toggleShowSearch()"
+                                aria-hidden="false"
+                                aria-disabled="false" title="close">
+                            <i class="fa fa-times themeColor"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body panel-table">
+                    <app-advanced-search-bar [parent]="result"
+                                             [show-restrict-to]="false"
+                                             [do-not-show-data-model-in-model-path]="false"
+                                             [do-not-display-model-path-status]="false"
+                                             show-domain-types="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
+                    </app-advanced-search-bar>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="showSecuritySection">
+            <mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)">
+                <mat-tab label="User & Group Access">
+                    <div style="width:100%;" ng-if="activeTab.name === 'access' && folder">
+                        <div class="userAccess"
+                             style="margin: 10px 0px 50px 0px">
+                            <app-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></app-share-with>
+                            <div colspan="2">
+                                <div style="margin-top: 10px">
+                                    <app-user-access-new [parent]="'folder'" [parentType]="'Folder'"></app-user-access-new>
+                                </div>
+                                <div style="margin-top: 50px">
+                                    <app-group-access-new [parent]="'folder'" [parentType]="'Folder'"></app-group-access-new>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="History">
+                    <div style="width:100%;" ng-if="activeTab.name === 'history' && folder">
+                        <app-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></app-history>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>

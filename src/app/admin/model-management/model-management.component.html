@@ -1,0 +1,99 @@
+<div style="margin-top: 10px">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+			<h4>Data Models Bulk Delete</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-5 col-md-5 col-xs-12 col-sm-12" style="padding-bottom: 10px;">
+			<div>
+				<span class="badge importFormStep themeBackgroundColor">1</span>
+				<span class="importFormStepTitle">&nbsp;Please select one or more element(s):</span>
+				<div style="margin-top: 10px;">
+					<div class="form-group">
+						<label for="filterElement">Filter elements by type:</label>
+						<select class="form-control" id="filterElement" [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
+							<option value="" selected></option>
+							<option value="dataModel">DataModel</option>
+							<option value="terminology">Terminology</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="filterStatus">Filter element by status:</label>
+						<select class="form-control"
+								id="filterStatus"
+								[disabled]="filterElement === ''"
+								[(ngModel)]="filterStatus"
+								(ngModelChange)="onFilterChange()">
+							<option value="" selected></option>
+							<option value="deleted">Mark as Deleted</option>
+							<option value="documentSuperseded">Document Superseded</option>
+							<option value="modelSuperseded">Model Superseded</option>
+						</select>
+					</div>
+					</div>
+			</div>
+			<div *ngIf="!reloading">
+				<div style="border: 1px solid #ccc;background-color:#FFF; width:100%;z-index: 900; border-radius: 5px;">
+					<div style="width: 100%; height: 400px; overflow-y: auto">
+						<folders-tree-3
+							doNotMakeSelectedBold="true"
+							doNotShowDataClasses="true"
+							doNotShowTerms="true"
+							defaultCheckedMap="true"
+							showCheckboxFor="['DataModel','Terminology']"
+							propagateCheckbox="true"
+							[inSearchMode]="inSearchMode"
+							[node]="folders"
+							tree-name="'folders'"
+							(nodeCheckedEvent)="onNodeChecked($event[0])"></folders-tree-3>
+						<!--accepts="['DataModel','Terminology']"-->
+					</div>
+				</div>
+			</div>
+			<div style="height: 100px" *ngIf="reloading">
+				<div style="width: 100%;height: 100%;" class="treeWaitingSpinner">
+					<div style="position: absolute;top:70%;left:40%;">
+						<a style="font-size: 75px;" class="themeColor">
+							<i class="fa fa-refresh fa-spin"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+			<div *ngIf="selectedElementsCount > 0">
+				<div style="margin-bottom: 10px">
+					<span class="badge importFormStep themeBackgroundColor">2</span>
+					<span class="importFormStepTitle">
+						&nbsp;You can delete the following selected element(s) <strong>{{selectedElementsCount}}</strong> :
+					</span>
+				</div>
+				<div *ngFor="let record of selectedElements">
+					<element-link [show-type-title]="true"
+								  [new-window]="true"
+								  [parent-data-model]="{id:record.dataModel}"
+								  [parent-data-class]="{id:record.dataClass}"
+								  [element]="record"></element-link>
+				</div>
+				<div style="padding-top: 20px;">
+					<button type="button" class="btn btn-default btn-xs" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">
+						<i class="fa fa-trash-o deleteButton"></i> Delete <strong class="deleteButton">Permanently</strong>
+					</button>
+					<button type="button" class="btn btn-default btn-xs" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
+						<i class="fa fa-check deleteButton"></i> Mark as Deleted
+					</button>
+					<span class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
+						<a style="font-size: 14px; text-decoration: none;">
+							<i class="fa fa-refresh fa-spin"></i> Deleting...
+						</a>
+					</span>
+					<div class="alert alert-success" style="margin-top: 10px;" *ngIf="deleteSuccessMessage">
+						{{deleteSuccessMessage}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

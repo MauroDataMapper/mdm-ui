@@ -1,0 +1,77 @@
+<div>
+    <span *ngIf="elementDataType.domainType == 'PrimitiveType'">
+        <a class="dataTypePrimitive" href="{{link}}" [hidden]="hideName"><span [innerHtml]="elementDataType.label"></span></a><span class="dataTypeLabel dataTypePrimitive" [hidden]="hideName">(Primitive)</span>
+    </span>
+
+
+    <span *ngIf="elementDataType.domainType == 'EnumerationType'">
+        <a class="dataTypeEnumeration" href="{{link}}"
+           [hidden]="hideName">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration" [hidden]="hideName">(Enumeration)</span><span *ngIf="!hideEnumList" class="enumCaretShow" style="margin-right: 2px;cursor: pointer; width:40px;" (click)="showEnums()" matTooltip="Show Enumerations">
+            <span class="caret"></span>
+            &nbsp;&nbsp;&nbsp;
+        </span>
+
+        <table class="table table-condensed enumerationKeyValueTable" *ngIf="elementDataType.enumerationValues && !hideEnumList && toggleShowEnums">
+            <thead>
+                <tr>
+                    <th *ngIf="hasCategory">Group</th>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let record of allRecordsWithGroups; let i = index">
+                    <tr *ngIf="!record.isCategoryRow || (record.isCategoryRow && hasCategory)"  [ngClass]="{'moreEnumerationKeyValue': i >= showCount,'hiddenMoreEnumerationKeyValue': i >= showCount}" >
+                        <td style="width: 100%" *ngIf="hasCategory && record.isCategoryRow" [attr.colspan]="(hasCategory && record.isCategoryRow) ? 3 : 1">
+                            <div *ngIf="record.isCategoryRow" style="font-weight: bold; font-style: italic;">
+                                {{record.category}}
+                            </div>
+                            <div *ngIf="!record.category">&nbsp;</div>
+                        </td>
+                        <td *ngIf="hasCategory && !record.isCategoryRow" style="width: 15%">
+                        </td>
+
+                        <td style="width: 30%; word-break: break-all;" class="enumerationKey" *ngIf="!record.isCategoryRow">
+                            <div *ngIf="!record.isCategoryRow">
+                                <span style="margin: 0px !important; width: 100%; padding-left: 2px; word-wrap: break-word; white-space: normal; max-width: 100px; min-width: 50px;" [innerHtml]="record.key"> <!--TODO Add | mchighlighter:$root.searchCriteria-->
+                                </span>
+                            </div>
+                        </td>
+                        <td style="width: 40%; word-break: break-all;" class="enumerationValue" *ngIf="!record.isCategoryRow">
+                            <span style="word-wrap: break-word; white-space: normal; display: block; max-width: 400px;" [innerHtml]="record.value ">
+                            </span>
+                        </td>
+
+                    </tr>
+                </ng-container>
+                <tr *ngIf="showMoreIcon" style="list-style: none;">
+                    <td [attr.colspan]="hasCategory ? 3 : 2">
+                        <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <span class="fa fa-caret-down"></span></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </span>
+    <span *ngIf="elementDataType.domainType == 'ReferenceType'">
+        <span *ngIf="!onlyShowRefDataClass">
+            <div><a href="{{link}}" title="DataType">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Reference)</span></div>
+            <div *ngIf="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span><element-link [element]="elementDataType.referenceClass" [new-window]="newWindow"></element-link>]</span></div>
+        </span>
+        <span *ngIf="onlyShowRefDataClass">
+            <element-link [element]="elementDataType.referenceClass" [new-window]="newWindow"></element-link>
+        </span>
+    </span>
+
+    <span *ngIf="elementDataType.domainType == 'TerminologyType'">
+        <span *ngIf="!onlyShowRefDataClass">
+            <div><a href="{{link}}" title="DataType">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Terminology)</span></div>
+            <div *ngIf="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span><element-link [element]="elementDataType.terminology" [new-window]="newWindow"></element-link>]</span></div>
+        </span>
+        <span *ngIf="onlyShowRefDataClass">
+            <element-link [element]="elementDataType.terminology" [new-window]="newWindow"></element-link>
+        </span>
+    </span>
+
+</div>
+

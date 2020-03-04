@@ -1,0 +1,157 @@
+<div class="mcTableMain">
+	<div class="mcTableTitle">
+		<span class="title">
+			Pending Users<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
+			<!--<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>-->
+		</span>
+	</div>
+	<div class="mcTableContainer">
+		<table mat-table [dataSource]="dataSource" matSort class="table table-condensed table-bordered mcTable">
+			<ng-container matColumnDef="emailAddress">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="emailAddress">
+					<span [hidden]="!hideFilters">Email</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" floatLabel="never">
+							<mat-label>To</mat-label>
+							<input #filters matInput name="emailAddress" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+					<span>{{record.emailAddress}}</span>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="firstName">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="firstName">
+					<span [hidden]="!hideFilters">First Name</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+					<span>{{record.firstName}}</span>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="lastName">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="lastName">
+					<span [hidden]="!hideFilters">Last Name</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" floatLabel="never">
+							<mat-label>Last Name</mat-label>
+							<input #filters matInput name="body" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+					<span>{{record.lastName}}</span>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="organisation">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="organisation">
+					<span [hidden]="!hideFilters">Organisation</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+					<span>{{record.organisation}}</span>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="empty">
+				<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 4%; width: 4%;" columnName="organisation">
+					<span [hidden]="!hideFilters"></span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 4%; width: 4%; text-align: left; word-wrap: break-word;">
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+			<tr mat-row *matRowDef="let record; columns: displayedColumns;" style="height: auto"></tr>
+
+		</table>
+	</div>
+
+	<div class="d-flex justify-content-between p-2">
+		<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+	</div>
+</div>
+
+
+
+<!--<div>
+	<mc-table mc-name="pendingUserTable"
+			  id="pendingUserTable"
+			  mc-record-type="'dynamic'"
+			  mc-fetch-method="pendingUserFetch"
+			  mc-static-loading-in-progress="loading"
+			  mc-table-handler="mcTableHandler"
+			  mc-display-records="mcDisplayRecords"
+			  mc-page-sizes="[5,10,15,20]"
+			  mc-page-size="5"
+			  mc-page-number="1">
+		<div class="mcTableMain">
+			<div class="mcTableTitle">
+				<span class="title">Pending Users</span>
+			</div>
+			<div class="mcTableContainer">
+				<table class="table table-condensed table-bordered mcTable">
+					<thead>
+						<tr class="mcTableHeader">
+							<th style="cursor:pointer;max-width: 12%;width: 12%;" columnName="emailAddress" sortable="true" filterable="true">
+								Email
+							</th>
+							<th style="cursor:pointer;max-width: 26%;width: 26%;" columnName="firstName" sortable="true" filterable="true">
+								First Name
+							</th>
+							<th style="cursor:pointer;max-width: 26%;width: 26%;" columnName="lastName" sortable="true" filterable="true">
+								Last Name
+							</th>
+							<th style="cursor:pointer;max-width: 26%;width: 26%;" columnName="organisation" sortable="true" filterable="true">
+								Organisation
+							</th>
+							<th style="cursor:pointer;max-width: 45px;width: 45px">
+							</th>
+						</tr>
+						<tr class="mcTableFilter">
+							<td style="max-width: 26%;width: 26%;">
+								<input class="form-control input-sm" type="text" autocomplete="off">
+							</td>
+							<td style="max-width: 26%;width: 26%;">
+								<input class="form-control input-sm" type="text" autocomplete="off">
+							</td>
+							<td style="max-width: 26%;width: 26%;">
+								<input class="form-control input-sm" type="text" autocomplete="off">
+							</td>
+							<td style="max-width: 26%;width: 26%;">
+								<input class="form-control input-sm" type="text" autocomplete="off">
+							</td>
+							<td style="max-width: 45px;width: 45px;">
+							</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="record in mcDisplayRecords">
+							<td style="max-width: 12%;width: 12%;text-align: left;word-wrap: break-word;">
+								{{record.emailAddress}}
+							</td>
+							<td style="max-width: 26%;width: 26%;text-align: left;word-wrap: break-word;">
+								{{record.firstName}}
+							</td>
+							<td style="max-width: 26%;width: 26%;text-align: left;word-wrap: break-word;">
+								{{record.lastName}}
+							</td>
+							<td style="max-width: 26%;width: 26%;text-align: left;word-wrap: break-word;">
+								{{record.organisation}}
+							</td>
+							<td style="max-width: 45px;width: 45px;text-align: center;">
+								<div style="text-align: center" ng-if="!record.disabled">
+									<approve-button text-location="bottom"
+													input-element="record"
+													on-confirm-approve="approve($index, record)"
+													on-confirm-reject="reject($index, record)"></approve-button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="paginationContainer">
+				<mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
+			</div>
+		</div>
+	</mc-table>
+</div>-->

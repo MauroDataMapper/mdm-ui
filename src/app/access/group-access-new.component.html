@@ -1,0 +1,105 @@
+<form>
+    <div class="form-group form-inline">
+        <!--        Search: <input class="form-control ml-2" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>-->
+        <!--        <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>-->
+    </div>
+
+    <div class="mcTableMain">
+        <div class="mcTableTitle">
+            <span class="title">Group Access</span>
+            <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{dataSource.data.length}}</span>
+            <div *ngIf="folderResult['editable']" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+            <button type="button"  class="btn btn-default btn-sm" style="float: right;  padding: 0px; margin-right: 10px;" (click)="add()" title="Add"> <i style="width: 20px;" class="fa fa-plus addNewModelButton themeColor"></i></button>
+            </div>
+            </div>
+        <div class="mcTableContainer">
+            <table mat-table [dataSource]="dataSource" matSort class="table table-condensed table-bordered mcTable">
+
+                <ng-container matColumnDef="user">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                        <div *ngIf="!record.inEdit">
+                            {{record.group.label}}
+                        </div>
+
+                        <div *ngIf="record.inEdit">
+                            <div *ngIf="!record.isNew">
+                                {{record.group.label}}
+                            </div>
+                            <div *ngIf="record.isNew">
+                                <mc-select [width]="'100%'"
+                                           [accept-typed-input]="false"
+                                           [value-type]="'static'"
+                                           [default-value]="record.group"
+                                           [static-values]="allGroups"
+                                           [min-input-length]="1"
+                                           [has-error]="record.edit.errors && record.edit.errors['group']"
+                                           [record]="record"
+                                           [id-property]="'id'"
+                                           [display-property]="'label'"
+                                           [search-property]="'label'"
+                                           (on-select)="onGroupSelect($event[0],$event[1])">
+                                    <ng-template #lineContent let-item>
+                                        <div>{{item.label}}</div>
+                                    </ng-template>
+                                </mc-select>
+                                <small *ngIf="record.edit.errors && record.edit.errors['group']" class="errorMessage">{{record.edit.errors['group']}}</small>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="read">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align:  center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                        <span *ngIf="record.readAccess && !record.inEdit">
+                            <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                        </span>
+                        <span *ngIf="record.inEdit">
+                            <input type="checkbox" [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="write">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                        <span *ngIf="record.writeAccess && !record.inEdit">
+                            <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                        </span>
+                        <span *ngIf="record.inEdit">
+                            <input type="checkbox" [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="edit">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                        <div *ngIf="record.isNew">
+                            <div>
+                                <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
+                                    <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
+                                </button>
+                                <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
+                                    <i class="fa fa-times editButton themeColor"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+
+            </table>
+        </div>
+
+
+        <div class="d-flex justify-content-between p-2">
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+
+</form>

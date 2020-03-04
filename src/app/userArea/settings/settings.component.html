@@ -1,0 +1,43 @@
+<div class="heading-container">
+    <p>Preference
+        <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" (click)="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
+    </p>
+</div>
+<form class="mdm--form" name="settingForm" (ngSubmit)="saveSettings()" novalidate enctype="multipart/form-data">
+    <div class="mdm--form-block">
+        <label id="countPerTableLabel">Number of records per table:</label>
+        <mat-radio-group aria-label="countPerTableLabel" name="countPerTable" [(ngModel)]="countPerTable">
+            <mat-radio-button [checked]="countPerTable == 5" [value]="5">5</mat-radio-button>
+            <mat-radio-button [checked]="countPerTable == 10" [value]="10">10</mat-radio-button>
+            <mat-radio-button [checked]="countPerTable == 20" [value]="20">20</mat-radio-button>
+            <mat-radio-button [checked]="countPerTable == 50" [value]="50">50</mat-radio-button>
+        </mat-radio-group>
+    </div>
+
+    <div class="mdm--form-block">
+        <div>
+            <mat-checkbox name="expandMoreDescription" [(ngModel)]="expandMoreDescription" labelPosition="after">
+                Always expand descriptions
+            </mat-checkbox>
+        </div>
+        <div>
+            <small>
+                <more-description
+                    description="If checked, description will be expanded automatically regardless of its characters count.">
+                </more-description>
+            </small>
+        </div>
+    </div>
+    <div class="mdm--form-block">
+        <div>
+            <mat-checkbox name="includeSupersededModels" [(ngModel)]="includeSupersededModels" labelPosition="after">
+                Include Superseded Document Models in Data Model Tree
+            </mat-checkbox>
+        </div>
+    </div>
+    <div>
+        <button mat-flat-button class="custom save-email-config" color="primary">
+            Save preferences
+        </button>
+    </div>
+</form>

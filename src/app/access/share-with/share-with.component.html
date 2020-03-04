@@ -1,0 +1,33 @@
+<div class="userAccess">
+  <div style="margin: 5px 5px 20px 0px">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div style="padding-left: 5px">
+          <strong>Is 'publicly' readable?</strong>
+          <input style="margin-left: 10px;" name="shareReadWithEveryone" type="checkbox" [(ngModel)]="readableByEveryone"  data-md-icheck (change)="shareReadWithEveryoneChanged()"/>
+          <div class="globalAccessText">
+            <i class="fa fa-globe globe themeColor" aria-hidden="true"></i>
+            By making the {{message}} publicly readable, it would be accessible by all registered and
+            non-registered users.
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin: 1px 5px 20px 0px">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div style="padding-left: 5px">
+          <strong>Is readable by 'authenticated' users?</strong>
+          <input style="margin-left: 10px;" name="shareReadWithAuthenticated" type="checkbox" [(ngModel)]="readableByAuthenticated"  data-md-icheck (change)="shareReadWithAuthenticatedChanged()"/>
+          <div class="globalAccessText">
+            <i class="fa fa-globe globe themeColor" aria-hidden="true"></i>
+            By making the {{message}} readable by authenticated users, it would be accessible by all
+            registered users.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

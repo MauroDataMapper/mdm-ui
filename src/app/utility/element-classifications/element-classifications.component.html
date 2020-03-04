@@ -1,0 +1,32 @@
+<div>
+    <div appProperties [classifiers]="editableForm[property]" *ngIf="(!editableForm.visible)">
+        <div *ngFor="let path of classifications">
+            <div style="float: left;">
+                <ul class="breadcrumbClassification">
+                    <li>
+                    <span ng-show="!editable || !editable.$visible">
+                        <a href="{{path.link}}" target="{{target}}" >
+                            <span>{{path.label}} </span>
+                            <i class="fa fa-tags" aria-hidden="false"></i>
+                        </a>
+                 </span>
+<!--                        <span ng-show="editable && editable.$visible">-->
+<!--                        <span>{{::path.label}} </span>-->
+<!--                    </span>-->
+<!--                        <span class="breadcrumbRemoveButton"-->
+<!--                              ng-disabled="editable && editable.$waiting"-->
+<!--                              ng-show="editable && editable.$visible" ng-click="remove($index)">-->
+<!--                            <i class="glyphicon glyphicon-remove"></i>-->
+<!--                    </span>-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="editableForm.visible" style="clear: both;">
+        <mat-select multiple placeholder="Classifications" class="form-control" name="classification" [(ngModel)]="selectedClassification" (ngModelChange)="onModelChanged()">
+            <mat-option *ngFor="let classification of allClassifications" [value]="classification">{{classification.label}}</mat-option>
+        </mat-select>
+
+    </div>
+</div>

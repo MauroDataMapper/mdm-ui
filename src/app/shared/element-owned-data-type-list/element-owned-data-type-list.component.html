@@ -1,0 +1,106 @@
+<div class="mcTableMain">
+    <div class="mcTableTitle">
+        <span class="title">Data Types<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span> <i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+
+        <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parent.editable && !parent.finalised">
+            <data-type-list-buttons
+                [display-records]="records"
+                (delete-rows)="deleteRows()"
+                [delete-in-progress] ="deleteInProgress"
+                [add]="add"></data-type-list-buttons>
+        </div>
+    </div>
+
+    <div class="mcTableContainer">
+        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+            <ng-container matColumnDef="checkbox">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
+                    <input type="checkbox" (change)="onChecked()" [(ngModel)]="checkAllCheckbox" class="checkboxAll" style="cursor:pointer;">
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+                    <input style="cursor:pointer;" type="checkbox" [(ngModel)]="record.checked">
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 15%;width: 15%;" columnName="label">
+                    <span [hidden]="!hideFilters">Name</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" floatLabel="never">
+                            <mat-label>Name</mat-label>
+                            <input #filters matInput name="label" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
+                    <div>
+                        <element-link [element]="record" [parent-data-model]="{id:record.dataModel}"></element-link>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters"  style="cursor:pointer;max-width: 20%;width: 20%;" columnName="description">
+
+                    <span [hidden]="!hideFilters">Description</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" floatLabel="never">
+                            <mat-label>Description</mat-label>
+                            <input #filters matInput name="description" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                    <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
+                        <more-description [description]="record.description"></more-description>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef  mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType" sortable="true" filterable="true">
+                    <span [hidden]="!hideFilters">Type</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" floatLabel="never">
+                            <mat-label>Type</mat-label>
+                            <input #filters matInput name="type" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left;word-wrap: break-word;">
+                    <div style="font-weight: bold;">
+                        {{allDataTypesMap[record.domainType]["displayLabel"]}}
+                    </div>
+                    <div style="width: 100%;">
+                        <element-data-type [element-data-type]="record" [hide-name]="true" [show-ref-data-class]="true" [hide-enum-list]="false"></element-data-type>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="buttons">
+                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 4%;width: 4%"></th>
+                <td mat-cell *matCellDef="let record" style="max-width: 4%;width: 4%;text-align: center;">
+                    <button class="btn btn-xs btn-default addNewModelButton  themeColor ng-click-active"
+                            *ngIf="parentDataModel?.editable"
+                            (click)="openEdit(record)"
+                            type="button" aria-disabled="false">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+
+        </table>
+        
+        <mat-card *ngIf="isLoadingResults"
+                  style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
+            <mat-progress-spinner color="primary"
+                                  mode="indeterminate">
+            </mat-progress-spinner>
+        </mat-card>
+
+    </div>
+
+    <div class="d-flex justify-content-between p-2">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

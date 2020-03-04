@@ -1,0 +1,70 @@
+<div>
+    <div class="container-fluid content" style="padding-left: 75px;">
+        <nav class="main-menu"a>
+            <ul>
+                <li>
+                    <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-table fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Models</span>
+                    </a>
+                </li>
+                <li class="has-subnav">
+                    <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.search">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-search fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Search</span>
+                    </a>
+
+                </li>
+                <li class="has-subnav">
+                    <a uiSref="appContainer.adminArea.home" *ngIf="isAdminUser()">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-user-circle-o fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Admin</span>
+                    </a>
+
+                </li>
+                <li class="has-subnav">
+                    <a uiSref="appContainer.mainApp.about">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-info-circle fa-2x"></i>
+                        </div>
+                        <span class="nav-text">About</span>
+                    </a>
+
+                </li>
+                <li *ngIf="isLoggedOn()">
+                    <a uiSref="appContainer.userArea.profile">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-address-card-o fa-2x"></i>
+                        </div>
+                        <span class="nav-text">My Profile</span>
+                    </a>
+                </li>
+                <li *ngIf="isLoggedOn()">
+                    <a uiSref="appContainer.userArea.settings">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-cog fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Preferences</span>
+                    </a>
+                </li>
+                <li *ngIf="isLoggedOn()">
+                    <a href (click)="logout()">
+                        <div style="width:40%;margin: 0 auto;">
+                            <i class="fa fa-sign-out fa-2x"></i>
+                        </div>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="mainContent" ui-view>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+
+
+<div>
+    <table *ngIf="diffColumnWidth" class="table table-bordered table-condensed" style="table-layout: fixed;width: 100%;">
+        <thead>
+            <th [ngStyle]="{'min-width': '35px', 'width': diffColumnWidth +'px'}"></th>
+            <th style="min-width: 8px;">Namespace</th>
+            <th style="min-width: 8px;">Key</th>
+            <th style="min-width: 8px;">Value</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let metadata of diffs">
+                <td [ngClass]="{'comparisonRow':true, 'deleted':metadata.deleted, 'modified':metadata.modified, 'created':metadata.created}">
+                    <span>&nbsp;&nbsp;&nbsp;</span>
+                </td>
+                <td style="word-break: break-all;">{{metadata.namespace}}</td>
+                <td style="word-break: break-all;">{{metadata.key}}</td>
+                <td style="word-break: break-all;">
+                    <div>{{metadata.value}}</div>
+                    <div><span style="border-bottom: 1px dashed #000;opacity: 0.6;">{{metadata.left}}</span></div>
+                    <div><span style="border-bottom: 1px dashed #000;">{{metadata.right}}</span></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

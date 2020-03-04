@@ -1,0 +1,111 @@
+<div>
+    <div class="row" style="padding-top:5px">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="margin-top:5px">
+            <div style="text-align: left;margin-left: 10px;">
+                <form name="editableForm">
+                    <table class="table table-bordered table-condensed dataModelDetailTable">
+                        <tbody>
+                            <tr>
+                                <td class="col-sx-2 col-sm-2 col-md-2 mcTableTitle" colspan="2">
+                                    <span *ngIf="user.id">Edit User</span>
+                                    <span *ngIf="!user.id">Create User</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Email*</td>
+                                <td>
+                                    <div class="form-group" ng-class="{'has-error':errors && errors['emailAddress']}">
+                                        <input name="emailAddress" type="text" class="form-control wizardInput" [(ngModel)]="user.emailAddress">
+                                        <small  *ngIf="errors && errors['emailAddress']" class="errorMessage">{{errors['emailAddress']}}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">First Name*</td>
+                                <td>
+                                    <div class="form-group" (ngClass)="{'has-error':errors && errors['firstName']}">
+                                        <input  name="firstName" type="text" class="form-control wizardInput" [(ngModel)]="user.firstName">
+                                        <small  *ngIf="errors && errors['firstName']" class="errorMessage">{{errors['firstName']}}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Last Name*</td>
+                                <td>
+                                    <div class="form-group" (ngClass)="{'has-error':errors && errors['lastName']}">
+                                        <input name="lastName" type="text" class="form-control wizardInput" [(ngModel)]="user.lastName">
+                                        <small  *ngIf="errors && errors['lastName']" class="errorMessage">{{errors['lastName']}}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation</td>
+                                <td>
+                                    <div class="form-group" ng-class="{'has-error':errors && errors['organisation']}">
+                                        <input name="organisation" type="text" class="form-control wizardInput" [(ngModel)]="user.organisation">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Role <br>in Organisation</td>
+                                <td>
+                                    <div class="form-group" ng-class="{'has-error':errors && errors['jobTitle']}">
+                                        <input name="jobTitle" type="text" class="form-control wizardInput" [(ngModel)]="user.jobTitle">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Role*</td>
+                                <td>
+                                    <div class="form-group" (ngClass)="{'has-error':errors && errors['userRole']}">
+                                        <select name="userRole" class="form-control wizardInput mcSelect" [(ngModel)]="user.userRole">
+                                            <option *ngFor="let role of roles" (value)="role.value">{{role.text}}</option>
+                                        </select>
+                                        <small  *ngIf="errors && errors['userRole']" class="errorMessage">{{errors['userRole']}}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Groups</td>
+                                <td>
+                                    <mc-select
+                                        [width]="'100%'"
+                                        [multi-select]="true"
+                                        [accept-typed-input]="false"
+                                        [value-type]="'static'"
+                                        [static-values]="allGroups"
+                                        [default-value]="user.groups"
+                                        [id-property]="'id'"
+                                        [display-property]="'label'"
+                                        [search-property]="'label'"
+                                        (on-select)="onGroupSelect">
+                                        <ng-template #lineContent let-item>
+                                            <div>{{item.label}}</div>
+                                        </ng-template>
+                                    </mc-select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: right;">
+                                    <div style="float: right;margin-bottom: 3px">
+                                        <button type="button"
+                                                class="btn btn-default btn-xs"
+                                                (click)="cancel()">
+                                            <i class="fa fa-times cancelEditButton"></i>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-default btn-xs"
+                                                (click)="save()">
+                                            <i class="fa fa-check saveButton"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

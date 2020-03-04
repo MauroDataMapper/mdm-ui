@@ -1,0 +1,61 @@
+<form role='form' (keyup)='$event.keyCode != 13;'>
+    <div class='modal-header'> 
+        <h3 class='modal-title'>Request an account</h3>
+    </div> 
+    <div class='modal-body'> 
+        <div *ngIf='message' class='alert alert-danger'>
+            <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+            {{message}}
+        </div>
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Email address</mat-label>
+            <input required matInput id='email' name='email' [(ngModel)]='email'/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>First name</mat-label>
+            <input required matInput id='firstName' name='firstName' [(ngModel)]='firstName'/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Last name</mat-label>
+            <input required matInput id='lastName' name='lastName' [(ngModel)]='lastName'/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Organisation</mat-label>
+            <input matInput id='organisation' name='organisation' [(ngModel)]='organisation'/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Role in organisation</mat-label>
+            <input matInput id='roleInOrganisation' name='roleInOrganisation' [(ngModel)]='roleInOrganisation'/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Password</mat-label>
+            <mat-pass-toggle-visibility #togglePassword matSuffix ></mat-pass-toggle-visibility>
+            <input autocomplete="new-password" required matInput [type]='togglePassword.type' id='password' name='password' [(ngModel)]='password'/>
+        </mat-form-field>
+        <mat-password-strength
+                [password]='password'
+                class="green"
+                [enableDigitRule]="true"
+                [enableLengthRule]="true"
+                [enableLowerCaseLetterRule]="true"
+                [enableSpecialCharRule]="false"
+                [enableUpperCaseLetterRule]="true"
+        ></mat-password-strength>
+
+        <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Confirm password</mat-label>
+            <mat-pass-toggle-visibility #toggleConfirmPassword matSuffix></mat-pass-toggle-visibility>
+            <input required matInput [type]='toggleConfirmPassword.type' id='confirmPassword' name='confirmPassword' [(ngModel)]='confirmPassword'/>
+        </mat-form-field>
+
+    </div>
+    <div class='modal-footer'> 
+        <button type='button' class='btn btn-success' (click)='register()' [disabled]='disabled()'><span class='glyphicon glyphicon-ok'></span> Register</button>
+        <button class='btn btn-default' (click)='close()'>Cancel</button>
+    </div>
+</form>

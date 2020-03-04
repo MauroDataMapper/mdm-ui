@@ -1,0 +1,167 @@
+<div class="mcTableMain">
+	<div class="mcTableTitle">
+		<span class="title">Users
+			<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
+			<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+
+		<div style="float: right; margin-top: -2px; margin-left: 9px;">
+			<data-type-list-buttons [display-records]="records"
+			                        [show-content-dropdown]="false"
+			                        [show-delete-button]="false"
+									[add]="add"></data-type-list-buttons>
+		</div>
+	</div>
+	<div class="mcTableContainer">
+		<table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+			<ng-container matColumnDef="status">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="cursor: pointer; max-width: 8%; width: 8%;" columnName="status">
+					<span [hidden]="!hideFilters">Status</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
+					<div>
+						<span *ngIf="record.disabled" style="font-size:11px;color: #a94442; font-weight: bold;">Disabled</span>
+						<span *ngIf="!record.disabled" style="font-size:11px">Active</span>
+					</div>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="emailAddress">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; max-width: 30%; width: 30%;" columnName="emailAddress">
+					<span [hidden]="!hideFilters">Email</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" floatLabel="never">
+							<mat-label>Email</mat-label>
+							<input #filters matInput name="emailAddress" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word;">
+					<div>
+						<a href="#" (click)="editUser(record)">{{record.emailAddress}}</a>
+					</div>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="firstName">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="firstName">
+					<span [hidden]="!hideFilters">First Name</span>
+					<div [hidden]="hideFilters" >
+						<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+							<mat-label>First Name</mat-label>
+							<input #filters matInput name="firstName" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+					<div>
+						<a href="#" (click)="editUser(record)">{{record.firstName}}</a>
+					</div>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="lastName">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="lastName">
+					<span [hidden]="!hideFilters">Last Name</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+							<mat-label>Last Name</mat-label>
+							<input #filters matInput name="lastName" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+					<div>
+						{{record.lastName}}
+					</div>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="organisation">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="lastName">
+					<span [hidden]="!hideFilters">Organisation</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+							<mat-label>Organisation</mat-label>
+							<input #filters matInput name="organisation" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word;">
+					<div>
+						{{record.organisation}}
+					</div>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="groups">
+				<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%; color: black; font-weight: 700" columnName="groups">
+					<span [hidden]="!hideFilters">Groups</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+					<div>
+						<span *ngFor="let group of record.groups">
+							<div class="group">
+								<a href="#" (click)="editGroup(group)">{{group.label}}</a>
+							</div>
+						</span>
+					</div>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="userRole">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="userRole" [disabled]="!hideFilters" style="cursor: pointer; max-width: 13%; width: 13%;" columnName="userRole">
+					<span [hidden]="!hideFilters">Role</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 13%; width: 13%; text-align: left; word-wrap: break-word;">
+					<div>
+						{{record.userRole | titlecase }}
+					</div>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="icons">
+				<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;" columnName="icons">
+				</th>
+				<td mat-cell *matCellDef="let record; let i = index" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+					<div style="float: right;margin-bottom: 3px">
+
+						<button type="button" matTooltip="Reset Password" tooltip-class="mcTooltip"
+								class="btn btn-default btn-xs"
+								(click)="resetPassword(record)">
+							<i class="fa fa-key editButton themeColor"></i>
+						</button>
+
+						<button type="button" matTooltip="Edit" tooltip-class="mcTooltip"
+								class="btn btn-default btn-xs"
+								(click)="editUser(record)">
+							<i class="fa fa-edit editButton themeColor"></i>
+						</button>
+
+						<button *ngIf="!record.disabled"
+								type="button" matTooltip="Deactivate" tooltip-class="mcTooltip"
+								class="btn btn-default btn-xs"
+								(click)="toggleDeactivate(record)">
+							<i class="fa fa-ban confirmDeleteButton"></i>
+						</button>
+
+						<button *ngIf="record.disabled"
+								type="button" matTooltip="Activate" tooltip-class="mcTooltip"
+								class="btn btn-default btn-xs"
+								uib-tooltip="Activate"
+								(click)="toggleDeactivate(record)">
+							<i class="fa fa-check saveButton"></i>
+						</button>
+
+
+					</div>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+			<tr mat-row *matRowDef="let record; columns: displayedColumns;" style="height: auto"></tr>
+
+		</table>
+	</div>
+
+	<div class="d-flex justify-content-between p-2">
+		<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+	</div>
+</div>
+
+
+
+

@@ -1,0 +1,105 @@
+<div class="mcTableMain">
+    <div class="mcTableTitle">
+        <span class="title">Comments</span>
+        <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+            <button type="button" matTooltip="Add Comment" class="btn btn-xs btn-default addNewModelButton themeColor" (click)="add()" *ngIf="access && access.canAddAnnotation">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="mcTableContainer">
+        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+            <ng-container matColumnDef="lastUpdated">
+                <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 90%;width: 90%;" columnName="lastUpdated"></th>
+                <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
+                    <div *ngIf="!record.inEdit">
+                        <div class="annotation-item-header">
+                            <profile-picture [user]="record.createdBy"></profile-picture>
+                            <span class="annotation-username">{{record.createdBy.firstName}}&nbsp;{{record.createdBy.lastName}}</span>
+                            <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
+                        </div>
+                        <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
+                        <div style="margin-left: 5px;"><markdown-text-area [description]="record.description" [in-edit-mode]="false" [rows]="'4'"></markdown-text-area></div>
+                        <div>
+                            <button class="btn btn-xs btn-default" (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
+                                <i class="fa fa-comment themeColor"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
+                            </button>
+                        </div>
+                        <div style="padding-top: 5px;">
+                            <div *ngFor="let childAnnotation of record.childAnnotations" [hidden]="!(record.show)">
+                                <div class="annotation-item">
+                                    <div class="annotation-child-item-header">
+                                        <profile-picture [user]="childAnnotation.createdBy"></profile-picture>
+                                        <span class="annotation-username">{{childAnnotation.createdBy.firstName}}&nbsp;{{childAnnotation.createdBy.lastName}}</span>
+                                        <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
+                                        <div style="float: right;margin-right: 5px">
+                                        </div>
+                                    </div>
+                                    <div style="padding:5px 5px 5px 10px;">
+                                        <markdown-text-area [description]="childAnnotation.description" [in-edit-mode]="false" [rows]="'4'"></markdown-text-area>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="annotation-item-bottom-line" *ngIf="access && access.canAddAnnotation">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="annotation-item" *ngIf="record.show && access && access.canAddAnnotation">
+                                <div class="annotation-child-item-header">
+                                    <span *ngIf="currentUser">
+                                        <span class="annotation-username">{{currentUser.firstName}}&nbsp;{{currentUser.lastName}}</span>
+                                    </span>
+                                    <span *ngIf="!currentUser">
+                                        <span class="annotation-username">Guest</span>
+                                    </span>
+
+                                </div>
+                                <div style="padding-left: 10px;">
+                                    <!--<textarea rows="'4'" class="form-control annotation-description" ng-model="record.newChildText"></textarea>-->
+                                    <markdown-text-area #childEditor [(description)]="record.newChildText" [in-edit-mode]="true" [rows]="'4'"></markdown-text-area>
+                                    <div style="margin:3px 0px;">
+                                        <button class="btn btn-xs btn-default" (click)="addChild(record)"
+                                                [disabled]="record.newChildText.length == 0">
+                                            <i class="fa fa-check saveButton"></i>&nbsp;Submit
+                                        </button>
+                                        <button class="btn btn-xs btn-default" (click)="showChildren(record)">
+                                            <i class="fa fa-times"></i>&nbsp;Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="record.inEdit">
+                        <div>
+                            <label>Title * :</label>
+                            <input class="form-control" [(ngModel)]="record.edit.label" autocomplete="off" />
+                        </div>
+                        <div>
+                            <label>Description :</label>
+                            <markdown-text-area [description]="record.edit.description" [in-edit-mode]="true" [rows]="'4'"></markdown-text-area>
+
+                            <!--<textarea rows="'4'" class="form-control annotation-description"-->
+                            <!--ng-model="record.edit.description"></textarea>-->
+                        </div>
+                        <div style="margin-top: 5px;">
+                            <table-buttons [record]="record"
+                                           [index]="i"
+                                           (save)="saveParent($event[0],$event[1])"
+                                           (cancel-edit)="cancelEdit($event[0],$event[1])">
+                            </table-buttons>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+        </table>
+    </div>
+    <div class="d-flex justify-content-between p-2">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

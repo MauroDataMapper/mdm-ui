@@ -1,0 +1,229 @@
+<div class="leftTab">
+    <div class="container-inner">
+        <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa fa-sitemap"></i>&nbsp; Models
+                </ng-template>
+                <div style="margin-top: 2px;">
+                    <div style="position: relative;">
+                        <div style="width: 100%;float: left;">
+                            <div class="input-group">
+                                <input type="text"
+                                       class="form-control input-sm"
+                                       [(ngModel)]="formData.filterCriteria"
+                                       [disabled]="levels.current === 1"
+                                       placeholder="Search for..."
+                                       (keyup)="onSearchInputKeyDown($event)">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-sm themeColor"
+                                            type="button"
+                                            [disabled]="levels.current === 1"
+                                            (click)="search()"
+                                            matTooltip="Search">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                    <button *ngIf="isLoggedIn()"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            [disabled]="levels.current === 1"
+                                            (click)="toggleFilterMenu()"
+                                            matTooltip="Filters">
+                                        <i class="fa fa-filter" [ngClass]="{'themeColor':!showFilters, 'filterIcon':showFilters}"></i>
+                                    </button>
+
+                                    <button *ngIf="isLoggedIn()"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            matTooltip="Refresh"
+                                            [disabled]="levels.current === 1"
+                                            (click)="reloadTree()">
+                                        <i class="fa fa-refresh themeColor" uib-tooltip="Reload Data Models Tree" tooltip-placement="bottom-left"></i>
+                                    </button>
+
+
+                                    <button [appShowIfRoleIsWritable]
+                                            matTooltipPosition="above"
+                                            matTooltip="Export DataModel(s)"
+                                            tooltip-class="mcTooltip"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            (click)="changeState('datamodelsexport')">
+                                        <i class="fa fa-download addNewModelButton themeColor"></i>
+                                    </button>
+
+                                    <button [appShowIfRoleIsWritable]
+                                            matTooltipPosition="above"
+                                            matTooltip="Import a DataModel from JSON, SQL,..."
+                                            tooltip-class="mcTooltip"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            (click)="changeState('import')">
+                                        <i class="fa fa-upload addNewModelButton themeColor"></i>
+                                    </button>
+                                    <button [appShowIfRoleIsWritable]
+                                            matTooltipPosition="above"
+                                            matTooltip="Create a new Folder"
+                                            tooltip-class="mcTooltip"
+                                            class="btn btn-default btn-sm"
+                                            type="button"
+                                            [disabled]="levels.current === 1"
+                                            (click)="onAddFolder()">
+                                        <i class="fa fa-plus addNewModelButton themeColor"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div *ngIf="isLoggedIn() && showFilters"
+                             style="z-index: 100;background-color: #f9f9f9;clear: both; padding: 2px; border: 1px solid #DDD;font-size: 12px; cursor: pointer;position: absolute;top: 28px;width: 100%;">
+                            <div style="padding: 3px;">
+                                <input type="checkbox"
+                                       style="cursor:pointer;"
+                                       name="showSupersededModels"
+                                       (ngModelChange)="toggleFilters('showSupersededModels')"
+                                       [(ngModel)]="showSupersededModels"> Show <strong>Superseded</strong> Data Models
+                            </div>
+                            <div *ngIf="isAdmin" style="padding: 3px;">
+                                <input type="checkbox"
+                                       style="cursor:pointer;"
+                                       name="showDeletedModels"
+                                       (ngModelChange)="toggleFilters('showDeletedModels')"
+                                       [(ngModel)]="showDeletedModels"> Show <strong>Deleted</strong> Data Models
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: scroll">
+
+                    <div style="margin:3px 0px 0px 0px" *ngIf="filteredModels && filteredModels.children && filteredModels.children.length!=0">
+                        <button class="btn btn-default btn-xs"
+                                type="button"
+                                [disabled]="levels.current === 0"
+                                (click)="levels.folders()">
+                            <i class="fa fa-arrow-left themeColor"></i>
+                        </button>
+
+                        <button class="btn btn-default btn-xs"
+                                type="button"
+                                [disabled]="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
+                                (click)="levels.focusedElement()">
+                            <i class="fa fa-arrow-right themeColor"></i>
+                        </button>
+                    </div>
+
+
+
+                    <div *ngIf="filteredModels && !reloading">
+                        <folders-tree-3 [inSearchMode]="inSearchMode"
+                                        [rememberExpandedStates]="true"
+                                        [node]="filteredModels"
+                                        [searchCriteria]="searchText"
+                                        (compareToEvent)="onCompareTo"
+                                        (loadModelsToCompareEvent)="loadModelsToCompare"
+                                        [enableDrag]="true"
+                                        [enableDrop]="true"
+                                        [enableContextMenu]="true"
+                                        (addFolderEvent)="onAddFolder"
+                                        (deleteFolderEvent)="onDeleteFolder"
+                                        (addDataModelEvent)="onAddDataModel"
+                                        (addCodeSetEvent)="onAddCodeSet"
+                                        (addChildDataClassEvent)="onAddChildDataClass"
+                                        (addChildDataElementEvent)="onAddChildDataElement"
+                                        (addChildDataTypeEvent)="onAddChildDataType"
+                                        (nodeDbClickEvent)="onNodeDbClick($event)"
+                                        (nodeClickEvent)="onNodeClick($event)"></folders-tree-3>
+                    </div>
+                    <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" *ngIf="reloading">
+                        <div style="position: absolute;top:30%;left:40%;">
+                            <a style="font-size: 75px;" class="themeColor">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div *ngIf="filteredModels && filteredModels.children && filteredModels.children.length==0">
+                        <div *ngIf="!isLoggedIn()">
+                            <div class="noDataModel">
+                                <div class="title">
+                                    There are no Data Models to display publicly.
+                                </div>
+                                <div class="content">
+                                    * Please login or register to view Data Models.
+                                </div>
+                            </div>
+
+                        </div>
+                        <div *ngIf="isLoggedIn()">
+                            <div class="noDataModel">
+                                <div class="title">
+                                    There are no Data Models to display.
+                                </div>
+                                <div class="content">
+                                    Please ask Administrator (or Data Model owner) to grant you access.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <i class="fa fa-tags"></i>&nbsp; Classifications
+                </ng-template>
+                <div style="margin-top: 2px;">
+                    <div>
+                        <div style="width: 100%; float: left;">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm" [(ngModel)]="formData.ClassificationFilterCriteria" placeholder="Search for..." (ngModelChange)="filterClassifications()">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-sm themeColor" type="button" (click)="filterClassifications()">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                    <button show-if-role-is-writable class="btn btn-default btn-sm" type="button" mattooltip="Create a new Classification" tooltip-class="mcTooltip" (click)="addClassifier()">
+                                        <i class="fa fa-plus addNewModelButton themeColor"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 0px);overflow-y: scroll">
+                    <folders-tree-3 *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></folders-tree-3>
+                    <div *ngIf="allClassifiers && allClassifiers.length==0">
+                        <div *ngIf="!isLoggedIn()">
+                            <div class="noClassification">
+                                <div class="title">
+                                    There are no Classifications to display publicly.
+                                </div>
+                                <div class="content">
+                                    * Please login or register to view Classifications.
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="isLoggedIn()">
+                            <div class="noClassification">
+                                <div class="title">
+                                    There are no Classifications to display.
+                                </div>
+                                <div class="content">
+                                    Please ask Administrator (or Classification owner) to grant you access.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab *ngIf="isLoggedIn()">
+                <ng-template mat-tab-label>
+                    <i class="fa fa-star"></i> &nbsp; Favourite
+                </ng-template>
+                <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: scroll" *ngIf="currentTab === 'favourites'">
+                    <favourites (on-favourite-db-click)="onFavouriteDbClick($event)"
+                                (on-favourite-click)="onFavouriteClick($event)">
+                    </favourites>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

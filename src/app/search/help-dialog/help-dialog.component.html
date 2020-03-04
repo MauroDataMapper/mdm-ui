@@ -1,0 +1,15 @@
+<h1 mat-dialog-title
+    cdkDrag
+    cdkDragRootElement=".cdk-overlay-pane"
+    cdkDragHandle>
+    <div class="ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle themeBackground" style="height: 40px">
+        <span class="ui-dialog-title" style="color: white; vertical-align: middle; font-size: 12pt; padding-left: 20px;">Help</span>
+        <button type="button" class="ui-button ui-corner-all ui-widget ui-button-icon-only ui-dialog-titlebar-close" style="float: right; margin: 5px; padding: 0px 0px; margin-top: 6px; margin-right: 10px;" (click)="closeHelp()" title="Close"><span class="ui-button-icon ui-icon ui-icon-closethick"></span><span class="ui-button-icon-space"> </span>Close</button>
+
+    </div>
+
+</h1>
+<mat-dialog-content style="height: 100%; margin: -5px" >
+    <div><a style='font-weight: bold;' href="{{data.wikiLink}}" target='_blank'>Open in New Window</a></div>
+    <iframe name='helpFrame' id='helpFrame' style='border:0; height: 500px;width: 100%' [src]="data.contentWikiLink"></iframe>
+</mat-dialog-content>

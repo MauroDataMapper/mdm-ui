@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <mat-horizontal-stepper #stepper>
+            <mat-step *ngFor="let stp of steps; let i = index">
+                <ng-template matStepLabel>{{stp.title}}</ng-template>
+                <dcl-wrapper [type]="stp.component" [(step)]="steps[stp]"></dcl-wrapper>
+                <div class="row">
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                        <button class="btn btn-default btn-sm" style="margin-right: 5px" matStepperPrevious>
+                            <span class="fa fa-chevron-left"></span> 
+                             Previous
+                        </button>
+                        <button class="btn btn-default btn-sm" (click)="cancelWizard()">
+                            Cancel
+                        </button>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
+                        <strong>{{(i+1)}} / {{steps.length}}</strong>
+                    </div>
+
+                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
+                        <button class="btn btn-default btn-sm" *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="stp.invalid">
+                            Next  
+                            <span class="fa fa-chevron-right"></span>
+                        </button>
+                        <button class="btn btn-success btn-sm" *ngIf="(i+1) === steps.length" (click)="save()">Submit</button>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+</div>

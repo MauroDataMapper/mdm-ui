@@ -1,0 +1,66 @@
+<div class="form-group">
+    <form #myForm="ngForm" ngNativeValidate>
+        <label>Please enter Code Set details:</label>
+
+        <table class="table table-bordered table-condensed dataModelDetailTable" ngModelGroup="model">
+            <tbody>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Folder *</th>
+                <td>
+                    <element-link
+                            [show-type-title] = "true"
+                            [new-window]="true"
+                            [element]="model.parentFolder"></element-link>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="label" [(ngModel)]="model.label" name="label"
+                           required="Name can not be Empty">
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Author *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="author" [(ngModel)]="model.author" name="author"
+                           required="Author can not be Empty">
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation *</th>
+                <td>
+                    <input type="text" class="form-control wizardInput" id="organisation" [(ngModel)]="model.organisation" name="organisation"
+                           required="Organisation can not be Empty">
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader col-md-2">Description</th>
+                <td>
+                    <textarea type="text" class="form-control" id="description" name="description" [(ngModel)]="model.description"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
+                <td>
+                    <app-element-classifications
+                            name="classifiers"
+                            (classificationsChanged)="model.classifiers = $event"
+                            [editable-form]="{visible :true}"></app-element-classifications>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <label style="margin-top: 20px;">Please add Term(s):</label><span style="font-style: italic; font-size: 12px;margin-left: 3px;">Code Set should have at least one Term *</span>
+
+        <!--        <multiple-terms-selector on-selected-terms-change="onSelectedTermsChange" hide-add-button="true"></multiple-terms-selector>-->
+<multiple-terms-selector  (onSelectedTermsChange)="model.terms = $event"></multiple-terms-selector>
+<!--        <div style="margin-top: 10px;">-->
+<!--            <button type="submit" ng-click="save()" class="btn btn-success" [disabled]="detailForm.$invalid || savingInProgress || model.terms.length === 0">Save</button>-->
+<!--            <button type="reset"  ng-click="cancelWizard()"         class="btn btn-default" ng-disabled="importingInProgress" >Cancel</button>-->
+<!--        </div>-->
+    </form>
+</div>
+
+

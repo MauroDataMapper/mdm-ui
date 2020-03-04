@@ -1,0 +1,50 @@
+<div>
+    <div class="container-fluid content">
+        <div class="row menuTwoSidePanel" style="padding-top: 60px">
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 leftPanel">
+                <div class="leftMenu" style="margin-top: 15px;">
+                    <h4  class="hidden-xs">General</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                                <div>
+                                    <i class="fa fa-home" aria-hidden="true"></i> <span class="hidden-xs">Home</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a uiSref="appContainer.userArea.profile">
+                                <div><i class="fa fa-address-card" aria-hidden="true"></i> <span class="hidden-xs">Profile</span></div>
+                            </a>
+                        </li>
+
+                        <li class="list-group-item">
+                            <a uiSref="appContainer.userArea.settings">
+                                <div><i class="fa fa-cog" aria-hidden="true"></i> <span class="hidden-xs">Preferences</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                    <h4  class="hidden-xs">Security</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a uiSref="appContainer.userArea.changePassword">
+                                <div><i class="fa fa-lock"></i> <span class="hidden-xs">Change Password</span></div>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <a  (click)="logout()">
+                                <div><i class="fa fa-sign-out" aria-hidden="true"></i> <span class="hidden-xs">Log out</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 rightPanel" style="min-height: calc(99vh - 60px);">
+                <div ui-view></div>
+                <div style="position: absolute;bottom: 0;">
+                    <app-footer></app-footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

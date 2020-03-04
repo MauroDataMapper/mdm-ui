@@ -1,0 +1,146 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <div style="width: 100%">
+            <app-data-model-detail [after-save]="afterSave"></app-data-model-detail>
+        </div>
+        <div *ngIf="showSearch">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <label>Search</label>
+                    <div style="float:right;">
+                        <button type="button"
+                                class="btn btn-default btn-xs"
+                                (click)="toggleShowSearch()"
+                                aria-hidden="false"
+                                aria-disabled="false" title="close">
+                            <i class="fa fa-times themeColor"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-body panel-table">
+                    <app-advanced-search-bar [parent]="dataModel"
+                                             [show-restrict-to]="false"
+                                             [do-not-show-data-model-in-model-path]="false"
+                                             [do-not-display-model-path-status]="false"
+                                             show-domain-types="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
+                    </app-advanced-search-bar>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!showSearch">
+        <div *ngIf="dataModel && dataModel.semanticLinks && dataModel.semanticLinks.length > 0">
+            <div class="panel panel-default">
+                <div class="panel-heading"><strong>Links</strong></div>
+                <div class="panel-body" style="padding-top: 5px !important;">
+                    <all-links-in-paged-list [show-loading-spinner]="true"
+                                             [parent]="dataModel"
+                                             [show-description]="true"
+                                             [show-no-links-message]="true"
+                                             [type]="'static'"></all-links-in-paged-list>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div *ngIf="showSecuritySection"  (selectedIndexChange)="tabSelected($event)">
+            <mat-tab-group >
+                <mat-tab select="tabSelected('access')" label="User & Group Access">
+                    <div style="width:100%;">
+                        <div class="userAccess"
+                             style="margin: 10px 0px 50px 0px">
+                            <app-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></app-share-with>
+                            <div colspan="2">
+                                <div style="margin-top: 10px">
+                                    <app-user-access-new [parent]="'folder'" [parentType]="'Folder'"></app-user-access-new>
+                                </div>
+                                <div style="margin-top: 50px">
+                                    <app-group-access-new [parent]="'folder'" [parentType]="'Folder'"></app-group-access-new>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="History">
+                    <div style="width:100%;" ng-if="activeTab.name === 'history' && folder">
+                        <app-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></app-history>
+                    </div>
+                </mat-tab>
+            </mat-tab-group >
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+        <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+            <mat-tab label="Data Classes">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <element-child-data-classes-list *ngIf="dataModel" [parent-data-model]="dataModel" [parent-data-class]="{id:null}" [mc-data-class]="{id:null}" [type]="'dynamic'"></element-child-data-classes-list>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Types">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></element-owned-data-type-list>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Properties">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <mc-data-set-metadata *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mc-data-set-metadata>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Summary">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <summary-metadata-table *ngIf="dataModel" [parent]="dataModel"></summary-metadata-table>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Comments">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <annotation-list *ngIf="dataModel" [parent]="dataModel"></annotation-list>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="History">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <app-history *ngIf="dataModel" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="parentId"></app-history>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Diagram">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                      <app-diagram-tab></app-diagram-tab>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Links">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <element-link-list *ngIf="dataModel" [parent]="dataModel"></element-link-list>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Attachments">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                        <attachment-list *ngIf="dataModel" [parent]="dataModel"></attachment-list>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Dataflow" *ngIf="dataModel && dataModel.type === 'Data Asset'">
+                <ng-template matTabContent>
+                    <div style="width: 100%;">
+                      <!-- TODO -->
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

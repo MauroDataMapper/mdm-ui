@@ -1,0 +1,48 @@
+<div style="padding: 5px 2px;">
+    <div class="input-group">
+        <input type="text"
+               class="form-control input-sm"
+               [(ngModel)]="formData.filterCriteria"
+               placeholder="Search for..."
+               (keyup)="onSearchInputKeyDown($event)">
+        <span class="input-group-btn">
+            <button class="btn btn-default btn-sm themeColor"
+                    type="button"
+                    (click)="search()">
+                <i class="glyphicon glyphicon-search"></i>
+            </button>
+        </span>
+    </div>
+    <ul class="favourites" style="padding: 5px;">
+        <li class="favourites" *ngFor="let favourite of favourites">
+            <element-icon [element]="favourite" ></element-icon>
+            <span
+                (contextmenu)="rightClick($event,favourite)"
+                (click)='nodeClick($event, favourite)'
+                (dblclick)='nodeDbClick($event, favourite)'
+                [ngClass]="{'nodeLabel favourites':true, 'deleted':favourite.deleted, 'selected':favourite.selected, 'supersededByItem':favourite.superseded}"
+                [innerHTML]="favourite.label | mchighlighter:formData.filterCriteria">
+            </span>
+        </li>
+    </ul>
+    <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" *ngIf="reloading">
+        <div style="position: absolute;top:30%;left:40%;">
+            <a style="font-size: 75px;" class="themeColor">
+                <i class="fa fa-refresh fa-spin"></i>
+            </a>
+        </div>
+    </div>
+    <div *ngIf="favourites && favourites.length ===0 && !reloading" class="noFavourites">
+        <div class="title">You don't currently have any favourite Data Models.</div>
+        <div class="content">* To add a favourite, click on the star beside its name in the details panel, or right-click on the model in Models tree view.</div>
+    </div>
+</div>
+<div style="visibility: hidden; position: fixed"
+     [style.left]="contextMenuPosition.x"
+     [style.top]="contextMenuPosition.y"
+     [matMenuTriggerFor]="contextMenu">
+</div>
+
+<mat-menu #contextMenu="matMenu">
+    <button *ngFor="let item of menuOptions" (click)="item.action()" mat-menu-item>{{ item.name }}</button>
+</mat-menu>

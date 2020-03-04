@@ -1,0 +1,10 @@
+<a *ngIf="showHref && showLink" tooltip-enable="element.documentationVersion" matTooltip="{{versionNumber}}" [href]="!disableLink ? getLinkUrl() : null"  target="{{openLinkLocation}}">
+    <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
+    <span [innerHtml]="label"></span>
+</a>
+<a *ngIf="!showHref && showLink" tooltip-enable="element.documentationVersion" aria-hidden="false" matTooltip="{{versionNumber}}" target="{{openLinkLocation}}">
+    <!-- <span [innerHtml]="label | mchighlighter:searchCriteria:!searchExactMatch"></span>-->
+    <span [innerHtml]="label"></span>
+</a>
+<span *ngIf="showTypeTitle" class="MCElementType">{{elementTypeTitle}}</span>
+

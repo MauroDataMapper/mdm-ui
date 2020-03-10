@@ -9,81 +9,76 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-	selector: 'app-modules',
-	templateUrl: './modules.component.html',
-	styleUrls: ['./modules.component.sass']
+  selector: 'app-modules',
+  templateUrl: './modules.component.html',
+  styleUrls: ['./modules.component.sass']
 })
 export class ModulesComponent implements OnInit {
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
+  activeTab: any;
+  records: any[] = [];
+  displayedColumns = ['name', 'version'];
 
-	@ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-	@ViewChild(MatSort, { static: false }) sort: MatSort;
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  appVersion: string;
 
-	activeTab: any;
-	records: any[] = [];
-	displayedColumns = ['name', 'version'];
+  totalItemCount: number;
 
-	appVersion: string;
+  hideFilters = true;
 
-	totalItemCount: number;
+  dataSource = new MatTableDataSource<any>();
 
-	hideFilters = true;
+  constructor(
+    private messageHandler: MessageHandlerService,
+    private resourcesService: ResourcesService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private shared: SharedService
+  ) {}
 
-	dataSource = new MatTableDataSource<any>();
+  ngOnInit() {
+    this.appVersion = this.shared.appVersion;
 
-	constructor(private messageHandler: MessageHandlerService,
-		           private resourcesService: ResourcesService,
-		           private stateService: StateService,
-		           private stateHandler: StateHandlerService,
-		           private shared: SharedService) { }
+    if (this.sort) {
+      this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    }
 
-	ngOnInit() {
+    this.modulesFetch();
+  }
 
-		this.appVersion = this.shared.appVersion;
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
 
-		if (this.sort) {
-			this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-		}
+  applyFilter = () => {};
 
+  modulesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+    const options = {
+      pageSize,
+      pageIndex,
+      filters,
+      sortBy: 'name',
+      sortType: 'asc'
+    };
 
-		this.modulesFetch();
-	}
+    this.resourcesService.admin.get('modules', options).subscribe(resp => {
+      this.records = resp.body;
 
-	ngAfterViewInit() {
+      this.records.push({
+        id: '0',
+        name: 'UI',
+        version: this.appVersion,
+        isUI: true
+      });
 
-		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
-	}
-
-	applyFilter = () =>
-	{
-		
-	}
-
-	modulesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-
-		let options = {
-			pageSize,
-			pageIndex,
-			filters,
-			sortBy: 'name',
-			sortType: 'asc'
-		};
-
-		this.resourcesService.admin.get('modules', options).subscribe(resp => {
-
-			this.records = resp.body;
-
-			this.records.push({ id: '0', name: 'UI', version: this.appVersion, isUI: true });
-
-			this.totalItemCount = this.records.length;
-			this.dataSource.data = this.records;
-
-		}),
-			(err) => {
-
-				this.messageHandler.showError('There was a problem loading the modules.', err);
-			};
-	}
+      this.totalItemCount = this.records.length;
+      this.dataSource.data = this.records;
+    }),
+      err => {
+        this.messageHandler.showError('There was a problem loading the modules.', err );
+      }
+  }
 }

@@ -1,26 +1,23 @@
-import { Component, OnInit } from "@angular/core";
-import { Title } from "@angular/platform-browser";
-import { StateHandlerService } from "../../services/handlers/state-handler.service";
-import { ResourcesService } from "../../services/resources.service";
-import { any, StateService } from "@uirouter/core";
-import { MessageHandlerService } from "../../services/utility/message-handler.service";
-import { McSelectPagination } from "../../utility/mc-select/mc-select.component";
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { ResourcesService } from '../../services/resources.service';
+import { StateService } from '@uirouter/core';
+import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
-  selector: "app-group",
-  templateUrl: "./group.component.html",
-  styleUrls: ["./group.component.scss"]
+  selector: 'app-group',
+  templateUrl: './group.component.html',
+  styleUrls: ['./group.component.scss']
 })
 export class GroupComponent implements OnInit {
   errors: any;
   group = {
-    label: "",
-    description: "",
+    label: '',
+    description: '',
     groupMembers: {},
-    id: ""
+    id: ''
   };
-
-
 
   constructor(
     private messageHandler: MessageHandlerService,
@@ -31,75 +28,72 @@ export class GroupComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.title.setTitle("Admin - Group");
-
-    debugger;
-
+    this.title.setTitle('Admin - Group');
     const id = this.stateService.params.id;
     if (id) {
       this.resources.userGroup.get(id).subscribe(result => {
-       const group = result.body;
+        const group = result.body;
         this.group = group;
         this.group.groupMembers = group.groupMembers || [];
-        this.title.setTitle("Admin - Edit Group");
+        this.title.setTitle('Admin - Edit Group');
       });
     }
   }
 
   validate = () => {
-    var isValid = true;
+    let isValid = true;
     this.errors = [];
     if (this.group.label.trim().length === 0) {
-      this.errors["label"] = "Name can't be empty!";
+      this.errors.label = 'Name can\'t be empty!';
       isValid = false;
     }
     if (isValid) {
       delete this.errors;
     }
     return isValid;
-  };
+  }
 
   save = () => {
     if (!this.validate()) {
       return;
     }
-    //it's in edit mode
+    // it's in edit mode
     if (this.group.id) {
-      //it's in edit mode (update)
+      // it's in edit mode (update)
       this.resources.userGroup
         .put(this.group.id, null, { resource: this.group })
         .subscribe(
           () => {
-            this.messageHandler.showSuccess("Group updated successfully.");
-            this.stateHandler.Go("admin.groups");
+            this.messageHandler.showSuccess('Group updated successfully.');
+            this.stateHandler.Go('admin.groups');
           },
           error => {
             this.messageHandler.showError(
-              "There was a problem updating the group.",
+              'There was a problem updating the group.',
               error
             );
           }
         );
     } else {
-      //it's in new mode (create)
+      // it's in new mode (create)
       this.resources.userGroup
         .post(null, null, { resource: this.group })
         .subscribe(
           () => {
-            this.messageHandler.showSuccess("Group saved successfully.");
-            this.stateHandler.Go("admin.groups");
+            this.messageHandler.showSuccess('Group saved successfully.');
+            this.stateHandler.Go('admin.groups');
           },
           error => {
             this.messageHandler.showError(
-              "There was a problem saving the group.",
+              'There was a problem saving the group.',
               error
             );
           }
         );
     }
-  };
+  }
 
   cancel = () => {
-    this.stateHandler.Go("admin.groups");
-  };
+    this.stateHandler.Go('admin.groups');
+  }
 }

@@ -21,6 +21,8 @@ export class DataTypeDetailComponent implements OnInit {
   @Input() hideEditButton: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
 
+  deleteInProgress: boolean; //TODO
+
   constructor(
     private dialog: MatDialog,
     private sharedService: SharedService,
@@ -79,8 +81,7 @@ export class DataTypeDetailComponent implements OnInit {
   }
 
   formBeforeSave = () => {
-
-    let resource = {
+    const resource = {
       id: this.mcDataTypeObject.id,
       label: this.editableForm.label,
       description: this.editableForm.description,
@@ -114,7 +115,6 @@ export class DataTypeDetailComponent implements OnInit {
       });
 
     this.changeRef.detectChanges();
-
   }
 
   openEditClicked = formName => {
@@ -167,7 +167,7 @@ export class DataTypeDetailComponent implements OnInit {
       )
       .subscribe(res => {
         const result = res.body;
-        let dataElementsCount = result.count;
+        const dataElementsCount = result.count;
 
         let message =
           'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Data Type?';
@@ -178,7 +178,7 @@ export class DataTypeDetailComponent implements OnInit {
             ')</strong> will be deleted <span class=\'errorMessage\'>permanently</span> as well:<br>';
 
           for (let i = 0; i < Math.min(5, result.items.length); i++) {
-            let link = this.elementTypes.getLinkUrl(result.items[i]);
+            const link = this.elementTypes.getLinkUrl(result.items[i]);
 
             message +=
               '<a target=\'_blank\' href=\'' +

@@ -13,10 +13,10 @@
             <small class="elementDetailMCType">Data Type</small><br>
             <span style="font-size: 11px;font-style: italic" class="dataTypeDetailsLastUpdate">Last Update: {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
         </div>
-        <table class="table table-bordered table-condensed dataTypeDetailTable">
+        <table class="table table-bordered">
             <tbody>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                    <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%">
                             <app-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
@@ -24,7 +24,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader  col-md-2">Description</th>
+                    <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
 
                         <markdown-text-area [editable-form]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></markdown-text-area>
@@ -32,13 +32,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader  col-md-2">DataModel</th>
+                    <th class="detailsRowHeader">DataModel</th>
                     <td class="elementDetailDescription">
                         <model-path [path]="mcDataTypeObject.breadcrumbs"></model-path>
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader  col-md-2">Type</th>
+                    <th class="detailsRowHeader">Type</th>
                     <td>
                         {{allDataTypesMap[mcDataTypeObject.domainType]["displayLabel"]}}
                         <element-data-type [element-data-type]="mcDataTypeObject"
@@ -49,7 +49,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
+                    <th class="detailsRowHeader">Classifications</th>
                     <td>
                         <app-element-classifications [(classifications)]="mcDataTypeObject.classifiers" [editable-form]="editableForm"></app-element-classifications>
                     </td>
@@ -68,28 +68,26 @@
                         </div>
                         <div style="float: right">
                             <div *ngIf="!editableForm.visible && !editableForm.deletePending" class="btn-group-xs" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button matTooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                <button matTooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
                                         (click)="editableForm.show();"
-                                        [hidden]="!editableForm.visible || !editableForm.deletePending">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        [hidden]="!editableForm.visible || !editableForm.deletePending" [disabled]="deleteInProgress">
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                         <div style="float: right">
                             <div  [hidden]="editableForm.visible || editableForm.deletePending" class="btn-group-xs"  is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button matTooltip="Delete" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                <button matTooltip="Delete" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
                                         (click)="askToDelete()"
                                         *ngIf="!editableForm.visible && !editableForm.deletePending"
-                                         >
-                                    <i class="fa fa-trash-o deleteButton" aria-hidden="true"></i>
+                                        [disabled]="deleteInProgress" >
+                                    <i class="far fa-trash-alt warning" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
 
                     </td>
                 </tr>
-
-
             </tbody>
         </table>
     </form>

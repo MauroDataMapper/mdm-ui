@@ -1,23 +1,10 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChild,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { UserSettingsHandlerService } from '../../services/utility/user-settings-handler.service';
 import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ValidatorService } from '../../services/validator.service';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  CdkDragHandle
-} from '@angular/cdk/drag-drop';
-import { ignoreElements } from 'rxjs-compat/operator/ignoreElements';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 
@@ -79,7 +66,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       this.showRecords(this.enumerationValues);
 
       if (this.parent != null && this.parent != undefined) {
-        let access = this.securityHandler.elementAccess(this.parent);
+        const access = this.securityHandler.elementAccess(this.parent);
         this.showEdit = access.showEdit;
       }
     }
@@ -152,7 +139,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     if (this.clientSide) {
       // sort it
       // var sorted = _.sortBy(this.allRecords, 'index'); !
-      let sorted = this.allRecords;
+      const sorted = this.allRecords;
 
       // find it & remove it
       let index = 0;
@@ -162,10 +149,10 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         }
       });
 
-      let foundRecords = sorted.splice(index, 1);
+      const foundRecords = sorted.splice(index, 1);
       // var record = [];
       if (foundRecords && foundRecords.length > 0) {
-        let record = foundRecords[0];
+        const record = foundRecords[0];
         // record.category = newCategory; !
         // }
 
@@ -190,7 +177,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         this.showRecords(sorted);
       }
     } else {
-      let resource = {
+      const resource = {
         index: newPosition,
         category: newCategory
       };
@@ -202,7 +189,6 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         .subscribe(
           () => {
             this.reloadRecordsFromServer().subscribe(data => {
-              debugger;
               this.showRecords(data.body.enumerationValues);
             });
 
@@ -221,7 +207,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     // };
   }
 
-  identify(index, item) {
+  identify(item) {
     return item.id;
   }
 
@@ -262,7 +248,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
     let hasEmptyCategory = false;
 
-    for (let category in categories) {
+    for (const category in categories) {
       if (category !== null && !categoryNames.includes(category)) {
         categoryNames.push(category);
       } else {
@@ -280,7 +266,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       categoryNames = categoryNames.reverse();
     }
 
-    let allRecordsWithGroups = [];
+    const allRecordsWithGroups = [];
     categoryNames.forEach(category => {
       // TODO sort
       // categories[category] = _.sortBy(categories[category], 'index');
@@ -302,7 +288,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     this.displayItems = [];
     this.total = this.enumsCount;
 
-    let start = this.pageSize * this.currentPage;
+    const start = this.pageSize * this.currentPage;
     let e = 0;
     let skippedCategories = 0;
     for (let i = 0; i < allRecordsWithGroups.length; i++) {
@@ -325,7 +311,6 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         break;
       }
     }
-    debugger;
     // If the current page ends with a category, don't display it
     if (
       this.displayItems[this.displayItems.length - 1] !== undefined &&
@@ -356,7 +341,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   }
 
   add() {
-    let newRecord = {
+    const newRecord = {
       id: 'temp-' + this.validator.guid(),
       key: '',
       value: '',
@@ -466,7 +451,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     record.inDelete = false;
   }
 
-  cancelEditClicked(record, index) {
+  cancelEditClicked(record) {
     if (record.isNew && this.allRecords) {
       let i = this.allRecords.length - 1;
       while (i >= 0) {
@@ -480,13 +465,12 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     record.inEdit = false;
   }
 
-  saveClicked(record, index) {
-    debugger;
+  saveClicked(record) {
     if (!this.validate(record)) {
       return;
     }
 
-    let resource = {
+    const resource = {
       key: record.edit.key,
       value: record.edit.value,
       category: record.edit.category
@@ -517,12 +501,12 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         // remove the "temp-" prefix of the id
         record.id = record.id.replace('temp-', '');
 
-        let newRecs = [].concat(this.allRecords);
+        const newRecs = [].concat(this.allRecords);
         newRecs.push(record);
         this.showRecords(newRecs);
       }
 
-      let allRecs = [].concat(this.allRecords);
+      const allRecs = [].concat(this.allRecords);
       this.showRecords(allRecs);
 
       if (this.onUpdate) {
@@ -537,7 +521,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         .put(this.parent.dataModel, this.parent.id, record.id, null, {
           resource
         })
-        .subscribe(result => {
+        .subscribe(() => {
           if (this.afterSave) {
             this.afterSave.emit(resource);
           }
@@ -562,7 +546,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       this.resourcesService.enumerationValues
         .post(this.parent.dataModel, this.parent.id, { resource })
         .subscribe(
-          response => {
+          () => {
             this.reloadRecordsFromServer().subscribe(data => {
               this.showRecords(data.body.enumerationValues);
             });

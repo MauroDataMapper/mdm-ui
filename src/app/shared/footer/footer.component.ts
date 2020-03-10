@@ -7,8 +7,7 @@ import { SharedService } from '../../services/shared.service';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-
-  constructor(private sharedService: SharedService) { }
+  constructor(private sharedService: SharedService) {}
 
   year = new Date().getFullYear();
   showWikiLink = true;
@@ -17,15 +16,18 @@ export class FooterComponent implements OnInit {
   youTrack = this.sharedService.youTrack;
 
   ngOnInit() {
-    if(this.sharedService.simpleViewSupport && !this.sharedService.isLoggedIn())
-    {
+    if (
+      this.sharedService.simpleViewSupport &&
+      !this.sharedService.isLoggedIn()
+    ) {
       this.showWikiLink = false;
     }
 
-    if(this.sharedService.simpleViewSupport && !this.sharedService.isLoggedIn())
-    {
+    if (
+      this.sharedService.simpleViewSupport &&
+      !this.sharedService.isLoggedIn()
+    ) {
       this.showYouTrackLink = false;
     }
   }
-
 }

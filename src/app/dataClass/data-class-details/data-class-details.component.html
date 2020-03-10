@@ -6,7 +6,7 @@
               disable-submit-on-enter>
             <div class="panel-body panel-table">
 
-                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
+                    <div style="padding: 0px !important;" *ngIf="result">
                         <h4> <span class="xeditableInput">
                                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
                                 <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20" style="width: 45%"  ></app-inline-text-edit>
@@ -22,10 +22,10 @@
                         </div>
                     </div>
             </div>
-            <table class="table table-condensed dataModelDetailTable">
+            <table class="table table-bordered">
                 <tbody>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                    <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%">
                             <app-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
@@ -33,7 +33,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader col-md-2">Description</td>
+                    <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="result">
                             <markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></markdown-text-area>
@@ -41,13 +41,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Parent Hierarchy</td>
+                    <td class="detailsRowHeader">Parent Hierarchy</td>
                     <td *ngIf="result">
                         <model-path [path]="result.breadcrumbs"></model-path>
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader  col-md-2">Multiplicity</th>
+                    <th class="detailsRowHeader">Multiplicity</th>
                     <td class="dataClassDetailsModelPath">
 
                        <div *ngIf="!editableForm.visible && result">
@@ -79,7 +79,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</td>
+                    <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
                         <app-element-classifications [classifications]="result.classifiers" [editable-form]="editableForm" [element]="result" [property]="'classifiers'"></app-element-classifications>
 
@@ -105,13 +105,13 @@
                                  class="btn-group-xs" uib-dropdown is-open="false"
                                  style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                                 <button id="singleX-button" type="button"
-                                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+                                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
                                         [hidden]="editableForm.visible || editableForm.deletePending"
                                         [disabled]="deleteInProgress"
                                         matTooltip="Edit"
                                         (click)="showForm();"
                                         uib-dropdown-toggle>
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>
                             <editable-form-buttons [hidden]="!editableForm.visible"
@@ -124,19 +124,14 @@
                         </div>
 
 
-                        <div matTooltip="Search" class="btn-group-xs" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button class="btn btn-xs btn-default addNewModelButton themeColor" type="button" (click)="toggleShowSearch()" [disabled]="processing">
-                                <i class="fa fa-search themeColor"></i>
+                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button mat-stroked-button type="button" class="paddingless addNewModelButton" matTooltipPosition="below" matTooltip="Search"  [disabled]="processing" (click)="toggleShowSearch()">
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
 
                         <div style="clear: both;" *ngIf="processing">
-                            <mat-progress-bar
-                                    value="50"
-                                    bufferValue="75"
-                                    color="primary"
-                                    mode="indeterminate">
-                            </mat-progress-bar>
+                            <mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate"> </mat-progress-bar>
                         </div>
                         <div style="text-align: left" *ngIf="exportError">
                             <div style="padding-top: 25px;">
@@ -146,10 +141,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </td>
                 </tr>
                 </tbody>
@@ -157,7 +148,4 @@
 
         </form>
     </div>
-
-
-
 </div>

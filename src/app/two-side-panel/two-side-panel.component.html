@@ -1,30 +1,25 @@
-<div class="row" style="padding: 10px 10px 0 10px;">
+<div class="container">
+    <div class="row">
 
-    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 themeBackgroundColor hideShowLeftPaneBtn visible-xs visible-sm"  (click)="hideShowLeftPane();">
-        <i #showHideLeftPane id="showHideLeftPane" class="fa fa-chevron-down"></i>
-        <small #showHidePaneText id="showHidePaneText" style="font-style: italic;padding-left: 5px;">Show Models Tree</small>
-    </div>
-
-    <div #resizableLeft [hidden]="expand" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 resizableLeft"  style="height: calc(100vh - 75px); padding-top: 0px !important;">
-        <div style="text-align: right; padding: 0px 2px;cursor: pointer;" (click)="toggle()" [hidden]="expand" title="Minimize">
-            <!--<i class="fa fa-window-close themeColor" style="font-size: 16px;"></i>-->
-            <i class="fa fa-bars themeColor" style="font-size: 17px; padding: 2px;"></i>
-        </div>
-        <div  ui-view="left"></div>
-    </div>
-
-    <div  [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-12':!expand }" class="" style="min-height: calc(100vh - 75px);">
-        <!--<div style="padding: 0px 5px;">-->
-        <!--<i class="fa fa-bars themeColor" style="font-size: 16px;"></i>-->
-        <!--</div>-->
-        <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" (click)="toggle()" *ngIf="expand" title="Minimize">
-            <!--<i class="fa fa-window-maximize themeColor" style="font-size: 16px;"></i>-->
-            <i class="fa fa-bars themeColor" style="font-size: 17px;"></i>
+        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 col-md-12 col-lg-4 visible-xs" (click)="hideShowLeftPane();" style="display: none;">
+            <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
+            <small #showHidePaneText id="showHidePaneText" style="font-style: italic;padding-left: 5px;">Show Models Tree</small>
         </div>
 
-        <div ui-view="" style="margin-bottom: 30px;"></div>
-        <div style="position: absolute;bottom:0;">
-            <app-footer></app-footer>
+        <div #resizableLeft [hidden]="expand" class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4">
+            <!-- <div (click)="toggle()" [hidden]="expand" title="Minimize" class="visible-xs"> TO DO
+            </div> -->
+            <div id="mdm--model-list" ui-view="left"></div>
         </div>
+
+        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-8':!expand }" class="">
+            <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" (click)="toggle()" *ngIf="expand" title="Minimize">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div ui-view="" style="margin-bottom: 30px;"></div>
+        </div>
+
     </div>
 </div>
+
+<app-footer></app-footer>

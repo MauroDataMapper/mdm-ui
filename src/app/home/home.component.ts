@@ -7,115 +7,118 @@ import { BroadcastService } from '../services/broadcast.service';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
-
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.sass']
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.sass']
 })
 export class HomeComponent implements OnInit {
+  profilePictureReloadIndex = 0;
+  profile: any;
 
-    profilePictureReloadIndex = 0;
-    profile: any;
+  constructor(
+    public dialog: MatDialog,
+    private securityHandler: SecurityHandlerService,
+    private stateHandler: StateHandlerService,
+    private broadcastSvc: BroadcastService
+  ) {}
 
-    constructor(public dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService) { }
-
-    ngOnInit() {
-
-        if (this.securityHandler.isLoggedIn()) {
-            this.profile = this.securityHandler.getCurrentUser();
-        }
+  ngOnInit() {
+    if (this.securityHandler.isLoggedIn()) {
+      this.profile = this.securityHandler.getCurrentUser();
     }
+  }
 
-    openProfile = () => {
-        this.stateHandler.Go('userarea.profile', null, null);
-    }
+  openProfile = () => {
+    this.stateHandler.Go('userarea.profile', null, null);
+  }
 
-    isLoggedIn = () => {
-        return this.securityHandler.isLoggedIn();
-    }
+  isLoggedIn = () => {
+    return this.securityHandler.isLoggedIn();
+  }
 
-    login = () => {
-
-        this.dialog.open(LoginModalComponent,
-            {
-                minWidth: 400,
-                hasBackdrop: true
-            }).afterClosed().subscribe((user) => {
-
-                if (user) {
-
-                    if (user.needsToResetPassword) {
-                        this.broadcastSvc.broadcast('userLoggedIn',
-                            { goTo: 'appContainer.userArea.changePassword' });
-                        return;
-                    }
-                    this.profile = user;
-
-                    let latestURL = this.securityHandler.getLatestURL();
-                    if (latestURL) {
-                        this.broadcastSvc.broadcast('userLoggedIn');
-                        this.securityHandler.removeLatestURL();
-                        this.stateHandler.CurrentWindow(latestURL);
-                        return;
-                    } else {
-                        this.broadcastSvc.broadcast('userLoggedIn',
-                            { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-                        return;
-                    }
-
-                }
+  login = () => {
+    this.dialog
+      .open(LoginModalComponent, {
+        minWidth: 600,
+        hasBackdrop: true
+      })
+      .afterClosed()
+      .subscribe(user => {
+        if (user) {
+          if (user.needsToResetPassword) {
+            this.broadcastSvc.broadcast('userLoggedIn', {
+              goTo: 'appContainer.userArea.changePassword'
             });
-    }
+            return;
+          }
+          this.profile = user;
 
-    logout = function() {
-        this.securityHandler.logout().subscribe(() => {
-            this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
-        });
-    };
+          const latestURL = this.securityHandler.getLatestURL();
+          if (latestURL) {
+            this.broadcastSvc.broadcast('userLoggedIn');
+            this.securityHandler.removeLatestURL();
+            this.stateHandler.CurrentWindow(latestURL);
+            return;
+          } else {
+            this.broadcastSvc.broadcast('userLoggedIn', {
+              goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+            });
+            return;
+          }
+        }
+      });
+  }
 
-    forgottenPassword = () => {
-        this.dialog.open(ForgotPasswordModalComponent, {
-            minWidth: 400,
-            hasBackdrop: false
-        }).afterClosed().subscribe((user) => {
-            if (user) {
+  logout = function() {
+    this.securityHandler.logout().subscribe(() => {
+      this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
+    });
+  };
 
-            }
-        });
-    }
+  forgottenPassword = () => {
+    this.dialog
+      .open(ForgotPasswordModalComponent, {
+        minWidth: 600,
+        hasBackdrop: true
+      })
+      .afterClosed()
+      .subscribe(user => {
+        if (user) {
+        }
+      });
+  }
 
-    register = () => {
-        // this.stateHandler.Go("appContainer.mainApp.register", null, null);
-        this.dialog.open(RegisterModalComponent,
-            {
-                minWidth: 600,
-                hasBackdrop: false
-            }).afterClosed().subscribe((user) => {
+  register = () => {
+    this.dialog
+      .open(RegisterModalComponent, {
+        minWidth: 600,
+        hasBackdrop: true
+      })
+      .afterClosed()
+      .subscribe(user => {
+        if (user) {
+          if (user.needsToResetPassword) {
+            this.broadcastSvc.broadcast('userLoggedIn', {
+              goTo: 'appContainer.userArea.change-password'
+            });
+            return;
+          }
+          this.profile = user;
 
-            if (user) {
-
-                if (user.needsToResetPassword) {
-                    this.broadcastSvc.broadcast('userLoggedIn',
-                        { goTo: 'appContainer.userArea.change-password' });
-                    return;
-                }
-                this.profile = user;
-
-                let latestURL = this.securityHandler.getLatestURL();
-                if (latestURL) {
-                    this.broadcastSvc.broadcast('userLoggedIn');
-                    this.securityHandler.removeLatestURL();
-                    this.stateHandler.CurrentWindow(latestURL);
-                    return;
-                } else {
-                    this.broadcastSvc.broadcast('userLoggedIn',
-                        { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-                    return;
-                }
-
-            }
-        });
-    }
-
+          const latestURL = this.securityHandler.getLatestURL();
+          if (latestURL) {
+            this.broadcastSvc.broadcast('userLoggedIn');
+            this.securityHandler.removeLatestURL();
+            this.stateHandler.CurrentWindow(latestURL);
+            return;
+          } else {
+            this.broadcastSvc.broadcast('userLoggedIn', {
+              goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+            });
+            return;
+          }
+        }
+      });
+  }
 }

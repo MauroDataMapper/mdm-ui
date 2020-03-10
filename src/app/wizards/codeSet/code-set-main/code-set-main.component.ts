@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {StateService} from "@uirouter/core";
-import {StateHandlerService} from "../../../services/handlers/state-handler.service";
-import {ResourcesService} from "../../../services/resources.service";
-import {MessageHandlerService} from "../../../services/utility/message-handler.service";
-import {BroadcastService} from "../../../services/broadcast.service";
-import {Step} from "../../../model/stepModel";
-import {ClassifierStep1Component} from "../../classifier/classifier-step1/classifier-step1.component";
-import {CodeSetStep1Component} from "../code-set-step1/code-set-step1.component";
+import { StateService } from '@uirouter/core';
+import { StateHandlerService } from '../../../services/handlers/state-handler.service';
+import { ResourcesService } from '../../../services/resources.service';
+import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { BroadcastService } from '../../../services/broadcast.service';
+import { Step } from '../../../model/stepModel';
+import { ClassifierStep1Component } from '../../classifier/classifier-step1/classifier-step1.component';
+import { CodeSetStep1Component } from '../code-set-step1/code-set-step1.component';
 
 @Component({
   selector: 'app-code-set-main',
@@ -17,10 +17,10 @@ export class CodeSetMainComponent implements OnInit {
   savingInProgress = false;
   steps: Step[] = [];
   model = {
-    label:"",
-    author:"",
-    organisation:"",
-    description:"",
+    label: '',
+    author: '',
+    organisation: '',
+    description: '',
     classifiers: [],
     parentFolderId: null,
     parentFolder: null,
@@ -50,32 +50,31 @@ export class CodeSetMainComponent implements OnInit {
 
   }
 
-  onSelectedTermsChange = function (terms) {
-   // angular.copy(terms, this.model.terms);
-  };
-  cancelWizard =() => {
+  onSelectedTermsChange = (terms) => {
+    // angular.copy(terms, this.model.terms);
+  }
+  cancelWizard = () => {
     this.stateHandler.GoPrevious();
-  };
-  save =  () => {
-
-    var resource = {
-      label:  this.model.label,
+  }
+  save = () => {
+    const resource = {
+      label: this.model.label,
       author: this.model.author,
       organisation: this.model.organisation,
       description: this.model.description,
       classifiers: this.model.classifiers,
       folder: this.model.parentFolderId,
 
-      terms: this.model.terms,
+      terms: this.model.terms
     };
-    this.resources.codeSet.post(null, null, {resource:resource}).subscribe( (result) => {
+    this.resources.codeSet.post(null, null, { resource }).subscribe( (result) => {
       this.messageHandler.showSuccess('Code Set created successfully.');
-      this.stateHandler.Go("codeset",{id:result.body.id});
+      this.stateHandler.Go('codeset', {id: result.body.id});
       this.broadcastSvc.broadcast('$reloadFoldersTree');
     }, error => {
       this.messageHandler.showError('There was a problem creating the Code Set.', error);
     });
-  };
+  }
   ngOnInit() {
   }
 

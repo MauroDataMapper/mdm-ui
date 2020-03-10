@@ -1,0 +1,68 @@
+/* Form specific style */
+form.mdm--form {
+  background-color: #fff;
+  border-radius: 5px;
+  max-width: 800px;
+  .form-row div.mdm--form-input, .mat-form-field {
+      width: 100%;
+  }
+  .input-group input, .input-group textarea {
+    border: 1px solid #e8e8e8;
+    border-radius: 2px;
+    box-shadow: none;
+  }
+  .mdm--form-button {
+    border-radius: 5px;
+    width: 400px;
+    @include respond-to($mobile) {
+      width: 100%;
+    }
+  }
+}
+
+/* Forms inside modal window */
+form.mdm--form.mdm--form-modal {
+  width: 600px;
+  padding: 32px 100px;
+  @include respond-to($mobile) {
+    width: 100%;
+    padding: 24px 32px;
+  }
+
+  .mdm--form-input{
+    width: 400px;
+    @include respond-to($mobile) {
+      width: 100%;
+    }
+  }
+  .mat-form-field-infix {
+    @include respond-to($mobile) {
+      border-bottom: 0.3em solid transparent;
+      border-top: 0.3em solid transparent;
+      line-height: 1;
+      padding: 0.5em 0;
+    }
+  }
+}
+/* end of block */
+
+.mat-radio-button .mat-radio-label {
+  width: unset;
+  width: initial;
+}
+/* Mat design reset */
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin: 0!important;
+}
+
+.outlined-input {
+  border-radius: 5px;
+  border: 1px solid #e8e8e8;
+  height: 44px;
+  line-height: 44px;
+  box-shadow: none;
+}
+
+// .mat-form-field-wrapper {
+//   padding-bottom: 0;
+// }

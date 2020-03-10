@@ -6,12 +6,9 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./enumeration-compare.component.scss']
 })
 export class EnumerationCompareComponent implements OnInit {
-
   @Input() diffs: any;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

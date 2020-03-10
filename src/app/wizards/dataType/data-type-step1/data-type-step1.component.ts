@@ -1,63 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'app-data-type-step1',
-	templateUrl: './data-type-step1.component.html',
-	styleUrls: ['./data-type-step1.component.sass']
+  selector: 'app-data-type-step1',
+  templateUrl: './data-type-step1.component.html',
+  styleUrls: ['./data-type-step1.component.sass']
 })
 export class DataTypeStep1Component implements OnInit {
+  step: any;
+  modelVal: any;
 
-	step: any;
-	modelVal: any;
+  get model() {
+    return this.modelVal;
+  }
 
-	get model() {
+  set model(val) {
+    this.modelVal = val;
+    this.validate();
+  }
 
-		return this.modelVal;
-	}
+  constructor() {}
 
-	set model(val) {
+  ngOnInit() {
+    this.model = this.step.scope.model;
+  }
 
-		this.modelVal = val;
-		this.validate();
-	}
+  ngDoCheck() {
+    this.validate();
+  }
 
-	constructor() { }
+  validate = () => {
+    if (!this.model.createType) {
+      this.step.invalid = true;
+      return;
+    }
 
-	ngOnInit() {
-		
-		this.model = this.step.scope.model;
-	}
+    if (
+      this.model.createType === 'copy' &&
+      this.model.copyFromDataModel.length === 0
+    ) {
+      this.step.invalid = true;
+      return;
+    }
 
-	ngDoCheck() {
-		this.validate();
-	}
-	
-	validate = () => {
-		
-		if (!this.model.createType) {
-			this.step.invalid = true;
-			return;
-		}
+    this.step.invalid = false;
+  }
 
-		if (this.model.createType === 'copy' && this.model.copyFromDataModel.length === 0) {
-			this.step.invalid = true;
-			return;
-		}
+  selectCreateType = createType => {
+    this.model.createType = createType;
+  }
 
-		this.step.invalid = false;
-	};
+  //TODO CORRECT
+  onSelect = () => {};
 
-	selectCreateType = (createType) => {
-		
-		this.model.createType = createType;
-	};
-
-	//TODO CORRECT
-	onSelect = () =>{
-
-	}
-
-	loadHelp = () =>{
-		//TODO
-	}
+  loadHelp = () => {
+    //TODO
+  };
 }

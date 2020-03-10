@@ -89,12 +89,12 @@
                             <button type="button"
                                     class="btn btn-default btn-xs"
                                     (click)="cancelEdit(record, i)">
-                                <i class="fa fa-times cancelEditButton"></i>
+                                <i class="fas fa-times cancelEditButton"></i>
                             </button>
                             <button type="submit"
                                     class="btn btn-default btn-xs"
                                     (click)="confirmAddMember(record, i)">
-                                <i class="fa fa-check saveButton"></i>
+                                <i class="fas fa-check saveButton"></i>
                             </button>
                         </div>
                         <div *ngIf="!record.isNew">
@@ -104,7 +104,7 @@
                                     class="btn btn-default btn-xs"
                                     matTooltip="Remove from Group"
                                     (click)="removeMember(record)">
-                                <i class="fa fa-trash-o confirmDeleteButton"></i>
+                                <i class="far fa-trash-alt confirmDeleteButton"></i>
                             </button>
 
                             <span  *ngIf="record.deletePending"  style="font-size: 11px;">Are you sure?</span>
@@ -113,7 +113,7 @@
                                     *ngIf="record.deletePending"
                                     class="btn btn-default btn-xs"
                                     (click)="confirmRemove(record,i)">
-                                <i class="fa fa-check editButton themeColor mcTableApproveBtn"></i>
+                                <i class="fas fa-check editButton mcTableApproveBtn"></i>
                             </button>
 
                             <!-- Cancel Delete-->
@@ -121,7 +121,7 @@
                                     *ngIf="record.deletePending"
                                     class="btn btn-default btn-xs"
                                     (click)="cancelRemove(record)">
-                                <i class="fa fa-times cancelButton"></i>
+                                <i class="fas fa-times cancelButton"></i>
                             </button>
 
                         </div>
@@ -149,4 +149,3 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
     </div>
 </div>
-

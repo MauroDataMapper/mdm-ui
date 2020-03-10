@@ -1,34 +1,25 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Input,
-  ViewChildren,
-  ElementRef,
-  EventEmitter,
-  Inject
-} from "@angular/core";
-import { ValidatorService } from "../../../services/validator.service";
-import { NgForm } from "@angular/forms";
-import { Subscription, Observable, ObservableInput, of } from "rxjs";
-import { MessageHandlerService } from "../../../services/utility/message-handler.service";
-import { ResourcesService } from "../../../services/resources.service";
-import { BroadcastService } from "../../../services/broadcast.service";
+import { Component, OnInit, ViewChild, ViewChildren, ElementRef, EventEmitter } from '@angular/core';
+import { ValidatorService } from '../../../services/validator.service';
+import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { ResourcesService } from '../../../services/resources.service';
+import { BroadcastService } from '../../../services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: "app-data-class-step2",
-  templateUrl: "./data-class-step2.component.html",
-  styleUrls: ["./data-class-step2.component.sass"]
+  selector: 'app-data-class-step2',
+  templateUrl: './data-class-step2.component.html',
+  styleUrls: ['./data-class-step2.component.sass']
 })
 export class DataClassStep2Component implements OnInit {
   step: any;
   model: any;
   scope: any;
   multiplicityError: any;
-  selectedDataClassesStr = "";
+  selectedDataClassesStr = '';
   defaultCheckedMap: any;
   loaded = false;
   totalItemCount = 0;
@@ -41,15 +32,15 @@ export class DataClassStep2Component implements OnInit {
 
   formChangesSubscription: Subscription;
 
-  @ViewChild("myForm", { static: false }) myForm: NgForm;
-  @ViewChildren("filters", { read: ElementRef }) filters: ElementRef[];
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   filterEvent = new EventEmitter<string>();
   filter: string;
   hideFilters: boolean = true;
-  displayedColumns = ["name", "description", "status"];
+  displayedColumns = ['name', 'description', 'status'];
 
   dataSource: any;
 
@@ -71,7 +62,7 @@ export class DataClassStep2Component implements OnInit {
 
   ngAfterViewInit() {
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      x => {
+      () => {
         //  this.validate(x);
       }
     );
@@ -92,9 +83,9 @@ export class DataClassStep2Component implements OnInit {
 
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
-    for (var id in this.model.selectedDataClassesMap) {
+    for (const id in this.model.selectedDataClassesMap) {
       if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
-        var element = this.model.selectedDataClassesMap[id];
+        const element = this.model.selectedDataClassesMap[id];
         this.model.selectedDataClasses.push(element.node);
       }
     }
@@ -107,19 +98,19 @@ export class DataClassStep2Component implements OnInit {
     this.dataSource.data = this.model.selectedDataClasses;
     this.dataSource._updateChangeSubscription();
     this.validate();
-  };
+  }
 
   validate = (newValue?) => {
-    var invalid = false;
-    if (this.model.createType === "new") {
+    let invalid = false;
+    if (this.model.createType === 'new') {
       if (newValue) {
-        //check Min/Max
+        // check Min/Max
         this.multiplicityError = this.validator.validateMultiplicities(
           newValue.minMultiplicity,
           newValue.maxMultiplicity
         );
 
-        //Check Mandatory fields
+        // Check Mandatory fields
         if (
           !newValue.label ||
           newValue.label.trim().length === 0 ||
@@ -132,7 +123,7 @@ export class DataClassStep2Component implements OnInit {
 
       invalid = this.myForm.invalid;
     }
-    if (this.model.createType === "copy") {
+    if (this.model.createType === 'copy') {
       if (this.model.selectedDataClasses.length === 0) {
         this.step.invalid = true;
         return;
@@ -140,7 +131,7 @@ export class DataClassStep2Component implements OnInit {
     }
 
     this.step.invalid = invalid;
-  };
+  }
 
   ngOnDestroy() {
     this.formChangesSubscription.unsubscribe();
@@ -155,10 +146,10 @@ export class DataClassStep2Component implements OnInit {
     this.model.selectedDataClasses.forEach((dc: any) => {
       promise = promise
         .then((result: any) => {
-          var link = "dataClasses/" + dc.dataModel + "/" + dc.id;
+          const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
           this.successCount++;
-          this.finalResult[dc.id] = { result: result, hasError: false };
-          if (this.model.parent.domainType === "DataClass") {
+          this.finalResult[dc.id] = { result, hasError: false };
+          if (this.model.parent.domainType === 'DataClass') {
             return this.resources.dataClass
               .post(
                 this.model.parent.dataModel,
@@ -175,20 +166,20 @@ export class DataClassStep2Component implements OnInit {
         })
         .catch(error => {
           this.failCount++;
-          var errorText = this.messageHandler.getErrorText(error);
+          const errorText = this.messageHandler.getErrorText(error);
           this.finalResult[dc.id] = { result: errorText, hasError: true };
         });
     });
 
     promise
-      .then(result => {
+      .then(() => {
         this.processing = false;
         this.step.isProcessComplete = true;
-        this.broadcastSvc.broadcast("$reloadFoldersTree");
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
       })
-      .catch(error => {
+      .catch(() => {
         this.processing = false;
         this.step.isProcessComplete = true;
       });
-  };
+  }
 }

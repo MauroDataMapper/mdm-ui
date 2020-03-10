@@ -6,26 +6,27 @@
                 {{getDisplayValue(element, displayProperty)}}
             </span>
             <i style="color:#c62828; position: absolute;height: 1px;top: 22%;right:5px;"
-               [ngClass]="{'fa':true,'fa-times':true, 'not-allowed-cursor':processing}" aria-hidden="true"
+               [ngClass]="{'fas':true,'fa-times':true, 'not-allowed-cursor':processing}" aria-hidden="true"
                (click)="remove($event, element)"></i>
         </div>
     </div>
 
     <div style="position: relative;">
         <span [hidden]="!loadingDynamicData" style="position: absolute;cursor: pointer;top: 25%;right: 10px;margin-top: -2px;">
-            <i class="fa fa-refresh fa-spin themeColor" aria-hidden="true"></i>
+            <i class="fas fa-sync-alt fa-spin" aria-hidden="true"></i>
         </span>
 
-        <i [hidden]="!(!show && !loadingDynamicData && showCaret)" style="position: absolute;height: 10px;top: 40%;right: 10px;margin-top: -2px;cursor: pointer;" class="fa fa-caret-down mcSelect2" #mcSelect2 aria-hidden="true"></i>
+        <i [hidden]="!(!show && !loadingDynamicData && showCaret)" style="position: absolute;height: 10px;top: 40%;right: 10px;margin-top: -2px;cursor: pointer;" class="fas fa-caret-down mcSelect2" #mcSelect2 aria-hidden="true"></i>
 
-        <i [hidden]="!(!show && selectedValue && !multiSelect)" style="position: absolute;height: 10px;top: 35%;right: 25px;margin-top: -2px;cursor: pointer;" class="fa fa-times mcSelect2Delete" #mcSelect2Delete aria-hidden="true" (click)="remove($event)"></i>
+        <i [hidden]="!(!show && selectedValue && !multiSelect)" style="position: absolute;height: 10px;top: 35%;right: 25px;margin-top: -2px;cursor: pointer;" class="fas fa-times mcSelect2Delete" #mcSelect2Delete aria-hidden="true" (click)="remove($event)"></i>
 
-        <input [ngClass]="{ 'extraCssClass':true,  'form-control' :true, 'mcSelectHasError': hasError}"
+        <input [ngClass]="{ 'extraCssClass':true,  'outlined-input' :true, 'mcSelectHasError': hasError}"
                type="text"
                placeholder="{{defaultPlaceholder}}"
                [ngStyle]="inputStyle"
                #input
                (keyup)="textUpdated()"
+               name="inputText"
                (keydown)="onInputKeyDown($event)"
                [(ngModel)]="inputText"
                [ngModelOptions]='{ debounce: 300 }'

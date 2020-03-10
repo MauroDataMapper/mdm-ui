@@ -1,43 +1,54 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
-import "rxjs-compat/add/operator/map";
-import { ValidatorService } from "./validator.service";
-import { RestHandlerService } from "./utility/rest-handler.service";
-import { SharedService } from "./shared.service";
+import 'rxjs-compat/add/operator/map';
+import { ValidatorService } from './validator.service';
+import { RestHandlerService } from './utility/rest-handler.service';
+import { SharedService } from './shared.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ResourcesService {
-    private subject = new Subject<any>();
-    Folderdetails = new Subject<any>();
-    FolderPermissions = new Subject<any>();
+  private subject = new Subject<any>();
+  Folderdetails = new Subject<any>();
+  FolderPermissions = new Subject<any>();
 
-    constructor(private http: HttpClient, private validator: ValidatorService, public restHandler: RestHandlerService) { }
+  constructor(
+    private http: HttpClient,
+    private validator: ValidatorService,
+    public restHandler: RestHandlerService
+  ) {}
 
-    SearchResult: any[];
+  SearchResult: any[];
 
-    API = 'http://localhost:8080/api';
+  API = environment.apiEndpoint;
 
-    HistoryGet(id: string, queryString: string): Observable<any> {
-        return this.http.get<any>(this.API + '/folders/a61e88e7-c951-4624-baaf-ec03cd09357b/edits?offset=0&max=20');
+  HistoryGet(id: string, queryString: string): Observable<any> {
+    return this.http.get<any>(`${this.API}/folders/a61e88e7-c951-4624-baaf-ec03cd09357b/edits?offset=0&max=20`);
+  }
+
+  get(name, id, action, options?): any {
+    if (!options) {
+      options = {};
+    }
+    if (name && name[name.length - 1] == '/') {
+      name = name.substr(0, name.length - 1);
     }
 
-    get(name, id, action, options?): any {
-        if (!options) {
-            options = {};
-        }
-        if (name && name[name.length - 1] == '/') {
-            name = name.substr(0, name.length - 1);
-        }
-
-        if (options.filters && options.filters[options.filters.length - 1] === '&') {
-            options.filters = options.filters.substr(0, options.filters.length - 1);
-        }
-        if (options.filters && options.filters[options.filters.length - 1] === '&') {
-            options.filters = options.filters.substr(1, options.filters.length);
-        }
+    if (
+      options.filters &&
+      options.filters[options.filters.length - 1] === '&'
+    ) {
+      options.filters = options.filters.substr(0, options.filters.length - 1);
+    }
+    if (
+      options.filters &&
+      options.filters[options.filters.length - 1] === '&'
+    ) {
+      options.filters = options.filters.substr(1, options.filters.length);
+    }
 
         id = !id ? "" : id + "/";
         action = !action ? "" : action;
@@ -47,19 +58,19 @@ export class ResourcesService {
         var all = !options.all ? "" : "&all=true";
         var qStr = "";
 
-        if (options.queryStringParams) {
-            for (var n in options.queryStringParams) {
-                if (options.queryStringParams.hasOwnProperty(n)) {
-                    if (!this.validator.isEmpty(options.queryStringParams[n])) {
-                        qStr += "&" + n + "=" + options.queryStringParams[n];
-                    }
-                }
-            }
+    if (options.queryStringParams) {
+      for (const n in options.queryStringParams) {
+        if (options.queryStringParams.hasOwnProperty(n)) {
+          if (!this.validator.isEmpty(options.queryStringParams[n])) {
+            qStr += '&' + n + '=' + options.queryStringParams[n];
+          }
         }
+      }
+    }
 
-        if (pagination || sort || filters || all || qStr) {
-            pagination = "?" + pagination;
-        }
+    if (pagination || sort || filters || all || qStr) {
+      pagination = '?' + pagination;
+    }
 
         return this.request(name + "/" + id + action + pagination + sort + filters + all + qStr, "GET", options.resource, options.contentType);
     }
@@ -78,315 +89,347 @@ export class ResourcesService {
         var filters = !options.filters ? "" : "&" + options.filters;
         var qStr = "";
 
-        if (options.queryStringParams) {
-            for (var n in options.queryStringParams) {
-                if (options.queryStringParams.hasOwnProperty(n)) {
-                    if (!this.validator.isEmpty(options.queryStringParams[n])) {
-                        qStr += "&" + n + "=" + options.queryStringParams[n];
-                    }
-                }
-            }
+    if (options.queryStringParams) {
+      for (const n in options.queryStringParams) {
+        if (options.queryStringParams.hasOwnProperty(n)) {
+          if (!this.validator.isEmpty(options.queryStringParams[n])) {
+            qStr += '&' + n + '=' + options.queryStringParams[n];
+          }
         }
-        if (pagination || sort || filters || qStr) {
-            pagination = "?" + pagination;
+      }
+    }
+    if (pagination || sort || filters || qStr) {
+      pagination = '?' + pagination;
+    }
+    return this.request(
+      name + '/' + id + action + pagination + sort + filters + qStr,
+      'POST',
+      options.resource,
+      options.contentType,
+      more
+    );
+  }
+
+  put(name, id, action, options) {
+    if (!options) {
+      options = {};
+    }
+    if (name && name[name.length - 1] == '/') {
+      name = name.substr(0, name.length - 1);
+    }
+    id = !id ? '' : id + '/';
+    action = !action ? '' : action;
+    let pagination = !options.pageSize
+      ? ''
+      : 'offset=' + options.pageIndex + '&max=' + options.pageSize;
+    const sort = !options.sortBy
+      ? ''
+      : '&sort=' +
+        options.sortBy +
+        '&order=' +
+        (!options.sortType ? 'asc' : options.sortType);
+    const filters = !options.filters ? '' : '&' + options.filters;
+    let qStr = '';
+
+    if (options.queryStringParams) {
+      for (const n in options.queryStringParams) {
+        if (options.queryStringParams.hasOwnProperty(n)) {
+          if (!this.validator.isEmpty(options.queryStringParams[n])) {
+            qStr += '&' + n + '=' + options.queryStringParams[n];
+          }
         }
-        return this.request(name + "/" + id + action + pagination + sort + filters + qStr, "POST", options.resource, options.contentType, more);
+      }
     }
 
-    put(name, id, action, options) {
-        if (!options) {
-            options = {};
-        }
-        if (name && name[name.length - 1] == '/') {
-            name = name.substr(0, name.length - 1);
-        }
-        id = !id ? "" : id + "/";
-        action = !action ? "" : action;
-        var pagination = !options.pageSize ? "" : "offset=" + options.pageIndex + "&max=" + options.pageSize;
-        var sort = !options.sortBy ? "" : "&sort=" + options.sortBy + "&order=" + (!options.sortType ? "asc" : options.sortType);
-        var filters = !options.filters ? "" : "&" + options.filters;
-        var qStr = "";
+    if (pagination || sort || filters || qStr) {
+      pagination = '?' + pagination;
+    }
+    return this.request(
+      name + '/' + id + action + pagination + sort + filters + qStr,
+      'PUT',
+      options.resource,
+      options.contentType
+    );
+  }
 
-        if (options.queryStringParams) {
-            for (var n in options.queryStringParams) {
-                if (options.queryStringParams.hasOwnProperty(n)) {
-                    if (!this.validator.isEmpty(options.queryStringParams[n])) {
-                        qStr += "&" + n + "=" + options.queryStringParams[n];
-                    }
-                }
-            }
-        }
+  exportGet(dataModels, exporter, contentType, url): any {
+    const more: any = {
+      responseType: 'arraybuffer'
+    };
+    return this.request(url, 'GET', null, contentType, more);
+  }
 
-        if (pagination || sort || filters || qStr) {
-            pagination = "?" + pagination;
-        }
-        return this.request(name + "/" + id + action + pagination + sort + filters + qStr, "PUT", options.resource, options.contentType);
+  exportPost(dataModels, exporter, contentType, url): any {
+    const more: any = {
+      responseType: 'arraybuffer'
+    };
+    return this.request(url, 'POST', null, contentType, more);
+  }
+
+  delete(name, id, action?, queryString?, resource?) {
+    if (name && name[name.length - 1] === '/') {
+      name = name.substr(0, name.length - 1);
+    }
+    id = !id ? '' : id + '/';
+    action = !action ? '' : action;
+    queryString = !queryString ? '' : '?' + queryString;
+
+    return this.request(
+      name + '/' + id + action + queryString,
+      'DELETE',
+      resource,
+      null
+    );
+  }
+
+  request(url, HTTP, resource, contentType, more?): any {
+    if (url && url[0] == '/') {
+      url = url.substr(1);
     }
 
-    exportGet(dataModels, exporter, contentType, url): any {
-        let more : any = {
-            responseType : "arraybuffer"
-        }
-        return this.request(url, "GET", null, contentType, more);
+    const options: any = {
+      url: this.API + '/' + url,
+      method: HTTP,
+      withCredentials: true,
+      headers: {
+        'Content-Type': contentType
+          ? contentType
+          : 'application/json; charset=utf-8'
+      }
+    };
+    if (resource) {
+      options.data = resource;
+    }
+    if (more && more.login == true) {
+      options.login = true;
+    }
+    if (more && more.ignoreAuthModule == true) {
+      options.ignoreAuthModule = true;
+    }
+    if (more && more.responseType) {
+      options.responseType = more.responseType;
     }
 
-    exportPost(dataModels, exporter, contentType, url): any {
-       let more : any = {
-           responseType : "arraybuffer"
-        }
-        return this.request(url, "POST", null, contentType, more);
+    return this.restHandler.restHandler(options);
+  }
+
+  catalogueItemOld: any = {
+    tree: function(id, includeSupersededModels) {
+      id = id ? '?id=' + id : '';
+      includeSupersededModels = includeSupersededModels
+        ? '?includeSupersededModels=true'
+        : '';
+      return this.request(
+        'catalogueItems/tree' + id + includeSupersededModels,
+        'GET'
+      );
+    },
+    get: function(id, action, options) {
+      return this.get('catalogueItems', id, action, options);
+    },
+    post: function(id, action, options) {
+      return this.post('catalogueItems', id, action, options);
+    },
+    put: function(id, action, childId, options) {
+      if (!options) {
+        options = {};
+      }
+      id = !id ? '' : id;
+      action = !action ? '' : action + '/';
+      childId = !childId ? '' : childId;
+      return this.put('catalogueItems', id, action + childId, options);
+    },
+    delete: function(id, action, childId) {
+      id = !id ? '' : id;
+      action = !action ? '' : action + '/';
+      childId = !childId ? '' : childId;
+      return this.httpDelete('catalogueItems', id, action + childId);
     }
+  }
 
-    delete(name, id, action?, queryString?, resource?) {
-        if (name && name[name.length - 1] === '/') {
-            name = name.substr(0, name.length - 1);
-        }
-        id = !id ? "" : id + "/";
-        action = !action ? "" : action;
-        queryString = !queryString ? "" : ("?" + queryString);
+  // dataClass: any = {
+  //     post: function (dataModelId, id, action, options) {
+  //         return this.post("dataModels/" + dataModelId + "/dataClasses/", id, action, options);
+  //     }
+  // }
 
-        return this.request(name + "/" + id + action + queryString, "DELETE", resource, null);
-    }
-
-    request(url, HTTP, resource, contentType, more?): any {
-        if (url && url[0] == '/') {
-            url = url.substr(1);
-        }
-
-        var options : any = {
-            url: this.API + '/' + url,
-            method: HTTP,
-            withCredentials: true,
-            headers: {
-                'Content-Type': contentType ? contentType : 'application/json; charset=utf-8'
-            }
-       
-        };
-        if (resource) {
-            options.data = resource;
-        }
-        if (more && more.login == true) {
-            options.login = true;
-        }
-        if (more && more.ignoreAuthModule == true) {
-            options.ignoreAuthModule = true;
-        }
-        if (more && more.responseType) {
-            options.responseType = more.responseType;
-        }
-
-        return this.restHandler.restHandler(options);
-    }
-
-    catalogueItemOld: any = {
-        tree: function (id, includeSupersededModels) {
-            id = id ? "?id=" + id : "";
-            includeSupersededModels = includeSupersededModels ? "?includeSupersededModels=true" : "";
-            return this.request("catalogueItems/tree" + id + includeSupersededModels, "GET");
-        },
-        get: function (id, action, options) {
-            return this.get("catalogueItems", id, action, options);
-        },
-        post: function (id, action, options) {
-            return this.post("catalogueItems", id, action, options);
-        },
-        put: function (id, action, childId, options) {
-            if (!options) {
-                options = {};
-            }
-            id = !id ? "" : id;
-            action = !action ? "" : action + "/";
-            childId = !childId ? "" : childId;
-            return this.put("catalogueItems", id, action + childId, options);
-        },
-        delete: function (id, action, childId) {
-            id = !id ? "" : id;
-            action = !action ? "" : action + "/";
-            childId = !childId ? "" : childId;
-            return this.httpDelete("catalogueItems", id, action + childId);
-        }
-    }
-
-    // dataClass: any = {
-    //     post: function (dataModelId, id, action, options) {
-    //         return this.post("dataModels/" + dataModelId + "/dataClasses/", id, action, options);
-    //     }
-    // }
-
-    classifier: Classifier = new Classifier(this);
-    terminology: Terminology = new Terminology(this);
-    term: Term = new Term(this);
-    folder: Folder = new Folder(this);
-    catalogueUser: CatalogueUser = new CatalogueUser(this);
-    catalogueItem: CatalogueItem = new CatalogueItem(this);
-	userGroup: UserGroup = new UserGroup(this);
-	enumerationValues: EnumerationValues = new EnumerationValues(this);
-    authentication: Authentication = new Authentication(this);
-    tree: Tree = new Tree(this);
-    metadata: MetaData = new MetaData(this);
-    facets: Facets = new Facets(this);
-    dataModel: DataModel = new DataModel(this);
-    dataClass: DataClass = new DataClass(this);
-    dataType: DataType = new DataType(this);
-    public: Public = new Public(this);
-    admin: Admin = new Admin(this);
-    dataElement: DataElement = new DataElement(this);
-    importer: Importer = new Importer(this);
-    codeSet: CodeSet = new CodeSet(this);
+  classifier: Classifier = new Classifier(this);
+  terminology: Terminology = new Terminology(this);
+  term: Term = new Term(this);
+  folder: Folder = new Folder(this);
+  catalogueUser: CatalogueUser = new CatalogueUser(this);
+  catalogueItem: CatalogueItem = new CatalogueItem(this);
+  userGroup: UserGroup = new UserGroup(this);
+  enumerationValues: EnumerationValues = new EnumerationValues(this);
+  authentication: Authentication = new Authentication(this);
+  tree: Tree = new Tree(this);
+  metadata: MetaData = new MetaData(this);
+  facets: Facets = new Facets(this);
+  dataModel: DataModel = new DataModel(this);
+  dataClass: DataClass = new DataClass(this);
+  dataType: DataType = new DataType(this);
+  public: Public = new Public(this);
+  admin: Admin = new Admin(this);
+  dataElement: DataElement = new DataElement(this);
+  importer: Importer = new Importer(this);
+  codeSet: CodeSet = new CodeSet(this);
 }
 
 class Importer {
-    constructor(private resourcesService: ResourcesService) { }
+  constructor(private resourcesService: ResourcesService) {}
 
-    get(name) {
-        return this.resourcesService.get("importer", name, null);
-    }
-    post(action, options) {
-        return this.resourcesService.post("importer", null, action, options);
-    }
+  get(name) {
+    return this.resourcesService.get('importer', name, null);
+  }
+  post(action, options) {
+    return this.resourcesService.post('importer', null, action, options);
+  }
 }
 
 class Classifier {
-    constructor(private resourcesService: ResourcesService) { }
+  constructor(private resourcesService: ResourcesService) {}
 
-    get(id, action, options) {
-        return this.resourcesService.get("classifiers", id, action, options);
-    }
-    delete(id, action) {
-        return this.resourcesService.delete("classifiers", id, action);
-    }
+  get(id, action, options) {
+    return this.resourcesService.get('classifiers', id, action, options);
+  }
+  delete(id, action) {
+    return this.resourcesService.delete('classifiers', id, action);
+  }
 
-    put(id, action, options) {
-        return this.resourcesService.put("classifiers", id, action, options);
-    }
+  put(id, action, options) {
+    return this.resourcesService.put('classifiers', id, action, options);
+  }
 
-    post(id, action, options) {
-        id = !id ? "" : id + "/";
-        action = !action ? "" : action;
-        return this.resourcesService.post("classifiers" , id , action,  options );
-       // return this.resourcesService.post("classifiers" , id , action,  options.resource)
-    }
+  post(id, action, options) {
+    id = !id ? '' : id + '/';
+    action = !action ? '' : action;
+    return this.resourcesService.post('classifiers', id, action, options);
+    // return this.resourcesService.post("classifiers" , id , action,  options.resource)
+  }
 }
 
 class DataClass {
-    constructor(private resourcesService: ResourcesService) { }
+  constructor(private resourcesService: ResourcesService) {}
 
-    get(dataModel, parentDataClass, id, action, options) {
-        if (!options) {
-            options = {};
-        }
-        if (['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action) !== -1) {
-            return this.resourcesService.catalogueItem.get(id, action, options.contentType);
-        }
-
-        if (parentDataClass) {
-            return this.resourcesService.get("dataModels/" + dataModel + "/dataClasses/" + parentDataClass + "/dataClasses/", id, action, options);
-        } else {
-            return this.resourcesService.get("dataModels/" + dataModel + "/dataClasses/", id, action, options);
-        }
+  get(dataModel, parentDataClass, id, action, options) {
+    if (!options) {
+      options = {};
+    }
+    if (
+      ['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action ) !== -1
+    ) {
+      return this.resourcesService.catalogueItem.get(id, action, options.contentType );
     }
 
-    post(dataModelId, id, action, options) {
-        return this.resourcesService.post("dataModels/" + dataModelId + "/dataClasses/", id, action, options);
+    if (parentDataClass) {
+      return this.resourcesService.get(`dataModels/${dataModel}/dataClasses/${parentDataClass}/dataClasses/`, id, action, options);
+    } else {
+      return this.resourcesService.get(`dataModels/${dataModel}/dataClasses/`, id, action, options);
     }
-    put(dataModelId, parentDataClassId, id, action, options) {
-        if (parentDataClassId) {
-            return this.resourcesService.put("dataModels/" + dataModelId + "/dataClasses/" + parentDataClassId + "/dataClasses/", id, action, options);
-        } else {
-            return this.resourcesService.put("dataModels/" + dataModelId + "/dataClasses/", id, action, options);
-        }
+  }
+
+  post(dataModelId, id, action, options) {
+    return this.resourcesService.post(`dataModels/${dataModelId}/dataClasses/`, id, action, options);
+  }
+  put(dataModelId, parentDataClassId, id, action, options) {
+    if (parentDataClassId) {
+      return this.resourcesService.put(`dataModels/${dataModelId}/dataClasses/${parentDataClassId}/dataClasses/`, id, action, options);
+    } else {
+      return this.resourcesService.put(`dataModels/{$}dataModelId}/dataClasses/`, id, action, options );
     }
-    delete(dataModelId, parentDataClassId, id) {
-        if (parentDataClassId) {
-            return this.resourcesService.delete("dataModels/" + dataModelId + "/dataClasses/" + parentDataClassId + "/dataClasses/", id);
-        } else {
-            return this.resourcesService.delete("dataModels/" + dataModelId + "/dataClasses/", id);
-        }
+  }
+  delete(dataModelId, parentDataClassId, id) {
+    if (parentDataClassId) {
+      return this.resourcesService.delete(`dataModels/${dataModelId}/dataClasses/${parentDataClassId}/dataClasses/`, id);
+    } else {
+      return this.resourcesService.delete(`dataModels/${dataModelId}/dataClasses/`, id);
     }
+  }
 }
 
 class DataElement {
-    constructor(private resourcesService: ResourcesService) { }
-    get(dataModelId, dataClassId, id, action, options) {
-        if (!options) {
-            options = {};
-        }
-        if (['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action) !== -1) {
-            return this.resourcesService.catalogueItem.get(id, action, options.contentType);
-        }
-
-        return this.resourcesService.get("dataModels/" + dataModelId + "/dataClasses/" + dataClassId + "/dataElements/", id, action, options);
-
+  constructor(private resourcesService: ResourcesService) {}
+  get(dataModelId, dataClassId, id, action, options) {
+    if (!options) {
+      options = {};
     }
-    put(dataModelId, dataClassId, id, action, options) {
-
-        return this.resourcesService.put("dataModels/" + dataModelId + "/dataClasses/" + dataClassId + "/dataElements/", id, action, options);
-
+    if (['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action) !== -1) {
+      return this.resourcesService.catalogueItem.get(id, action, options.contentType );
     }
-    delete(dataModelId, dataClassId, id) {
-        return this.resourcesService.delete("dataModels/" + dataModelId + "/dataClasses/" + dataClassId + "/dataElements/", id);
 
-    }
+    return this.resourcesService.get(`dataModels/${dataModelId}/dataClasses/${dataClassId}/dataElements/`, id, action, options);
+  }
+  put(dataModelId, dataClassId, id, action, options) {
+    return this.resourcesService.put(`dataModels/${dataModelId}/dataClasses/${dataClassId}/dataElements/`, id, action, options);
+  }
+  delete(dataModelId, dataClassId, id) {
+    return this.resourcesService.delete(`dataModels/${dataModelId}/dataClasses/${dataClassId}/dataElements/`, id);
+  }
 }
 
-
 class Folder {
-    constructor(private resourcesService: ResourcesService) { }
-    get(id, action, options?) {
-        if (!options) {
-            options = {};
-        }
+  constructor(private resourcesService: ResourcesService) {}
+  get(id, action, options?) {
+    if (!options) {
+      options = {};
+    }
 
-        return this.resourcesService.get("folders", id, action, options);
-    }
-    post(id, action, options) {
-        return this.resourcesService.post("folders", id, action, options);
-    }
-    put(id, action, options) {
-        return this.resourcesService.put("folders", id, action, options);
-    }
-    delete(id, action, queryString) {
-        return this.resourcesService.delete("folders", id, action, queryString, null);
-    }
+    return this.resourcesService.get('folders', id, action, options);
+  }
+  post(id, action, options) {
+    return this.resourcesService.post('folders', id, action, options);
+  }
+  put(id, action, options) {
+    return this.resourcesService.put('folders', id, action, options);
+  }
+  delete(id, action, queryString) {
+    return this.resourcesService.delete('folders', id, action, queryString, null);
+  }
 }
 
 class Terminology {
-    constructor(private resourcesService: ResourcesService) { }
-    get(id, action, options: any = {}) {
-        if (!options) {
-            options = {};
-        }
-        if (['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action) !== -1) {
-            return this.resourcesService.catalogueItem.get(id, action, options.contentType);
-        }
-        return this.resourcesService.get("terminologies", id, action, options);
+  constructor(private resourcesService: ResourcesService) {}
+  get(id, action, options: any = {}) {
+    if (!options) {
+      options = {};
     }
-    post(id, action, options) {
-        return this.resourcesService.post("terminologies", id, action, options);
+    if (['metadata', 'annotations', 'classifiers', 'semanticLinks'].indexOf(action) !== -1) {
+      return this.resourcesService.catalogueItem.get(id, action, options.contentType);
     }
+    return this.resourcesService.get('terminologies', id, action, options);
+  }
+  post(id, action, options) {
+    return this.resourcesService.post('terminologies', id, action, options);
+  }
 
-    put(id, action, options) {
-        return this.resourcesService.put("terminologies", id, action, options);
-    }
-    delete(id, action, queryString) {
-        return this.resourcesService.delete("terminologies", id, action, queryString);
-    }
+  put(id, action, options) {
+    return this.resourcesService.put('terminologies', id, action, options);
+  }
+  delete(id, action, queryString) {
+    return this.resourcesService.delete('terminologies', id, action, queryString);
+  }
 }
 
 class Term {
-    constructor(private resourcesService: ResourcesService) { }
+  constructor(private resourcesService: ResourcesService) {}
 
-    get(terminologyId, id, action, options: any = {}) {
-        if (['metadata', 'annotations', 'classifiers'].indexOf(action) !== -1) {
-            return this.resourcesService.catalogueItem.get(id, action, options.contentType);
-        }
-
-        return this.resourcesService.get("terminologies/" + terminologyId + "/terms/", id, action, options);
+  get(terminologyId, id, action, options: any = {}) {
+    if (['metadata', 'annotations', 'classifiers'].indexOf(action) !== -1) {
+      return this.resourcesService.catalogueItem.get(id, action, options.contentType);
     }
 
-    put(terminologyId, id, action, options) {
-        return this.resourcesService.put("terminologies/" + terminologyId + "/terms/", id, action, options);
-    }
+    return this.resourcesService.get('terminologies/' + terminologyId + '/terms/', id, action, options
+    );
+  }
+
+  put(terminologyId, id, action, options) {
+    return this.resourcesService.put(
+      'terminologies/' + terminologyId + '/terms/',
+      id,
+      action,
+      options
+    );
+  }
 
     post(terminologyId, id, action, options) {
         return this.resourcesService.post("terminologies/" + terminologyId + "/terms/", id, action, options);
@@ -398,57 +441,54 @@ class Term {
 }
 
 class Admin {
+  constructor(private resourcesService: ResourcesService) {}
 
-    constructor(private resourcesService: ResourcesService) { }
+  get(name, options) {
+    return this.resourcesService.get('admin', name, null, options);
+  }
 
-    get(name, options) {
-        return this.resourcesService.get("admin", name, null, options);
-    }
-
-    post(action, options) {
-        return this.resourcesService.post("admin", null, action, options);
-    }
+  post(action, options) {
+    return this.resourcesService.post('admin', null, action, options);
+  }
 }
 
 class CatalogueUser {
+  constructor(private resourcesService: ResourcesService) {}
 
-    constructor(private resourcesService: ResourcesService) { }
-
-    get(id, action, options) {
-        if (!options) {
-            options = {};
-        }
-        return this.resourcesService.get("catalogueUsers", id, action, options);
+  get(id, action, options) {
+    if (!options) {
+      options = {};
     }
+    return this.resourcesService.get('catalogueUsers', id, action, options);
+  }
 
-    post(id, action, options) {
-        return this.resourcesService.post("catalogueUsers", id, action, options);
-    }
+  post(id, action, options) {
+    return this.resourcesService.post('catalogueUsers', id, action, options);
+  }
 
-    put(id, action, options) {
-        return this.resourcesService.put("catalogueUsers", id, action, options);
-    }
+  put(id, action, options) {
+    return this.resourcesService.put('catalogueUsers', id, action, options);
+  }
 
-    delete(id, action) {
-        return this.resourcesService.delete("catalogueUsers", id, action);
-    }
+  delete(id, action) {
+    return this.resourcesService.delete('catalogueUsers', id, action);
+  }
 }
 
 class UserGroup {
-    constructor(private resourcesService: ResourcesService) { }
-    get(id?, action?, options?) {
-        return this.resourcesService.get("userGroups", id, action, options);
-    }
-    post(id, action, options) {
-        return this.resourcesService.post("userGroups", id, action, options);
-    }
-    put(id, action, options) {
-        return this.resourcesService.put("userGroups", id, action, options);
-    }
-    delete(id, action) {
-        return this.resourcesService.delete("userGroups", id, action, null, null);
-    }
-
+  constructor(private resourcesService: ResourcesService) {}
+  get(id?, action?, options?) {
+    return this.resourcesService.get('userGroups', id, action, options);
+  }
+  post(id, action, options) {
+    return this.resourcesService.post('userGroups', id, action, options);
+  }
+  put(id, action, options) {
+    return this.resourcesService.put('userGroups', id, action, options);
+  }
+  delete(id, action) {
+    return this.resourcesService.delete('userGroups', id, action, null, null);
+  }
 }
 
 class CatalogueItem {
@@ -481,7 +521,7 @@ class CatalogueItem {
 }
 
 class Authentication {
-    constructor(private resourcesService: ResourcesService) { }
+  constructor(private resourcesService: ResourcesService) {}
 
     get(action) {
         return this.resourcesService.get("authentication", null, action, null);
@@ -492,18 +532,18 @@ class Authentication {
 }
 
 class Tree {
-    constructor(private resourcesService: ResourcesService) { }
-    get(id?, action?, options?) {
-        return this.resourcesService.get("tree", id, action, options);
-    }
-};
+  constructor(private resourcesService: ResourcesService) {}
+  get(id?, action?, options?) {
+    return this.resourcesService.get('tree', id, action, options);
+  }
+}
 
 class Hierarchy {
-    constructor(private resourcesService: ResourcesService) { }
-    get(id?, action?, options?) {
-        return this.resourcesService.get("hierarchy", id, action, options);
-    }
-};
+  constructor(private resourcesService: ResourcesService) {}
+  get(id?, action?, options?) {
+    return this.resourcesService.get('hierarchy', id, action, options);
+  }
+}
 
 class MetaData {
     constructor(private resourcesService: ResourcesService) { }
@@ -715,7 +755,7 @@ class DataType {
 class EnumerationValues {
 
 	constructor(private resourcesService: ResourcesService) { }
-	
+
 	delete(dataModelId, dataTypeId, id) {
 
 		return this.resourcesService.delete("dataModels/" + dataModelId + "/enumerationTypes/" + dataTypeId + "/enumerationValues/", id);

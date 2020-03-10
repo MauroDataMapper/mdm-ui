@@ -1,0 +1,101 @@
+strong {
+  font-weight: 600;
+}
+ol li, ul li {
+  font-size: $defaultFontSize;
+}
+@media only screen and (min-width: 1600px) {
+  .container {
+    max-width: 1600px;
+    width: 1600px;
+  }
+}
+.container {
+  @include respond-to(992px) {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+label {
+  @include font(20px, 500);
+  margin-bottom: 0;
+}
+// table.mat-table, table.mat-table tr, table.mat-table td, .table > thead > tr > th {
+//   border: none !important;
+// }
+
+.table > thead > tr > th {
+  border: none !important;
+}
+
+table.mat-table .mat-header-cell {
+  font-size: 18px;
+  font-weight: 500;
+}
+table.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #fcfcfd;
+}
+.highlight {
+  background-color: #FCFCFC;
+  padding: 24px 0;
+}
+a.show-more, a.show-less {
+  color: $defaultLinkColour;
+  text-decoration:none;
+  cursor: pointer;
+}
+.pill-card--red, .pill-card--green {
+  padding: 5px 10px;
+  list-style: none;
+  font-size: 16px;
+  border-radius: 20px;
+  display: inline-block;
+}
+.pill-card--red {
+  color: #fff; 
+  background-color: #A5122A;
+}
+.pill-card--green {
+  color: #fff; 
+  background-color: #0A8535;
+}
+hr {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.mat-body, .mat-body-1, .mat-typography {
+  @include respond-to($tablet) {
+    font: 500 16px/24px Nunito Sans, sans-serif;
+  }
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+.helpIcon {
+  color: $defaultLinkColour;
+  cursor: pointer;
+}
+mat-progress-bar.mat-progress-bar.mat-primary {
+  margin-top: 16px;
+}
+.step-description {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+// .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+//   background: $defaultLinkColour;
+//   height: 5px;
+// } 
+
+// /* label style */
+// .mat-tab-label{
+//   background: $defaultLinkColour;;
+//   color:white;
+// }
+
+
+.fa.fa-remove:before {
+  content: "\f2ed";
+}

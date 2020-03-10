@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500.34" height="417.745">
+  <defs>
+    <linearGradient id="a" x1=".5" x2=".5" y1="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="gray" stop-opacity=".251"/>
+      <stop offset=".54" stop-color="gray" stop-opacity=".122"/>
+      <stop offset="1" stop-color="gray" stop-opacity=".102"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#a)" d="M0 0h227.478v253.889H0z" data-name="Rectangle 3"/>
+  <path fill="#fff" d="M3.758 169.512h219.956v78.848H3.758z" data-name="Rectangle 4"/>
+  <path fill="#64ffda" d="M21.812 188.214h8.523v40.404h-8.523z" data-name="Rectangle 5"/>
+  <g data-name="Group 2">
+    <path fill="#64ffda" d="M38.638 188.214h8.523v40.404h-8.523z" data-name="Rectangle 6" opacity=".7"/>
+  </g>
+  <g data-name="Group 3">
+    <path fill="#64ffda" d="M55.469 188.214h8.523v40.404h-8.523z" data-name="Rectangle 7" opacity=".6"/>
+  </g>
+  <g data-name="Group 4">
+    <path fill="#64ffda" d="M72.295 188.214h8.523v40.404h-8.523z" data-name="Rectangle 8" opacity=".5"/>
+  </g>
+  <g data-name="Group 5">
+    <path fill="#64ffda" d="M89.12 188.214h8.523v40.404H89.12z" data-name="Rectangle 9" opacity=".5"/>
+  </g>
+  <g data-name="Group 6">
+    <path fill="#64ffda" d="M105.946 188.214h8.523v40.404h-8.523z" data-name="Rectangle 10" opacity=".4"/>
+  </g>
+  <g data-name="Group 7">
+    <path fill="#64ffda" d="M122.777 188.214h8.523v40.404h-8.523z" data-name="Rectangle 11" opacity=".3"/>
+  </g>
+  <circle cx="20.567" cy="20.567" r="20.567" fill="#6c63ff" data-name="Ellipse 25" transform="translate(172.008 187.589)"/>
+  <path fill="#fff" d="M3.758 87.593h219.956v78.848H3.758z" data-name="Rectangle 12"/>
+  <path fill="#64ffda" d="M21.812 106.295h8.523v40.404h-8.523z" data-name="Rectangle 13"/>
+  <g data-name="Group 8">
+    <path fill="#64ffda" d="M38.638 106.295h8.523v40.404h-8.523z" data-name="Rectangle 14" opacity=".7"/>
+  </g>
+  <g data-name="Group 9">
+    <path fill="#64ffda" d="M55.469 106.295h8.523v40.404h-8.523z" data-name="Rectangle 15" opacity=".6"/>
+  </g>
+  <g data-name="Group 10">
+    <path fill="#64ffda" d="M72.295 106.295h8.523v40.404h-8.523z" data-name="Rectangle 16" opacity=".5"/>
+  </g>
+  <g data-name="Group 11">
+    <path fill="#64ffda" d="M89.12 106.295h8.523v40.404H89.12z" data-name="Rectangle 17" opacity=".5"/>
+  </g>
+  <g data-name="Group 12">
+    <path fill="#64ffda" d="M105.946 106.295h8.523v40.404h-8.523z" data-name="Rectangle 18" opacity=".4"/>
+  </g>
+  <g data-name="Group 13">
+    <path fill="#64ffda" d="M122.777 106.295h8.523v40.404h-8.523z" data-name="Rectangle 19" opacity=".3"/>
+  </g>
+  <circle cx="20.567" cy="20.567" r="20.567" fill="#6c63ff" data-name="Ellipse 26" transform="translate(172.008 105.675)"/>
+  <path fill="#fff" d="M3.758 5.673h219.956v78.848H3.758z" data-name="Rectangle 20"/>
+  <path fill="#64ffda" d="M21.812 24.38h8.523v40.404h-8.523z" data-name="Rectangle 21"/>
+  <g data-name="Group 14">
+    <path fill="#64ffda" d="M38.638 24.38h8.523v40.404h-8.523z" data-name="Rectangle 22" opacity=".7"/>
+  </g>
+  <g data-name="Group 15">
+    <path fill="#64ffda" d="M55.469 24.38h8.523v40.404h-8.523z" data-name="Rectangle 23" opacity=".6"/>
+  </g>
+  <g data-name="Group 16">
+    <path fill="#64ffda" d="M72.295 24.38h8.523v40.404h-8.523z" data-name="Rectangle 24" opacity=".5"/>
+  </g>
+  <g data-name="Group 17">
+    <path fill="#64ffda" d="M89.12 24.38h8.523v40.404H89.12z" data-name="Rectangle 25" opacity=".5"/>
+  </g>
+  <g data-name="Group 18">
+    <path fill="#64ffda" d="M105.946 24.38h8.523v40.404h-8.523z" data-name="Rectangle 26" opacity=".4"/>
+  </g>
+  <g data-name="Group 19">
+    <path fill="#64ffda" d="M122.777 24.38h8.523v40.404h-8.523z" data-name="Rectangle 27" opacity=".3"/>
+  </g>
+  <circle cx="22.172" cy="22.172" r="22.172" fill="url(#a)" data-name="Ellipse 27" transform="translate(170.403 22.15)"/>
+  <circle cx="22.172" cy="22.172" r="22.172" fill="#2196f3" data-name="Ellipse 28" transform="translate(170.403 104.618)"/>
+  <circle cx="22.172" cy="22.172" r="22.172" fill="#2196f3" data-name="Ellipse 29" transform="translate(170.403 186.532)"/>
+  <circle cx="20.567" cy="20.567" r="20.567" fill="#2196f3" data-name="Ellipse 30" transform="translate(172.008 23.755)"/>
+  <g fill="none" stroke="#6c63ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" data-name="Group 20" opacity=".7">
+    <path d="M255.151 87.82h3.321" data-name="Line 9"/>
+    <path stroke-dasharray="12.52 33.38" d="M276.947 87.82h92.391" data-name="Line 10"/>
+    <path d="M378.576 87.82h3.321v3.321" data-name="Path 82"/>
+    <path stroke-dasharray="11.93 31.8" d="M381.896 108.747v63.81" data-name="Line 11"/>
+    <path d="M381.896 181.357v3.321" data-name="Line 12"/>
+  </g>
+  <g fill="none" stroke="#6c63ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" data-name="Group 21" opacity=".7">
+    <path d="M203.446 338.543l-3.321-.017" data-name="Line 13"/>
+    <path stroke-dasharray="12.52 33.38" d="M181.65 338.438l-92.386-.443" data-name="Line 14"/>
+    <path d="M80.02 337.956l-3.321-.017.022-3.321" data-name="Path 83"/>
+    <path stroke-dasharray="11.55 30.79" d="M76.833 317.577l.255-38.339" data-name="Line 15"/>
+    <path d="M77.143 270.715l.022-3.321" data-name="Line 16"/>
+  </g>
+  <path fill="#e0e0e0" d="M399.171 348.943s6.6 44.544 45.534 59.393h-157.74c38.937-14.85 45.534-59.393 45.534-59.393z" data-name="Path 84"/>
+  <path fill="url(#a)" d="M0 0h159.207v9.409H0z" data-name="Rectangle 28" transform="translate(286.196 408.336)"/>
+  <path fill="#f5f5f5" d="M286.987 408.336h157.718v7.262H286.987z" data-name="Rectangle 29"/>
+  <path fill="url(#a)" d="M829.931 417H573.95a5.95 5.95 0 00-5.95 5.95v161.276a7.118 7.118 0 007.118 7.118h253.645a7.118 7.118 0 007.118-7.118V422.95a5.95 5.95 0 00-5.95-5.95z" data-name="Path 85" transform="translate(-335.541 -226.395)"/>
+  <path fill="#fff" d="M241.63 193.04h248.43a5.95 5.95 0 015.95 5.95v138.07H235.68V198.995a5.95 5.95 0 015.95-5.955z" data-name="Path 86"/>
+  <path fill="#f5f5f5" d="M488.894 360.82h-246.1a7.118 7.118 0 01-7.118-7.118v-16.637h260.336v16.637a7.118 7.118 0 01-7.118 7.118z" data-name="Path 87"/>
+  <path fill="#504e6f" d="M248.548 204.708h235.586v116.263H248.548z" data-name="Rectangle 30"/>
+  <path fill="#90caf9" d="M384.894 253.34l-2.591-5.191-39.8 19.9 39.8 19.9 2.6-5.191-29.423-14.709z" data-name="Path 89"/>
+  <path fill="#d81b60" d="M340.34 259h17v18h-17z" data-name="Rectangle 35"/>
+  <g fill="#2196f3" data-name="Group 22">
+    <path d="M375.34 242h17v17h-17z" data-name="Rectangle 36"/>
+    <path d="M375.34 277h17v17h-17z" data-name="Rectangle 37"/>
+  </g>
+</svg>

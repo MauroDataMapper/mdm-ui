@@ -1,0 +1,155 @@
+@import "~@angular/material/theming";
+
+$custom-typography: mat-typography-config(
+  $font-family: "Nunito Sans, sans-serif",
+  $body-1: mat-typography-level(18px, 26px, 500),
+  $body-2: mat-typography-level(18px, 26px, 500),
+  $headline: mat-typography-level(36px, 42px, 600),
+  $title: mat-typography-level(32px, 38px, 600),
+  $subheading-2: mat-typography-level(26px, 32px, 600),
+  $subheading-1: mat-typography-level(22px, 28px, 600),
+  $button: mat-typography-level(20px, 26px, 600),
+  $input: mat-typography-level(18px, 1.125, 500)
+);
+
+// $primary-color-dark:   #1976D2;
+// $primary-color:        #2dbd73;
+// $primary-color-light:  #BBDEFB;
+// $primary-color-text:   #FFFFFF;
+// $accent-color:         #CDDC39;
+// $primary-text-color:   #333;
+// $secondary-text-color: #757575;
+// $divider-color:        #BDBDBD;
+
+/* Primary values */
+$bdi-primary: (
+  50: #e0e5e9,
+  100: #b3bdc8,
+  200: #8091a3,
+  300: #4d657e,
+  400: #264463,
+  500: #002147,
+  600: #001f40,
+  700: #001a37,
+  800: #00152f,
+  900: #000c20,
+  A100: #5d7fff,
+  A200: #2a57ff,
+  A400: #0034f6,
+  A700: #002edc,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff
+  )
+);
+/* Accent values */
+$bdi-accent: (
+  50: #f9ece4,
+  100: #efcebc,
+  200: #e5ae8f,
+  300: #da8e62,
+  400: #d27540,
+  500: #ca5d1e,
+  600: #c5551a,
+  700: #bd4b16,
+  800: #b74112,
+  900: #ab300a,
+  A100: #ffdfd7,
+  A200: #ffb5a4,
+  A400: #ff8c71,
+  A700: #ff7858,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000
+  )
+);
+
+/* Warn values */
+$bdi-warn: (
+  50: #f4e3e5,
+  100: #e4b8bf,
+  200: #d28995,
+  300: #c0596a,
+  400: #b3364a,
+  500: #a5122a,
+  600: #9d1025,
+  700: #930d1f,
+  800: #8a0a19,
+  900: #79050f,
+  A100: #ffa8ac,
+  A200: #ff757b,
+  A400: #ff424a,
+  A700: #ff2832,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff
+  )
+);
+
+@include angular-material-typography($custom-typography);
+@include mat-core($custom-typography);
+
+$bdi-theme-primary: mat-palette($bdi-primary);
+$bdi-theme-accent: mat-palette($bdi-accent);
+$bdi-theme-warn: mat-palette($bdi-warn);
+
+$bdi-theme: mat-light-theme(
+  $bdi-theme-primary,
+  $bdi-theme-accent,
+  $bdi-theme-warn
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($bdi-theme);
+
+/* import custom styling */
+@import "style/main";
+@import "style/variables";
+@import "style/mixins";
+@import "style/helpers";
+@import "style/default";
+@import "style/header";
+@import "style/home";
+@import "style/forms";
+@import "style/modal";
+@import "style/admin";
+@import "style/browse";
+@import "style/tree";

@@ -3,7 +3,7 @@
         <mat-horizontal-stepper #stepper>
             <mat-step *ngFor="let step of steps; let i = index">
                 <ng-template matStepLabel>{{step.title}}</ng-template>
-                <dcl-wrapper [type]="step.component" [(step)]="steps[step]"></dcl-wrapper>
+                <dcl-wrapper [type]="step.component" [(step)]="steps[i]"></dcl-wrapper>
                 <div class="row">
                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
 
@@ -18,7 +18,7 @@
                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
                         <button class="btn btn-default btn-sm" *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="step.invalid">
                             Next
-                            <span class="fa fa-chevron-right"></span>
+                            <span class="fas fa-chevron-right"></span>
                         </button>
                         <button class="btn btn-success btn-sm" *ngIf="(i+1) === steps.length" [disabled]="step.invalid" (click)="saveClassifier()">Submit</button>
                         <span *ngIf="step.isProcessComplete">  <button class="btn btn-default btn-sm" (click)="closeWizard()">Close</button></span>

@@ -6,13 +6,10 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./metadata-compare.component.scss']
 })
 export class MetadataCompareComponent implements OnInit {
+  @Input() diffs: any;
+  @Input() diffColumnWidth: any;
 
-  @Input() diffs : any;
-  @Input()  diffColumnWidth: any;
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

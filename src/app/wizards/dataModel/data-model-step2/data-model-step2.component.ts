@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from "../../../services/resources.service";
-import { MessageHandlerService } from "../../../services/utility/message-handler.service";
+import { ResourcesService } from '../../../services/resources.service';
+import { MessageHandlerService } from '../../../services/utility/message-handler.service';
 
 @Component({
   selector: 'app-data-model-step2',
@@ -8,35 +8,41 @@ import { MessageHandlerService } from "../../../services/utility/message-handler
   styleUrls: ['./data-model-step2.component.sass']
 })
 export class DataModelStep2Component implements OnInit {
+  loadingData: any;
+  defaultDataTypeProviders: any;
+  dataTypes: any;
+  step: any;
 
-    loadingData: any;
-    defaultDataTypeProviders:any;
-    dataTypes: any;
-    step:any;
+  constructor(
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService
+  ) {}
 
-    constructor(private resources: ResourcesService, private messageHandler: MessageHandlerService) { }
+  ngOnInit() {
+    this.resources.public.get('defaultDataTypeProviders').subscribe(
+      result => {
+        this.defaultDataTypeProviders = result.body;
+      },
+      error => {
+        this.messageHandler.showError(
+          'There was a problem loading Data Type Providers',
+          error
+        );
+      }
+    );
+  }
 
-    ngOnInit() {
-
-        this.resources.public.get("defaultDataTypeProviders").subscribe((result) => {
-            this.defaultDataTypeProviders = result.body;
-        },(error) => {
-            this.messageHandler.showError('There was a problem loading Data Type Providers', error);
-        });
-
+  onSelectDataTypeProvider = dataTypeProvider => {
+    if (!dataTypeProvider) {
+      this.loadingData = false;
+      this.dataTypes = null;
+      return;
     }
-
-    onSelectDataTypeProvider = (dataTypeProvider) => {
-
-        if (!dataTypeProvider) {
-            this.loadingData = false;
-            this.dataTypes = null;
-            return;
-        }
-        this.loadingData = true;
-        this.step.scope.model.selectedDataTypeProvider = dataTypeProvider;
-        this.dataTypes = { items: this.step.scope.model.selectedDataTypeProvider.dataTypes };
-        this.loadingData = false;
-    }
-
+    this.loadingData = true;
+    this.step.scope.model.selectedDataTypeProvider = dataTypeProvider;
+    this.dataTypes = {
+      items: this.step.scope.model.selectedDataTypeProvider.dataTypes
+    };
+    this.loadingData = false;
+  }
 }

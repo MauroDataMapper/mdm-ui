@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import { HelpDialogueHandlerService } from "../../../services/helpDialogue.service";
-import { ResourcesService } from "../../../services/resources.service";
-import { ControlContainer, NgForm, Form } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HelpDialogueHandlerService } from '../../../services/helpDialogue.service';
+import { ResourcesService } from '../../../services/resources.service';
+import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,21 +10,19 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./classifier-step1.component.sass']
 })
 export class ClassifierStep1Component implements OnInit {
-
-  constructor(private helpDialogueHandler: HelpDialogueHandlerService, private resources: ResourcesService) { }
+  constructor(
+    private helpDialogueHandler: HelpDialogueHandlerService  ) {}
 
   allDataModelTypes: any;
   step: any;
   model: any;
 
-  formChangesSubscription : Subscription;
-  @ViewChild("myForm", { static: false }) myForm: NgForm;
+  formChangesSubscription: Subscription;
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
 
   ngOnInit() {
-
     this.model = this.step.scope.model;
     this.step.invalid = true;
-
   }
 
   ngOnDestroy() {
@@ -32,16 +30,14 @@ export class ClassifierStep1Component implements OnInit {
   }
 
   ngAfterViewInit() {
-
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
-      this.step.invalid = this.myForm.invalid;
-    });
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
+      () => {
+        this.step.invalid = this.myForm.invalid;
+      }
+    );
   }
 
   loadHelp = () => {
-    this.helpDialogueHandler.open("Create_a_new_model", null);
-  };
-
-
-
+    this.helpDialogueHandler.open('Create_a_new_model', null);
+  }
 }

@@ -24,8 +24,8 @@
             </div>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center;">
-            <button class="btn btn-xs btn-default" type="button" style="margin: 25px auto;width:80px;height:30px;"  matToolTip="Swap" (click)="swap()">
-                <i class="fa fa-exchange themeColor" style="font-size: 18px;"></i>
+            <button class="btn btn-xs btn-default" type="button" style="margin: 25px auto;width:80px;height:30px;"  matToolTip="Swap" aria-label="Swap" (click)="swap()">
+                <i class="fas fa-exchange-alt" style="font-size: 18px;"></i>
             </button>
         </div>
         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12" style="float: right;">
@@ -62,16 +62,16 @@
 
     <div class="row" style="margin-top:10px;">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <mat-tab-group  animationDuration="0ms" #tab [selectedIndex]="activeTab">
+                <mat-tab-group #tab [selectedIndex]="activeTab">
                     <mat-tab *ngIf= "diffs?.properties && diffs?.properties.length > 0">
                         <ng-template mat-tab-label>
                             Details <span class="badge element-count">{{diffs.properties.length}}</span>
                         </ng-template>
                         <ng-template matTabContent>  
                     <div *ngIf="diffs.properties && diffs.properties.length>0" style="width:100%;">
-                        <table class="table table-condensed table-bordered mcTable">
+                        <table class="table table-bordered">
                             <thead>
-                                <tr class="mcTableHeader">
+                                <tr>
                                     <th style="min-width: 18px;width: 18px;">
                                         &nbsp;&nbsp;
                                     </th>
@@ -112,9 +112,9 @@
                         Data Types <span class="badge element-count">{{diffs.filteredDataTypes.length}}</span>
                   </ng-template>
                     <div *ngIf="diffs?.dataTypes?.length > 0" style="width:100%;position: relative">
-                        <table class="table table-condensed table-bordered mcTable">
+                        <table class="table table-bordered">
                                 <thead>
-                                    <tr class="mcTableHeader">
+                                    <tr>
                                         <th style="min-width: 18px;width: 18px;">
                                             &nbsp;
                                         </th>
@@ -205,9 +205,9 @@
                         Data Elements <span class="badge element-count">{{diffs.filteredDataElements.length}}</span>
                     </ng-template>
                     <div *ngIf="diffs?.dataElements.length > 0" style="width:100%;">
-                        <table class="table table-condensed table-bordered mcTable">
+                        <table class="table table-bordered">
                             <thead>
-                            <tr class="mcTableHeader">
+                            <tr>
                                 <th style="width: 2px;">
                                     &nbsp;
                                 </th>

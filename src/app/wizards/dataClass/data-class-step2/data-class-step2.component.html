@@ -3,9 +3,7 @@
         <div class="form-group">
             <form #myForm="ngForm" ngNativeValidate>
 
-                <label>Please enter Data Class details:</label>
-                <b></b>
-
+                <span>Please enter Data Class details:</span>
                 <table class="table table-bordered table-condensed dataModelDetailTable">
                     <tbody>
 
@@ -76,7 +74,7 @@
     </div>
     <div *ngIf="model.createType == 'copy' && step.active == true" class="row" style="margin-bottom:20px;">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label>Please Select Data Class(s):</label>
+            <span>Please Select Data Class(s):</span>
             <model-selector-tree [default-checked-map]="defaultCheckedMap"
                                  [root]="model.copyFromDataModel[0]"
                                  [show-checkbox-for]="['DataClass']"
@@ -136,11 +134,11 @@
                                 </th>
                                 <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
                                     <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
-                                        <div><i class="fa fa-times copyElementError"></i></div>
+                                        <div><i class="fas fa-times copyElementError"></i></div>
                                         <div class="errorMessage">{{finalResult[record.id].result}}</div>
                                     </span>
                                     <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
-                                        <div><i class="fa fa-check copyElementSuccess"></i>&nbsp;Success</div>
+                                        <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
                                     </span>
                                 </td>
                             </ng-container>
@@ -171,4 +169,3 @@
         </div>
     </div>
 </div>
-

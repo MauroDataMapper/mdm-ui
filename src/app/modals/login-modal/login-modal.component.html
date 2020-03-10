@@ -1,26 +1,26 @@
-<form role='form' (keyup)='$event.keyCode != 13;'>
-    <div class='modal-header'> 
-        <h3 class='modal-title'>Login</h3> 
-    </div> 
-    <div class='modal-body'> 
-        <div *ngIf='message' class='alert alert-danger'>
-            <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-            {{message}}
-        </div>
-        <div class='form-group'>
-            <label for='username'>Username:</label>
-            <input  class='form-control' id='username' name="username" [(ngModel)]='username'>
-        </div>
-        <div class='form-group'>
-            <label  for='password'>Password:</label>
-            <input type='password' class='form-control' id='password' name="password" [(ngModel)]='password' (keyup)='keyEntered($event)'>
-        </div>
-        <div class='form-group'>
-            <a href='' (click)='reset()'>Forgot Password</a>
-        </div>
-    </div> 
-    <div class='modal-footer'> 
-        <button type='button' class='btn btn-success' (click)='login()' [disabled]='!username || !password'><span class='glyphicon glyphicon-ok'></span> Login</button>
-        <button class='btn btn-default' (click)='close()'>Cancel</button>
+<form class="mdm--form mdm--form-modal" (keyup)='$event.keyCode != 13;' role="form" autocomplete="on">
+    <h3 class='modal-title text-center'>Login</h3>
+    <p class="mdm--block text-center">Please log in to continue using our Catalogue</p>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput name="email" [(ngModel)]='username' autocomplete="on" placeholder="Enter your email" required>
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" name="password" [(ngModel)]='password' autocomplete="on" placeholder="Enter your password" required>
+        </mat-form-field>
+    </div>
+    <div class="mdm--block text-center">
+        <button (click)="login()" mat-flat-button class="custom mdm--form-button" color="primary"> Log in </button>
+    </div>
+    <div class="text-center marginless">
+        <button (click)="reset()" mat-button color="primary"> Forgot Password </button>
+    </div>
+    <div class="text-center marginless">
+        <span>Don't have an account?</span>
+        <button mat-button color="primary" (click)="signUp()">Sign up</button>
     </div>
 </form>

@@ -1,122 +1,129 @@
-import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, Query, ElementRef } from '@angular/core';
-
+import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
-
 @Component({
-	selector: 'app-emails',
-	templateUrl: './emails.component.html',
-	styleUrls: ['./emails.component.sass']
+  selector: 'app-emails',
+  templateUrl: './emails.component.html',
+  styleUrls: ['./emails.component.sass']
 })
 export class EmailsComponent implements OnInit {
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-	@ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-	@ViewChild(MatSort, { static: true }) sort: MatSort;
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  filterEvent = new EventEmitter<string>();
+  hideFilters = true;
+  isLoadingResults: boolean;
+  totalItemCount: number;
+  filter: string;
 
-	filterEvent = new EventEmitter<string>();
-	hideFilters = true;
-	isLoadingResults: boolean;
-	totalItemCount: number;
-	filter: string;
+  records: any[] = [];
+  displayedColumns = [
+    'sentToEmailAddress',
+    'dateTimeSent',
+    'subject',
+    'successfullySent'
+  ];
 
-	records: any[] = [];
-	displayedColumns = ['sentToEmailAddress', 'dateTimeSent', 'subject', 'successfullySent'];
+  dataSource = new MatTableDataSource<any>();
 
+  constructor(
+    private messageHandler: MessageHandlerService,
+    private resourcesService: ResourcesService
+  ) {
+    this.dataSource = new MatTableDataSource(this.records);
+  }
 
-	dataSource = new MatTableDataSource<any>();
+  ngOnInit() {
+    this.mailsFetch();
+  }
 
-	constructor(
-		private messageHandler: MessageHandlerService,
-		private resourcesService: ResourcesService) {
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
 
-		this.dataSource = new MatTableDataSource(this.records);
-	}
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      if (property === 'sentToEmailAddress') {
+        return item.sentToEmailAddress;
+      }
 
-	ngOnInit() {
+      if (property === 'dateTimeSent') {
+        return item.dateTimeSent;
+      }
 
-		this.mailsFetch();
-	}
+      if (property === 'subject') {
+        return item.subject;
+      }
 
-	ngAfterViewInit() {
+      if (property === 'successfullySent') {
+        return item.successfullySent;
+      }
+    };
+  }
 
-		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
+  mailsFetch(pageSize?, pageIndex?, filters?) {
+    const options = {
+      pageSize,
+      pageIndex,
+      filters,
+      sortBy: 'sentToEmailAddress',
+      sortType: 'asc'
+    };
 
-		this.dataSource.sortingDataAccessor = (item, property) => {
+    this.resourcesService.admin.get('emails', options).subscribe(resp => {
+      this.records = resp.body.items;
+      this.records.forEach(row => {
+        row.dateTimeSentString =
+          row.dateTimeSent.year +
+          '/' +
+          row.dateTimeSent.monthValue +
+          '/' +
+          row.dateTimeSent.dayOfMonth +
+          ' ' +
+          row.dateTimeSent.hour +
+          ':' +
+          row.dateTimeSent.minute +
+          ':' +
+          row.dateTimeSent.second;
+      });
+      this.totalItemCount = this.records.length;
+      this.refreshDataSource();
+    }),
+      err => {
+        this.messageHandler.showError(
+          'There was a problem loading user emails.',
+          err
+        );
+      };
+  }
 
-			if (property === 'sentToEmailAddress') {
-				return item.sentToEmailAddress;
-			}
+  applyFilter = () => {
+    let filter: any = '';
+    this.filters.forEach((x: any) => {
+      const name = x.nativeElement.name;
+      const value = x.nativeElement.value;
 
-			if (property === 'dateTimeSent') {
-				return item.dateTimeSent;
-			}
+      if (value !== '') {
+        filter += name + '=' + value + '&';
+      }
+    });
+    this.filter = filter;
+    this.filterEvent.emit(filter);
+  }
 
-			if (property === 'subject') {
-				return item.subject;
-			}
+  filterClick = () => {
+    this.hideFilters = !this.hideFilters;
+  }
 
-			if (property === 'successfullySent') {
-				return item.successfullySent;
-			}
-		};
-	}
+  toggleMessage(record) {
+    record.showFailure = !record.showFailure;
+  }
 
-	mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-
-		let options = {
-			pageSize,
-			pageIndex,
-			filters,
-			sortBy: 'sentToEmailAddress',
-			sortType: 'asc'
-		};
-
-		this.resourcesService.admin.get('emails', options).subscribe(resp => {
-
-			this.records = resp.body.items;
-			this.records.forEach((row) => {
-				row.dateTimeSentString = row.dateTimeSent.year +'/'+ row.dateTimeSent.monthValue +'/'+ row.dateTimeSent.dayOfMonth + ' '+ row.dateTimeSent.hour +':'+ row.dateTimeSent.minute +':'+ row.dateTimeSent.second;
-            });
-			this.totalItemCount = this.records.length;
-			this.refreshDataSource();
-		}),
-			(err) => {
-				this.messageHandler.showError('There was a problem loading user emails.', err);
-			};
-	}
-
-	applyFilter = () => {
-
-		let filter: any = '';
-		this.filters.forEach((x: any) => {
-			let name = x.nativeElement.name;
-			let value = x.nativeElement.value;
-
-			if (value !== '') {
-				filter += name + '=' + value + '&';
-			}
-		});
-		this.filter = filter;
-		this.filterEvent.emit(filter);
-	}
-
-	filterClick = () => {
-
-		this.hideFilters = !this.hideFilters;
-	}
-
-	toggleMessage(record) {
-
-		record.showFailure = !record.showFailure;
-	}
-
-	refreshDataSource() {
-		this.dataSource.data = this.records;
-	}
+  refreshDataSource() {
+    this.dataSource.data = this.records;
+  }
 }

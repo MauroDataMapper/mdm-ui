@@ -1,11 +1,11 @@
 <div class="mcTableMain">
     <div class="mcTableTitle">
-        <span class="title">Links <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+        <span class="title">Links <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
 
         <div id="addContent" class="btn-group-xs" uib-dropdown is-open="false" style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="access && access.canAddLink">
-            <button matTooltip="Add" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
+            <button matTooltip="Add" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
                     [matMenuTriggerFor]="menu">
-                <i class="fa fa-plus" aria-hidden="true"></i>
+                <i class="fas fa-plus" aria-hidden="true"></i>
             </button>
 
             <mat-menu #menu="matMenu">
@@ -20,7 +20,7 @@
     </div>
 
     <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable" >
+        <table mat-table matSort [dataSource]="records" class="table table-bordered" >
             <ng-container matColumnDef="source">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="source.label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="name">
                     <span [hidden]="!hideFilters">Source</span>
@@ -101,8 +101,8 @@
                         </div>
                         <div style="float:right">
                             <div *ngIf="record.inEdit">
-                                <button class="btn btn-default btn-xs themeColor" type="button" (click)="findElement(record)">
-                                    <i class="glyphicon glyphicon-search"></i> ...
+                                <button class="btn btn-default btn-xs" type="button" (click)="findElement(record)">
+                                    <i class="fas fa-search"></i>...
                                 </button>
                             </div>
                         </div>
@@ -126,8 +126,8 @@
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
         

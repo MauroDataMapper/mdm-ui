@@ -6,7 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
-
 @Component({
     selector: 'app-history',
     templateUrl: './history.component.html',
@@ -72,7 +71,7 @@ export class HistoryComponent implements OnInit {
         this.elementMap = this.elementTypeService.getBaseWithUserTypes();
         let resource = this.elementMap.find(x => x.id === this.parentType);
 
-        for (let type in this.elementMap) {
+        for (const type in this.elementMap) {
             if (this.elementMap[type].id == this.parentTypeVal) {
                 resource = this.elementMap[type];
                 break;

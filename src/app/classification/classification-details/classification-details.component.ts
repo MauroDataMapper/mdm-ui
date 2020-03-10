@@ -1,20 +1,20 @@
-import {Component, OnInit, Input, QueryList, ViewChildren, ContentChildren} from '@angular/core';
-import {ResourcesService} from '../../services/resources.service';
-import {MessageService} from '../../services/message.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {FolderHandlerService} from '../../services/handlers/folder-handler.service';
-import {StateHandlerService} from '../../services/handlers/state-handler.service';
-import {SharedService} from '../../services/shared.service';
-import {ElementSelectorDialogueService} from '../../services/element-selector-dialogue.service';
-import {Editable, FolderResult} from '../../model/folderModel';
-import {Subscription} from 'rxjs';
-import {MarkdownTextAreaComponent} from '../../utility/markdown-text-area.component';
+import { Component, OnInit, Input, QueryList, ViewChildren, ContentChildren } from '@angular/core';
+import { ResourcesService } from '../../services/resources.service';
+import { MessageService } from '../../services/message.service';
+import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
+import { FolderHandlerService } from '../../services/handlers/folder-handler.service';
+import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { SharedService } from '../../services/shared.service';
+import { ElementSelectorDialogueService } from '../../services/element-selector-dialogue.service';
+import { Editable, FolderResult } from '../../model/folderModel';
+import { Subscription } from 'rxjs';
+import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
 import { BroadcastService } from '../../services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 
 @Component({
-  selector: 'classification-details',
+  selector: "classification-details",
   templateUrl: './classification-details.component.html',
   styleUrls: ['./classification-details.component.sass']
 })
@@ -43,34 +43,45 @@ export class ClassificationDetailsComponent implements OnInit {
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
-  constructor(private resourcesService: ResourcesService, private messageService: MessageService, private messageHandler: MessageHandlerService, private securityHandler: SecurityHandlerService, private folderHandler: FolderHandlerService, private stateHandler: StateHandlerService, private sharedService: SharedService, private elementDialogueService: ElementSelectorDialogueService, private broadcaseSvc: BroadcastService) {
+  constructor(
+    private resourcesService: ResourcesService,
+    private messageService: MessageService,
+    private messageHandler: MessageHandlerService,
+    private securityHandler: SecurityHandlerService,
+    private folderHandler: FolderHandlerService,
+    private stateHandler: StateHandlerService,
+    private sharedService: SharedService,
+    private elementDialogueService: ElementSelectorDialogueService,
+    private broadcaseSvc: BroadcastService
+  ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.ClassifierDetails();
-
-
   }
 
-
-
-  public showAddElementToMarkdown() { // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
+  public showAddElementToMarkdown() {
+    // Remove from here & put in markdown
+    this.elementDialogueService.open(
+      'Search_Help',
+      'left' as DialogPosition,
+      null,
+      null
+    );
   }
 
   ngOnInit() {
-
-
-
     this.editableForm = new Editable();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
 
-
     this.editableForm.show = () => {
-      this.editForm.forEach(x => x.edit({ editing: true,
-        focus: x._name === 'moduleName' ? true : false
-      }));
+      this.editForm.forEach(x =>
+        x.edit({
+          editing: true,
+          focus: x._name === 'moduleName' ? true : false
+        })
+      );
       this.editableForm.visible = true;
     };
 
@@ -86,31 +97,32 @@ export class ClassificationDetailsComponent implements OnInit {
     // this.subscription = this.messageService.editMode.subscribe((message: boolean) => {
     //     this.showEditMode = message;
     // });
-
   }
 
   ngAfterViewInit(): void {
-
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes
-        .subscribe((queryList: QueryList<any>) => {
-          this.invokeInlineEditor();
-          // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
+    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+      this.invokeInlineEditor();
+      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
 
-          if (this.editMode) {
-            this.editForm.forEach(x => x.edit({ editing: true,
-              focus: x._name === 'moduleName' ? true : false
-            }));
-            this.showForm();
-          }
-        });
+      if (this.editMode) {
+        this.editForm.forEach(x =>
+          x.edit({
+            editing: true,
+            focus: x._name === 'moduleName' ? true : false
+          })
+        );
+        this.showForm();
+      }
+    });
   }
 
   private invokeInlineEditor(): void {
     const inlineEditorToInvoke = this.editForm.find(
-        (inlineEditorComponent: any) => {
-          return inlineEditorComponent.name === 'editableText';
-        });
+      (inlineEditorComponent: any) => {
+        return inlineEditorComponent.name === 'editableText';
+      }
+    );
     // console.log(inlineEditorToInvoke.state);  // OUTPUT: InlineEditorState {value: "Some Value", disabled: false, editing: false, empty: false}
     //  if (inlineEditorToInvoke) {
     //      inlineEditorToInvoke.edit({editing: true, focus: true, select: true});
@@ -123,29 +135,28 @@ export class ClassificationDetailsComponent implements OnInit {
   // }
 
   ClassifierDetails(): any {
-
-    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-      this.result = serverResult;
-      this.editableForm.label = this.result.label;
-      this.editableForm.description = this.result['description'];
-      let access: any = this.securityHandler.folderAccess(this.result);
-      this.showEdit = access.showEdit;
-      this.showPermission = access.showPermission;
-      this.showDelete = access.showDelete;
-      if (this.result != null) {
-        this.hasResult = true;
-        this.watchFolderObject();
+    this.subscription = this.messageService.dataChanged$.subscribe(
+      serverResult => {
+        this.result = serverResult;
+        this.editableForm.label = this.result.label;
+        this.editableForm.description = this.result['description'];
+        const access: any = this.securityHandler.folderAccess(this.result);
+        this.showEdit = access.showEdit;
+        this.showPermission = access.showPermission;
+        this.showDelete = access.showDelete;
+        if (this.result != null) {
+          this.hasResult = true;
+          this.watchFolderObject();
+        }
       }
-    });
-
+    );
   }
 
   watchFolderObject() {
-    let access = this.securityHandler.folderAccess(this.result);
+    const access = this.securityHandler.folderAccess(this.result);
     this.showEdit = access.showEdit;
     this.showPermission = access.showPermission;
     this.showDelete = access.showDelete;
-
   }
 
   toggleSecuritySection() {
@@ -167,7 +178,6 @@ export class ClassificationDetailsComponent implements OnInit {
 
     this.folderHandler.askForSoftDelete(this.result.id).then(() => {
       this.stateHandler.reload();
-
     });
   }
 
@@ -176,41 +186,42 @@ export class ClassificationDetailsComponent implements OnInit {
       return;
     }
 
-
     this.folderHandler.askForPermanentDelete(this.result.id).then(() => {
       this.broadcaseSvc.broadcast('$reloadFoldersTree');
     });
   }
 
-
   formBeforeSave = function() {
     this.editMode = false;
     this.errorMessage = '';
-    this.editForm.forEach(x => this.result['label'] = x.getHotState().value);
+    this.editForm.forEach(x => (this.result['label'] = x.getHotState().value));
 
-    let resource = {
+    const resource = {
       id: this.result['id'],
       label: this.result['label'],
       description: this.editableForm.description
     };
 
     if (this.validateLabel(this.result.label)) {
-
-      this.resourcesService.classifier.put(resource.id, null, { resource }).subscribe(result => {
+      this.resourcesService.classifier
+        .put(resource.id, null, { resource })
+        .subscribe(
+          result => {
             if (this.afterSave) {
               this.afterSave(result);
             }
             this.messageHandler.showSuccess('Classifier updated successfully.');
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
-
           },
           error => {
-            this.messageHandler.showError('There was a problem updating the Classifier.', error);
-          });
+            this.messageHandler.showError(
+              'There was a problem updating the Classifier.',
+              error
+            );
+          }
+        );
     }
-
-
   };
 
   validateLabel(data): any {
@@ -223,9 +234,7 @@ export class ClassificationDetailsComponent implements OnInit {
   }
 
   showForm() {
-
     this.editableForm.show();
-
   }
 
   onCancelEdit() {
@@ -238,23 +247,37 @@ export class ClassificationDetailsComponent implements OnInit {
       this.editableForm.validationError = true;
     } else {
       this.editableForm.validationError = false;
-
     }
-
   }
 
   delete() {
-    this.resourcesService.dataClass.delete(this.result['parentDataModel'], this.result['parentDataClass'], this.result['id']).subscribe(result => {
-
+    this.resourcesService.dataClass
+      .delete(
+        this.result['parentDataModel'],
+        this.result['parentDataClass'],
+        this.result['id']
+      )
+      .subscribe(
+        result => {
           this.messageHandler.showSuccess('Data Class deleted successfully.');
-          this.stateHandler.Go('dataModel', {id: this.result['parentDataModel'], reload: true, location: true}, null);
+          this.stateHandler.Go(
+            'dataModel',
+            {
+              id: this.result['parentDataModel'],
+              reload: true,
+              location: true
+            },
+            null
+          );
           this.broadcaseSvc.broadcast('$reloadFoldersTree');
         },
         error => {
           this.deleteInProgress = false;
-          this.messageHandler.showError('There was a problem deleting the Data Model.', error);
-        });
-
+          this.messageHandler.showError(
+            'There was a problem deleting the Data Model.',
+            error
+          );
+        }
+      );
   }
-
 }

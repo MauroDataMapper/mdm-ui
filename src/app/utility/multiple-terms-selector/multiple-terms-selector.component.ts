@@ -15,20 +15,20 @@ export class MultipleTermsSelectorComponent implements OnInit {
   displayedColumns: string[] = ['label'];
   @Input() hideAddButton = true;
   selectorSection = {
-    terminologies:[],
-    selectedTerminology:null,
-    selectedTerms:{},
-    selectedTermsArray:[],
-    selectedTermsCount:0,
-    termSearchText:"",
-    startFetching:0,
-    searchResultPageSize:20,
-    searchResultOffset: 0 ,
+    terminologies: [],
+    selectedTerminology: null,
+    selectedTerms: {},
+    selectedTermsArray: [],
+    selectedTermsCount: 0,
+    termSearchText: '',
+    startFetching: 0,
+    searchResultPageSize: 20,
+    searchResultOffset: 0,
     searchResult: [],
 
-    searchResultDisplayedSoFar:0,
-    searchResultTotal :0,
-    loading:false
+    searchResultDisplayedSoFar: 0,
+    searchResultTotal: 0,
+    loading: false
   };
   loading = false;
   @Output() onSelectedTermsChange = new EventEmitter<any[]>();
@@ -42,11 +42,10 @@ export class MultipleTermsSelectorComponent implements OnInit {
   //@Input() selectedTerms: any;
   @Input()
   get selectedTerms() {
-   return this.selectedItems;
+    return this.selectedItems;
   }
 
-  set selectedTerms(val)
-  {
+  set selectedTerms(val) {
     this.selectedItems = val;
     this.onSelectedTermsChange.emit(this.selectedItems);
   }
@@ -54,98 +53,106 @@ export class MultipleTermsSelectorComponent implements OnInit {
   @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
 
     if (!this.searchControlInput && content) {
-      fromEvent(content.nativeElement, "keyup").pipe(
+      fromEvent(content.nativeElement, 'keyup')
+        .pipe(
           map((event: any) => {
             return event.target.value;
           }),
           filter(res => res.length >= 0),
           debounceTime(500),
-          distinctUntilChanged()).subscribe((text: string) => {
-
-        this.dataSource = new MatTableDataSource<any>(null);
-        this.loading = false;
-        this.totalItemCount = 0;
-        this.currentRecord = 0;
-        this.isProcessing = false;
-        this.fetch(40, 0);
-
-      });
+          distinctUntilChanged()
+        )
+        .subscribe((text: string) => {
+          this.dataSource = new MatTableDataSource<any>(null);
+          this.loading = false;
+          this.totalItemCount = 0;
+          this.currentRecord = 0;
+          this.isProcessing = false;
+          this.fetch(40, 0);
+        });
       this.searchControlInput = content;
     }
     this.cd.detectChanges();
   }
 
-
-  constructor(private resources: ResourcesService, private contextSearchHandler : ContentSearchHandlerService, private cd : ChangeDetectorRef) {
+  constructor(
+    private resources: ResourcesService,
+    private contextSearchHandler: ContentSearchHandlerService,
+    private cd: ChangeDetectorRef
+  ) {
     this.loadTerminologies();
   }
 
-  loadTerminologies =() =>{
-    this.resources.terminology.get(null, null, {all:true}).subscribe(data => {
-      this.selectorSection.terminologies = data.body.items;
-    });
-  };
-  onTerminologySelect =  (terminology: any, record: any) => {
+  loadTerminologies = () => {
+    this.resources.terminology
+      .get(null, null, { all: true })
+      .subscribe(data => {
+        this.selectorSection.terminologies = data.body.items;
+      });
+  }
+  onTerminologySelect = (terminology: any, record: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
     if (terminology != null) {
       this.selectorSection.selectedTerminology = terminology;
       this.fetch(40, 0);
-    }
-    else {
+    } else {
       this.totalItemCount = 0;
       this.currentRecord = 0;
       // this.noData = true;
       // this.searchInput = "";
     }
 
-
-   // this.selectorSection.startFetching++;
-  };
+    // this.selectorSection.startFetching++;
+  }
   runTermSearch = () => {
-   // this.selectorSection.startFetching++;
-    this.fetch(40,0);
-  };
-  loadAllTerms =  (terminology, pageSize, offset) =>{
-   // var deferred = $q.defer();
+    // this.selectorSection.startFetching++;
+    this.fetch(40, 0);
+  }
+  loadAllTerms = (terminology, pageSize, offset) => {
+    // var deferred = $q.defer();
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
-    var options = {
-      pageSize: pageSize,
-      pageIndex: offset * pageSize,
+    const options = {
+      pageSize,
+      pageIndex: offset * pageSize
     };
 
     this.selectorSection.loading = true;
 
-    this.resources.terminology.get(terminology.id, "terms", options).subscribe(result => {
-      //make check=true if element is already selected
-      result.body.items.forEach(item =>{
-        item.terminology = terminology;
-      });
-      // angular.forEach(result.items, function (item) {
-      //   item.terminology = terminology;
-      //   if(this.selectorSection.selectedTerms[item.id]){
-      //     item.checked = true;
-      //   }
-      // });
+    this.resources.terminology
+      .get(terminology.id, 'terms', options)
+      .subscribe(result => {
+        // make check=true if element is already selected
+        result.body.items.forEach(item => {
+          item.terminology = terminology;
+        });
+        // angular.forEach(result.items, function (item) {
+        //   item.terminology = terminology;
+        //   if(this.selectorSection.selectedTerms[item.id]){
+        //     item.checked = true;
+        //   }
+        // });
 
-      this.selectorSection.searchResult = result.body.items;
+        this.selectorSection.searchResult = result.body.items;
 
-      this.calculateDisplayedSoFar(result);
+        this.calculateDisplayedSoFar(result);
 
-      this.selectorSection.loading = false;
+        this.selectorSection.loading = false;
 
-      this.totalItemCount = result.body.count;
-      if (this.dataSource.data) {
-        this.dataSource.data = this.dataSource.data.concat(this.selectorSection.searchResult);
-        this.currentRecord = this.dataSource.data.length;
-        this.loading = false;
-        this.isProcessing = false;
-      } else {
-        this.dataSource.data = this.selectorSection.searchResult;
-        this.currentRecord = this.dataSource.data.length;
-        this.isProcessing = false;
-        this.loading = false;
-      }
+        this.totalItemCount = result.body.count;
+        if (this.dataSource.data) {
+          this.dataSource.data = this.dataSource.data.concat(
+            this.selectorSection.searchResult
+          );
+          this.currentRecord = this.dataSource.data.length;
+          this.loading = false;
+          this.isProcessing = false;
+        } else {
+          this.dataSource.data = this.selectorSection.searchResult;
+          this.currentRecord = this.dataSource.data.length;
+          this.isProcessing = false;
+          this.loading = false;
+        }
 
     //   deferred.resolve({
     //     items: result.items,
@@ -200,25 +207,27 @@ export class MultipleTermsSelectorComponent implements OnInit {
   };
 
   onTableScroll(e) {
-    const tableViewHeight = e.target.offsetHeight // viewport: ~500px
-    const tableScrollHeight = e.target.scrollHeight // length of all table
+    const tableViewHeight = e.target.offsetHeight; // viewport: ~500px
+    const tableScrollHeight = e.target.scrollHeight; // length of all table
     const scrollLocation = e.target.scrollTop; // how far user scrolled
 
     // If the user has scrolled within 200px of the bottom, add more data
     const buffer = 200;
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit && limit > 0) {
-      var requiredNum = this.dataSource.data.length + this.pageSize;
-      if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing == false) {
+      const requiredNum = this.dataSource.data.length + this.pageSize;
+      if (this.totalItemCount + this.pageSize > requiredNum && !this.isProcessing ) {
         this.isProcessing = true;
         this.fetch(this.pageSize, this.dataSource.data.length);
       }
     }
   }
-  calculateDisplayedSoFar = (result)=>{
+  calculateDisplayedSoFar = result => {
     this.selectorSection.searchResultTotal = result.count;
     if (result.count >= this.selectorSection.searchResultPageSize) {
-      var total = (this.selectorSection.searchResultOffset + 1) * this.selectorSection.searchResultPageSize;
+      const total =
+        (this.selectorSection.searchResultOffset + 1) *
+        this.selectorSection.searchResultPageSize;
       if (total >= result.count) {
         this.selectorSection.searchResultDisplayedSoFar = result.count;
       } else {
@@ -227,22 +236,21 @@ export class MultipleTermsSelectorComponent implements OnInit {
     } else {
       this.selectorSection.searchResultDisplayedSoFar = result.count;
     }
-  };
-  termToggle = ($item) =>{
-
-    if($item.checked) {
+  }
+  termToggle = $item => {
+    if ($item.checked) {
       this.selectorSection.selectedTerms[$item.id] = $item;
       this.selectorSection.selectedTermsArray.push($item);
-      let local = this.selectorSection.selectedTermsArray;
+      const local = this.selectorSection.selectedTermsArray;
       this.selectorSection.selectedTermsArray = [];
       this.selectorSection.selectedTermsArray = Object.assign([], local);
       this.selectorSection.selectedTermsCount++;
-    }else{
-      var i = this.selectorSection.selectedTermsArray.length - 1;
-      while(i >= 0){
-        if(this.selectorSection.selectedTermsArray[i].id === $item.id){
-          this.selectorSection.selectedTermsArray.splice(i,1);
-          let local = this.selectorSection.selectedTermsArray;
+    } else {
+      let i = this.selectorSection.selectedTermsArray.length - 1;
+      while (i >= 0) {
+        if (this.selectorSection.selectedTermsArray[i].id === $item.id) {
+          this.selectorSection.selectedTermsArray.splice(i, 1);
+          const local = this.selectorSection.selectedTermsArray;
           this.selectorSection.selectedTermsArray = [];
           this.selectorSection.selectedTermsArray = Object.assign([], local);
 
@@ -273,9 +281,9 @@ export class MultipleTermsSelectorComponent implements OnInit {
       }
       i--;
     }
-    this.selectorSection.searchResult.forEach((item) => {
-      if(item.id === $item.id){
-        if(item.checked) {
+    this.selectorSection.searchResult.forEach(item => {
+      if (item.id === $item.id) {
+        if (item.checked) {
           item.checked = false;
         }
         return;
@@ -285,17 +293,15 @@ export class MultipleTermsSelectorComponent implements OnInit {
     delete this.selectorSection.selectedTerms[$item.id];
     this.selectorSection.selectedTermsCount--;
 
-    if(this.onSelectedTermsChange){
+    if (this.onSelectedTermsChange) {
       this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     }
-  };
-  addSelectedTerms = (terms)=>{
-    if(this.onAddButtonClick){
+  }
+  addSelectedTerms = terms => {
+    if (this.onAddButtonClick) {
       this.onAddButtonClick(terms);
     }
-  };
-
-  ngOnInit() {
   }
 
+  ngOnInit() {}
 }

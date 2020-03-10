@@ -1,130 +1,137 @@
+<div class="heading-container">
+    <h4>Import a new Data Model </h4>
+    <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
+</div>
+<div *ngIf="importers">
+    <p>Select an importer<sup class="required">*</sup> <i *ngIf="importerHelp" id="importerHelpIcon" class="fas fa-info-circle helpIcon" (click)="loadImporterHelp()" matTooltipPosition="below" matTooltip="Help"></i></p>
+    
+    <mat-form-field appearance="outline" class="mdm--block">
+        <mat-label>Select importer</mat-label>
+        <mat-select aria-label="selectedImporterStr" [(ngModel)]="selectedImporterStr" placeholder="Select..." (selectionChange)="importerChanged()">
+          <mat-option *ngFor="let item of importers" [value]="item">{{item.displayName}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
 
-<div class="panel panel-default">
-    <table class="table table-bordered table-condensed ">
-        <thead>
-            <tr>
-                <th class="detailsRowHeader" colspan="3">
-                    Import <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" (click)="loadHelp()" tooltip-placement="left" matTooltip="Help"></i>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div *ngIf="importers" style="margin-bottom: 10px">
-                        <div style="margin-bottom: 10px">
-                            <span class="badge importFormStep themeBackgroundColor">1</span>
-                            <span class="importFormStepTitle">&nbsp;Please select an importer:</span>
-                        </div>
-                        <label>Importer *</label> <i *ngIf="importerHelp" id="importerHelpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" (click)="loadImporterHelp()" matTooltipPostion="left" matTooltip="Help"></i>
-                        <br />
-                        <mat-select [(ngModel)]="selectedImporterStr" placeholder="Select..." (selectionChange)="importerChanged()" class="form-control mcSelect" style="width:90%">
-                            <mat-option *ngFor="let item of importers" [value]="item">{{item.displayName}}</mat-option>
-                        </mat-select>
+<div *ngIf="step >= 2 && selectedImporterGroups && selectedImporterGroups.length > 0">
 
+    <form #userForm="ngForm" id="userForm" (ngSubmit)="submitForm(userForm.valid)" novalidate enctype="multipart/form-data" method="POST">
+
+        <div *ngFor="let group of selectedImporterGroups">
+            <h4>{{group.name}}</h4>
+            <div *ngFor="let option of group.parameters" class="mdm--block">
+                <!-- <label>{{option.displayName}}<span [hidden]="option.optional">*</span></label> -->
+                <div class="import-folder" *ngIf="option.type === 'Folder'">
+                    <span>Folder location</span>
+                    <model-selector-tree [tree-search-domain-type]="'Folder'" 
+                                         [just-show-folders]="true"
+                                         [ng-model]="option.value"
+                                         (ngModelChange)="option.value = $event" 
+                                         [accepts]="['Folder']"
+                                         [show-validation-error]="option.optional === false" 
+                                         [is-required]="option.optional == false">
+                    </model-selector-tree>
+                </div>
+
+                <div class="import-dataModel" *ngIf="option.type === 'DataModel'">
+                    <model-selector-tree [tree-search-domain-type]="'DataModel'" 
+                                         [ng-model]="option.value" 
+                                         [accepts]="['DataModel']" 
+                                         (ngModelChange)="option.value = $event"
+                                         [show-validation-error]="option.optional === false" 
+                                         [is-required]="option.optional == false">
+                    </model-selector-tree>
+                </div>
+
+                <div class="import-text" *ngIf="option.type === 'Text'">
+                    <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
+                        <textarea [(ngModel)]="option.value" 
+                                  name="{{option.name}}" 
+                                  id="{{option.name}}" 
+                                  [required]="option.optional == false" 
+                                  rows="5" 
+                                  class="form-control"> 
+                        </textarea>
+                    </div>
+                </div>
+
+                <div *ngIf="option.type !== 'Folder' && option.type !== 'DataModel' && option.type != 'Text'">
+
+                    <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}" class="topping"> 
+                            <div *ngIf="formOptionsMap[option.type] === 'checkbox'" >
+                                <mat-checkbox  [(ngModel)]="option.value"
+                                               name="{{option.name}}" 
+                                               id="{{option.name}}" 
+                                               [required]="option.optional === false">
+                                <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
+                                </mat-checkbox>
+                            </div>
+
+                            <div *ngIf="formOptionsMap[option.type] != 'checkbox' && formOptionsMap[option.type] != 'file'">
+                                <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>                                
+                                <input  type="{{formOptionsMap[option.type]}}" 
+                                        id="{{option.name}}" 
+                                        name="{{option.name}}" 
+                                        [(ngModel)]="option.value"
+                                        [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}"
+                                        [required]="option.optional === false"> 
+                            </div>
+
+                            <div *ngIf="formOptionsMap[option.type] === 'file'">
+                                <input  type="{{formOptionsMap[option.type]}}" 
+                                        id="{{option.name}}" 
+                                        name="{{option.name}}" 
+                                        [(ngModel)]="option.value"
+                                        [ngClass]="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
+                                        [required]="option.optional === false"
+                                        [attr.valid-file]="formOptionsMap[option.type] == 'file'">
+                            </div>
 
                     </div>
-                    <div *ngIf="step >= 2 && selectedImporterGroups && selectedImporterGroups.length > 0">
-                        <div style="margin-bottom: 15px">
-                            <span class="badge importFormStep themeBackgroundColor">2</span>
-                            <span class="importFormStepTitle">&nbsp;Please fill the following form and press submit button:</span>
-                        </div>
-
-                        <form #userForm="ngForm" id="userForm" (ngSubmit)="submitForm(userForm.valid)" novalidate enctype="multipart/form-data" method="POST">
-
-                            <div *ngFor="let group of selectedImporterGroups" class="form-group" style="margin: 0px 0px 20px 10px;">
-
-                                <span style="font-weight: bold; font-style: italic;" class="themeColor">{{group.name}}</span>
-                                <hr style="margin: 1px 0px; border-top: 1px solid" class="themeColor">
-
-
-                                <div *ngFor="let option of group.parameters" style="margin: 0px 0px 0px 20px;">
-                                    <label>{{option.displayName}}<span [hidden]="option.optional">*</span></label>
-                                    <div class="importForm">{{option.description}}</div>
-
-                                    <div *ngIf="option.type === 'Folder'">
-                                        <model-selector-tree [tree-search-domain-type]="'Folder'"
-                                                             [just-show-folders]="true"
-                                                             [ng-model]="option.value"
-                                                             (ngModelChange)="option.value = $event"
-                                                             [accepts]="['Folder']"
-                                                             [show-validation-error]="option.optional === false"
-                                                             [is-required]="option.optional == false"></model-selector-tree>
-                                    </div>
-
-                                    <div *ngIf="option.type === 'DataModel'">
-                                        <model-selector-tree [tree-search-domain-type]="'DataModel'"
-                                                             [ng-model]="option.value"
-                                                             [accepts]="['DataModel']"
-                                                             (ngModelChange)="option.value = $event"
-                                                             [show-validation-error]="option.optional === false"
-                                                             [is-required]="option.optional == false"></model-selector-tree>
-                                    </div>
-
-
-                                    <div *ngIf="option.type === 'Text'">
-                                        <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
-                                            <textarea [(ngModel)]="option.value"
-                                                      name="{{option.name}}"
-                                                      id="{{option.name}}"
-                                                      [required]="option.optional == false"
-                                                      rows="5"
-                                                      class="form-control">
-                                        </textarea>
-                                        </div>
-
-                                    </div>
-                                    <div *ngIf="option.type !== 'Folder' && option.type !== 'DataModel' && option.type != 'Text'">
-                                        <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
-                                            <input type="{{formOptionsMap[option.type]}}"
-                                                   [(ngModel)]="option.value"
-                                                   name="{{option.name}}"
-                                                   id="{{option.name}}"
-                                                   [ngClass]="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
-                                                   [required]="option.optional === false"
-                                                   [attr.valid-file]="formOptionsMap[option.type] == 'file'">
-                                        </div>
-                                    </div>
-                                    <div class="has-error">
-                                        <div *ngIf="userForm.form.get(option.name)?.errors?.number && option.type == 'Integer'">
-                                            <span class="control-label">This is not a valid number.</span>
-                                        </div>
-                                        <div *ngIf="userForm.form.get(option.name)?.errors?.required && userForm.form.get(option.name)?.touched">
-                                            <span class="control-label">This field is required.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="width: 100%;">
-                                <div *ngIf="importingInProgress">
-                                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                                </div>
-                            </div>
-                            <div style="margin-top: 10px;">
-                                <button type="submit" class="btn btn-success" [disabled]="userForm.invalid || importingInProgress">Submit</button>
-                                <button type="reset" class="btn btn-default" [disabled]="importingInProgress">Reset</button>
-                            </div>
-                        </form>
+                </div>
+                <div class="step-description">{{option.description}}</div>
+                <div class="has-error">
+                    <div *ngIf="userForm.form.get(option.name)?.errors?.number && option.type == 'Integer'">
+                        <span class="control-label">This is not a valid number.</span>
                     </div>
-                    <div *ngIf="importCompleted && importResult.count > 1">
-                        <hr>
-                        <span><strong>The following Data Models ({{importResult.count}}) are imported successfully:</strong></span>
-                        <div *ngFor="let import of importResult.items" style="padding-left: 5px;">
-                            <div>
-                                <element-link [element]="import"></element-link>
-                            </div>
-                        </div>
+                    <div *ngIf="userForm.form.get(option.name)?.errors?.required && userForm.form.get(option.name)?.touched">
+                        <span class="control-label">This field is required.</span>
                     </div>
-                    <div *ngIf="importHasError && importErrors.length > 0" style="margin-top: 10px;">
-                        <div class="alert alert-danger">
-                            <strong>Import Errors ({{importErrors.length}})</strong>
-                            <div *ngFor="let error of importErrors">
-                                <div>{{error.message}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%;">
+            <div *ngIf="importingInProgress">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+        </div>
+        <div>
+            <button mat-button type="reset" class="btn btn-default" [disabled]="importingInProgress">Reset</button>
+            <button mat-flat-button 
+                    color="primary"
+                    class="custom"
+                    type="submit" 
+                    [disabled]="userForm.invalid || importingInProgress">
+                    Import Model(s)
+            </button>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="importCompleted && importResult.count > 1">
+    <hr>
+    <span><strong>The following Data Models ({{importResult.count}}) are imported successfully:</strong></span>
+    <div *ngFor="let import of importResult.items">
+        <div>
+            <element-link [element]="import"></element-link>
+        </div>
+    </div>
+</div>
+<div *ngIf="importHasError && importErrors.length > 0">
+    <div class="alert alert-danger">
+        <strong>Import Errors ({{importErrors.length}})</strong>
+        <div *ngFor="let error of importErrors">
+            <div>{{error.message}}</div>
+        </div>
+    </div>
 </div>

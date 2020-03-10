@@ -2,13 +2,13 @@
     <div class="mcTableTitle">
         <span class="title">Comments</span>
         <div class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
-            <button type="button" matTooltip="Add Comment" class="btn btn-xs btn-default addNewModelButton themeColor" (click)="add()" *ngIf="access && access.canAddAnnotation">
-                <i class="fa fa-plus" aria-hidden="true"></i>
+            <button type="button" matTooltip="Add Comment" class="btn btn-xs btn-default addNewModelButton" (click)="add()" *ngIf="access && access.canAddAnnotation">
+                <i class="fas fa-plus" aria-hidden="true"></i>
             </button>
         </div>
     </div>
     <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+        <table mat-table matSort [dataSource]="records" class="table table-bordered">
             <ng-container matColumnDef="lastUpdated">
                 <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 90%;width: 90%;" columnName="lastUpdated"></th>
                 <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
@@ -22,7 +22,7 @@
                         <div style="margin-left: 5px;"><markdown-text-area [description]="record.description" [in-edit-mode]="false" [rows]="'4'"></markdown-text-area></div>
                         <div>
                             <button class="btn btn-xs btn-default" (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
-                                <i class="fa fa-comment themeColor"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
+                                <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
                             </button>
                         </div>
                         <div style="padding-top: 5px;">
@@ -61,10 +61,10 @@
                                     <div style="margin:3px 0px;">
                                         <button class="btn btn-xs btn-default" (click)="addChild(record)"
                                                 [disabled]="record.newChildText.length == 0">
-                                            <i class="fa fa-check saveButton"></i>&nbsp;Submit
+                                            <i class="fas fa-check saveButton"></i>&nbsp;Submit
                                         </button>
                                         <button class="btn btn-xs btn-default" (click)="showChildren(record)">
-                                            <i class="fa fa-times"></i>&nbsp;Cancel
+                                            <i class="fas fa-times"></i>&nbsp;Cancel
                                         </button>
                                     </div>
                                 </div>
@@ -73,11 +73,11 @@
                     </div>
                     <div *ngIf="record.inEdit">
                         <div>
-                            <label>Title * :</label>
+                            <span>Title * :</span>
                             <input class="form-control" [(ngModel)]="record.edit.label" autocomplete="off" />
                         </div>
                         <div>
-                            <label>Description :</label>
+                            <span>Description :</span>
                             <markdown-text-area [description]="record.edit.description" [in-edit-mode]="true" [rows]="'4'"></markdown-text-area>
 
                             <!--<textarea rows="'4'" class="form-control annotation-description"-->
@@ -95,8 +95,8 @@
             </ng-container>
 
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
     <div class="d-flex justify-content-between p-2">

@@ -2,11 +2,10 @@
     <img *ngIf="user.profilePicture"
          class="profilePicture"
          matTooltip="'{{dynamicTooltipText}}'"
-         tooltip-class = "profilePictureToolTip"
-         src="data:{{user.profilePicture.fileType}};base64,{{user.profilePicture.fileContents | byteArrayToBase64}}"/>
+         src="data:{{user.profilePicture.fileType}};base64,{{user.profilePicture.fileContents | byteArrayToBase64}}"
+         alt="Profile picture"/>
     <span *ngIf="!user.profilePicture"
           style="cursor: pointer; font-size: 18px;"
           matTooltip="'{{dynamicTooltipText}}'"
-          tooltip-class = "profilePictureToolTip"
-          class="glyphicon glyphicon-user profilePicture themeColor"></span>
+          class="fas fa-user profilePicture"></span>
 </div>

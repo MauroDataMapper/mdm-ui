@@ -1,0 +1,44 @@
+.bdi--hero-header {
+  margin-bottom: 32px;
+  padding: 0 16px 24px 16px;
+  h3:first-child {
+    margin-top: 72px;
+    @include respond-to($tablet) {
+      margin-top: 0px;
+    }
+  }
+  .bdi--hero-header--image {
+    margin-top: 32px;
+    img {
+      // width: 100%;
+      @include respond-to(960px) {
+        width: 50%;
+      }
+      @include respond-to($mobile-xs) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.feature-icon {
+  @include size(80px, 80px);
+  border-radius: 100%;
+  line-height: 5.2;
+  display: inline-block;
+  margin-bottom: 16px;
+  margin-top: 32px;
+
+  &.feature-icon--3 {
+    background-color: rgba(234, 172, 48, 0.1);
+    color: #eaac30;
+  }
+  &.feature-icon--2 {
+    background-color: rgba(51, 122, 183, 0.1);
+    color: #337ab7;
+  }
+  &.feature-icon--1 {
+    background-color: rgba(10, 133, 53, 0.1);
+    color: #0a8535;
+  }
+}

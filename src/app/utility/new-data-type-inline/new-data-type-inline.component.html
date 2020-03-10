@@ -1,6 +1,6 @@
 <div>
 	<div class="form-group">
-		<table class="table table-bordered table-condensed dataModelDetailTable">
+		<table class="table table-bordered dataModelDetailTable">
 			<tbody>
 				<tr class="parent" *ngIf="showParentDataModel">
 					<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Data Model *</th>
@@ -43,9 +43,9 @@
 				</tr>
 				<tr class="type" *ngIf="model.domainType != 'PrimitiveType'">
 					<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">
-						<label *ngIf="model.domainType === 'EnumerationType'">Enumeration (key,value) *</label>
-						<label *ngIf="model.domainType === 'ReferenceType'">Reference *</label>
-						<label *ngIf="model.domainType === 'TerminologyType'">Terminology *</label>
+						<span *ngIf="model.domainType === 'EnumerationType'">Enumeration (key,value) *</span>
+						<span *ngIf="model.domainType === 'ReferenceType'">Reference *</span>
+						<span *ngIf="model.domainType === 'TerminologyType'">Terminology *</span>
 						<div style="font-weight: normal;font-style: italic;  padding-top: 8px; color: #c7254e;">
 							<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass">
 								Please select the reference DataClass.

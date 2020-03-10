@@ -5,23 +5,23 @@
         </small>
     </div>
     <button class="btn btn-default btn-xs" *ngIf="!hideEdit && !record.inEdit && !record.inDelete" (click)="editClicked(record, index)" type="button">
-        <i class="fa fa-pencil-square-o editButton themeColor"></i>
+        <i class="fas fa-pencil-alt editButton"></i>
     </button>
     <button class="btn btn-default btn-xs"  *ngIf="record.inEdit"  (click)="saveClicked(record, index)" type="button">
-        <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
+        <i class="fas fa-check editButton saveButton mcTableApproveBtn"></i>
     </button>
     <button class="btn btn-default btn-xs"  *ngIf="record.inEdit"  (click)="editCancelled(record, index)" type="button">
-        <i class="fa fa-times editButton themeColor"></i>
+        <i class="fas fa-times editButton"></i>
     </button>
 
     <button class="btn btn-default btn-xs" *ngIf="!hideDelete && !record.inEdit && !record.inDelete" (click)="deleteClicked(record, index)" type="button">
-        <i class="fa fa-trash-o mcTableDeleteBtn"></i>
+        <i class="far fa-trash-alt mcTableDeleteBtn"></i>
     </button>
     <button class="btn btn-default btn-xs"  *ngIf="record.inDelete" (click)="deleteApproved(record, index)" type="button">
-        <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
+        <i class="fas fa-check editButton saveButton mcTableApproveBtn"></i>
     </button>
     <button class="btn btn-default btn-xs"  *ngIf="record.inDelete"  (click)="deleteCancelled(record, index)" type="button">
-        <i class="fa fa-times editButton"></i>
+        <i class="fas fa-times editButton"></i>
     </button>
 
 </div>

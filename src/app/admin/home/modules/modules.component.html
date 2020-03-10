@@ -1,12 +1,9 @@
-<div class="mcTableTitle">
-	<span class="title">
-		Modules
-		<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-		<!--<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>-->
-	</span>
+<div class="heading-container">
+	<h4>There are {{totalItemCount}} modules in this repository. </h4>
 </div>
+
 <div class="mcTableContainer">
-	<table mat-table matSort [dataSource]="dataSource" class="table table-condensed table-bordered mcTable">
+	<table mat-table matSort [dataSource]="dataSource" class="table table-borderless mdm--table table-striped">
 		<ng-container matColumnDef="name">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="name" [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name">
 				<span [hidden]="!hideFilters">Name</span>
@@ -40,8 +37,9 @@
 			</td>
 		</ng-container>
 
-		<tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-		<tr mat-row *matRowDef="let record; columns: displayedColumns;" style="height: auto"></tr>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
 
 	</table>
 </div>
+<br>

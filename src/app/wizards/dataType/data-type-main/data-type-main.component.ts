@@ -1,161 +1,180 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { StateService } from "@uirouter/core";
-import { StateHandlerService } from "../../../services/handlers/state-handler.service";
-import { ResourcesService } from "../../../services/resources.service";
-import { MessageHandlerService } from "../../../services/utility/message-handler.service";
-import { Step } from "../../../model/stepModel";
-import { DataTypeStep1Component } from "../data-type-step1/data-type-step1.component";
-import { DataTypeStep2Component } from "../data-type-step2/data-type-step2.component";
+import { StateService } from '@uirouter/core';
+import { StateHandlerService } from '../../../services/handlers/state-handler.service';
+import { ResourcesService } from '../../../services/resources.service';
+import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { Step } from '../../../model/stepModel';
+import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.component';
+import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
 
 @Component({
-	selector: 'app-data-type-main',
-	templateUrl: './data-type-main.component.html',
-	styleUrls: ['./data-type-main.component.sass']
+  selector: 'app-data-type-main',
+  templateUrl: './data-type-main.component.html',
+  styleUrls: ['./data-type-main.component.sass']
 })
 export class DataTypeMainComponent implements OnInit {
 
-	parentDataModelId: any;
-	steps: Step[] = [];
-	processing: any;
-	isProcessComplete: any;
+  constructor(
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService
+  ) {}
+  parentDataModelId: any;
+  steps: Step[] = [];
+  processing: any;
+  isProcessComplete: any;
 
-	constructor(private stateService: StateService,
-		private stateHandler: StateHandlerService,
-		private resources: ResourcesService,
-		private messageHandler: MessageHandlerService,
-		) { }
+  model = {
+    createType: 'new',
+    copyFromDataModel: [],
+    isValid: false,
 
-	ngOnInit() {
+    parent: {
+      id: ''
+    },
+    parentDataModel: { id: '' },
 
-		this.parentDataModelId = this.stateService.params.parentDataModelId;
+    label: '',
+    description: '',
+    organisation: '',
+    domainType: 'PrimitiveType',
 
-		if (!this.parentDataModelId) {
-			this.stateHandler.NotFound({ location: false });
-			return;
-		}
+    metadata: [],
+    enumerationValues: [],
+    classifiers: [],
+    referencedDataType: { id: '' },
+    referencedTerminology: { id: '' },
+    referencedDataClass: { id: '' }
+  };
 
-		const step1 = new Step();
-		step1.title = "Add Data Type";
-		step1.component = DataTypeStep1Component;
-		step1.scope = this;
-		step1.hasForm = true;
+  ngOnInit() {
+    this.parentDataModelId = this.stateService.params.parentDataModelId;
 
-		const step2 = new Step();
-		step2.title = "Data Type Details";
-		step2.component = DataTypeStep2Component;
-		step2.scope = this;
+    if (!this.parentDataModelId) {
+      this.stateHandler.NotFound({ location: false });
+      return;
+    }
 
-		this.resources.dataModel
-			.get(this.parentDataModelId).toPromise().then((result) => {
+    const step1 = new Step();
+    step1.title = 'Add Data Type';
+    step1.component = DataTypeStep1Component;
+    step1.scope = this;
+    step1.hasForm = true;
 
-				result.body.breadcrumbs = [];
-				result.body.breadcrumbs.push(Object.assign({}, result.body));
-				this.model.parent = result.body;
+    const step2 = new Step();
+    step2.title = 'Data Type Details';
+    step2.component = DataTypeStep2Component;
+    step2.scope = this;
 
-				this.steps.push(step1);
-				this.steps.push(step2);
-			});
-	}
+    this.resources.dataModel
+      .get(this.parentDataModelId)
+      .toPromise()
+      .then(result => {
+        result.body.breadcrumbs = [];
+        result.body.breadcrumbs.push(Object.assign({}, result.body));
+        this.model.parent = result.body;
 
-	model = {
-		createType: "new",
-		copyFromDataModel: [],
-		isValid: false,
+        this.steps.push(step1);
+        this.steps.push(step2);
+      });
+  }
 
-		parent: {
-			id: ""
-		},
-		parentDataModel: { id: "" },
+  cancelWizard() {
+    this.stateHandler.GoPrevious();
+  }
 
-		label: "",
-		description: "",
-		organisation: "",
-		domainType: "PrimitiveType",
+  save = () => {
+    if (this.model.createType === 'new') {
+      this.saveNewDataType();
+    } else {
+      this.saveCopiedDataTypes();
+    }
+  }
 
-		metadata: [],
-		enumerationValues: [],
-		classifiers: [],
-		referencedDataType: { id: "" },
-		referencedTerminology: { id: "" },
-		referencedDataClass: { id: "" }
-	};
+  fireChanged = (tab: any) => {
+    for (let i = 0; i < this.steps.length; i++) {
+      const step: Step = this.steps[i];
 
-	cancelWizard() {
-		this.stateHandler.GoPrevious();
-	};
+      if (i === tab.selectedIndex) {
+        if (step.compRef) {
+          step.compRef.instance.onLoad();
+          step.active = true;
+        }
+      } else {
+        step.active = false;
+      }
+    }
+  }
 
-	save = () => {
+  saveNewDataType() {
+    const resource = {
+      label: this.model.label,
+      description: this.model.description,
+      organisation: this.model.organisation,
+      domainType: this.model.domainType,
 
-		if (this.model.createType === 'new') {
-			this.saveNewDataType();
-		} else {
-			this.saveCopiedDataTypes();
-		}
-	};
+      referenceDataType: {
+        id: this.model.referencedDataType
+          ? this.model.referencedDataType.id
+          : null
+      },
+      referenceClass: {
+        id: this.model.referencedDataClass
+          ? this.model.referencedDataClass.id
+          : null
+      },
+      terminology: {
+        id: this.model.referencedTerminology
+          ? this.model.referencedTerminology.id
+          : null
+      },
 
-	fireChanged = (tab: any) => {
+      classifiers: this.model.classifiers.map((cls) => {
+        return { id: cls.id };
+      }),
+      enumerationValues: this.model.enumerationValues.map((m) => {
+        return {
+          key: m.key,
+          value: m.value,
+          category: m.category
+        };
+      }),
+      metadata: this.model.metadata.map((m) => {
+        return {
+          key: m.key,
+          value: m.value,
+          namespace: m.namespace
+        };
+      })
+    };
 
-		for (var i = 0; i < this.steps.length; i++) {
+    const deferred = this.resources.dataModel.post(
+      this.model.parent.id,
+      'dataTypes',
+      { resource }
+    );
 
-			var step: Step = this.steps[i];
+    deferred.subscribe(
+      response => {
+        this.messageHandler.showSuccess('Data Type saved successfully.');
 
-			if (i === tab.selectedIndex) {
+        this.stateHandler.Go(
+          'DataType',
+          { dataModelId: response.dataModel, id: response.id },
+          { reload: true, location: true }
+        );
+      },
+      error => {
+        this.messageHandler.showError(
+          'There was a problem saving the Data Type.',
+          error
+        );
+      }
+    );
+  }
 
-				if (step.compRef) {
-					step.compRef.instance.onLoad();
-					step.active = true;
-				}
-			} else {
-				step.active = false;
-			}
-		}
-	}
-
-	saveNewDataType() {
-		var resource = {
-			label: this.model.label,
-			description: this.model.description,
-			organisation: this.model.organisation,
-			domainType: this.model.domainType,
-			
-			referenceDataType: { id: this.model.referencedDataType ? this.model.referencedDataType.id : null },
-			referenceClass: { id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null },
-			terminology: { id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null },
-
-			classifiers: this.model.classifiers.map(function (cls) {
-				return { id: cls.id };
-			}),
-			enumerationValues: this.model.enumerationValues.map(function (m) {
-				return {
-					key: m.key,
-					value: m.value,
-					category: m.category
-				};
-			}),
-			metadata: this.model.metadata.map(function (m) {
-				return {
-					key: m.key,
-					value: m.value,
-					namespace: m.namespace
-				};
-			})
-		};
-
-		var deferred = this.resources.dataModel.post(this.model.parent.id, 'dataTypes', { resource: resource });
-
-		deferred.subscribe((response) => {
-
-			this.messageHandler.showSuccess('Data Type saved successfully.');
-			
-			this.stateHandler.Go("DataType",
-				{ dataModelId: response.dataModel, id: response.id },
-				{ reload: true, location: true });
-		}, (error) => {
-			this.messageHandler.showError('There was a problem saving the Data Type.', error);
-		});
-	};
-
-	saveCopiedDataTypes = () => {
-		this.steps[1].compRef.instance.saveCopiedDataTypes();
-	}
+  saveCopiedDataTypes = () => {
+    this.steps[1].compRef.instance.saveCopiedDataTypes();
+  }
 }

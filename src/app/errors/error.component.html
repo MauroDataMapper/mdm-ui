@@ -1,5 +1,5 @@
 <div class="jumbotron errorMessage" style="text-align: left">
-    <h2> <i class="fa fa-bug themeColor"></i>{{errorHeader}}</h2>
+    <h2> <i class="fas fa-bug"></i>{{errorHeader}}</h2>
     <p>{{errorMessage}}</p>
 </div>
 <div>
@@ -13,7 +13,7 @@
             aria-disabled="false" title="Report Issue"
             (click)="reportIssueToYouTrack()"
             *ngIf="!issueReporting && !issueReported && !errorInSubmit">
-        <i class="fa fa-share themeColor"></i> Report Issue
+        <i class="fas fa-share"></i> Report Issue
     </button>
 
 
@@ -26,28 +26,28 @@
         Reporting issue...</span>
     </div>
     <div class="alert alert-success" *ngIf="issueReported">
-        <i class="fa fa-check"></i> <strong>Success!</strong> Issue successfully reported to YouTrack - thank you!
+        <i class="fas fa-check"></i> <strong>Success!</strong> Issue successfully reported to YouTrack - thank you!
     </div>
     <div class="alert alert-danger" *ngIf="errorInSubmit">
-        <i class="fa fa-times"></i><strong>Error!</strong> Failed to report issue to YouTrack. <br/>
+        <i class="fas fa-times"></i><strong>Error!</strong> Failed to report issue to YouTrack. <br/>
         This may be a configuration error or an problem with the issue-tracking software.  Please contact your catalogue administrator.
     </div>
 </div>
 <div>
     <mat-slide-toggle (change)="changeShowDetails()">Show details</mat-slide-toggle>
-    <div [hidden]="!showDetails" class="themeColor" >
+    <div [hidden]="!showDetails">
         <h3>Details
             <button type="button"
                     class="btn btn-default btn"
                     aria-hidden="false"
                     aria-disabled="false" title="Copy to clipboard"
                     (click)="copyToClipboard()">
-                <i class="fa fa-clipboard themeColor"></i> Copy to Clipboard
+                <i class="fas fa-clipboard"></i> Copy to Clipboard
             </button>
         </h3>
 
 
-        <table class="table table-condensed dataModelDetailTable">
+        <table class="table dataModelDetailTable">
             <tbody>
             <tr *ngFor="let item of dataSource">
                 <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">{{item.field}}</td>

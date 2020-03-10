@@ -74,8 +74,7 @@ export class MctableService {
     this.resourcesService.HistoryGet('a61e88e7-c951-4624-baaf-ec03cd09357b', '').subscribe(serverResult => {
       this.result = serverResult;
     });
-    console.log(this.result);
-        if(this.result != null && this.result != undefined)
+    if(this.result != null && this.result != undefined)
     this._total$.next(this.result.count);
     this._search$.next();
   }

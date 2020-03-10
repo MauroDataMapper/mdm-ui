@@ -1,191 +1,179 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div>
-            <div class="input-group">
-                <input #searchInputControl type="text" id="searchInput" class="form-control input-sm ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput" [ngModelOptions]="{ debounce: 500 }" placeholder="{{placeHolderText}}" aria-invalid="false">
-                <span class="input-group-btn">
-                    <button class="btn btn-default btn-sm" type="button" (click)="search(true)">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </button>
-                    <button class="btn btn-default btn-sm" id="helpButton" (click)="loadHelp()" type="button">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
-                    <button class="btn btn-default btn-sm" type="button" (click)="toggleAdvancedSearch()">
-                        Advanced
-                    </button>
-                </span>
+<div class="input-group">
+    <input #searchInputControl type="text" id="searchInput" class="form-control outlined-input ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput" [ngModelOptions]="{ debounce: 500 }" placeholder="{{placeHolderText}}" aria-invalid="false">
+    <span class="input-group-btn tree-top-actions">
+        <button mat-stroked-button class="paddingless" (click)="search(true)" aria-label="Search">
+            <i class="fas fa-search"></i>
+        </button>
+        <button mat-stroked-button class="paddingless" id="helpButton" matTooltipPosition="below" matTooltip="Help" (click)="loadHelp()" aria-label="Help">
+            <i class="fas fa-info-circle helpIcon"></i>
+        </button>
+        <button class="btn btn-default" (click)="toggleAdvancedSearch()" aria-label="Advanced search">
+            Advanced
+        </button>
+    </span>
+</div>
+<br>
+<ng-template [ngIf]="advancedSearch">
+    <div style="background-color: #efefef; margin: 0px 1px 5px 1px;border-radius: 4px;">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="showRestrictTo">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Restrict your search to:</span>
+                    <br>
+                    <div style="margin-right: 10px; width:60%;">
+                        <model-selector-tree
+                            [ng-model]="context"        
+                            [on-select]="onContextSelected"
+                            [placeholder]="'Choose a Folder, Data Model or Data Class'"
+                            [accepts]="['Folder', 'DataModel', 'DataClass']">
+                        </model-selector-tree>
+                    </div>
+                </div>
             </div>
-            <div style="width:99%">
-                <div class="row" style="padding-top: 5px;padding-left: 15px;">
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Domain Types</span>
+                    <br>
+                    <div style="margin-right: 10px;" *ngIf="!hideDM">
+                        <input style="cursor: pointer;" type="checkbox"
+                                [(ngModel)]="formData.selectedDomainTypes.DataModel"
+                                ng-true-value="true" ng-false-value="false"
+                                name="DataModel" (change)="search(true)">
+                        Data Model
+                    </div>
+                    <div style="margin-right: 10px;" *ngIf="!hideDC">
+                        <input style="cursor: pointer;" type="checkbox"
+                                [(ngModel)]="formData.selectedDomainTypes.DataClass"
+                                name="DataClass" (change)="search(true)">
+                        Data Class
+                    </div>
+                    <div style="margin-right: 10px;" *ngIf="!hideDE">
+                        <input style="cursor: pointer;"
+                                type="checkbox"
+                                [(ngModel)]="formData.selectedDomainTypes.DataElement"
+                                name="DataElement"
+                                (change)="search()"> Data Element
+                    </div>
+                    <div style="margin-right: 10px;" *ngIf="!hideDT">
+                        <input style="cursor: pointer;" type="checkbox"
+                                [(ngModel)]="formData.selectedDomainTypes.DataType"
+                                name="DataType" (change)="search(true)"> Data
+                        Type
+                    </div>
+
+                    <div style="margin-right: 10px;" *ngIf="!hideEV">
+                        <input style="cursor: pointer;" type="checkbox"
+                                [(ngModel)]="formData.selectedDomainTypes.EnumerationValue"
+                                name="DataType" (change)="search(true)"> Enumeration Value
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Search Type</span>
+                    <br>
+                    <div style="margin-right: 10px;">
+                        <input style="cursor: pointer;" type="checkbox"
+                                [(ngModel)]="formData.labelOnly" name="labelOnly"
+                                (change)="search(true)"> Title only <i class="fas fa-info-circle"
+                                                                        class="helpIcon"
+                                                                        matTooltipPosition="right"
+                                                                        matTooltip="Just search in title of the elements. Not in descriptions, metadata and aliases."></i>
+                    </div>
+                    <div style="margin-right: 10px;">
+                        <input style="cursor: pointer;" type="checkbox"
+                                [(ngModel)]="formData.exactMatch" name="matchCase"
+                                (change)="search(true)"> Exact match
+                    </div>
                 </div>
             </div>
         </div>
-        <ng-template [ngIf]="advancedSearch">
-            <div style="background-color: #efefef; margin: 0px 1px 5px 1px;border-radius: 4px;">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="showRestrictTo">
-                        <div style="padding: 10px;">
-                            <span style="font-weight: bold;">Restrict your search to:</span>
-                            <br>
-                            <div style="margin-right: 10px; width:60%;">
-                                <model-selector-tree
-                                    [ng-model]="context"        
-                                    [on-select]="onContextSelected"
-                                    [placeholder]="'Choose a Folder, Data Model or Data Class'"
-                                    [accepts]="['Folder', 'DataModel', 'DataClass']">
-                                </model-selector-tree>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                        <div style="padding: 10px;">
-                            <span style="font-weight: bold;">Domain Types</span>
-                            <br>
-                            <div style="margin-right: 10px;" *ngIf="!hideDM">
-                                <input style="cursor: pointer;" type="checkbox"
-                                       [(ngModel)]="formData.selectedDomainTypes.DataModel"
-                                       ng-true-value="true" ng-false-value="false"
-                                       name="DataModel" (change)="search(true)">
-                                Data Model
-                            </div>
-                            <div style="margin-right: 10px;" *ngIf="!hideDC">
-                                <input style="cursor: pointer;" type="checkbox"
-                                       [(ngModel)]="formData.selectedDomainTypes.DataClass"
-                                       name="DataClass" (change)="search(true)">
-                                Data Class
-                            </div>
-                            <div style="margin-right: 10px;" *ngIf="!hideDE">
-                                <input style="cursor: pointer;"
-                                       type="checkbox"
-                                       [(ngModel)]="formData.selectedDomainTypes.DataElement"
-                                       name="DataElement"
-                                       (change)="search()"> Data Element
-                            </div>
-                            <div style="margin-right: 10px;" *ngIf="!hideDT">
-                                <input style="cursor: pointer;" type="checkbox"
-                                       [(ngModel)]="formData.selectedDomainTypes.DataType"
-                                       name="DataType" (change)="search(true)"> Data
-                                Type
-                            </div>
-
-                            <div style="margin-right: 10px;" *ngIf="!hideEV">
-                                <input style="cursor: pointer;" type="checkbox"
-                                       [(ngModel)]="formData.selectedDomainTypes.EnumerationValue"
-                                       name="DataType" (change)="search(true)"> Enumeration Value
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                        <div style="padding: 10px;">
-                            <span style="font-weight: bold;">Search Type</span>
-                            <br>
-                            <div style="margin-right: 10px;">
-                                <input style="cursor: pointer;" type="checkbox"
-                                       [(ngModel)]="formData.labelOnly" name="labelOnly"
-                                       (change)="search(true)"> Title only <i class="fa fa-info-circle"
-                                                                              style="cursor: pointer;"
-                                                                              matTooltipPosition="right"
-                                                                              matTooltip="Just search in title of the elements. Not in descriptions, metadata and aliases."></i>
-                            </div>
-                            <div style="margin-right: 10px;">
-                                <input style="cursor: pointer;" type="checkbox"
-                                       [(ngModel)]="formData.exactMatch" name="matchCase"
-                                       (change)="search(true)"> Exact match
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div style="padding: 0px 10px;">
-                            <span style="font-weight: bold;">Last Updated</span>
-                            <div>
-                                <date-from-to (onSelect)="onLastUpdatedSelect($event)"></date-from-to>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div style="padding: 0px 10px;">
-                            <span style="font-weight: bold;">Created</span>
-                            <date-from-to (onSelect)="onCreatedSelect($event)"></date-from-to>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="context && context.domainType === 'Folder'">
-                        <div style="padding: 10px;">
-                            <span style="font-weight: bold;">Classifiers</span>
-                            <br>
-                            <span style="font-size: 12px; font-style: italic;">Filter result based on the following classifier(s):</span>
-                            <div>
-                                <mat-select (selectionChange)="search(true)" multiple placeholder="Classifications" class="form-control" [(ngModel)]="formData.classifiers">
-                                    <mat-option *ngFor="let classification of classifications" [value]="classification">{{classification.label}}</mat-option>
-                                </mat-select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </ng-template>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div>
-                    <div class="mcTableTitle" *ngIf="formData.showSearchResult === true">
-                        <span class="title">Search Result <span class="badge element-count ng-binding" style="margin:0px 3px; font-size: 12px;" aria-hidden="false">{{totalItemCount}}</span> </span>
+                <div style="padding: 0px 10px;">
+                    <span style="font-weight: bold;">Last Updated</span>
+                    <div>
+                        <date-from-to (onSelect)="onLastUpdatedSelect($event)"></date-from-to>
                     </div>
-                    <div class="mcTableMain">
-                        <div class="mcTableContainer">
-                            <table mat-table [dataSource]="searchResults" class="table table-condensed table-bordered mcTable">
-                                <ng-container matColumnDef="label">
-                                    <th mat-header-cell *matHeaderCellDef> </th>
-                                    <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
-                                        <div style="padding: 2px 0px">
-                                            <div>
-                                                <div>
-                                                    <element-link [show-type-title]="true"
-                                                                  [new-window]="!doNotOpenLinkInNewWindow"
-                                                                  [parent-data-model]="{id:record.dataModel}"
-                                                                  [parent-data-class]="{id:record.dataClass}"
-                                                                  [element]="record"></element-link>
-                                                </div>
-                                                <div *ngIf="record.aliases">
-                                                    <ul class="aliasSearchResult">
-                                                        <li style="font-size: 12px;display: inline-block;font-style: italic;">Aliases:</li>
-                                                        <li ng-repeat="alias in record.aliases"
-                                                            class="aliasSearchResult">
-                                                            <span class="themeColor" ng-bind-html="alias"></span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div style="padding: 0px 10px;">
+                    <span style="font-weight: bold;">Created</span>
+                    <date-from-to (onSelect)="onCreatedSelect($event)"></date-from-to>
+                </div>
+            </div>
+        </div>
 
-                                                <model-path [path]="record.breadcrumbs" [new-window]="!doNotOpenLinkInNewWindow" [do-not-display-status]="doNotDisplayModelPathStatus"></model-path>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="context && context.domainType === 'Folder'">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold;">Classifiers</span>
+                    <br>
+                    <span style="font-size: 12px; font-style: italic;">Filter result based on the following classifier(s):</span>
+                    <div>
+                        <mat-select (selectionChange)="search(true)" multiple placeholder="Classifications" class="form-control" [(ngModel)]="formData.classifiers">
+                            <mat-option *ngFor="let classification of classifications" [value]="classification">{{classification.label}}</mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                            </div>
-                                            <markdown-text-area rows="'4'" [description]="record.description" [in-edit-mode]="false" [hide-help-text]="true"></markdown-text-area>
+    </div>
+</ng-template>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div>
+            <div class="mdm--block" *ngIf="formData.showSearchResult === true">
+                <span class="title">Search result(s) <span class="badge element-count ng-binding" style="margin:0px 3px; font-size: 12px;" aria-hidden="false">{{totalItemCount}}</span> </span>
+            </div>
+            <div class="mcTableMain">
+                <div class="mcTableContainer">
+                    <table mat-table [dataSource]="searchResults" class="table table-bordered">
+                        <ng-container matColumnDef="label">
+                            <th mat-header-cell *matHeaderCellDef> </th>
+                            <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding: 12px 24px;">
+                                <div style="padding: 2px 0px">
+                                    <div>
+                                        <div>
+                                            <element-link [show-type-title]="true"
+                                                            [new-window]="!doNotOpenLinkInNewWindow"
+                                                            [parent-data-model]="{id:record.dataModel}"
+                                                            [parent-data-class]="{id:record.dataClass}"
+                                                            [element]="record"></element-link>
+                                        </div>
+                                        <div *ngIf="record.aliases">
+                                            <ul class="aliasSearchResult">
+                                                <li style="font-size: 12px;display: inline-block;font-style: italic;">Aliases:</li>
+                                                <li ng-repeat="alias in record.aliases"
+                                                    class="aliasSearchResult">
+                                                    <span ng-bind-html="alias"></span>
+                                                </li>
+                                            </ul>
                                         </div>
 
-                                    </td>
-                                </ng-container>
+                                        <model-path [path]="record.breadcrumbs" [new-window]="!doNotOpenLinkInNewWindow" [do-not-display-status]="doNotDisplayModelPathStatus"></model-path>
+
+                                    </div>
+                                    <markdown-text-area rows="'4'" [description]="record.description" [in-edit-mode]="false" [hide-help-text]="true"></markdown-text-area>
+                                </div>
+
+                            </td>
+                        </ng-container>
 
 
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-                            </table>
+                    </table>
 
-                            <mat-card *ngIf="isLoading"
-                                      style="display: flex; justify-content: center; align-items: center">
-                                <mat-progress-spinner color="primary"
-                                                      mode="indeterminate">
-                                </mat-progress-spinner>
-                            </mat-card>
+                    <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+                        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+                    </mat-card>
 
-                            <mat-paginator *ngIf="formData.showSearchResult" [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons></mat-paginator>
-                        </div>
-                    </div>
+                    <mat-paginator *ngIf="formData.showSearchResult" [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons></mat-paginator>
                 </div>
             </div>
         </div>

@@ -10,17 +10,23 @@ import { SharedService } from './services/shared.service';
 export class AppComponent implements OnInit {
   title = 'mdm-ui';
 
-  constructor(private userIdle: UserIdleService, private sharedService: SharedService) {}
+  constructor(
+    private userIdle: UserIdleService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
     // Start watching for user inactivity.
     this.userIdle.startWatching();
 
     // Start watch when time is up.
-    this.userIdle.onTimeout().subscribe(() => {console.log('Time is up!'); this.sharedService.handleExpiredSession(), this.userIdle.resetTimer();});
+    this.userIdle.onTimeout().subscribe(() => {
+      console.log('Time is up!');
+      this.sharedService.handleExpiredSession(), this.userIdle.resetTimer();
+    });
   }
 
-  @HostListener('document:mousemove', ['$event']) 
+  @HostListener('document:mousemove', ['$event'])
   onMouseMove(e) {
     this.userIdle.resetTimer();
   }

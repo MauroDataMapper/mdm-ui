@@ -1,0 +1,32 @@
+.marginless {
+  margin: 0 !important;
+}
+.paddingless, .paddingless .mat-form-field-wrapper {
+  padding: 0!important;
+}
+
+.required, .danger, .warning {
+  color: #a5122a;
+}
+.badge {
+  padding: 5px 9px;
+  font-size: 15px;
+  font-style: normal;
+}
+button.custom {
+  padding: 7px 16px;
+  @include respond-to($mobile-xs) {
+    padding: 5px 16px;
+  }
+
+  &.inverted-button {
+    color: #fff;
+    &[mat-stroked-button] {
+      border: 1px solid #fff;
+    }
+  }
+}
+.mdm--block {
+  margin-bottom: 16px;
+  display: block!important;
+}

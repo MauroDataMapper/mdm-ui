@@ -36,7 +36,7 @@
     <div #mcSelectHolder class="mcSelectHolder" id="my" [ngStyle]="holderStyle" (scroll)="onScroll($event)" style="width: 100%" [hidden]="!(show && displayValues && displayValues.length > 0)" >
        <div *ngFor="let item of displayValues">
            <div (click)="itemClicked($event,item)" class="mcSelectItem" #mcSelectItem>
-               <ng-container *ngTemplateOutlet="lineContentTmpl, context: { $implicit: item, inputText: inputText }"></ng-container>
+               <ng-container *ngTemplateOutlet="lineContentTmpl, context: { $implicit: item, item:item, inputText: inputText }"></ng-container>
            </div>
        </div>
     </div>

@@ -88,7 +88,8 @@
                                         [parent-scope-handler]="parentScopeHandler"
                                         [model]="model.newlyAddedDataType"
                                         [parent-data-model]="model.parentDataModel"
-                                        [show-parent-data-model]="false">
+                                        [show-parent-data-model]="false"
+                                        (validationStatusEvent)="validationStatusEmitter($event)">
                                 </new-data-type-inline>
                             </div>
                             <div *ngIf="!model.showNewInlineDataType">
@@ -99,14 +100,14 @@
                                             [value-type]="'dynamic'"
                                             [default-value]="model.dataType"
                                             [load-dynamic-values]="fetchDataTypes"
-                                            [min-input-length]="1"                                      
+                                            [min-input-length]="1"
                                             [id-property]="'id'"
                                             [display-property]="'label'"
                                             [search-property]="'label'"
                                             [load-all-on-click]="true"
                                             [(pagination)]="pagination"
-                                            (on-select)="onTargetSelect">
-                                        <ng-template #lineContent let-item = "item", let-searchTerm = "inputText" >
+                                            (on-select)="onTargetSelect($event[0])">
+                                        <ng-template #lineContent let-item = 'item', let-searchTerm = "inputText" >
                                             <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
                                             <div>
                                                 <element-link [element]="item" [show-type-title]="true" [show-link]="false"></element-link>

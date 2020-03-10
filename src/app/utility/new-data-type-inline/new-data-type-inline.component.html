@@ -11,7 +11,7 @@
 				<tr>
 					<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
 					<td>
-						<input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label" 
+						<input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label"
 							   required="Name can not be Empty">
 					</td>
 				</tr>
@@ -82,10 +82,10 @@
 							</mc-select>
 						</div>
 						<div *ngIf="model.domainType === 'ReferenceType'">
-							<model-selector-tree 
-								(ngModelChange)="onDataClassSelect = $event"
+							<model-selector-tree
+								(ngModelChange)="onDataClassSelect($event)"
 												 [default-elements]="model.referencedDataClass"
-												 [root]="model.parent"
+												 [root]="parentDataModel"
 												 [placeholder]="'Select Data Class'"
 												 [read-only-search-input]="true"
 												 [accepts]="['DataClass']">

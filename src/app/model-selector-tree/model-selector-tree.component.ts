@@ -1,33 +1,43 @@
-import {Component, EventEmitter, Input, OnInit, Output, ElementRef, HostListener, SimpleChanges} from '@angular/core';
-import {ResourcesService} from "../services/resources.service";
-import {SecurityHandlerService} from "../services/handlers/security-handler.service";
-import {UserSettingsHandlerService} from "../services/utility/user-settings-handler.service";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ElementRef,
+  HostListener,
+  SimpleChanges,
+  ChangeDetectorRef
+} from '@angular/core';
+import {ResourcesService} from '../services/resources.service';
+import {SecurityHandlerService} from '../services/handlers/security-handler.service';
+import {UserSettingsHandlerService} from '../services/utility/user-settings-handler.service';
 
 @Component({
   selector: 'model-selector-tree',
   templateUrl: './model-selector-tree.component.html',
-  //styleUrls: ['./model-selector-tree.component.sass']
+  // styleUrls: ['./model-selector-tree.component.sass']
 })
 export class ModelSelectorTreeComponent implements OnInit {
 
-    @Input() root : any;
+    @Input() root: any;
     @Output() rootChange = new EventEmitter<any>();
 
-    @Input("default-elements") defaultElements: any;
+    @Input('default-elements') defaultElements: any;
 
-    @Input("default-checked-map") defaultCheckedMap: any;
+    @Input('default-checked-map') defaultCheckedMap: any;
 
-    @Input("on-select") onSelect: any;
+    @Input('on-select') onSelect: any;
     @Output() onSelectChange = new EventEmitter<any>();
 
-    @Input("on-check") onCheck: any;
+    @Input('on-check') onCheck: any;
     @Output() onCheckChange = new EventEmitter<any>();
 
-    selectedElementsVal: any;
+    selectedElementsVal: any ;
     @Output() ngModelChange = new EventEmitter<any>();
    // @Input("ng-model") ngModel: any;
 
-    @Input("ng-model")
+    @Input('ng-model')
     get ngModel() {
         return this.selectedElements;
     }
@@ -43,60 +53,59 @@ export class ModelSelectorTreeComponent implements OnInit {
     }
 
 
-    @Input("is-required") isRequired: any;
-    @Input("show-validation-error") showValidationError: any;
-    @Input("do-not-show-data-classes") doNotShowDataClasses: any;
-    @Input("do-not-show-terms") doNotShowTerms: any;
-    @Input("just-show-folders") justShowFolders: any;
+    @Input('is-required') isRequired: any;
+    @Input('show-validation-error') showValidationError: any;
+    @Input('do-not-show-data-classes') doNotShowDataClasses: any;
+    @Input('do-not-show-terms') doNotShowTerms: any;
+    @Input('just-show-folders') justShowFolders: any;
 
-    @Input() placeholder : any;
+    @Input() placeholder: any;
     @Output() placeholderChange = new EventEmitter<any>();
 
     @Input() accepts: any;
-    @Input("tree-search-domain-type") treeSearchDomainType: any;//"Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
-    @Input("read-only-search-input") readOnlySearchInput: any;
+    @Input('tree-search-domain-type') treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
+    @Input('read-only-search-input') readOnlySearchInput: any;
     @Input() multiple: any;
     @Input() processing: any;
-    @Input("hide-selected-elements") hideSelectedElements: any;
-    @Input("always-show-tree") alwaysShowTree: any = false;
-    @Input("show-checkbox-for") showCheckboxFor: any; //['DataClass','DataModel','Folder']"
-    @Input("propagate-checkbox") propagateCheckbox: any;
-    @Input("used-in-modal-dialogue") usedInModalDialogue: any;
-    @Input("do-not-apply-settings-filter") doNotApplySettingsFilter: any;
+    @Input('hide-selected-elements') hideSelectedElements: any;
+    @Input('always-show-tree') alwaysShowTree: any = false;
+    @Input('show-checkbox-for') showCheckboxFor: any; // ['DataClass','DataModel','Folder']"
+    @Input('propagate-checkbox') propagateCheckbox: any;
+    @Input('used-in-modal-dialogue') usedInModalDialogue: any;
+    @Input('do-not-apply-settings-filter') doNotApplySettingsFilter: any;
 
-  showTree : any;
+  showTree: any;
   placeholderStr: string;
-  loading : boolean;
+  loading: boolean;
   rootNode: any;
   filteredRootNode: any;
   markChildren: any;
-  selectedElements: any;
+  selectedElements = [];
   searchCriteria: any;
   hasValidationError: boolean;
   inSearchMode: any;
   wasInside = false;
 
-  constructor(private resources: ResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private eRef: ElementRef) {
+  constructor(private resources: ResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private eRef: ElementRef, private changeRef: ChangeDetectorRef) {
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-        if(changes.defaultElements){
-      this.selectedElements = this.defaultElements;
-      if(!this.multiple){
+    // Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    // Add '${implements OnChanges}' to the class.
+        if (changes.defaultElements) {
+      this.selectedElements.push(this.defaultElements);
+      if (!this.multiple) {
         this.searchCriteria = this.selectedElements[0] ? this.selectedElements[0].label : null;
       }
     }
 
-    if(changes.searchCriteria)
-    { if (!this.multiple) {
+        if (changes.searchCriteria) { if (!this.multiple) {
       if (this.selectedElements && this.selectedElements.length > 0) {
-          var label = this.selectedElements[0] ? this.selectedElements[0].label : "";
+          let label = this.selectedElements[0] ? this.selectedElements[0].label : '';
           if (this.selectedElements &&
               this.searchCriteria.trim().toLowerCase() === label.trim().toLowerCase() &&
-              label.trim().toLowerCase() !== "") {
+              label.trim().toLowerCase() !== '') {
               return;
           }
       }
@@ -107,7 +116,7 @@ export class ModelSelectorTreeComponent implements OnInit {
   // $scope.showTree = true;
 
 
-  var options = {
+      let options = {
       queryStringParams: {
           domainType: this.treeSearchDomainType,
           includeDocumentSuperseded: true,
@@ -117,12 +126,12 @@ export class ModelSelectorTreeComponent implements OnInit {
   };
 
 
-  if (this.searchCriteria.trim().length > 0) {
+      if (this.searchCriteria.trim().length > 0) {
     this.inSearchMode = true;
-    this.resources.tree.get(null, "search/" + this.searchCriteria, options).subscribe(
+    this.resources.tree.get(null, 'search/' + this.searchCriteria, options).subscribe(
           (result) => {
               this.filteredRootNode = {
-                  "children": result.body,
+                  children: result.body,
                   isRoot: true
               };
           });
@@ -136,17 +145,17 @@ export class ModelSelectorTreeComponent implements OnInit {
   }
 
   ngOnInit() {
-     
+
       this.showTree = this.alwaysShowTree;
-      this.placeholderStr = this.placeholder ? this.placeholder : "Select";
+      this.placeholderStr = this.placeholder ? this.placeholder : 'Select';
       this.reload();
- 
+
   }
 
-  loadFolder  (folder) {
-    var id = (folder && folder.id) ? folder.id : null;
+  loadFolder (folder) {
+    let id = (folder && folder.id) ? folder.id : null;
     this.loading = true;
-    this.resources.folder.get(id, null, {all:true, sortBy:"label"}).subscribe( data =>{
+    this.resources.folder.get(id, null, {all: true, sortBy: 'label'}).subscribe( data => {
       this.loading = false;
       this.rootNode = {
         children: data.items,
@@ -154,27 +163,27 @@ export class ModelSelectorTreeComponent implements OnInit {
       };
       this.filteredRootNode = this.rootNode;
 
-    }, function (error) {
+    }, function(error) {
       this.loading = false;
     });
-  };
+  }
 
-  loadTree (model) {
-    var id = (model && model.id) ? model.id : null;
+  loadTree(model) {
+    let id = (model && model.id) ? model.id : null;
     this.loading = true;
 
 
-    var options = {};
+    let options = {};
 
-    if(!this.doNotApplySettingsFilter && this.securityHandler.isLoggedIn()){
-      if(this.userSettingsHandler.get("includeSupersededDocModels") || false){
+    if (!this.doNotApplySettingsFilter && this.securityHandler.isLoggedIn()) {
+      if (this.userSettingsHandler.get('includeSupersededDocModels') || false) {
         options = {
           queryStringParams : {
             includeModelSuperseded: true,
           }
         };
       }
-    }else{
+    } else {
       options = {
         queryStringParams : {
           includeDocumentSuperseded: true,
@@ -193,27 +202,27 @@ export class ModelSelectorTreeComponent implements OnInit {
       };
       this.filteredRootNode = this.rootNode;
 
-      if(this.defaultCheckedMap && this.markChildren){
+      if (this.defaultCheckedMap && this.markChildren) {
         this.markChildren(this.filteredRootNode);
-        }      
+        }
 
-    }, function (error) {
+    }, function(error) {
       this.loading = false;
     });
-  };
+  }
 
-    remove  (event, element) {
+    remove (event, element) {
         if (this.multiple) {
-            var el = this.elementExists(element);
+            let el = this.elementExists(element);
             this.selectedElements.splice(el.index, 1);
             if (this.onSelect) {
                 this.onSelect(this.selectedElements);
             }
         }
-    };
+    }
 
-    elementExists (element) {
-        var i = 0;
+    elementExists(element) {
+        let i = 0;
         while (this.selectedElements && i < this.selectedElements.length) {
             if (this.selectedElements[i] && this.selectedElements[i].id === element.id) {
                 return { element: this.selectedElements[i], index: i };
@@ -221,9 +230,9 @@ export class ModelSelectorTreeComponent implements OnInit {
             i++;
         }
         return null;
-    };
+    }
 
-    cleanSelection () {
+    cleanSelection() {
         if (!this.multiple) {
             this.selectedElements = [];
            // this.safeApply();
@@ -238,9 +247,9 @@ export class ModelSelectorTreeComponent implements OnInit {
         this.searchCriteria = null;
        /// this.filteredRootNode = angular.copy(this.rootNode);TODO
         this.checkValidationError();
-    };
+    }
 
-    checkValidationError  () {
+    checkValidationError () {
         this.hasValidationError = false;
         if (this.isRequired && this.showValidationError) {
 
@@ -253,16 +262,16 @@ export class ModelSelectorTreeComponent implements OnInit {
                 this.hasValidationError = true;
             }
         }
-    };
+    }
 
-    toggleTree () {
+    toggleTree() {
 
         if (this.alwaysShowTree) {
             this.showTree = true;
             return;
         }
         this.showTree = !this.showTree;
-    };
+    }
 
     @HostListener('click')
     clickInside() {
@@ -279,9 +288,9 @@ export class ModelSelectorTreeComponent implements OnInit {
 
     onNodeClick =  (node) => {
         this.click(node);
-    };
+    }
 
-    onNodeDbClick = function (node) {
+    onNodeDbClick = function(node) {
         this.click(node);
     };
 
@@ -307,7 +316,7 @@ export class ModelSelectorTreeComponent implements OnInit {
         }
 
         this.selectedElements.push(node);
-       
+
 
         if (this.onSelect) {
             this.onSelect(this.selectedElements);
@@ -316,31 +325,34 @@ export class ModelSelectorTreeComponent implements OnInit {
         if (!this.multiple) {
             this.searchCriteria = this.selectedElements[0].label;
             this.showTree = false;
+            this.changeRef.detectChanges();
         }
 
         this.ngModel = this.selectedElements;
         this.checkValidationError();
-    };
+    }
 
-    onNodeChecked (node,parent,checkedList) {
+    onNodeChecked(node, parent, checkedList) {
         if (this.onCheck) {
             this.onCheck(node, parent, checkedList);
         }
-    };
+    }
 
     reload() {
-    if(this.justShowFolders) {
+    if (this.justShowFolders) {
       this.loadFolder(this.root);
-    }else{
+    } else {
       this.loadTree(this.root);
     }
-  };
+  }
 
-  //TODO NEEDS LOOK AT
+
+
+  // TODO NEEDS LOOK AT
   onAddFolder = (var1)  => {
 
   }
-  //this.reload();//TODO
+  // this.reload();//TODO
 
 
   // markChildren (node){

@@ -37,7 +37,7 @@ export class DataTypeDetailComponent implements OnInit {
   errorMessage: any;
 
   ngOnInit() {
-    debugger;
+
     this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -100,7 +100,7 @@ export class DataTypeDetailComponent implements OnInit {
         if (this.afterSave) {
           this.afterSave(resource);
         }
-        debugger;
+
         this.mcDataTypeObject.aliases = Object.assign([], result.aliases);
         this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
         this.mcDataTypeObject.label = result.label;

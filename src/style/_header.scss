@@ -1,0 +1,233 @@
+/* header & navbar specific styling */
+header#mdm--header {
+  position: relative;
+  background-color: $defaultThemeColour;
+  width: 100%;
+  margin-bottom: 24px;
+  z-index: 1000;
+  @include respond-to($tablet) {
+    padding: 0 15px;
+  }
+
+  #mdm--navbar {
+    height: 100px;
+    margin-bottom: 0;
+    padding: 0;
+    @include respond-to($mobile-xs) {
+      height: 70px;
+    }
+  }
+  .mdm--navbar-items {
+    display: flex;
+    margin-left: 72px;
+    align-items: center;
+    @include respond-to($tablet) {
+      display: none !important;
+    }
+  }
+  .mdm--navbar-brand {
+    z-index: 100;
+    #mdm-logo {
+      image-rendering: -webkit-optimize-contrast;
+      @include size(255px, auto);
+      @include respond-to($mobile-xs) {
+        position: relative;
+        display: block;
+        @include size(160px, 40px);
+      }
+    }
+    img {
+      @include respond-to ($mobile-xs){
+        max-width: 100%;
+      }
+    }
+  }
+  .nav-link {
+    display: inline-block;
+    line-height: 1;
+    color: #fff;
+    @include font(20px, 600);
+    padding: 8px;
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  .nav-link.active {
+    border-bottom: 2px solid white;
+  }
+
+  #mdm--navbar-desktop {
+    width: 100%;
+  }
+
+  > .container {
+    @include respond-to($tablet) {
+      padding: 0;
+    }
+  }
+}
+
+.section-title {
+  padding: 16px 24px 0px 24px;
+}
+
+.mdm--navbar-user {
+  display: flex;
+  cursor: pointer;
+  font-size: 18px;
+  @include respond-to($tablet) {
+    display: none !important;
+  }
+  .profile-name {
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .profile-role {
+    font-size: 14px;
+    line-height: 1;
+  }
+  .profile-img {
+    max-width: unset !important;
+    max-width: none;
+    @include size(50px !important, 50px !important);
+    text-align: center;
+    align-content: center;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    background: #fff;
+    color: #333;
+    border-radius: 100%;
+    font-weight: 700;
+  }
+}
+
+.mat-menu-content:not(:empty) {
+  padding: 0 !important;
+}
+
+a.mat-menu-item {
+  height: unset;
+  line-height: 1;
+  padding: 12px 24px;
+  outline: none;
+  color: #777777;
+  text-decoration: none;
+  outline: 0;
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  text-align: left;
+  text-decoration: none;
+  max-width: 100%;
+  position: relative;
+
+  i {
+    width: 30px;
+    text-align: center;
+  }
+}
+#navbar-logout {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  padding: 8px;
+  border: none;
+  outline: none;
+  background: #fcfafa;
+  color: #a5122a;
+  margin-top: 12px;
+  span {
+    margin-left: 8px;
+  }
+}
+
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+  padding: 0;
+}
+
+/* Mobile nav */
+#mobile-trigger {
+  display: none;
+  height: 40px;
+  line-height: 40px;
+  @include respond-to($tablet) {
+    display: block;
+  }
+  i.fa-bars {
+    display: block;
+  }
+}
+
+.aside-container {
+  position: absolute;
+  top: 60px;
+  bottom: 60px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  #sidenav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    background: #fff;
+    z-index: 1000;
+    @include respond-to(340px) {
+      width: 280px;
+    }
+  }
+  #sidenav-content {
+    flex: 1 0 auto;
+  }
+  .mat-drawer-inner-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+  }
+  .profile-details,
+  .profile-img {
+    text-align: center;
+    margin-top: 18px;
+  }
+  .aside-separator {
+    margin-top: 40px;
+  }
+  a.mat-menu-item {
+    padding: 9px 24px;
+    font-size: 16px;
+    i {
+      text-align: left;
+    }
+  }
+  .aside-main-navigation {
+    h5 {
+      padding-top: 0;
+    }
+  }
+  .section-title {
+    padding: 10px 24px 0px 24px;
+  }
+  .aside-user-actions {
+    text-align: center;
+    margin-bottom: 20px;
+    button {
+      width: 80%;
+    }
+    button:first-child {
+      background-color: #002147;
+      color: #fff;
+    }
+  }
+}
+
+mat-sidenav-container.aside-container.mat-drawer-container.mat-sidenav-container {
+  z-index: 1000;
+}
+mat-sidenav-container.aside-container.mat-drawer-container.mat-sidenav-container
+  .mat-drawer-backdrop.mat-drawer-shown {
+  height: 100%;
+  position: fixed;
+}

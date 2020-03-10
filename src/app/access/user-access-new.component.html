@@ -9,11 +9,11 @@
             <span class="title">User Access</span>
             <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{dataSource.data.length}}</span>
             <div *ngIf="folderResult['editable']" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
-            <button type="button" class="btn btn-default btn-sm" style="float: right;  padding: 0px; margin-right: 10px;" (click)="add()" title="Add"> <i style="width: 20px;" class="fa fa-plus addNewModelButton themeColor"></i></button>
+            <button type="button" class="btn btn-default btn-sm" style="float: right;  padding: 0px; margin-right: 10px;" (click)="add()" title="Add"> <i style="width: 20px;" class="fas fa-plus addNewModelButton"></i></button>
         </div>
         </div>
         <div class="mcTableContainer">
-            <table mat-table [dataSource]="dataSource" matSort class="table table-condensed table-bordered mcTable">
+            <table mat-table [dataSource]="dataSource" matSort class="table able-bordered">
                 <ng-container matColumnDef="user">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 30%; width: 30%; font-weight: bold">User</th>
                     <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
@@ -98,7 +98,7 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%; ">Read</th>
                     <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align:  center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
                         <span *ngIf="record.readAccess && record.user.userRole == 'ADMINISTRATOR'">
-                            <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                            <i class="fas fa-check userAccessCheckBox" aria-hidden="true"></i>
                         </span>
                         <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
                             <input type="checkbox" [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
@@ -110,7 +110,7 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%;">Write</th>
                     <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
                         <span *ngIf="record.writeAccess && record.user.userRole == 'ADMINISTRATOR'">
-                            <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                            <i class="fas fa-check userAccessCheckBox" aria-hidden="true"></i>
                         </span>
                         <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
                             <input type="checkbox" [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
@@ -124,10 +124,10 @@
                         <div *ngIf="record.isNew">
                             <div>
                                 <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
-                                    <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
+                                    <i class="fas fa-check editButton saveButton mcTableApproveBtn"></i>
                                 </button>
                                 <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
-                                    <i class="fa fa-times editButton themeColor"></i>
+                                    <i class="fas fa-times editButton"></i>
                                 </button>
                             </div>
                         </div>
@@ -141,8 +141,8 @@
                 </ng-container>
 
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
             </table>
         </div>

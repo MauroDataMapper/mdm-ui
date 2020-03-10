@@ -1,5 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import { SharedService } from "../services/shared.service";
+import { Component, Inject, OnInit } from '@angular/core';
+import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'app-about',
@@ -7,13 +7,11 @@ import { SharedService } from "../services/shared.service";
   styleUrls: ['./about.component.sass']
 })
 export class AboutComponent implements OnInit {
-  ngOnInit() {
-    }
+  ngOnInit() {}
 
-    public appVersion : string;
+  public appVersion: string;
 
-    constructor(private shared: SharedService) {
-        this.appVersion = shared.appVersion;
-    }
-
+  constructor(private shared: SharedService) {
+    this.appVersion = shared.appVersion;
+  }
 }

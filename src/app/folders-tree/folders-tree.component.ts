@@ -1,14 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-  ViewChild,
-  OnDestroy
-} from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { of, Subscription } from 'rxjs';
 import { ResourcesService } from '../services/resources.service';
@@ -18,8 +8,12 @@ import { FavouriteHandlerService } from '../services/handlers/favourite-handler.
 import { FolderService } from './folder.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
+import {
+  MatTreeFlattener,
+  MatTreeFlatDataSource
+} from '@angular/material/tree';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { DOMAIN_TYPE } from './flat-node';
 
 @Component({
   selector: "folders-tree-3",
@@ -27,7 +21,6 @@ import { MatMenuTrigger } from '@angular/material/menu';
   styleUrls: ['./folders-tree.component.scss']
 })
 export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
-
   constructor(
     protected messages: MessageService,
     protected resources: ResourcesService,
@@ -39,7 +32,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     this.loadFavourites();
     this.subscriptions.add(
-      this.messages.on("favoutires", () => {
+      this.messages.on('favoutires', () => {
         this.loadFavourites();
       })
     );
@@ -87,7 +80,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() doNotShowDataClasses;
   @Input() doNotShowTerms;
   @Input() justShowFolders;
-  @Input() showCheckboxFor; //it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
+  @Input() showCheckboxFor; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
   @Input() propagateCheckbox;
   @Input() enableDrag;
   @Input() enableDrop;
@@ -96,17 +89,17 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() expandOnNodeClickFor;
   @Input() doNotMakeSelectedBold;
 
-  @Input() treeName = "unnamed";
+  @Input() treeName = 'unnamed';
 
   @Input() inSearchMode;
 
   @ViewChild(MatMenuTrigger, { static: false })
   contextMenuTrigger: MatMenuTrigger;
-  contextMenuPosition = { x: "0", y: "0" };
+  contextMenuPosition = { x: '0', y: '0' };
 
   favourites;
   subscriptions: Subscription = new Subscription();
-  selectedNode = null; //Control highlighting
+  selectedNode = null; // Control highlighting
   checkedList = this.defaultCheckedMap || {};
 
   targetVersions = [];
@@ -132,15 +125,15 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
     let children = [];
     if (this.justShowFolders) {
-      children = node.children.filter(c => c.domainType === "Folder");
+      children = node.children.filter(c => c.domainType === 'Folder');
     } else if (this.doNotShowDataClasses) {
-      children = node.children.filter(c => c.domainType !== "DataClass");
+      children = node.children.filter(c => c.domainType !== 'DataClass');
     } else {
       children = node.children;
     }
 
     return of(children);
-  };
+  }
 
   ngOnInit() {}
 
@@ -151,12 +144,12 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
 
-    //HACK TO FILTER CLASSIFERS NEEDS REVISITED
-    //Note 1: The domain model tree uses backend API call to get filtered results.
+    // HACK TO FILTER CLASSIFERS NEEDS REVISITED
+    // Note 1: The domain model tree uses backend API call to get filtered results.
     if (changes.searchCriteria) {
       if (
         this.treeName &&
-        this.treeName === "Classifiers" &&
+        this.treeName === 'Classifiers' &&
         this.searchCriteria &&
         this.searchCriteria.trim().length > 0
       ) {
@@ -166,7 +159,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   loadFavourites() {
-    let fs: any[] = this.favouriteHandler.get();
+    const fs: any[] = this.favouriteHandler.get();
     this.favourites = {};
     fs.forEach(f => {
       this.favourites[f.id] = f;
@@ -175,7 +168,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Get whether the node has children or not. Tree branch control. */
   hasChild(index: number, node: FlatNode) {
-    if (node.domainType === "DataModel" && this.doNotShowDataClasses) {
+    if (node.domainType === 'DataModel' && this.doNotShowDataClasses) {
       return false;
     }
     return node?.hasChildren;
@@ -184,24 +177,24 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   /** Determine which tree node icon to use based on given node's domain type */
   getIcon(fnode: FlatNode) {
     switch (fnode.domainType) {
-      case "Folder":
+      case 'Folder':
         return this.treeControl.isExpanded(fnode)
-          ? "fa-folder-open"
-          : "fa-folder";
-      case "DataModel":
-        if (fnode.type === "Data Standard") {
-          return "fa-file-text-o";
-        } else if (fnode.type === "Data Asset") {
-          return "fa-database";
+          ? 'fa-folder-open'
+          : 'fa-folder';
+      case 'DataModel':
+        if (fnode.type === 'Data Standard') {
+          return ' fa-file-alt';
+        } else if (fnode.type === 'Data Asset') {
+          return 'fa-database';
         }
-      case "Terminology":
-        return "fa-book";
-      case "CodeSet":
-        return "fa-list";
-      case "Classification":
-        return "fa-tags";
-      case "Term":
-        return "fa-code"; //Not currently used in html template
+      case 'Terminology':
+        return 'fa-book';
+      case 'CodeSet':
+        return 'fa-list';
+      case 'Classification':
+        return 'fa-tags';
+      case 'Term':
+        return 'fa-code'; // Not currently used in html template
       default:
         return null;
     }
@@ -209,7 +202,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Additional CSS classes to add to the tree node. fa-lg is requied to make sure fa icon is properly sized. */
   getCssClass(node: FlatNode) {
-    return `fa-lg ${node.deleted ? "deleted-folder" : "themeColor"}`;
+    return `fa-lg ${node.deleted ? 'deleted-folder' : ''}`;
   }
 
   private async refreshTree() {
@@ -218,20 +211,20 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     if (this.rememberExpandedStates) {
       // Init extended paths
       if (!this.expandedPaths || this.expandedPaths.length === 0) {
-        let storePaths = JSON.parse(sessionStorage.getItem("expandedPaths"));
+        const storePaths = JSON.parse(sessionStorage.getItem('expandedPaths'));
         this.expandedPaths = storePaths ? storePaths : [];
       }
     }
 
     for (let i = 0; i < this.expandedPaths.length; i++) {
-      /* 
+      /*
                 `mat-tree` requires the ancesters to be expanded first.
                 dataNodes: Flatten nodes
-                
+
                 Each extended path follow the pattern `<level0 node>/<level1 node>/.../<target node>.
-                When the path is split, the index will correspond to the level. 
+                When the path is split, the index will correspond to the level.
             */
-      let path: string[] = this.expandedPaths[i].split("/");
+      const path: string[] = this.expandedPaths[i].split('/');
 
       // Skip if parent path not in expandedPaths.
       if (!this.pathExists(path)) {
@@ -239,17 +232,17 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       for (let j = 0; j < path.length; j++) {
-        let fnode = this.treeControl.dataNodes.find(
+        const fnode = this.treeControl.dataNodes.find(
           dn => this.treeControl.getLevel(dn) === j && dn.id === path[j]
         );
 
         // Load children if they are not available
         if (fnode?.hasChildren && !fnode?.children) {
-          let data = await this.expand(fnode.node);
+          const data = await this.expand(fnode.node);
           fnode.children = data.body;
 
           // Manually construct the FlatNodes and insert into the tree's dataNodes array
-          let newNodes = fnode.children.map(c => {
+          const newNodes = fnode.children.map(c => {
             return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
           });
 
@@ -261,17 +254,17 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         for (let j = 0; j < path.length; j++) {
-          let fnode = this.treeControl.dataNodes.find(
+          const fnode = this.treeControl.dataNodes.find(
             dn => this.treeControl.getLevel(dn) === j && dn.id === path[j]
           );
 
           // Load children if they are not available
           if (fnode?.hasChildren && !fnode?.children) {
-            let data = await this.expand(fnode.node);
+            const data = await this.expand(fnode.node);
             fnode.children = data.body;
 
             // Manually construct the FlatNodes and insert into the tree's dataNodes array
-            let newNodes = fnode.children.map(c => {
+            const newNodes = fnode.children.map(c => {
               return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
             });
 
@@ -289,7 +282,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   private pathExists(path: string[]) {
     if (path.length > 1) {
-      let currentPathExists = this.expandedPaths.includes(path.join("/"));
+      const currentPathExists = this.expandedPaths.includes(path.join('/'));
       if (currentPathExists) {
         return this.pathExists(path.slice(0, path.length - 1));
       } else {
@@ -308,9 +301,9 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
    */
   private getExpandedPaths(fnode: FlatNode) {
     if (this.treeControl.getLevel(fnode) > 0) {
-      let index = this.treeControl.dataNodes.indexOf(fnode) - 1;
+      const index = this.treeControl.dataNodes.indexOf(fnode) - 1;
       for (let i = index; i >= 0; i--) {
-        let dn = this.treeControl.dataNodes[i];
+        const dn = this.treeControl.dataNodes[i];
         if (this.treeControl.getLevel(dn) < this.treeControl.getLevel(fnode)) {
           return `${this.getExpandedPaths(dn)}/${fnode.id}`;
         }
@@ -339,13 +332,13 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
     if (this.rememberExpandedStates) {
       sessionStorage.setItem(
-        "expandedPaths",
+        'expandedPaths',
         JSON.stringify(this.expandedPaths)
       );
     }
 
     if (!this.inSearchMode && !flatNode.children) {
-      let data = await this.expand(flatNode.node);
+      const data = await this.expand(flatNode.node);
       flatNode.children = data.body;
     }
 
@@ -365,22 +358,22 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   async expand(node: Node) {
     try {
       switch (node.domainType) {
-        case "Folder":
+        case 'Folder':
           // if (this.justShowFolders){
           //     return await this.resources.folder.get(node.id, 'folders').toPromise();;
           // } else {
           return node.children;
         // }
-        case "DataModel":
-        case "DataClass":
+        case 'DataModel':
+        case 'DataClass':
           return await this.resources.tree.get(node.id).toPromise();
-        case "Terminology":
+        case 'Terminology':
           return await this.resources.terminology
-            .get(node.id, "tree")
+            .get(node.id, 'tree')
             .toPromise();
-        case "Term":
+        case 'Term':
           return await this.resources.term
-            .get(node.terminology, node.id, "tree")
+            .get(node.terminology, node.id, 'tree')
             .toPromise();
         default:
           return [];
@@ -396,7 +389,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   nodeChecked(child) {
-    var element = this.find(this.node, null, child.id);
+    const element = this.find(this.node, null, child.id);
 
     this.markChildren(child, child, child.checked);
 
@@ -406,25 +399,25 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       delete this.checkedList[element.node.id];
     }
 
-    this.nodeCheckedEvent.emit([child,child.parent,this.checkedList]);
+    this.nodeCheckedEvent.emit([child, child.parent, this.checkedList]);
   }
 
   find(node, parent, ID) {
     if (node.id === ID) {
-      return { node: node, parent: parent };
+      return { node, parent };
     }
     if (
-      node.domainType === "Folder" ||
-      node.domainType === "DataModel" ||
-      node.domainType === "DataClass" ||
+      node.domainType === 'Folder' ||
+      node.domainType === 'DataModel' ||
+      node.domainType === 'DataClass' ||
       node.isRoot === true
     ) {
       if (!node.children) {
         return null;
       }
-      var i = 0;
+      let i = 0;
       while (i < node.children.length) {
-        var result = this.find(node.children[i], node, ID);
+        const result = this.find(node.children[i], node, ID);
         if (result !== null) {
           return result;
         }
@@ -448,7 +441,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  //** Context Menu */
+  // ** Context Menu */
 
   async onContextMenu(fnode: FlatNode, event) {
     event.preventDefault();
@@ -457,12 +450,12 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.contextMenuPosition.x = event.clientX + "px";
-    this.contextMenuPosition.y = event.clientY + "px";
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenuTrigger.menuData = { node: fnode };
     this.contextMenuTrigger.openMenu();
 
-    if (fnode.domainType === "DataModel") {
+    if (fnode.domainType === 'DataModel') {
       this.targetVersions = await this.folderService.loadVersions(fnode.node);
     }
   }
@@ -481,21 +474,21 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       let result;
       let newNode;
       if (!fnode) {
-        //Create new top level folder
+        // Create new top level folder
         result = await this.resources.folder
           .post(null, null, { resource: {} })
           .toPromise();
-        result.body.domainType = "Folder";
+        result.body.domainType = 'Folder';
         this.node.children.push(result.body);
 
         newNode = new FlatNode(result.body, 0);
         this.treeControl.dataNodes.push(newNode);
       } else {
-        //Add new folder to existing folder
+        // Add new folder to existing folder
         result = await this.resources.folder
-          .post(fnode.id, "folders", { resource: {} })
+          .post(fnode.id, 'folders', { resource: {} })
           .toPromise();
-        result.body.domainType = "Folder";
+        result.body.domainType = 'Folder';
         if (!fnode.children) {
           fnode.children = [];
         }
@@ -520,45 +513,44 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           this.treeControl.getLevel(dn) === newNode.level
       );
 
-      this.stateHandler.Go("Folder", { id: result.body.id, edit: true });
+      this.stateHandler.Go('Folder', { id: result.body.id, edit: true });
 
-      this.messageHandler.showSuccess("Folder created successfully.");
+      this.messageHandler.showSuccess('Folder created successfully.');
     } catch (error) {
-      console.log(error);
       this.messageHandler.showError(
-        "There was a problem creating the Folder.",
+        'There was a problem creating the Folder.',
         error
       );
     }
   }
 
   async handleAddDataModel(fnode: FlatNode) {
-    this.stateHandler.Go("NewDataModel", { parentFolderId: fnode.id });
+    this.stateHandler.Go('NewDataModel', { parentFolderId: fnode.id });
   }
 
   async handleAddCodeSet(fnode: FlatNode) {
-    this.stateHandler.Go("NewCodeSet", { parentFolderId: fnode.id });
+    this.stateHandler.Go('NewCodeSet', { parentFolderId: fnode.id });
   }
 
   async handleDeleteFolder(fnode: FlatNode, permanent = false) {
-    this.deleteFolderEvent.emit({ folder: fnode, permanent: permanent });
+    this.deleteFolderEvent.emit({ folder: fnode, permanent });
     if (!permanent) {
       fnode.deleted = true;
     }
   }
 
   async handleAddDataClass(fnode: FlatNode) {
-    this.stateHandler.Go("NewDataClass", {
+    this.stateHandler.Go('NewDataClass', {
       grandParentDataClassId:
-        fnode.domainType === "DataClass" ? fnode.parentDataClass : null,
+        fnode.domainType === 'DataClass' ? fnode.parentDataClass : null,
       parentDataModelId:
-        fnode.domainType === "DataModel" ? fnode.id : fnode.dataModel,
-      parentDataClassId: fnode.domainType === "DataModel" ? null : fnode.id
+        fnode.domainType === 'DataModel' ? fnode.id : fnode.dataModel,
+      parentDataClassId: fnode.domainType === 'DataModel' ? null : fnode.id
     });
   }
 
   async handleAddDataElement(fnode: FlatNode) {
-    this.stateHandler.Go("NewDataElement", {
+    this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: fnode.parentDataClass
         ? fnode.parentDataClass
         : null,
@@ -568,11 +560,11 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   async handleAddDataType(fnode: FlatNode) {
-    this.stateHandler.Go("NewDataType", { parentDataModelId: fnode.id });
+    this.stateHandler.Go('NewDataType', { parentDataModelId: fnode.id });
   }
 
   handleDataModelCompare(fnode: FlatNode, targetVersion = null) {
-    this.stateHandler.NewWindow("modelscomparison", {
+    this.stateHandler.NewWindow('modelscomparison', {
       sourceId: fnode.id,
       targetId: targetVersion ? targetVersion.id : null
     });
@@ -580,21 +572,11 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   openWindow(fnode: FlatNode) {
     switch (fnode.domainType) {
-      case "DataModel":
-        this.stateHandler.NewWindow("datamodel", { id: fnode.id });
-        break;
-      case "DataClass":
-        this.stateHandler.NewWindow("dataclass", {
-          id: fnode.id,
-          dataModelId: fnode.dataModel,
-          dataClassId: fnode.parentDataClass
-        });
-        break;
-      case "Terminology":
-        this.stateHandler.NewWindow("terminology", { id: fnode.id });
-        break;
+        case DOMAIN_TYPE.DataModel: this.stateHandler.NewWindow(DOMAIN_TYPE.DataModel.toLocaleLowerCase(), { id: fnode.id }); break;
+        case DOMAIN_TYPE.DataClass: this.stateHandler.NewWindow(DOMAIN_TYPE.DataClass.toLocaleLowerCase(), { id: fnode.id, dataModelId: fnode.dataModel, dataClassId: fnode.parentDataClass }); break;
+        case DOMAIN_TYPE.Terminology: this.stateHandler.NewWindow(DOMAIN_TYPE.Terminology.toLocaleLowerCase(), { id: fnode.id }); break;
     }
-  }
+}
 
   isFavourited(fnode: FlatNode) {
     return this.favouriteHandler.isAdded(fnode);
@@ -615,8 +597,8 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       );
       Object.assign([], filteredTreeData).forEach(ftd => {
         let str = <string>ftd.label;
-        while (str.lastIndexOf(".") > -1) {
-          const index = str.lastIndexOf(".");
+        while (str.lastIndexOf('.') > -1) {
+          const index = str.lastIndexOf('.');
           str = str.substring(0, index);
           if (filteredTreeData.findIndex(t => t.code === str) === -1) {
             const obj = this.dataSource.data.find(d => d.label === str);

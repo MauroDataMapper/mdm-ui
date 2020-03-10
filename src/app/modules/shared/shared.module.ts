@@ -15,6 +15,7 @@ import { EnumerationCompareComponent } from '../../shared/enumeration-compare/en
 import { MaterialModule } from '../material/material.module';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from 'src/app/errors/error.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -34,8 +35,8 @@ import { ErrorComponent } from 'src/app/errors/error.component';
     MaterialModule,
     ReactiveFormsModule,
     MatPasswordStrengthModule,
-    NgxJsonViewerModule
-
+    NgxJsonViewerModule,
+    FlexLayoutModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -52,7 +53,8 @@ import { ErrorComponent } from 'src/app/errors/error.component';
     MetadataCompareComponent,
     EnumerationCompareComponent,
     NgxJsonViewerModule,
-    ErrorComponent
+    ErrorComponent,
+    FlexLayoutModule
   ]
 })
 export class SharedModule {}

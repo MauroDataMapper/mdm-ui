@@ -33,7 +33,6 @@ export class LinkSuggestionComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
-
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   doNotSuggest: any;
@@ -87,11 +86,7 @@ export class LinkSuggestionComponent implements OnInit {
       : this.state.params.targetDMId;
 
     if (this.sourceDataElementId) {
-      this.setSourceDataElement(
-        this.sourceDataModelId,
-        this.sourceDataClassId,
-        this.sourceDataElementId
-      );
+      this.setSourceDataElement(this.sourceDataModelId, this.sourceDataClassId, this.sourceDataElementId);
     } else if (this.sourceDataModelId) {
       this.setSourceDataModel([{ id: this.sourceDataModelId }]);
     }
@@ -99,8 +94,6 @@ export class LinkSuggestionComponent implements OnInit {
     if (this.targetDataModelId) {
       this.setTargetDataModel([{ id: this.targetDataModelId }]);
     }
-
-
   }
 
   onSourceSelect = dataModels => {
@@ -115,7 +108,7 @@ export class LinkSuggestionComponent implements OnInit {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        let access = this.securityHandler.dataModelAccess(this.model.source);
+        const access = this.securityHandler.dataModelAccess(this.model.source);
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
@@ -134,7 +127,7 @@ export class LinkSuggestionComponent implements OnInit {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        let access = this.securityHandler.dataModelAccess(this.model.source);
+        const access = this.securityHandler.dataModelAccess(this.model.source);
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
@@ -166,20 +159,19 @@ export class LinkSuggestionComponent implements OnInit {
   }
 
   approveSuggestion = suggest => {
-    let resource = {
+    const resource = {
       target: { id: suggest.selectedTarget.dataElement.id },
       linkType: 'Refines'
     };
 
-    let i = this.model.suggestions.indexOf(suggest);
+    const i = this.model.suggestions.indexOf(suggest);
 
     if (i >= 0) {
       this.model.suggestions[i].processing = true;
       // create the link and then remove it
       this.resources.catalogueItem
         .post(this.model.source.id, 'semanticLinks', { resource })
-        .subscribe(
-          response => {
+        .subscribe(() => {
             this.model.suggestions[i].processing = false;
             this.model.suggestions[i].success = true;
             this.model.successfullyAdded++;
@@ -238,12 +230,11 @@ export class LinkSuggestionComponent implements OnInit {
               suggestion.selectedTarget = suggestion.results[0];
             });
             this.datasource.data = data.links;
-
             this.datasource.paginator = this.paginator;
             this.datasource.sort = this.sort;
             this.model.processing = false;
           },
-          error => {
+          () => {
             this.model.processing = false;
           }
         );
@@ -264,12 +255,11 @@ export class LinkSuggestionComponent implements OnInit {
               suggestion.selectedTarget = suggestion.results[0];
             });
             this.datasource.data = [data];
-
             this.datasource.paginator = this.paginator;
             this.datasource.sort = this.sort;
             this.model.processing = false;
           },
-          error => {
+          () => {
             this.model.processing = false;
           }
         );
@@ -278,6 +268,5 @@ export class LinkSuggestionComponent implements OnInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-}
-
+  }
 }

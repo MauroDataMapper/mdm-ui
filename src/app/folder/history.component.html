@@ -4,7 +4,7 @@
         <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
     </div>
     <div class="mcTableContainer">
-        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="getSortedData($event)" class="table table-condensed table-bordered mcTable">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="getSortedData($event)" class="table mdm--table table-bordered">
 
             <ng-container matColumnDef="createdBy">
                 <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
@@ -33,7 +33,7 @@
                 <td style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element"> {{element.description}} </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mcTableHeader"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>

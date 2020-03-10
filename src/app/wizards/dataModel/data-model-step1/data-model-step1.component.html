@@ -1,10 +1,10 @@
 <div class="form-group">
 
 
-    <label>Please enter Data Model details:<i id="helpIcon" class="fa fa-info-circle themeColor" style="margin: 5px;" (click)="loadHelp()" matTooltipPosition="left" matTooltip="Help"></i></label>
+    <span>Please enter Data Model details:<i id="helpIcon" class="fas fa-info-circle" style="margin: 5px;" (click)="loadHelp()" matTooltipPosition="left" matTooltip="Help"></i></span>
     <form #myForm="ngForm" ngNativeValidate>
 
-        <table class="table table-bordered table-condensed dataModelDetailTable" ngModelGroup="model">
+        <table class="table table-bordered dataModelDetailTable" ngModelGroup="model">
             <tbody>
                 <tr>
                     <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Folder *</th>

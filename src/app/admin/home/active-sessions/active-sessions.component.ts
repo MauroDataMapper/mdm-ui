@@ -56,7 +56,7 @@ export class ActiveSessionsComponent implements OnInit {
   }
 
   activeSessionsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    let options = {
+    const options = {
       pageSize,
       pageIndex,
       filters,
@@ -86,15 +86,12 @@ export class ActiveSessionsComponent implements OnInit {
         this.dataSource.data = this.records;
       }),
       err => {
-        this.messageHandler.showError(
-          'There was a problem loading the active sessions.',
-          err
-        );
-      };
+        this.messageHandler.showError('There was a problem loading the active sessions.', err);
+      }
   }
 
   isToday(date) {
-    let today = new Date();
+    const today = new Date();
 
     if (
       today.getUTCFullYear() === date.getUTCFullYear() &&
@@ -111,7 +108,11 @@ export class ActiveSessionsComponent implements OnInit {
     this.hideFilters = !this.hideFilters;
   }
 
-  applyFilter = () =>{
+  applyFilter = () => {
+    // TODO
+  }
+
+  editUser = (var1?) => {
     // TODO
   }
 }

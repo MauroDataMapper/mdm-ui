@@ -14,8 +14,8 @@
 
         <!-- Default to show expansion icon -->
         <ng-container *ngIf="hasChild(-1, node) && (!expandOnNodeClickFor || expandOnNodeClickFor.includes(node.domainType))">
-            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name" (click)="toggleChildren(node)">
-                <mat-icon class="mat-icon-rtl-mirror" fontSet="fa" fontIcon="{{treeControl.isExpanded(node) ? 'fa-minus' : 'fa-plus'}}"></mat-icon>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="toggleChildren(node)">
+                <mat-icon class="mat-icon-rtl-mirror" fontSet="fas" fontIcon="{{treeControl.isExpanded(node) ? 'fa-minus' : 'fa-plus'}}"></mat-icon>
             </button>
         </ng-container>
 
@@ -39,7 +39,7 @@
             <ng-container *ngIf="isUserAdmin">
                 <mat-divider></mat-divider>
                 <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button>
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="errorMessage">permanenly</span></button>
+                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanenly</span></button>
             </ng-container>
         </ng-container>
         <ng-container *ngIf="node.domainType === 'DataModel'">
@@ -81,9 +81,9 @@
 <ng-template #nodeContentTemplate let-node>
     <div class="mat-tree-node-content">
         <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)"[disabled]="node.disableChecked"></mat-checkbox>
-        <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet'].includes(node.domainType)" fontSet="fa" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
-        <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'deleted': node.deleted}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
+        <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet'].includes(node.domainType)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
+        <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'deleted': node.deleted}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
         <span *ngIf="node.superseded" style='font-size: 11px'>({{node.documentationVersion}})</span>
-        <i style="font-size: 10px;" class="fa fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>
+        <i style="font-size: 10px;" class="fas fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>
     </div>
 </ng-template>

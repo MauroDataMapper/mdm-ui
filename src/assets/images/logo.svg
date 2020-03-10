@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="228" height="86" viewBox="0 0 228 86">
+  <g id="logo" transform="translate(-1583 -669)">
+    <g id="Group_63" data-name="Group 63" transform="translate(1582.932 661)">
+      <text id="MDM" transform="translate(0.068 76)" fill="#fff" font-size="65" font-family="Roboto-Bold, Roboto" font-weight="700"><tspan x="0" y="0">MDM</tspan></text>
+    </g>
+    <g id="Group_64" data-name="Group 64" transform="translate(1744.845 680.894)">
+      <text id="Mauro" transform="translate(-1.845 22.106)" fill="#f2b441" font-size="17" font-family="Roboto-Regular, Roboto"><tspan x="0" y="0">MAURO</tspan></text>
+      <text id="Data" transform="translate(-1.845 39.106)" fill="#f2b441" font-size="17" font-family="Roboto-Regular, Roboto"><tspan x="0" y="0">DATA</tspan></text>
+      <text id="Mapper" transform="translate(-1.845 56.106)" fill="#f2b441" font-size="17" font-family="Roboto-Regular, Roboto"><tspan x="0" y="0">MAPPER</tspan></text>
+    </g>
+  </g>
+</svg>

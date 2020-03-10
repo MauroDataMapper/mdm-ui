@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {NgForm} from "@angular/forms";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-code-set-step1',
@@ -11,10 +11,10 @@ export class CodeSetStep1Component implements OnInit {
   step: any;
   model: any;
 
-  constructor() { }
+  constructor() {}
 
-  formChangesSubscription : Subscription;
-  @ViewChild("myForm", { static: false }) myForm: NgForm;
+  formChangesSubscription: Subscription;
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
 
   ngOnInit() {
     this.model = this.step.scope.model;
@@ -26,10 +26,10 @@ export class CodeSetStep1Component implements OnInit {
   }
 
   ngAfterViewInit() {
-
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
-      this.step.invalid = this.myForm.invalid;
-    });
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
+      x => {
+        this.step.invalid = this.myForm.invalid;
+      }
+    );
   }
-
 }

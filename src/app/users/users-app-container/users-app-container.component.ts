@@ -8,10 +8,17 @@ import { SharedService } from '../../services/shared.service';
 })
 export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;
+  exporting: boolean; // TODO correct this
+  pendingUsersCount = 0;
+
 
   constructor(private sharedService: SharedService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sharedService.pendingUsersCount().subscribe(data => {
+      this.pendingUsersCount = data.body.count;
+    });
+  }
 
   logout = () => {
     this.sharedService.logout();

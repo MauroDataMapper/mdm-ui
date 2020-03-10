@@ -1,30 +1,23 @@
-<div class="row" style="padding: 5px">
-	<div class="col-lg-6 col-md-6">
-		<div class="panel panel-default">
-			<div class="panel-heading clearfix">
-				<div class="pull-left" style="width: 48px; position: relative; margin-right: 10px;">
-					<div class="btn-group btn-group-xs" style="position: absolute; z-index: 1; overflow: hidden; color: white; text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);">
-						<label class="btn btn-xs btn-file" aria-label="Choose Profile Image" style="color: white;">
-							<span class="glyphicon glyphicon-camera"></span>
-							<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*">
-						</label>
-						<a class="btn btn-xs" (click)="removeProfileImage()" style="color: white" aria-label="Remove profile image">
-							<span class="glyphicon glyphicon-remove"></span>
-						</a>
-					</div>
-					<img class="img-rounded" *ngIf="trustedUrl" style="width: 48px; height: auto;" [src]="trustedUrl">
-				</div>
-				<div>
-					<h2 class="panel-title">Profile</h2> <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" (click)="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
-				</div>
-			</div>
-			<app-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></app-img-croppie>
-			<div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px;">
-				<button (click)="clear()" type="button" class="btn btn-default btn-xs">Cancel</button>
-				<button (click)="savePicture()" type="button" class="btn btn-primary btn-xs">Save</button>
-			</div>
-			<app-user-details [after-save]="afterSave" (refreshUserDetails)='userDetails()'></app-user-details>
+<div class="panel-heading clearfix">
+	<div class="pull-left" style="width: 48px; position: relative; margin-right: 10px;">
+		<div class="btn-group btn-group-xs" style="position: absolute; z-index: 1; overflow: hidden; color: white; text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);">
+			<label class="btn btn-xs btn-file" aria-label="Choose Profile Image" style="color: white;">
+				<i class="fas fa-camera"></i>
+				<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*">
+			</label>
+			<a class="btn btn-xs" (click)="removeProfileImage()" style="color: white" aria-label="Remove profile image">
+				<i class="fas fa-times"></i>
+			</a>
 		</div>
+		<img class="img-rounded" *ngIf="trustedUrl" style="width: 48px; height: auto;" [src]="trustedUrl" alt="User profile">
+		<i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
 	</div>
-
+	<div>
+	</div>
 </div>
+<app-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></app-img-croppie>
+<div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px;">
+	<button (click)="clear()" type="button" class="btn btn-default btn-xs">Cancel</button>
+	<button (click)="savePicture()" type="button" class="btn btn-primary btn-xs">Save</button>
+</div>
+<app-user-details [after-save]="afterSave" (refreshUserDetails)='userDetails()'></app-user-details>

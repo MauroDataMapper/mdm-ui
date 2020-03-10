@@ -1,8 +1,8 @@
 <div class="form-group">
     <form #myForm="ngForm" ngNativeValidate>
-        <label>Please enter Code Set details:</label>
+        <span>Please enter Code Set details:</span>
 
-        <table class="table table-bordered table-condensed dataModelDetailTable" ngModelGroup="model">
+        <table class="table table-bordered dataModelDetailTable" ngModelGroup="model">
             <tbody>
             <tr>
                 <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Folder *</th>
@@ -52,7 +52,7 @@
             </tbody>
         </table>
 
-        <label style="margin-top: 20px;">Please add Term(s):</label><span style="font-style: italic; font-size: 12px;margin-left: 3px;">Code Set should have at least one Term *</span>
+        <span style="margin-top: 20px;">Please add Term(s):</span><span style="font-style: italic; font-size: 12px;margin-left: 3px;">Code Set should have at least one Term *</span>
 
         <!--        <multiple-terms-selector on-selected-terms-change="onSelectedTermsChange" hide-add-button="true"></multiple-terms-selector>-->
 <multiple-terms-selector  (onSelectedTermsChange)="model.terms = $event"></multiple-terms-selector>

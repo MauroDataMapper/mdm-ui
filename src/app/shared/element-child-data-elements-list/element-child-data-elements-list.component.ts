@@ -1,14 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChildren,
-  ElementRef,
-  ViewChild,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { GridService } from '../../services/grid.service';
 import { merge } from 'rxjs';
@@ -56,13 +46,17 @@ export class ElementChildDataElementsListComponent implements OnInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-
     if (this.type === 'dynamic') {
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-      this.gridSvc.reloadEvent.subscribe((fitler) => this.filter = fitler);
+      this.gridSvc.reloadEvent.subscribe(fitler => (this.filter = fitler));
 
-      merge(this.sort.sortChange, this.paginator.page, this.filterEvent, this.gridSvc.reloadEvent)
+      merge(
+        this.sort.sortChange,
+        this.paginator.page,
+        this.filterEvent,
+        this.gridSvc.reloadEvent
+      )
         .pipe(
           startWith({}),
           switchMap(() => {
@@ -101,7 +95,7 @@ export class ElementChildDataElementsListComponent implements OnInit {
   }
 
   dataElementsFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    let options = {
+    const options = {
       pageSize,
       pageIndex,
       sortBy,
@@ -140,5 +134,5 @@ export class ElementChildDataElementsListComponent implements OnInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-}
+  }
 }

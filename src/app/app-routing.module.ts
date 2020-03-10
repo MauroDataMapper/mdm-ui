@@ -195,24 +195,24 @@ export const PagesRoutes = {
       component: DataModelsExportComponent
     },
     {
-        name:'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
+        name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
         url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
         component: DataElementMainComponent
     },
     {
-      name :'appContainer.mainApp.twoSidePanel.catalogue.dataType',
+      name : 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
       url: '/dataType/:dataModelId/:id/{tabView:string}',
       component : DataTypeComponent,
       params: {
         tabView: { dynamic: true, value: null, squash: true }
     }},
     {
-      name:'appContainer.mainApp.resetPassword',
+      name: 'appContainer.mainApp.resetPassword',
       url: '/resetpassword?uid&token',
       component: ResetPasswordComponent
     },
     {
-      name:'appContainer.mainApp.twoSidePanel.catalogue.term',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.term',
       url: '/term/:terminologyId/:id/{tabView:string}',
       component: TermComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
@@ -254,76 +254,5 @@ export const PagesRoutes = {
   ]
 })
 export class AppRoutingModule {
-  constructor() {
-    // this.stateRoleAccessService.add("appContainer", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.about", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.home", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.default", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.register", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.resetPassword", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.about", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.allDataModel", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.home", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.result", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.filter", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.submission", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.element", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.notImplemented", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.serverError", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.resourceNotFound", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.notAuthorized", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataType", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataModel", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.codeSet", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.terminology", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.term", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataElement", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataClass", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.selection", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.classification", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.resourceNotFound", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.serverError", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.notImplemented", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.notAuthorized", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.search", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.folder", ['public']);
-    // this.stateRoleAccessService.add("otherwise", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea.profile", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea.changePassword", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea.settings", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.diagram", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.dataFlowTransformation", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.dataFlowDM2DM", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.dataFlowChain", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.topicView", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataModel", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataElement", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataClass", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataType", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewClassifier", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.adminArea", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.users", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.user", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.groups", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.group", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.pendingUsers", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.configuration", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.home", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.resourceNotFound", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.emails", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.modelManagement", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.import", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.modelsComparison", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.linkSuggestion", ['Administrator', 'Editor']);
-  }
+  constructor() { }
 }

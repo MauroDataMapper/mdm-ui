@@ -1,19 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-    selector: 'multiplicity',
-    templateUrl: './multiplicity.component.html',
-    styleUrls: ['./multiplicity.component.sass']
+  selector: "multiplicity",
+  templateUrl: './multiplicity.component.html',
+  styleUrls: ['./multiplicity.component.sass']
 })
 export class MultiplicityComponent implements OnInit {
+  @Input() min: any;
+  @Input() max: any;
 
-    @Input() min: any;
-    @Input() max :any;
-        
-    constructor() { }
+  constructor() {}
 
-    ngOnInit() {
-
-    }
-
+  ngOnInit() {}
 }

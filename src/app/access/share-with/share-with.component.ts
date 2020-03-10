@@ -1,39 +1,36 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MessageService} from "../../services/message.service";
-import {FolderResult} from "../../model/folderModel";
-import {Observable, Subscription} from "rxjs";
-import {ResourcesService} from "../../services/resources.service";
-import {rejects} from "assert";
-import {MessageHandlerService} from "../../services/utility/message-handler.service";
-import {ToastrService} from 'ngx-toastr';
-
-
+import { Component, Input, OnInit } from '@angular/core';
+import { MessageService } from '../../services/message.service';
+import { Subscription } from 'rxjs';
+import { ResourcesService } from '../../services/resources.service';
+import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
   selector: 'app-share-with',
   templateUrl: './share-with.component.html',
-  // styleUrls: ['./share-with.component.sass']
+  styleUrls: ['./share-with.component.sass']
 })
 export class ShareWithComponent implements OnInit {
-  folderResult : any;
+  folderResult: any;
   subscription: Subscription;
   // @Input() folderResult: FolderResult;
 
-    constructor(private messageService: MessageService, private resourcesService: ResourcesService, private messageHandler: MessageHandlerService) {
-
-    }
+  constructor(
+    private messageService: MessageService,
+    private resourcesService: ResourcesService,
+    private messageHandler: MessageHandlerService
+  ) {}
 
   supportedDomainTypes = {
-    "DataModel":  {name:"dataModel",   message:"Data Model"},
-    "Classifier": {name:"classifier",  message:"Classifier"},
-    "Folder":     {name:"folder",      message:"Folder"},
-    "Terminology":{name:"terminology", message:"Terminology"},
-    "CodeSet"    :{name:"codeSet"    , message:"CodeSet"}
+    DataModel: { name: 'dataModel', message: 'Data Model' },
+    Classifier: { name: 'classifier', message: 'Classifier' },
+    Folder: { name: 'folder', message: 'Folder' },
+    Terminology: { name: 'terminology', message: 'Terminology' },
+    CodeSet: {name: 'codeSet', message: 'CodeSet' }
   };
   readableByEveryone: false;
-  readableByAuthenticated:false;
-  @Input() mcElement: "=";
-  @Input() mcDomainType:"=";
+  readableByAuthenticated: false;
+  @Input() mcElement: '=';
+  @Input() mcDomainType: '=';
   endPoint;
   type;
   message = '';
@@ -56,84 +53,106 @@ export class ShareWithComponent implements OnInit {
   //   //console.log(this.resourcesService.NGgetFolderDetails());
   // }
 
-  shareReadWithEveryoneChanged()
-  {
-    let promise = new Promise((resolve, reject) => {
-      if(this.readableByEveryone)
-      { this.endPoint.put(this.folderResult.id,'readByEveryone',null).subscribe(result => {
-          this.folderResult = result.body;
-        this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-          for (var attrname in permissions.body) {
-            this.folderResult[attrname] = permissions.body[attrname];
-
-          }});
-         this.messageService.dataChanged(this.folderResult);
-        resolve();
-      });
-
+  shareReadWithEveryoneChanged() {
+    const promise = new Promise((resolve, reject) => {
+      if (this.readableByEveryone) {
+        this.endPoint
+          .put(this.folderResult.id, 'readByEveryone', null)
+          .subscribe(result => {
+            this.folderResult = result.body;
+            this.endPoint
+              .get(this.folderResult.id, 'permissions', null)
+              .subscribe(permissions => {
+                for (const attrname in permissions.body) {
+                  this.folderResult[attrname] = permissions.body[attrname];
+                }
+              });
+            this.messageService.dataChanged(this.folderResult);
+            resolve();
+          });
+      } else if (!this.readableByEveryone) {
+        this.endPoint
+          .delete(this.folderResult.id, 'readByEveryone', null, null)
+          .subscribe(result => {
+            this.folderResult = result.body;
+            this.endPoint
+              .get(this.folderResult.id, 'permissions', null)
+              .subscribe(permissions => {
+                for (const attrname in permissions.body) {
+                  this.folderResult[attrname] = permissions.body[attrname];
+                }
+              });
+            this.messageService.dataChanged(this.folderResult);
+            resolve();
+          });
+      } else {
+        reject();
       }
-      else if(!this.readableByEveryone)
-      { this.endPoint.delete(this.folderResult.id, 'readByEveryone', null, null).subscribe(result => {
-          this.folderResult = result.body;
-        this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-          for (var attrname in permissions.body) {
-            this.folderResult[attrname] = permissions.body[attrname];
+    });
 
-          }});
-         this.messageService.dataChanged(this.folderResult);
-        resolve();
-        })
-
-           }else{
-               reject();
-           }
-       });
-
-    promise.then(response=>{
-      this.messageHandler.showSuccess(this.message + ' updated successfully.')
-     }).catch(function(error){
-      this.messageHandler.showError('There was a problem updating the ' + this.message + '.', error);
-     });
-
+    promise
+      .then(() => {
+        this.messageHandler.showSuccess(
+          this.message + ' updated successfully.'
+        );
+      })
+      .catch(function(error) {
+        this.messageHandler.showError(
+          'There was a problem updating the ' + this.message + '.',
+          error
+        );
+      });
   }
 
-  shareReadWithAuthenticatedChanged()
-  {
-    let promise = new Promise((resolve, reject)=>{
-      if(this.readableByAuthenticated) {
-        this.endPoint.put(this.folderResult.id, "readByAuthenticated", null).subscribe(serverResult => {
-          this.folderResult = serverResult.body;
-          this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-            for (var attrname in permissions.body) {
-              this.folderResult[attrname] = permissions.body[attrname];
-
-            }});
-          this.messageService.dataChanged(this.folderResult);
-          resolve();
-        });
-      }
-      else if(!this.readableByAuthenticated){
-        this.endPoint.delete(this.folderResult.id, "readByAuthenticated").subscribe(serverResult => {
-          this.folderResult = serverResult.body;
-          this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-            for (var attrname in permissions.body) {
-              this.folderResult[attrname] = permissions.body[attrname];
-
-            }});
-          this.messageService.dataChanged(this.folderResult);
-          resolve();
-        });
-      }
-      else
+  shareReadWithAuthenticatedChanged() {
+    const promise = new Promise((resolve, reject) => {
+      if (this.readableByAuthenticated) {
+        this.endPoint
+          .put(this.folderResult.id, 'readByAuthenticated', null)
+          .subscribe(serverResult => {
+            this.folderResult = serverResult.body;
+            this.endPoint
+              .get(this.folderResult.id, 'permissions', null)
+              .subscribe(permissions => {
+                for (const attrname in permissions.body) {
+                  this.folderResult[attrname] = permissions.body[attrname];
+                }
+              });
+            this.messageService.dataChanged(this.folderResult);
+            resolve();
+          });
+      } else if (!this.readableByAuthenticated) {
+        this.endPoint
+          .delete(this.folderResult.id, 'readByAuthenticated')
+          .subscribe(serverResult => {
+            this.folderResult = serverResult.body;
+            this.endPoint
+              .get(this.folderResult.id, 'permissions', null)
+              .subscribe(permissions => {
+                for (const attrname in permissions.body) {
+                  this.folderResult[attrname] = permissions.body[attrname];
+                }
+              });
+            this.messageService.dataChanged(this.folderResult);
+            resolve();
+          });
+      } else {
         reject();
+      }
     });
 
-    promise.then(response=>{
-      this.messageHandler.showSuccess(this.message + ' updated successfully.')
-    }).catch(function(error){
-      this.messageHandler.showError('There was a problem updating the ' + this.message + '.', error);
-    });
-
+    promise
+      .then(() => {
+        this.messageHandler.showSuccess(
+          this.message + ' updated successfully.'
+        );
+      })
+      .catch(function(error) {
+        this.messageHandler.showError(
+          'There was a problem updating the ' + this.message + '.',
+          error
+        );
+      });
   }
 
 }

@@ -1,14 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  Output,
-  EventEmitter,
-  forwardRef} from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor
-} from '@angular/forms';
+import { Component, OnInit, Input, Output,  EventEmitter, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-inline-text-edit',
@@ -24,15 +15,11 @@ import {
 })
 export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Output() editableFormChanged = new EventEmitter<any>();
- 
 
   @Input() inEditMode: boolean;
   @Input() isRequired: boolean;
   @Input() styleCss: any;
   @Input() name: any;
-
-
-
 
   constructor() {}
 
@@ -60,12 +47,9 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
     this.propChange(val);
   }
 
-  get ngValue(){
+  get ngValue() {
     return this.val;
   }
 
   propChange: any = () => {};
-
-  
-
 }

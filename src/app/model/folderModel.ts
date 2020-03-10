@@ -1,57 +1,46 @@
 export class FolderResult {
-    id: string;
-    label: string;
-    description: string;
-    finalised: boolean;
-    deleted: boolean;
-    writeableByUsers: any[];
-    readableByUsers: any[];
-    readableByEveryone: boolean;
-    lastUpdated: any;
+  id: string;
+  label: string;
+  description: string;
+  finalised: boolean;
+  deleted: boolean;
+  writeableByUsers: any[];
+  readableByUsers: any[];
+  readableByEveryone: boolean;
+  lastUpdated: any;
 }
 
-
 export class SearchResult {
-    count: number;
-    items: HistoryModel[];
+  count: number;
+  items: HistoryModel[];
 }
 
 export class HistoryModel {
-    dateCreated: string;
-    createdBy: HistoryPropertiesModel;
-    description: string;
-
+  dateCreated: string;
+  createdBy: HistoryPropertiesModel;
+  description: string;
 }
 
 export class HistoryPropertiesModel {
-    id: string;
-    emailAddress: string;
-    firstName: string;
-    lastName: string;
-    userRole: string;
-    disabled: boolean;
-
+  id: string;
+  emailAddress: string;
+  firstName: string;
+  lastName: string;
+  userRole: string;
+  disabled: boolean;
 }
 
 export class Editable {
+  constructor() {}
 
-    constructor(){}
+  deletePending: boolean;
+  label: string;
+  description: string;
+  visible: boolean;
+  waiting: boolean;
+  validationError: boolean;
 
-    deletePending: boolean;
-    label:string;
-    description: string;
-    visible: boolean;
-    waiting: boolean;
-    validationError: boolean;
-    
-    show() {
-        
-    }
-    cancel() {
-       
-    }
-    save(parent: any) {
-
-    }
-
+  show() {}
+  cancel() {}
+  save(parent: any) {}
 }

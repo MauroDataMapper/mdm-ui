@@ -17,7 +17,7 @@ export class ModelPathComponent implements OnInit {
 
     updatedPath: any[];
     targetWindow;
-   
+
     showAsSimpleText;
 
     constructor(private elementTypes: ElementTypesService) { }

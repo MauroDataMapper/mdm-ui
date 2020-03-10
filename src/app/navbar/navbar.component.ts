@@ -6,22 +6,22 @@ import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/fo
 import { SharedService } from '../services/shared.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
+import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 
 @Component({
-    selector: 'app-navbar',
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.sass']
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.sass']
 })
 export class NavbarComponent implements OnInit {
+  @Input() navCollapsed: boolean;
 
-    @Input() navCollapsed: boolean;
-
-    profilePictureReloadIndex = 0;
-    profile: any;
+  profilePictureReloadIndex = 0;
+  profile: any;
 
     backendURL: any;
     simpleViewSupport: any;
-    current:any; 
+    current: any;
     HDFLink: any;
     sideNav: any;
 
@@ -82,18 +82,57 @@ export class NavbarComponent implements OnInit {
         });
     }
 
-    logout =  () => {
-        this.securityHandler.logout();
-    }
+  logout = () => {
+    this.securityHandler.logout();
+  }
 
-    forgottenPassword = () => {
-        this.dialog.open(ForgotPasswordModalComponent, {
-            minWidth: 400,
-            hasBackdrop: true
-        }).afterClosed().subscribe((user) => {
-            if (user) {
+  forgottenPassword = () => {
+    this.dialog
+      .open(ForgotPasswordModalComponent, {
+        minWidth: 600,
+        hasBackdrop: true
+      })
+      .afterClosed()
+      .subscribe(user => {
+        if (user) {
+        }
+      });
+  }
 
-            }
-        });
-    }
+  // TODO
+  toggled = (open: any) => {};
+
+  register = () => {
+    this.dialog
+      .open(RegisterModalComponent, {
+        width: '600px',
+        hasBackdrop: true,
+        autoFocus: false
+      })
+      .afterClosed()
+      .subscribe(user => {
+        if (user) {
+          if (user.needsToResetPassword) {
+            this.broadcastSvc.broadcast('userLoggedIn', {
+              goTo: 'appContainer.userArea.changePassword'
+            });
+            return;
+          }
+          this.profile = user;
+
+          const latestURL = this.securityHandler.getLatestURL();
+          if (latestURL) {
+            this.broadcastSvc.broadcast('userLoggedIn');
+            this.securityHandler.removeLatestURL();
+            this.stateHandler.CurrentWindow(latestURL);
+            return;
+          } else {
+            this.broadcastSvc.broadcast('userLoggedIn', {
+              goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+            });
+            return;
+          }
+        }
+      });
+  }
 }

@@ -1,88 +1,196 @@
-<nav class="navbar navbar-default themeBackgroundColor themeBackground " style="border: 0;" role="navigation">
-    <div class="themeHeaderBottomBorder">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" (click)="navCollapsed = !navCollapsed">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" uiSref="appContainer.mainApp.home"><strong>Metadata</strong><span style=" font-weight: 100;">Catalogue</span></a>
-        </div>
+<header id="mdm--header">
+    <div class="container">
+        <mat-toolbar id="mdm--navbar" color="primary">
+            <div class="mdm--navbar-brand">
+                <a id="mdm-logo" uiSref="appContainer.mainApp.home">
+                    <img src="/assets/images/logo.png" alt="Mauro Data Mapper logo">
+                </a>
+            </div>
 
-        <div class="collapse navbar-collapse themeBackgroundColor" [ngClass]="!navCollapsed && 'in'" *ngIf="isLoggedIn()">
-            <ul class="nav navbar-nav" style="float: right;">
-                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') === -1">
-                    <a ui-sref="appContainer.simpleApp.home">
-                        Simple View
-                    </a>
-                </li>
-                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') !== -1">
-                    <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
-                        Advanced View
-                    </a>
-                </li>
-                <li [matMenuTriggerFor]="menu" >
-                    <a *ngIf="profile"  uib-dropdown-toggle style="padding-top: 14px  !important;padding-bottom: 9px  !important;">
-                        <div style="height: 100%">
-                            <div style="float: left; padding-right: 5px; cursor: pointer;"
-                                 matTooltip="{{profile.email}}"
-                                 (click)="openProfile()"
-                                 mattTooltipPostion="bottom">
-                                <img class="img-rounded" style="width: 30px; height: auto;" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}">
+            <nav id="mdm--navbar-desktop" flex fxLayout="row" fxLayoutAlign="space-between">
+                <div class="mdm--navbar-items">
+                    <a class="nav-item nav-link" uiSref="appContainer.mainApp.home" uiSrefActive="active">Home</a>
+                    <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel" uiSrefActive="active">Browse models</a>
+                    <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.search" uiSrefActive="active">Search</a>
+                    <a class="nav-item nav-link" uiSref="appContainer.mainApp.about" uiSrefActive="active">About</a>
+                </div>
+                <div class="mdm--navbar-user">
+                    <div *ngIf="!isLoggedIn()">
+                        <button (click)="register()" mat-button class="custom inverted-button" color="primary">Register</button>
+                        <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary">Log in</button>
+                    </div>
+
+                    <div *ngIf="isLoggedIn()">
+                        <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column"
+                            fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px"
+                            fxLayoutAlign="center center">
+                            <div class="profile-img" fxFlex="30" fxFlex.sm="100" fxFlex.xs="100">
+                                <img class="img-rounded" style="width: 30px; height: auto;"
+                                    src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}"
+                                    alt="User profile">
                             </div>
-                            <div style="float:right">
-                                <div>{{profile.firstName + " " + profile.lastName}}</div>
-                                <div style="font-style: italic; font-size: 10px;">
-                                    {{profile.role | capitalize}} <i class='fa fa-caret-down' style="float: right;"></i>
-                                </div>
+                            <div fxFlex="60" fxFlex.sm="100" fxFlex.xs="100">
+                                <div class="profile-name">{{profile.firstName}}</div>
+                                <div class="profile-role">{{profile.role | capitalize}}</div>
+                            </div>
+                            <div fxFlex="10" fxFlex.sm="100" fxFlex.xs="100">
+                                <i class="fas fa-chevron-down"></i>
                             </div>
                         </div>
-                    </a>
-
-                    <mat-menu #menu="matMenu" style="width:100%" yPosition="below">
-                        <a mat-menu-item uiSref="appContainer.userArea.profile" style="text-align: left">
-                            <i class="fa fa-address-card-o"></i> My Profile
-                        </a>
-
-                        <a mat-menu-item uiSref="appContainer.userArea.settings" style="text-align: left">
-                            <i class="fa fa-cog"></i> Preferences
-                        </a>
-
-                        <a mat-menu-item class="btn" (click)="logout()" style="text-align: left">
-                            <i class="fa fa-sign-in"></i> Log out
-                        </a>
-
-                    </mat-menu>
-                </li>
-            </ul>
-        </div>
-
-        <div class="collapse navbar-collapse themeBackgroundColor" [ngClass]="!navCollapsed && 'in'" *ngIf="!isLoggedIn()">
-            <ul class="nav navbar-nav" style="float: right;">
-                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') === -1">
-                    <a uiSref="appContainer.simpleApp.home">
-                        Simple View
-                    </a>
-                </li>
-                <li *ngIf="simpleViewSupport && current.name.indexOf('appContainer.simpleApp') !== -1">
-                    <a uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
-                        Advanced View
-                    </a>
-                </li>
-                <li *ngIf="HDFLink && HDFLink.length>0">
-                    <a href="{{HDFLink}}" uib-dropdown-toggle>
-                        Return to Health Data Finder
-                    </a>
-                </li>
-                <li>
-                    <a class="btn" (click)="login()">
-                        <i class="fa fa-sign-in"></i> Log in
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-
+                        <mat-menu #menu="matMenu" yPosition="below" xPosition="before">
+                            <div *ngIf="isLoggedIn()">
+                                <h5 class="mat-h5 marginless text-muted section-title">Account settings</h5>
+                                <a mat-menu-item uiSref="appContainer.userArea.profile">
+                                    <i class="fas fa-id-card"></i>
+                                    <span>My profile</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.userArea.settings">
+                                    <i class="fas fa-sliders-h"></i>
+                                    <span>Preferences</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.userArea.changePassword">
+                                    <i class="fas fa-user-lock"></i>
+                                    <span>Change password</span>
+                                </a>
+                            </div>
+                            <div ng-show="isAdmin()">
+                                <h5 class="mat-h5 marginless text-muted section-title">Admin settings</h5>
+                                <a mat-menu-item uiSref="appContainer.adminArea.home">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.adminArea.modelManagement">
+                                    <i class="fas fa-list" aria-hidden="true"></i>
+                                    <span>Model management</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.adminArea.emails">
+                                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                                    <span>Emails</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.adminArea.users">
+                                    <i class="fas fa-user" aria-hidden="true"></i>
+                                    <span>Manage users</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.adminArea.groups">
+                                    <i class="fas fa-users" aria-hidden="true"></i>
+                                    <span>Manage groups</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.adminArea.configuration">
+                                    <i class="fas fa-cog" aria-hidden="true"></i>
+                                    <span>Configuration</span>
+                                </a>
+                            </div>
+                            <button *ngIf="isLoggedIn()" (click)="logout()" id="navbar-logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log out</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </nav>
+            <button mat-button id="mobile-trigger" (click)="sidenav.toggle()" aria-label="Toggle mobile menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </mat-toolbar>
     </div>
-</nav>
+</header>
+
+
+
+<mat-sidenav-container id="mdm--navbar-mobile" class="aside-container">
+    <mat-sidenav #sidenav mode="over" id="sidenav" fixedInViewport="fixed" fixedTopGap="0" fixedBottomGap="0" opened="false" position="end" [autoFocus]="false">
+        <nav id="sidenav-content">
+            <div *ngIf="isLoggedIn()">
+                <div *ngIf="profile">
+                    <div class="profile-img">
+                        <img class="img-rounded" style="width: 30px; height: auto;" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}" alt="User profile">
+                    </div>
+                    <div class="profile-details">
+                        <div class="profile-name">{{profile.firstName}} {{profile.lastName}}</div>
+                        <div class="profile-role text-muted">{{profile.email}} </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div class="aside-main-navigation">
+                <div *ngIf="!isLoggedIn()" class="aside-separator"></div>
+                <h5 class="mat-h5 marginless text-muted section-title">Main navigation</h5>
+                <a mat-menu-item uiSref="appContainer.mainApp.home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Browse Models</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.search">
+                    <i class="fas fa-search"></i>
+                    <span>Search</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.mainApp.about">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+            </div>
+
+            <div *ngIf="isLoggedIn()">
+                <h5 class="mat-h5 marginless text-muted section-title">Account settings</h5>
+                <a mat-menu-item uiSref="appContainer.userArea.profile" (click)="sidenav.toggle()">
+                    <i class="fas fa-id-card"></i>
+                    <span>My profile</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.userArea.settings">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Preferences</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.userArea.changePassword">
+                    <i class="fas fa-user-lock"></i>
+                    <span>Change password</span>
+                </a>
+            </div>
+            <div *ngIf="isLoggedIn()" ng-show="isAdmin()">
+                <h5 class="mat-h5 marginless text-muted section-title">Admin settings</h5>
+                <a mat-menu-item uiSref="appContainer.adminArea.home">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.adminArea.modelManagement">
+                    <i class="fas fa-list" aria-hidden="true"></i>
+                    <span>Model management</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.adminArea.emails">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span>Emails</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.adminArea.users">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span>Manage users</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers">
+                    <i class="fas fa-user-clock"></i>
+                    <span>Pending users</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.adminArea.groups">
+                    <i class="fas fa-users" aria-hidden="true"></i>
+                    <span>Manage groups</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.adminArea.configuration">
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    <span>Configuration</span>
+                </a>
+            </div>
+        </nav>
+        <div *ngIf="!isLoggedIn()" class="aside-user-actions">
+            <button (click)="login()" mat-stroked-button class="custom" color="primary">Log in</button>
+            <button (click)="register()" mat-button class="custom" color="primary">Register an account</button>
+        </div>
+
+        <button *ngIf="isLoggedIn()" (click)="logout()" id="navbar-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Log out</span>
+        </button>
+    </mat-sidenav>
+
+    <mat-sidenav-content></mat-sidenav-content>
+</mat-sidenav-container>

@@ -21,9 +21,7 @@ import { UserSettingsHandlerService } from './services/utility/user-settings-han
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     CatalougeModule,
@@ -33,16 +31,17 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     UIRouterModule.forRoot({ useHash: true })
   ],
-  providers: [    CookieService,
+  providers: [
+    CookieService,
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },
-    {provide: ROLES , useClass: ROLES},
+    { provide: ROLES, useClass: ROLES },
     {
       provide: LOCALE_ID,
       useValue: 'en-GB'
     },
     { provide: APP_BASE_HREF, useValue: '/' },
-    Location,
-    { provide: LocationStrategy, useClass: HashLocationStrategy }],
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ],
   bootstrap: [UiViewComponent]
 })
 export class AppModule {
@@ -56,21 +55,16 @@ export class AppModule {
     private trans: TransitionService,
     private rolesService: StateRoleAccessService,
     private userSettingsHandler: UserSettingsHandlerService
-
   ) {
-
-    
-
     this.trans.onStart({}, state => {
       console.log(state);
       this.sharedService.current = state.$to().name;
       return this.rolesService.hasAccess(state.$to().name);
-    
     });
 
     this.sharedService.handleExpiredSession(true);
 
-       // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
     this.broadcast.subscribe('applicationOffline', () => {
       this.toast.error('Application is offline!');
@@ -86,12 +80,16 @@ export class AppModule {
 
     this.broadcast.subscribe('userLoggedIn', args => {
       this.userSettingsHandler.init().then(() => {
-          // To remove any ngToast messages specifically sessionExpiry,...
-          console.log('User Logged In');
-          this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
-          if (args && args.goTo) {
-              this.stateHandler.Go(args.goTo, {}, { reload: true, inherit: false, notify: true });
-          }
+        // To remove any ngToast messages specifically sessionExpiry,...
+        console.log('User Logged In');
+        this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
+        if (args && args.goTo) {
+          this.stateHandler.Go(
+            args.goTo,
+            {},
+            { reload: true, inherit: false, notify: true }
+          );
+        }
       });
     });
 

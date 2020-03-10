@@ -6,7 +6,7 @@
           <strong>Is 'publicly' readable?</strong>
           <input style="margin-left: 10px;" name="shareReadWithEveryone" type="checkbox" [(ngModel)]="readableByEveryone"  data-md-icheck (change)="shareReadWithEveryoneChanged()"/>
           <div class="globalAccessText">
-            <i class="fa fa-globe globe themeColor" aria-hidden="true"></i>
+            <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
             By making the {{message}} publicly readable, it would be accessible by all registered and
             non-registered users.
           </div>
@@ -22,7 +22,7 @@
           <strong>Is readable by 'authenticated' users?</strong>
           <input style="margin-left: 10px;" name="shareReadWithAuthenticated" type="checkbox" [(ngModel)]="readableByAuthenticated"  data-md-icheck (change)="shareReadWithAuthenticatedChanged()"/>
           <div class="globalAccessText">
-            <i class="fa fa-globe globe themeColor" aria-hidden="true"></i>
+            <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
             By making the {{message}} readable by authenticated users, it would be accessible by all
             registered users.
           </div>

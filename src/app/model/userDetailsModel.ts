@@ -1,33 +1,28 @@
 ﻿export class UserDetailsResult {
-
-	id: string;
-	firstName: string;
-	lastName: string;
-	organisation: string;
-	jobTitle: string;
-	userRole: string;
-	groups: any[];
-	emailAddress: any;
+  id: string;
+  firstName: string;
+  lastName: string;
+  organisation: string;
+  jobTitle: string;
+  userRole: string;
+  groups: any[];
+  emailAddress: any;
 }
 
 export class EditableUserDetails {
+  id: string;
+  deletePending: boolean;
+  username: string;
+  firstName: string;
+  lastName: string;
+  organisation: string;
+  jobTitle: string;
+  visible: boolean;
+  validationError: boolean;
 
-	id: string;
-	deletePending: boolean;
-	username:string;
-	firstName: string;
-	lastName: string;
-	organisation: string;
-	jobTitle: string;
-	visible: boolean;
-	validationError: boolean;
-	
-	show() {
-	}
+  show() {}
 
-	cancel() {
-	}
+  cancel() {}
 
-	save(parent: any) {
-	}
+  save(parent: any) {}
 }

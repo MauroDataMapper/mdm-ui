@@ -11,7 +11,7 @@
             &nbsp;&nbsp;&nbsp;
         </span>
 
-        <table class="table table-condensed enumerationKeyValueTable" *ngIf="elementDataType.enumerationValues && !hideEnumList && toggleShowEnums">
+        <table class="table enumerationKeyValueTable" *ngIf="elementDataType.enumerationValues && !hideEnumList && toggleShowEnums">
             <thead>
                 <tr>
                     <th *ngIf="hasCategory">Group</th>
@@ -46,7 +46,7 @@
                 </ng-container>
                 <tr *ngIf="showMoreIcon" style="list-style: none;">
                     <td [attr.colspan]="hasCategory ? 3 : 2">
-                        <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <span class="fa fa-caret-down"></span></a>
+                        <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <span class="fas fa-caret-down"></span></a>
                     </td>
                 </tr>
             </tbody>

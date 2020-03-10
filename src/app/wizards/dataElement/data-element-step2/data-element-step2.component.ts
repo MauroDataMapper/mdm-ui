@@ -136,9 +136,9 @@ export class DataElementStep2Component implements OnInit {
 
   }
 
-  parentScopeHandler = () => {
-    // TODO
-  }
+  // parentScopeHandler = () => {
+  //   // TODO
+  // }
 
 
   ngOnDestroy() {

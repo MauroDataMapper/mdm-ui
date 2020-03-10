@@ -1,8 +1,10 @@
 <span [hidden]="!(description && description.length != 0)">
     <div *ngIf="showMore">
-        <span [innerHTML]="fullDesc"></span>&nbsp;<a style="cursor: pointer;text-decoration:none;" (click)="toggle()"  [hidden]="!(fullDesc && fullDesc.length > 0 && fullDesc.length > maxLength)">close</a>
+        <span [innerHTML]="fullDesc"></span>
+        <a color="primary" class="show-less" (click)="toggle()" [hidden]="!(fullDesc && fullDesc.length > 0 && fullDesc.length > maxLength)">Show less</a>
     </div>
     <div *ngIf="!showMore">
-        <span [innerHTML]="shortDesc"></span>&nbsp;<a style="cursor: pointer;text-decoration:none;" (click)="toggle()"   [hidden]="!(shortDesc && shortDesc.length > 0  && fullDesc.length > maxLength)">more</a>
+        <span [innerHTML]="shortDesc"></span>&nbsp;
+        <a color="primary" class="show-more" (click)="toggle()" [hidden]="!(shortDesc && shortDesc.length > 0  && fullDesc.length > maxLength)">Show more</a>
     </div>
 </span>

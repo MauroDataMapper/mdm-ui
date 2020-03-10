@@ -1,15 +1,15 @@
 <div style="min-width: 400px;">
     <div style="float:left; margin-left: 10px;">
         <p class="input-group" style="width:160px;">
-            <input type="text" class="form-control input-sm" [min]="date1Options.minDate" [max]="date1Options.maxDate" [matDatepicker]="dp1" [(ngModel)]="dtFrom" [required]="true" (ngModelChange)="datePicker1Changed($event, oldVal);  oldVal = $event;" />
+            <input type="text" class="form-control" [min]="date1Options.minDate" [max]="date1Options.maxDate" [matDatepicker]="dp1" [(ngModel)]="dtFrom" [required]="true" (ngModelChange)="datePicker1Changed($event, oldVal); oldVal = $event;" />
             <mat-datepicker #dp1></mat-datepicker>
             
             <span class="input-group-btn">
-                <button type="button" class="btn btn-default btn-sm" (click)="clear1()">
-                    <i class="glyphicon glyphicon-remove"></i>
+                <button class="btn btn-default" (click)="clear1()" aria-label="Clear">
+                    <i class="fas fa-times"></i>
                 </button>
-                <button type="button" class="btn btn-default btn-sm" (click)="open1()">
-                    <i class="glyphicon glyphicon-calendar"></i>
+                <button class="btn btn-default" (click)="open1()" aria-label="Open calendar">
+                    <i class="far fa-calendar-alt"></i>
                 </button>
 
             </span>
@@ -20,14 +20,14 @@
     </div>
     <div style="float:left; margin-left: 10px;">
         <p class="input-group" style="width:160px;">
-  <input type="text" class="form-control input-sm" [min]="date2Options.minDate" [max]="date2Options.maxDate" [matDatepicker]="dp2" [(ngModel)]="dtTo" [required]="true" (ngModelChange)="datePicker2Changed($event, oldVal); oldVal = $event;" />
+  <input type="text" class="form-control" [min]="date2Options.minDate" [max]="date2Options.maxDate" [matDatepicker]="dp2" [(ngModel)]="dtTo" [required]="true" (ngModelChange)="datePicker2Changed($event, oldVal); oldVal = $event;" />
             <mat-datepicker #dp2></mat-datepicker>
             <span class="input-group-btn">
-                <button type="button" class="btn btn-default btn-sm" (click)="clear2()">
-                    <i class="glyphicon glyphicon-remove"></i>
+                <button class="btn btn-default" (click)="clear2()" aria-label="Clear">
+                    <i class="fas fa-times"></i>
                 </button>
-                <button type="button" class="btn btn-default btn-sm" (click)="open2()">
-                    <i class="glyphicon glyphicon-calendar"></i>
+                <button class="btn btn-default" (click)="open2()" aria-label="Open calendar">
+                    <i class="far fa-calendar-alt"></i>
                 </button>
 
             </span>

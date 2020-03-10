@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
-import { SharedService } from '../../services/shared.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from 'src/app/modals/confirmation-modal/confirmation-modal.component';
-
 
 @Component({
   selector: 'app-model-management',
@@ -61,53 +59,53 @@ export class ModelManagementComponent implements OnInit {
     if (this.filterStatus === null) {
       // no op
     } else if (this.filterStatus === 'deleted') {
-    //   if (this.filterElement === "dataModel") {
-    //     method = this.resourcesService.admin.get("dataModels/deleted");
-    //   } else if (this.filterElement === "terminology") {
-    //     method = this.resourcesService.admin.get("terminologies/deleted");
-	//   }
-	options = {
-		queryStringParams: {
-		  includeDocumentSuperseded: false,
-		  includeModelSuperseded: false,
-		  includeDeleted: true
-		}
-	  };
-	method = this.resourcesService.tree.get(null, null, options);
+      //   if (this.filterElement === "dataModel") {
+      //     method = this.resourcesService.admin.get("dataModels/deleted");
+      //   } else if (this.filterElement === "terminology") {
+      //     method = this.resourcesService.admin.get("terminologies/deleted");
+      //   }
+      options = {
+        queryStringParams: {
+          includeDocumentSuperseded: false,
+          includeModelSuperseded: false,
+          includeDeleted: true
+        }
+      };
+      method = this.resourcesService.tree.get(null, null, options);
     } else if (this.filterStatus === 'documentSuperseded') {
-    //   if (this.filterElement === "dataModel") {
-    //     method = this.resourcesService.admin.get(
-    //       "dataModels/documentSuperseded"
-    //     );
-    //   } else if (this.filterElement === "terminology") {
-    //     method = this.resourcesService.admin.get(
-    //       "terminologies/documentSuperseded"
-    //     );
-	//   }
-	options = {
-		queryStringParams: {
-		  includeDocumentSuperseded: true,
-		  includeModelSuperseded: false,
-		  includeDeleted: false
-		}
-	  };
-	method = this.resourcesService.tree.get(null, null, options);
+      //   if (this.filterElement === "dataModel") {
+      //     method = this.resourcesService.admin.get(
+      //       "dataModels/documentSuperseded"
+      //     );
+      //   } else if (this.filterElement === "terminology") {
+      //     method = this.resourcesService.admin.get(
+      //       "terminologies/documentSuperseded"
+      //     );
+      //   }
+      options = {
+        queryStringParams: {
+          includeDocumentSuperseded: true,
+          includeModelSuperseded: false,
+          includeDeleted: false
+        }
+      };
+      method = this.resourcesService.tree.get(null, null, options);
     } else if (this.filterStatus === 'modelSuperseded') {
-    //   if (this.filterElement === "dataModel") {
-    //     method = this.resourcesService.admin.get("dataModels/modelSuperseded");
-    //   } else if (this.filterElement === "terminology") {
-    //     method = this.resourcesService.admin.get(
-    //       "terminologies/modelSuperseded"
-    //     );
-	//   }
-	options = {
-		queryStringParams: {
-		  includeDocumentSuperseded: false,
-		  includeModelSuperseded: true,
-		  includeDeleted: false
-		}
-	  };
-	method = this.resourcesService.tree.get(null, null, options);
+      //   if (this.filterElement === "dataModel") {
+      //     method = this.resourcesService.admin.get("dataModels/modelSuperseded");
+      //   } else if (this.filterElement === "terminology") {
+      //     method = this.resourcesService.admin.get(
+      //       "terminologies/modelSuperseded"
+      //     );
+      //   }
+      options = {
+        queryStringParams: {
+          includeDocumentSuperseded: false,
+          includeModelSuperseded: true,
+          includeDeleted: false
+        }
+      };
+      method = this.resourcesService.tree.get(null, null, options);
     }
 
     method.subscribe(resp => {
@@ -126,18 +124,17 @@ export class ModelManagementComponent implements OnInit {
       err => {
         this.reloading = false;
         this.messageHandler.showError('There was a problem loading tree.', err);
-      };
-  };
+      }
+  }
 
   markChildren = function(node) {
-
-	if (this.selectedElements) {
+    if (this.selectedElements) {
       if (this.selectedElements[node.id]) {
         node.checked = true;
       }
     }
 
- if (node.children) {
+    if (node.children) {
       for (const entry of node.children) {
         this.markChildren(entry);
       }
@@ -145,8 +142,8 @@ export class ModelManagementComponent implements OnInit {
   };
 
   onNodeChecked = function(node) {
-	const currentIdx = this.selectedElements.findIndex(x => x.id == [node.id]);
-	if ( currentIdx === -1) {
+    const currentIdx = this.selectedElements.findIndex(x => x.id == [node.id]);
+    if (currentIdx === -1) {
       this.selectedElements.push(node);
       this.selectedElementsCount++;
     } else {
@@ -163,7 +160,7 @@ export class ModelManagementComponent implements OnInit {
   };
 
   delete(permanent?) {
-    let dataModelResources = {
+    const dataModelResources = {
       permanent,
       ids: []
     };
@@ -177,32 +174,36 @@ export class ModelManagementComponent implements OnInit {
     this.deleteInProgress = true;
     this.resourcesService.dataModel
       .delete(null, null, null, dataModelResources)
-      .subscribe(() => {
-        if (permanent) {
-          this.deleteSuccessMessage =
-            this.selectedElementsCount + ' Data Model(s) deleted successfully.';
-          this.deleteInProgress = false;
+      .subscribe(
+        () => {
+          if (permanent) {
+            this.deleteSuccessMessage =
+              this.selectedElementsCount +
+              ' Data Model(s) deleted successfully.';
+            this.deleteInProgress = false;
 
-          setTimeout(() => {
-            this.resetSettings();
-          }, 2000);
-        } else {
-          this.deleteSuccessMessage =
-            this.selectedElementsCount +
-            ' Data Model(s) marked as deleted successfully.';
-          this.deleteInProgress = false;
+            setTimeout(() => {
+              this.resetSettings();
+            }, 2000);
+          } else {
+            this.deleteSuccessMessage =
+              this.selectedElementsCount +
+              ' Data Model(s) marked as deleted successfully.';
+            this.deleteInProgress = false;
 
-          setTimeout(() => {
-            this.resetSettings();
-          }, 2000);
+            setTimeout(() => {
+              this.resetSettings();
+            }, 2000);
+          }
+        },
+        error => {
+          this.deleteInProgress = false;
+          this.messageHandler.showError(
+            'There was a problem deleting the Data Model(s).',
+            error
+          );
         }
-      }, (error) => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError(
-          'There was a problem deleting the Data Model(s).',
-          error
-        );
-      });
+      );
   }
 
   askForSoftDelete() {

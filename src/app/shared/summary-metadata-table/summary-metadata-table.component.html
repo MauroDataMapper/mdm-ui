@@ -1,10 +1,10 @@
 <div class="mcTableMain">
     <div class="mcTableTitle">
-        <span class="title">Summary Metadata <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>   <i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+        <span class="title">Summary Metadata <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>   <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
     </div>
 
     <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+        <table mat-table matSort [dataSource]="records" class="table table-bordered">
             <ng-container matColumnDef="namespace">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 40%;width: 40%;">
                     <span [hidden]="!hideFilters">Namespace</span>
@@ -35,8 +35,8 @@
                 </td>
             </ng-container>
             
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
     </div>

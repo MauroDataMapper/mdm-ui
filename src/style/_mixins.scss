@@ -1,0 +1,17 @@
+@mixin size($width: 100%, $height: 100%) {
+  width: $width;
+  height: $height;
+}
+
+@mixin font($size: $size, $weight: $weight) {
+  font-size: $size;
+  font-weight: $weight;
+}
+
+@mixin respond-to($size,$query:max-width)
+{
+    @media ($query:$size)
+    {
+        @content;
+    }
+}

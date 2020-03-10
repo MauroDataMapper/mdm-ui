@@ -1,17 +1,16 @@
-import { Component, OnInit, Inject } from "@angular/core";
-import { StateHandlerService } from "../services/handlers/state-handler.service";
-import { StateService } from "@uirouter/core";
-import { Title } from "@angular/platform-browser";
-import { ResourcesService } from "../services/resources.service";
-import { Observable } from "rxjs";
-import { BroadcastService } from "../services/broadcast.service";
-import { SharedService } from "../services/shared.service";
-import { McSelectPagination } from "../utility/mc-select/mc-select.component";
+import { Component, OnInit } from '@angular/core';
+import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { StateService } from '@uirouter/core';
+import { Title } from '@angular/platform-browser';
+import { ResourcesService } from '../services/resources.service';
+import { BroadcastService } from '../services/broadcast.service';
+import { SharedService } from '../services/shared.service';
+import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 
 @Component({
-  selector: "app-terminology",
-  templateUrl: "./terminology.component.html",
-  styleUrls: ["./terminology.component.sass"]
+  selector: 'app-terminology',
+  templateUrl: './terminology.component.html',
+  styleUrls: ['./terminology.component.sass']
 })
 export class TerminologyComponent implements OnInit {
   constructor(
@@ -45,7 +44,7 @@ export class TerminologyComponent implements OnInit {
     this.terminology = null;
     this.diagram = null;
 
-    this.title.setTitle("Terminology");
+    this.title.setTitle('Terminology');
 
     this.resources.terminology.get(id, null).subscribe(result => {
       const data = result.body;
@@ -65,42 +64,42 @@ export class TerminologyComponent implements OnInit {
 
   getTabDetail = tabName => {
     switch (tabName) {
-      case "properties":
-        return { index: 0, name: "properties" };
-      case "comments":
-        return { index: 1, name: "comments" };
-      case "attachments":
-        return { index: 2, name: "attachments" };
-      case "history":
-        return { index: 3, name: "history" };
+      case 'properties':
+        return { index: 0, name: 'properties' };
+      case 'comments':
+        return { index: 1, name: 'comments' };
+      case 'attachments':
+        return { index: 2, name: 'attachments' };
+      case 'history':
+        return { index: 3, name: 'history' };
       default:
-        return { index: 0, name: "properties" };
+        return { index: 0, name: 'properties' };
     }
-  };
+  }
 
   getTabDetailIndex = tabIndex => {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: "properties" };
+        return { index: 0, name: 'properties' };
       case 1:
-        return { index: 1, name: "comments" };
+        return { index: 1, name: 'comments' };
       case 2:
-        return { index: 2, name: "attachments" };
+        return { index: 2, name: 'attachments' };
       case 3:
-        return { index: 3, name: "history" };
+        return { index: 3, name: 'history' };
       default:
-        return { index: 0, name: "properties" };
+        return { index: 0, name: 'properties' };
     }
-  };
+  }
 
   save = (updatedResource?) => {
-    this.broadcastSvc.broadcast("$elementDetailsUpdated", updatedResource);
-  };
+    this.broadcastSvc.broadcast('$elementDetailsUpdated', updatedResource);
+  }
 
   tabSelected = tabIndex => {
-    var tab = this.getTabDetailIndex(tabIndex);
+    const tab = this.getTabDetailIndex(tabIndex);
     this.stateHandler.Go(
-      "terminologyNew",
+      'terminologyNew',
       { tabView: tab.name },
       { notify: false, location: tab.index != 0 }
     );
@@ -118,17 +117,17 @@ export class TerminologyComponent implements OnInit {
           this.loadingData = false;
         });
     }
-  };
+  }
 
   openEditForm = formName => {
     this.showEditForm = true;
     this.editForm = formName;
-  };
+  }
 
   closeEditForm = () => {
     this.showEditForm = false;
     this.editForm = null;
-  };
+  }
 
   fetch = (text,loadAll, offset, limit) => {
     //var deferred = $q.defer();
@@ -138,26 +137,26 @@ export class TerminologyComponent implements OnInit {
 
 
     this.pagination = {
-        limit : limit,
-        offset : offset        
-      }
+        limit,
+        offset        
+      };
 
     this.searchTerm = text;
 
-    return this.resources.terminology.get(this.terminology.id, "terms/search", {
+    return this.resources.terminology.get(this.terminology.id, 'terms/search', {
       queryStringParams: {
         search: encodeURIComponent(text),
-        limit: limit,
-        offset: offset
+        limit,
+        offset
       }
     });
-  };
+  }
 
   onTermSelect = term => {
     this.stateHandler.NewWindow(
-      "term",
+      'term',
       { terminologyId: term.terminology, id: term.id },
       null
     );
-  };
+  }
 }

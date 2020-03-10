@@ -15,171 +15,198 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./group-member-table.component.scss']
 })
 export class GroupMemberTableComponent implements OnInit {
+  @Input() parent: any;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  @Input() parent : any;
-  @ViewChildren("filters", { read: ElementRef })  filters: ElementRef[];
-  @ViewChild(MatSort, { static: false })  sort: MatSort;
-  @ViewChild(MatPaginator, { static: false })  paginator: MatPaginator;
+  constructor(
+    private roles: ROLES,
+    private changeRef: ChangeDetectorRef,
+    private gridService: GridService,
+    private messageHandler: MessageHandlerService,
+    private resources: ResourcesService
+  ) {}
 
-
-  constructor(private roles: ROLES, private changeRef: ChangeDetectorRef, private gridService : GridService, private messageHandler:MessageHandlerService, private resources: ResourcesService) { }
-
-  mcDisplayRecords:any;
+  mcDisplayRecords: any;
   ROLES = this.roles.map;
-  errors:any;
-  displayedColumns = ["disabled","emailAddress","firstName","lastName","organisation","userRole","empty"];
+  errors: any;
+  displayedColumns = [
+    'disabled',
+    'emailAddress',
+    'firstName',
+    'lastName',
+    'organisation',
+    'userRole',
+    'empty'
+  ];
   pagination: McSelectPagination;
-  totalItemCount:number;
+  totalItemCount: number;
   isLoadingResults: boolean;
 
   records: any[] = [];
-  filter: any = "";
+  filter: any = '';
   applyFilter = this.gridService.applyFilter(this.filters);
 
-  ngOnInit() {
-    debugger;
-  }
-
-
+  ngOnInit() {}
 
   ngAfterViewInit() {
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.gridService.reloadEvent.subscribe(
+      () => (this.paginator.pageIndex = 0)
+    );
+    merge(
+      this.sort.sortChange,
+      this.paginator.page,
+      this.gridService.reloadEvent
+    )
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
 
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    this.gridService.reloadEvent.subscribe(() => this.paginator.pageIndex = 0);
-    merge(this.sort.sortChange, this.paginator.page, this.gridService.reloadEvent)
-        .pipe(
-            startWith({}),
-            switchMap(() => {
-                    this.isLoadingResults = true;
-
-                    return this.groupMembersFetch(this.paginator.pageSize,
-                        this.paginator.pageIndex,
-                        this.sort.active,
-                        this.sort.direction,
-                        this.filter);
-                }
-            ),
-            map((data: any) => {
-                this.totalItemCount = data.body.count;
-                this.isLoadingResults = false;
-                return data.body["items"];
-            }),
-            catchError(() => {
-                this.isLoadingResults = false;
-                return [];
-            })
-        ).subscribe(data => {
-            this.records = data;
-        });
-        this.changeRef.detectChanges();
-}
+          return this.groupMembersFetch(
+            this.paginator.pageSize,
+            this.paginator.pageIndex,
+            this.sort.active,
+            this.sort.direction,
+            this.filter
+          );
+        }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.isLoadingResults = false;
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return [];
+        })
+      )
+      .subscribe(data => {
+        this.records = data;
+      });
+    this.changeRef.detectChanges();
+  }
 
   groupMembersFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    var options = {
-        pageSize: pageSize,
-        pageIndex:pageIndex,
-        sortBy: sortBy,
-        sortType:sortType,
-        filters: filters
+    const options = {
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
     };
-    return this.resources.userGroup.get(this.parent.id, "catalogueUsers", options);
-}
+    return this.resources.userGroup.get(
+      this.parent.id,
+      'catalogueUsers',
+      options
+    );
+  }
 
-validate = () => {
-  var isValid = true;
-  this.errors = [];
-  if (this.parent.label.trim().length === 0) {
-      this.errors['label'] = "Name can't be empty!";
+  validate = () => {
+    let isValid = true;
+    this.errors = [];
+    if (this.parent.label.trim().length === 0) {
+      this.errors.label = 'Name can\'t be empty!';
       isValid = false;
-  }
-  if (isValid) {
+    }
+    if (isValid) {
       delete this.errors;
+    }
+    return isValid;
   }
-  return isValid;
-}
 
-add = () => {
-  var newRecord = {
-      id:"",
-      firstName:"",
-      lastName:"",
-      organisation:"",
-      userRole:"",
+  add = () => {
+    const newRecord = {
+      id: '',
+      firstName: '',
+      lastName: '',
+      organisation: '',
+      userRole: '',
       disabled: false,
-      isNew:true
-  };
-  this.mcDisplayRecords = [].concat([newRecord]).concat(this.mcDisplayRecords);
-}
+      isNew: true
+    };
+    this.mcDisplayRecords = []
+      .concat([newRecord])
+      .concat(this.mcDisplayRecords);
+  }
 
-fetchUser = (text, offset, limit) => {
+  fetchUser = (text, offset, limit) => {
+    this.pagination.limit = this.pagination.limit ? this.pagination.limit : 10;
+    this.pagination.offset = this.pagination.offset
+      ? this.pagination.offset
+      : 0;
 
-  this.pagination.limit  = this.pagination.limit ? this.pagination.limit : 10;
-  this.pagination.offset = this.pagination.offset ? this.pagination.offset : 0;
-  
-  var options = {
+    const options = {
       pageSize: limit,
       pageIndex: offset,
-      filters: "search=" + text,
-      sortBy: "emailAddress",
-      sortType: "asc"
-  };
-  return this.resources.catalogueUser.get(null, "search", options);
-}
-
-onUserSelect = (select, record) => {
-  record.id = select.id;
-  record.emailAddress = select.emailAddress;
-  record.firstName = select.firstName;
-  record.lastName = select.lastName;
-  record.organisation = select.organisation;
-  record.userRole = select.userRole;
-  record.disabled = select.disabled;
-}
-
-cancelEdit =  (record, index) => {
-  if(record.isNew){
-     this.mcDisplayRecords.splice(index, 1);
+      filters: 'search=' + text,
+      sortBy: 'emailAddress',
+      sortType: 'asc'
+    };
+    return this.resources.catalogueUser.get(null, 'search', options);
   }
-}
 
-confirmAddMember = (record, $index) => {
-  if(!record.id || !record.emailAddress){
+  onUserSelect = (select, record) => {
+    record.id = select.id;
+    record.emailAddress = select.emailAddress;
+    record.firstName = select.firstName;
+    record.lastName = select.lastName;
+    record.organisation = select.organisation;
+    record.userRole = select.userRole;
+    record.disabled = select.disabled;
+  }
+
+  cancelEdit = (record, index) => {
+    if (record.isNew) {
+      this.mcDisplayRecords.splice(index, 1);
+    }
+  }
+
+  confirmAddMember = (record, $index) => {
+    if (!record.id || !record.emailAddress) {
       return;
-  }
-  this.resources.userGroup.put(this.parent.id, "catalogueUsers/" + record.id, null).subscribe(() => {
+    }
+    this.resources.userGroup
+      .put(this.parent.id, 'catalogueUsers/' + record.id, null)
+      .subscribe(
+        () => {
           this.mcDisplayRecords[$index] = record;
           this.messageHandler.showSuccess('User added successfully.');
+        },
+        error => {
+          this.messageHandler.showError(
+            'There was a problem adding the user to the group.',
+            error
+          );
+        }
+      );
+  }
 
-  }, (error) => {
-      this.messageHandler.showError('There was a problem adding the user to the group.', error);
-  });
+  removeMember = record => {
+    record.deletePending = true;
+  }
+
+  confirmRemove = (record, $index) => {
+    this.resources.userGroup
+      .delete(this.parent.id, 'catalogueUsers/' + record.id)
+      .subscribe(
+        () => {
+          delete record.deletePending;
+          this.mcDisplayRecords.splice($index, 1);
+          this.messageHandler.showSuccess('User removed successfully.');
+        },
+        error => {
+          this.messageHandler.showError(
+            'There was a problem removing the user from the group.',
+            error
+          );
+        }
+      );
+  }
+
+  cancelRemove = record => {
+    delete record.deletePending;
+  }
 }
-
-removeMember = (record) => {
-  record.deletePending = true;
-};
-
-confirmRemove = (record, $index) => {
-  this.resources.userGroup.delete(this.parent.id, "catalogueUsers/" + record.id).subscribe(() => {
-      delete record.deletePending;
-      this.mcDisplayRecords.splice($index, 1);
-      this.messageHandler.showSuccess('User removed successfully.');
-     
-  }, (error) => {
-      this.messageHandler.showError('There was a problem removing the user from the group.', error);
-  });
-}
-
-cancelRemove =  (record) => {
-  delete record.deletePending;
-}
-
-
-}
-
-
-
-
-
-        
-

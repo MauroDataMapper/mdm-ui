@@ -1,65 +1,58 @@
+<div class="heading-container">
+	<h4>There are {{totalItemCount}} groups in this repository. </h4>
+	<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+	<div class="addUserTrigger">
+		<data-type-list-buttons [display-records]="records" [show-content-dropdown]="false" [show-delete-button]="false" [add]="add"></data-type-list-buttons>
+	</div>
+</div>
 
-<div class="mcTableMain">
-	<div class="mcTableTitle">
-		<span class="title">
-			Groups<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-			<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
-		</span>
-		<div style="float: right; margin-top: -2px; margin-left: 9px;">
-			<data-type-list-buttons [display-records]="records"
-			                        [show-content-dropdown]="false"
-			                        [show-delete-button]="false"
-			                        [add]="add"></data-type-list-buttons>
-		</div>
-	</div>
-	<div class="mcTableContainer">
-		<table mat-table [dataSource]="dataSource" matSort class="table table-condensed table-bordered mcTable">
-			<ng-container matColumnDef="name">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 33%; width: 33%;" columnName="label">
-					<span [hidden]="!hideFilters">Name</span>
-					<div [hidden]="hideFilters">
-						<mat-form-field class="filter" floatLabel="never">
-							<mat-label>Name</mat-label>
-							<input #filters matInput name="label" (keyup)="applyFilter()">
-						</mat-form-field>
-					</div>
-				</th>
-				<td mat-cell *matCellDef="let record" style="max-width: 33%; width: 33%; text-align: left; word-wrap: break-word;">
-					<span>{{record.label}}</span>
-				</td>
-			</ng-container>
-			<ng-container matColumnDef="description">
-				<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 40%; width: 40%; font-weight: bold; color: black" columnName="description">
-					<span [hidden]="!hideFilters">Description</span>
-				</th>
-				<td mat-cell *matCellDef="let record" style="max-width: 40%; width: 40%; text-align: left; word-wrap: break-word;">
-					<span>{{record.description}}</span>
-				</td>
-			</ng-container>
-			<ng-container matColumnDef="icons">
-				<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 27%; width: 27%;" columnName="icons">
-				</th>
-				<td mat-cell *matCellDef="let record; let i = index" style="max-width: 27%; width: 27%; text-align: left; word-wrap: break-word;">
-					<div style="float: right;margin-bottom: 3px">
-						<button type="button" matTooltip="Edit" tooltip-class="mcTooltip"
-								class="btn btn-default btn-xs"
-								(click)="editUser(record)">
-							<i class="fa fa-edit editButton themeColor"></i>
-						</button>
-						<button type="button" matTooltip="Delete" tooltip-class="mcTooltip"
-								class="btn btn-default btn-xs"
-								(click)="deleteUser(record)">
-							<i class="fa fa-trash-o deleteButton"></i>
-						</button>
-					</div>
-				</td>
-			</ng-container>
+<div class="mcTableContainer">
+	<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped">
+		<ng-container matColumnDef="name">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 33%; width: 33%;" columnName="label">
+				<span [hidden]="!hideFilters">Name</span>
+				<div [hidden]="hideFilters">
+					<mat-form-field class="filter" floatLabel="never">
+						<mat-label>Name</mat-label>
+						<input #filters matInput name="label" (keyup)="applyFilter()">
+					</mat-form-field>
+				</div>
+			</th>
+			<td mat-cell *matCellDef="let record" style="max-width: 33%; width: 33%; text-align: left; word-wrap: break-word;">
+				<span>{{record.label}}</span>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="description">
+			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 40%; width: 40%;" columnName="description">
+				<span [hidden]="!hideFilters">Description</span>
+			</th>
+			<td mat-cell *matCellDef="let record" style="max-width: 40%; width: 40%; text-align: left; word-wrap: break-word;">
+				<span>{{record.description}}</span>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="icons">
+			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 27%; width: 27%;" columnName="icons">
+			</th>
+			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 27%; width: 27%; text-align: left; word-wrap: break-word;">
+				<div style="float: right;margin-bottom: 3px">
+					<button type="button" matTooltip="Edit" 
+							class="btn btn-default"
+							(click)="editUser(record)">
+							<i class="fas fa-pencil-alt editButton"></i>
+					</button>
+					<button type="button" matTooltip="Delete" 
+							class="btn btn-default"
+							(click)="deleteUser(record)">
+						<i class="far fa-trash-alt warning"></i>
+					</button>
+				</div>
+			</td>
+		</ng-container>
 
-			<tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-			<tr mat-row *matRowDef="let record; columns: displayedColumns;" style="height: auto"></tr>
-		</table>
-	</div>
-	<div class="d-flex justify-content-between p-2">
-		<mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
-	</div>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
+	</table>
+</div>
+<div>
+	<mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 </div>

@@ -1,4 +1,2 @@
-
-    <span *ngIf="!inEditMode"  [ngClass]="styleCss">{{val}}</span>
-    <span *ngIf="inEditMode" ><input type="text" [(ngModel)]="ngValue" [name]="name" [ngClass]="styleCss"/></span>
-
+<span *ngIf="!inEditMode" [ngClass]="styleCss">{{val}}</span>
+<span *ngIf="inEditMode"><input type="text" [(ngModel)]="ngValue" [name]="name" [ngClass]="styleCss" /></span>

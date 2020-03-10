@@ -6,22 +6,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./data-element-step1.component.sass']
 })
 export class DataElementStep1Component implements OnInit {
-
   step: any;
   model: any;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-
     this.model = this.step.scope.model;
   }
-  onSelect = (dataClass) => {
+  onSelect = dataClass => {
     this.model.selectedDataElements = [];
-  };
+  }
 
-  selectCreateType = (createType) => {
+  selectCreateType = createType => {
     this.model.createType = createType;
-  };
-
+  }
 }

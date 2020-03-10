@@ -41,9 +41,4 @@ export class ModelPathComponent implements OnInit {
             this.targetWindow = "_blank";
         }
     }
-
-    //TODO FIX THIS
-    click = (var1?:any, var2?:any, var3?:any) => {
-        
-    } 
 }

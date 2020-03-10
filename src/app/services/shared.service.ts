@@ -23,6 +23,7 @@ export class SharedService {
     HDFLink = environment.HDFLink;
     isAdmin;
     applicationOffline = new Subject<any>();
+    current;
 
     public searchCriteria: string;
 

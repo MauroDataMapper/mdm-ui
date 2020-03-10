@@ -136,11 +136,14 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { UIRouterModule } from '@uirouter/angular';
 import { AngularSplitModule } from 'angular-split';
 import { UserIdleModule } from 'angular-user-idle';
+import {CodeSetComponent} from "../../code-set/code-set/code-set.component";
+import {CodeSetDetailsComponent} from "../../code-set/code-set-details/code-set-details.component";
+import {CodeSetTermsTableComponent} from "../../shared/code-set-terms-table/code-set-terms-table.component";
 
 
 
 @NgModule({
-  declarations: [      
+  declarations: [
     FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
@@ -266,7 +269,10 @@ import { UserIdleModule } from 'angular-user-idle';
     ModelComparisonComponent,
     CodeSetMainComponent,
     CodeSetStep1Component,
-    MultipleTermsSelectorComponent],
+    MultipleTermsSelectorComponent,
+    CodeSetComponent,
+    CodeSetDetailsComponent,
+    CodeSetTermsTableComponent],
   imports: [
     CommonModule,
     BrowserModule,
@@ -280,7 +286,7 @@ import { UserIdleModule } from 'angular-user-idle';
     AngularSplitModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 30000,
-      positionClass: "toast-bottom-right",
+      positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
     ImageCropperModule,
@@ -415,6 +421,9 @@ import { UserIdleModule } from 'angular-user-idle';
     ModelComparisonComponent,
     CodeSetMainComponent,
     CodeSetStep1Component,
-    MultipleTermsSelectorComponent]
+    MultipleTermsSelectorComponent,
+    CodeSetComponent,
+    CodeSetDetailsComponent,
+    CodeSetTermsTableComponent]
 })
 export class CatalougeModule { }

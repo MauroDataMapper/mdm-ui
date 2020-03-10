@@ -85,8 +85,8 @@
                 <div  style="min-height: 200px;">
                     <div style="position: relative; border: 1px solid #DDD;padding: 5px;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
                         <mc-paged-list
-                                [name]="linkType"
-                                [mc-title]="linkType"
+                                [name]="'linkType'"
+                                [mc-title]="'linkType'"
                                 [type]="'static'"
                                 [(items)]="selectorSection.selectedTermsArray"
                                 [page-size]="10">
@@ -111,9 +111,9 @@
 
                         </mc-paged-list>
                     </div>
-<!--                    <div style="margin-top: 5px;" *ngIf="!hideAddButton">-->
-<!--                        <button type="button" class="btn btn-sm btn-default themeColor" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>-->
-<!--                    </div>-->
+                    <div style="margin-top: 5px;" *ngIf="!hideAddButton">
+                        <button type="button" class="btn btn-sm btn-default themeColor" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
+                    </div>
                 </div>
             </div>
         </div>

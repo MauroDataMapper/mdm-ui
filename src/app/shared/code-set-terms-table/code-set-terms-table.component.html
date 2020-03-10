@@ -1,0 +1,100 @@
+<div class="mcTableMain">
+    <div class="mcTableTitle">
+        <span class="title">Terms <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+        <div *ngIf="(access && access.showEdit) || clientSide" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
+            <button type="button"   class="btn btn-xs btn-default addNewModelButton themeColor" (click)="toggleAddTermsSection()">
+                <i class="fa fa-plus"  uib-tooltip="Add Term" aria-hidden="true" *ngIf="!showAddTerm"></i>
+                <i class="fa fa-times" uib-tooltip="Close" aria-hidden="true" *ngIf="showAddTerm"></i>
+            </button>
+        </div>
+    </div>
+
+    <div style="padding: 10px; border: 1px solid #DDD;margin-right: 0px !important;  margin-left: 0px !important; " class="row" *ngIf="showAddTerm">
+        <multiple-terms-selector [on-add-button-click]="addTerms" [hideAddButton] = false></multiple-terms-selector>
+    </div>
+
+    <div class="mcTableContainer">
+        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+
+            <ng-container matColumnDef="terminology">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="terminologyLabel" [disabled]="!hideFilters" style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="terminology">
+                    <span [hidden]="!hideFilters">Terminology</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" floatLabel="never">
+                            <mat-label>Terminology</mat-label>
+                            <input #filters matInput name="terminologyLabel" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
+                    <element-link
+                       [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}"></element-link>
+                                    </td>
+            </ng-container>
+            <ng-container matColumnDef="term">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="code" [disabled]="!hideFilters" style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="term">
+                    <span [hidden]="!hideFilters">Term</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" floatLabel="never">
+                            <mat-label>Term</mat-label>
+                            <input #filters matInput name="code" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
+                    <element-link
+                            [parent-data-model]="{id:record.dataModel}"
+                            [parent-data-class]="{id:record.dataClass}"
+                            [element]="record"></element-link>
+
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="definition">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="definition" [disabled]="!hideFilters" style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="definition">
+                    <span [hidden]="!hideFilters">Definition</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" floatLabel="never">
+                            <mat-label>Definition</mat-label>
+                            <input #filters matInput name="definition" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
+                    <div *ngIf="record.definition && record.definition.length>0" style="margin-bottom: 10px;" >
+                        <span [innerHTML]="record.definition"></span>
+                    </div>
+
+                    <div title="Aliases">
+                        <app-element-alias [aliases]="record.aliases"></app-element-alias>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="btns" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
+                    <div *ngIf="access && access.showEdit">
+
+                        <table-buttons [record]="record" [index]="i"  (delete)="delete($event[0],$event[1])"  [hide-edit]="true" ></table-buttons>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+
+        </table>
+
+        <mat-card *ngIf="isLoadingResults"
+                  style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
+            <mat-progress-spinner color="primary"
+                                  mode="indeterminate">
+            </mat-progress-spinner>
+        </mat-card>
+
+    </div>
+
+    <div class="d-flex justify-content-between p-2">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
+

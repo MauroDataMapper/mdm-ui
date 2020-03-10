@@ -1,9 +1,9 @@
-<div class="row">
+<div class="row" >
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <mat-horizontal-stepper #stepper>
             <mat-step *ngFor="let step of steps; let i = index">
                 <ng-template matStepLabel>{{step.title}}</ng-template>
-                <dcl-wrapper [type]="step.component" [(step)]="steps[step]"></dcl-wrapper>
+                <dcl-wrapper  [type]="step.component" [(step)]="steps[i]"></dcl-wrapper>
                 <div class="row">
                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                         <button class="btn btn-default btn-sm" style="margin-right: 5px" matStepperPrevious>

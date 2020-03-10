@@ -361,20 +361,19 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       key: '',
       value: '',
       category: '',
-      isCategoryRow: false, // TODO
+      isCategoryRow: false,
       edit: {
         id: '',
         key: '',
         value: '',
         category: '',
-        errors: '' // TODO
+        errors: '' 
       },
       inEdit: true,
       inDelete: false,
       isNew: true
     };
-
-    // TODO
+ 
     if (this.displayItems == undefined) {
       this.displayItems = [];
     }

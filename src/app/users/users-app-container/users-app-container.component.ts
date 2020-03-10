@@ -8,7 +8,7 @@ import { SharedService } from '../../services/shared.service';
 })
 export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;
-  exporting:boolean; //TODO correct this
+
   constructor(private sharedService: SharedService) {}
 
   ngOnInit() {}

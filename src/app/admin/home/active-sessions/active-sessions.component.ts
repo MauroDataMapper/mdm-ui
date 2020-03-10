@@ -114,8 +114,4 @@ export class ActiveSessionsComponent implements OnInit {
   applyFilter = () =>{
     // TODO
   }
-
-  editUser = (var1?) => {
-    //TODO
-  }
 }

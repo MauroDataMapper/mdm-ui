@@ -169,18 +169,18 @@ export class ElementSelectorComponent implements OnInit {
             this.reloading = false;
         });
     }
-    loadAllFolders = function () {
-        this.loading = true;
-        this.resourceService.folder.get().subscribe( (data) => {
-            this.loading = false;
-            this.rootNode = {
-                children: data.items,
-                isRoot: true
-            };
-        }, function (error) {
-            this.loading = false;
-        });
-    };
+  loadAllFolders = function () {
+    this.loading = true;
+    this.resourceService.tree.get(null, null, { foldersOnly: true }).subscribe( (data) => {
+      this.loading = false;
+      this.rootNode = {
+        children: data.body,
+        isRoot: true
+      };
+    }, function (error) {
+      this.loading = false;
+    });
+  };
 
     loadTerminologies = function () {
         this.reloading = true;

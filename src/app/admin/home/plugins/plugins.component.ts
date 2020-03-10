@@ -94,7 +94,7 @@ export class PluginsComponent implements OnInit {
 
 			this.totalItemCount = this.dataSource.data.length;
 		}),
-			(err) => {
+			(err: any) => {
 
 				this.messageHandler.showError('There was a problem loading the exporters.', err);
 			};

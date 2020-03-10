@@ -3,14 +3,13 @@
         <i class="fa fa-sitemap modelPathIcon" aria-hidden="true" title="Parent Hierarchy" [hidden]="i === 0"></i>
         <span *ngIf="!doNotDisplayStatus && i == 0 && !p.finalised" class="label label-warning" style="vertical-align: middle;font-size: 9px;">Draft</span>
         <span *ngIf="!doNotDisplayStatus && i == 0 &&  p.finalised" class="label label-success" style="vertical-align: middle;font-size: 9px;">Finalised</span>
-
+      <a  *ngIf="i >= 0" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
         <span [hidden]="!doNotShowParentDataModel && i == 0">
-<!--            <a *ngIf="p.domainType=='DataModel' && showHref" (click)="click($event,p,i)" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>-->
-<!--            <a *ngIf="i >= 1 && showHref"  href="{{p.link}}" (click)="click($event,p,$index)" target="{{targetWindow}}">{{p.label}}</a>-->
-            <a *ngIf="p.domainType=='DataModel' && showHref" (click)="click($event,p,i)" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
-             <a *ngIf="i >= 1 && showHref" (click)="click($event,p,i)" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
+
+            <a *ngIf="p.domainType=='DataModel' && showHref" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
+             <a *ngIf="i >= 0 && showHref" href="{{p.link}}" target="{{targetWindow}}">{{updatedPath[i]}}</a>
             <a *ngIf="p.domainType=='DataModel' && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
-            <a *ngIf="i >= 1 && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
+            <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
         </span>
     </li>
 </ul>

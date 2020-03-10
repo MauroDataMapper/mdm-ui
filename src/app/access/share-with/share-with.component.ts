@@ -27,7 +27,8 @@ export class ShareWithComponent implements OnInit {
     "DataModel":  {name:"dataModel",   message:"Data Model"},
     "Classifier": {name:"classifier",  message:"Classifier"},
     "Folder":     {name:"folder",      message:"Folder"},
-    "Terminology":{name:"terminology", message:"Terminology"}
+    "Terminology":{name:"terminology", message:"Terminology"},
+    "CodeSet"    :{name:"codeSet"    , message:"CodeSet"}
   };
   readableByEveryone: false;
   readableByAuthenticated:false;

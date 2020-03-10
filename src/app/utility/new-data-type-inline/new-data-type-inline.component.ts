@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ResourcesService } from "../../services/resources.service";
-import { ElementTypesService } from "../../services/element-types.service";
+import { ResourcesService } from '../../services/resources.service';
+import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
 	selector: 'new-data-type-inline',
@@ -11,113 +11,113 @@ export class NewDataTypeInlineComponent implements OnInit {
 
 	@Output() validationStatusEvent = new EventEmitter<string>();
 
-	@Input("parent-data-model") parentDataModel;
-	@Input("show-parent-data-model") showParentDataModel = false;
-	@Input("show-classification") showClassification = false;
+	@Input('parent-data-model') parentDataModel;
+	@Input('show-parent-data-model') showParentDataModel = false;
+	@Input('show-classification') showClassification = false;
 	@Input() model: any = {
-		label: "",
-		description: "",
-		domainType: "",
-		referencedDataClass: "",
-		referencedTerminology: ""
-	}
+		label: '',
+		description: '',
+		domainType: '',
+		referencedDataClass: '',
+		referencedTerminology: ''
+	};
 
-	childDataClasses:any; // TODO - FIGURE OUT IF NEEDED
 
-	@Input("parent-scope-handler") parentScopeHandler;
+	@Input('parent-scope-handler') parentScopeHandler;
 	allDataTypes;
 	isValid = false;
 	reloading = false;
 	terminologies: any;
-	
+
 	constructor(private resourceService: ResourcesService, private elementTypes: ElementTypesService) {
 
 		this.allDataTypes = this.elementTypes.getAllDataTypesArray();
-		if (this.allDataTypes)
+		if (this.allDataTypes) {
 			this.model.domainType = this.allDataTypes[0];
+		}
 		this.loadTerminologies();
 	}
 
 	sendValidationStatus() {
-		
+
 		this.validationStatusEvent.emit(String(!this.isValid));
 	}
 
 	ngOnInit() {
-		
+
 		this.validate();
-		if (this.parentScopeHandler) {
-			this.parentScopeHandler.$broadcast("newDataTypeInlineUpdated", { model: this.model, isValid: this.isValid });
-		}
+		// if (this.parentScopeHandler) { TODO - check what it is doing?
+		// 	this.parentScopeHandler.broadcast('newDataTypeInlineUpdated', { model: this.model, isValid: this.isValid });
+		// }
 	}
-	
+
 	ngDoCheck() {
-		
+
 		this.validate();
 		this.sendValidationStatus();
 	}
 
 	onTypeSelect() {
 
-		if (this.model.domainType !== "TerminologyType") {
+		if (this.model.domainType !== 'TerminologyType') {
 
-			this.model.referencedTerminology.id = "";
+			this.model.referencedTerminology.id = '';
 		}
-		
+
 		this.validate();
 	}
 
 	validate(newValue?) {
 
-		var isValid = true;
+		let isValid = true;
 
 		if (!this.model.label || this.model.label.trim().length === 0) {
 			isValid = false;
 		}
-		//Check if for EnumerationType, at least one value is added
-		if (this.model.domainType === "EnumerationType" && this.model.enumerationValues.length === 0) {
+		// Check if for EnumerationType, at least one value is added
+		if (this.model.domainType === 'EnumerationType' && this.model.enumerationValues.length === 0) {
 			isValid = false;
 		}
-		//Check if for ReferenceType, the dataClass is selected
-		if (this.model.domainType === "ReferenceType" && !this.model.referencedDataClass) {
+		// Check if for ReferenceType, the dataClass is selected
+		if (this.model.domainType === 'ReferenceType' && !this.model.referencedDataClass) {
 			isValid = false;
 		}
-		
-		//Check if for TerminologyType, the terminology is selected
-		if (this.model.domainType === "TerminologyType" && (!this.model.referencedTerminology || this.model.referencedTerminology.id === "")) {
+
+		// Check if for TerminologyType, the terminology is selected
+		if (this.model.domainType === 'TerminologyType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
 			isValid = false;
 		}
 
 		this.isValid = isValid;
-	};
+	}
 
 	onDataClassSelect = (dataClasses) => {
-		
+
 		if (dataClasses && dataClasses.length > 0) {
 			this.model.referencedDataClass = dataClasses[0];
 		} else {
 			this.model.referencedDataClass = null;
 		}
-	};
+	}
 
 	loadTerminologies() {
 		this.reloading = true;
 		this.resourceService.terminology.get(null, null, null).subscribe(data => {
 			this.terminologies = data.body.items;
 			this.reloading = false;
-		}, function () {
+		}, function() {
 			this.reloading = false;
 		});
-	};
+	}
 
 	onTerminologySelect(terminology: any, record: any) {
-		
+
 		this.model.referencedTerminology = terminology;
 		this.model.terminology = terminology;
-	};
-	
+	}
+
 	onEnumListUpdated = (newEnumList) => {
-		
+
 		this.model.enumerationValues = newEnumList;
-	};
+	}
 }

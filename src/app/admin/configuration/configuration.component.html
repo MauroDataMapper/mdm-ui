@@ -1,6 +1,6 @@
 <mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth *ngIf="properties">
 	<mat-tab label="Email template">
-		<form name="form" (ngSubmit)="f.form.valid && Submit()" #f="ngForm" class="mdm--form mdm--form-configuration">
+		<form name="form" (ngSubmit)="f.form.valid && submitConfig()" #f="ngForm" class="mdm--form mdm--form-configuration">
 			<div class="mdm--form-input mdm--block">
 				<h4 class="mat-h4">Site URL address</h4>
 				<mat-form-field appearance="outline">

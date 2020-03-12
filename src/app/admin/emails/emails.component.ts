@@ -1,33 +1,35 @@
-import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  EventEmitter,
+  ElementRef
+} from "@angular/core";
+import { MatSort } from "@angular/material/sort";
+import { MessageHandlerService } from "../../services/utility/message-handler.service";
+import { ResourcesService } from "../../services/resources.service";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
-  selector: 'app-emails',
-  templateUrl: './emails.component.html',
-  styleUrls: ['./emails.component.sass']
+  selector: "app-emails",
+  templateUrl: "./emails.component.html",
+  styleUrls: ["./emails.component.sass"]
 })
 export class EmailsComponent implements OnInit {
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChildren("filters", { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   filterEvent = new EventEmitter<string>();
   hideFilters = true;
   isLoadingResults: boolean;
-  totalItemCount: number;
+  totalItemCount: number = 0;
   filter: string;
 
   records: any[] = [];
-  displayedColumns = [
-    'sentToEmailAddress',
-    'dateTimeSent',
-    'subject',
-    'successfullySent'
-  ];
+  displayedColumns = ["sentToEmailAddress", "dateTimeSent", "subject", "successfullySent"];
 
   dataSource = new MatTableDataSource<any>();
 
@@ -47,19 +49,19 @@ export class EmailsComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.sortingDataAccessor = (item, property) => {
-      if (property === 'sentToEmailAddress') {
+      if (property === "sentToEmailAddress") {
         return item.sentToEmailAddress;
       }
 
-      if (property === 'dateTimeSent') {
+      if (property === "dateTimeSent") {
         return item.dateTimeSent;
       }
 
-      if (property === 'subject') {
+      if (property === "subject") {
         return item.subject;
       }
 
-      if (property === 'successfullySent') {
+      if (property === "successfullySent") {
         return item.successfullySent;
       }
     };
@@ -70,54 +72,42 @@ export class EmailsComponent implements OnInit {
       pageSize,
       pageIndex,
       filters,
-      sortBy: 'sentToEmailAddress',
-      sortType: 'asc'
+      sortBy: "sentToEmailAddress",
+      sortType: "asc"
     };
 
-    this.resourcesService.admin.get('emails', options).subscribe(resp => {
+    this.resourcesService.admin.get("emails", options).subscribe(resp => {     
       this.records = resp.body.items;
-      this.records.forEach(row => {
-        row.dateTimeSentString =
-          row.dateTimeSent.year +
-          '/' +
-          row.dateTimeSent.monthValue +
-          '/' +
-          row.dateTimeSent.dayOfMonth +
-          ' ' +
-          row.dateTimeSent.hour +
-          ':' +
-          row.dateTimeSent.minute +
-          ':' +
-          row.dateTimeSent.second;
-      });
-      this.totalItemCount = this.records.length;
-      this.refreshDataSource();
+      if (this.records) {
+        this.records.forEach(row => {
+          row.dateTimeSentString = `${row.dateTimeSent.year}/${row.dateTimeSent.monthValue}/${row.dateTimeSent.dayOfMonth} ${row.dateTimeSent.hour}:${row.dateTimeSent.minute}:${row.dateTimeSent.second}`;
+        });
+        this.totalItemCount = this.records.length;
+        this.refreshDataSource();
+      }
     }),
-      err => {
-        this.messageHandler.showError(
-          'There was a problem loading user emails.',
-          err
-        );
-      };
+    err => {
+      this.messageHandler.showError("There was a problem loading user emails.", err);
+    }
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter: any = "";
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
 
-      if (value !== '') {
-        filter += name + '=' + value + '&';
+      if (value !== "") {
+        filter += name + "=" + value + "&";
       }
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   toggleMessage(record) {
     record.showFailure = !record.showFailure;

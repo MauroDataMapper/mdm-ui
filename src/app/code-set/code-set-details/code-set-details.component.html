@@ -11,12 +11,12 @@
                                 <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
 <!--                                <inline-editor #editableText type="text" [(ngModel)]="result.label" size="20" class="dataModelDetailsLabel" [editOnClick]="false" (input)="onLabelChange($event.target.value)" style="width: 45%" name="moduleName"></inline-editor>-->
 
-                                    <i [ngClass]="{'fa fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
+                                    <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
                                        (click)="toggleFavourite()"
                                        uib-tooltip="Favourite"></i>
 
                             <span class="publiclyReadable" [hidden]="!result.readableByEveryone">
-                                    <i class="fa fa-globe themeColor" aria-hidden="true" title="Publicly Readable"></i>
+                                    <i class="fas fa-globe-europe" title="Publicly Readable"></i>
                                 </span>
                             </div>
                             <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
@@ -27,11 +27,11 @@
                     </div>
                     <div class="dataModelTypeIcon"
                          *ngIf="result?.type === 'Data Standard'">
-                        <i matTooltip="Data Standard" style="font-size: 30px;" class="fa fa-file-text-o themeColor"></i>
+                        <i matTooltip="Data Standard" style="font-size: 30px;" class="far fa-file-alt"></i>
                     </div>
                     <div class="dataModelTypeIcon"
                          *ngIf="result?.type === 'Data Asset'">
-                        <i matTooltip="Data Asset" style="font-size: 30px;" class="fa fa-database themeColor"></i>
+                        <i matTooltip="Data Asset" style="font-size: 30px;" class="fas fa-database"></i>
                     </div>
                 </h4>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
@@ -98,7 +98,7 @@
                                         class="btn btn-default btn-xs dropdown-toggle"
                                         [disabled]="deleteInProgress || exporting"
                                         [matMenuTriggerFor]="menu">
-                                    <i class="fa fa-trash-o deleteButton" aria-hidden="true"></i>
+                                    <i class="fas fa-trash-alt"></i>
                                     <span class="caret" style="margin-right: 2px;"></span>
                                 </button>
 
@@ -125,7 +125,7 @@
                                         matTooltip="Edit"
                                         (click)="showForm();"
                                         uib-dropdown-toggle>
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>
                             <editable-form-buttons [hidden]="!editableForm.visible"
@@ -140,7 +140,7 @@
                             <button  class="btn btn-xs btn-default themeColor"
                                      (click)="finalise()" matTooltip="Finalise" type="button"
                                      [disabled]="deleteInProgress || processing">
-                                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                <i class="fas fa-check-circle" aria-hidden="true"></i>
                             </button>
                         </div>
 
@@ -151,16 +151,10 @@
                                     *ngIf="showPermission"
                                     [disabled]="deleteInProgress || processing"
                                     [hidden]="editableForm.visible || editableForm.deletePending">
-                                <i class="fa fa-user userAccess"></i>
+                                <i class="fas fa-user userAccess"></i>
                             </button>
 
                         </div>
-<!--                        <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" uib-tooltip="Create a New Version" class="btn-group-xs" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;"  >-->
-<!--                            <button  class="btn btn-xs btn-default addNewModelButton themeColor" (click)="newVersion()" type="button" matTooltip="Create a New Version" [disabled]="deleteInProgress || processing">-->
-<!--                                <i class="fa fa-copy userAccess"></i>-->
-<!--                            </button>-->
-<!--                        </div>-->
-
                     </td>
                 </tr>
                 </tbody>

@@ -33,7 +33,7 @@ export class DataElementStep2Component implements OnInit {
   record: any; // TODO
   processing = false;
   failCount: any; // TODO
-  parentScopeHandler: any;
+  // parentScopeHandler: any;
 
   formChangesSubscription: Subscription;
 

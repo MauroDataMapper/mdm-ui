@@ -39,9 +39,7 @@ export class ConfigurationComponent implements OnInit {
   }
 
   getConfig() {
-    this.resourcesService.admin
-      .get('properties', null)
-      .subscribe((result: { body: any }) => {
+    this.resourcesService.admin.get('properties', null).subscribe((result: { body: any }) => {
         this.properties = result.body;
         // this.propertiesTemp = this.propertyRenamingService.renameKeys(result.body);
         // this.properties = this.propertiesTemp;
@@ -49,38 +47,21 @@ export class ConfigurationComponent implements OnInit {
         this.oldConfiguration = Object.assign({}, this.properties);
       },
       err => {
-        this.messageHandler.showError(
-          'There was a problem getting the configuration properties.',
-          err
-        );
+        this.messageHandler.showError('There was a problem getting the configuration properties.', err);
       });
   }
 
   // Create or edit a configuration property
-  Submit() {
-    this.resource = this.objectEnhancer.diff(
-      this.properties,
-      this.oldConfiguration
-    );
+  submitConfig() {
+    this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
 
-    const call = from(
-      this.resourcesService.admin.post('editProperties', {
-        resource: this.resource
-      })
-    ).subscribe(
-      result => {
-        this.messageHandler.showSuccess(
-          'Configuration properties updated successfully.'
-        );
-
+    from(this.resourcesService.admin.post('editProperties', {resource: this.resource})).subscribe(() => {
+        this.messageHandler.showSuccess('Configuration properties updated successfully.');
         // refresh the page
         this.getConfig();
       },
       error => {
-        this.messageHandler.showError(
-          'There was a problem updating the configuration properties.',
-          error
-        );
+        this.messageHandler.showError('There was a problem updating the configuration properties.', error);
       }
     );
   }
@@ -119,15 +100,12 @@ export class ConfigurationComponent implements OnInit {
   rebuildIndex() {
     this.indexingStatus = 'start';
 
-    this.resourcesService.admin.post('rebuildLuceneIndexes', null).subscribe(
-      result => {
+    this.resourcesService.admin.post('rebuildLuceneIndexes', null).subscribe(() => {
         this.indexingStatus = 'success';
       },
       error => {
         if (error.status === 418) {
           this.indexingStatus = 'success';
-          // console.log("error.timeTaken");
-
           if (error.error && error.error.timeTaken) {
             this.indexingTime = 'in ' + error.error.timeTaken;
           }

@@ -58,7 +58,6 @@ export class AppModule {
     private userSettingsHandler: UserSettingsHandlerService
   ) {
     this.trans.onStart({}, state => {
-      console.log(state);
       this.sharedService.current = state.$to().name;
       return this.rolesService.hasAccess(state.$to().name);
     });

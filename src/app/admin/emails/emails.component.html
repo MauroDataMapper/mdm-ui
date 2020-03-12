@@ -1,5 +1,10 @@
 <div class="heading-container">
-	<h4>There are {{totalItemCount}} emails in this repository. </h4>
+	<h4 *ngIf="totalItemCount > 0">
+		There are {{totalItemCount}} emails in this repository. 
+	</h4>
+	<h4 *ngIf="totalItemCount === 0">
+		There are no emails in this repository. 
+	</h4>
 </div>
 
 <div class="mcTableContainer">

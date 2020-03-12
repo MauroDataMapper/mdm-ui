@@ -18,16 +18,11 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   filterEvent = new EventEmitter<string>();
   hideFilters = true;
   isLoadingResults: boolean;
-  totalItemCount: number;
+  totalItemCount: number = 0;
   filter: string;
 
   records: any[] = [];
-  displayedColumns = [
-    'sentToEmailAddress',
-    'dateTimeSent',
-    'subject',
-    'successfullySent'
-  ];
+  displayedColumns = ["sentToEmailAddress", "dateTimeSent", "subject", "successfullySent"];
 
   dataSource = new MatTableDataSource<any>();
 
@@ -47,19 +42,19 @@ export class EmailsComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.sortingDataAccessor = (item, property) => {
-      if (property === 'sentToEmailAddress') {
+      if (property === "sentToEmailAddress") {
         return item.sentToEmailAddress;
       }
 
-      if (property === 'dateTimeSent') {
+      if (property === "dateTimeSent") {
         return item.dateTimeSent;
       }
 
-      if (property === 'subject') {
+      if (property === "subject") {
         return item.subject;
       }
 
-      if (property === 'successfullySent') {
+      if (property === "successfullySent") {
         return item.successfullySent;
       }
     };
@@ -70,11 +65,11 @@ export class EmailsComponent implements OnInit, AfterViewInit {
       pageSize,
       pageIndex,
       filters,
-      sortBy: 'sentToEmailAddress',
-      sortType: 'asc'
+      sortBy: "sentToEmailAddress",
+      sortType: "asc"
     };
 
-    this.resourcesService.admin.get('emails', options).subscribe(resp => {
+    this.resourcesService.admin.get("emails", options).subscribe(resp => {     
       this.records = resp.body.items;
       this.records.forEach(row => {
         row.dateTimeSentString =
@@ -102,13 +97,13 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter: any = "";
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
 
-      if (value !== '') {
-        filter += name + '=' + value + '&';
+      if (value !== "") {
+        filter += name + "=" + value + "&";
       }
     });
     this.filter = filter;

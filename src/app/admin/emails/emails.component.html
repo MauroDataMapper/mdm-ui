@@ -1,67 +1,74 @@
 <div class="heading-container">
-	<h4>There are {{totalItemCount}} emails in this repository. </h4>
+	<h4 *ngIf="totalItemCount > 0">
+		There are {{totalItemCount}} emails in this repository. 
+	</h4>
+	<h4 *ngIf="totalItemCount === 0">
+		There are no emails in this repository. 
+	</h4>
 </div>
 
-<div class="mcTableContainer">
-	<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped table-responsive">
-		<ng-container matColumnDef="sentToEmailAddress">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="sentToEmailAddress">
-				<span [hidden]="!hideFilters">To</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" floatLabel="never">
-						<mat-label>To</mat-label>
-						<input #filters matInput name="sentToEmailAddress" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
-				<span>{{record.sentToEmailAddress}}</span>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="dateTimeSent">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%;" columnName="dateTimeSent">
-				<span [hidden]="!hideFilters">Date/Time</span>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-				<span>{{record.dateTimeSent | date: 'dd/MM/yyyy'}}</span>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="subject">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 50%; width: 50%;" columnName="subject">
-				<span [hidden]="!hideFilters">Subject/Body</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" floatLabel="never">
-						<mat-label>Subject/Body</mat-label>
-						<input #filters matInput name="body" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
-				<span style="font-weight: bold;">{{record.subject}}</span>
-				<br>
-				<mdm-more-description [description]="record.body" [length]="200"></mdm-more-description>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="successfullySent">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%; text-align: left;" columnName="successfullySent">
-				<span [hidden]="!hideFilters">Status</span>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-				<a *ngIf="record.successfullySent">
-					Successful
-				</a>
-				<a *ngIf="!record.successfullySent" (click)="toggleMessage(record)" style="text-decoration: none; cursor: pointer;">
-					Failed
-				</a>
-				<div *ngIf="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
-					{{record.failureReason}}
-				</div>
-			</td>
-		</ng-container>
-		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-		<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
-	</table>
-</div>
-<div>
-	<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+<div *ngIf="totalItemCount > 0">
+	<div class="mcTableContainer">
+		<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped table-responsive">
+			<ng-container matColumnDef="sentToEmailAddress">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="sentToEmailAddress">
+					<span [hidden]="!hideFilters">To</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" floatLabel="never">
+							<mat-label>To</mat-label>
+							<input #filters matInput name="sentToEmailAddress" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+					<span>{{record.sentToEmailAddress}}</span>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="dateTimeSent">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%;" columnName="dateTimeSent">
+					<span [hidden]="!hideFilters">Date/Time</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+					<span>{{record.dateTimeSent | date: 'dd/MM/yyyy'}}</span>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="subject">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 50%; width: 50%;" columnName="subject">
+					<span [hidden]="!hideFilters">Subject/Body</span>
+					<div [hidden]="hideFilters">
+						<mat-form-field class="filter" floatLabel="never">
+							<mat-label>Subject/Body</mat-label>
+							<input #filters matInput name="body" (keyup)="applyFilter()">
+						</mat-form-field>
+					</div>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
+					<span style="font-weight: bold;">{{record.subject}}</span>
+					<br>
+					<more-description [description]="record.body" [length]="200"></more-description>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="successfullySent">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%; text-align: left;" columnName="successfullySent">
+					<span [hidden]="!hideFilters">Status</span>
+				</th>
+				<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+					<a *ngIf="record.successfullySent">
+						Successful
+					</a>
+					<a *ngIf="!record.successfullySent" (click)="toggleMessage(record)" style="text-decoration: none; cursor: pointer;">
+						Failed
+					</a>
+					<div *ngIf="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
+						{{record.failureReason}}
+					</div>
+				</td>
+			</ng-container>
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+	<div>
+		<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+	</div>
 </div>

@@ -11,6 +11,9 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES5",
+    "types": [
+      "jest"
+    ],
     "typeRoots": [
       "node_modules/@types"
     ],

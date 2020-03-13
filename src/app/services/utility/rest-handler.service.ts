@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-
-import { Subject } from "rxjs/Rx";
-import { HttpClient, HttpResponse } from "@angular/common/http";
-import { Observable } from 'rxjs/Observable'
-import { StateHandlerService } from "../handlers/state-handler.service";
+import { Subject, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { StateHandlerService } from '../handlers/state-handler.service';
 import { BroadcastService } from '../broadcast.service';
 import { MessageService } from '../message.service';
-import { throwError } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -41,36 +39,30 @@ export class RestHandlerService {
             withCredentials: options.withCredentials,
             observe: 'response',
             responseType: options.responseType
-    })
-			.catch(response => {
-
-                if (response.status === 0 || response.status === -1) {
-                    this.stateHandler.ApplicationOffline();
-                    this.broadcastSvc.broadcast('applicationOffline', response);
-                }
-                else if (response.status === 401) {
-                    this.stateHandler.NotAuthorized(response);
-                    this.messageService.lastError = response
-                }
-                else if (response.status === 404) {
-                    this.stateHandler.NotFound(response);
-                    this.messageService.lastError = response
-                }
-                else if (response.status === 501) {
-                    this.stateHandler.NotImplemented(response);
-                    this.messageService.lastError = response
-                }
-                else if (response.status >= 400 && response.status < 500 && options.method == 'GET') {
-                    this.stateHandler.NotFound(response);
-                    this.broadcastSvc.broadcast('resourceNotFound', response);
-                    this.messageService.lastError = response
-                }
-                else if (response.status >= 500) {
-                    this.messageService.lastError = response
-                    this.stateHandler.ServerError(response);
-                }
-                return throwError(response);
-
-            });
-    }
+        }).pipe(
+          catchError(response => {
+            if (response.status === 0 || response.status === -1) {
+                this.stateHandler.ApplicationOffline();
+                this.broadcastSvc.broadcast('applicationOffline', response);
+            } else if (response.status === 401) {
+                this.stateHandler.NotAuthorized(response);
+                this.messageService.lastError = response;
+            } else if (response.status === 404) {
+                this.stateHandler.NotFound(response);
+                this.messageService.lastError = response;
+            } else if (response.status === 501) {
+                this.stateHandler.NotImplemented(response);
+                this.messageService.lastError = response;
+            } else if (response.status >= 400 && response.status < 500 && options.method == 'GET') {
+                this.stateHandler.NotFound(response);
+                this.broadcastSvc.broadcast('resourceNotFound', response);
+                this.messageService.lastError = response;
+            } else if (response.status >= 500) {
+                this.messageService.lastError = response;
+                this.stateHandler.ServerError(response);
+            }
+            return throwError(response);
+          })
+        );
+  }
 }

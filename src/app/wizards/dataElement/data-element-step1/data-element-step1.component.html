@@ -50,7 +50,9 @@
                                         [processing]="model.createType != 'copy'"
                                         [(ng-model)]="model.copyFromDataClass"
                                         [tree-search-domain-type]="'DataClass'"
+                                        (ngModelChange)="model.copyFromDataClass = $event"
                                         [accepts]="['DataClass']">
+
                                 </model-selector-tree>
                             </div>
                         </div>

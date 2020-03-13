@@ -6,7 +6,7 @@ import {
   forwardRef,
   ChangeDetectorRef
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageService } from '../../services/message.service';
 import { SharedService } from '../../services/shared.service';
@@ -114,7 +114,7 @@ export class TermComponent implements OnInit {
       )
     );
 
-    Observable.forkJoin(terms).subscribe((results: any) => {
+    forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;
       this.term = results[1].body;
       this.term.semanticLinks = results[2].body.items;

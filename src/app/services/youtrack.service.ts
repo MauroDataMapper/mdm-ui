@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import {SharedService} from "./shared.service"
 import { Observable } from 'rxjs';
 import {SecurityHandlerService} from "./handlers/security-handler.service";
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -25,9 +26,9 @@ export class YoutrackService {
         //make sure youTrack is configured
 
 
-        return this.getYoutrackProjectId(this.sharedService.youTrack.project).mergeMap(
-            (data:Object) => this.submitIssueToYouTrack(data[0]["id"], summary, description)
-        )
+        return this.getYoutrackProjectId(this.sharedService.youTrack.project).pipe(
+          mergeMap((data: object) => this.submitIssueToYouTrack(data[0]["id"], summary, description))
+        );
     }
 
     getYoutrackProjectId(shortName: string): Observable<Object> {

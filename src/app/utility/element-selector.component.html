@@ -100,14 +100,14 @@
                        [ngModelOptions]='{ debounce: 500 }'>
                 <div style="width: 100%; height: 300px;overflow-y: auto;border: 1px solid #DDD;">
                     <div>
-                        <folders-tree-3
+                        <mdm-folders-tree
                             [inSearchMode] = "formData.inSearchMode"
                             [doNotMakeSelectedBold]="true"
                             [justShowFolders]="true"
                             [doNotShowDataClasses]="true"
                             [expandOnNodeClickFor]="['Folder']"
                             (nodeClickEvent)="onNodeInTreeSelect($event)"
-                             [node]="rootNode"></folders-tree-3>
+                             [node]="rootNode"></mdm-folders-tree>
                     </div>
                 </div>
             </div>
@@ -131,13 +131,13 @@
 
                 <div style="width: 100%; height: 300px;overflow-y: auto;border: 1px solid #DDD;">
                     <div>
-                       <folders-tree-3
+                       <mdm-folders-tree
                             [inSearchMode]="formData.inSearchMode"
                             [doNotMakeSelectedBold]="true"
                             [expandOnNodeClickFor]="['Folder', 'DataModel', 'DataClass']"
                             [searchCriteria]="formData.treeSearchText"
                             (nodeClickEvent)="onNodeInTreeSelect($event)"
-                            [node]="rootNode"></folders-tree-3>
+                            [node]="rootNode"></mdm-folders-tree>
                     </div>
                 </div>
                 <div style="margin-top: 10px;" *ngIf="showPrevBtn">
@@ -154,12 +154,12 @@
 
                 <div style="width: 100%; height: 300px;overflow-y: auto; border: 1px solid #DDD;">
                     <div>
-                       <folders-tree-3
+                       <mdm-folders-tree
                             [doNotMakeSelectedBold]="true"
                             [justShowFolders]="true"
                             [doNotShowDataClasses]="true"
                             (nodeClickEvent)="onNodeInTreeSelect($event)"
-                            [node]="rootNode"></folders-tree-3>
+                            [node]="rootNode"></mdm-folders-tree>
                     </div>
                 </div>
                 <div style="margin-top: 10px;" *ngIf="showPrevBtn">

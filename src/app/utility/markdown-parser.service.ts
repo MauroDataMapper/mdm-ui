@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ElementTypesService } from '../services/element-types.service';
+import * as marked from 'marked';
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,8 @@ export class MarkdownParserService {
   constructor(private elementTypes: ElementTypesService) {}
 
   initialised: boolean = false;
-  private getWindow(): any {
-    return window;
-  }
 
   public htmlRenderer() {
-    const marked = this.getWindow().marked;
     const renderer = new marked.Renderer();
 
     renderer.link = (href: string, title: any, text: string) => {
@@ -54,7 +51,6 @@ export class MarkdownParserService {
 
   // return a custom renderer for marked.
   public textRenderer() {
-    const marked = this.getWindow().marked;
     const render = new marked.Renderer();
 
     // render just the text of a link
@@ -109,26 +105,22 @@ export class MarkdownParserService {
   }
 
   public parse(source, renderType) {
-    if (this.getWindow().marked) {
-      let renderer = this.htmlRenderer();
-      if (renderType === 'text') {
-        renderer = this.textRenderer();
-      }
-
-      const marked = this.getWindow().marked;
-      marked.setOptions({
-        renderer,
-        gfm: true,
-        breaks: true,
-        sanitize: true,
-        sanitizer: (code) => {
-          return code;
-        }
-      });
-      return marked(source);
-    } else {
-      return 'Markdown parser not found!';
+    let renderer = this.htmlRenderer();
+    if (renderType === 'text') {
+      renderer = this.textRenderer();
     }
+
+    marked.setOptions({
+      renderer,
+      gfm: true,
+      breaks: true,
+      sanitize: true,
+      sanitizer: (code) => {
+        return code;
+      }
+    });
+
+    return marked(source);
   }
 
   public createMarkdownLink(element) {

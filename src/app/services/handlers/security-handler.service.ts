@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { ResourcesService } from '../resources.service';
-import 'rxjs-compat/add/operator/map';
 import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
 import { environment } from 'src/environments/environment';

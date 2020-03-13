@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <mat-horizontal-stepper #stepper>
+        <mat-horizontal-stepper #stepper (selectionChange)="fireChanged($event)">
             <mat-step *ngFor="let step of steps; let i = index">
                 <ng-template matStepLabel>{{step.title}}</ng-template>
                 <dcl-wrapper [type]="step.component" [(step)]="steps[i]"></dcl-wrapper>

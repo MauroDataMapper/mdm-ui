@@ -36,16 +36,16 @@
 			<div *ngIf="!reloading">
 				<div style="border: 1px solid #ccc;background-color:#FFF; width:100%;z-index: 900; border-radius: 5px;">
 					<div style="width: 100%; height: 400px; overflow-y: auto">
-						<folders-tree-3
+						<mdm-folders-tree
 							doNotMakeSelectedBold="true"
 							doNotShowDataClasses="true"
 							doNotShowTerms="true"
 							defaultCheckedMap="true"
 							showCheckboxFor="['DataModel','Terminology']"
-							propagateCheckbox="true"		
+							propagateCheckbox="true"
 							[node]="folders"
 							tree-name="'folders'"
-							(nodeCheckedEvent)="onNodeChecked($event[0])"></folders-tree-3>
+							(nodeCheckedEvent)="onNodeChecked($event[0])"></mdm-folders-tree>
 						<!--accepts="['DataModel','Terminology']"-->
 					</div>
 				</div>

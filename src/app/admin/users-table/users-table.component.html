@@ -123,28 +123,25 @@
 		</ng-container>
 
 		<ng-container matColumnDef="icons">
-			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;"
-				columnName="icons">
-			</th>
-			<td mat-cell *matCellDef="let record; let i = index"
-				style="max-width: 18%; width: 18%; text-align: left; word-wrap: break-word;">
+			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;" columnName="icons"></th>
+			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 18%; width: 18%; text-align: left; word-wrap: break-word;">
 				<div style="float: right;margin-bottom: 3px">
 
-					<button mat-stroked-button matTooltip="Reset password" class="paddingless" (click)="resetPassword(record)" aria-label="Reset password">
-						<i class="fas fa-key"></i>
-					</button>
-
-					<button mat-stroked-button matTooltip="Edit" class="paddingless" (click)="editUser(record)">
-						<i class="fas fa-pencil-alt"></i>
-					</button>
-
-					<button mat-stroked-button *ngIf="!record.disabled" matTooltip="Deactivate" class="paddingless" (click)="toggleDeactivate(record)" aria-label="Deactivate">
-						<i class="fas fa-ban warning"></i>
-					</button>
-
-					<button mat-stroked-button *ngIf="record.disabled" matTooltip="Activate" class="paddingless" (click)="toggleDeactivate(record)" aria-label="Activate">
-						<i class="fas fa-check saveButton"></i>
-					</button>
+					<button mat-flat-button color="primary" [matMenuTriggerFor]="actions">Action </button>
+					<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
+						<a href="#"  mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
+							<i class="fas fa-key" color="primary"></i> Reset password
+						</a>
+						<a href="#" mat-menu-item (click)="editUser(record)">
+							<i class="fas fa-pencil-alt" color="primary"></i> Edit user
+						</a>
+						<a href="#" mat-menu-item *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">
+							<i class="fas fa-ban warning"></i> Deactivate
+						</a>
+						<a href="#" mat-menu-item *ngIf="record.disabled" (click)="toggleDeactivate(record)" aria-label="Activate">
+							<i class="fas fa-check saveButton"></i> Activate
+						</a>
+				</mat-menu>
 				</div>
 			</td>
 		</ng-container>

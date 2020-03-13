@@ -31,7 +31,7 @@
 					<span [hidden]="!hideFilters">Date/Time</span>
 				</th>
 				<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-					<span>{{record.dateTimeSent | date: 'dd/MM/yyyy'}}</span>
+					<span>{{record.dateTimeSentString}}</span>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="subject">

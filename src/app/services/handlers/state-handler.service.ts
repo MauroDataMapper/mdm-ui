@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 })
 export class StateHandlerService {
 
-   
+
 
     constructor(private router: UIRouter, private ngToast: ToastrService, private _location: Location) { }
 
@@ -58,7 +58,7 @@ export class StateHandlerService {
                 "simpleviewelement": "appContainer.simpleApp.element",
                 "about":"appContainer.mainApp.about"
             }
-        }
+        };
 
     handleSimpleView(name, params) {
         if ((params && params.mode === "advancedView") ||

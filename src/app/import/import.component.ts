@@ -60,7 +60,7 @@ export class ImportComponent implements OnInit {
         this.messageHandler.showError('Can not load importers!', error);
       }
     );
-  }
+  };
 
   loadImporterParameters = selectedItem => {
     if (!selectedItem) {
@@ -100,7 +100,7 @@ export class ImportComponent implements OnInit {
         }
       }
     });
-  }
+  };
 
   importerChanged = () => {
     this.step = 2;
@@ -109,7 +109,7 @@ export class ImportComponent implements OnInit {
     }
     this.selectedImporterObj = Object.assign({}, this.selectedImporterStr);
     this.loadImporterParameters(this.selectedImporterObj);
-  }
+  };
 
   submitForm = isValid => {
     // if the form is not valid, return
@@ -117,7 +117,7 @@ export class ImportComponent implements OnInit {
       return;
     }
     this.startImport();
-  }
+  };
 
   startImport = () => {
     this.importingInProgress = true;
@@ -179,20 +179,20 @@ export class ImportComponent implements OnInit {
           this.messageHandler.showError('Error in import process', '');
         }
       );
-  }
+  };
 
   getFile = paramName => {
     const element: any = document.getElementById(paramName);
     return element && element.files ? element.files[0] : '';
-  }
+  };
 
   loadHelp = () => {
     this.helpDialogueHandler.open('Importing_models', {});
-  }
+  };
 
   loadImporterHelp = () => {
     this.helpDialogueHandler.open(this.importerHelp, {});
-  }
+  };
 
   checkIf(value: any, option: any) {
     // open the devtools and go to the view...code execution will stop here!

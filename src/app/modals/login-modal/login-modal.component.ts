@@ -38,28 +38,28 @@ export class LoginModalComponent implements OnInit {
         }
       }
     );
-  }
+  };
 
   cancel = () => {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();
-  }
+  };
 
   keyEntered = event => {
     if (event.which === 13) {
       this.login();
     }
-  }
+  };
 
   close = () => {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();
-  }
+  };
 
   reset = () => {
     this.dialogRef.close();
     this.dialog.open(ForgotPasswordModalComponent);
-  }
+  };
   signUp = () => {
     this.dialogRef.close();
     this.dialog.open(LoginModalComponent);

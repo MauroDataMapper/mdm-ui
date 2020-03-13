@@ -21,7 +21,7 @@ describe('StateHandlerService', () => {
         current: <StateDeclaration> {
         }
       }
-    }
+    };
 
     spyOn(spyRouter.stateService, "reload");  // To verify if reload() is called.
 
@@ -37,7 +37,7 @@ describe('StateHandlerService', () => {
      */
     spyRouter.stateService.current.toString = jasmine.createSpy("toString()").and.callFake(function() {
       return currentText;
-    })
+    });
 
     /**
      * Set up the test bed to support creation of StateHandlerService instances.
@@ -90,10 +90,10 @@ describe('StateHandlerService', () => {
       pageIndex: 1,
       pageSize: 256,
       offset: 0
-    }
+    };
     currentText = "appContainer.simpleApp.result";
     let result = handlerService.getURL('terminology', params);
-    
+
     expect(result).toEqual('appContainer.simpleApp.element');
     expect(params.criteria).toBeNull();
     expect(params.pageIndex).toBeNull();

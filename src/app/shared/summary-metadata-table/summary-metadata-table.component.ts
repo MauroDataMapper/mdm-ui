@@ -123,7 +123,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
       'summaryMetadata',
       options
     );
-  }
+  };
 
   applyFilter = () => {
     let filter: any = '';
@@ -137,7 +137,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick() {
     this.hideFilters = !this.hideFilters;

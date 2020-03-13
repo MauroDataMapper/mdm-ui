@@ -22,7 +22,7 @@ export class ElementAliasComponent implements OnInit {
   }
 
   remove (element) {
-    const index = this.aliases.findIndex(alias => alias == element)
+    const index = this.aliases.findIndex(alias => alias == element);
     if(index !==-1) {
      this.aliases.splice(index, 1);
       this.editableForm["aliases"] = this.aliases;

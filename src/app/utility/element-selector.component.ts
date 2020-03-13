@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ResourcesService } from '../services/resources.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MarkdownParserService } from '../utility/markdown-parser.service';
+import { MarkdownParserService } from './markdown-parser.service';
 import { MessageService } from '../services/message.service';
 import { ContentSearchHandlerService } from '../services/content-search.handler.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -222,8 +222,8 @@ export class ElementSelectorComponent implements OnInit {
     };
 
     onTableScroll(e) {
-        const tableViewHeight = e.target.offsetHeight // viewport: ~500px
-        const tableScrollHeight = e.target.scrollHeight // length of all table
+        const tableViewHeight = e.target.offsetHeight; // viewport: ~500px
+        const tableScrollHeight = e.target.scrollHeight; // length of all table
         const scrollLocation = e.target.scrollTop; // how far user scrolled
 
         // If the user has scrolled within 200px of the bottom, add more data
@@ -318,7 +318,7 @@ export class ElementSelectorComponent implements OnInit {
                     else {
                         rows.push(element);
                     }
-                })
+                });
 
                 // if(element.hasOwnProperty("breadcrumbs"))
                 if (infinateScrollCall == true) {
@@ -382,7 +382,7 @@ export class ElementSelectorComponent implements OnInit {
                     else {
                         rows.push(element);
                     }
-                })
+                });
                 this.formData.searchResult = result.items;
                 this.calculateDisplayedSoFar(result);
 
@@ -404,7 +404,7 @@ export class ElementSelectorComponent implements OnInit {
                     else {
                         rows.push(element);
                     }
-                })
+                });
 
                 // $scope.loading = false;
                 this.formData.searchResult = result.items;
@@ -447,7 +447,7 @@ export class ElementSelectorComponent implements OnInit {
                     else {
                         rows.push(element);
                     }
-                })
+                });
 
                     this.termsList = rows;
                  this.totalItemCount = result.body.count;
@@ -547,7 +547,7 @@ export class ElementSelectorComponent implements OnInit {
     }
 
     this.fetch(40, 0);
-  }
+  };
 
   ngOnInit() {}
 }

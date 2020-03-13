@@ -111,7 +111,7 @@ export class UserComponent implements OnInit {
       delete this.errors;
     }
     return isValid;
-  }
+  };
 
   save = () => {
     if (!this.validate()) {
@@ -160,11 +160,11 @@ export class UserComponent implements OnInit {
           }
         );
     }
-  }
+  };
 
   cancel = () => {
     this.stateHandler.Go('admin.users');
-  }
+  };
 
   onGroupSelect = groups => {
     this.user.groups = groups.map(group => {

@@ -51,7 +51,7 @@ export class GroupComponent implements OnInit {
       delete this.errors;
     }
     return isValid;
-  }
+  };
 
   save = () => {
     if (!this.validate()) {
@@ -91,7 +91,7 @@ export class GroupComponent implements OnInit {
           }
         );
     }
-  }
+  };
 
   cancel = () => {
     this.stateHandler.Go('admin.groups');

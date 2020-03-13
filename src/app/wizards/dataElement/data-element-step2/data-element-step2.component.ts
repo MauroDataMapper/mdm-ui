@@ -337,7 +337,7 @@ export class DataElementStep2Component implements OnInit {
 
     this.dataSourceSelectedDataElements.data = this.model.selectedDataElements;
     this.totalSelectedItemsCount = this.model.selectedDataElements.length;
-  }
+  };
 
   onCheck(record) {
     if (record.checked) {
@@ -375,7 +375,7 @@ export class DataElementStep2Component implements OnInit {
         this.model.selectedDataClasses.push(element.node);
       }
     }
-  }
+  };
 
 
 
@@ -410,7 +410,7 @@ export class DataElementStep2Component implements OnInit {
 
     this.step.invalid = invalid;
 
-  }
+  };
 
   // parentScopeHandler = () => {
   //   // TODO
@@ -444,12 +444,12 @@ export class DataElementStep2Component implements OnInit {
     }
     return this.resources.dataModel.get(this.model.parent.dataModel, 'dataTypes', options);
 
-  }
+  };
 
   onTargetSelect =  (selectedValue) => {
     this.model.dataType = selectedValue;
     this.validate(this.model);
-  }
+  };
 
   applyFilter = (filterValue?: any, filterName?) => {
     let filter: any = '';
@@ -473,7 +473,7 @@ export class DataElementStep2Component implements OnInit {
 
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
 
   validationStatusEmitter($event) {
@@ -484,12 +484,12 @@ export class DataElementStep2Component implements OnInit {
   filterClick = () => {
 
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   filterClickSelectedDataTypes = () => {
 
     this.hideFiltersSelectedDataTypes = !this.hideFiltersSelectedDataTypes;
-  }
+  };
 
   async saveCopiedDataTypes() {
     this.processing = true;

@@ -244,7 +244,7 @@ export class ResourcesService {
       childId = !childId ? '' : childId;
       return this.httpDelete('catalogueItems', id, action + childId);
     }
-  }
+  };
 
   // dataClass: any = {
   //     post: function (dataModelId, id, action, options) {

@@ -33,7 +33,7 @@ export class DataTypeListButtonsComponent implements OnInit {
 
       this.deleteRows.emit();
     }
-  }
+  };
 
   onAskDelete = () => {
     let showDelete = false;
@@ -47,7 +47,7 @@ export class DataTypeListButtonsComponent implements OnInit {
     } else {
       this.deleteWarning = 'Please select one or more elements.';
     }
-  }
+  };
 
   cancelDeleteClicked = () => {
     this.deletePending = false;

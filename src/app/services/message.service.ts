@@ -11,8 +11,8 @@ export class MessageService implements OnDestroy {
 	isShareReadWithEveryone = false;
 	isEditMode = false;
 
-	private _lastError = {}
-	private _errorMessage = {}
+	private _lastError = {};
+	private _errorMessage = {};
 
 	@Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 

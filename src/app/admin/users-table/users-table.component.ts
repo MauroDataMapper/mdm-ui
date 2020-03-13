@@ -93,7 +93,7 @@ export class UsersTableComponent implements OnInit {
 
   add = () => {
     this.stateHandler.Go('admin.user', { id: null }, null);
-  }
+  };
 
   resetPassword(row) {
     from(this.resources.catalogueUser.put(row.id, 'adminPasswordReset', null)).subscribe(() => {
@@ -128,7 +128,7 @@ export class UsersTableComponent implements OnInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;

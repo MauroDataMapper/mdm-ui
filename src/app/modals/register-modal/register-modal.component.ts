@@ -41,7 +41,7 @@ export class RegisterModalComponent implements OnInit {
 
   disabled = () => {
     return (this.email === '' || this.firstName === '' || this.lastName === '' || this.password === '' || this.password !== this.confirmPassword);
-  }
+  };
 
   register = () => {
     const resource = {
@@ -70,7 +70,7 @@ export class RegisterModalComponent implements OnInit {
         this.message = 'Error in registration: ' + firstError;
       }
     );
-  }
+  };
 
   registerSuccess = () => {
     const dialog = this.dialog.open(ConfirmationModalComponent, {
@@ -88,13 +88,13 @@ export class RegisterModalComponent implements OnInit {
         // reject("cancelled");
       }
     });
-  }
+  };
 
   keyEntered = event => {
     if (event.which === 13) {
       this.register();
     }
-  }
+  };
 
   login = () => {
     this.dialogRef.close();

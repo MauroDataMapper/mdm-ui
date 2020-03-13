@@ -41,7 +41,7 @@ export class ComparisonTreeComponent implements OnInit {
       this.parentData.splice(itemIndex, 1);
     }
     this.val = {};
-  }
+  };
 
   toggleExpand = () => {
     if (this.type === 'dynamic' && this.nodeExpand) {
@@ -52,7 +52,7 @@ export class ComparisonTreeComponent implements OnInit {
     } else {
       this.val.close = !this.val.close;
     }
-  }
+  };
 
   nodeClickFn = () => {
     this.val.selected = !this.val.selected;

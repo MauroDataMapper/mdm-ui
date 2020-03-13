@@ -55,7 +55,7 @@ export class SemanticLinkHandlerService {
 
     post = (source, target, linkType) => {
         return this.action(source, target, null, linkType, "POST");
-    }
+    };
 
     put = (source, target, linkId, linkType) => {
         return this.action(source, target, linkId, linkType, "PUT");

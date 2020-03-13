@@ -64,7 +64,7 @@
                             </div>
                             <div *ngIf="record.isNew">
                                 <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['firstName']}">
-                                    <input type="text" class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
+                                    <input class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
                                     <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="errorMessage">{{record.edit.errors['firstName']}}</small>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                             </div>
                             <div *ngIf="record.isNew">
                                 <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['lastName']}">
-                                    <input type="text" class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
+                                    <input class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
                                     <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="errorMessage">{{record.edit.errors['lastName']}}</small>
                                 </div>
                             </div>

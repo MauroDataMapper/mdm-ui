@@ -39,15 +39,15 @@ export class SharedService {
 
   logout = () => {
     this.securityHandler.logout();
-  }
+  };
 
   isLoggedIn = () => {
     return this.securityHandler.isLoggedIn();
-  }
+  };
 
   isAdminUser = () => {
     return this.securityHandler.isAdmin();
-  }
+  };
 
   handleExpiredSession = (firstTime?) => {
     // if 'event:auth-loginRequired' event is fired, then do not check as
@@ -63,7 +63,7 @@ export class SharedService {
         this.securityHandler.logout();
       }
     });
-  }
+  };
 
   pendingUsersCount = () => {
     return this.resources.catalogueUser.get(null, 'pending', { filters: 'count=true&disabled=false' });

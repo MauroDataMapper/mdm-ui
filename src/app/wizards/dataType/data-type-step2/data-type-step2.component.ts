@@ -240,7 +240,7 @@ export class DataTypeStep2Component implements OnInit {
         this.model.selectedDataTypes.push(element.node);
       }
     }
-  }
+  };
 
   onCheckAll = () => {
     for (let i = 0; i < this.recordsDataTypes.length; i++) {
@@ -264,7 +264,7 @@ export class DataTypeStep2Component implements OnInit {
 
     this.dataSourceSelectedDataTypes.data = this.model.selectedDataTypes;
     this.totalSelectedItemsCount = this.model.selectedDataTypes.length;
-  }
+  };
 
   onCheck(record) {
     if (record.checked) {
@@ -316,7 +316,7 @@ export class DataTypeStep2Component implements OnInit {
 
     this.step.invalid = invalid;
     this.changeRef.detectChanges();
-  }
+  };
 
   ngOnDestroy() {
     this.formChangesSubscription.unsubscribe();
@@ -344,7 +344,7 @@ export class DataTypeStep2Component implements OnInit {
 
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   // Gets the selected value of a dropdown and adds it to the filter string
   applyMatSelectFilter(filterValue: any, filterName) {
@@ -353,11 +353,11 @@ export class DataTypeStep2Component implements OnInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   filterClickSelectedDataTypes = () => {
     this.hideFiltersSelectedDataTypes = !this.hideFiltersSelectedDataTypes;
-  }
+  };
 
   async saveCopiedDataTypes() {
     this.processing = true;

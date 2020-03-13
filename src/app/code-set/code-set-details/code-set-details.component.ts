@@ -377,7 +377,7 @@ export class CodeSetDetailsComponent implements OnInit {
     }
 
 
-  }
+  };
 
   validateLabel(data): any {
     if (!data || (data && data.trim().length === 0)) {

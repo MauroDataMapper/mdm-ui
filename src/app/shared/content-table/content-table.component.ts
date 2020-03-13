@@ -98,7 +98,7 @@ export class ContentTableComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   addDataClass = () => {
     this.stateHandler.Go(
@@ -112,7 +112,7 @@ export class ContentTableComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   addDataElement = () => {
     this.stateHandler.Go(
@@ -126,7 +126,7 @@ export class ContentTableComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   deleteRows = () => {
     this.processing = true;
@@ -194,7 +194,7 @@ export class ContentTableComponent implements AfterViewInit {
         );
       }
     );
-  }
+  };
 
   applyFilter = () => {
     let filter: any = '';
@@ -208,11 +208,11 @@ export class ContentTableComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   contentFetch(
     pageSize?,

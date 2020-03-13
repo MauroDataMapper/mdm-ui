@@ -7,11 +7,11 @@ import { SharedService } from '../services/shared.service';
   styleUrls: ['./about.component.sass']
 })
 export class AboutComponent implements OnInit {
-  ngOnInit() {}
-
-  public appVersion: string;
 
   constructor(private shared: SharedService) {
     this.appVersion = shared.appVersion;
   }
+
+  public appVersion: string;
+  ngOnInit() {}
 }

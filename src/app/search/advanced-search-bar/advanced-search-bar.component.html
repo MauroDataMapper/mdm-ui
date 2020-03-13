@@ -22,7 +22,7 @@
                     <br>
                     <div style="margin-right: 10px; width:60%;">
                         <model-selector-tree
-                            [ng-model]="context"        
+                            [ng-model]="context"
                             [on-select]="onContextSelected"
                             [placeholder]="'Choose a Folder, Data Model or Data Class'"
                             [accepts]="['Folder', 'DataModel', 'DataClass']">
@@ -76,8 +76,7 @@
                     <div style="margin-right: 10px;">
                         <input style="cursor: pointer;" type="checkbox"
                                 [(ngModel)]="formData.labelOnly" name="labelOnly"
-                                (change)="search(true)"> Title only <i class="fas fa-info-circle"
-                                                                        class="helpIcon"
+                                (change)="search(true)"> Title only <i class="fas fa-info-circle helpIcon"
                                                                         matTooltipPosition="right"
                                                                         matTooltip="Just search in title of the elements. Not in descriptions, metadata and aliases."></i>
                     </div>

@@ -77,7 +77,7 @@ export class DataModelMainComponent implements OnInit {
 
   cancelWizard = () => {
     this.stateHandler.GoPrevious();
-  }
+  };
 
   save = () => {
     const resource = {

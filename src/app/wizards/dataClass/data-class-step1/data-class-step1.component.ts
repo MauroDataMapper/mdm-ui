@@ -30,7 +30,7 @@ export class DataClassStep1Component implements OnInit {
   onSelect = dataModel => {
     this.model.selectedDataTypes = [];
     this.model.selectedDataClassesMap = [];
-  }
+  };
 
   onLoad() {}
 
@@ -49,7 +49,7 @@ export class DataClassStep1Component implements OnInit {
     }
 
     this.step.invalid = false;
-  }
+  };
 
   selectCreateType = createType => {
     this.model.createType = createType;

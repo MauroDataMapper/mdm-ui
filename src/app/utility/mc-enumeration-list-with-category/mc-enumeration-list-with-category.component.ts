@@ -205,7 +205,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         );
     }
     // };
-  }
+  };
 
   identify(item) {
     return item.id;
@@ -222,7 +222,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
       return result;
     }, {}); // empty object is the initial value for result object
-  }
+  };
 
   showRecords(values) {
     if (!values && values.length > 0) {
@@ -352,13 +352,13 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         key: '',
         value: '',
         category: '',
-        errors: '' 
+        errors: ''
       },
       inEdit: true,
       inDelete: false,
       isNew: true
     };
- 
+
     if (this.displayItems == undefined) {
       this.displayItems = [];
     }

@@ -89,7 +89,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
       .subscribe(data => {
         this.selectorSection.terminologies = data.body.items;
       });
-  }
+  };
   onTerminologySelect = (terminology: any, record: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
     if (terminology != null) {
@@ -103,11 +103,11 @@ export class MultipleTermsSelectorComponent implements OnInit {
     }
 
     // this.selectorSection.startFetching++;
-  }
+  };
   runTermSearch = () => {
     // this.selectorSection.startFetching++;
     this.fetch(40, 0);
-  }
+  };
   loadAllTerms = (terminology, pageSize, offset) => {
     // var deferred = $q.defer();
     this.selectorSection.searchResultOffset = offset;
@@ -165,7 +165,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     // });
     // return deferred.promise;
   });
-  }
+  };
   fetch = (pageSize, offset) =>{
     if(this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology){
       //load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
@@ -236,7 +236,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     } else {
       this.selectorSection.searchResultDisplayedSoFar = result.count;
     }
-  }
+  };
   termToggle = $item => {
     if ($item.checked) {
       this.selectorSection.selectedTerms[$item.id] = $item;
@@ -296,12 +296,12 @@ export class MultipleTermsSelectorComponent implements OnInit {
     if (this.onSelectedTermsChange) {
       this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     }
-  }
+  };
   addSelectedTerms = terms => {
     if (this.onAddButtonClick) {
       this.onAddButtonClick(terms);
     }
-  }
+  };
 
   ngOnInit() {}
 }

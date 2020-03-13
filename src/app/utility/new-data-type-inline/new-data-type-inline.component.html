@@ -12,7 +12,7 @@
 					<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
 					<td>
 						<input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label"
-							   required="Name can not be Empty">
+							   required="required">
 					</td>
 				</tr>
 				<tr>
@@ -35,7 +35,7 @@
 						<select class="form-control  wizardInput mcSelect"
 								id="dataModelType" name="dataModelType"
 								[(ngModel)]="model.domainType"
-								required="Type can not be Empty"
+								required="required"
 								(ngModelChange)="onTypeSelect()" >
 							<option [value]="dt.id" *ngFor="let dt of allDataTypes" [selected]="dt">{{dt.displayLabel}}</option>
 						</select>

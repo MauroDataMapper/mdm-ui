@@ -115,11 +115,11 @@ export class ElementLinkListComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   semanticLinkFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
     const options = {
@@ -144,13 +144,13 @@ export class ElementLinkListComponent implements AfterViewInit {
         options
       );
     }
-  }
+  };
 
   handleShowLinkSuggestion = element => {
     if (['DataModel', 'DataElement'].indexOf(element.domainType) !== -1) {
       this.showLinkSuggestion = true;
     }
-  }
+  };
 
   linkSuggestion = () => {
     let params = {};
@@ -168,7 +168,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       };
     }
     this.stateHandler.NewWindow('linkSuggestion', params, null);
-  }
+  };
 
   delete = (record, $index) => {
     if (this.clientSide) {
@@ -195,7 +195,7 @@ export class ElementLinkListComponent implements AfterViewInit {
           );
         }
       );
-  }
+  };
 
   add = () => {
     const newRecord = {
@@ -217,7 +217,7 @@ export class ElementLinkListComponent implements AfterViewInit {
 
     this.records = [].concat([newRecord]).concat(this.records);
     return;
-  }
+  };
 
   onEdit = (record, index) => {};
 
@@ -226,7 +226,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       this.records.splice(index, 1);
       this.table.renderRows();
     }
-  }
+  };
 
   validate = (record, index) => {
     let isValid = true;
@@ -238,7 +238,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       isValid = false;
     }
     return isValid;
-  }
+  };
 
   save = (record, index) => {
     if (this.clientSide) {
@@ -302,7 +302,7 @@ export class ElementLinkListComponent implements AfterViewInit {
           }
         );
     }
-  }
+  };
 
   findElement = record => {
     let domainTypes = [];

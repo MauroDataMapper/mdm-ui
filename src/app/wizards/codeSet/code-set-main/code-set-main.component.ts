@@ -33,11 +33,11 @@ export class CodeSetMainComponent implements OnInit {
     if (!this.stateService.params.parentFolderId) {
       this.stateHandler.NotFound({location: false});
     }
-    this.resources.folder.get(this.model.parentFolderId,null, null).toPromise().then(result => {
-      result.domainType = "Folder";
+    this.resources.folder.get(this.model.parentFolderId, null, null).toPromise().then(result => {
+      result.domainType = 'Folder';
       this.model.parentFolder = result.body;
       const step1 = new Step();
-      step1.title = "Code Set Details";
+      step1.title = 'Code Set Details';
       step1.component = CodeSetStep1Component;
       step1.scope = this;
       step1.hasForm = true;
@@ -52,10 +52,10 @@ export class CodeSetMainComponent implements OnInit {
 
   onSelectedTermsChange = (terms) => {
     // angular.copy(terms, this.model.terms);
-  }
+  };
   cancelWizard = () => {
     this.stateHandler.GoPrevious();
-  }
+  };
   save = () => {
     const resource = {
       label: this.model.label,
@@ -74,7 +74,7 @@ export class CodeSetMainComponent implements OnInit {
     }, error => {
       this.messageHandler.showError('There was a problem creating the Code Set.', error);
     });
-  }
+  };
   ngOnInit() {
   }
 

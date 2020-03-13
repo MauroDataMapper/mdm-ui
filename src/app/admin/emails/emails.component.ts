@@ -113,11 +113,11 @@ export class EmailsComponent implements OnInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   toggleMessage(record) {
     record.showFailure = !record.showFailure;

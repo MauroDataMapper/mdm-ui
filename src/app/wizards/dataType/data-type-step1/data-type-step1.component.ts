@@ -43,11 +43,11 @@ export class DataTypeStep1Component implements OnInit {
     }
 
     this.step.invalid = false;
-  }
+  };
 
   selectCreateType = createType => {
     this.model.createType = createType;
-  }
+  };
 
   //TODO CORRECT
   onSelect = () => {};

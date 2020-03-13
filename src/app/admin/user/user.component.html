@@ -45,7 +45,7 @@
             <input matInput name="jobTitle" [(ngModel)]="user.jobTitle">
         </mat-form-field>
     </div>
-    <div class="mdm--form-input">    
+    <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Role*</mat-label>
             <mat-select name="userRole" [(ngModel)]="user.userRole">
@@ -56,7 +56,7 @@
             </mat-error>
         </mat-form-field>
     </div>
-    <div class="mdm--form-input mdm--block"> 
+    <div class="mdm--form-input mdm--block">
         <mat-label>Role*</mat-label>
         <mc-select
         [width]="'100%'"
@@ -75,10 +75,10 @@
     </mc-select>
     </div>
 
-    <button mat-button type="button" (click)="cancel()"> 
+    <button mat-button type="button" (click)="cancel()">
         Cancel
     </button>
-    <button mat-flat-button type="submit" color="primary" type="submit" class="custom" (click)="save()"> 
+    <button mat-flat-button color="primary" type="submit" class="custom" (click)="save()">
         <span *ngIf="user.id">Update user details</span>
         <span *ngIf="!user.id">Add user</span>
     </button>

@@ -95,7 +95,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     return of(children);
-  }
+  };
 
   constructor(
     protected messages: MessageService,

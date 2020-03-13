@@ -38,14 +38,14 @@ export class DataElementStep1Component implements OnInit {
     }
 
     this.step.invalid = false;
-  }
+  };
 
   ngOnInit() {
     this.model = this.step.scope.model;
   }
   onSelect = dataClass => {
     this.model.selectedDataElements = [];
-  }
+  };
 
   selectCreateType = createType => {
     this.model.createType = createType;

@@ -138,7 +138,7 @@ export class CodeSetTermsTableComponent implements OnInit {
     }
     this.filter = filter.substring(0, filter.length -1);
     this.filterEvent.emit(filter);
-  }
+  };
 
   applyMatSelectFilter(filterValue: any, filterName) {
     this.filterValue = filterValue;
@@ -153,7 +153,7 @@ export class CodeSetTermsTableComponent implements OnInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
 
 

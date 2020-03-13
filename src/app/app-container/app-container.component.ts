@@ -17,11 +17,11 @@ export class AppContainerComponent implements OnInit {
 
   isLoggedOn = () => {
     return this.securityHandler.isLoggedIn();
-  }
+  };
 
   isAdminUser = () => {
     return this.sharedService.isAdminUser();
-  }
+  };
 
   logout = () => {
     return this.sharedService.logout();

@@ -39,7 +39,7 @@ export class PluginsComponent implements OnInit {
 
 	ngAfterViewInit() {
 
-		this.displayedColumns
+		this.displayedColumns;
 
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;

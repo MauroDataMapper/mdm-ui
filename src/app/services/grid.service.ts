@@ -19,7 +19,6 @@ export class GridService {
           filter += name + "=" + value;
         }
       });
-      filter = filter;
       this.reloadEvent.emit(filter);
     }
   };

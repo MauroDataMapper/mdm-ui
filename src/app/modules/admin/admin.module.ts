@@ -8,8 +8,18 @@ import { GroupMemberTableComponent } from '../../admin/group-member-table/group-
 import { UserComponent } from '../../admin/user/user.component';
 
 @NgModule({
-  declarations: [AdminAppContainerComponent, EmailsComponent, GroupMemberTableComponent, UserComponent],
+  declarations: [
+    AdminAppContainerComponent,
+    EmailsComponent,
+    GroupMemberTableComponent,
+    UserComponent
+  ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
-  exports: [AdminAppContainerComponent, EmailsComponent, GroupMemberTableComponent, UserComponent]
+  exports: [
+    AdminAppContainerComponent,
+    EmailsComponent,
+    GroupMemberTableComponent,
+    UserComponent
+  ]
 })
 export class AdminModule {}

@@ -67,13 +67,13 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   expandedPaths = [];
 
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
-  protected treeControl: FlatTreeControl<FlatNode>;
+  treeControl: FlatTreeControl<FlatNode>;
 
   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
   protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
 
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-  protected dataSource: MatTreeFlatDataSource<Node, FlatNode>;
+  dataSource: MatTreeFlatDataSource<Node, FlatNode>;
 
   /**
    * Get the children for the given node from source data.

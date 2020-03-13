@@ -50,26 +50,25 @@
 
 
         <!--edit Cancel -->
-    <button mat-stroked-button 
+    <button mat-button 
+            color="warn"
             type="button" 
-            class="paddingless" 
             [disabled]="editable.waiting || processing"
             *ngIf="editable.visible && !hideCancel" 
             (click)="cancelEditClicked()"
             aria-label="Cancel edit">
-        <i class="fas fa-times warning cancelEditButton"></i>
+            Cancel edit
     </button>
 
     <!-- Save -->
-    <button mat-stroked-button 
+    <button mat-flat-button
+            color="accent"
             type="submit" 
-            class="paddingless" 
+            class="custom"
             [disabled]="editable.waiting || editable.validationError"
             *ngIf="editable.visible" 
             (click)="saveClicked()"
             aria-label="Save">
-        <i class="fas fa-check saveButton"></i>
+            Save changes
     </button>
-
-
 </div>

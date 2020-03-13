@@ -35,21 +35,14 @@ export class HomeComponent implements OnInit {
 
   isLoggedIn = () => {
     return this.securityHandler.isLoggedIn();
-  }
+  };
 
   login = () => {
     this.dialog
-      .open(LoginModalComponent, {
-        minWidth: 600,
-        hasBackdrop: true
-      })
-      .afterClosed()
-      .subscribe(user => {
+      .open(LoginModalComponent, { minWidth: 600, hasBackdrop: true}).afterClosed().subscribe(user => {
         if (user) {
           if (user.needsToResetPassword) {
-            this.broadcastSvc.broadcast('userLoggedIn', {
-              goTo: 'appContainer.userArea.changePassword'
-            });
+            this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.userArea.changePassword'});
             return;
           }
           this.profile = user;
@@ -61,9 +54,7 @@ export class HomeComponent implements OnInit {
             this.stateHandler.CurrentWindow(latestURL);
             return;
           } else {
-            this.broadcastSvc.broadcast('userLoggedIn', {
-              goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
-            });
+            this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'});
             return;
           }
         }

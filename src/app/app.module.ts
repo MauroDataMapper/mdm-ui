@@ -83,22 +83,14 @@ export class AppModule {
         console.log('User Logged In');
         this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
         if (args && args.goTo) {
-          this.stateHandler.Go(
-            args.goTo,
-            {},
-            { reload: true, inherit: false, notify: true }
-          );
+          this.stateHandler.Go(args.goTo, {}, { reload: true, inherit: false, notify: true });
         }
       });
     });
 
     this.broadcast.subscribe('userLoggedOut', args => {
       if (args && args.goTo) {
-        this.stateHandler.Go(
-          args.goTo,
-          {},
-          { reload: true, inherit: false, notify: true }
-        );
+        this.stateHandler.Go(args.goTo, {}, { reload: true, inherit: false, notify: true });
       }
     });
 

@@ -120,17 +120,17 @@ export class ElementChildDataElementsListComponent implements OnInit {
         options
       );
     }
-  }
+  };
 
   showStaticRecords = () => {
     if (this.childDataElements && this.type === 'static') {
       this.records = [].concat(this.childDataElements.items);
     }
-  }
+  };
 
   applyFilter = () => {
     this.gridSvc.applyFilter(this.filters);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;

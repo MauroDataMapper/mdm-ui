@@ -136,9 +136,9 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { UIRouterModule } from '@uirouter/angular';
 import { AngularSplitModule } from 'angular-split';
 import { UserIdleModule } from 'angular-user-idle';
-import {CodeSetComponent} from "../../code-set/code-set/code-set.component";
-import {CodeSetDetailsComponent} from "../../code-set/code-set-details/code-set-details.component";
-import {CodeSetTermsTableComponent} from "../../shared/code-set-terms-table/code-set-terms-table.component";
+import {CodeSetComponent} from '../../code-set/code-set/code-set.component';
+import {CodeSetDetailsComponent} from '../../code-set/code-set-details/code-set-details.component';
+import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code-set-terms-table.component';
 
 
 
@@ -296,7 +296,7 @@ import {CodeSetTermsTableComponent} from "../../shared/code-set-terms-table/code
     UsersModule,
     UserIdleModule.forRoot({idle: 600, timeout: 300})
   ],
-  exports:[FolderComponent,
+  exports: [FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     ShareWithComponent,

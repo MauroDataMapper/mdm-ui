@@ -10,7 +10,7 @@ import { mergeMap } from 'rxjs/operators';
 })
 export class YoutrackService {
 
-    username: string
+    username: string;
 
     constructor(
         private httpClient: HttpClient,
@@ -42,7 +42,7 @@ export class YoutrackService {
                           summary: string,
                           description: string): Observable<Object> {
 
-        var url = this.sharedService.youTrack.url + "/api/issues"
+        var url = this.sharedService.youTrack.url + "/api/issues";
 
 
         var body = {
@@ -56,7 +56,7 @@ export class YoutrackService {
                 name: "Reporter's name",
                 $type: "SimpleIssueCustomField"
             } ]
-        }
+        };
 
         return this.httpClient.post(url, body)
 

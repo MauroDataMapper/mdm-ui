@@ -72,7 +72,7 @@ export class FavouritesComponent implements OnInit {
         this.formData.filterCriteria
       );
     });
-  }
+  };
 
   filter = (allFavourites, text) => {
     let i = allFavourites.length - 1;
@@ -88,15 +88,15 @@ export class FavouritesComponent implements OnInit {
       i--;
     }
     return allFavourites;
-  }
+  };
 
   nodeClick = ($event, favourite) => {
     this.click($event, favourite);
-  }
+  };
 
   nodeDbClick = ($event, favourite) => {
     this.click($event, favourite);
-  }
+  };
 
   click = ($event, favourite) => {
     favourite.selected = !favourite.selected;
@@ -109,7 +109,7 @@ export class FavouritesComponent implements OnInit {
     if (this.onFavouriteDbClick) {
       this.onFavouriteDbClick.emit(favourite);
     }
-  }
+  };
 
   dataModelContextMenu(favourite) {
     const subMenu = [
@@ -134,11 +134,11 @@ export class FavouritesComponent implements OnInit {
     this.contextMenu.menu.focusFirstItem('mouse');
 
     this.contextMenu.openMenu();
-  }
+  };
 
   onSearchInputKeyDown = $event => {
     this.search();
-  }
+  };
 
   search = () => {
     this.favourites = this.filter(

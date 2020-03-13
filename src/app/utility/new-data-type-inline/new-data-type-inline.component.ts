@@ -104,7 +104,7 @@ export class NewDataTypeInlineComponent implements OnInit {
     } else {
       this.model.referencedDataClass = null;
     }
-  }
+  };
 
   loadTerminologies() {
     this.reloading = true;

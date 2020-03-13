@@ -146,7 +146,7 @@ export class DataModelsExportComponent implements OnInit {
 
   loadHelp = () => {
     this.helpDialogueHandler.open('Exporting_models', {});
-  }
+  };
 
   ngOnInit() {}
 }

@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: "attachment-list",
+  selector: 'attachment-list',
   templateUrl: './attachment-list.component.html',
   styleUrls: ['./attachment-list.component.sass']
 })
@@ -90,11 +90,11 @@ export class AttachmentListComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.reloadEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   attachmentFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
     const options = {
@@ -105,25 +105,25 @@ export class AttachmentListComponent implements AfterViewInit {
       filters
     };
     return this.resources.facets.get(this.parent.id, 'referenceFiles', options);
-  }
+  };
 
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
     }
-  }
+  };
 
   getFile = inputFileName => {
     const element: any = document.getElementById(inputFileName);
     return element && element.files ? element.files[0] : '';
-  }
+  };
 
   download = record => {
     return this.resources.facets.downloadLinkReferenceFile(
       this.parent.id,
       record.id
     );
-  }
+  };
 
   delete = record => {
     this.resources.facets
@@ -140,7 +140,7 @@ export class AttachmentListComponent implements AfterViewInit {
           );
         }
       );
-  }
+  };
 
   add = () => {
     const newRecord = {
@@ -155,7 +155,7 @@ export class AttachmentListComponent implements AfterViewInit {
       isNew: true
     };
     this.records = [].concat([newRecord]).concat(this.records);
-  }
+  };
 
   save = (record, index) => {
     const fileName = 'File' + index;

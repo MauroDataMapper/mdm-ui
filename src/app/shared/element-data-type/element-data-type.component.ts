@@ -152,7 +152,7 @@ export class ElementDataTypeComponent implements OnInit {
       element.innerHTML = '... more <span class=\'fas fa-caret-down\'></span>';
     }
     this.showing = !this.showing;
-  }
+  };
 
   showEnums = () => {
     this.toggleShowEnums = !this.toggleShowEnums;

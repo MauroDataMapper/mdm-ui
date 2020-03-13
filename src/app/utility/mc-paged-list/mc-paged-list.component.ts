@@ -91,7 +91,7 @@ export class McPagedListComponent implements OnInit {
     if (this.currentPage === 0) {
       this.disablePrev = true;
     }
-  }
+  };
 
   fetchData = () => {
     const offset = this.currentPage * this.pageSize;
@@ -105,7 +105,7 @@ export class McPagedListComponent implements OnInit {
       }
       this.addToUI();
     });
-  }
+  };
 
   next = () => {
     const pageCount = Math.floor(this.total / this.pageSize);
@@ -120,7 +120,7 @@ export class McPagedListComponent implements OnInit {
     } else {
       this.fetchData();
     }
-  }
+  };
 
   prev = () => {
     if (this.currentPage === 0) {

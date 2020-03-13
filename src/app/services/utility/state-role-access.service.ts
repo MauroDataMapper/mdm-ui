@@ -162,12 +162,12 @@ export class StateRoleAccessService {
         if (!this.securityHandler.isLoggedIn()) {
             return false;
         }
-        
+
         //////if this user is logged In but its role does NOT exist in valid role for this resource
         var user = this.securityHandler.getCurrentUser();
         return this.mappings[state].indexOf(user.role.toLowerCase()) !== -1;
 
-    }
+    };
 
     getAllRoles = () => {
         return this.allRoles;

@@ -91,11 +91,11 @@ export class ClassifierMainComponent implements OnInit {
         );
       }
     );
-  }
+  };
 
   cancelWizard = () => {
     this.stateHandler.GoPrevious();
-  }
+  };
   closeWizard = () => {
     this.stateHandler.GoPrevious();
   }

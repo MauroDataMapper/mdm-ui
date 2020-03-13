@@ -99,7 +99,7 @@ export class LinkSuggestionComponent implements OnInit {
   onSourceSelect = dataModels => {
     this.model.suggestions = [];
     this.setSourceDataModel(dataModels);
-  }
+  };
 
   setSourceDataModel = dataModels => {
     if (dataModels && dataModels.length > 0) {
@@ -117,7 +117,7 @@ export class LinkSuggestionComponent implements OnInit {
       this.model.source = null;
       this.model.sourceEditable = true;
     }
-  }
+  };
 
   setSourceDataElement = (sourceDMId, sourceDCId, sourceDEId) => {
     this.model.loadingSource = true;
@@ -131,12 +131,12 @@ export class LinkSuggestionComponent implements OnInit {
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
-  }
+  };
 
   onTargetSelect = dataModels => {
     this.model.suggestions = [];
     this.setTargetDataModel(dataModels);
-  }
+  };
 
   setTargetDataModel = dataModels => {
     if (dataModels && dataModels.length > 0) {
@@ -151,12 +151,12 @@ export class LinkSuggestionComponent implements OnInit {
       this.model.targetLink = null;
       this.model.target = null;
     }
-  }
+  };
 
   onTargetDateElementSelect = (suggestion, record) => {
     record.selectedTarget = suggestion;
     record.showMore = null;
-  }
+  };
 
   approveSuggestion = suggest => {
     const resource = {
@@ -192,7 +192,7 @@ export class LinkSuggestionComponent implements OnInit {
           }
         );
     }
-  }
+  };
 
   ignoreSuggestion = record => {
     this.model.totalIgnoredLinks++;
@@ -205,11 +205,11 @@ export class LinkSuggestionComponent implements OnInit {
         this.table.renderRows();
       }, 300);
     }
-  }
+  };
 
   toggleShowMore = suggestion => {
     suggestion.showMore = !suggestion.showMore;
-  }
+  };
 
   suggest = function() {
     this.model.processing = true;

@@ -133,7 +133,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   openEdit = dataType => {
     if (!dataType || (dataType && !dataType.id)) {
@@ -147,7 +147,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   add = () => {
     this.stateHandler.Go(
@@ -157,7 +157,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   deleteRows = () => {
     this.processing = true;
@@ -215,11 +215,11 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
         );
       }
     );
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   dataTypesFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
     const options = {
@@ -231,7 +231,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
     };
 
     return this.resources.dataModel.get(this.parent.id, 'dataTypes', options);
-  }
+  };
 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));

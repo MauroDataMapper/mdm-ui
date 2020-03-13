@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: "annotation-list",
+  selector: 'annotation-list',
   templateUrl: './annotation-list.component.html',
   styleUrls: ['./annotation-list.component.sass']
 })
@@ -114,13 +114,13 @@ export class AnnotationListComponent implements AfterViewInit {
       isNew: true
     };
     this.records = [].concat([newRecord]).concat(this.records);
-  }
+  };
 
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
     }
-  }
+  };
 
   saveParent = (record, index) => {
     const resource = {
@@ -141,7 +141,7 @@ export class AnnotationListComponent implements AfterViewInit {
           );
         }
       );
-  }
+  };
 
   addChild = annotation => {
     const resource = {
@@ -171,7 +171,7 @@ export class AnnotationListComponent implements AfterViewInit {
           }
         }
       );
-  }
+  };
 
   showChildren = annotation => {
     if (annotation.show) {

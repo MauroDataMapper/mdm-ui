@@ -108,7 +108,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   add = () => {
     this.stateHandler.Go(
@@ -119,7 +119,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit {
       },
       null
     );
-  }
+  };
 
   deleteRows = () => {
     this.processing = true;
@@ -177,7 +177,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit {
         );
       }
     );
-  }
+  };
 
   applyFilter = () => {
     let filter: any = '';
@@ -191,11 +191,11 @@ export class ElementChildDataClassesListComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   dataClassesFetch(
     pageSize?,

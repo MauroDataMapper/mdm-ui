@@ -47,7 +47,7 @@ export class FavouriteHandlerService {
       { fvt = true;
           return;
       }
-    })
+    });
 
     // var fvt = favorites.every(favorite =>{
     //   return favorite.id === element.id;

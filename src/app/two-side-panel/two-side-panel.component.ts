@@ -44,7 +44,7 @@ export class TwoSidePanelComponent implements AfterViewInit {
 
   toggle = () => {
     this.expand = !this.expand;
-  }
+  };
 
   state = 'inactive';
 

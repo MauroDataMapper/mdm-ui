@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable, of, pipe, Subject} from 'rxjs';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
 import {SortDirection} from '../directives/sortable.directive';
-import {ResourcesService} from '../services/resources.service';
+import {ResourcesService} from './resources.service';
 
 
 interface SearchResult {

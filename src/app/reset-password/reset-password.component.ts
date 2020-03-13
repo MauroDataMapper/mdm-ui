@@ -57,11 +57,11 @@ export class ResetPasswordComponent implements OnInit {
       delete this.errors;
     }
     return isValid;
-  }
+  };
 
   cancel = () => {
     this.stateHandler.Go('home');
-  }
+  };
 
   save = () => {
     if (!this.validate()) {

@@ -22,7 +22,7 @@ export class ObjectEnhancerService {
 		return Object.keys(this.diff(newObj, oldObj)).reduce(function (res, key) {
 			var obj = {};
 			obj[key] = newObj[key];
-			res.push(obj)
+			res.push(obj);
 			return res;
 		}, []);
 	}

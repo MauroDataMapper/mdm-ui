@@ -258,7 +258,7 @@ export class GroupAccessNewComponent implements OnInit {
   onGroupSelect = (select, record) => {
     delete record.edit.errors;
     record.edit.group = select;
-  }
+  };
 
   validate(record, index) {
     let isValid = true;

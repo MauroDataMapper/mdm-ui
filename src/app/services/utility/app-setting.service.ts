@@ -6,20 +6,20 @@ import { Injectable } from '@angular/core';
 export class AppSettingService {
    appSettings = {};
 
-  //Provider definition
+  // Provider definition
 
-  add = function(key,value){
+  add = function(key, value) {
     this.appSettings[key] = value;
   };
 
-  getSettings = function(){
+  getSettings = function() {
     return this.appSettings;
   };
   constructor() {}
 
-    get(key){
-      return this.appSettings[key]
-    };
+    get(key) {
+      return this.appSettings[key];
+    }
 
 
 }

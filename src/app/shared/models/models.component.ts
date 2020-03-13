@@ -175,7 +175,7 @@ export class ModelsComponent implements OnInit {
         this.currentTab = 'models';
       }
     }
-  }
+  };
 
   loadClassifiers = () => {
     this.classifierLoading = true;
@@ -197,7 +197,7 @@ export class ModelsComponent implements OnInit {
         this.classifierLoading = false;
       }
     );
-  }
+  };
 
   loadFolders = (noCache?) => {
     this.reloading = true;
@@ -232,7 +232,7 @@ export class ModelsComponent implements OnInit {
         this.reloading = false;
       }
     );
-  }
+  };
 
   onNodeClick = node => {
     this.stateHandler.Go(node.domainType, {
@@ -242,7 +242,7 @@ export class ModelsComponent implements OnInit {
       dataClassId: node.parentDataClass || '',
       terminologyId: node.terminology
     });
-  }
+  };
 
   onNodeDbClick = node => {
     // if the element if a dataModel, load it
@@ -250,14 +250,14 @@ export class ModelsComponent implements OnInit {
       return;
     }
     this.levels.focusedElement(node);
-  }
+  };
 
   onCompareTo = (source, target) => {
     this.stateHandler.NewWindow('modelscomparison', {
       sourceId: source.id,
       targetId: target ? target.id : null
     });
-  }
+  };
 
   loadModelsToCompare = dataModel => {
     this.resources.dataModel
@@ -274,7 +274,7 @@ export class ModelsComponent implements OnInit {
           }
         });
       });
-  }
+  };
 
   onAddFolder = function(event?, folder?) {
     let parentId;
@@ -316,11 +316,11 @@ export class ModelsComponent implements OnInit {
 
   onAddDataModel = (event, folder) => {
     this.stateHandler.Go('NewDataModelNew', { parentFolderId: folder.id });
-  }
+  };
 
   onAddCodeSet = (event, folder) => {
     this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
-  }
+  };
 
   onAddChildDataClass = (event, element) => {
     this.stateHandler.Go('NewDataClassNew', {
@@ -330,7 +330,7 @@ export class ModelsComponent implements OnInit {
         element.domainType === 'DataModel' ? element.id : element.dataModel,
       parentDataClassId: element.domainType === 'DataModel' ? null : element.id
     });
-  }
+  };
 
   onAddChildDataElement = (event, element) => {
     this.stateHandler.Go('NewDataElement', {
@@ -340,15 +340,15 @@ export class ModelsComponent implements OnInit {
       parentDataModelId: element.dataModel,
       parentDataClassId: element.id
     });
-  }
+  };
 
   onAddChildDataType = (event, element) => {
     this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
-  }
+  };
 
   toggleFilterMenu = () => {
     this.showFilters = !this.showFilters;
-  }
+  };
 
   toggleFilters = filerName => {
     this[filerName] = !this[filerName];
@@ -369,7 +369,7 @@ export class ModelsComponent implements OnInit {
     this.loadFolders();
 
     this.showFilters = !this.showFilters;
-  }
+  };
 
   onDeleteFolder = (event, folder, permanent) => {
     if (!this.sharedService.isAdmin()) {
@@ -384,12 +384,12 @@ export class ModelsComponent implements OnInit {
         folder.deleted = true;
       });
     }
-  }
+  };
 
   initializeModelsTree = () => {
     this.loadFolders();
     this.loadClassifiers();
-  }
+  };
 
   changeState = (newState, newWindow?) => {
     if (newWindow) {
@@ -397,7 +397,7 @@ export class ModelsComponent implements OnInit {
       return;
     }
     this.stateHandler.Go(newState);
-  }
+  };
 
   onSearchInputKeyDown = event => {
     if (event.keyCode && event.keyCode === 13) {
@@ -408,7 +408,7 @@ export class ModelsComponent implements OnInit {
     }
     event.preventDefault();
     return false;
-  }
+  };
 
   search = () => {
     if (this.formData.filterCriteria.trim().length > 2) {
@@ -438,11 +438,11 @@ export class ModelsComponent implements OnInit {
       this.searchText = '';
       this.loadFolders();
     }
-  }
+  };
 
   classifierTreeOnSelect = node => {
     this.stateHandler.Go('classification', { id: node.id });
-  }
+  };
 
   classificationFilterChange = val => {
     if (val && val.length !== 0 && val.trim().length === 0) {
@@ -450,7 +450,7 @@ export class ModelsComponent implements OnInit {
     } else {
       this.loadClassifiers();
     }
-  }
+  };
 
   filterClassifications = function() {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
@@ -463,19 +463,19 @@ export class ModelsComponent implements OnInit {
 
   onFavouriteDbClick = node => {
     this.onFavioureClick(node);
-  }
+  };
 
   onFavouriteClick = node => {
     this.onFavioureClick(node);
-  }
+  };
 
   reloadTree = () => {
     this.loadFolders(true);
-  }
+  };
 
   addClassifier = () => {
     this.stateHandler.Go('newclassification');
-  }
+  };
 
   private onFavioureClick(node) {
     this.stateHandler.Go(node.domainType, {

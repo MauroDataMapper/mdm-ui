@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
 
   openProfile = () => {
     this.stateHandler.Go('userarea.profile', null, null);
-  }
+  };
 
   isLoggedIn = () => {
     return this.securityHandler.isLoggedIn();
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
           }
         }
       });
-  }
+  };
 
   logout = function() {
     this.securityHandler.logout().subscribe(() => {
@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit {
         if (user) {
         }
       });
-  }
+  };
 
   register = () => {
     this.dialog

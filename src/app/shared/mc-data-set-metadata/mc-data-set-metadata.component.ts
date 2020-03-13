@@ -160,7 +160,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         });
         this.filter = filter;
         this.filterEvent.emit(filter);
-    }
+    };
 
     onNamespaceSelect(select, record) {
 
@@ -252,7 +252,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
             // Call a backend service and see if it's duplicate
         }
         return isValid;
-    }
+    };
 
     add() {
         let newRecord = {

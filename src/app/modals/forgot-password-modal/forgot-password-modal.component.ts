@@ -33,12 +33,12 @@ export class ForgotPasswordModalComponent implements OnInit {
 
   cancel = () => {
     this.dialogRef.close();
-  }
+  };
 
   keyEntered = event => {
     event.preventDefault();
     return false;
-  }
+  };
 
   close = () => {
     this.dialogRef.close();

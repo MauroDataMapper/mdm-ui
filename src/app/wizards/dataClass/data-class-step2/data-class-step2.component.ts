@@ -90,7 +90,7 @@ export class DataClassStep2Component implements OnInit {
       }
     }
     this.totalItemCount = this.model.selectedDataClasses.length;
-  }
+  };
 
   onCheck = (node, parent, checkedMap) => {
     this.model.selectedDataClassesMap = checkedMap;
@@ -98,7 +98,7 @@ export class DataClassStep2Component implements OnInit {
     this.dataSource.data = this.model.selectedDataClasses;
     this.dataSource._updateChangeSubscription();
     this.validate();
-  }
+  };
 
   validate = (newValue?) => {
     let invalid = false;
@@ -131,7 +131,7 @@ export class DataClassStep2Component implements OnInit {
     }
 
     this.step.invalid = invalid;
-  }
+  };
 
   ngOnDestroy() {
     this.formChangesSubscription.unsubscribe();

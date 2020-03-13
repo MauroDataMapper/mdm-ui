@@ -24,7 +24,7 @@ export class SettingsComponent implements OnInit {
     this.countPerTable = this.userSettingsHandler.get('countPerTable') || this.countPerTable;
     this.expandMoreDescription = this.userSettingsHandler.get('expandMoreDescription') || this.expandMoreDescription;
     this.includeSupersededModels = this.userSettingsHandler.get('includeSupersededModels') || this.includeSupersededModels;
-  }
+  };
 
   saveSettings = () => {
     this.userSettingsHandler.update('countPerTable', this.countPerTable);
@@ -39,7 +39,7 @@ export class SettingsComponent implements OnInit {
         this.messageHandler.showError('Failed to save user preferences.', error);
       }
     );
-  }
+  };
   public loadHelp() {
     this.helpDialogueService.open('Preferences', { my: 'right top', at: 'bottom' } as DialogPosition);
   }

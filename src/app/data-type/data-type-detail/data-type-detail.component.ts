@@ -78,7 +78,7 @@ export class DataTypeDetailComponent implements OnInit {
     if (!data || (data && data.trim().length === 0)) {
       return 'Data Type name can not be empty';
     }
-  }
+  };
 
   formBeforeSave = () => {
     const resource = {
@@ -115,13 +115,13 @@ export class DataTypeDetailComponent implements OnInit {
       });
 
     this.changeRef.detectChanges();
-  }
+  };
 
   openEditClicked = formName => {
     if (this.openEditForm) {
       this.openEditForm(formName);
     }
-  }
+  };
 
   onCancelEdit = () => {
     this.mcDataTypeObject.editAliases = Object.assign(
@@ -129,7 +129,7 @@ export class DataTypeDetailComponent implements OnInit {
       this.mcDataTypeObject.aliases
     );
     this.changeRef.detectChanges();
-  }
+  };
 
   delete = () => {
     this.resources.dataType
@@ -150,7 +150,7 @@ export class DataTypeDetailComponent implements OnInit {
           );
         }
       );
-  }
+  };
 
   askToDelete = () => {
     if (!this.sharedService.isAdminUser()) {

@@ -75,7 +75,7 @@ export class TerminologyComponent implements OnInit {
       default:
         return { index: 0, name: 'properties' };
     }
-  }
+  };
 
   getTabDetailIndex = tabIndex => {
     switch (tabIndex) {
@@ -90,11 +90,11 @@ export class TerminologyComponent implements OnInit {
       default:
         return { index: 0, name: 'properties' };
     }
-  }
+  };
 
   save = (updatedResource?) => {
     this.broadcastSvc.broadcast('$elementDetailsUpdated', updatedResource);
-  }
+  };
 
   tabSelected = tabIndex => {
     const tab = this.getTabDetailIndex(tabIndex);
@@ -117,17 +117,17 @@ export class TerminologyComponent implements OnInit {
           this.loadingData = false;
         });
     }
-  }
+  };
 
   openEditForm = formName => {
     this.showEditForm = true;
     this.editForm = formName;
-  }
+  };
 
   closeEditForm = () => {
     this.showEditForm = false;
     this.editForm = null;
-  }
+  };
 
   fetch = (text,loadAll, offset, limit) => {
     //var deferred = $q.defer();
@@ -138,7 +138,7 @@ export class TerminologyComponent implements OnInit {
 
     this.pagination = {
         limit,
-        offset        
+        offset
       };
 
     this.searchTerm = text;
@@ -150,7 +150,7 @@ export class TerminologyComponent implements OnInit {
         offset
       }
     });
-  }
+  };
 
   onTermSelect = term => {
     this.stateHandler.NewWindow(

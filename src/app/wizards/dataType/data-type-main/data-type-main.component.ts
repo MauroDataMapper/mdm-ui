@@ -90,7 +90,7 @@ export class DataTypeMainComponent implements OnInit {
     } else {
       this.saveCopiedDataTypes();
     }
-  }
+  };
 
   fireChanged = (tab: any) => {
     for (let i = 0; i < this.steps.length; i++) {
@@ -105,7 +105,7 @@ export class DataTypeMainComponent implements OnInit {
         step.active = false;
       }
     }
-  }
+  };
 
   saveNewDataType() {
     const resource = {

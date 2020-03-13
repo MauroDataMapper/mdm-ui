@@ -8,14 +8,14 @@ import { filter, map } from 'rxjs/operators';
 export class BroadcastService {
 
   constructor() { }
-  private _handler: Subject<Message> = new Subject<Message>();
+  private handler: Subject<Message> = new Subject<Message>();
 
   broadcast(type: string, payload: any = null) {
-    this._handler.next({ type, payload });
+    this.handler.next({ type, payload });
   }
 
   subscribe(type: string, callback: (payload: any) => void): Subscription {
-    return this._handler.pipe(
+    return this.handler.pipe(
       filter(message => message.type === type),
       map(message => message.payload)
     ).subscribe(callback);

@@ -58,7 +58,7 @@ export class DiagramComponent implements OnInit {
     this.resources.dataModel.get(element.id, 'hierarchy').subscribe(res => {
       this.setDiagram(res);
     });
-  }
+  };
 
   private setDiagram(res: any) {
     // const data = res.body;

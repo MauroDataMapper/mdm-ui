@@ -103,11 +103,11 @@ export class DataClassMainComponent implements AfterViewInit {
 
   cancelWizard = () => {
     this.stateHandler.GoPrevious();
-  }
+  };
 
   closeWizard = () => {
     this.stateHandler.GoPrevious();
-  }
+  };
 
   save = () => {
     if (this.model.createType === 'new') {
@@ -115,7 +115,7 @@ export class DataClassMainComponent implements AfterViewInit {
     } else {
       this.saveCopiedDataClasses();
     }
-  }
+  };
 
   getMultiplicity = (resource, multiplicity) => {
     if (this.model[multiplicity] === '*') {
@@ -124,7 +124,7 @@ export class DataClassMainComponent implements AfterViewInit {
     if (!isNaN(this.model[multiplicity])) {
       resource[multiplicity] = parseInt(this.model[multiplicity]);
     }
-  }
+  };
 
   fireChanged = (tab: any) => {
     for (let i = 0; i < this.steps.length; i++) {
@@ -139,11 +139,11 @@ export class DataClassMainComponent implements AfterViewInit {
         step.active = false;
       }
     }
-  }
+  };
 
   saveCopiedDataClasses = () => {
     this.steps[1].compRef.instance.saveCopiedDataClasses();
-  }
+  };
 
   saveNewDataClass = () => {
     const resource = {

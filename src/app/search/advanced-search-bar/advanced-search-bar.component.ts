@@ -30,7 +30,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   searchTerm = new Subject<string>();
 
   pageIndex: any;
-  advancedSearch: Boolean;
+  advancedSearch: boolean;
   searchInput: string;
   lastDateUpdatedFrom: Date;
   lastDateUpdatedTo: Date;
@@ -42,11 +42,11 @@ export class AdvancedSearchBarComponent implements OnInit {
   classifications: any[];
   searchResults: any[];
 
-  hideDM: Boolean;
-  hideDC: Boolean;
-  hideDE: Boolean;
-  hideDT: Boolean;
-  hideEV: Boolean;
+  hideDM: boolean;
+  hideDC: boolean;
+  hideDE: boolean;
+  hideDT: boolean;
+  hideEV: boolean;
 
   isLoading: boolean;
 
@@ -134,7 +134,7 @@ export class AdvancedSearchBarComponent implements OnInit {
 
   loadHelp = () => {
     this.helpDialogueService.open('Search_Help', { right: '150' });
-  }
+  };
 
   toggleAdvancedSearch() {
     this.advancedSearch = !this.advancedSearch;

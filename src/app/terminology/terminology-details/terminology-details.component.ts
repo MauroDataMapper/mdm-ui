@@ -98,7 +98,7 @@ export class TerminologyDetailsComponent implements OnInit {
     if (!data || (data && data.trim().length === 0)) {
       return 'Terminology name can not be empty';
     }
-  }
+  };
 
   formBeforeSave = () => {
     const resource = {
@@ -139,11 +139,11 @@ export class TerminologyDetailsComponent implements OnInit {
         );
       }
     );
-  }
+  };
 
   toggleSecuritySection = () => {
     this.securitySection = !this.securitySection;
-  }
+  };
 
   export = exporter => {
     this.exportError = null;
@@ -173,11 +173,11 @@ export class TerminologyDetailsComponent implements OnInit {
           this.exportError = 'An error occurred when processing the request.';
         }
       );
-  }
+  };
 
   resetExportError = () => {
     this.exportError = null;
-  }
+  };
 
   delete = (permanent?) => {
     if (!this.sharedService.isAdminUser()) {
@@ -210,7 +210,7 @@ export class TerminologyDetailsComponent implements OnInit {
           );
         }
       );
-  }
+  };
 
   askForSoftDelete = () => {
     if (!this.sharedService.isAdminUser()) {
@@ -231,7 +231,7 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.delete();
       });
-  }
+  };
 
   askForPermanentDelete = () => {
     if (!this.sharedService.isAdminUser()) {
@@ -266,13 +266,13 @@ export class TerminologyDetailsComponent implements OnInit {
             this.delete(true);
           });
       });
-  }
+  };
 
   openEditClicked = formName => {
     if (this.openEditForm) {
       this.openEditForm(formName);
     }
-  }
+  };
 
   newVersion = () => {
     this.stateHandler.Go(
@@ -280,7 +280,7 @@ export class TerminologyDetailsComponent implements OnInit {
       { id: this.mcTerminology.id },
       { location: true }
     );
-  }
+  };
 
   finalise = () => {
     this.dialog
@@ -321,14 +321,14 @@ export class TerminologyDetailsComponent implements OnInit {
             }
           );
       });
-  }
+  };
 
   onCancelEdit = () => {
     this.mcTerminology.editAliases = Object.assign(
       {},
       this.mcTerminology.aliases
     );
-  }
+  };
 
   loadExporterList = () => {
     this.exportList = [];
@@ -348,7 +348,7 @@ export class TerminologyDetailsComponent implements OnInit {
         }
       );
     });
-  }
+  };
 
   toggleFavourite = function() {
     this.favouriteHandler.toggle(this.mcTerminology);
@@ -356,7 +356,7 @@ export class TerminologyDetailsComponent implements OnInit {
 
   loadHelp = () => {
     this.helpDialogueHandler.open('Terminology_details', {});
-  }
+  };
 
   showForm() {
     this.editableForm.show();

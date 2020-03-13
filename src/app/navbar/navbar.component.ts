@@ -43,11 +43,11 @@ export class NavbarComponent implements OnInit {
 
     openProfile = () => {
         this.stateHandler.Go('userarea.profile');
-    }
+    };
 
     isLoggedIn = () => {
         return this.securityHandler.isLoggedIn();
-    }
+    };
 
     login = () => {
 
@@ -80,11 +80,11 @@ export class NavbarComponent implements OnInit {
 
             }
         });
-    }
+    };
 
   logout = () => {
     this.securityHandler.logout();
-  }
+  };
 
   forgottenPassword = () => {
     this.dialog
@@ -97,7 +97,7 @@ export class NavbarComponent implements OnInit {
         if (user) {
         }
       });
-  }
+  };
 
   // TODO
   toggled = (open: any) => {};

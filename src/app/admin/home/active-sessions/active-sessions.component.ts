@@ -106,11 +106,11 @@ export class ActiveSessionsComponent implements OnInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 
   applyFilter = () => {
     // TODO
-  }
+  };
 
   editUser = (var1?) => {
     // TODO

@@ -39,7 +39,7 @@ import {TermComponent} from './term/term/term.component';
 import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import {CodeSetMainComponent} from './wizards/codeSet/code-set-main/code-set-main.component';
-import {CodeSetComponent} from "./code-set/code-set/code-set.component";
+import {CodeSetComponent} from './code-set/code-set/code-set.component';
 
 export const PagesRoutes = {
   states: [

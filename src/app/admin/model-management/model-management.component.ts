@@ -125,7 +125,7 @@ export class ModelManagementComponent implements OnInit {
         this.reloading = false;
         this.messageHandler.showError('There was a problem loading tree.', err);
       }
-  }
+  };
 
   markChildren = function(node) {
     if (this.selectedElements) {

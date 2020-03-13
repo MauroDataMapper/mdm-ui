@@ -67,7 +67,7 @@ export class UserSettingsHandlerService {
           reject(error);
         }
       );
-    })
+    });
     return promise;
   }
 
@@ -100,7 +100,7 @@ export class UserSettingsHandlerService {
     );
 
   }
-  
+
   handleCountPerTable(items) {
     var counts = this.get("counts");
     if (items && items.length < 5) {

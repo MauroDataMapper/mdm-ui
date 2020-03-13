@@ -127,15 +127,15 @@ export class ModelComparisonComponent implements OnInit {
       }
     }
     return swapNeeded;
-  }
+  };
 
   loadDataModelDetail = id => {
     return this.resources.dataModel.get(id);
-  }
+  };
 
   loadModelTree = model => {
     return this.resources.tree.get(model.id);
-  }
+  };
 
   onLeftModelSelect = select => {
     if (!select || (select && select.length === 0)) {
@@ -155,7 +155,7 @@ export class ModelComparisonComponent implements OnInit {
         }
       });
     });
-  }
+  };
 
   onRightModelSelect = select => {
     if (!select || (select && select.length === 0)) {
@@ -176,7 +176,7 @@ export class ModelComparisonComponent implements OnInit {
         }
       });
     });
-  }
+  };
 
   swap = () => {
     let srcCopy;
@@ -208,7 +208,7 @@ export class ModelComparisonComponent implements OnInit {
 
       this.runDiff();
     });
-  }
+  };
 
   cleanDiff = function() {
     this.diffMap = {};
@@ -229,7 +229,7 @@ export class ModelComparisonComponent implements OnInit {
         diffMap[element.id].created = false;
       }
     });
-  }
+  };
   initDiff = (id, diffMap) => {
     if (diffMap[id]) {
       return;
@@ -246,7 +246,7 @@ export class ModelComparisonComponent implements OnInit {
         dataElements: []
       }
     };
-  }
+  };
 
   findDiffDataTypeChanges = (leftId, rightId, dataTypeDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
@@ -262,7 +262,7 @@ export class ModelComparisonComponent implements OnInit {
     };
     diffMap[leftId].diffs.properties.push(update);
     diffMap[rightId].diffs.properties.push(update);
-  }
+  };
 
   findDiffProps = (propName, leftId, rightId, labelDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
@@ -281,7 +281,7 @@ export class ModelComparisonComponent implements OnInit {
 
     diffMap[leftId].diffs.properties.push(update);
     diffMap[rightId].diffs.properties.push(update);
-  }
+  };
 
   findDiffMetadata = (leftId, rightId, metadataDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
@@ -319,7 +319,7 @@ export class ModelComparisonComponent implements OnInit {
         diffMap[rightId].diffs.metadata.push(update);
       });
     }
-  }
+  };
 
   findDiffEnumerationValues = (
     leftId,
@@ -362,7 +362,7 @@ export class ModelComparisonComponent implements OnInit {
         diffMap[rightId].diffs.enumerationValues.push(update);
       });
     }
-  }
+  };
 
   runDiff = () => {
     this.ready = false;
@@ -730,7 +730,7 @@ export class ModelComparisonComponent implements OnInit {
           this.processing = false;
         }
       );
-  }
+  };
 
   onNodeExpand = node => {
     const obs = new Observable(sub => {
@@ -750,7 +750,7 @@ export class ModelComparisonComponent implements OnInit {
       );
     });
     return obs;
-  }
+  };
 
   onNodeClick = node => {
     this.diffs = [];
@@ -814,7 +814,7 @@ export class ModelComparisonComponent implements OnInit {
     } else if (this.diffs.dataElements.length > 0) {
       this.activeTab.index = 3;
     }
-  }
+  };
 
   dataElementFilterChange = () => {
     if (this.diffs.dataElements && this.diffs.dataElements.length > 0) {
@@ -840,7 +840,7 @@ export class ModelComparisonComponent implements OnInit {
         }
       );
     }
-  }
+  };
 
   dataTypeFilterChange = () => {
     if (this.diffs.dataTypes && this.diffs.dataTypes.length > 0) {

@@ -160,7 +160,7 @@ export class ClassifiedElementsListComponent implements AfterViewInit {
     }
     this.filter = filter.substring(0, filter.length - 1);
     this.filterEvent.emit(filter);
-  }
+  };
 
   applyMatSelectFilter(filterValue: any, filterName) {
     this.filterValue = filterValue;

@@ -102,7 +102,7 @@ export class GroupMemberTableComponent implements OnInit {
       'catalogueUsers',
       options
     );
-  }
+  };
 
   validate = () => {
     let isValid = true;
@@ -115,7 +115,7 @@ export class GroupMemberTableComponent implements OnInit {
       delete this.errors;
     }
     return isValid;
-  }
+  };
 
   add = () => {
     const newRecord = {
@@ -130,7 +130,7 @@ export class GroupMemberTableComponent implements OnInit {
     this.mcDisplayRecords = []
       .concat([newRecord])
       .concat(this.mcDisplayRecords);
-  }
+  };
 
   fetchUser = (text, offset, limit) => {
     this.pagination.limit = this.pagination.limit ? this.pagination.limit : 10;
@@ -146,7 +146,7 @@ export class GroupMemberTableComponent implements OnInit {
       sortType: 'asc'
     };
     return this.resources.catalogueUser.get(null, 'search', options);
-  }
+  };
 
   onUserSelect = (select, record) => {
     record.id = select.id;
@@ -156,13 +156,13 @@ export class GroupMemberTableComponent implements OnInit {
     record.organisation = select.organisation;
     record.userRole = select.userRole;
     record.disabled = select.disabled;
-  }
+  };
 
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.mcDisplayRecords.splice(index, 1);
     }
-  }
+  };
 
   confirmAddMember = (record, $index) => {
     if (!record.id || !record.emailAddress) {
@@ -182,11 +182,11 @@ export class GroupMemberTableComponent implements OnInit {
           );
         }
       );
-  }
+  };
 
   removeMember = record => {
     record.deletePending = true;
-  }
+  };
 
   confirmRemove = (record, $index) => {
     this.resources.userGroup
@@ -204,7 +204,7 @@ export class GroupMemberTableComponent implements OnInit {
           );
         }
       );
-  }
+  };
 
   cancelRemove = record => {
     delete record.deletePending;

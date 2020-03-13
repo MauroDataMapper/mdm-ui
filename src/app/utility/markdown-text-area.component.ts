@@ -1,6 +1,6 @@
 import { Component, OnInit, Input,   ViewChild, Output, ElementRef, EventEmitter } from '@angular/core';
 import { FolderResult } from '../model/folderModel';
-import { MarkdownParserService } from '../utility/markdown-parser.service';
+import { MarkdownParserService } from './markdown-parser.service';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
 import { MessageService } from '../services/message.service';
 

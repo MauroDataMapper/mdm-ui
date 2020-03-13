@@ -2,14 +2,11 @@ import { TestBed } from '@angular/core/testing';
 
 import { ResourcesService } from './resources.service';
 import { HttpClient } from '@angular/common/http';
-import { AngularAngularjsLinkService } from './angular-angularjs-link.service';
 import { Observable } from 'rxjs';
 import { stringify } from 'querystring';
 import { ValidatorService } from './validator.service';
 
-describe('ResourcesService', () =>
-{
-    let spyLink: AngularAngularjsLinkService;
+describe('ResourcesService', () => {
     let spyClient: HttpClient;
     let errorCode = 200;
     const testURL = "https://expected.com/api";
@@ -25,60 +22,26 @@ describe('ResourcesService', () =>
         "observe": "response"
     }));
 
-    beforeEach(() =>
-    {
-        spyLink = <AngularAngularjsLinkService>{};
-        spyLink.broadcast = jasmine.createSpy("broadcast");
+    beforeEach(() => {
         /**
          * Create a spy for HttpClient
          */
-        spyClient = <HttpClient>{
-            request: function (method: string, url: string, options: Object)
-            {
-                let observable$ = new Observable(observer =>
-                {
-                    console.log(url);
-                    if (url) {
-                        if (errorCode === 200) {
-                            observer.next(url);
-                            observer.complete();
-                        } else {
-                            observer.error({ "status": errorCode });
-                        }
-                    } else {
-                        observer.error({ "status": 0 });
-                    }
-                });
-                return observable$;
-            }
-        };
 
-        spyOn(spyClient, "request").and.callThrough();
-
-        TestBed.configureTestingModule({
-            providers: [
-                ResourcesService,
-                { provide: HttpClient, useValue: spyClient },
-                { provide: AngularAngularjsLinkService, useValue: spyLink }
-            ]
-        });
     });
 
-    function prepareService(statusCode?: number)
-    {
+    function prepareService(statusCode?: number) {
         const service = TestBed.get(ResourcesService);
         service.API = testURL;
 
-        if (statusCode)
-            errorCode = statusCode
-        else
-            errorCode = 200;
-
+        if (statusCode) {
+          errorCode = statusCode
+        } else {
+          errorCode = 200;
+        }
         return service;
     }
 
-    function makeRequest(observable$, expectedResult?: string, expectedError?: string)
-    {
+    function makeRequest(observable$, expectedResult?: string, expectedError?: string) {
         let result: string = null;
 
         observable$.subscribe(
@@ -96,7 +59,7 @@ describe('ResourcesService', () =>
                 if (expectedError)
                     expect(error).toEqual(expectedError);
                 else
-                    fail(`The error "${JSON.stringify(error)}" was not expected`)
+                    fail(`The error "${JSON.stringify(error)}" was not expected`);
                 result = error;
             },
             () => expect(result).not.toBeNull()
@@ -106,10 +69,12 @@ describe('ResourcesService', () =>
 
     function pluraliseClassname(classname: string): string
     {
-        if (classname === "terminology")
-            return "terminologies";
-        if (classname === "authentication" || classname === "tree")
-            return classname;
+        if (classname === "terminology") {
+          return "terminologies";
+        }
+        if (classname === "authentication" || classname === "tree") {
+          return classname;
+        }
 
         return classname + "s";
     }
@@ -177,26 +142,26 @@ describe('ResourcesService', () =>
     }
 
     it('should GET a Folder', async () => testGETRequest("100", "folder"));
-    it('should GET a Terminology', async () => testGETRequest("101", "terminology"))
-    it('should GET a Classifier', async () => testGETRequest("102", "classifier"))
-    it('should GET a CatalogueUser', async () => testGETRequest("103", "catalogueUser"))
-    it('should GET a CatalogueItem', async () => testGETRequest("104", "catalogueItem"))
-    it('should GET a UserGroup', async () => testGETRequest("105", "userGroup"))
-    it('should GET a Authentication', async () => testGETRequest("106", "authentication", null))
-    it('should GET a Tree', async () => testGETRequest("107", "tree"))
+    it('should GET a Terminology', async () => testGETRequest("101", "terminology"));
+    it('should GET a Classifier', async () => testGETRequest("102", "classifier"));
+    it('should GET a CatalogueUser', async () => testGETRequest("103", "catalogueUser"));
+    it('should GET a CatalogueItem', async () => testGETRequest("104", "catalogueItem"));
+    it('should GET a UserGroup', async () => testGETRequest("105", "userGroup"));
+    it('should GET a Authentication', async () => testGETRequest("106", "authentication", null));
+    it('should GET a Tree', async () => testGETRequest("107", "tree"));
 
-    it('should POST new Folder', async () => testPOSTRequest("200", "folder"))
-    it('should POST new Terminology', async () => testPOSTRequest("201", "terminology"))
-    it('should POST new CatalogueUser', async () => testPOSTRequest("202", "catalogueUser"))
-    it('should POST new CatalogueItem', async () => testPOSTRequest("203", "catalogueItem"))
-    it('should POST new UserGroup', async () => testPOSTRequest("204", "userGroup"))
+    it('should POST new Folder', async () => testPOSTRequest("200", "folder"));
+    it('should POST new Terminology', async () => testPOSTRequest("201", "terminology"));
+    it('should POST new CatalogueUser', async () => testPOSTRequest("202", "catalogueUser"));
+    it('should POST new CatalogueItem', async () => testPOSTRequest("203", "catalogueItem"));
+    it('should POST new UserGroup', async () => testPOSTRequest("204", "userGroup"));
 
-    it('should PUT to a Folder', async () => testPUTRequest("300", "folder"))
-    it('should PUT to a Terminology', async () => testPUTRequest("301", "terminology"))
-    it('should PUT to a CatalogueUser', async () => testPUTRequest("302", "catalogueUser"))
-    it('should PUT to a CatalogueItem', async () => testPUTRequest("303", "catalogueItem"))
-    it('should PUT to a UserGroup', async () => testPUTRequest("304", "userGroup"))
+    it('should PUT to a Folder', async () => testPUTRequest("300", "folder"));
+    it('should PUT to a Terminology', async () => testPUTRequest("301", "terminology"));
+    it('should PUT to a CatalogueUser', async () => testPUTRequest("302", "catalogueUser"));
+    it('should PUT to a CatalogueItem', async () => testPUTRequest("303", "catalogueItem"));
+    it('should PUT to a UserGroup', async () => testPUTRequest("304", "userGroup"));
 
-    it('should DELETE a Folder', async () => testDELETERequest("400", "folder"))
+    it('should DELETE a Folder', async () => testDELETERequest("400", "folder"));
     it('should DELETE a UserGroup', async () => testDELETERequest("401", "userGroup"))
 });

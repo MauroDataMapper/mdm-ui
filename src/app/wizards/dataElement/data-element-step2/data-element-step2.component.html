@@ -21,7 +21,7 @@
             <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
             <td>
               <input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label"
-                     required="Name can not be Empty">
+                     required="required">
             </td>
           </tr>
           <tr>
@@ -107,7 +107,7 @@
                     [load-all-on-click]="true"
                     [(pagination)]="pagination"
                     (on-select)="onTargetSelect($event[0])">
-                    <ng-template #lineContent let-item = 'item', let-searchTerm = "inputText" >
+                    <ng-template #lineContent let-item = 'item' let-searchTerm = "inputText" >
                       <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
                       <div>
                         <element-link [element]="item" [show-type-title]="true" [show-link]="false"></element-link>

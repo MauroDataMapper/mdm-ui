@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/cor
 import { MessageService } from '../services/message.service';
 import { FolderResult } from '../model/folderModel';
 import { ResourcesService } from '../services/resources.service';
-import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { forEach } from '@uirouter/core';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { ValidatorService } from '../services/validator.service';
@@ -197,7 +197,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
       }
     }
 
-    Observable.forkJoin(observableCol).subscribe(
+    forkJoin(observableCol).subscribe(
       (results: any) => {
         row.readAccess = row.edit.readAccess;
         row.writeAccess = row.edit.writeAccess;

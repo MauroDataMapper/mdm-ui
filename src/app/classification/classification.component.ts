@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChildren, QueryList, ContentChildren } from '@angular/core';
 import { MarkdownTextAreaComponent } from '../utility/markdown-text-area.component';
 import { FolderResult } from '../model/folderModel';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { ResourcesService } from '../services/resources.service';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
@@ -94,7 +94,7 @@ export class ClassificationComponent implements OnInit {
       )
     );
 
-    Observable.forkJoin(promises).subscribe((results: any) => {
+    forkJoin(promises).subscribe((results: any) => {
       this.catalogueItemsCount = results[0].count;
       this.terminologiesCount = results[1].count;
       this.termsCount = results[2].count;

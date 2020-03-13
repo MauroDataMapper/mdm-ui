@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
-import 'rxjs-compat/add/operator/map';
 import { ValidatorService } from './validator.service';
 import { RestHandlerService } from './utility/rest-handler.service';
 import { SharedService } from './shared.service';

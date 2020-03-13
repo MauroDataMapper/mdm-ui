@@ -1,7 +1,7 @@
 import { Component, Input, ViewChildren, ViewChild, AfterViewInit, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
 import { ResourcesService } from '../../services/resources.service';
-import { merge, Observable } from 'rxjs';
+import { merge, Observable, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { MatSort } from '@angular/material/sort';
@@ -141,7 +141,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit {
       );
     });
 
-    Observable.forkJoin(chain).subscribe(
+    forkJoin(chain).subscribe(
       () => {
         this.processing = false;
         if (this.failCount === 0) {

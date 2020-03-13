@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/cor
 import { FavouriteHandlerService } from '../../services/handlers/favourite-handler.service';
 import { ElementTypesService } from '../../services/element-types.service';
 import { ResourcesService } from '../../services/resources.service';
-import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
@@ -59,7 +59,7 @@ export class FavouritesComponent implements OnInit {
       this.reloading = false;
     }
 
-    Observable.forkJoin(queries).subscribe(results => {
+    forkJoin(queries).subscribe(results => {
       let index = 0;
       results.forEach((res: any) => {
         const result = res.body;

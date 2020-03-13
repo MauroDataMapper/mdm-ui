@@ -5,7 +5,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 
 import { FolderResult } from '../model/folderModel';
-import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -203,8 +203,8 @@ export class GroupAccessNewComponent implements OnInit {
       }
     }
 
-    Observable.forkJoin(observableCol).subscribe(
-      result => {
+    forkJoin(observableCol).subscribe(
+      () => {
         // if both are false, remove the row
         if (!row.edit.readAccess && !row.edit.writeAccess) {
           this.groups.splice(index, 1);

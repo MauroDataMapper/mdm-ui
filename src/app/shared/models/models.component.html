@@ -74,7 +74,7 @@
 
 
                     <div *ngIf="filteredModels && !reloading">
-                        <folders-tree-3 [inSearchMode]="inSearchMode"
+                        <mdm-folders-tree [inSearchMode]="inSearchMode"
                                         [rememberExpandedStates]="true"
                                         [node]="filteredModels"
                                         [searchCriteria]="searchText"
@@ -91,7 +91,7 @@
                                         (addChildDataElementEvent)="onAddChildDataElement"
                                         (addChildDataTypeEvent)="onAddChildDataType"
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeClickEvent)="onNodeClick($event)"></folders-tree-3>
+                                        (nodeClickEvent)="onNodeClick($event)"></mdm-folders-tree>
                     </div>
                     <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" *ngIf="reloading">
                         <div style="position: absolute;top:30%;left:40%;">
@@ -149,7 +149,7 @@
                     </div>
                 </div>
                 <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 50px);overflow-y: scroll">
-                    <folders-tree-3 *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></folders-tree-3>
+                    <mdm-folders-tree *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></mdm-folders-tree>
                     <div *ngIf="allClassifiers && allClassifiers.length==0">
                         <div *ngIf="!isLoggedIn()">
                             <div class="noClassification">

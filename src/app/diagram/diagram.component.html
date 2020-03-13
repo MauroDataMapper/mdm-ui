@@ -8,13 +8,13 @@
 
                 <div *ngIf="allModels">
 
-                    <folders-tree-3 [node]="allModels"
+                    <mdm-folders-tree [node]="allModels"
                                     [treeName]="'folders'"
                                     [enableDrag]="false"
                                     [enableDrop]="false"
                                     [doNotShowDataClasses]="true"
                                     (nodeDbClickEvent)="diagramModelsOnSelect($event)"
-                                    (nodeClickEvent)="diagramModelsOnSelect($event)"></folders-tree-3>
+                                    (nodeClickEvent)="diagramModelsOnSelect($event)"></mdm-folders-tree>
 
                 </div>
             </div>

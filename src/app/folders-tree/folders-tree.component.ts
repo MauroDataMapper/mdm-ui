@@ -14,7 +14,7 @@ import { HttpResponse } from '@angular/common/http';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
 
 @Component({
-  selector: 'folders-tree-3',
+  selector: 'mdm-folders-tree',
   templateUrl: './folders-tree.component.html',
   styleUrls: ['./folders-tree.component.scss']
 })

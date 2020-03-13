@@ -212,17 +212,17 @@ export class ModelManagementComponent implements OnInit {
         reject({ message: 'You should be an Admin!' });
       }
 
-      let message =
-        'Are you sure you want to delete these Elements?<br>They will be marked as deleted and will not be viewable by users except Administrators.';
+      let message = 'Are you sure you want to delete these Elements?<br>They will be marked as deleted and will not be viewable by users except Administrators.';
       if (this.selectedElementsCount === 1) {
-        message =
-          'Are you sure you want to delete this Element?<br>It will be marked as deleted and will not be viewable by users except Administrators.';
+        message = 'Are you sure you want to delete this Element?<br>It will be marked as deleted and will not be viewable by users except Administrators.';
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
+        hasBackdrop: true,
+        autoFocus: false,
         data: {
-          title: 'Folder',
+          title: 'Folder delete',
+          okBtnTitle: 'Confirm folder deletion',
           message
         }
       });
@@ -244,18 +244,18 @@ export class ModelManagementComponent implements OnInit {
         reject({ message: 'You should be an Admin!' });
       }
 
-      let message =
-        'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete these Elements?';
+      let message = 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete these Elements?';
       if (this.selectedElementsCount === 1) {
-        message =
-          'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Element?';
+        message = 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Element?';
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
+        hasBackdrop: true,
+        autoFocus: false,
         data: {
-          title: 'Data Model',
-          message
+          title: 'Data Model deletion',
+          okBtnTitle: 'Delete permanently',
+          message,
         }
       });
 
@@ -264,17 +264,17 @@ export class ModelManagementComponent implements OnInit {
           return;
         }
 
-        message =
-          '<strong>Are you sure?</strong><br>All their child elements such as \'Data Classes\', \'Data Elements\', \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'errorMessage\'>permanently</span>.';
+        message = '<strong>Are you sure?</strong><br>All their child elements such as \'Data Classes\', \'Data Elements\', <br> \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'warning\'>permanently</span>.';
         if (this.selectedElementsCount === 1) {
-          message =
-            '<strong>Are you sure?</strong><br>All its child elements such as \'Data Classes\', \'Data Elements\', \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'errorMessage\'>permanently</span>.';
+          message = '<strong>Are you sure?</strong><br>All its child elements such as \'Data Classes\', \'Data Elements\', <br> \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'warning\'>permanently</span>.';
         }
 
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          hasBackdrop: false,
+          hasBackdrop: true,
+          autoFocus: false,
           data: {
-            title: 'Folder',
+            title: 'Permanent delete',
+            okBtnTitle: 'Confirm permanent deletion',
             message
           }
         });

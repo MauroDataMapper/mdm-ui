@@ -41,7 +41,7 @@
       [ngStyle]="{'position': alwaysShowTree ? 'relative' : 'relative', 'top': alwaysShowTree ? '0px' : '29px'}">
       <div style="width: 100%; height: 400px;overflow-y: auto">
 
-        <folders-tree-3 [inSearchMode]="inSearchMode" enable-drag="true" enable-drop="true" enable-context-menu="true"
+        <mdm-folders-tree [inSearchMode]="inSearchMode" enable-drag="true" enable-drop="true" enable-context-menu="true"
           (addFolderEvent)="onAddFolder($event)" [doNotShowDataClasses]="doNotShowDataClasses"
           [doNotShowTerms]="doNotShowTerms" [justShowFolders]="justShowFolders" [defaultCheckedMap]="defaultCheckedMap"
           [showCheckboxFor]="showCheckboxFor" [propagateCheckbox]="propagateCheckbox" [searchCriteria]="searchCriteria"
@@ -49,7 +49,7 @@
           (nodeCheckedEvent)="onNodeChecked($event[0],$event[1],$event[2])" (nodeDbClickEvent)="onNodeDbClick($event)">
 
 
-        </folders-tree-3>
+        </mdm-folders-tree>
 
       </div>
     </div>

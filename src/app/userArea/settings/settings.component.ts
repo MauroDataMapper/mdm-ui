@@ -18,7 +18,6 @@ export class SettingsComponent implements OnInit {
   showSupersededModels = this.userSettingsHandler.defaultSettings.showSupersededModels;
 
   ngOnInit() {
-    // console.log(this.countPerTable);
     this.loadSettings();
   }
   loadSettings = () => {

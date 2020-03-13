@@ -2,7 +2,7 @@ import { Component, Input, ViewChildren, ViewChild, QueryList, EventEmitter, Aft
 import { ElementTypesService } from '../../services/element-types.service';
 import { ResourcesService } from '../../services/resources.service';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { merge, Observable } from 'rxjs';
+import { merge, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
@@ -179,7 +179,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
       );
     });
 
-    Observable.forkJoin(chain).subscribe(
+    forkJoin(chain).subscribe(
       () => {
         this.processing = false;
         if (this.failCount === 0) {

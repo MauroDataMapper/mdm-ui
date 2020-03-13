@@ -12,14 +12,14 @@ $custom-typography: mat-typography-config(
   $input: mat-typography-level(18px, 1.125, 500)
 );
 
-// $primary-color-dark:   #1976D2;
-// $primary-color:        #2dbd73;
-// $primary-color-light:  #BBDEFB;
-// $primary-color-text:   #FFFFFF;
-// $accent-color:         #CDDC39;
-// $primary-text-color:   #333;
-// $secondary-text-color: #757575;
-// $divider-color:        #BDBDBD;
+$primary-color-dark:   #388E3C;
+$primary-color:        #4CAF50;
+$primary-color-light:  #C8E6C9;
+$primary-color-text:   #FFFFFF;
+$accent-color:         #7C4DFF;
+$primary-text-color:   #212121;
+$secondary-text-color: #757575;
+$divider-color:        #BDBDBD;
 
 /* Primary values */
 $bdi-primary: (
@@ -56,37 +56,39 @@ $bdi-primary: (
 );
 /* Accent values */
 $bdi-accent: (
-  50: #f9ece4,
-  100: #efcebc,
-  200: #e5ae8f,
-  300: #da8e62,
-  400: #d27540,
-  500: #ca5d1e,
-  600: #c5551a,
-  700: #bd4b16,
-  800: #b74112,
-  900: #ab300a,
-  A100: #ffdfd7,
-  A200: #ffb5a4,
-  A400: #ff8c71,
-  A700: #ff7858,
-  contrast: (
-    50: #000000,
-    100: #000000,
-    200: #000000,
-    300: #000000,
-    400: #000000,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-    A100: #000000,
-    A200: #000000,
-    A400: #000000,
-    A700: #000000
-  )
+    50 : #e7f1e8,
+    100 : #c3ddc5,
+    200 : #9cc79e,
+    300 : #74b077,
+    400 : #569f59,
+    500 : #388e3c,
+    600 : #328636,
+    700 : #2b7b2e,
+    800 : #247127,
+    900 : #175f1a,
+    A100 : #9aff9d,
+    A200 : #67ff6b,
+    A400 : #34ff3a,
+    A700 : #1aff21,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
 );
+
+
 
 /* Warn values */
 $bdi-warn: (

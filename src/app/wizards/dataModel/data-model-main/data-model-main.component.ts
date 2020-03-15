@@ -10,7 +10,7 @@ import { Step } from '../../../model/stepModel';
 import { BroadcastService } from '../../../services/broadcast.service';
 
 @Component({
-  selector: 'app-data-model-main',
+  selector: 'mdm-data-model-main',
   templateUrl: './data-model-main.component.html',
   styleUrls: ['./data-model-main.component.sass']
 })

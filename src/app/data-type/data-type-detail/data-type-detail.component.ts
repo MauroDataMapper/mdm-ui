@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
-import { ElementTypesService } from '../../services/element-types.service';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { SharedService } from '../../services/shared.service';
-import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
-import { EditableDataModel, DataModelResult } from '../../model/dataModelModel';
-import { MatDialog } from '@angular/material/dialog';
+import {Component, OnInit, Input, ViewChildren, QueryList, ChangeDetectorRef} from '@angular/core';
+import {ElementTypesService} from '../../services/element-types.service';
+import {ResourcesService} from '../../services/resources.service';
+import {MessageHandlerService} from '../../services/utility/message-handler.service';
+import {StateHandlerService} from '../../services/handlers/state-handler.service';
+import {SharedService} from '../../services/shared.service';
+import {ConfirmationModalComponent} from '../../modals/confirmation-modal/confirmation-modal.component';
+import {EditableDataModel, DataModelResult} from '../../model/dataModelModel';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-data-type-detail',
+  selector: 'mdm-data-type-detail',
   templateUrl: './data-type-detail.component.html',
   styleUrls: ['./data-type-detail.component.scss']
 })
@@ -21,7 +21,7 @@ export class DataTypeDetailComponent implements OnInit {
   @Input() hideEditButton: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
 
-  deleteInProgress: boolean; //TODO
+  deleteInProgress: boolean; // TODO
 
   constructor(
     private dialog: MatDialog,
@@ -31,7 +31,8 @@ export class DataTypeDetailComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef
-  ) {}
+  ) {
+  }
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
@@ -47,29 +48,30 @@ export class DataTypeDetailComponent implements OnInit {
     this.editableForm.label = this.mcDataTypeObject.label;
 
     this.editableForm.show = () => {
-      this.editForm.forEach(x => x.edit({ editing: true,
-          focus: x._name === 'moduleName' ? true : false
-           }));
+      this.editForm.forEach(x => x.edit({
+        editing: true,
+        focus: x._name === 'moduleName' ? true : false
+      }));
       this.editableForm.visible = true;
     };
 
     this.editableForm.cancel = () => {
-      this.editForm.forEach(x => x.edit({ editing: false }));
+      this.editForm.forEach(x => x.edit({editing: false}));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
       this.editableForm.description = this.mcDataTypeObject.description;
       this.editableForm.label = this.mcDataTypeObject.label;
-      if (this.mcDataTypeObject['classifiers']) {
-            this.mcDataTypeObject['classifiers'].forEach(item => {
-                this.editableForm.classifiers.push(item);
-            });
-        }
-       if (this.mcDataTypeObject['aliases']) {
-      this.mcDataTypeObject["aliases"].forEach(item => {
-        this.editableForm.aliases.push(item);
-      });
-       }
+      if (this.mcDataTypeObject.classifiers) {
+        this.mcDataTypeObject.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+      if (this.mcDataTypeObject.aliases) {
+        this.mcDataTypeObject.aliases.forEach(item => {
+          this.editableForm.aliases.push(item);
+        });
+      }
 
     };
   }
@@ -87,9 +89,7 @@ export class DataTypeDetailComponent implements OnInit {
       description: this.editableForm.description,
       aliases: this.mcDataTypeObject.editAliases,
       domainType: this.mcDataTypeObject.domainType,
-      classifiers: this.mcDataTypeObject.classifiers.map(function(cls) {
-        return { id: cls.id };
-      })
+      classifiers: this.mcDataTypeObject.classifiers.map(cls => ({id: cls.id}))
     };
 
     this.resources.dataType
@@ -139,8 +139,8 @@ export class DataTypeDetailComponent implements OnInit {
           this.messageHandler.showSuccess('Data Type deleted successfully.');
           this.stateHandler.Go(
             'dataModel',
-            { id: this.mcParentDataModel.id },
-            { reload: true, location: true }
+            {id: this.mcParentDataModel.id},
+            {reload: true, location: true}
           );
         },
         error => {
@@ -193,10 +193,10 @@ export class DataTypeDetailComponent implements OnInit {
         }
 
         this.dialog
-          .open(ConfirmationModalComponent, { data: { message } })
+          .open(ConfirmationModalComponent, {data: {message}})
           .afterClosed()
-          .subscribe(result => {
-            if (result.status !== 'ok') {
+          .subscribe(result2 => {
+            if (result2.status !== 'ok') {
               return;
             }
             this.delete();

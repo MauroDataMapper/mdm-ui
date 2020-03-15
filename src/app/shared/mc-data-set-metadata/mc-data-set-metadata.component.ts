@@ -12,7 +12,7 @@ import { DialogPosition } from '@angular/material/dialog';
 
 
 @Component({
-    selector: 'mc-data-set-metadata',
+    selector: 'mdm-data-set-metadata',
     templateUrl: './mc-data-set-metadata.component.html',
     styleUrls: ['./mc-data-set-metadata.component.scss']
 })
@@ -63,7 +63,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
 
 
-            if (this.type == 'dynamic') {
+            if (this.type === 'dynamic') {
 
                 this.resources.metadata.namespaces.get().toPromise().then((result) => {
                     this.namespaces = result.body.filter((n) => n.defaultNamespace);
@@ -89,7 +89,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                                 this.totalItemCount = data.body.count;
                                 this.isLoadingResults = false;
                                 this.changeDetectorRefs.detectChanges();
-                                return data.body['items'];
+                                return data.body.items;
                             }),
                             catchError(() => {
                                 this.isLoadingResults = false;
@@ -102,7 +102,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                 });
             }
 
-            if (this.type == 'static') {
+            if (this.type === 'static') {
                 this.loading = true;
 
                 this.loadNamespaces();
@@ -132,7 +132,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
 
-        let options = {
+        const options = {
             pageSize,
             pageIndex,
             sortBy,
@@ -151,8 +151,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     applyFilter = () => {
         let filter: any = '';
         this.filters.forEach((x: any) => {
-            let name = x.nativeElement.name;
-            let value = x.nativeElement.value;
+            const name = x.nativeElement.name;
+            const value = x.nativeElement.value;
 
             if (value !== '') {
                 filter += name + '=' + value;
@@ -169,7 +169,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
             record.metadataKeys = [];
             // now fill the 'metadataKeys'
             for (let i = 0; i < this.namespaces.length; i++) {
-                if (this.namespaces[i].namespace == select.namespace) {
+                if (this.namespaces[i].namespace === select.namespace) {
                     record.metadataKeys = this.namespaces[i].keys;
                     // create object for the keys as mcSelect2 expects objects with id
                     let id = 0;
@@ -189,7 +189,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         if (select) {
             record.edit.key = select.key;
             // it is one of the default namespaces
-            if (select.id != -1) {
+            if (select.id !== -1) {
 
             }
         } else {
@@ -200,7 +200,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     onEdit(record, index) {
         // now fill the 'metadataKeys'
         for (let i = 0; i < this.namespaces.length; i++) {
-            if (this.namespaces[i].namespace == record.namespace) {
+            if (this.namespaces[i].namespace === record.namespace) {
                 record.metadataKeys = this.namespaces[i].metadataKeys;
                 break;
             }
@@ -218,7 +218,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
         record.edit.errors = [];
 
-        if (this.type == 'static') {
+        if (this.type === 'static') {
             if (record.edit.key.trim().length === 0) {
                 record.edit.errors.key = 'Key can\'t be empty!';
                 isValid = false;
@@ -228,7 +228,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                 isValid = false;
             }
             for (let i = 0; i < this.records.length; i++) {
-                if (i == index) {
+                if (i === index) {
                     continue;
                 }
                 if (this.records[i].key.toLowerCase().trim() === record.edit.key.toLowerCase().trim() &&
@@ -255,7 +255,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     };
 
     add() {
-        let newRecord = {
+        const newRecord = {
             id: '',
             namespace: '',
             key: '',
@@ -283,7 +283,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     save(record, index) {
 
-        let resource = {
+        const resource = {
             key: record.edit.key,
             value: record.edit.value,
             namespace: record.edit.namespace
@@ -303,7 +303,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         }
 
         // in edit mode, we save them here
-        if (record.id && record.id != '') {
+        if (record.id && record.id !== '') {
             this.resources.facets.put(this.parent.id, 'metadata', record.id, { resource })
                 .subscribe((result) => {
                     if (this.afterSave) {
@@ -318,7 +318,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                 },
                     (error) => {
                         // duplicate namespace + key
-                        if (error.status == 422) {
+                        if (error.status === 422) {
                             record.edit.errors = [];
                             record.edit.errors.key = 'Key already exists';
                             return;
@@ -335,7 +335,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                 record.inEdit = false;
                 delete record.edit;
 
-                if (this.type == 'static') {
+                if (this.type === 'static') {
                     this.records[index] = record;
                     this.messageHandler.showSuccess('Property saved successfully.');
                 } else {
@@ -345,7 +345,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                 }
             }, (error) => {
                 // duplicate namespace + key
-                if (error.status == 422) {
+                if (error.status === 422) {
                     record.edit.errors = [];
                     record.edit.errors.key = 'Key already exists';
                     return;
@@ -363,7 +363,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         }
         this.resources.facets.delete(this.parent.id, 'metadata', record.id)
             .subscribe(() => {
-                if (this.type == 'static') {
+                if (this.type === 'static') {
                     this.records.splice($index, 1);
                     this.messageHandler.showSuccess('Property deleted successfully.');
                 } else {

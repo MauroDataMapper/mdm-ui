@@ -9,7 +9,7 @@ import { ClassifierStep1Component } from '../classifier-step1/classifier-step1.c
 import { BroadcastService } from '../../../services/broadcast.service';
 
 @Component({
-  selector: 'app-classifier-main',
+  selector: 'mdm-classifier-main',
   templateUrl: './classifier-main.component.html',
   styleUrls: ['./classifier-main.component.sass']
 })

@@ -2,11 +2,11 @@ import { ResourcesService } from '../services/resources.service';
 import { FolderResult } from '../model/folderModel';
 import { Component, OnInit, Input, EventEmitter, Output, Inject } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { MessageService } from "../services/message.service";
-import { Subscription } from "rxjs";
-import { SharedService } from "../services/shared.service";
-import { ToastrService } from "ngx-toastr";
-import { StateHandlerService } from "../services/handlers/state-handler.service";
+import { MessageService } from '../services/message.service';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../services/shared.service';
+import { ToastrService } from 'ngx-toastr';
+import { StateHandlerService } from '../services/handlers/state-handler.service';
 
 @Component({
     selector: 'app-folder',
@@ -34,7 +34,7 @@ export class FolderComponent implements OnInit {
             return;
         }
 
-        if (this.stateService.params.edit === "true") {
+        if (this.stateService.params.edit === 'true') {
             this.editMode = true;
         }
 
@@ -44,7 +44,7 @@ export class FolderComponent implements OnInit {
         // }
         // else
         //     this.messageService.showEditMode(false);
-        window.document.title = "Folder";
+        window.document.title = 'Folder';
         this.folderDetails(this.stateService.params.id);
         this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
             this.showSecuritySection = message;
@@ -69,11 +69,11 @@ export class FolderComponent implements OnInit {
     }
     folderPermissions(id: any) {
         this.resourcesService.folder.get(id, 'permissions', null).subscribe((permissions: { body: { [x: string]: any; }; }) => {
-            for (var attrname in permissions.body) {
+            for (let attrname in permissions.body) {
                 this.result[attrname] = permissions.body[attrname];
 
             }
-            //Send it to message service to receive in child components
+            // Send it to message service to receive in child components
             this.messageService.FolderSendMessage(this.result);
             this.messageService.dataChanged(this.result);
         });
@@ -103,9 +103,9 @@ export class FolderComponent implements OnInit {
     }
 
     tabSelected(itemsName) {
-        var tab = this.getTabDetail(itemsName);
-        this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
-    };
+        let tab = this.getTabDetail(itemsName);
+        this.stateHandler.Go('folder', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+    }
 
     getTabDetail(tabIndex) {
 

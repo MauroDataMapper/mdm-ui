@@ -20,12 +20,12 @@
                     </div>
                 </div>
                 <div class="panel-body panel-table">
-                    <app-advanced-search-bar [parent]="result"
+                    <mdm-advanced-search-bar [parent]="result"
                                              [show-restrict-to]="false"
                                              [do-not-show-data-model-in-model-path]="false"
                                              [do-not-display-model-path-status]="false"
                                              show-domain-types="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
-                    </app-advanced-search-bar>
+                    </mdm-advanced-search-bar>
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@
                             <app-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></app-share-with>
                             <div colspan="2">
                                 <div style="margin-top: 10px">
-                                    <app-user-access-new [parent]="'folder'" [parentType]="'Folder'"></app-user-access-new>
+                                    <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
                                 </div>
                                 <div style="margin-top: 50px">
                                     <app-group-access-new [parent]="'folder'" [parentType]="'Folder'"></app-group-access-new>

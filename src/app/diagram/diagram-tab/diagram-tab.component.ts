@@ -3,7 +3,7 @@ import { ResourcesService } from '../../services/resources.service';
 // import * as mermaid from "mermaid";
 
 @Component({
-  selector: 'app-diagram-tab',
+  selector: 'mdm-diagram-tab',
   templateUrl: './diagram-tab.component.html',
   styleUrls: ['./diagram-tab.component.scss']
 })

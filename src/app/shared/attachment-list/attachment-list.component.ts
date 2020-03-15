@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'attachment-list',
+  selector: 'mdm-attachment-list',
   templateUrl: './attachment-list.component.html',
   styleUrls: ['./attachment-list.component.sass']
 })
@@ -64,7 +64,7 @@ export class AttachmentListComponent implements AfterViewInit {
         map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

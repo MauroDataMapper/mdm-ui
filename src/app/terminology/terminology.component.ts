@@ -8,7 +8,7 @@ import { SharedService } from '../services/shared.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 
 @Component({
-  selector: 'app-terminology',
+  selector: 'mdm-terminology',
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
@@ -51,12 +51,12 @@ export class TerminologyComponent implements OnInit {
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
       if (this.sharedService.isLoggedIn()) {
-        //this.resources.terminology.get(id, 'permissions').subscribe((result) => {
+        // this.resources.terminology.get(id, 'permissions').subscribe((result) => {
         //    const permissions = result.body;
         //    permissions.forEach((attrName) => {
         //        this.terminology[attrName] = permissions[attrName];
         //    });
-        //});
+        // });
       }
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
@@ -101,7 +101,7 @@ export class TerminologyComponent implements OnInit {
     this.stateHandler.Go(
       'terminologyNew',
       { tabView: tab.name },
-      { notify: false, location: tab.index != 0 }
+      { notify: false, location: tab.index !== 0 }
     );
     this[tab.name] = [];
 
@@ -129,8 +129,8 @@ export class TerminologyComponent implements OnInit {
     this.editForm = null;
   };
 
-  fetch = (text,loadAll, offset, limit) => {
-    //var deferred = $q.defer();
+  fetch = (text, loadAll, offset, limit) => {
+    // var deferred = $q.defer();
 
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;

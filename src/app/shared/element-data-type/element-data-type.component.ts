@@ -6,7 +6,7 @@ import { groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { Categories } from '../../model/dataModelModel';
 
 @Component({
-  selector: "element-data-type",
+  selector: 'element-data-type',
   templateUrl: './element-data-type.component.html',
   styleUrls: ['./element-data-type.component.sass']
 })

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, DoCheck, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-data-element-step1',
+  selector: 'mdm-data-element-step1',
   templateUrl: './data-element-step1.component.html',
   styleUrls: ['./data-element-step1.component.sass']
 })
-export class DataElementStep1Component implements OnInit {
+export class DataElementStep1Component implements OnInit, DoCheck {
   step: any;
   modelVal: any;
   get model() {

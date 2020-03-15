@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '../../../services/broadcast.service';
 
 @Component({
-  selector: 'app-data-class-main',
+  selector: 'mdm-data-class-main',
   templateUrl: './data-class-main.component.html',
   styleUrls: ['./data-class-main.component.sass']
 })
@@ -122,7 +122,7 @@ export class DataClassMainComponent implements AfterViewInit {
       this.model[multiplicity] = -1;
     }
     if (!isNaN(this.model[multiplicity])) {
-      resource[multiplicity] = parseInt(this.model[multiplicity]);
+      resource[multiplicity] = parseInt(this.model[multiplicity], 10);
     }
   };
 

@@ -1,198 +1,198 @@
-import { Injectable, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Observable, Subject } from "rxjs";
+import {Injectable, EventEmitter, Output, OnDestroy} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
-	providedIn: 'root'
+  providedIn: 'root'
 })
 export class MessageService implements OnDestroy {
 
-	isUserGroupAccess = false;
-	isSearch = false;
-	isShareReadWithEveryone = false;
-	isEditMode = false;
+  get lastError(): any {
+    return this._lastError;
+  }
 
-	private _lastError = {};
-	private _errorMessage = {};
+  set lastError(value: any) {
+    this._lastError = value;
+  }
 
-	@Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
+  get errorMessage(): {} {
+    return this._errorMessage;
+  }
 
-	@Output() changeSearch: EventEmitter<boolean> = new EventEmitter();
+  set errorMessage(value: {}) {
+    this._errorMessage = value;
+  }
 
-	@Output() changeShareReadWithEveryone: EventEmitter<boolean> = new EventEmitter();
+  isUserGroupAccess = false;
+  isSearch = false;
+  isShareReadWithEveryone = false;
+  isEditMode = false;
 
-	@Output() editMode: EventEmitter<boolean> = new EventEmitter();
+  private _lastError = {};
+  private _errorMessage = {};
 
-	private subjUserDetails = new Subject<any>();
+  @Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 
-	sendUserDetails(data) {
-		this.subjUserDetails.next(data);
-	}
+  @Output() changeSearch: EventEmitter<boolean> = new EventEmitter();
 
-	getUserDetails(): Observable<any> {
-		return this.subjUserDetails.asObservable();
-	}
+  @Output() changeShareReadWithEveryone: EventEmitter<boolean> = new EventEmitter();
 
-	private dataChange = new Subject<any>();
+  @Output() editMode: EventEmitter<boolean> = new EventEmitter();
 
-	private dataModelDataChange = new Subject<any>();
+  private subjUserDetails = new Subject<any>();
 
-	dataChanged$ = this.dataChange.asObservable();
+  private dataChange = new Subject<any>();
 
-	dataModelDataChange$ = this.dataModelDataChange.asObservable();
+  private dataModelDataChange = new Subject<any>();
 
-	dataChanged(data) {
-		this.dataChange.next(data);
-	}
+  dataChanged$ = this.dataChange.asObservable();
 
-	dataModelDataChanged(data) {
-		this.dataModelDataChange.next(data);
-	}
+  dataModelDataChange$ = this.dataModelDataChange.asObservable();
 
-	private elementSelectorSendMessage = new Subject<any>();
+  private elementSelectorSendMessage = new Subject<any>();
 
-	elementSelector = this.elementSelectorSendMessage.asObservable();
+  elementSelector = this.elementSelectorSendMessage.asObservable();
 
-	elementSelectorSendData(data) {
-		this.elementSelectorSendMessage.next(data);
-	}
+  private FolderSubject = new Subject<any>();
 
-	private FolderSubject = new Subject<any>();
+  folderPermissions;
 
-	folderPermissions;
+  private UserGroupAccessSubject = new Subject<any>();
+  /** Generic message functions */
 
-	toggleUserGroupAccess() {
-		this.isUserGroupAccess = !this.isUserGroupAccess;
-		this.changeUserGroupAccess.emit(this.isUserGroupAccess);
-		if (this.isUserGroupAccess) {
-			this.isSearch = false;
-			this.changeSearch.emit(this.isSearch);
-		}
-	}
+    // A map to store subjects/channels
+  private subjects: Map<string, Subject<any>> = new Map();
 
-	toggleSearch() {
-		this.isSearch = !this.isSearch;
-		this.changeSearch.emit(this.isSearch);
-		if (this.isSearch) {
-			this.isUserGroupAccess = false;
-			this.changeUserGroupAccess.emit(this.isUserGroupAccess);
-		}
-	}
+  sendUserDetails(data) {
+    this.subjUserDetails.next(data);
+  }
 
-	toggleShareReadWithEveryone() {
-		this.isShareReadWithEveryone = !this.isShareReadWithEveryone;
-		this.changeShareReadWithEveryone.emit(this.isShareReadWithEveryone);
+  getUserDetails(): Observable<any> {
+    return this.subjUserDetails.asObservable();
+  }
 
-	}
+  dataChanged(data) {
+    this.dataChange.next(data);
+  }
 
-	showEditMode(showEdit: boolean) {
-		this.editMode.emit(showEdit);
-	}
+  dataModelDataChanged(data) {
+    this.dataModelDataChange.next(data);
+  }
 
-	private UserGroupAccessSubject = new Subject<any>();
+  elementSelectorSendData(data) {
+    this.elementSelectorSendMessage.next(data);
+  }
 
-	FolderSendMessage(message: any) {
-		this.folderPermissions = message;
-		this.FolderSubject.next(message);
-	}
+  toggleUserGroupAccess() {
+    this.isUserGroupAccess = !this.isUserGroupAccess;
+    this.changeUserGroupAccess.emit(this.isUserGroupAccess);
+    if (this.isUserGroupAccess) {
+      this.isSearch = false;
+      this.changeSearch.emit(this.isSearch);
+    }
+  }
 
-	FolderSendClearMessages() {
-		this.FolderSubject.next();
-	}
+  toggleSearch() {
+    this.isSearch = !this.isSearch;
+    this.changeSearch.emit(this.isSearch);
+    if (this.isSearch) {
+      this.isUserGroupAccess = false;
+      this.changeUserGroupAccess.emit(this.isUserGroupAccess);
+    }
+  }
 
-	FolderGetMessage(): Observable<any> {
-		return this.FolderSubject.asObservable();
-	}
+  toggleShareReadWithEveryone() {
+    this.isShareReadWithEveryone = !this.isShareReadWithEveryone;
+    this.changeShareReadWithEveryone.emit(this.isShareReadWithEveryone);
 
-	getFolderPermissions() {
-		if (this.folderPermissions != null) {
+  }
 
-			return this.folderPermissions;
-		}
-		// else{      add a call in else condition to get folders
-		//   this.FoldersPermissionGet();
-		//   return this.permissionsData;
-		// }
-	}
+  showEditMode(showEdit: boolean) {
+    this.editMode.emit(showEdit);
+  }
 
-	DataModelSendMessage(message: any) {
-		this.folderPermissions = message;
-		this.FolderSubject.next(message);
-	}
+  FolderSendMessage(message: any) {
+    this.folderPermissions = message;
+    this.FolderSubject.next(message);
+  }
 
-	get lastError(): any {
-		return this._lastError;
-	}
+  FolderSendClearMessages() {
+    this.FolderSubject.next();
+  }
 
-	set lastError(value: any) {
-		this._lastError = value;
-	}
+  FolderGetMessage(): Observable<any> {
+    return this.FolderSubject.asObservable();
+  }
 
-	get errorMessage(): {} {
-		return this._errorMessage;
-	}
+  getFolderPermissions() {
+    if (this.folderPermissions != null) {
 
-	set errorMessage(value: {}) {
-		this._errorMessage = value;
-	}
-	/** Generic message functions */
+      return this.folderPermissions;
+    }
+    // else{      add a call in else condition to get folders
+    //   this.FoldersPermissionGet();
+    //   return this.permissionsData;
+    // }
+  }
 
-	//A map to store subjects/channels
-	private subjects: Map<string, Subject<any>> = new Map();
+  DataModelSendMessage(message: any) {
+    this.folderPermissions = message;
+    this.FolderSubject.next(message);
+  }
 
-	/**
-	 * Broadcast to all subscribers of a given subject.
-	 *
-	 * @param subject name of subject/channel to broadcast to
-	 * @param message message to broadcast
-	 */
-	broadcast(subject, ...message: any) {
-		//Create the named Subject if not exists
-		if (!this.subjects.has(subject)) {
-			this.subjects.set(subject, new Subject());
-		}
+  /**
+   * Broadcast to all subscribers of a given subject.
+   *
+   * @param subject name of subject/channel to broadcast to
+   * @param message message to broadcast
+   */
+  broadcast(subject, ...message: any) {
+    // Create the named Subject if not exists
+    if (!this.subjects.has(subject)) {
+      this.subjects.set(subject, new Subject());
+    }
 
-		this.subjects.get(subject).next(message);
-	}
+    this.subjects.get(subject).next(message);
+  }
 
-	/**
-	 * Get the named subject
-	 * @param subject name of subject to get
-	 */
-	getSubject(subject) {
-		//Create the named Subject if not exists
-		if (!this.subjects.has(subject)) {
-			this.subjects.set(subject, new Subject());
-		}
+  /**
+   * Get the named subject
+   * @param subject name of subject to get
+   */
+  getSubject(subject) {
+    // Create the named Subject if not exists
+    if (!this.subjects.has(subject)) {
+      this.subjects.set(subject, new Subject());
+    }
 
-		return this.subjects.get(subject);
-	}
+    return this.subjects.get(subject);
+  }
 
-	/**
-	 * Subscribe to named subject/channel
-	 *
-	 * @param subject subject to subscribe to
-	 * @param callback message handler
-	 */
-	subscribe(subject, handler) {
-		//Create the named Subject if not exists
-		if (!this.subjects.has(subject)) {
-			this.subjects.set(subject, new Subject());
-		}
+  /**
+   * Subscribe to named subject/channel
+   *
+   * @param subject subject to subscribe to
+   * @param callback message handler
+   */
+  subscribe(subject, handler) {
+    // Create the named Subject if not exists
+    if (!this.subjects.has(subject)) {
+      this.subjects.set(subject, new Subject());
+    }
 
-		return this.subjects.get(subject).subscribe(handler);
-	}
+    return this.subjects.get(subject).subscribe(handler);
+  }
 
-	on(subject, handler) {
-		return this.subscribe(subject, handler);
-	}
+  on(subject, handler) {
+    return this.subscribe(subject, handler);
+  }
 
-	/**
-	 * Clear the subjects map when destroy
-	 */
-	ngOnDestroy(): void {
-		this.subjects.forEach((subject, key) => {
-			subject.complete();
-			this.subjects.delete(key);
-		});
-	}
+  /**
+   * Clear the subjects map when destroy
+   */
+  ngOnDestroy(): void {
+    this.subjects.forEach((subject, key) => {
+      subject.complete();
+      this.subjects.delete(key);
+    });
+  }
 }

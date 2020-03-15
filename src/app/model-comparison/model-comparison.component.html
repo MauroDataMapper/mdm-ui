@@ -12,7 +12,7 @@
                         [accepts]="['DataModel']" ></model-selector-tree>
             </div>
             <div class="leftTree" *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
-                <app-comparison-tree
+                <mdm-comparison-tree
                         [val]="sourceModel"
                         [diffMap]="diffMapLeft"
                         [type]="'dynamic'"
@@ -20,7 +20,7 @@
                         [treeName]="'left'"
                         [nodeClick]="onNodeClick"
                         child-element-name="'children'">
-                </app-comparison-tree>
+                </mdm-comparison-tree>
             </div>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center;">
@@ -40,7 +40,7 @@
                         [accepts]="['DataModel']" ></model-selector-tree>
             </div>
             <div *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
-                <app-comparison-tree
+                <mdm-comparison-tree
                         [val]="targetModel"
                         [diffMap]="diffMapRight"
                         [type]="'dynamic'"
@@ -48,7 +48,7 @@
                         [treeName]="'right'"
                         [nodeClick]="onNodeClick"
                         [childElementName]="'children'">
-                    </app-comparison-tree>
+                    </mdm-comparison-tree>
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
                         <ng-template mat-tab-label>
                             Details <span class="badge element-count">{{diffs.properties.length}}</span>
                         </ng-template>
-                        <ng-template matTabContent>  
+                        <ng-template matTabContent>
                     <div *ngIf="diffs.properties && diffs.properties.length>0" style="width:100%;">
                         <table class="table table-bordered">
                             <thead>

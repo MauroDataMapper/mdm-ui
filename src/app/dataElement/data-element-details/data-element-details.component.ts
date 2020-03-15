@@ -1,4 +1,13 @@
-import { Component, ContentChildren, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { from, Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
@@ -14,11 +23,11 @@ import {
 import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
-  selector: 'data-element-details',
+  selector: 'mdm-data-element-details',
   templateUrl: './data-element-details.component.html',
   styleUrls: ['./data-element-details.component.sass']
 })
-export class DataElementDetailsComponent implements OnInit {
+export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   result: DataElementResult;
   hasResult = false;
   subscription: Subscription;
@@ -100,11 +109,11 @@ export class DataElementDetailsComponent implements OnInit {
       //     x=>x.edit({focus: true, select: true});
       // )
       this.editableForm.visible = true;
-      if (this.min == '*') {
+      if (this.min === '*') {
         this.min = '-1';
       }
 
-      if (this.max == '*') {
+      if (this.max === '*') {
         this.max = '-1';
       }
     };
@@ -118,26 +127,26 @@ export class DataElementDetailsComponent implements OnInit {
       this.error = '';
 
       this.editableForm.label = this.result.label;
-      this.editableForm.description = this.result['description'];
-      if (this.result['classifiers']) {
-        this.result['classifiers'].forEach(item => {
+      this.editableForm.description = this.result.description;
+      if (this.result.classifiers) {
+        this.result.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
         });
       }
       this.editableForm.aliases = [];
       this.aliases = [];
-      if (this.result['aliases']) {
-        this.result['aliases'].forEach(item => {
+      if (this.result.aliases) {
+        this.result.aliases.forEach(item => {
           this.aliases.push(item);
           this.editableForm.aliases.push(item);
         });
       }
 
-      if (this.min == '-1') {
+      if (this.min === '-1') {
         this.min = '*';
       }
 
-      if (this.max == '-1') {
+      if (this.max === '-1') {
         this.max = '*';
       }
     };
@@ -176,36 +185,36 @@ export class DataElementDetailsComponent implements OnInit {
       serverResult => {
         this.result = serverResult;
         this.editableForm.label = this.result.label;
-        this.editableForm.description = this.result['description'];
-        if (this.result['classifiers']) {
-          this.result['classifiers'].forEach(item => {
+        this.editableForm.description = this.result.description;
+        if (this.result.classifiers) {
+          this.result.classifiers.forEach(item => {
             this.editableForm.classifiers.push(item);
           });
         }
         this.aliases = [];
-        if (this.result['aliases']) {
-          this.result['aliases'].forEach(item => {
+        if (this.result.aliases) {
+          this.result.aliases.forEach(item => {
             this.aliases.push(item);
             // this.editableForm.aliases.push(item);
           });
         }
 
         if (
-          this.result['minMultiplicity'] &&
-          this.result['minMultiplicity'] == -1
+          this.result.minMultiplicity &&
+          this.result.minMultiplicity === -1
         ) {
           this.min = '*';
         } else {
-          this.min = this.result['minMultiplicity'];
+          this.min = this.result.minMultiplicity;
         }
 
         if (
-          this.result['maxMultiplicity'] &&
-          this.result['maxMultiplicity'] == -1
+          this.result.maxMultiplicity &&
+          this.result.maxMultiplicity === -1
         ) {
           this.max = '*';
         } else {
-          this.max = this.result['maxMultiplicity'];
+          this.max = this.result.maxMultiplicity;
         }
 
         if (this.result != null) {
@@ -246,9 +255,9 @@ export class DataElementDetailsComponent implements OnInit {
   delete() {
     this.resourcesService.dataClass
       .delete(
-        this.result['parentDataModel'],
-        this.result['parentDataClass'],
-        this.result['id']
+        this.result.parentDataModel,
+        this.result.parentDataClass,
+        this.result.id
       )
       .subscribe(
         result => {
@@ -256,7 +265,7 @@ export class DataElementDetailsComponent implements OnInit {
           this.stateHandler.Go(
             'dataModel',
             {
-              id: this.result['parentDataModel'],
+              id: this.result.parentDataModel,
               reload: true,
               location: true
             },
@@ -302,11 +311,11 @@ export class DataElementDetailsComponent implements OnInit {
         this.max != null &&
         this.max !== ''
       ) {
-        if (this.newMinText == '*') {
+        if (this.newMinText === '*') {
           this.newMinText = -1;
         }
 
-        if (this.max == '*') {
+        if (this.max === '*') {
           this.max = -1;
         }
       }
@@ -318,15 +327,15 @@ export class DataElementDetailsComponent implements OnInit {
         dataType = this.newlyAddedDataType;
       }
       const resource = {
-        id: this.result['id'],
-        label: this.result['label'],
+        id: this.result.id,
+        label: this.result.label,
         description: this.editableForm.description,
-        domainType: this.result['domainType'],
+        domainType: this.result.domainType,
         aliases,
         dataType,
         classifiers,
-        minMultiplicity: parseInt(this.min),
-        maxMultiplicity: parseInt(this.max)
+        minMultiplicity: parseInt(this.min, 10),
+        maxMultiplicity: parseInt(this.max, 10)
       };
       const call = from(
         this.resourcesService.dataElement.put(
@@ -404,11 +413,11 @@ export class DataElementDetailsComponent implements OnInit {
 
   validateMultiplicity(minVal, maxVal) {
     let min = '';
-    if (minVal != null && minVal != undefined) {
+    if (minVal != null && minVal !== undefined) {
       min = minVal + '';
     }
     let max = '';
-    if (maxVal != null && maxVal != undefined) {
+    if (maxVal != null && maxVal !== undefined) {
       max = maxVal + '';
     }
 

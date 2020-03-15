@@ -9,7 +9,7 @@ import { ClassifierStep1Component } from '../../classifier/classifier-step1/clas
 import { CodeSetStep1Component } from '../code-set-step1/code-set-step1.component';
 
 @Component({
-  selector: 'app-code-set-main',
+  selector: 'mdm-code-set-main',
   templateUrl: './code-set-main.component.html',
   styleUrls: ['./code-set-main.component.scss']
 })

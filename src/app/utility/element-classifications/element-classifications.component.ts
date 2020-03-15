@@ -1,34 +1,34 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { FolderResult } from "../../model/folderModel";
-import { DataModelResult } from "../../model/dataModelModel";
-import { forEach } from "@uirouter/core";
-import { ElementTypesService } from "../../services/element-types.service";
-import { ResourcesService } from "../../services/resources.service";
+import { FolderResult } from '../../model/folderModel';
+import { DataModelResult } from '../../model/dataModelModel';
+import { forEach } from '@uirouter/core';
+import { ElementTypesService } from '../../services/element-types.service';
+import { ResourcesService } from '../../services/resources.service';
 import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor } from '@angular/forms';
 
 @Component({
     selector: 'app-element-classifications',
     templateUrl: './element-classifications.component.html',
-    //styleUrls: ['./element-classifications.component.sass']
+    // styleUrls: ['./element-classifications.component.sass']
 })
 export class ElementClassificationsComponent implements OnInit {
 
-    @Input("editable-form") editableForm: any;
+    @Input('editable-form') editableForm: any;
 
     classificationsVal: any[];
     @Output() classificationsChanged = new EventEmitter<any[]>();
     @Input() get classifications() {
-        return this.classificationsVal
-    };
+        return this.classificationsVal;
+    }
     set classifications(val) {
 
         this.classificationsVal = val;
         this.classificationsChanged.emit(this.classificationsVal);
     }
 
-    @Input("in-edit-mode") inEditMode: boolean;
-    @Input("property") property: string;
-    @Input("element") element: DataModelResult;
+    @Input('in-edit-mode') inEditMode: boolean;
+    @Input('property') property: string;
+    @Input('element') element: DataModelResult;
     @Input() newWindow = false;
     target: String;
     lastWasShiftKey: any;
@@ -37,7 +37,7 @@ export class ElementClassificationsComponent implements OnInit {
         classifiers: []
     };
     allClassifications: any;
-    selectedClassification =[];
+    selectedClassification = [];
     constructor(private elementTypes: ElementTypesService, private resourceService: ResourcesService, private fb: FormBuilder) { }
 
     ngOnInit() {
@@ -45,7 +45,7 @@ export class ElementClassificationsComponent implements OnInit {
 
         if (!this.editableForm.visible) {
             if (this.newWindow) {
-                this.target = "_blank";
+                this.target = '_blank';
             }
             if (this.classifications != undefined) {
                 this.formData.classifiers = this.classifications;
@@ -56,7 +56,7 @@ export class ElementClassificationsComponent implements OnInit {
             }
         } else {
 
-            this.formData.classifiers = this.editableForm["classifiers"];
+            this.formData.classifiers = this.editableForm.classifiers;
 
 
         }
@@ -68,21 +68,21 @@ export class ElementClassificationsComponent implements OnInit {
             const selectedList: any[] = [];
             if (this.classifications != undefined) {
                 this.classifications.forEach((classification) => {
-                    var selected = this.allClassifications.find(c => c.id === classification.id);
+                    let selected = this.allClassifications.find(c => c.id === classification.id);
                     selectedList.push(selected);
                 }
                 );
                 this.selectedClassification = selectedList;
                 this.formData.classifiers = selectedList;
-                this.editableForm["classifiers"] = selectedList;
+                this.editableForm.classifiers = selectedList;
             }
         });
 
     }
 
     onModelChanged() {
-        this.formData.classifiers = this.selectedClassification;;
-        this.editableForm["classifiers"] = this.selectedClassification;;
+        this.formData.classifiers = this.selectedClassification;
+        this.editableForm.classifiers = this.selectedClassification;
         this.classifications = this.selectedClassification;
     }
 

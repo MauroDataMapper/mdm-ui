@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
         <div style="width: 100%">
-            <classification-details [mc-classification]="classifier" [after-save]="afterSave"></classification-details>
+            <mdm-classification-details [mc-classification]="classifier" [after-save]="afterSave"></mdm-classification-details>
         </div>
 
         <div *ngIf="showSearch">
@@ -19,12 +19,12 @@
                     </div>
                 </div>
                 <div class="panel-body panel-table">
-                    <app-advanced-search-bar [parent]="result"
+                    <mdm-advanced-search-bar [parent]="result"
                                              [show-restrict-to]="false"
                                              [do-not-show-data-model-in-model-path]="false"
                                              [do-not-display-model-path-status]="false"
                                              show-domain-types="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
-                    </app-advanced-search-bar>
+                    </mdm-advanced-search-bar>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                             <app-share-with [mcElement]="'mcClassification'" [mcDomainType]="'Classifier'"></app-share-with>
                             <div colspan="2">
                                 <div style="margin-top: 10px">
-                                    <app-user-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></app-user-access-new>
+                                    <mdm-user-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-user-access-new>
                                 </div>
                                 <div style="margin-top: 50px">
                                     <app-group-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></app-group-access-new>
@@ -54,28 +54,28 @@
             <mat-tab label="Classified Elements">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'catalogueItems'"></classified-elements-list>
+                        <mdm-classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'catalogueItems'"></mdm-classified-elements-list>
                     </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Classified Terminologies">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'terminologies'"></classified-elements-list>
+                        <mdm-classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'terminologies'"></mdm-classified-elements-list>
                     </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Classified Terms" *ngIf="termsCount">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'terminologies'"></classified-elements-list>
+                        <mdm-classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'terminologies'"></mdm-classified-elements-list>
                     </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Classified CodeSets" *ngIf="codeSetsCount">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'terminologies'"></classified-elements-list>
+                        <mdm-classified-elements-list *ngIf="result" [parent]="result" [classified-element-type]="'terminologies'"></mdm-classified-elements-list>
                     </div>
                 </ng-template>
             </mat-tab>

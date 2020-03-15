@@ -54,7 +54,7 @@
                 <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 10%;width: 10%;" columnName="other"></th>
                 <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
                     <div *ngIf="access && access.showEdit">
-                        <table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hide-edit]="true"></table-buttons>
+                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hide-edit]="true"></mdm-table-buttons>
                     </div>
                 </td>
             </ng-container>
@@ -64,7 +64,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
-        
+
         <mat-card *ngIf="isLoadingResults"
                   style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
             <mat-progress-spinner color="primary"
@@ -72,7 +72,7 @@
             </mat-progress-spinner>
         </mat-card>
     </div>
-    
+
     <div class="d-flex justify-content-between p-2">
         <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
     </div>

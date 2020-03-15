@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { HelpDialogueHandlerService } from '../../../services/helpDialogue.service';
 import { ResourcesService } from '../../../services/resources.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-classifier-step1',
+  selector: 'mdm-classifier-step1',
   templateUrl: './classifier-step1.component.html',
   styleUrls: ['./classifier-step1.component.sass']
 })
-export class ClassifierStep1Component implements OnInit {
+export class ClassifierStep1Component implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private helpDialogueHandler: HelpDialogueHandlerService  ) {}
 

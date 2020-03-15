@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, QueryList, ContentChildren } from '@angular/core';
+import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren, OnDestroy} from '@angular/core';
 import { MarkdownTextAreaComponent } from '../utility/markdown-text-area.component';
 import { FolderResult } from '../model/folderModel';
 import { Subscription, forkJoin } from 'rxjs';
@@ -9,11 +9,11 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 
 @Component({
-  selector: 'app-classification',
+  selector: 'mdm-classification',
   templateUrl: './classification.component.html',
   styleUrls: ['./classification.component.sass']
 })
-export class ClassificationComponent implements OnInit {
+export class ClassificationComponent implements OnInit, OnDestroy {
   @Input('after-save') afterSave: any;
   @Input() editMode = false;
 
@@ -139,7 +139,7 @@ export class ClassificationComponent implements OnInit {
         for (let attrname in permissions.body) {
           this.result[attrname] = permissions.body[attrname];
         }
-        //Send it to message service to receive in child components
+        // Send it to message service to receive in child components
         this.messageService.FolderSendMessage(this.result);
         this.messageService.dataChanged(this.result);
       });
@@ -149,7 +149,6 @@ export class ClassificationComponent implements OnInit {
     this.messageService.toggleSearch();
   }
 
- 
   ngOnDestroy() {
     if (this.subscription) {
       // unsubscribe to ensure no memory leaks
@@ -158,7 +157,7 @@ export class ClassificationComponent implements OnInit {
   }
 
   tabSelected(itemsName) {
-    let tab = this.getTabDetail(itemsName);
+    const tab = this.getTabDetail(itemsName);
     // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
   }
 

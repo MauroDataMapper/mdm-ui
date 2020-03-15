@@ -74,7 +74,7 @@
                 <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
                     <div *ngIf="access && access.showEdit">
 
-                        <table-buttons [record]="record" [index]="i"  (delete)="delete($event[0],$event[1])"  [hide-edit]="true" ></table-buttons>
+                        <mdm-table-buttons [record]="record" [index]="i"  (delete)="delete($event[0],$event[1])"  [hide-edit]="true" ></mdm-table-buttons>
                     </div>
                 </td>
             </ng-container>

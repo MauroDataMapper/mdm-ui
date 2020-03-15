@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 
 @Component({
-  selector: "term-relationships",
+  selector: 'mdm-term-relationships',
   templateUrl: './term-relationships.component.html',
   styleUrls: ['./term-relationships.component.scss']
 })

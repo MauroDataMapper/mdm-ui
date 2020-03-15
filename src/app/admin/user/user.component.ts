@@ -8,7 +8,7 @@ import { MessageHandlerService } from '../../services/utility/message-handler.se
 import { ValidatorService } from '../../services/validator.service';
 
 @Component({
-  selector: 'app-user',
+  selector: 'mdm-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
@@ -83,7 +83,7 @@ export class UserComponent implements OnInit {
     let isValid = true;
     this.errors = [];
     if (this.user.emailAddress.trim().length === 0) {
-      this.errors['emailAddress'] = 'Email can\'t be empty!';
+      this.errors.emailAddress = 'Email can\'t be empty!';
       isValid = false;
     }
 
@@ -91,20 +91,20 @@ export class UserComponent implements OnInit {
       this.user.emailAddress &&
       !this.validator.validateEmail(this.user.emailAddress)
     ) {
-      this.errors['emailAddress'] = 'Invalid Email';
+      this.errors.emailAddress = 'Invalid Email';
       isValid = false;
     }
 
     if (this.user.firstName.trim().length === 0) {
-      this.errors['firstName'] = 'First Name can\'t be empty!';
+      this.errors.firstName = 'First Name can\'t be empty!';
       isValid = false;
     }
     if (this.user.lastName.trim().length === 0) {
-      this.errors['lastName'] = 'Last Name can\'t be empty!';
+      this.errors.lastName = 'Last Name can\'t be empty!';
       isValid = false;
     }
     if (this.user.userRole.trim().length === 0) {
-      this.errors['userRole'] = 'Role can\'t be empty!';
+      this.errors.userRole = 'Role can\'t be empty!';
       isValid = false;
     }
     if (isValid) {

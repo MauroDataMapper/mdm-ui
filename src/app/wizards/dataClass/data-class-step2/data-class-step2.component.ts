@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild, ViewChildren, ElementRef, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  ElementRef,
+  EventEmitter,
+  AfterViewInit,
+  OnDestroy
+} from '@angular/core';
 import { ValidatorService } from '../../../services/validator.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -10,11 +19,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-data-class-step2',
+  selector: 'mdm-data-class-step2',
   templateUrl: './data-class-step2.component.html',
   styleUrls: ['./data-class-step2.component.sass']
 })
-export class DataClassStep2Component implements OnInit {
+export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy {
   step: any;
   model: any;
   scope: any;
@@ -39,7 +48,7 @@ export class DataClassStep2Component implements OnInit {
 
   filterEvent = new EventEmitter<string>();
   filter: string;
-  hideFilters: boolean = true;
+  hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
 
   dataSource: any;

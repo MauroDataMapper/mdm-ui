@@ -8,7 +8,7 @@ import { Observable, Subject, fromEvent } from 'rxjs';
 import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-advanced-search-bar',
+  selector: 'mdm-advanced-search-bar',
   inputs: ['parent', 'placeholder', 'showDomainTypes: show-domain-types'],
   templateUrl: './advanced-search-bar.component.html',
   styleUrls: ['./advanced-search-bar.component.sass']

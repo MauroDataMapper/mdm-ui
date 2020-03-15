@@ -1,4 +1,4 @@
-import { Injectable, PipeTransform } from '@angular/core';
+import {Injectable, PipeTransform} from '@angular/core';
 import {BehaviorSubject, Observable, of, pipe, Subject} from 'rxjs';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
@@ -47,7 +47,7 @@ export class MctableService {
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
   // private  result :any;
-  result : any;
+  result: any;
   // private _countries$ = new BehaviorSubject<[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
 
@@ -59,7 +59,7 @@ export class MctableService {
     sortDirection: ''
   };
 
-  constructor(private resourcesService : ResourcesService) {
+  constructor(private resourcesService: ResourcesService) {
     // this._search$.pipe(
     //     tap(() => this._loading$.next(true)),
     //     debounceTime(200),
@@ -74,22 +74,51 @@ export class MctableService {
     this.resourcesService.HistoryGet('a61e88e7-c951-4624-baaf-ec03cd09357b', '').subscribe(serverResult => {
       this.result = serverResult;
     });
-    if(this.result != null && this.result != undefined)
-    this._total$.next(this.result.count);
+    if (this.result !== null && this.result !== undefined)
+      this._total$.next(this.result.count);
     this._search$.next();
   }
-    // get countries$() { return this._countries$.asObservable(); }
-  get total$() { return this._total$.asObservable(); }
-  get loading$() { return this._loading$.asObservable(); }
-  get page() { return this._state.page; }
-  get pageSize() { return this._state.pageSize; }
-  get searchTerm() { return this._state.searchTerm; }
 
-  set page(page: number) { this._set({page}); }
-  set pageSize(pageSize: number) { this._set({pageSize}); }
-  set searchTerm(searchTerm: string) { this._set({searchTerm}); }
-  set sortColumn(sortColumn: string) { this._set({sortColumn}); }
-  set sortDirection(sortDirection: SortDirection) { this._set({sortDirection}); }
+  // get countries$() { return this._countries$.asObservable(); }
+  get total$() {
+    return this._total$.asObservable();
+  }
+
+  get loading$() {
+    return this._loading$.asObservable();
+  }
+
+  get page() {
+    return this._state.page;
+  }
+
+  set page(page: number) {
+    this._set({page});
+  }
+
+  get pageSize() {
+    return this._state.pageSize;
+  }
+
+  set pageSize(pageSize: number) {
+    this._set({pageSize});
+  }
+
+  get searchTerm() {
+    return this._state.searchTerm;
+  }
+
+  set searchTerm(searchTerm: string) {
+    this._set({searchTerm});
+  }
+
+  set sortColumn(sortColumn: string) {
+    this._set({sortColumn});
+  }
+
+  set sortDirection(sortDirection: SortDirection) {
+    this._set({sortDirection});
+  }
 
   private _set(patch: Partial<State>) {
     Object.assign(this._state, patch);
@@ -112,7 +141,7 @@ export class MctableService {
   // }
 
   ResultSendMessage(message: any) {
-    this.resultSubject.next( message );
+    this.resultSubject.next(message);
     this.result = message;
   }
 

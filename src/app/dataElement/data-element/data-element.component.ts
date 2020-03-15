@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
-  selector: 'app-data-element',
+  selector: 'mdm-data-element',
   templateUrl: './data-element.component.html',
   styleUrls: ['./data-element.component.sass']
 })
@@ -46,7 +46,7 @@ export class DataElementComponent implements OnInit {
     if (
       this.stateService.params.id &&
       this.stateService.params.dataModelId &&
-      this.stateService.params.dataModelId.trim() != ''
+      this.stateService.params.dataModelId.trim() !== ''
     ) {
       this.dataModel = { id: this.stateService.params.dataModelId };
     }
@@ -54,7 +54,7 @@ export class DataElementComponent implements OnInit {
     if (
       this.stateService.params.id &&
       this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() != ''
+      this.stateService.params.dataClassId.trim() !== ''
     ) {
       this.dataClass = { id: this.stateService.params.dataClassId };
     }
@@ -174,7 +174,7 @@ export class DataElementComponent implements OnInit {
     this.stateHandler.Go(
       'dataElement',
       { tabView: tab.name },
-      { notify: false, location: tab.index != 0 }
+      { notify: false, location: tab.index !== 0 }
     );
     this.activeTab = tab.index;
   }

@@ -6,7 +6,7 @@ import { ResourcesService } from '../services/resources.service';
 import { SharedService } from '../services/shared.service';
 
 @Component({
-  selector: 'app-data-type',
+  selector: 'mdm-data-type',
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
@@ -66,7 +66,7 @@ export class DataTypeComponent implements OnInit {
     this.stateHandler.Go(
       'dataType',
       { tabView: itemsName },
-      { notify: false, location: tab.index != 0 }
+      { notify: false, location: tab.index !== 0 }
     );
     this[itemsName] = [];
 
@@ -103,11 +103,11 @@ export class DataTypeComponent implements OnInit {
   };
 
   Save = () => {
-    //TODO
+    // TODO
   };
 
 
-  openEditForm = (formName: any) =>{
+  openEditForm = (formName: any) => {
     this.showEditForm = true;
     this.editForm = formName;
   }

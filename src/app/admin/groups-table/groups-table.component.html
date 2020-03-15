@@ -2,7 +2,7 @@
 	<h4>There are {{totalItemCount}} groups in this repository. </h4>
 	<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
 	<div class="addUserTrigger">
-		<data-type-list-buttons [display-records]="records" [show-content-dropdown]="false" [show-delete-button]="false" [add]="add"></data-type-list-buttons>
+		<mdm-data-type-list-buttons [display-records]="records" [show-content-dropdown]="false" [show-delete-button]="false" [add]="add"></mdm-data-type-list-buttons>
 	</div>
 </div>
 
@@ -35,12 +35,12 @@
 			</th>
 			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 27%; width: 27%; text-align: left; word-wrap: break-word;">
 				<div style="float: right;margin-bottom: 3px">
-					<button type="button" matTooltip="Edit" 
+					<button type="button" matTooltip="Edit"
 							class="btn btn-default"
 							(click)="editUser(record)">
 							<i class="fas fa-pencil-alt editButton"></i>
 					</button>
-					<button type="button" matTooltip="Delete" 
+					<button type="button" matTooltip="Delete"
 							class="btn btn-default"
 							(click)="deleteUser(record)">
 						<i class="far fa-trash-alt warning"></i>

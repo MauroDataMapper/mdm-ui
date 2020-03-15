@@ -6,7 +6,7 @@ import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-data-models-export',
+  selector: 'mdm-data-models-export',
   templateUrl: './data-models-export.component.html',
   styleUrls: ['./data-models-export.component.scss']
 })
@@ -56,8 +56,8 @@ export class DataModelsExportComponent implements OnInit {
         return;
       }
       this.resources.public.dataModelExporterPlugins().subscribe(
-        result => {
-          this.exportersList = result.body;
+        result2 => {
+          this.exportersList = result2.body;
         },
         error => {
           this.messageHandler.showError(

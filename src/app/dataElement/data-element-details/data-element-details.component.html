@@ -8,7 +8,7 @@
 
                 <div style="padding: 0px !important;" *ngIf="result">
                     <h4> <span class="xeditableInput">
-                                <div [ngClass]="{ 'has-error': errorMessage != ''}">                             
+                                <div [ngClass]="{ 'has-error': errorMessage != ''}">
                                 <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target.value)"  name="moduleName" size="20" style="width: 45%"  ></app-inline-text-edit>
                                 <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
                               <span class="help-block">{{errorMessage}}</span>
@@ -86,7 +86,7 @@
 <!--                                    </div>-->
 <!--                                </mc-select-2>-->
 
-                                <mc-select [width]="'100%'"
+                                <mdm-select [width]="'100%'"
                                            [accept-typed-input]="true"
                                            [value-type]="'dynamic'"
                                            [default-value]="result.dataType"
@@ -101,7 +101,7 @@
                                     <ng-template #lineContent let-item>
                                         <div>{{item.label}}</div>
                                     </ng-template>
-                                </mc-select>
+                                </mdm-select>
                             </div>
                             <span class="help-block errorMessage" *ngIf="dataTypeErrors"><small>{{dataTypeErrors}}</small></span>
                         </div>

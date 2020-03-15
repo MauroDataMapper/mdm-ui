@@ -1,7 +1,7 @@
-import { Injectable, Output, EventEmitter } from "@angular/core";
+import { Injectable, Output, EventEmitter } from '@angular/core';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class GridService {
   @Output() reloadEvent = new EventEmitter<string>();
@@ -9,14 +9,14 @@ export class GridService {
   constructor() {}
 
   applyFilter = (filters: any[]) => {
-    var filter: any = "";
+    let filter: any = '';
     if (filters) {
       filters.forEach((x: any) => {
-        var name = x.nativeElement.name;
-        var value = x.nativeElement.value;
+        let name = x.nativeElement.name;
+        let value = x.nativeElement.value;
 
-        if (value !== "") {
-          filter += name + "=" + value;
+        if (value !== '') {
+          filter += name + '=' + value;
         }
       });
       this.reloadEvent.emit(filter);

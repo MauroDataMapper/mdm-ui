@@ -26,7 +26,7 @@ export class ElementSelectorComponent implements OnInit {
     @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
 
         if (!this.searchControlInput && content) {
-            fromEvent(content.nativeElement, "keyup").pipe(
+            fromEvent(content.nativeElement, 'keyup').pipe(
                 map((event: any) => {
                     return event.target.value;
                 }),
@@ -99,7 +99,7 @@ export class ElementSelectorComponent implements OnInit {
     onElementTypeSelect(selectedType) {
         this.formData.selectedType = selectedType;
         this.formData.step = 1;
-        this.searchInput = "";
+        this.searchInput = '';
         this.dataSource = new MatTableDataSource<any>(null);
         this.totalItemCount = 0;
         this.currentRecord = 0;
@@ -131,39 +131,39 @@ export class ElementSelectorComponent implements OnInit {
              this.loadAllDataModels();
         }
 
-        if (this.formData.selectedType === "Folder") {
+        if (this.formData.selectedType === 'Folder') {
             this.showPrevBtn = true;
-             this.loadAllFolders();
+            this.loadAllFolders();
         }
 
-        if (this.formData.selectedType === "Term") {
+        if (this.formData.selectedType === 'Term') {
             this.showPrevBtn = true;
             this.loadTerminologies();
         }
         this.showPrevBtn = true;
 
     }
-    previousStep = function () {
+    previousStep = function() {
         this.formData.step = 0;
         this.formData.currentContext = null;
-        this.formData.treeSearchText = "";
-        this.searchInput = "";
+        this.formData.treeSearchText = '';
+        this.searchInput = '';
         this.dataSource = new MatTableDataSource<any>(null);
     };
 
-    loadAllDataModels (){
+    loadAllDataModels() {
         this.reloading = true;
-        this.resourceService.tree.get().subscribe((data) =>{
+        this.resourceService.tree.get().subscribe((data) => {
             this.rootNode = {
-                "children": data.body,
+                children: data.body,
                 isRoot: true
             };
             this.reloading = false;
-        }, function () {
+        }, function() {
             this.reloading = false;
         });
     }
-  loadAllFolders = function () {
+  loadAllFolders = function() {
     this.loading = true;
     this.resourceService.tree.get(null, null, { foldersOnly: true }).subscribe( (data) => {
       this.loading = false;
@@ -171,21 +171,21 @@ export class ElementSelectorComponent implements OnInit {
         children: data.body,
         isRoot: true
       };
-    }, function (error) {
+    }, function(error) {
       this.loading = false;
     });
   };
 
-    loadTerminologies = function () {
+    loadTerminologies = function() {
         this.reloading = true;
         this.resourceService.terminology.get(null, null, { all: true }).subscribe(res => {
             if (this.data.notAllowedToSelectIds && this.data.notAllowedToSelectIds.length > 0) {
-                var i = res.body.items.length - 1;
+                let i = res.body.items.length - 1;
                 while (i >= 0) {
                     // var found =  _.find(data.notAllowedToSelectIds, function(terminologyId) {
                     //     return terminologyId === data.items[i].id;
                     // });
-                    var found = false;
+                    let found = false;
                     this.data.notAllowedToSelectIds.forEach((terminologyId) => {
                         if (terminologyId === res.body.items[i].id) {
                             found = true;
@@ -202,7 +202,7 @@ export class ElementSelectorComponent implements OnInit {
             this.terminologies = res.body.items;
 
             // this.reloading = false;
-        }, function () {
+        }, function() {
             this.reloading = false;
         });
     };
@@ -212,12 +212,11 @@ export class ElementSelectorComponent implements OnInit {
         if (terminology != null) {
             this.formData.currentContext = this.terminologies.find((data: any) => data.label === terminology.label);
             this.fetch(40, 0);
-        }
-        else {
+        } else {
             this.totalItemCount = 0;
             this.currentRecord = 0;
             this.noData = true;
-            this.searchInput = "";
+            this.searchInput = '';
         }
     };
 
@@ -230,20 +229,20 @@ export class ElementSelectorComponent implements OnInit {
         const buffer = 200;
         const limit = tableScrollHeight - tableViewHeight - buffer;
         if (scrollLocation > limit && limit > 0) {
-            var requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length + this.pageSize;
+            let requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length + this.pageSize;
             if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing == false) {
                 this.isProcessing = true;
-                this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length, true);
+                this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length, true);
             }
         }
     }
 
     onNodeInTreeSelect(node) {
-        if(this.formData.selectedType !== node.domainType){
+        if (this.formData.selectedType !== node.domainType) {
             return;
         }
 
-        var found = false;
+        let found = false;
         // if(this.notAllowedToSelectIds && $scope.notAllowedToSelectIds.length > 0){
         //     angular.forEach($scope.notAllowedToSelectIds, function (notAllowedId) {
         //         if(node.id === notAllowedId){
@@ -251,7 +250,7 @@ export class ElementSelectorComponent implements OnInit {
         //         }
         //     });
         // } TODO Ask
-        if(found){
+        if (found) {
             return;
         }
 
@@ -283,15 +282,15 @@ export class ElementSelectorComponent implements OnInit {
 
     public fetch(pageSize: number, offset: number, infinateScrollCall: boolean = false): any {
         if ((!this.searchInput || (this.searchInput && this.searchInput.trim().length === 0)) && this.formData.currentContext) {
-            offset = offset/pageSize;
-            //load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
+            offset = offset / pageSize;
+            // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
             this.loadAllContextElements(this.formData.currentContext, this.formData.selectedType, pageSize, offset);
         } else {
                         // var deferred = $q.defer();
             this.formData.searchResultOffset = offset;
 
             this.loading = true;
-            offset = offset/pageSize;
+            offset = offset / pageSize;
             // $scope.safeApply();
             // var position = offset * this.formData.searchResultPageSize;
             this.contextSearchHandler.search(
@@ -312,10 +311,9 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
                 this.loading = false;
                 res.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
                 });
@@ -335,7 +333,7 @@ export class ElementSelectorComponent implements OnInit {
 
                     this.totalItemCount = res.body.count;
 
-                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
 
 
                     this.dataSource._updateChangeSubscription();
@@ -346,7 +344,7 @@ export class ElementSelectorComponent implements OnInit {
                 } else {
                     this.isProcessing = true;
                     this.dataSource = new MatTableDataSource<any>(rows);
-                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
                     this.totalItemCount = res.body.count;
                     this.noData = false;
                     this.isProcessing = false;
@@ -358,17 +356,17 @@ export class ElementSelectorComponent implements OnInit {
     }
 
     loadAllDataElements(dataClass, pageSize, pageIndex) {
-        var options = {
-            pageSize: pageSize,
-            pageIndex: pageIndex ,
-            sortBy: "label",
-            sortType: "asc"
+        let options = {
+            pageSize,
+            pageIndex ,
+            sortBy: 'label',
+            sortType: 'asc'
         };
-        return this.resourceService.dataClass.get(dataClass.dataModel, null, dataClass.id, "dataElements", options);
+        return this.resourceService.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
     }
     loadAllContextElements(currentContext, selectedType, pageSize, offset) {
 
-        if (currentContext.domainType === "DataClass" && selectedType === "DataElement") {
+        if (currentContext.domainType === 'DataClass' && selectedType === 'DataElement') {
             this.loading = true;
             this.formData.searchResultOffset = offset;
 
@@ -376,10 +374,9 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
 
                 result.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
                 });
@@ -390,7 +387,7 @@ export class ElementSelectorComponent implements OnInit {
                 this.loading = false;
             });
 
-        } else if (currentContext.domainType === "DataModel" && selectedType === "DataType") {
+        } else if (currentContext.domainType === 'DataModel' && selectedType === 'DataType') {
 
             this.formData.searchResultOffset = offset;
             this.loading = true;
@@ -398,10 +395,9 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
 
                 result.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
                 });
@@ -418,7 +414,7 @@ export class ElementSelectorComponent implements OnInit {
                 }
 
                 this.totalItemCount = result.body.count;
-                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
 
 
                 this.dataSource._updateChangeSubscription();
@@ -431,7 +427,7 @@ export class ElementSelectorComponent implements OnInit {
 
             this.loading = false;
 
-        } else if (currentContext.domainType === "Terminology" && selectedType === "Term") {
+        } else if (currentContext.domainType === 'Terminology' && selectedType === 'Term') {
 
             this.formData.searchResultOffset = offset;
             this.loading = true;
@@ -441,16 +437,15 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
 
                 result.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
                 });
 
-                    this.termsList = rows;
-                 this.totalItemCount = result.body.count;
+                this.termsList = rows;
+                this.totalItemCount = result.body.count;
                 if (this.dataSource.data) {
                     this.dataSource.data = this.dataSource.data.concat(this.termsList);
                 } else {
@@ -460,13 +455,13 @@ export class ElementSelectorComponent implements OnInit {
 
                // this.currentRecord = this.dataSource.data.length;
 
-                //this.totalItemCount = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
-                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                // this.totalItemCount = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
 
-        this.dataSource._updateChangeSubscription();
-        this.noData = false;
-        this.isProcessing = false;
-        this.loading = false;
+                this.dataSource._updateChangeSubscription();
+                this.noData = false;
+                this.isProcessing = false;
+                this.loading = false;
       });
     }
   }

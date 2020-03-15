@@ -176,7 +176,7 @@
                     Please select a Term:
                 </div>
                 <div style="padding-bottom:1.2em">
-                    <mc-select [width]="'100%'"
+                    <mdm-select [width]="'100%'"
                                [accept-typed-input]="false"
                                [value-type]="'static'"
                                [static-values]="terminologies"
@@ -189,7 +189,7 @@
                         <ng-template #lineContent let-item>
                             <div>{{item.label}}</div>
                         </ng-template>
-                    </mc-select>
+                    </mdm-select>
                 </div>
                 <div>
                     <input type="text" id="searchInput" class="form-control input-sm ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput" #searchInputControl [ngModelOptions]="{ debounce: 500 }" placeholder="Search for Terms..." [disabled]="noData" aria-invalid="false">

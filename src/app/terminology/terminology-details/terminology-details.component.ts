@@ -12,7 +12,7 @@ import { ConfirmationModalComponent } from '../../modals/confirmation-modal/conf
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: "terminology-details",
+  selector: 'mdm-terminology-details',
   templateUrl: './terminology-details.component.html',
   styleUrls: ['./terminology-details.component.sass']
 })
@@ -83,9 +83,9 @@ export class TerminologyDetailsComponent implements OnInit {
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
-      this.editableForm.description = this.mcTerminology['description'];
-      if (this.mcTerminology['classifiers']) {
-        this.mcTerminology['classifiers'].forEach(item => {
+      this.editableForm.description = this.mcTerminology.description;
+      if (this.mcTerminology.classifiers) {
+        this.mcTerminology.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
         });
       }

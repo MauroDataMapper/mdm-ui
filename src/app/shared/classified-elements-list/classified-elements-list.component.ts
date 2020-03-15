@@ -1,4 +1,14 @@
-import { Component, Input, ViewChildren, ElementRef, ViewChild, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChildren,
+  ElementRef,
+  ViewChild,
+  EventEmitter,
+  AfterViewInit,
+  ChangeDetectorRef,
+  OnInit
+} from '@angular/core';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
@@ -9,11 +19,11 @@ import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
-  selector: "classified-elements-list",
+  selector: 'mdm-classified-elements-list',
   templateUrl: './classified-elements-list.component.html',
   styleUrls: ['./classified-elements-list.component.sass']
 })
-export class ClassifiedElementsListComponent implements AfterViewInit {
+export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   @Input() parent: any;
   @Input('classified-element-type') classifiedElementType: any;
 
@@ -21,7 +31,7 @@ export class ClassifiedElementsListComponent implements AfterViewInit {
   @Input('grand-parent-data-class') grandParentDataClass: any;
   @Input('parent-data-class') parentDataClass: any;
   @Input() loadingData: any;
-  checkAllCheckbox: boolean = false;
+  checkAllCheckbox = false;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -29,13 +39,13 @@ export class ClassifiedElementsListComponent implements AfterViewInit {
   processing: boolean;
   failCount: number;
   total: number;
-  allDataTypes: any;
+  // allDataTypes: any;
 
-  showStaticRecords: Function;
+  // showStaticRecords: Function;
 
   records: any[] = [];
 
-  hideFilters: boolean = true;
+  hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
   totalItemCount: number;
@@ -105,7 +115,7 @@ export class ClassifiedElementsListComponent implements AfterViewInit {
         map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;
@@ -164,7 +174,7 @@ export class ClassifiedElementsListComponent implements AfterViewInit {
 
   applyMatSelectFilter(filterValue: any, filterName) {
     this.filterValue = filterValue;
-    if (this.filterValue != '') { this.filterName = filterName; } else { this.filterName = ''; }
+    if (this.filterValue !== '') { this.filterName = filterName; } else { this.filterName = ''; }
     this.applyFilter();
   }
 

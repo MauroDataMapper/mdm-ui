@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
         <div style="width: 100%">
-            <app-data-model-detail after-save="afterSave"></app-data-model-detail>
+            <mdm-data-model-detail after-save="afterSave"></mdm-data-model-detail>
         </div>
         <div *ngIf="showSearch">
             <div class="panel panel-default">
@@ -18,12 +18,12 @@
                     </div>
                 </div>
                 <div class="panel-body panel-table">
-                    <app-advanced-search-bar [parent]="dataModel"
+                    <mdm-advanced-search-bar [parent]="dataModel"
                                              [show-restrict-to]="false"
                                              [do-not-show-data-model-in-model-path]="false"
                                              [do-not-display-model-path-status]="false"
                                              show-domain-types="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
-                    </app-advanced-search-bar>
+                    </mdm-advanced-search-bar>
                 </div>
             </div>
         </div>
@@ -32,11 +32,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><strong>Links</strong></div>
                 <div class="panel-body" style="padding-top: 5px !important;">
-                    <all-links-in-paged-list [show-loading-spinner]="true"
+                    <mdm-all-links-in-paged-list [show-loading-spinner]="true"
                                              [parent]="dataModel"
                                              [show-description]="true"
                                              [show-no-links-message]="true"
-                                             [type]="'static'"></all-links-in-paged-list>
+                                             [type]="'static'">
+                    </mdm-all-links-in-paged-list>
                 </div>
             </div>
         </div>
@@ -51,7 +52,7 @@
                             <app-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></app-share-with>
                             <div colspan="2">
                                 <div style="margin-top: 10px">
-                                    <app-user-access-new [parent]="'folder'" [parentType]="'Folder'"></app-user-access-new>
+                                    <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
                                 </div>
                                 <div style="margin-top: 50px">
                                     <app-group-access-new [parent]="'folder'" [parentType]="'Folder'"></app-group-access-new>
@@ -88,21 +89,21 @@
             <mat-tab label="Properties">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <mc-data-set-metadata *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mc-data-set-metadata>
+                        <mdm-data-set-metadata *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mdm-data-set-metadata>
                     </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Summary">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <summary-metadata-table *ngIf="dataModel" [parent]="dataModel"></summary-metadata-table>
+                        <mdm-summary-metadata-table *ngIf="dataModel" [parent]="dataModel"></mdm-summary-metadata-table>
                     </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Comments">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <annotation-list *ngIf="dataModel" [parent]="dataModel"></annotation-list>
+                        <mdm-annotation-list *ngIf="dataModel" [parent]="dataModel"></mdm-annotation-list>
                     </div>
                 </ng-template>
             </mat-tab>
@@ -116,7 +117,7 @@
             <mat-tab label="Diagram">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                      <app-diagram-tab></app-diagram-tab>
+                      <mdm-diagram-tab></mdm-diagram-tab>
                     </div>
                 </ng-template>
             </mat-tab>
@@ -130,7 +131,7 @@
             <mat-tab label="Attachments">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <attachment-list *ngIf="dataModel" [parent]="dataModel"></attachment-list>
+                        <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel"></mdm-attachment-list>
                     </div>
                 </ng-template>
             </mat-tab>

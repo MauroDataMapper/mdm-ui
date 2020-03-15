@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-code-set-step1',
+  selector: 'mdm-code-set-step1',
   templateUrl: './code-set-step1.component.html',
   styleUrls: ['./code-set-step1.component.scss']
 })
-export class CodeSetStep1Component implements OnInit {
+export class CodeSetStep1Component implements OnInit, OnDestroy, AfterViewInit {
   step: any;
   model: any;
 

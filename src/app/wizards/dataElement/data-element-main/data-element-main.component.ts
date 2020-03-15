@@ -13,7 +13,7 @@ import { DataElementStep2Component } from '../data-element-step2/data-element-st
 import { MessageHandlerService } from '../../../services/utility/message-handler.service';
 
 @Component({
-  selector: "data-element-main",
+  selector: 'mdm-data-element-main',
   templateUrl: './data-element-main.component.html',
   styleUrls: ['./data-element-main.component.sass']
 })
@@ -149,11 +149,11 @@ export class DataElementMainComponent implements OnInit {
   };
 
   getMultiplicity = (resource, multiplicity) => {
-    if (this.model[multiplicity] == '*') {
+    if (this.model[multiplicity] === '*') {
       this.model[multiplicity] = -1;
     }
     if (!isNaN(this.model[multiplicity])) {
-      resource[multiplicity] = parseInt(this.model[multiplicity]);
+      resource[multiplicity] = parseInt(this.model[multiplicity], 10);
     }
   };
 
@@ -229,25 +229,19 @@ export class DataElementMainComponent implements OnInit {
             : null
         },
 
-        classifiers: this.model.classifiers.map(function(cls) {
-          return { id: cls.id };
-        }),
+        classifiers: this.model.classifiers.map(cls => ({id: cls.id})),
         enumerationValues: this.model.newlyAddedDataType.enumerationValues.map(
-          function(m) {
-            return {
-              key: m.key,
-              value: m.value,
-              category: m.category
-            };
-          }
-        ),
-        metadata: this.model.metadata.map(function(m) {
-          return {
+          m => ({
             key: m.key,
             value: m.value,
-            namespace: m.namespace
-          };
-        })
+            category: m.category
+          })
+        ),
+        metadata: this.model.metadata.map(m => ({
+          key: m.key,
+          value: m.value,
+          namespace: m.namespace
+        }))
       };
 
       const deferred = this.resources.dataModel.post(
@@ -294,25 +288,19 @@ export class DataElementMainComponent implements OnInit {
           : null
       },
 
-      classifiers: this.model.classifiers.map(function(cls) {
-        return { id: cls.id };
-      }),
+      classifiers: this.model.classifiers.map(cls => ({id: cls.id})),
       enumerationValues: this.model.newlyAddedDataType.enumerationValues.map(
-        function(m) {
-          return {
-            key: m.key,
-            value: m.value,
-            category: m.category
-          };
-        }
-      ),
-      metadata: this.model.metadata.map(function(m) {
-        return {
+        m => ({
           key: m.key,
           value: m.value,
-          namespace: m.namespace
-        };
-      })
+          category: m.category
+        })
+      ),
+      metadata: this.model.metadata.map(m => ({
+        key: m.key,
+        value: m.value,
+        namespace: m.namespace
+      }))
     };
 
     const deferred = this.resources.dataModel.post(

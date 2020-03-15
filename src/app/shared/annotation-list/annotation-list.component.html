@@ -84,11 +84,11 @@
                             <!--ng-model="record.edit.description"></textarea>-->
                         </div>
                         <div style="margin-top: 5px;">
-                            <table-buttons [record]="record"
+                            <mdm-table-buttons [record]="record"
                                            [index]="i"
                                            (save)="saveParent($event[0],$event[1])"
                                            (cancel-edit)="cancelEdit($event[0],$event[1])">
-                            </table-buttons>
+                            </mdm-table-buttons>
                         </div>
                     </div>
                 </td>

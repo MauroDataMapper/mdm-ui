@@ -1,11 +1,10 @@
 import {
   Component,
   OnInit,
-  Query,
+  AfterViewInit,
   ElementRef,
   ViewChildren,
   ViewChild,
-  ChangeDetectorRef
 } from '@angular/core';
 import { MessageHandlerService } from '../../../services/utility/message-handler.service';
 import { ResourcesService } from '../../../services/resources.service';
@@ -14,11 +13,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-active-sessions',
+  selector: 'mdm-active-sessions',
   templateUrl: './active-sessions.component.html',
   styleUrls: ['./active-sessions.component.sass']
 })
-export class ActiveSessionsComponent implements OnInit {
+export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -84,10 +83,10 @@ export class ActiveSessionsComponent implements OnInit {
 
         this.totalItemCount = this.records.length;
         this.dataSource.data = this.records;
-      }),
+      },
       err => {
         this.messageHandler.showError('There was a problem loading the active sessions.', err);
-      }
+      });
   }
 
   isToday(date) {

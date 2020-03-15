@@ -3,11 +3,11 @@
         <span class="title">Data Types<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span> <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
 
         <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parent.editable && !parent.finalised">
-            <data-type-list-buttons
+            <mdm-data-type-list-buttons
                 [display-records]="records"
                 (delete-rows)="deleteRows()"
                 [delete-in-progress] ="deleteInProgress"
-                [add]="add"></data-type-list-buttons>
+                [add]="add"></mdm-data-type-list-buttons>
         </div>
     </div>
 
@@ -90,7 +90,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
-        
+
         <mat-card *ngIf="isLoadingResults"
                   style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
             <mat-progress-spinner color="primary"

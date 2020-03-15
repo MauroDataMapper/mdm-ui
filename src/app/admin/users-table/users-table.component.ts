@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import {Component, OnInit, ViewChildren, ViewChild, EventEmitter, ElementRef, AfterViewInit} from '@angular/core';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { merge, Observable, from } from 'rxjs';
@@ -8,11 +8,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-users-table',
+  selector: 'mdm-users-table',
   templateUrl: './users-table.component.html',
   styleUrls: ['./users-table.component.sass']
 })
-export class UsersTableComponent implements OnInit {
+export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -49,7 +49,7 @@ export class UsersTableComponent implements OnInit {
         map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

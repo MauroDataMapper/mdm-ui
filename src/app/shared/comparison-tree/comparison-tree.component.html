@@ -1,6 +1,6 @@
 <span *ngIf="val.close == true" style="padding-right:9px;"></span>
 
-<i 
+<i
     [ngClass]="{'fa':true, 'fa-plus':val.close ,'fa-minus':!val.close, 'plusMinusElement':true,'comparisonTree':true}"
     style="margin-right: 3px; font-size: 10px; font-weight: normal" (click)="toggleExpand()"></i>
 
@@ -10,9 +10,9 @@
 
 <ul [ngClass]="{'myTree':true, 'comparisonTree':true, 'hide':val.close}">
     <li class="myTreeEmptyRoot comparisonTree node" *ngFor="let item of val.items">
-        <app-comparison-tree [val]="item" [parentData]="val.items" [childElementName]="childElementName"
+        <mdm-comparison-tree [val]="item" [parentData]="val.items" [childElementName]="childElementName"
             [treeName]="treeName" [type]="type" [diffMap]="diffMap" [nodeClick]="nodeClick"
             [nodeExpand]="nodeExpand">
-        </app-comparison-tree>
+        </mdm-comparison-tree>
     </li>
 </ul>

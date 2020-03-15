@@ -1,4 +1,14 @@
-import { Component, OnInit, ViewEncapsulation, Input, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  Input,
+  QueryList,
+  ViewChildren,
+  Output,
+  EventEmitter,
+  OnDestroy
+} from '@angular/core';
 import { UserDetailsResult } from '../../model/userDetailsModel';
 import { ResourcesService } from '../../services/resources.service';
 import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
@@ -7,12 +17,12 @@ import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-user-details',
+  selector: 'mdm-user-details',
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent implements OnInit, OnDestroy {
   user: UserDetailsResult;
   public: false;
   subscription: Subscription;

@@ -1,23 +1,23 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { ElementTypesService } from "../../services/element-types.service";
+import { Component, OnInit, Input } from '@angular/core';
+import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
-  selector: "element-link",
+  selector: 'element-link',
   inputs: [
-    "hideVersionNumber: hide-Version-Number",
-    "justShowCodeForTerm: just-show-code-for-term"
+    'hideVersionNumber: hide-Version-Number',
+    'justShowCodeForTerm: just-show-code-for-term'
   ],
-  templateUrl: "./element-link.component.html"
+  templateUrl: './element-link.component.html'
 })
 export class ElementLinkComponent implements OnInit {
-  @Input("show-type-title") showTypeTitle: boolean;
+  @Input('show-type-title') showTypeTitle: boolean;
   @Input() element: any;
-  @Input("new-window") newWindow: boolean;
-  @Input("parent-data-model") parentDataModel: any;
-  @Input("parent-data-class") parentDataClass: any;
-  @Input("show-href") showHref = true;
-  @Input("show-parent-data-model-name") showParentDataModelName: boolean;
-  @Input("show-link") showLink: boolean = true;
+  @Input('new-window') newWindow: boolean;
+  @Input('parent-data-model') parentDataModel: any;
+  @Input('parent-data-class') parentDataClass: any;
+  @Input('show-href') showHref = true;
+  @Input('show-parent-data-model-name') showParentDataModelName: boolean;
+  @Input('show-link') showLink = true;
 
   label: string;
   versionNumber: string;
@@ -33,20 +33,20 @@ export class ElementLinkComponent implements OnInit {
   constructor(private elementTypes: ElementTypesService) {}
 
   ngOnInit() {
-    this.label = "";
-    this.versionNumber = "";
+    this.label = '';
+    this.versionNumber = '';
 
     if (!this.hideVersionNumber) {
       this.versionNumber = this.element?.documentationVersion
-        ? "Documentation Version: " + this.element.documentationVersion
-        : "";
+        ? 'Documentation Version: ' + this.element.documentationVersion
+        : '';
     }
 
     this.label = this.element?.label || this.element?.definition;
-    if (this.element?.domainType === "Term" && !this.justShowCodeForTerm) {
-      this.label = this.element.code + " : " + this.element.definition;
+    if (this.element?.domainType === 'Term' && !this.justShowCodeForTerm) {
+      this.label = this.element.code + ' : ' + this.element.definition;
     }
-    if (this.element?.domainType === "Term" && this.justShowCodeForTerm) {
+    if (this.element?.domainType === 'Term' && this.justShowCodeForTerm) {
       this.label = this.element.code;
     }
 
@@ -56,17 +56,17 @@ export class ElementLinkComponent implements OnInit {
 
     if (
       this.showParentDataModelName &&
-      this.element?.domainType !== "DataModel" &&
-      this.element?.domainType !== "Term" &&
-      this.element?.domainType !== "Terminology"
+      this.element?.domainType !== 'DataModel' &&
+      this.element?.domainType !== 'Term' &&
+      this.element?.domainType !== 'Terminology'
     ) {
-      var parentDM =
+      let parentDM =
         this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
-      this.label = parentDM?.label + " : " + this.label;
+      this.label = parentDM?.label + ' : ' + this.label;
       if (this.label === undefined) {
-        this.label = "";
+        this.label = '';
       }
     }
 
@@ -75,7 +75,7 @@ export class ElementLinkComponent implements OnInit {
   }
 
   public initTypeLabel(): any {
-    this.elementTypeTitle = "";
+    this.elementTypeTitle = '';
     this.types = this.elementTypes.getTypes();
     if (
       this.element &&
@@ -89,11 +89,11 @@ export class ElementLinkComponent implements OnInit {
   }
 
   public initLink() {
-    this.openLinkLocation = "_self";
+    this.openLinkLocation = '_self';
     if (this.newWindow) {
-      this.openLinkLocation = "_blank";
+      this.openLinkLocation = '_blank';
     }
-    //if it's true or it's NOT mentioned then make it true
+    // if it's true or it's NOT mentioned then make it true
     if (
       this.showLink === true ||
       this.showLink ||

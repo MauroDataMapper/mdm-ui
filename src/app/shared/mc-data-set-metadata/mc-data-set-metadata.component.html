@@ -27,7 +27,7 @@
                         {{rec.namespace}}
                     </div>
                     <div *ngIf="rec.inEdit">
-                        <mc-select [width]="'100%'"
+                        <mdm-select [width]="'100%'"
                                    [accept-typed-input]="true"
                                    [value-type]="'static'"
                                    [static-values]="namespaces"
@@ -43,7 +43,7 @@
                             <ng-template #lineContent let-item>
                                 <div>{{item.namespace}}</div>
                             </ng-template>
-                        </mc-select>
+                        </mdm-select>
                         <small *ngIf="rec.edit.errors && rec.edit.errors['namespace']" class="errorMessage">{{rec.edit.errors['namespace']}}</small>
                     </div>
                 </td>
@@ -63,7 +63,7 @@
                         {{record.key}}
                     </div>
                     <div *ngIf="record.inEdit">
-                        <mc-select [width]="'100%'"
+                        <mdm-select [width]="'100%'"
                                    [accept-typed-input]="true"
                                    [value-type]="'static'"
                                    [static-values]="record.metadataKeys"
@@ -78,7 +78,7 @@
                             <ng-template #lineContent let-item>
                                 <div>{{item.key}}</div>
                             </ng-template>
-                        </mc-select>
+                        </mdm-select>
 
                         <small *ngIf="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
 
@@ -114,7 +114,7 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
                     <div ng-if="access && access.canAddMetadata">
-                        <table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancel-edit)="cancelEdit($event[0],$event[1])" (on-edit)="onEdit($event[0],$event[1])" ></table-buttons>
+                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancel-edit)="cancelEdit($event[0],$event[1])" (on-edit)="onEdit($event[0],$event[1])" ></mdm-table-buttons>
                     </div>
                 </td>
             </ng-container>
@@ -125,11 +125,11 @@
 
         </table>
     </div>
-    
-    <mat-card *ngIf="isLoadingResults" 
+
+    <mat-card *ngIf="isLoadingResults"
               style="display: flex; justify-content: center; align-items: center">
-        <mat-progress-spinner 
-            color="primary" 
+        <mat-progress-spinner
+            color="primary"
             mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>

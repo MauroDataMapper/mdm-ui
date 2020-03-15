@@ -4,7 +4,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { ResourcesService } from '../services/resources.service';
 
 @Component({
-  selector: 'app-diagram',
+  selector: 'mdm-diagram',
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.sass']
 })

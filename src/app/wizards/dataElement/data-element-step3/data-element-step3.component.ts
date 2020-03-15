@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-data-element-step3',
+  selector: 'mdm-data-element-step3',
   templateUrl: './data-element-step3.component.html',
   styleUrls: ['./data-element-step3.component.sass']
 })

@@ -6,7 +6,7 @@ import { MessageHandlerService } from '../../services/utility/message-handler.se
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-change-password',
+  selector: 'mdm-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.sass']
 })

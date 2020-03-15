@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'all-links-in-paged-list',
+  selector: 'mdm-all-links-in-paged-list',
   templateUrl: './all-links-in-paged-list.component.html',
   styleUrls: ['./all-links-in-paged-list.component.sass']
 })

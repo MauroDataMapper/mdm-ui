@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { ResourcesService } from "../resources.service";
-import { CookieService } from "ngx-cookie-service";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { ResourcesService } from '../resources.service';
+import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class UserSettingsHandlerService {
   defaultSettings = {
@@ -23,7 +23,7 @@ export class UserSettingsHandlerService {
   ) {}
 
   getUserSettings() {
-    var settings = JSON.parse(localStorage.getItem("userSettings"));
+    let settings = JSON.parse(localStorage.getItem('userSettings'));
     if (!settings) {
       this.updateUserSettings(this.defaultSettings);
       settings = this.defaultSettings;
@@ -32,23 +32,23 @@ export class UserSettingsHandlerService {
   }
 
   updateUserSettings(setting) {
-    localStorage.setItem("userSettings", JSON.stringify(setting));
+    localStorage.setItem('userSettings', JSON.stringify(setting));
   }
 
   initUserSettings() {
 
-    const promise = new Promise((resolve,reject) => {
+    const promise = new Promise((resolve, reject) => {
     this.resources.catalogueUser
-      .get(this.cookies.get("userId"), "userPreferences", null)
+      .get(this.cookies.get('userId'), 'userPreferences', null)
       .subscribe(
         res => {
           const result = res.body;
-          var settings = null;
+          let settings = null;
           if (!result) {
             settings = this.defaultSettings;
           } else {
-            //check if we have added new items but they don't exists already, then add them
-            for (var property in this.defaultSettings) {
+            // check if we have added new items but they don't exists already, then add them
+            for (const property in this.defaultSettings) {
               if (
                 this.defaultSettings.hasOwnProperty(property) &&
                 !result[property]
@@ -56,14 +56,14 @@ export class UserSettingsHandlerService {
                 result[property] = this.defaultSettings[property];
               }
             }
-            //save them into the localStorage
+            // save them into the localStorage
             settings = result;
           }
-          //save it locally
+          // save it locally
           this.updateUserSettings(settings);
           resolve(settings);
         },
-        function(error) {
+        error => {
           reject(error);
         }
       );
@@ -76,33 +76,33 @@ export class UserSettingsHandlerService {
   }
 
   update(setting, value) {
-    var storage = this.getUserSettings();
+    const storage = this.getUserSettings();
     storage[setting] = value;
     this.updateUserSettings(storage);
   }
 
   get(setting) {
-    var storage = this.getUserSettings();
+    const storage = this.getUserSettings();
     return storage[setting];
   }
 
   removeAll() {
-    localStorage.removeItem("userSettings");
+    localStorage.removeItem('userSettings');
   }
 
   saveOnServer(): Observable<any> {
-    var defaultSettings = this.getUserSettings();
-    var settingsStr = JSON.stringify(defaultSettings);
+    const defaultSettings = this.getUserSettings();
+    const settingsStr = JSON.stringify(defaultSettings);
     return this.resources.catalogueUser.put(
-      this.cookies.get("userId"),
-      "userPreferences",
-      { resource: settingsStr, contentType: "text/plain" }
+      this.cookies.get('userId'),
+      'userPreferences',
+      { resource: settingsStr, contentType: 'text/plain' }
     );
 
   }
 
   handleCountPerTable(items) {
-    var counts = this.get("counts");
+    let counts = this.get('counts');
     if (items && items.length < 5) {
       counts = [];
     }

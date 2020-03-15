@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { HelpDialogueHandlerService } from '../../../services/helpDialogue.service';
 import { ResourcesService } from '../../../services/resources.service';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-data-model-step1',
+  selector: 'mdm-data-model-step1',
   templateUrl: './data-model-step1.component.html',
   styleUrls: ['./data-model-step1.component.sass'],
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
-export class DataModelStep1Component implements OnInit {
+export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private helpDialogueHandler: HelpDialogueHandlerService,
     private resources: ResourcesService

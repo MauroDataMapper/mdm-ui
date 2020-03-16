@@ -47,36 +47,38 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-			<div *ngIf="selectedElementsCount > 0">
-				<div style="margin-bottom: 10px">
-					<span class="badge importFormStep themeBackgroundColor">2</span>
-					<span class="importFormStepTitle">
-						&nbsp;You can delete the following selected element(s) <strong>{{selectedElementsCount}}</strong> :
-					</span>
-				</div>
-				<div *ngFor="let record of selectedElements">
-					<mdm-element-link [showTypeTitle]="true"
-								  [newWindow]="true"
-								  [parentDataModel]="{id:record.dataModel}"
-								  [parentDataClass]="{id:record.dataClass}"
-								  [element]="record"></mdm-element-link>
-				</div>
-				<div style="padding-top: 20px;">
-					<button type="button" class="btn btn-default btn-xs" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">
-						<i class="far fa-trash-alt deleteButton"></i> Delete <strong class="deleteButton">Permanently</strong>
-					</button>
-					<button type="button" class="btn btn-default btn-xs" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
-						<i class="fas fa-check deleteButton"></i> Mark as Deleted
-					</button>
-					<span class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
-						<a style="font-size: 14px; text-decoration: none;">
-							<i class="fas fa-sync-alt fa-spin"></i> Deleting...
-						</a>
-					</span>
-					<div class="alert alert-success" style="margin-top: 10px;" *ngIf="deleteSuccessMessage">
-						{{deleteSuccessMessage}}
-					</div>
+	</div>
+
+	<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
+		<div *ngIf="selectedElementsCount > 0">
+			<div style="margin-bottom: 10px">
+				<h4 class="importFormStepTitle">
+					You can delete the following selected element(s) <strong>{{selectedElementsCount}}</strong> :
+				</h4>
+			</div>
+			<div *ngFor="let record of selectedElements">
+				<mdm-element-link [showTypeTitle]="true"
+				[newWindow]="true"
+				[parentDataModel]="{id:record.dataModel}"
+				[parentDataClass]="{id:record.dataClass}"
+				[element]="record"></mdm-element-link>
+			</div>
+			<div style="padding-top: 20px;">
+				<button mat-stroked-button color="warn" type="button" class="custom" style="margin-right: 10px; margin-bottom: 8px;" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">
+					<i class="far fa-trash-alt warning"></i> Delete <strong class="warning">Permanently</strong>
+				</button>
+
+				<button mat-flat-button color="warn" type="button" class="custom" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
+					<i class="far fa-trash-alt"></i> Mark as Deleted
+				</button>
+				
+				<span class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
+					<a style="font-size: 14px; text-decoration: none;">
+						<i class="fas fa-sync-alt fa-spin"></i> Deleting...
+					</a>
+				</span>
+				<div class="alert alert-success" style="margin-top: 10px;" *ngIf="deleteSuccessMessage">
+					{{deleteSuccessMessage}}
 				</div>
 			</div>
 		</div>

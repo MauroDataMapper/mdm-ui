@@ -10,9 +10,9 @@
   z-index: 1050;
 }
 
-.cdk-overlay-pane {
-  @include respond-to($mobile) {
-    min-width: 90%!important;
-    max-width: 80vw;
-  }
-}
+// .cdk-overlay-pane {
+//   @include respond-to($mobile) {
+//     min-width: 90%!important;
+//     max-width: 80vw;
+//   }
+// }

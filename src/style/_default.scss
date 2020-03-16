@@ -66,6 +66,8 @@ a.show-more, a.show-less {
 .pill-card--green {
   color: #fff; 
   background-color: #0A8535;
+  // color: #0A8535;
+  //   background-color: rgba(29,201,183,.1);
 }
 hr {
   margin-top: 16px;
@@ -93,4 +95,10 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 .fa.fa-remove:before {
   content: "\f2ed";
+}
+
+
+tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
+  padding: 0.75em;
+  border-bottom: .07rem dashed #ebedf2;
 }

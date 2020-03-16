@@ -9,7 +9,7 @@
 <div class="mcTableContainer">
 	<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped">
 		<ng-container matColumnDef="name">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 33%; width: 33%;" columnName="label">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="label">
 				<span [hidden]="!hideFilters">Name</span>
 				<div [hidden]="hideFilters">
 					<mat-form-field class="filter" floatLabel="never">
@@ -18,34 +18,33 @@
 					</mat-form-field>
 				</div>
 			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 33%; width: 33%; text-align: left; word-wrap: break-word;">
+			<td mat-cell *matCellDef="let record" style="max-width: 35%; width: 35%; text-align: left; word-wrap: break-word;">
 				<span>{{record.label}}</span>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="description">
-			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 40%; width: 40%;" columnName="description">
+			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 50%; width: 50%;" columnName="description">
 				<span [hidden]="!hideFilters">Description</span>
 			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 40%; width: 40%; text-align: left; word-wrap: break-word;">
+			<td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
 				<span>{{record.description}}</span>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="icons">
-			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 27%; width: 27%;" columnName="icons">
+			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 12%; width: 12%;" columnName="icons">
 			</th>
-			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 27%; width: 27%; text-align: left; word-wrap: break-word;">
-				<div style="float: right;margin-bottom: 3px">
-					<button type="button" matTooltip="Edit"
-							class="btn btn-default"
-							(click)="editUser(record)">
-							<i class="fas fa-pencil-alt editButton"></i>
+			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 12%; width: 12%; text-align: left; word-wrap: break-word;">
+
+				<!-- <button mat-flat-button color="primary" [matMenuTriggerFor]="actions" style="color: #1157a9; border: 1px solid #1157a9; background-color: #fff;">Action <i class="fas fa-chevron-down fa-xs"></i></button> -->
+				<button mat-flat-button color="primary" [matMenuTriggerFor]="actions" style="color: #1157a9; border: 1px solid rgba(17, 87, 169, 0.3); background-color: #fff;">Actions <i class="fas fa-chevron-down fa-xs"></i></button>
+				<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
+					<button mat-menu-item (click)="editUser(record)">
+						<i class="fas fa-pencil-alt editButton"></i> Edit group
 					</button>
-					<button type="button" matTooltip="Delete"
-							class="btn btn-default"
-							(click)="deleteUser(record)">
-						<i class="far fa-trash-alt warning"></i>
+					<button mat-menu-item (click)="deleteUser(record)">
+						<i class="far fa-trash-alt warning"></i> Delete group
 					</button>
-				</div>
+				</mat-menu>
 			</td>
 		</ng-container>
 

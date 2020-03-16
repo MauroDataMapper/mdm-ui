@@ -4,11 +4,11 @@
 			<form #myForm="ngForm" ngNativeValidate>
 				<span>Please enter Data Type details:</span>
 
-				<mdm-data-type-inline [parent-scope-handler]="parentScopeHandler"
+				<mdm-data-type-inline [parentScopeHandler]="parentScopeHandler"
 									  [model]="model"
-									  [parent-data-model]="model.parent.breadcrumbs"
-									  [show-parent-data-model]="true"
-									  [show-classification]="true"
+									  [parentDataModel]="model.parent.breadcrumbs"
+									  [showParentDataModel]="true"
+									  [showClassification]="true"
 									  (validationStatusEvent)="validationStatusEmitter($event)">
 				</mdm-data-type-inline>
 			</form>

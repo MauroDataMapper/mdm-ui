@@ -23,23 +23,23 @@
                 <!-- <label>{{option.displayName}}<span [hidden]="option.optional">*</span></label> -->
                 <div class="import-folder" *ngIf="option.type === 'Folder'">
                     <span>Folder location</span>
-                    <mdm-model-selector-tree [tree-search-domain-type]="'Folder'"
-                                         [just-show-folders]="true"
-                                         [ng-model]="option.value"
+                    <mdm-model-selector-tree [treeSearchDomainType]="'Folder'"
+                                         [justShowFolders]="true"
+                                         [ngModel]="option.value"
                                          (ngModelChange)="option.value = $event"
                                          [accepts]="['Folder']"
-                                         [show-validation-error]="option.optional === false"
-                                         [is-required]="option.optional == false">
+                                         [showValidationError]="option.optional === false"
+                                         [isRequired]="option.optional == false">
                     </mdm-model-selector-tree>
                 </div>
 
                 <div class="import-dataModel" *ngIf="option.type === 'DataModel'">
-                    <mdm-model-selector-tree [tree-search-domain-type]="'DataModel'"
-                                         [ng-model]="option.value"
+                    <mdm-model-selector-tree [treeSearchDomainType]="'DataModel'"
+                                         [ngModel]="option.value"
                                          [accepts]="['DataModel']"
                                          (ngModelChange)="option.value = $event"
-                                         [show-validation-error]="option.optional === false"
-                                         [is-required]="option.optional == false">
+                                         [showValidationError]="option.optional === false"
+                                         [isRequired]="option.optional == false">
                     </mdm-model-selector-tree>
                 </div>
 

@@ -15,8 +15,8 @@ export class MoreDescriptionComponent implements OnInit {
     this.showMore = userSettingsHandler.get('expandMoreDescription');
   }
 
-  @Input('description') description: string;
-  @Input('length') length: any;
+  @Input() description: string;
+  @Input() length: any;
 
   maxLength = 100;
   showMore = false;

@@ -39,17 +39,17 @@
 				<div *ngIf="record.inEdit">
 					<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['category']}">
 						<mdm-select [width]="'100%'"
-								   [accept-typed-input]="true"
-								   [value-type]="'static'"
-								   [default-value]="{key:record.edit.category, value:record.edit.category}"
-								   [(record)]="record.edit"
-								   [id-property]="'key'"
-								   [display-property]="'value'"
-								   [search-property]="'key'"
-								   [static-values]="categories"
-								   [show-all-static-values]="true"
-								   [on-text-updated]="onCategoryTextUpdated"
-								   (on-select)="onCategorySelect($event[0],$event[1])">
+								   [acceptTypedInput]="true"
+								   [valueType]="'static'"
+								   [defaultValue]="{key:record.edit.category, value:record.edit.category}"
+								   [record]="record.edit"
+								   [idProperty]="'key'"
+								   [displayProperty]="'value'"
+								   [searchProperty]="'key'"
+								   [staticValues]="categories"
+								   [showAllStaticValues]="true"
+								   [onTextUpdated]="onCategoryTextUpdated"
+								   (selectEvent)="onCategorySelect($event[0],$event[1])">
 							<ng-template #lineContent let-item>
 								<div>{{item.value}}</div>
 							</ng-template>

@@ -10,9 +10,9 @@ Component({
 export class ModelPathComponent implements OnInit {
 
     @Input() path: any[];
-    @Input('new-window') newWindow: boolean;
-    @Input('do-not-display-status') doNotDisplayStatus: boolean;
-    @Input('show-href') showHref = true;
+    @Input() newWindow: boolean;
+    @Input() doNotDisplayStatus: boolean;
+    @Input() showHref = true;
     @Input() doNotShowParentDataModel: boolean;
 
     updatedPath: any[];

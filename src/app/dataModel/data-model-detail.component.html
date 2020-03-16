@@ -58,7 +58,7 @@
           <td>
             <div style="width:50%">
               <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="result?.aliases"
-                                 [editable-form]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                                 [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
             </div>
           </td>
         </tr>
@@ -82,7 +82,7 @@
           <td class="detailsRowHeader">Description</td>
           <td class="elementDetailDescription">
             <div *ngIf="hasResult">
-              <mdm-markdown-text-area [editable-form]="editableForm" [element]="result"
+              <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
                                   [property]="'description'"></mdm-markdown-text-area>
             </div>
           </td>
@@ -99,7 +99,7 @@
         <tr>
           <td class="detailsRowHeader">Classifications</td>
           <td *ngIf="result">
-            <mdm-element-classifications [(classifications)]="result.classifiers" [editable-form]="editableForm"
+            <mdm-element-classifications [classifications]="result.classifiers" [editableForm]="editableForm"
                                          [element]="result" [property]="'classifiers'"></mdm-element-classifications>
           </td>
         </tr>
@@ -141,11 +141,11 @@
                 </button>
               </div>
               <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                     [on-cancel-edit]="onCancelEdit"
+                                     [onCancelEdit]="onCancelEdit"
                                      [editable]="editableForm"
-                                     [text-location]="'left'"
-                                     [hide-delete]="true"
-                                     [hide-cancel]="false"
+                                     [textLocation]="'left'"
+                                     [hideDelete]="true"
+                                     [hideCancel]="false"
                                      [processing]="deleteInProgress"></mdm-editable-form-buttons>
             </div>
             <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" matTooltip="Finalise"

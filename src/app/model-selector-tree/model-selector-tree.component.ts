@@ -23,22 +23,22 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Input() root: any;
   @Output() rootChange = new EventEmitter<any>();
 
-  @Input('default-elements') defaultElements: any;
+  @Input() defaultElements: any;
 
-  @Input('default-checked-map') defaultCheckedMap: any;
+  @Input() defaultCheckedMap: any;
 
-  @Input('on-select') onSelect: any;
-  @Output() onSelectChange = new EventEmitter<any>();
+  @Input() onSelect: any;
+  @Output() selectChange = new EventEmitter<any>();
 
-  @Input('on-check') onCheck: any;
-  @Output() onCheckChange = new EventEmitter<any>();
+  @Input() onCheck: any;
+  @Output() checkChange = new EventEmitter<any>();
 
   selectedElementsVal: any;
   @Output() ngModelChange = new EventEmitter<any>();
 
   // @Input("ng-model") ngModel: any;
 
-  @Input('ng-model')
+  @Input()
   get ngModel() {
     return this.selectedElements;
   }
@@ -54,26 +54,26 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
 
-  @Input('is-required') isRequired: any;
-  @Input('show-validation-error') showValidationError: any;
-  @Input('do-not-show-data-classes') doNotShowDataClasses: any;
-  @Input('do-not-show-terms') doNotShowTerms: any;
-  @Input('just-show-folders') justShowFolders: any;
+  @Input() isRequired: any;
+  @Input() showValidationError: any;
+  @Input() doNotShowDataClasses: any;
+  @Input() doNotShowTerms: any;
+  @Input() justShowFolders: any;
 
   @Input() placeholder: any;
   @Output() placeholderChange = new EventEmitter<any>();
 
   @Input() accepts: any;
-  @Input('tree-search-domain-type') treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
-  @Input('read-only-search-input') readOnlySearchInput: any;
+  @Input() treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
+  @Input() readOnlySearchInput: any;
   @Input() multiple: any;
   @Input() processing: any;
-  @Input('hide-selected-elements') hideSelectedElements: any;
-  @Input('always-show-tree') alwaysShowTree: any = false;
-  @Input('show-checkbox-for') showCheckboxFor: any; // ['DataClass','DataModel','Folder']"
-  @Input('propagate-checkbox') propagateCheckbox: any;
-  @Input('used-in-modal-dialogue') usedInModalDialogue: any;
-  @Input('do-not-apply-settings-filter') doNotApplySettingsFilter: any;
+  @Input() hideSelectedElements: any;
+  @Input() alwaysShowTree: any = false;
+  @Input() showCheckboxFor: any; // ['DataClass','DataModel','Folder']"
+  @Input() propagateCheckbox: any;
+  @Input() usedInModalDialogue: any;
+  @Input() doNotApplySettingsFilter: any;
 
   showTree: any;
   placeholderStr: string;

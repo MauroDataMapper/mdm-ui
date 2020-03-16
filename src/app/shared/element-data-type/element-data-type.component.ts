@@ -16,14 +16,14 @@ export class ElementDataTypeComponent implements OnInit {
     private elementTypes: ElementTypesService
   ) {}
 
-  @Input('element-data-type') elementDataType: any;
-  @Input('hide-name') hideName: boolean;
-  @Input('show-ref-data-class') onlyShowRefDataClass: boolean;
-  @Input('hide-enum-list') hideEnumList: boolean;
-  @Input('initially-show-enum-list') initiallyShowEnumList: boolean;
-  @Input('mc-parent-data-model') mcParentDataModel: any;
-  @Input('new-window') newWindow: boolean;
-  @Input('show-type-name') showTypeName: boolean;
+  @Input() elementDataType: any;
+  @Input() hideName: boolean;
+  @Input() onlyShowRefDataClass: boolean;
+  @Input() hideEnumList: boolean;
+  @Input() initiallyShowEnumList: boolean;
+  @Input() mcParentDataModel: any;
+  @Input() newWindow: boolean;
+  @Input() showTypeName: boolean;
 
   showMoreIcon: boolean;
   showing = false;

@@ -2,10 +2,10 @@
     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
         <div style="width: 100%">
             <mdm-terminology-details *ngIf="terminology"
-                                 [hide-edit-button]="true"
-                                 [mc-terminology]="terminology"
-                                 (after-save)="save()"
-                                 [(open-edit-form)]="openEditForm"></mdm-terminology-details>
+                                 [hideEditButton]="true"
+                                 [mcTerminology]="terminology"
+                                 (afterSave)="save()"
+                                 [openEditForm]="openEditForm"></mdm-terminology-details>
         </div>
 
         <div style="width: 100%;margin-bottom: 10px;">
@@ -13,17 +13,17 @@
                 <div class="panel-heading" style="background-color: #E8E8E8 !important;"><strong>Find Terms</strong></div>
                 <div class="panel-body">
                     <mdm-select [width]="'100%'"
-                               [accept-typed-input]="false"
-                               [value-type]="'dynamic'"
-                               [min-input-length]="1"
-                               [default-placeholder]="'Search for Term...'"
-                               [load-dynamic-values]="fetch"
-                               [do-not-close-on-select]="true"
-                               [id-property]="'id'"
-                               [display-property]="'definition'"
-                               [search-property]="'definition'"
-                               [(pagination)]="pagination"
-                               (on-select)="onTermSelect($event[0])">
+                               [acceptTypedInput]="false"
+                               [valueType]="'dynamic'"
+                               [minInputLength]="1"
+                               [defaultPlaceholder]="'Search for Term...'"
+                               [loadDynamicValues]="fetch"
+                               [doNotCloseOnSelect]="true"
+                               [idProperty]="'id'"
+                               [displayProperty]="'definition'"
+                               [searchProperty]="'definition'"
+                               [pagination]="pagination"
+                               (selectEvent)="onTermSelect($event[0])">
                         <ng-template #lineContent let-item let-inputText="inputText">
                             <a><span [innerHTML]="(item.code + ': ' + item.definition  | mchighlighter:inputText)"></span></a>
                             <div *ngIf="item.aliases && item.aliases.length>0">

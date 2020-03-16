@@ -11,8 +11,8 @@ import { MatMenuTrigger } from '@angular/material/menu';
   styleUrls: ['./favourites.component.sass']
 })
 export class FavouritesComponent implements OnInit {
-  @Output('on-favourite-click') onFavouriteClick = new EventEmitter<any>();
-  @Output('on-favourite-db-click') onFavouriteDbClick = new EventEmitter<any>();
+  @Output() favouriteClick = new EventEmitter<any>();
+  @Output() favouriteDbClick = new EventEmitter<any>();
 
   reloading = false;
   allFavourites: any;
@@ -106,8 +106,8 @@ export class FavouritesComponent implements OnInit {
     }
     this.selectedFavourite = favourite;
 
-    if (this.onFavouriteDbClick) {
-      this.onFavouriteDbClick.emit(favourite);
+    if (this.favouriteDbClick) {
+      this.favouriteDbClick.emit(favourite);
     }
   };
 

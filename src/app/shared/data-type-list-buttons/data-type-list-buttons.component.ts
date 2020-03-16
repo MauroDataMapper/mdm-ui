@@ -8,14 +8,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class DataTypeListButtonsComponent implements OnInit {
   constructor() {}
 
-  @Output('delete-rows') deleteRows = new EventEmitter<any>();
-  @Input('add') add: any;
-  @Input('display-records') mcDisplayRecords: any[];
-  @Input('delete-in-progress') deleteInProgress = false;
-  @Input('show-content-dropdown') showContentDropdown = false;
-  @Input('addDataClass') addDataClass: any;
-  @Input('addDataElement') addDataElement: any;
-  @Input('show-delete-button') showDeleteButton = true;
+  @Output() deleteRows = new EventEmitter<any>();
+  @Input() add: any;
+  @Input() displayRecords: any[];
+  @Input() deleteInProgress = false;
+  @Input() showContentDropdown = false;
+  @Input() addDataClass: any;
+  @Input() addDataElement: any;
+  @Input() showDeleteButton = true;
 
   deletePending: boolean;
   textLocation: string;
@@ -37,7 +37,7 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   onAskDelete = () => {
     let showDelete = false;
-    this.mcDisplayRecords.forEach(record => {
+    this.displayRecords.forEach(record => {
       if (record.checked === true) {
         showDelete = true;
       }

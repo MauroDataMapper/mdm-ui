@@ -25,11 +25,11 @@ import { ElementTypesService } from '../../services/element-types.service';
 })
 export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   @Input() parent: any;
-  @Input('classified-element-type') classifiedElementType: any;
+  @Input() classifiedElementType: any;
 
-  @Input('parent-data-model') parentDataModel: any;
-  @Input('grand-parent-data-class') grandParentDataClass: any;
-  @Input('parent-data-class') parentDataClass: any;
+  @Input() parentDataModel: any;
+  @Input() grandParentDataClass: any;
+  @Input() parentDataClass: any;
   @Input() loadingData: any;
   checkAllCheckbox = false;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

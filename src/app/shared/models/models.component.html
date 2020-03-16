@@ -180,7 +180,7 @@
                     <i class="fas fa-star"></i> &nbsp; Favourite
                 </ng-template>
                 <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: scroll" *ngIf="currentTab === 'favourites'">
-                    <mdm-favourites (on-favourite-db-click)="onFavouriteDbClick($event)" (on-favourite-click)="onFavouriteClick($event)"></mdm-favourites>
+                    <mdm-favourites (favouriteDbClick)="onFavouriteDbClick($event)" (favouriteClick)="onFavouriteClick($event)"></mdm-favourites>
                 </div>
             </mat-tab>
 

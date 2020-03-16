@@ -44,8 +44,8 @@ function compare(v1, v2) {
 })
 export class MctableService {
   private resultSubject = new Subject<any>();
-  private _loading$ = new BehaviorSubject<boolean>(true);
-  private _search$ = new Subject<void>();
+  private loadingBehaviorSubject = new BehaviorSubject<boolean>(true);
+  private searchSubject = new Subject<void>();
   // private  result :any;
   result: any;
   // private _countries$ = new BehaviorSubject<[]>([]);
@@ -60,12 +60,12 @@ export class MctableService {
   };
 
   constructor(private resourcesService: ResourcesService) {
-    // this._search$.pipe(
-    //     tap(() => this._loading$.next(true)),
+    // this.searchSubject.pipe(
+    //     tap(() => this.loadingBehaviorSubject.next(true)),
     //     debounceTime(200),
     //     switchMap(() => this._search()),
     //     delay(200),
-    //     tap(() => this._loading$.next(false))
+    //     tap(() => this.loadingBehaviorSubject.next(false))
     // ).subscribe(result => {
     //   this._countries$.next(result.countries);
     //   this._total$.next(result.total);
@@ -77,7 +77,7 @@ export class MctableService {
     if (this.result !== null && this.result !== undefined) {
       this._total$.next(this.result.count);
     }
-    this._search$.next();
+    this.searchSubject.next();
   }
 
   // get countries$() { return this._countries$.asObservable(); }
@@ -85,8 +85,8 @@ export class MctableService {
     return this._total$.asObservable();
   }
 
-  get loading$() {
-    return this._loading$.asObservable();
+  get loading() {
+    return this.loadingBehaviorSubject.asObservable();
   }
 
   get page() {
@@ -123,7 +123,7 @@ export class MctableService {
 
   private _set(patch: Partial<State>) {
     Object.assign(this._state, patch);
-    this._search$.next();
+    this.searchSubject.next();
   }
 
   // private _search(): Observable<SearchResult> {

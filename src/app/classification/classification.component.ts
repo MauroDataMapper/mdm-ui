@@ -14,7 +14,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
   styleUrls: ['./classification.component.sass']
 })
 export class ClassificationComponent implements OnInit, OnDestroy {
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;

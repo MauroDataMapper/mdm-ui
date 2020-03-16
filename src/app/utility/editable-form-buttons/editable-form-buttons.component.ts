@@ -7,23 +7,23 @@ import { Editable } from '../../model/folderModel';
    styleUrls: ['./editable-form-buttons.component.sass']
 })
 export class EditableFormButtonsComponent implements OnInit {
-  @Input('delete-icon') deleteIcon: any;
-  @Input('delete-title') deleteTitle: any;
-  @Input('edit-title') editTitle: any;
-  @Input('processing') processing: any;
-  @Input('editable') editable: Editable;
-  @Input('on-edit-clicked') onEditClicked: any;
-  @Input('on-delete-clicked') onDeleteClicked: any;
-  @Input('on-confirm-delete') onConfirmDelete: any;
-  @Input('on-cancel-delete') onCancelDelete: any;
-  @Input('on-cancel-edit') onCancelEdit: any;
-  @Input('on-save') onSave: any;
-  @Input('has-separate-edit-form') hasSeparateEditForm: any;
-  @Input('text-location') textLocation: any;
-  @Input('hide-delete') hideDelete: any;
-  @Input('hide-edit') hideEdit: any;
-  @Input('hide-cancel') hideCancel: any;
-  @Output('delete') delete = new EventEmitter<any>();
+  @Input() deleteIcon: any;
+  @Input() deleteTitle: any;
+  @Input() editTitle: any;
+  @Input() processing: any;
+  @Input() editable: Editable;
+  @Input() onEditClicked: any;
+  @Input() onDeleteClicked: any;
+  @Input() onConfirmDelete: any;
+  @Input() onCancelDelete: any;
+  @Input() onCancelEdit: any;
+  @Input() onSave: any;
+  @Input() hasSeparateEditForm: any;
+  @Input() textLocation: any;
+  @Input() hideDelete: any;
+  @Input() hideEdit: any;
+  @Input() hideCancel: any;
+  @Output() delete = new EventEmitter<any>();
 
   public displayDeleteTitle: string = this.deleteTitle;
   public displayDeleteIcon: any = this.deleteIcon;

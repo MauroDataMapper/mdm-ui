@@ -28,11 +28,11 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() parent: any;
   @Input() type: any;
 
-  @Input('child-owned-data-types') childOwnedDataTypes: any;
+  @Input() childOwnedDataTypes: any;
 
-  @Input('loading-data') loadingData: boolean;
+  @Input() loadingData: boolean;
 
-  @Input('client-side') clientSide: boolean;
+  @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

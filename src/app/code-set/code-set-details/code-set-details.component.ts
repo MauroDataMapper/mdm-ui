@@ -66,7 +66,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;

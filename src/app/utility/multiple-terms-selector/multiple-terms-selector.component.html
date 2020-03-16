@@ -8,13 +8,13 @@
                 <strong>Terminology*</strong>
                 <mdm-select
                         width="'100%'"
-                        [accept-typed-input]="false"
-                        [value-type]="'static'"
-                        [static-values]="selectorSection.terminologies"
-                        [id-property]="'id'"
-                        [display-property]="'label'"
-                        [search-property]="'label'"
-                        (on-select)="onTerminologySelect($event[0],$event[1])">
+                        [acceptTypedInput]="false"
+                        [valueType]="'static'"
+                        [staticValues]="selectorSection.terminologies"
+                        [idProperty]="'id'"
+                        [displayProperty]="'label'"
+                        [searchProperty]="'label'"
+                        (selectEvent)="onTerminologySelect($event[0],$event[1])">
                     <ng-template #lineContent let-item>
                         <div>{{item.label}}</div>
                     </ng-template>
@@ -45,8 +45,8 @@
                                            (change)="termToggle(element)"
                                            [(ngModel)]="element.checked">
                                     <mdm-element-link
-                                                  [new-window]= "true"
-                                                  [show-href]="true"
+                                                  [newWindow]= "true"
+                                                  [showHref]="true"
                                                   [element]="element"></mdm-element-link>
 
 
@@ -78,9 +78,9 @@
                     <div style="position: relative; border: 1px solid #DDD;padding: 5px;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
                         <mdm-paged-list
                                 [name]="'linkType'"
-                                [mc-title]="'linkType'"
+                                [mcTitle]="'linkType'"
                                 [type]="'static'"
-                                [(items)]="selectorSection.selectedTermsArray"
+                                [items]="selectorSection.selectedTermsArray"
                                 [page-size]="10">
                             <ng-template #pageListTemplate let-item>
                                 <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">

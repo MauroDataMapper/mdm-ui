@@ -60,15 +60,15 @@
         <mat-label>Role*</mat-label>
         <mdm-select
         [width]="'100%'"
-        [multi-select]="true"
-        [accept-typed-input]="false"
-        [value-type]="'static'"
-        [static-values]="allGroups"
-        [default-value]="user.groups"
-        [id-property]="'id'"
-        [display-property]="'label'"
-        [search-property]="'label'"
-        (on-select)="onGroupSelect">
+        [multiSelect]="true"
+        [acceptTypedInput]="false"
+        [valueType]="'static'"
+        [staticValues]="allGroups"
+        [defaultValue]="user.groups"
+        [idProperty]="'id'"
+        [displayProperty]="'label'"
+        [searchProperty]="'label'"
+        (selectEvent)="onGroupSelect">
         <ng-template #lineContent let-item>
             <div>{{item.label}}</div>
         </ng-template>

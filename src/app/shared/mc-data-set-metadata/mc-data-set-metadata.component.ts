@@ -18,12 +18,12 @@ import { DialogPosition } from '@angular/material/dialog';
 })
 export class McDataSetMetadataComponent implements AfterViewInit {
 
-    @Input('parent') parent: any;
-    @Input('type') type: any;
-    @Input('meta_data_items') metaDataItems: any;
-    @Input('loading_data') loadingData: any;
-    @Input('client_side') clientSide: any;
-    @Input('after_save') afterSave: any;
+    @Input() parent: any;
+    @Input() type: any;
+    @Input() metaDataItems: any;
+    @Input() loadingData: any;
+    @Input() clientSide: any;
+    @Input() afterSave: any;
 
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

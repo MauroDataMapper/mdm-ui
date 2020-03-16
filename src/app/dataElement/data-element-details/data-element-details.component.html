@@ -28,7 +28,7 @@
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editable-form]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                     </td>
                 </tr>
@@ -36,7 +36,7 @@
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="result">
-                            <mdm-markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -44,7 +44,7 @@
                     <th class="detailsRowHeader">Data Type</th>
                     <td>
                         <div *ngIf="!editableForm.visible && result">
-                            <mdm-element-data-type [element-data-type]="result.dataType" [mc-parent-data-model]="parentDataModel"></mdm-element-data-type>
+                            <mdm-element-data-type [elementDataType]="result.dataType" [mcParentDataModel]="parentDataModel"></mdm-element-data-type>
                         </div>
 
                         <div *ngIf="editableForm.visible">
@@ -56,9 +56,9 @@
                             <div *ngIf="showNewInlineDataType">
                                 <mdm-data-type-inline
                                         [model]="newlyAddedDataType"
-                                        [parent-data-model]="parentDataModel"
-                                        [show-classification]="false"
-                                        [show-parent-data-model]="false">
+                                        [parentDataModel]="parentDataModel"
+                                        [showClassification]="false"
+                                        [showParentDataModel]="false">
                                 </mdm-data-type-inline>
                             </div>
 
@@ -87,17 +87,17 @@
 <!--                                </mc-select-2>-->
 
                                 <mdm-select [width]="'100%'"
-                                           [accept-typed-input]="true"
-                                           [value-type]="'dynamic'"
-                                           [default-value]="result.dataType"
-                                           [has-error]="dataTypeErrors"
-                                           [load-dynamic-values]="fetchDataTypes"
-                                           [(record)]="result"
-                                           [min-input-length]="1"
-                                           [id-property]="'id'"
-                                           [display-property]="'label'"
-                                           [search-property]="'label'"
-                                           (on-select)="onDataTypeSelect">
+                                           [acceptTypedInput]="true"
+                                           [valueType]="'dynamic'"
+                                           [defaultValue]="result.dataType"
+                                           [hasError]="dataTypeErrors"
+                                           [loadDynamicValues]="fetchDataTypes"
+                                           [record]="result"
+                                           [minInputLength]="1"
+                                           [idProperty]="'id'"
+                                           [displayProperty]="'label'"
+                                           [searchProperty]="'label'"
+                                           (selectEvent)="onDataTypeSelect">
                                     <ng-template #lineContent let-item>
                                         <div>{{item.label}}</div>
                                     </ng-template>
@@ -146,7 +146,7 @@
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <mdm-element-classifications [classifications]="result.classifiers" [editable-form]="editableForm" [element]="result" [property]="'classifiers'"></mdm-element-classifications>
+                        <mdm-element-classifications [classifications]="result.classifiers" [editableForm]="editableForm" [element]="result" [property]="'classifiers'"></mdm-element-classifications>
 
                     </td>
                 </tr>
@@ -156,12 +156,12 @@
                         <div *ngIf="result" mdmShowIfRolesWritable [result]="result" style="float: right;margin-bottom: 3px">
                             <div style="float: right">
                                 <mdm-editable-form-buttons [hidden]="editableForm.visible"
-                                                       [on-cancel-edit]="onCancelEdit"
+                                                       [onCancelEdit]="onCancelEdit"
                                                        [editable]="editableForm"
-                                                       [text-location]="'left'"
-                                                       [hide-delete]="false"
-                                                       [hide-cancel]="false"
-                                                       [hide-edit] = "true"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="false"
+                                                       [hideCancel]="false"
+                                                       [hideEdit] = "true"
                                                        (delete)="delete()"
                                                        [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
@@ -179,11 +179,11 @@
                                 </button>
                             </div>
                             <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                   [on-cancel-edit]="onCancelEdit"
+                                                   [onCancelEdit]="onCancelEdit"
                                                    [editable]="editableForm"
-                                                   [text-location]="'left'"
-                                                   [hide-delete]="true"
-                                                   [hide-cancel]="false"
+                                                   [textLocation]="'left'"
+                                                   [hideDelete]="true"
+                                                   [hideCancel]="false"
                                                    [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
 

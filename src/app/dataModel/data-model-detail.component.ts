@@ -65,7 +65,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;

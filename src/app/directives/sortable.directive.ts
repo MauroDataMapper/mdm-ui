@@ -20,7 +20,7 @@ export interface SortEvent {
 }
 
 @Directive({
-  selector: 'th[sortable]',
+  selector: 'th[mdmSortable]',
   host: {
     '[class.asc]': 'direction === "asc"',
     '[class.desc]': 'direction === "desc"',

@@ -28,18 +28,18 @@
                             </div>
                             <div *ngIf="record.isNew">
                                 <mdm-select [width]="'100%'"
-                                           [accept-typed-input]="true"
-                                           [value-type]="'dynamic'"
-                                           [default-value]="record.user"
-                                           [load-dynamic-values]="fetchUser"
-                                           [min-input-length]="1"
-                                           [has-error]="record.edit.errors && record.edit.errors['user']"
+                                           [acceptTypedInput]="true"
+                                           [valueType]="'dynamic'"
+                                           [defaultValue]="record.user"
+                                           [loadDynamicValues]="fetchUser"
+                                           [minInputLength]="1"
+                                           [hasError]="record.edit.errors && record.edit.errors['user']"
                                            [record]="record"
-                                           [id-property]="'id'"
-                                           [display-property]="'emailAddress'"
-                                           [search-property]="'emailAddress'"
-                                           [(pagination)]="pagination"
-                                           (on-select)="onUserSelect($event[0],$event[1])">
+                                           [idProperty]="'id'"
+                                           [displayProperty]="'emailAddress'"
+                                           [searchProperty]="'emailAddress'"
+                                           [pagination]="pagination"
+                                           (selectEvent)="onUserSelect($event[0],$event[1])">
                                     <ng-template #lineContent let-item>
                                        <div>{{item.emailAddress}}</div>
                                     </ng-template>

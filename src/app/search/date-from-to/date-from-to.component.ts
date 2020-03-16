@@ -10,7 +10,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 })
 export class DateFromToComponent implements OnInit {
   constructor() {}
-  @Output() onSelect = new EventEmitter<DateEventInfo>();
+  @Output() selectEvent = new EventEmitter<DateEventInfo>();
 
   @ViewChild('dp1', { static: false }) datePicker1: MatDatepicker<Date>;
   @ViewChild('dp2', { static: false }) datePicker2: MatDatepicker<Date>;
@@ -49,8 +49,8 @@ export class DateFromToComponent implements OnInit {
       return;
     }
 
-    if (this.onSelect) {
-      this.onSelect.emit(new DateEventInfo(newValue, this.dtTo));
+    if (this.selectEvent) {
+      this.selectEvent.emit(new DateEventInfo(newValue, this.dtTo));
     }
 
     if (newValue) {
@@ -64,9 +64,9 @@ export class DateFromToComponent implements OnInit {
       return;
     }
 
-    if (this.onSelect) {
+    if (this.selectEvent) {
       // this.onSelect(this.dtFrom, newValue);
-      this.onSelect.emit(new DateEventInfo(this.dtFrom, newValue));
+      this.selectEvent.emit(new DateEventInfo(this.dtFrom, newValue));
     }
 
     if (newValue) {

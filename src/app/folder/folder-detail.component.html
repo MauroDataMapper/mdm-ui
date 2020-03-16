@@ -32,7 +32,7 @@
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
-                            <mdm-markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -81,9 +81,9 @@
                                         <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [on-cancel-edit]="onCancelEdit"
-                                [editable]="editableForm" [text-location]="'left'" [hide-delete]="true"
-                                [hide-cancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
+                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
+                                [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
                         <!--                        <div class="deleteInProgressSpinner"-->
                         <!--                             style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;"-->

@@ -55,7 +55,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   inputStyle: any;
   holderStyle: any;
 
-  @Output('on-select') onSelect = new EventEmitter<any>();
+  @Output() selectEvent = new EventEmitter<any>();
 
   recordVal: any;
   @Output() recordChanged = new EventEmitter<any>();
@@ -70,24 +70,24 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.recordChanged.emit();
   }
 
-  @Input('load-all-on-click') loadAllOnClick: boolean;
-  @Input('accept-typed-input') acceptTypedInput: boolean;
-  @Input('default-value') defaultValue: any;
-  @Input('min-input-length') minInputLength: number;
-  @Input('id-property') idProperty: any;
-  @Input('display-property') displayProperty: any;
-  @Input('search-property') searchProperty: any;
-  @Input('value-type') valueType: any;
-  @Input('width') width: any;
-  @Input('show-all-static-values') showAllStaticValues: any;
-  @Input('on-text-updated') onTextUpdated: any;
-  @Input('multi-select') multiSelect: boolean;
-  @Input('static-values') staticValues: any;
-  @Input('load-dynamic-values') loadDynamicValues: any;
-  @Input('has-error') hasError: any;
-  @Input('item-template') itemTemplate: any;
-  @Input('do-not-close-on-select') doNotCloseOnSelect: boolean | false;
-  @Input('default-placeholder') defaultPlaceholder: any;
+  @Input() loadAllOnClick: boolean;
+  @Input() acceptTypedInput: boolean;
+  @Input() defaultValue: any;
+  @Input() minInputLength: number;
+  @Input() idProperty: any;
+  @Input() displayProperty: any;
+  @Input() searchProperty: any;
+  @Input() valueType: any;
+  @Input() width: any;
+  @Input() showAllStaticValues: any;
+  @Input() onTextUpdated: any;
+  @Input() multiSelect: boolean;
+  @Input() staticValues: any;
+  @Input() loadDynamicValues: any;
+  @Input() hasError: any;
+  @Input() itemTemplate: any;
+  @Input() doNotCloseOnSelect: boolean | false;
+  @Input() defaultPlaceholder: any;
 
   @ViewChildren('mcSelectItem') elements;
   @ViewChild('input', {static: false}) input;
@@ -96,7 +96,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ContentChild('lineContent', {static: true}) lineContentTmpl: TemplateRef<any>;
 
-  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: ResourcesService, private _elementRef: ElementRef) {
+  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: ResourcesService, private elementRef: ElementRef) {
   }
 
   ngOnInit() {
@@ -305,8 +305,8 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       this.selectedValue = selectedElement;
     }
 
-    if (this.onSelect) {
-      this.onSelect.emit([this.selectedValue, this.record]);
+    if (this.selectEvent) {
+      this.selectEvent.emit([this.selectedValue, this.record]);
     }
   }
 
@@ -387,7 +387,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
             resolve(result.body.items);
             this.loadingDynamicData = false;
           },
-          (error) => {
+          (error2) => {
             this.loadingDynamicData = false;
           });
 
@@ -441,16 +441,16 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
         }
       }
-      if (this.onSelect) {
-        this.onSelect.emit([this.selectedValue, this.record]);
+      if (this.selectEvent) {
+        this.selectEvent.emit([this.selectedValue, this.record]);
       }
     } else {
       this.selectedValue = null;
       this.inputText = '';
       this.input.nativeElement.value = '';
 
-      if (this.onSelect) {
-        this.onSelect.emit([null, this.record]);
+      if (this.selectEvent) {
+        this.selectEvent.emit([null, this.record]);
       }
     }
 

@@ -66,13 +66,13 @@
                     <tr>
                         <td class="detailsRowHeader">Description</td>
                         <td class="elementDetailDescription">
-                            <mdm-markdown-text-area [editable-form]="editableForm" [element]="mcTerminology" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcTerminology" [property]="'description'"></mdm-markdown-text-area>
                         </td>
                     </tr>
                     <tr>
                         <td class="detailsRowHeader">Classifications</td>
                         <td>
-                            <mdm-element-classifications [(classifications)]="mcTerminology.classifiers" [editable-form]="editableForm"></mdm-element-classifications>
+                            <mdm-element-classifications [classifications]="mcTerminology.classifiers" [editableForm]="editableForm"></mdm-element-classifications>
                         </td>
                     </tr>
                     <tr>
@@ -119,11 +119,11 @@
                                     </button>
                                 </div>
                                 <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                       [on-cancel-edit]="onCancelEdit"
+                                                       [onCancelEdit]="onCancelEdit"
                                                        [editable]="editableForm"
-                                                       [text-location]="'left'"
-                                                       [hide-delete]="true"
-                                                       [hide-cancel]="false"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="true"
+                                                       [hideCancel]="false"
                                                        [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
 

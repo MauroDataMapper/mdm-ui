@@ -29,10 +29,10 @@ export class ElementLinkListComponent implements AfterViewInit {
     private elementSelector: ElementSelectorDialogueService
   ) {}
 
-  @Input('parent') parent: any;
-  @Input('search-criteria') searchCriteria: any;
+  @Input() parent: any;
+  @Input() searchCriteria: any;
   @Input() type: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   @ViewChildren('filters', { read: ElementRef })

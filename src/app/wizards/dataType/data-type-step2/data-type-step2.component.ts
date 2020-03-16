@@ -27,7 +27,7 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./data-type-step2.component.sass']
 })
 export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
-  @Input('parent') parent;
+  @Input() parent;
 
   successCount: number;
   failCount: number;

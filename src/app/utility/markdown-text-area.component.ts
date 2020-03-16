@@ -29,12 +29,12 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.descriptionChange.emit(this.descriptionVal);
   }
 
-  @Input('in-edit-mode') inEditMode: boolean;
-  @Input('hide-help-text') hideHelpText: boolean;
-  @Input('editable-form') editableForm: any;
+  @Input() inEditMode: boolean;
+  @Input() hideHelpText: boolean;
+  @Input() editableForm: any;
   @Input() rows: number;
-  @Input('property') property: string;
-  @Input('element') element: FolderResult;
+  @Input() property: string;
+  @Input() element: FolderResult;
   elementDialogue;
 
   @ViewChild('editableTextArea', { static: false })

@@ -8,7 +8,7 @@ import { ResourcesService } from '../../services/resources.service';
   styleUrls: ['./diagram-tab.component.scss']
 })
 export class DiagramTabComponent implements OnInit {
-  @Input('parent-data-model') parentDataModel: any;
+  @Input() parentDataModel: any;
 
   constructor(private resourcesService: ResourcesService) {}
 

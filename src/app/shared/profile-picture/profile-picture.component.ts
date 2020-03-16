@@ -8,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ProfilePictureComponent implements OnInit {
   constructor() {}
 
-  @Input('user') user: any;
+  @Input() user: any;
   image: any;
   dynamicTooltipText: string;
 

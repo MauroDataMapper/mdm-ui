@@ -54,7 +54,7 @@
                 <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 10%;width: 10%;" columnName="other"></th>
                 <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
                     <div *ngIf="access && access.showEdit">
-                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hide-edit]="true"></mdm-table-buttons>
+                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hideEdit]="true"></mdm-table-buttons>
                     </div>
                 </td>
             </ng-container>

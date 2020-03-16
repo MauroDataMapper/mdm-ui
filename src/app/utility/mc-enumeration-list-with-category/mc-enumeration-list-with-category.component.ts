@@ -14,10 +14,10 @@ import { MatTable } from '@angular/material/table';
   styleUrls: ['./mc-enumeration-list-with-category.component.sass']
 })
 export class McEnumerationListWithCategoryComponent implements OnInit {
-  @Input('parent') parent;
-  @Input('client-side') clientSide = false;
-  @Input('enumeration-values') enumerationValues;
-  @Input('on-update') onUpdate;
+  @Input() parent;
+  @Input() clientSide = false;
+  @Input() enumerationValues;
+  @Input() onUpdate;
   @Input() type: any;
 
   @Output() afterSave = new EventEmitter<any>();

@@ -22,7 +22,7 @@
                     </div>
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-                    <mdm-element-link [element]="record" [show-link]="false" [show-type-title]="true"></mdm-element-link>
+                    <mdm-element-link [element]="record" [showLink]="false" [showTypeTitle]="true"></mdm-element-link>
                 </td>
             </ng-container>
             <ng-container matColumnDef="label">
@@ -37,8 +37,8 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
                 <mdm-element-link
-                        [parent-data-model]="{id:record.dataModel}"
-                        [parent-data-class]="{id:record.dataClass}"
+                        [parentDataModel]="{id:record.dataModel}"
+                        [parentDataClass]="{id:record.dataClass}"
                         [element]="record"></mdm-element-link>
                 <br>
                 <mdm-model-path [path]="record.breadcrumbs"></mdm-model-path>

@@ -2,7 +2,7 @@
 import { Directive, HostListener, HostBinding } from '@angular/core';
 
 @Directive({
-    selector: '[mat-filter-item]'
+    selector: '[mdmMatFilterItem]'
 })
 export class FilterItemDirective {
     @HostListener('click', ['$event'])

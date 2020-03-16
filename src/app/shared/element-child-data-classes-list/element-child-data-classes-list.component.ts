@@ -23,11 +23,11 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./element-child-data-classes-list.component.sass']
 })
 export class ElementChildDataClassesListComponent implements AfterViewInit, OnInit {
-  @Input('parent-data-model') parentDataModel: any;
-  @Input('parent-data-class') parentDataClass: any;
-  @Input('mc-data-class') mcDataClass: any;
-  @Input('type') type: any;
-  @Input('child-data-classes') childDataClasses: any;
+  @Input() parentDataModel: any;
+  @Input() parentDataClass: any;
+  @Input() mcDataClass: any;
+  @Input() type: any;
+  @Input() childDataClasses: any;
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;

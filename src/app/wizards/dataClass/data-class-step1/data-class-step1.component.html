@@ -3,9 +3,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span>
                 How do you want to add new Data Class(s) to <span>
-                    <mdm-element-link [parent-data-model]="{id:model.parent.dataModel}"
-                                  [parent-data-class]="{id:model.parent.dataClass}"
-                                  [new-window]="true"
+                    <mdm-element-link [parentDataModel]="{id:model.parent.dataModel}"
+                                  [parentDataClass]="{id:model.parent.dataClass}"
+                                  [newWindow]="true"
                                   [element]="model.parent"></mdm-element-link>
                 </span> ?
             </span>
@@ -45,13 +45,13 @@
                                    style="cursor: pointer; z-index: 150">
                             <span style="cursor: pointer;">Copy Data Class(s) from...</span>
                             <div style="margin-left: 45px;">
-                                <mdm-model-selector-tree [(on-select)]="onSelect"
+                                <mdm-model-selector-tree [onSelect]="onSelect"
 
                                                      [placeholder]="'Select Data Model...'"
                                                      [processing]="model.createType != 'copy'"
-                                                     [do-not-show-data-classes]="true"
-                                                     [(ng-model)]="model.copyFromDataModel"
-                                                     [tree-search-domain-type]="'DataModel'"
+                                                     [doNotShowDataClasses]="true"
+                                                     [ngModel]="model.copyFromDataModel"
+                                                     [treeSearchDomainType]="'DataModel'"
                                                      (ngModelChange)="model.copyFromDataModel = $event"
                                                      [accepts]="['DataModel']">
                                 </mdm-model-selector-tree>

@@ -3,29 +3,25 @@ import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
   selector: 'mdm-element-link',
-  inputs: [
-    'hideVersionNumber: hide-Version-Number',
-    'justShowCodeForTerm: just-show-code-for-term'
-  ],
   templateUrl: './element-link.component.html'
 })
 export class ElementLinkComponent implements OnInit {
-  @Input('show-type-title') showTypeTitle: boolean;
+  @Input() hideVersionNumber: boolean;
+  @Input() justShowCodeForTerm: boolean;
+  @Input() showTypeTitle: boolean;
   @Input() element: any;
-  @Input('new-window') newWindow: boolean;
-  @Input('parent-data-model') parentDataModel: any;
-  @Input('parent-data-class') parentDataClass: any;
-  @Input('show-href') showHref = true;
-  @Input('show-parent-data-model-name') showParentDataModelName: boolean;
-  @Input('show-link') showLink = true;
+  @Input() newWindow: boolean;
+  @Input() parentDataModel: any;
+  @Input() parentDataClass: any;
+  @Input() showHref = true;
+  @Input() showParentDataModelName: boolean;
+  @Input() showLink = true;
 
   label: string;
   versionNumber: string;
   openLinkLocation: string;
   elementTypeTitle: string;
   types: any[];
-  hideVersionNumber: boolean;
-  justShowCodeForTerm: boolean;
 
   replaceLabelBy: any;
   disableLink: any;

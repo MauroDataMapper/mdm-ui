@@ -10,9 +10,9 @@ import { ElementTypesService } from '../../services/element-types.service';
 export class NewDataTypeInlineComponent implements OnInit, DoCheck {
   @Output() validationStatusEvent = new EventEmitter<string>();
 
-  @Input('parent-data-model') parentDataModel;
-  @Input('show-parent-data-model') showParentDataModel = false;
-  @Input('show-classification') showClassification = false;
+  @Input() parentDataModel;
+  @Input() showParentDataModel = false;
+  @Input() showClassification = false;
   @Input() model: any = {
     label: '',
     description: '',
@@ -23,7 +23,7 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
 
   childDataClasses: any; // TODO - FIGURE OUT IF NEEDED
 
-  @Input('parent-scope-handler') parentScopeHandler;
+  @Input() parentScopeHandler;
   allDataTypes;
   isValid = false;
   reloading = false;

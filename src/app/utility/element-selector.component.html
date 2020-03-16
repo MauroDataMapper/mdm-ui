@@ -177,15 +177,15 @@
                 </div>
                 <div style="padding-bottom:1.2em">
                     <mdm-select [width]="'100%'"
-                               [accept-typed-input]="false"
-                               [value-type]="'static'"
-                               [static-values]="terminologies"
-                               [min-input-length]="1"
-                               [has-error]="false"
-                               [id-property]="'id'"
-                               [display-property]="'label'"
-                               [search-property]="'label'"
-                               (on-select)="onTerminologySelect($event[0],$event[1])">
+                               [acceptTypedInput]="false"
+                               [valueType]="'static'"
+                               [staticValues]="terminologies"
+                               [minInputLength]="1"
+                               [hasError]="false"
+                               [idProperty]="'id'"
+                               [displayProperty]="'label'"
+                               [searchProperty]="'label'"
+                               (selectEvent)="onTerminologySelect($event[0],$event[1])">
                         <ng-template #lineContent let-item>
                             <div>{{item.label}}</div>
                         </ng-template>
@@ -202,11 +202,11 @@
                             <mat-header-row *matHeaderCellDef> Term </mat-header-row>
                             <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
                                 <!--                                <a target="_blank" style="width:100%" href=null>{{element.label}}</a>-->
-                                <mdm-element-link [show-type-title]="true"
-                                              [new-window]= "true"
-                                              [parent-data-model]="{id:element.dataModel}"
-                                              [parent-data-class]="{id:element.dataClass}"
-                                              [show-href]="false"
+                                <mdm-element-link [showTypeTitle]="true"
+                                              [newWindow]= "true"
+                                              [parentDataModel]="{id:element.dataModel}"
+                                              [parentDataClass]="{id:element.dataClass}"
+                                              [showHref]="false"
                                               [element]="element"></mdm-element-link>
 
                             </mat-cell>
@@ -264,10 +264,10 @@
                     <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
                     <div style="margin-top: 2px;">
                           <mdm-model-selector-tree
-                                [(on-select)]="onContextSelected"
+                                [onSelect]="onContextSelected"
                                 [placeholder]="'Choose a Folder or Data Model or Data Class'"
                                 [accepts]="['Folder', 'DataModel', 'DataClass']"
-                                [used-in-modal-dialogue]="true">
+                                [usedInModalDialogue]="true">
                         </mdm-model-selector-tree>
                     </div>
                 </div>
@@ -290,7 +290,7 @@
                         <ng-container matColumnDef="expandedDetail">
                             <mat-cell  *matCellDef = "let record">
 
-                                <mdm-model-path [path]="record.element.breadcrumbs" [show-href]="false" [new-window]="true" ></mdm-model-path>
+                                <mdm-model-path [path]="record.element.breadcrumbs" [showHref]="false" [newWindow]="true" ></mdm-model-path>
 
                             </mat-cell>
                         </ng-container>
@@ -353,11 +353,11 @@
                     <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
                     <div style="margin-top: 2px;">
                         <mdm-model-selector-tree
-                                [(on-select)]="onContextSelected"
+                                [onSelect]="onContextSelected"
                                 [placeholder] ="'Choose a Folder or Data Model'"
-                                [do-not-show-data-classes]="true"
+                                [doNotShowDataClasses]="true"
                                 [accepts]="['Folder', 'DataModel']"
-                                [used-in-modal-dialogue]="true">
+                                [usedInModalDialogue]="true">
                         </mdm-model-selector-tree>
                     </div>
                 </div>
@@ -377,7 +377,7 @@
                         <ng-container matColumnDef="expandedDetail">
                             <mat-cell  *matCellDef = "let record">
 
-                                <mdm-model-path [path]="record.element.breadcrumbs" [show-href]="false" [new-window]="true" ></mdm-model-path>
+                                <mdm-model-path [path]="record.element.breadcrumbs" [showHref]="false" [newWindow]="true" ></mdm-model-path>
 
                             </mat-cell>
                         </ng-container>

@@ -32,12 +32,12 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   hasResult = false;
   subscription: Subscription;
   editableForm: EditableDataElement;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
-  @Input('parent-data-model') parentDataModel;
-  @Input('parent-data-class') parentDataClass;
+  @Input() parentDataModel;
+  @Input() parentDataClass;
   errorMessage = '';
   error = '';
   dataTypeErrors = '';

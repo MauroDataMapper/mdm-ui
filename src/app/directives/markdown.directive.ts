@@ -5,9 +5,9 @@ import { MarkdownParserService } from '../utility/markdown-parser.service';
   selector: '[mdmMarkdown]'
 })
 export class MarkdownDirective implements OnInit {
-  private markdown_: any;
+  private markdownInternal: any;
 
-  @Input('render-type') renderType: any;
+  @Input() renderType: any;
 
   constructor(
     private markdownParser: MarkdownParserService,
@@ -20,14 +20,14 @@ export class MarkdownDirective implements OnInit {
   }
 
   get markdown(): any {
-    return this.markdown_;
+    return this.markdownInternal;
   }
 
   @Input('markdown')
   set markdown(markdown: any) {
-    if (this.markdown_ === markdown) { return; }
+    if (this.markdownInternal === markdown) { return; }
 
-    this.markdown_ = markdown;
+    this.markdownInternal = markdown;
     this.renderMarkdown();
   }
 

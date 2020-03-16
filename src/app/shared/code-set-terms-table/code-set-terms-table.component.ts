@@ -24,7 +24,7 @@ import {SecurityHandlerService} from '../../services/handlers/security-handler.s
   styleUrls: ['./code-set-terms-table.component.scss']
 })
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
-  @Input('code-set') codeSet: any;
+  @Input() codeSet: any;
   @Input() type: any; // static, dynamic
   clientSide: any; // if true, it should NOT pass values to the serve in save/update/delete
   hideFilters = true;

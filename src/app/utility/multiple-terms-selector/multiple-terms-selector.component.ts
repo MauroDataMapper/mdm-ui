@@ -6,7 +6,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
-  selector: 'multiple-terms-selector',
+  selector: 'mdm-multiple-terms-selector',
   templateUrl: './multiple-terms-selector.component.html',
   styleUrls: ['./multiple-terms-selector.component.scss']
 })
@@ -31,8 +31,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
     loading: false
   };
   loading = false;
-  @Output() onSelectedTermsChange = new EventEmitter<any[]>();
-  @Input('on-add-button-click') onAddButtonClick: any;
+  @Output() selectedTermsChange = new EventEmitter<any[]>();
+  @Input() onAddButtonClick: any;
   dataSource = new MatTableDataSource();
   currentRecord: number;
   totalItemCount: number;

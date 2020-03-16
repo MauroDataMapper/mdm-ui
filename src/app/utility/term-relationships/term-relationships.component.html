@@ -16,7 +16,7 @@
             <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10" style="border-left: 1px solid #DDDDDD;padding:5px;">
 
                 <mdm-paged-list [name]="relationshipType"
-                               [mc-title]="relationshipType"
+                               [mcTitle]="relationshipType"
                                [type]="'static'"
                                [items]="relationshipTypes"
                                [page-size]="10">
@@ -24,10 +24,10 @@
                     <ng-template #pageListTemplate let-item>
                         <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
                             <mdm-element-link [element]="item.targetTerm"
-                                          [show-parent-data-model-name]="true"
-                                          [show-link]="true"
-                                          [show-type-title]="true"
-                                          [new-window]="false"></mdm-element-link>
+                                          [showParentDataModelName]="true"
+                                          [showLink]="true"
+                                          [showTypeTitle]="true"
+                                          [newWindow]="false"></mdm-element-link>
 
                         </div>
                     </ng-template>

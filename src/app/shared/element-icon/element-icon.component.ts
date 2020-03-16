@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "element-icon",
+  selector: 'mdm-element-icon',
   templateUrl: './element-icon.component.html',
   styleUrls: ['./element-icon.component.sass']
 })

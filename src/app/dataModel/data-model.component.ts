@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ResourcesService } from '../services/resources.service';
 import { MessageService } from '../services/message.service';
@@ -9,11 +9,11 @@ import { DataModelResult } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
-  selector: 'app-data-model',
+  selector: 'mdm-data-model',
   templateUrl: './data-model.component.html',
   styleUrls: ['./data-model.component.scss']
 })
-export class DataModelComponent implements OnInit {
+export class DataModelComponent implements OnInit, OnDestroy {
   dataModel: DataModelResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -90,9 +90,9 @@ export class DataModelComponent implements OnInit {
     this.resourcesService.dataModel
       .get(id, 'permissions', null)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
-        for (const attrname in permissions.body) {
+        permissions.body.forEach( attrname => {
           this.dataModel[attrname] = permissions.body[attrname];
-        }
+        });
         // Send it to message service to receive in child components
         this.messageService.FolderSendMessage(this.dataModel);
         this.messageService.dataChanged(this.dataModel);
@@ -174,7 +174,7 @@ export class DataModelComponent implements OnInit {
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false, location: tab.index != 0 } );
+    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false, location: tab.index !== 0 } );
     this.activeTab = tab.index;
 
     if (tab.name === 'diagram') {

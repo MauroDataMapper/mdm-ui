@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastrService } from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable({
@@ -9,27 +9,27 @@ export class MessageHandlerService {
 
     constructor(private ngToast: ToastrService) { }
     showError(defaultMessage, error) {
-        var text = defaultMessage;
+        let text = defaultMessage;
         if (error && error.status === 422) {
-            var result = this.getErrorText(error);
+            let result = this.getErrorText(error);
             if (result) {
                 text = result;
             }
         }
         this.ngToast.error(text);
 
-    };
+    }
 
     showSuccess(message) {
         this.ngToast.success(message);
-    };
+    }
 
     showWarning(message, timeout, className) {
         this.ngToast.warning(message);
-    };
+    }
 
     getErrorText(error) {
-        var errorText = "";
+        let errorText = '';
 
         if (error.error && error.error.errors) {
             errorText = error.error.errors[0].message;

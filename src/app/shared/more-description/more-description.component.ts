@@ -3,7 +3,7 @@ import { UserSettingsHandlerService } from '../../services/utility/user-settings
 import { MarkdownParserService } from '../../utility/markdown-parser.service';
 
 @Component({
-  selector: "more-description",
+  selector: 'mdm-more-description',
   templateUrl: './more-description.component.html',
   styleUrls: ['./more-description.component.sass']
 })
@@ -15,13 +15,13 @@ export class MoreDescriptionComponent implements OnInit {
     this.showMore = userSettingsHandler.get('expandMoreDescription');
   }
 
-  @Input('description') description: String;
+  @Input('description') description: string;
   @Input('length') length: any;
 
-  maxLength: number = 100;
-  showMore: boolean = false;
-  shortDesc: String;
-  fullDesc: String;
+  maxLength = 100;
+  showMore = false;
+  shortDesc: string;
+  fullDesc: string;
 
   ngOnInit() {
     if (this.length !== undefined) {

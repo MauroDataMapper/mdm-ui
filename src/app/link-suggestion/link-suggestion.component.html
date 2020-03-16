@@ -10,7 +10,7 @@
               <span>Source Data Model<span style="margin-left:3px;font-size: 12px;cursor: pointer;"
                                            *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank"><i
                 class="fas fa-external-link-alt"></i></a></span></span>
-              <model-selector-tree
+              <mdm-model-selector-tree
                 [processing]="model.loadingSource"
                 [placeholder]="'Select Source Data Model...'"
                 (on-select)="onSourceSelect"
@@ -19,18 +19,18 @@
                 [(ng-model)]="model.source"
                 [tree-search-domain-type]="'DataModel'"
                 [accepts]="['DataModel']">
-              </model-selector-tree>
+              </mdm-model-selector-tree>
             </div>
             <div *ngIf="model.source.domainType === 'DataElement'">
               <span class="badge importFormStep themeBackgroundColor">1</span>
               <span>Source Data Element</span>
               <div style="padding-left: 5px;">
-                <element-link
+                <mdm-element-link
                   [new-window]="true"
                   [show-type-title]="true"
-                  [element]="model.source"></element-link>
+                  [element]="model.source"></mdm-element-link>
                 <br>
-                <model-path [path]="model.source.breadcrumbs" [new-window]="true"></model-path>
+                <mdm-model-path [path]="model.source.breadcrumbs" [new-window]="true"></mdm-model-path>
               </div>
             </div>
           </div>
@@ -39,7 +39,7 @@
             <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
                                                 *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank"><i
             class="fas fa-external-link-alt"></i></a></span>
-            <model-selector-tree
+            <mdm-model-selector-tree
               [processing]="model.processing"
               [placeholder]="'Select Target Data Model...'"
               [(on-select)]="onTargetSelect "
@@ -48,7 +48,7 @@
               [(ng-model)]="model.target"
               [tree-search-domain-type]="'DataModel'"
               [accepts]="['DataModel']">
-            </model-selector-tree>
+            </mdm-model-selector-tree>
           </div>
 
           <div class="form-group">
@@ -125,15 +125,15 @@
                     <td mat-cell *matCellDef="let suggest"
                         style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
                       <div style="margin-bottom: 10px;">
-                        <element-link
+                        <mdm-element-link
                           [new-window]="true"
                           [show-type-title]="false"
-                          [element]="suggest.sourceDataElement"></element-link>
+                          [element]="suggest.sourceDataElement"></mdm-element-link>
                       </div>
-                      <model-path [path]="suggest.sourceDataElement.breadcrumbs"
+                      <mdm-model-path [path]="suggest.sourceDataElement.breadcrumbs"
                                   [new-window]="true"
                                   [do-not-display-status]="true"
-                                  [doNotShowParentDataModel]="true"></model-path>
+                                  [doNotShowParentDataModel]="true"></mdm-model-path>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="target">
@@ -146,15 +146,15 @@
                       <div *ngIf="!suggest.showMore">
                         <div *ngIf="suggest.selectedTarget" style="float:left;">
                           <div style="margin-bottom: 10px;">
-                            <element-link
+                            <mdm-element-link
                               [new-window]="true"
                               [show-type-title]="false"
-                              [element]="suggest.selectedTarget.dataElement"></element-link>
+                              [element]="suggest.selectedTarget.dataElement"></mdm-element-link>
                           </div>
-                          <model-path [path]="suggest.selectedTarget.dataElement.breadcrumbs"
+                          <mdm-model-path [path]="suggest.selectedTarget.dataElement.breadcrumbs"
                                       [new-window]="true"
                                       [do-not-display-status]="true"
-                                      [doNotShowParentDataModel]="true"></model-path>
+                                      [doNotShowParentDataModel]="true"></mdm-model-path>
                         </div>
                         <div style="float:right;top:0;right:0;position: relative;"
                              *ngIf="suggest.results && suggest.results.length > 0">
@@ -169,7 +169,7 @@
                       </div>
                       <div *ngIf="suggest.showMore">
                         <div style="float:left;width: 90%;">
-                          <mc-select
+                          <mdm-select
                             [record]="suggest"
                             [width]="'100%'"
                             [default-value]="suggest.selectedTarget"
@@ -188,15 +188,15 @@
                                     {{item.dataElement.label}}
                                   </div>
                                   <div>
-                                    <model-path [path]="item.dataElement.breadcrumbs"
+                                    <mdm-model-path [path]="item.dataElement.breadcrumbs"
                                                 [new-window]="true"
                                                 [do-not-display-status]="true"
-                                                [doNotShowParentDataModel]="true"></model-path>
+                                                [doNotShowParentDataModel]="true"></mdm-model-path>
                                   </div>
                                 </div>
                               </div>
                             </ng-template>
-                          </mc-select>
+                          </mdm-select>
                         </div>
                         <div style="float:left;margin-left:5px;margin-top:10px;">
                           <a style="font-size: 12px; font-style:italic;cursor: pointer;"

@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
-  selector: 'app-data-class',
+  selector: 'mdm-data-class',
   templateUrl: './data-class.component.html',
   styleUrls: ['./data-class.component.sass']
 })
@@ -42,7 +42,7 @@ export class DataClassComponent implements OnInit {
       return;
     }
 
-    if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() != '') {
+    if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
       this.parentDataClass = { id: this.stateService.params.dataClassId };
     }
 
@@ -167,7 +167,7 @@ export class DataClassComponent implements OnInit {
     this.stateHandler.Go(
       'dataClass',
       { tabView: tab.name },
-      { notify: false, location: tab.index != 0 }
+      { notify: false, location: tab.index !== 0 }
     );
     this.activeTab = tab.index;
   }

@@ -1,4 +1,4 @@
-import { ComponentRef } from "@angular/core/core";
+import { ComponentRef } from '@angular/core/core';
 
 export class Step {
     constructor() {}
@@ -9,5 +9,5 @@ export class Step {
     isProcessComplete: boolean;
     scope: any;
     compRef: ComponentRef<any>;
-    active:boolean;
+    active: boolean;
 }

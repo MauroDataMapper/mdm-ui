@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'annotation-list',
+  selector: 'mdm-annotation-list',
   templateUrl: './annotation-list.component.html',
   styleUrls: ['./annotation-list.component.sass']
 })
@@ -68,7 +68,7 @@ export class AnnotationListComponent implements AfterViewInit {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

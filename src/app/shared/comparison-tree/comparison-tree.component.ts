@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
-  selector: 'app-comparison-tree',
+  selector: 'mdm-comparison-tree',
   templateUrl: './comparison-tree.component.html',
   styleUrls: ['./comparison-tree.component.scss']
 })

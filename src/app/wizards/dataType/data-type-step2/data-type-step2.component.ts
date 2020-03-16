@@ -1,4 +1,15 @@
-import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, Input, QueryList, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChildren,
+  ViewChild,
+  EventEmitter,
+  Input,
+  QueryList,
+  ChangeDetectorRef,
+  AfterViewInit, OnDestroy
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Subscription, Observable, merge } from 'rxjs';
 import { ValidatorService } from '../../../services/validator.service';
@@ -11,11 +22,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'app-data-type-step2',
+  selector: 'mdm-data-type-step2',
   templateUrl: './data-type-step2.component.html',
   styleUrls: ['./data-type-step2.component.sass']
 })
-export class DataTypeStep2Component implements OnInit {
+export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
   @Input('parent') parent;
 
   successCount: number;
@@ -125,11 +136,11 @@ export class DataTypeStep2Component implements OnInit {
     ];
 
     if (
-      this.sort != null &&
-      this.sort != undefined &&
+      this.sort !== null &&
+      this.sort !== undefined &&
       this.sort.toArray().length > 0 &&
-      this.paginator != null &&
-      this.paginator != undefined &&
+      this.paginator !== null &&
+      this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
       this.sort
@@ -153,11 +164,11 @@ export class DataTypeStep2Component implements OnInit {
       this.dataSourceSelectedDataTypes.paginator = this.paginator.toArray()[1];
 
       if (
-        this.sort != null &&
-        this.sort != undefined &&
+        this.sort !== null &&
+        this.sort !== undefined &&
         this.sort.length > 1 &&
-        this.paginator != null &&
-        this.paginator != undefined &&
+        this.paginator !== null &&
+        this.paginator !== undefined &&
         this.paginator.length > 1
       ) {
         merge(
@@ -181,7 +192,7 @@ export class DataTypeStep2Component implements OnInit {
             map((data: any) => {
               this.totalItemCount = data.body.count;
               this.isLoadingResults = false;
-              return data.body['items'];
+              return data.body.items;
             }),
             catchError(() => {
               this.isLoadingResults = false;
@@ -214,7 +225,7 @@ export class DataTypeStep2Component implements OnInit {
     this.model.selectedDataTypes.forEach((sdt: any) => {
       const currentId = sdt.id;
       const item = this.recordsDataTypes.find(r => r.id === currentId);
-      if (item !== null && item != undefined) {
+      if (item !== null && item !== undefined) {
         item.checked = true;
       }
 
@@ -250,9 +261,7 @@ export class DataTypeStep2Component implements OnInit {
         this.model.selectedDataTypes.push(this.recordsDataTypes[i]);
       } else {
         const currentId = this.recordsDataTypes[i].id;
-        const index = this.model.selectedDataTypes.findIndex(function(r) {
-          return r.id === currentId;
-        });
+        const index = this.model.selectedDataTypes.findIndex(r => r.id === currentId);
 
         if (index !== -1) {
           this.model.selectedDataTypes.splice(index, 1);
@@ -304,8 +313,8 @@ export class DataTypeStep2Component implements OnInit {
     }
     if (this.model.createType === 'copy') {
       if (
-        this.model.selectedDataTypes != null &&
-        this.model.selectedDataTypes != undefined &&
+        this.model.selectedDataTypes !== null &&
+        this.model.selectedDataTypes !== undefined &&
         this.model.selectedDataTypes.length === 0
       ) {
         this.step.invalid = true;
@@ -328,7 +337,7 @@ export class DataTypeStep2Component implements OnInit {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
 
-      if (value !== '' && value != undefined) {
+      if (value !== '' && value !== undefined) {
         filter += name + '=' + value + '&';
       }
     });

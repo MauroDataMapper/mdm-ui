@@ -3,7 +3,7 @@ import { ResourcesService } from '../../../services/resources.service';
 import { MessageHandlerService } from '../../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-data-model-step2',
+  selector: 'mdm-data-model-step2',
   templateUrl: './data-model-step2.component.html',
   styleUrls: ['./data-model-step2.component.sass']
 })

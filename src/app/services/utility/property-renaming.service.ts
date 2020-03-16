@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
-	providedIn: 'root'
+  providedIn: 'root'
 })
 export class PropertyRenamingService {
 
-	constructor() {
-	}
+  constructor() {
+  }
 
-	renameKeys(obj) {
+  renameKeys(obj) {
 
-		const keyValues = Object.keys(obj).map(key => {
-			const newKey = this.replaceUnwantedChars(key.replace(/\./g, '_'));
-			return { [newKey]: obj[key] };
-		});
-		return Object.assign({}, ...keyValues);
-	}
+    const keyValues = Object.keys(obj).map(key => {
+      const newKey = this.replaceUnwantedChars(key.replace(/\./g, '_'));
+      return {[newKey]: obj[key]};
+    });
+    return Object.assign({}, ...keyValues);
+  }
 
-	replaceUnwantedChars = (str) => str.replace(
-		/([-_][a-z])/g,
-		(group) => group.toUpperCase()
-			.replace('-', '')
-			.replace('_', '')
-	);
+  replaceUnwantedChars = (str) => str.replace(
+    /([-_][a-z])/g,
+    (group) => group.toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  );
 }

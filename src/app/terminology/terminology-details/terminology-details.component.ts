@@ -12,7 +12,7 @@ import { ConfirmationModalComponent } from '../../modals/confirmation-modal/conf
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: "terminology-details",
+  selector: 'mdm-terminology-details',
   templateUrl: './terminology-details.component.html',
   styleUrls: ['./terminology-details.component.sass']
 })
@@ -83,9 +83,9 @@ export class TerminologyDetailsComponent implements OnInit {
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
-      this.editableForm.description = this.mcTerminology['description'];
-      if (this.mcTerminology['classifiers']) {
-        this.mcTerminology['classifiers'].forEach(item => {
+      this.editableForm.description = this.mcTerminology.description;
+      if (this.mcTerminology.classifiers) {
+        this.mcTerminology.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
         });
       }
@@ -259,8 +259,8 @@ export class TerminologyDetailsComponent implements OnInit {
             }
           })
           .afterClosed()
-          .subscribe(result => {
-            if (result.status !== 'ok') {
+          .subscribe(result2 => {
+            if (result2.status !== 'ok') {
               return;
             }
             this.delete(true);
@@ -337,8 +337,8 @@ export class TerminologyDetailsComponent implements OnInit {
         return;
       }
       this.resources.public.dataModelExporterPlugins().subscribe(
-        result => {
-          this.exportList = result;
+        result2 => {
+          this.exportList = result2;
         },
         error => {
           this.messageHandler.showError(

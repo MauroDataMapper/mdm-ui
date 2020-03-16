@@ -11,7 +11,7 @@ import { SharedService } from '../../services/shared.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-models',
+  selector: 'mdm-models',
   templateUrl: './models.component.html',
   styleUrls: ['./models.component.sass']
 })

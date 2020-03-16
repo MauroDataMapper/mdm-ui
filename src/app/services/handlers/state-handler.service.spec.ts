@@ -5,39 +5,37 @@ import {UIRouter, StateService, StateDeclaration, StateOrName, RawParams, HrefOp
 
 describe('StateHandlerService', () => {
   let spyRouter: UIRouter;
-  let currentText = "";   // What the spyRouter.stateService.current.toString() returns.
+  let currentText = '';   // What the spyRouter.stateService.current.toString() returns.
 
   beforeEach(() => {
     /**
      * Build a mock UIRouter and add some spies the tests can use.
      */
-    spyRouter = <UIRouter> {
-      stateService: <StateService> {
-        reload: function () {
+    spyRouter = {
+      stateService: {
+        reload() {
         },
-        href: function (name: string, params): string {
+        href(name: string, params): string {
           return name;
         },
-        current: <StateDeclaration> {
-        }
-      }
-    };
+        current: {
+        } as StateDeclaration
+      } as StateService
+    } as UIRouter;
 
-    spyOn(spyRouter.stateService, "reload");  // To verify if reload() is called.
+    spyOn(spyRouter.stateService, 'reload');  // To verify if reload() is called.
 
     /**
      * Calls to the routers href() always return the value of the stateOrName
      * giving a predictable value to be checked in the test.
      */
-    spyOn(spyRouter.stateService, "href").and.callFake((stateOrName, params) => {
+    spyOn(spyRouter.stateService, 'href').and.callFake((stateOrName, params) => {
       return stateOrName.toString();
     });
     /**
      * Allow tests to control the result by setting currentText.
      */
-    spyRouter.stateService.current.toString = jasmine.createSpy("toString()").and.callFake(function() {
-      return currentText;
-    });
+    spyRouter.stateService.current.toString = jasmine.createSpy('toString()').and.callFake(() => currentText);
 
     /**
      * Set up the test bed to support creation of StateHandlerService instances.
@@ -59,7 +57,7 @@ describe('StateHandlerService', () => {
    * Verifies that calling reload() gets passed through to the UIRouter's
    * reload and that no arguments are passed.
    */
-  it('should reload', function () {
+  it('should reload', () => {
     const handlerService = TestBed.get(StateHandlerService);
 
     handlerService.reload();
@@ -72,10 +70,10 @@ describe('StateHandlerService', () => {
   it('should get folder url', () => {
     const handlerService = TestBed.get(StateHandlerService);
 
-    currentText = "";
-    let result = handlerService.getURL('folder', null);
+    currentText = '';
+    const result = handlerService.getURL('folder', null);
     expect(spyRouter.stateService.href).toHaveBeenCalled();
-    expect(result).toEqual(handlerService.handler.states['folder']);
+    expect(result).toEqual(handlerService.handler.states.folder);
   });
 
   /**
@@ -84,15 +82,15 @@ describe('StateHandlerService', () => {
   it('should get simple app result', () => {
     const handlerService = TestBed.get(StateHandlerService);
 
-    let params = {
-      mode: "notAdvanced",
-      criteria: "criteria",
+    const params = {
+      mode: 'notAdvanced',
+      criteria: 'criteria',
       pageIndex: 1,
       pageSize: 256,
       offset: 0
     };
-    currentText = "appContainer.simpleApp.result";
-    let result = handlerService.getURL('terminology', params);
+    currentText = 'appContainer.simpleApp.result';
+    const result = handlerService.getURL('terminology', params);
 
     expect(result).toEqual('appContainer.simpleApp.element');
     expect(params.criteria).toBeNull();
@@ -106,9 +104,9 @@ describe('StateHandlerService', () => {
    */
   it('should get unknown', () => {
     const handlerService = TestBed.get(StateHandlerService);
-    currentText = "";
-    let name = 'Fjord defect';
-    let result = handlerService.getURL(name, null);
+    currentText = '';
+    const name = 'Fjord defect';
+    const result = handlerService.getURL(name, null);
     expect(result).toEqual(name);
   });
 });

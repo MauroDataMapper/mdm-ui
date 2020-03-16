@@ -4,7 +4,7 @@
             <h4>
                 <div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
-                       <app-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></app-inline-text-edit>
+                       <mdm-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
                     </div>
                 </div>
 
@@ -19,7 +19,7 @@
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%">
-                            <app-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editable-form]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                     </td>
                 </tr>
@@ -27,44 +27,44 @@
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
 
-                        <markdown-text-area [editable-form]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></markdown-text-area>
+                        <mdm-markdown-text-area [editable-form]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></mdm-markdown-text-area>
 
                     </td>
                 </tr>
                 <tr>
                     <th class="detailsRowHeader">DataModel</th>
                     <td class="elementDetailDescription">
-                        <model-path [path]="mcDataTypeObject.breadcrumbs"></model-path>
+                        <mdm-model-path [path]="mcDataTypeObject.breadcrumbs"></mdm-model-path>
                     </td>
                 </tr>
                 <tr>
                     <th class="detailsRowHeader">Type</th>
                     <td>
                         {{allDataTypesMap[mcDataTypeObject.domainType]["displayLabel"]}}
-                        <element-data-type [element-data-type]="mcDataTypeObject"
+                        <mdm-element-data-type [element-data-type]="mcDataTypeObject"
                                            [hide-name]="true"
                                            [show-type-name]="true"
                                            [show-ref-data-class]="true"
-                                           [hide-enum-list]="true"></element-data-type>
+                                           [hide-enum-list]="true"></mdm-element-data-type>
                     </td>
                 </tr>
                 <tr>
                     <th class="detailsRowHeader">Classifications</th>
                     <td>
-                        <app-element-classifications [(classifications)]="mcDataTypeObject.classifiers" [editable-form]="editableForm"></app-element-classifications>
+                        <mdm-element-classifications [(classifications)]="mcDataTypeObject.classifiers" [editable-form]="editableForm"></mdm-element-classifications>
                     </td>
                 </tr>
 
                 <tr show-if-role-is-writable mc-element="mcDataTypeObject">
                     <td colspan="2" style="text-align: right;">
                         <div style="float: right">
-                            <editable-form-buttons
+                            <mdm-editable-form-buttons
                                     [hide-edit]="true"
                                     [hide-delete]="true"
                                     [on-cancel-edit]="onCancelEdit"
                                     [editable]="editableForm"
                                     [text-location]="'left'">
-                            </editable-form-buttons>
+                            </mdm-editable-form-buttons>
                         </div>
                         <div style="float: right">
                             <div *ngIf="!editableForm.visible && !editableForm.deletePending" class="btn-group-xs" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">

@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-content-table',
+  selector: 'mdm-content-table',
   templateUrl: './content-table.component.html',
   styleUrls: ['./content-table.component.sass']
 })
@@ -26,7 +26,7 @@ export class ContentTableComponent implements AfterViewInit {
   failCount: number;
   total: number;
 
-  showStaticRecords: Function;
+  // showStaticRecords: Function;
 
   records: any[] = [];
 
@@ -72,7 +72,7 @@ export class ContentTableComponent implements AfterViewInit {
         map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

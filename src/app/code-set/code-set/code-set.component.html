@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
         <div style="width: 100%">
-            <code-set-details></code-set-details>
+            <mdm-code-set-details></mdm-code-set-details>
         </div>
         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
             <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
                 <mat-tab label="Terms">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <code-set-terms-table *ngIf="codeSetModel" [code-set]="codeSetModel" [type]="'dynamic'"></code-set-terms-table>
+                            <mdm-code-set-terms-table *ngIf="codeSetModel" [code-set]="codeSetModel" [type]="'dynamic'"></mdm-code-set-terms-table>
                         </div>
                     </ng-template>
                 </mat-tab>
@@ -16,7 +16,7 @@
                 <mat-tab label="Properties">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <mc-data-set-metadata *ngIf="codeSetModel" [parent]="codeSetModel" [type]="'dynamic'"></mc-data-set-metadata>
+                            <mdm-data-set-metadata *ngIf="codeSetModel" [parent]="codeSetModel" [type]="'dynamic'"></mdm-data-set-metadata>
                         </div>
                     </ng-template>
                 </mat-tab>
@@ -24,14 +24,14 @@
                 <mat-tab label="Comments">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <annotation-list *ngIf="codeSetModel" [parent]="codeSetModel"></annotation-list>
+                            <mdm-annotation-list *ngIf="codeSetModel" [parent]="codeSetModel"></mdm-annotation-list>
                         </div>
                     </ng-template>
                 </mat-tab>
                 <mat-tab label="History">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <app-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></app-history>
+                            <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></mdm-history>
                         </div>
                     </ng-template>
                 </mat-tab>
@@ -39,14 +39,14 @@
                 <mat-tab label="Links">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></element-link-list>
+                            <mdm-element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-element-link-list>
                         </div>
                     </ng-template>
                 </mat-tab>
                 <mat-tab label="Attachments">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></attachment-list>
+                            <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-attachment-list>
                         </div>
                     </ng-template>
                 </mat-tab>

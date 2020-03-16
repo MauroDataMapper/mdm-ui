@@ -8,6 +8,8 @@ export class FolderResult {
   readableByUsers: any[];
   readableByEveryone: boolean;
   lastUpdated: any;
+  parentDataModel: string;
+  parentDataClass: string;
 }
 
 export class SearchResult {

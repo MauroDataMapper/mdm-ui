@@ -9,7 +9,7 @@ import { PropertyRenamingService } from '../../services/utility/property-renamin
 import { ObjectEnhancerService } from '../../services/utility/object-enhancer.service';
 
 @Component({
-  selector: 'app-configuration',
+  selector: 'mdm-configuration',
   templateUrl: './configuration.component.html',
   styleUrls: ['./configuration.component.sass']
 })
@@ -45,10 +45,10 @@ export class ConfigurationComponent implements OnInit {
         // this.properties = this.propertiesTemp;
 
         this.oldConfiguration = Object.assign({}, this.properties);
-      }),
+      },
       err => {
         this.messageHandler.showError('There was a problem getting the configuration properties.', err);
-      };
+      });
   }
 
   // Create or edit a configuration property

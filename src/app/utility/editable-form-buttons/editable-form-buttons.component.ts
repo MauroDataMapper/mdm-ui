@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Editable } from '../../model/folderModel';
 
 @Component({
-  selector: "editable-form-buttons",
+  selector: 'mdm-editable-form-buttons',
   templateUrl: './editable-form-buttons.component.html',
    styleUrls: ['./editable-form-buttons.component.sass']
 })

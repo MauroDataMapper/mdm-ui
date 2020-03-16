@@ -7,7 +7,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { BroadcastService } from '../services/broadcast.service';
 
 @Component({
-  selector: 'app-import',
+  selector: 'mdm-import',
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.sass']
 })

@@ -6,7 +6,7 @@ import {
   QueryList,
   EventEmitter,
   AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectorRef, OnInit
 } from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { merge, Observable, BehaviorSubject } from 'rxjs';
@@ -16,11 +16,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: "summary-metadata-table",
+  selector: 'mdm-summary-metadata-table',
   templateUrl: './summary-metadata-table.component.html',
   styleUrls: ['./summary-metadata-table.component.sass']
 })
-export class SummaryMetadataTableComponent implements AfterViewInit {
+export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
 
   hideFilters = true;
@@ -66,7 +66,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
           );
         }),
         map((data: any) => {
-          data.body['items'].forEach(item => {
+          data.body.items.forEach(item => {
             if (
               item.summaryMetadataType &&
               item.summaryMetadataType.toLowerCase() === 'map'
@@ -82,7 +82,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
             ) {
               item.summaryMetadataType = 'number';
               item.summaryMetadataReports.forEach(report => {
-                report.reportValue = parseInt(report.reportValue);
+                report.reportValue = parseInt(report.reportValue, 10);
                 report.reportDate = report.reportDate.substring(0, 10);
               });
             }
@@ -90,7 +90,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

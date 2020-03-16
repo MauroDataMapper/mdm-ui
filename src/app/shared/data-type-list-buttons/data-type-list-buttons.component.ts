@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: "data-type-list-buttons",
+  selector: 'mdm-data-type-list-buttons',
   templateUrl: './data-type-list-buttons.component.html',
   styleUrls: ['./data-type-list-buttons.component.sass']
 })

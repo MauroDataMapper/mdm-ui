@@ -2,13 +2,13 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
-  selector: 'app-img-croppie',
+  selector: 'mdm-img-croppie',
   templateUrl: './img-croppie.component.html',
   styleUrls: ['./img-croppie.component.sass']
 })
 export class ImgCroppieComponent implements OnInit {
   @Output() cropImage: EventEmitter<any> = new EventEmitter();
-  public imageBase64: string = '';
+  public imageBase64 = '';
   imageChangedEvent: any = '';
   croppedImage: any = '';
 

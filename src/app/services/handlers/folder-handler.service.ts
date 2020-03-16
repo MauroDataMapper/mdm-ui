@@ -37,7 +37,7 @@ export class FolderHandlerService {
         if (result.status !== 'ok') {
           return promise;
         }
-        this.delete(id, false).then(function(result) { resolve(result);
+        this.delete(id, false).then(result2 => { resolve(result2);
           })
           .catch((error) => {
             reject(error);

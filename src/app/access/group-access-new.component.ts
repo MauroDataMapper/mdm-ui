@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'app-group-access-new',
+  selector: 'mdm-group-access-new',
   templateUrl: './group-access-new.component.html',
   styleUrls: ['./group-access-new.component.sass']
 })

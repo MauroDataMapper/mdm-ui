@@ -53,8 +53,8 @@
                         <td class="detailsRowHeader">Aliases</td>
                         <td>
                             <div style="width:50%" *ngIf="mcTerm">
-                                <app-element-alias [inEditMode]="editableForm.visible" [aliases]="mcTerm.aliases"
-                                    [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
+                                <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcTerm.aliases"
+                                    [editable-form]="editableForm" [property]="'aliases'"></mdm-element-alias>
                             </div>
                         </td>
                     </tr>
@@ -67,8 +67,8 @@
                                 <span *ngIf="mcTerm.terminology.finalised" class="label label-success"
                                     style="vertical-align: middle;font-size: 9px;">Finalised</span>
                             </span>
-                            <element-link [element]="mcTerm.terminology" [show-link]="true" [new-window]="false">
-                            </element-link>
+                            <mdm-element-link [element]="mcTerm.terminology" [show-link]="true" [new-window]="false">
+                            </mdm-element-link>
 
                         </td>
                     </tr>
@@ -76,8 +76,8 @@
                         <td class="detailsRowHeader">Description</td>
                         <td class="elementDetailDescription">
                             <div *ngIf="hasResult">
-                                <markdown-text-area [editable-form]="editableForm" [element]="mcTerm"
-                                    [property]="'description'"></markdown-text-area>
+                                <mdm-markdown-text-area [editable-form]="editableForm" [element]="mcTerm"
+                                    [property]="'description'"></mdm-markdown-text-area>
                             </div>
                         </td>
                     </tr>
@@ -93,9 +93,9 @@
                     <tr>
                         <td class="detailsRowHeader">Classifications</td>
                         <td *ngIf="mcTerm?.classifiers">
-                            <app-element-classifications [(classifications)]="mcTerm.classifiers"
+                            <mdm-element-classifications [(classifications)]="mcTerm.classifiers"
                                 [editable-form]="editableForm" [element]="mcTerm" [property]="'classifiers'">
-                            </app-element-classifications>
+                            </mdm-element-classifications>
 
                         </td>
                     </tr>

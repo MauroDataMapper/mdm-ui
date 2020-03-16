@@ -3,7 +3,7 @@
         <mat-horizontal-stepper #stepper>
             <mat-step *ngFor="let stp of steps; let i = index">
                 <ng-template matStepLabel>{{stp.title}}</ng-template>
-                <dcl-wrapper [type]="stp.component" [(step)]="steps[i]"></dcl-wrapper>
+                <mdm-dcl-wrapper [type]="stp.component" [(step)]="steps[i]"></mdm-dcl-wrapper>
                 <div class="row">
                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                         <button class="btn btn-default btn-sm" style="margin-right: 5px" matStepperPrevious>

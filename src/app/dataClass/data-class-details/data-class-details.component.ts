@@ -1,4 +1,13 @@
-import { Component, ContentChildren, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { DataClassResult, EditableDataClass } from '../../model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
@@ -11,11 +20,11 @@ import { StateHandlerService } from '../../services/handlers/state-handler.servi
 import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
-  selector: 'app-data-class-details',
+  selector: 'mdm-data-class-details',
   templateUrl: './data-class-details.component.html',
   styleUrls: ['./data-class-details.component.sass']
 })
-export class DataClassDetailsComponent implements OnInit {
+export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   result: DataClassResult;
   hasResult = false;
   subscription: Subscription;
@@ -71,11 +80,11 @@ export class DataClassDetailsComponent implements OnInit {
       //     x=>x.edit({focus: true, select: true});
       // )
       this.editableForm.visible = true;
-      if (this.min == '*') {
+      if (this.min === '*') {
         this.min = '-1';
       }
 
-      if (this.max == '*') {
+      if (this.max === '*') {
         this.max = '-1';
       }
     };
@@ -103,18 +112,18 @@ export class DataClassDetailsComponent implements OnInit {
         });
       }
 
-      if (this.min == '-1') {
+      if (this.min === '-1') {
         this.min = '*';
       }
 
-      if (this.max == '-1') {
+      if (this.max === '-1') {
         this.max = '*';
       }
     };
   }
 
   private setEditableForm() {
-    this.editableForm.description = this.result['description'];
+    this.editableForm.description = this.result.description;
     this.editableForm.label = this.result.label;
     this.min = this.result.minMultiplicity;
     this.max = this.result.maxMultiplicity;
@@ -153,7 +162,7 @@ export class DataClassDetailsComponent implements OnInit {
       serverResult => {
         this.result = serverResult;
 
-        this.editableForm.description = this.result['description'];
+        this.editableForm.description = this.result.description;
         this.editableForm.label = this.result.label;
 
         if (this.result.classifiers) {
@@ -169,13 +178,13 @@ export class DataClassDetailsComponent implements OnInit {
           });
         }
 
-        if (this.result.minMultiplicity && this.result.minMultiplicity == -1) {
+        if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
           this.min = '*';
         } else {
           this.min = this.result.minMultiplicity;
         }
 
-        if (this.result.maxMultiplicity && this.result.maxMultiplicity == -1) {
+        if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
           this.max = '*';
         } else {
           this.max = this.result.maxMultiplicity;
@@ -244,11 +253,11 @@ export class DataClassDetailsComponent implements OnInit {
         this.max != null &&
         this.max !== ''
       ) {
-        if (this.newMinText == '*') {
+        if (this.newMinText === '*') {
           this.newMinText = -1;
         }
 
-        if (this.max == '*') {
+        if (this.max === '*') {
           this.max = -1;
         }
       }
@@ -258,8 +267,8 @@ export class DataClassDetailsComponent implements OnInit {
         description: this.editableForm.description,
         aliases,
         classifiers,
-        minMultiplicity: parseInt(this.min),
-        maxMultiplicity: parseInt(this.max)
+        minMultiplicity: parseInt(this.min, 10),
+        maxMultiplicity: parseInt(this.max, 10)
       };
       this.resourcesService.dataClass
         .put(
@@ -291,11 +300,11 @@ export class DataClassDetailsComponent implements OnInit {
 
   validateMultiplicity(minVal, maxVal) {
     let min = '';
-    if (minVal != null && minVal != undefined) {
+    if (minVal != null && minVal !== undefined) {
       min = minVal + '';
     }
     let max = '';
-    if (maxVal != null && maxVal != undefined) {
+    if (maxVal != null && maxVal !== undefined) {
       max = maxVal + '';
     }
 

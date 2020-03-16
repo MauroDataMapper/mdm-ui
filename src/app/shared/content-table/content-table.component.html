@@ -3,12 +3,12 @@
         <span class="title">Content <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
 
         <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parentDataModel.editable && !parentDataModel.finalised">
-            <data-type-list-buttons [display-records]="records"
+            <mdm-data-type-list-buttons [display-records]="records"
                                     (delete-rows)="deleteRows()"
                                     [delete-in-progress] ="deleteInProgress"
                                     [show-content-dropdown]="true"
                                     [addDataClass]="addDataClass"
-                                    [addDataElement] = "addDataElement"></data-type-list-buttons>
+                                    [addDataElement] = "addDataElement"></mdm-data-type-list-buttons>
         </div>
     </div>
 
@@ -27,7 +27,7 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" [ngClass]="{'dataClassRecord contentTable': record.domainType == 'DataClass'}">
                     <div>
-                        <element-link [element]="record" [parent-data-model]="{id:record.dataModel}" [parent-data-class]="{id:record.dataClassParent}"></element-link>
+                        <mdm-element-link [element]="record" [parent-data-model]="{id:record.dataModel}" [parent-data-class]="{id:record.dataClassParent}"></mdm-element-link>
                     </div>
                     <div>
                         <small class="elementDetailMCType">{{record.domainType}}</small>
@@ -47,18 +47,18 @@
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;" [ngClass]="{'descBottomBorder':record.domainType == 'DataElement'}">
                         <span style="font-style: italic;font-size:11px;">Description:</span>
-                        <more-description description="{{record.description}}"></more-description>
+                        <mdm-more-description description="{{record.description}}"></mdm-more-description>
                     </div>
                     <div *ngIf="record.domainType == 'DataElement'" style="margin-bottom:9px;" >
                         <span style="font-style: italic;font-size:11px;">Data Type:</span>
-                        <element-data-type
+                        <mdm-element-data-type
                                 [hide-enum-list]="true"
                                 [element-data-type]="record.dataType"
-                                [mc-parent-data-model]="parentDataModel"></element-data-type>
+                                [mc-parent-data-model]="parentDataModel"></mdm-element-data-type>
                     </div>
 
                     <div>
-                        <all-links-in-paged-list [parent]="record" ></all-links-in-paged-list>
+                        <mdm-all-links-in-paged-list [parent]="record" ></mdm-all-links-in-paged-list>
                     </div>
                 </td>
             </ng-container>

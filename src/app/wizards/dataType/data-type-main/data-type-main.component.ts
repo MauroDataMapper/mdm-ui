@@ -8,7 +8,7 @@ import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.compo
 import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
 
 @Component({
-  selector: 'app-data-type-main',
+  selector: 'mdm-data-type-main',
   templateUrl: './data-type-main.component.html',
   styleUrls: ['./data-type-main.component.sass']
 })

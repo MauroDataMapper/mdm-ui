@@ -9,9 +9,9 @@
           <div style="padding: 0px !important;" *ngIf="result">
                         <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
                                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                                  <app-inline-text-edit [inEditMode]="editableForm.visible"
+                                  <mdm-inline-text-edit [inEditMode]="editableForm.visible"
                                                         [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20"
-                                                        [styleCss]="'dataModelDetailsLabel'"></app-inline-text-edit>
+                                                        [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
                                 <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
                                    (click)="toggleFavourite()" matTooltip="Favourite"></i>
                                 <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
@@ -37,8 +37,8 @@
         </h4>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
           <small class="elementDetailMCType">Data Model</small>
-          <span style="padding-left: 5px; padding-right: 5px"> <app-element-status
-            [result]="result"></app-element-status></span>
+          <span style="padding-left: 5px; padding-right: 5px"> <mdm-element-status
+            [result]="result"></mdm-element-status></span>
           <span *ngIf="result?.deleted" class="label label-danger"
                 style="vertical-align: middle;font-size: 9px;">Deleted</span>
           <br>
@@ -57,33 +57,33 @@
           <td class="detailsRowHeader">Aliases</td>
           <td>
             <div style="width:50%">
-              <app-element-alias [inEditMode]="editableForm.visible" [aliases]="result?.aliases"
-                                 [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
+              <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="result?.aliases"
+                                 [editable-form]="editableForm" [property]="'aliases'"></mdm-element-alias>
             </div>
           </td>
         </tr>
         <tr>
           <td class="detailsRowHeader">Author</td>
           <td *ngIf="result">
-            <app-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.author"
+            <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.author"
                                   class="dataModelDetailsLabel" name="moduleNameAuthor" size="20"
-                                  style="width: 45%"></app-inline-text-edit>
+                                  style="width: 45%"></mdm-inline-text-edit>
           </td>
         </tr>
         <tr>
           <td class="detailsRowHeader">Organisation</td>
           <td *ngIf="result">
-            <app-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.organisation"
+            <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.organisation"
                                   class="dataModelDetailsLabel" name="moduleNameOrganisation" size="20"
-                                  style="width: 45%"></app-inline-text-edit>
+                                  style="width: 45%"></mdm-inline-text-edit>
           </td>
         </tr>
         <tr>
           <td class="detailsRowHeader">Description</td>
           <td class="elementDetailDescription">
             <div *ngIf="hasResult">
-              <markdown-text-area [editable-form]="editableForm" [element]="result"
-                                  [property]="'description'"></markdown-text-area>
+              <mdm-markdown-text-area [editable-form]="editableForm" [element]="result"
+                                  [property]="'description'"></mdm-markdown-text-area>
             </div>
           </td>
         </tr>
@@ -99,8 +99,8 @@
         <tr>
           <td class="detailsRowHeader">Classifications</td>
           <td *ngIf="result">
-            <app-element-classifications [(classifications)]="result.classifiers" [editable-form]="editableForm"
-                                         [element]="result" [property]="'classifiers'"></app-element-classifications>
+            <mdm-element-classifications [(classifications)]="result.classifiers" [editable-form]="editableForm"
+                                         [element]="result" [property]="'classifiers'"></mdm-element-classifications>
           </td>
         </tr>
         <tr>
@@ -140,13 +140,13 @@
                   <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                 </button>
               </div>
-              <editable-form-buttons [hidden]="!editableForm.visible"
+              <mdm-editable-form-buttons [hidden]="!editableForm.visible"
                                      [on-cancel-edit]="onCancelEdit"
                                      [editable]="editableForm"
                                      [text-location]="'left'"
                                      [hide-delete]="true"
                                      [hide-cancel]="false"
-                                     [processing]="deleteInProgress"></editable-form-buttons>
+                                     [processing]="deleteInProgress"></mdm-editable-form-buttons>
             </div>
             <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" matTooltip="Finalise"
                  style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
@@ -268,13 +268,13 @@
 
     <div style="width:100%;" ng-if="activeTab.name === 'access' && folder">
       <div class="userAccess" style="margin: 10px 0px 50px 0px">
-        <app-share-with [mcElement]="'dataModel'" [mcDomainType]="'DataModel'"></app-share-with>
+        <mdm-share-with [mcElement]="'dataModel'" [mcDomainType]="'DataModel'"></mdm-share-with>
         <div colspan="2">
           <div style="margin-top: 10px">
-            <app-user-access-new [parent]="'dataModel'" [parentType]="'DataModel'"></app-user-access-new>
+            <mdm-user-access-new [parent]="'dataModel'" [parentType]="'DataModel'"></mdm-user-access-new>
           </div>
           <div style="margin-top: 50px">
-            <app-group-access-new [parent]="'dataModel'" [parentType]="'DataModel'"></app-group-access-new>
+            <mdm-group-access-new [parent]="'dataModel'" [parentType]="'DataModel'"></mdm-group-access-new>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-group',
+  selector: 'mdm-group',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.scss']
 })

@@ -6,15 +6,15 @@ import { UpgradeComponent } from '@angular/upgrade/static';
 })
 export class JointDiagram3Directive extends UpgradeComponent {
 
-    @Input("mc-element") mcElement: '=';
-    @Input("hide-expand") hideExpand: '=';
-    @Input("diagram-name") diagramName: '=';
-    @Input("min-height") minHeight: '=';
+    @Input('mc-element') mcElement: '=';
+    @Input('hide-expand') hideExpand: '=';
+    @Input('diagram-name') diagramName: '=';
+    @Input('min-height') minHeight: '=';
     @Input() height: '=';
     @Input() width: '=';
-    @Input("grid-size") gridSize: '=';
+    @Input('grid-size') gridSize: '=';
     @Input() scale: '=';
-    @Input("root-cell") rootCell: '=';
+    @Input('root-cell') rootCell: '=';
     @Input() cells: '=';
     @Input() diagram: '=';
 

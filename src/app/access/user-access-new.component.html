@@ -27,7 +27,7 @@
                                 {{record.user.emailAddress}}
                             </div>
                             <div *ngIf="record.isNew">
-                                <mc-select [width]="'100%'"
+                                <mdm-select [width]="'100%'"
                                            [accept-typed-input]="true"
                                            [value-type]="'dynamic'"
                                            [default-value]="record.user"
@@ -44,7 +44,7 @@
                                        <div>{{item.emailAddress}}</div>
                                     </ng-template>
 
-                                </mc-select>
+                                </mdm-select>
                                 <small *ngIf="record.edit.errors && record.edit.errors['user']" class="errorMessage">{{record.edit.errors['user']}}</small>
                             </div>
                         </div>

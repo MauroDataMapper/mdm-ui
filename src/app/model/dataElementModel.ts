@@ -1,18 +1,19 @@
 export class DataElementResult {
-        id : string;
-        domainType : string;
-        label : string;
-        dataModel : string;
-        breadcrumbs : Breadcrumb[];
-        aliases : any[] = [];
-        semanticLinks : SemanticLink[];
+        id: string;
+        domainType: string;
+        label: string;
+        dataModel: string;
+        description: string;
+        breadcrumbs: Breadcrumb[];
+        aliases: any[] = [];
+        semanticLinks: SemanticLink[];
         classifiers: Classifiers[];
-        editable : boolean;
-        lastUpdated : Date;
-        maxMultiplicity : number;
-        minMultiplicity : number;
+        editable: boolean;
+        lastUpdated: Date;
+        maxMultiplicity: number;
+        minMultiplicity: number;
         parentDataModel: string;
-        parentDataClass : string;
+        parentDataClass: string;
         finalised: boolean;
         dateFinalised: string;
         dataType: string;
@@ -24,7 +25,7 @@ export class DataElementResult {
 export class Breadcrumb {
     id: string;
     label: string;
-    domainType:string;
+    domainType: string;
     finalised: boolean;
 
 }
@@ -32,7 +33,7 @@ export class Breadcrumb {
 export class SemanticLink {
     id: string;
     linkType: string;
-    domainType:string;
+    domainType: string;
     source: Source;
     target: Target;
 
@@ -40,7 +41,7 @@ export class SemanticLink {
 
 export class Source {
     id: string;
-    domainType:string;
+    domainType: string;
     label: string;
     dataModel: boolean;
     breadcrumbs: Breadcrumb[];
@@ -49,7 +50,7 @@ export class Source {
 
 export class Target {
     id: string;
-    domainType:string;
+    domainType: string;
     label: string;
     dataModel: boolean;
     breadcrumbs: Breadcrumb[];
@@ -59,19 +60,19 @@ export class Target {
 export class Classifiers {
     id: string;
     label: string;
-    lastUpdated:string;
+    lastUpdated: string;
 
 }
 
 export class EditableDataElement {
 
-    constructor(){}
+    constructor() {}
 
     deletePending: boolean;
-    label:string;
+    label: string;
     description: string;
-    classifiers:Classifiers[] = [];
-    aliases:any[] = [];
+    classifiers: Classifiers[] = [];
+    aliases: any[] = [];
     visible: boolean;
     waiting: boolean;
     validationError: boolean;

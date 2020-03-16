@@ -1,9 +1,9 @@
 <div style="margin-top: 2px;">
     <div class="input-group ">
-        <input  type="text" 
-                class="form-control outlined-input" 
-                [(ngModel)]="formData.filterCriteria" 
-                placeholder="Search favourite items..." 
+        <input  type="text"
+                class="form-control outlined-input"
+                [(ngModel)]="formData.filterCriteria"
+                placeholder="Search favourite items..."
                 (keyup)="onSearchInputKeyDown($event)">
         <span class="input-group-btn tree-top-actions">
             <button mat-stroked-button type="button" matTooltipPosition="below" matTooltip="Search"  (click)="search()" aria-label="Search">
@@ -13,7 +13,7 @@
     </div>
     <ul class="favourites" style="padding: 5px;">
         <li class="favourites" *ngFor="let favourite of favourites">
-            <element-icon [element]="favourite" ></element-icon>
+            <mdm-element-icon [element]="favourite" ></mdm-element-icon>
             <span
                 (contextmenu)="rightClick($event,favourite)"
                 (click)='nodeClick($event, favourite)'

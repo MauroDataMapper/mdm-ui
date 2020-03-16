@@ -13,7 +13,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: "element-link-list",
+  selector: 'mdm-element-link-list',
   templateUrl: './element-link-list.component.html',
   styleUrls: ['./element-link-list.component.sass']
 })
@@ -85,7 +85,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

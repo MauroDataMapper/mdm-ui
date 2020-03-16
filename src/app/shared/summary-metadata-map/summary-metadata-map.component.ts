@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "summary-metadata-map",
+  selector: 'mdm-summary-metadata-map',
   templateUrl: './summary-metadata-map.component.html',
   styleUrls: ['./summary-metadata-map.component.sass']
 })

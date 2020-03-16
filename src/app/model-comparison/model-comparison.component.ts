@@ -7,7 +7,7 @@ import { _ } from 'underscore';
 import { forkJoin, Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-model-comparison',
+  selector: 'mdm-model-comparison',
   templateUrl: './model-comparison.component.html',
   styleUrls: ['./model-comparison.component.scss']
 })
@@ -104,7 +104,7 @@ export class ModelComparisonComponent implements OnInit {
       i < this.sourceModel.semanticLinks.length;
       i++
     ) {
-      let link = this.sourceModel.semanticLinks[i];
+      const link = this.sourceModel.semanticLinks[i];
       if (
         link.linkType === 'New Version Of' &&
         link.target.id === this.targetModel.id
@@ -118,7 +118,7 @@ export class ModelComparisonComponent implements OnInit {
       i < this.targetModel.semanticLinks.length;
       i++
     ) {
-      let link = this.targetModel.semanticLinks[i];
+      const link = this.targetModel.semanticLinks[i];
       if (
         link.linkType === 'Superseded By' &&
         link.target.id === this.sourceModel.id
@@ -196,7 +196,7 @@ export class ModelComparisonComponent implements OnInit {
 
     // Load all children of source & target dataModels
     // to rest deleted, created, modified properties
-    let obvs = [];
+    const obvs = [];
     obvs.push(this.loadModelTree(this.sourceModel));
     obvs.push(this.loadModelTree(this.targetModel));
     forkJoin(obvs).subscribe((results: any) => {
@@ -254,7 +254,7 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[leftId].modified = true;
     diffMap[rightId].modified = true;
 
-    let update = {
+    const update = {
       property: 'dataType',
       title: 'DataType',
       left: dataTypeDiff.left,
@@ -270,7 +270,7 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[leftId].modified = true;
     diffMap[rightId].modified = true;
 
-    let update = {
+    const update = {
       property: propName,
       title: this.validator.capitalize(propName),
       left:
@@ -305,7 +305,7 @@ export class ModelComparisonComponent implements OnInit {
     }
     if (metadataDiff.modified) {
       metadataDiff.modified.forEach(modified => {
-        let update = {
+        const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
           key: modified.key,
@@ -349,7 +349,7 @@ export class ModelComparisonComponent implements OnInit {
 
     if (enumerationValuesDiff.modified) {
       enumerationValuesDiff.modified.forEach(modified => {
-        let update = {
+        const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
           label: modified.label,
@@ -380,7 +380,7 @@ export class ModelComparisonComponent implements OnInit {
           this.processing = false;
           const result = res.body;
 
-          let diffMap = {};
+          const diffMap = {};
 
           // Run for DataModel
           result.diffs.forEach(diff => {
@@ -451,7 +451,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.breadcrumbs) {
                   this.modifiedParents(el.breadcrumbs, diffMap);
 
-                  let parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
+                  const parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.created = true;
                   el.modified = false;
@@ -495,7 +495,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.breadcrumbs) {
                   this.modifiedParents(el.breadcrumbs, diffMap);
 
-                  let parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
+                  const parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.deleted = true;
                   el.created = false;
@@ -552,7 +552,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.leftBreadcrumbs) {
                   this.modifiedParents(el.leftBreadcrumbs, diffMap);
 
-                  let parentDC =
+                  const parentDC =
                     el.leftBreadcrumbs[el.leftBreadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.modified = true;
@@ -565,7 +565,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.rightBreadcrumbs) {
                   this.modifiedParents(el.rightBreadcrumbs, diffMap);
 
-                  let parentDC =
+                  const parentDC =
                     el.rightBreadcrumbs[el.rightBreadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.modified = true;
@@ -578,7 +578,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataTypes' && el.leftBreadcrumbs) {
                   this.modifiedParents(el.leftBreadcrumbs, diffMap);
 
-                  let parentDM = el.leftBreadcrumbs[0];
+                  const parentDM = el.leftBreadcrumbs[0];
                   this.initDiff(parentDM.id, diffMap);
                   el.modified = true;
                   el.deleted = false;
@@ -590,7 +590,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataTypes' && el.rightBreadcrumbs) {
                   this.modifiedParents(el.rightBreadcrumbs, diffMap);
 
-                  let parentDM = el.rightBreadcrumbs[0];
+                  const parentDM = el.rightBreadcrumbs[0];
                   this.initDiff(parentDM.id, diffMap);
                   el.modified = true;
                   el.deleted = false;

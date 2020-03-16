@@ -8,7 +8,7 @@ import { SharedService } from '../services/shared.service';
 const columns: string[] = ['field', 'value'];
 
 @Component({
-  selector: 'app-error',
+  selector: 'mdm-error',
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss']
 })
@@ -65,10 +65,10 @@ export class ErrorComponent implements OnInit {
     const description = JSON.stringify(this.lastError, null, 2);
 
     this.youtrackService.reportIssueToYouTrack(summary, description).subscribe(
-      (data: Object) => {
+      (data: object) => {
         this.successfulReport();
       },
-      (data: Object) => {
+      (data: object) => {
         this.errorReport();
       }
     );

@@ -27,7 +27,7 @@
                                 {{record.group.label}}
                             </div>
                             <div *ngIf="record.isNew">
-                                <mc-select [width]="'100%'"
+                                <mdm-select [width]="'100%'"
                                            [accept-typed-input]="false"
                                            [value-type]="'static'"
                                            [default-value]="record.group"
@@ -42,7 +42,7 @@
                                     <ng-template #lineContent let-item>
                                         <div>{{item.label}}</div>
                                     </ng-template>
-                                </mc-select>
+                                </mdm-select>
                                 <small *ngIf="record.edit.errors && record.edit.errors['group']" class="errorMessage">{{record.edit.errors['group']}}</small>
                             </div>
                         </div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 
 @Component({
-  selector: 'app-users-app-container',
+  selector: 'mdm-users-app-container',
   templateUrl: './users-app-container.component.html',
   styleUrls: ['./users-app-container.component.sass']
 })

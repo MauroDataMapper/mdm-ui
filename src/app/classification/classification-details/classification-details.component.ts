@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, QueryList, ViewChildren, ContentChildren } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  QueryList,
+  ViewChildren,
+  ContentChildren,
+  AfterViewInit,
+  OnDestroy
+} from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageService } from '../../services/message.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
@@ -14,11 +23,11 @@ import { BroadcastService } from '../../services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 
 @Component({
-  selector: "classification-details",
+  selector: 'mdm-classification-details',
   templateUrl: './classification-details.component.html',
   styleUrls: ['./classification-details.component.sass']
 })
-export class ClassificationDetailsComponent implements OnInit {
+export class ClassificationDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
@@ -91,7 +100,7 @@ export class ClassificationDetailsComponent implements OnInit {
       this.editableForm.label = this.result.label;
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
-      this.editableForm.description = this.result['description'];
+      this.editableForm.description = this.result.description;
     };
 
     // this.subscription = this.messageService.editMode.subscribe((message: boolean) => {
@@ -139,7 +148,7 @@ export class ClassificationDetailsComponent implements OnInit {
       serverResult => {
         this.result = serverResult;
         this.editableForm.label = this.result.label;
-        this.editableForm.description = this.result['description'];
+        this.editableForm.description = this.result.description;
         const access: any = this.securityHandler.folderAccess(this.result);
         this.showEdit = access.showEdit;
         this.showPermission = access.showPermission;
@@ -194,11 +203,11 @@ export class ClassificationDetailsComponent implements OnInit {
   formBeforeSave = function() {
     this.editMode = false;
     this.errorMessage = '';
-    this.editForm.forEach(x => (this.result['label'] = x.getHotState().value));
+    this.editForm.forEach(x => (this.result.label = x.getHotState().value));
 
     const resource = {
-      id: this.result['id'],
-      label: this.result['label'],
+      id: this.result.id,
+      label: this.result.label,
       description: this.editableForm.description
     };
 
@@ -253,9 +262,9 @@ export class ClassificationDetailsComponent implements OnInit {
   delete() {
     this.resourcesService.dataClass
       .delete(
-        this.result['parentDataModel'],
-        this.result['parentDataClass'],
-        this.result['id']
+        this.result.parentDataModel,
+        this.result.parentDataClass,
+        this.result.id
       )
       .subscribe(
         result => {
@@ -263,7 +272,7 @@ export class ClassificationDetailsComponent implements OnInit {
           this.stateHandler.Go(
             'dataModel',
             {
-              id: this.result['parentDataModel'],
+              id: this.result.parentDataModel,
               reload: true,
               location: true
             },

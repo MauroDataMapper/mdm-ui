@@ -51,7 +51,7 @@ export class HelpDialogueHandlerService {
     }
 
     let wikiLink = environment.wiki;
-    if (wikiLink && wikiLink[wikiLink.length - 1] == '/') {
+    if (wikiLink && wikiLink[wikiLink.length - 1] === '/') {
       wikiLink = wikiLink.substr(0, name.length - 1);
     }
     wikiLink = wikiLink + '/index.php?title=' + this.dialogueMaps[name];

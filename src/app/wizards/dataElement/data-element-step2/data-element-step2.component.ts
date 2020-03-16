@@ -6,7 +6,7 @@ import {
   ViewChild,
   ViewChildren,
   ChangeDetectorRef,
-  QueryList
+  QueryList, AfterViewInit, OnDestroy
 } from '@angular/core';
 import {merge, Subscription} from 'rxjs';
 import {NgForm} from '@angular/forms';
@@ -20,11 +20,11 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MessageHandlerService} from '../../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-data-element-step2',
+  selector: 'mdm-data-element-step2',
   templateUrl: './data-element-step2.component.html',
   styleUrls: ['./data-element-step2.component.sass']
 })
-export class DataElementStep2Component implements OnInit {
+export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestroy {
 
   // constructor() { }
 
@@ -137,11 +137,11 @@ export class DataElementStep2Component implements OnInit {
     ];
 
     if (
-      this.sort != null &&
-      this.sort != undefined &&
+      this.sort !== null &&
+      this.sort !== undefined &&
       this.sort.toArray().length > 0 &&
-      this.paginator != null &&
-      this.paginator != undefined &&
+      this.paginator !== null &&
+      this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
       this.sort
@@ -166,10 +166,10 @@ export class DataElementStep2Component implements OnInit {
 
       if (
         this.sort != null &&
-        this.sort != undefined &&
+        this.sort !== undefined &&
         this.sort.length > 0 &&
         this.paginator != null &&
-        this.paginator != undefined &&
+        this.paginator !== undefined &&
         this.paginator.length > 0
       ) {
         merge(
@@ -193,7 +193,7 @@ export class DataElementStep2Component implements OnInit {
             map((data: any) => {
               this.totalItemCount = data.body.count;
               this.isLoadingResults = false;
-              return data.body['items'];
+              return data.body.items;
             }),
             catchError(() => {
               this.isLoadingResults = false;
@@ -292,7 +292,7 @@ export class DataElementStep2Component implements OnInit {
 
       const currentId = sdt.id;
       const item = this.recordsDataElements.find(r => r.id === currentId);
-      if (item !== null && item != undefined) {
+      if (item !== null && item !== undefined) {
         item.checked = true;
       }
 
@@ -323,9 +323,7 @@ export class DataElementStep2Component implements OnInit {
       } else {
 
         const currentId = this.recordsDataElements[i].id;
-        const index = this.model.selectedDataElements.findIndex(function(r) {
-          return r.id === currentId;
-        });
+        const index = this.model.selectedDataElements.findIndex(r => r.id === currentId);
 
         if (index !== -1) {
           this.model.selectedDataElements.splice(index, 1);
@@ -345,9 +343,7 @@ export class DataElementStep2Component implements OnInit {
       this.model.selectedDataElements.push(record);
     } else {
 
-      const index = this.model.selectedDataElements.findIndex(function(r) {
-        return r.id === record.id;
-      });
+      const index = this.model.selectedDataElements.findIndex(r => r.id === record.id);
 
       if (index !== -1) {
         this.model.selectedDataElements.splice(index, 1);
@@ -457,7 +453,7 @@ export class DataElementStep2Component implements OnInit {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
 
-      if (value !== '' && value != undefined) {
+      if (value !== '' && value !== undefined) {
         filter += name + '=' + value + '&';
       }
     });

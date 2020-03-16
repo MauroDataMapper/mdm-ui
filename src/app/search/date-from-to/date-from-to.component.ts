@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/cor
 import { MatDatepicker } from '@angular/material/datepicker';
 
 @Component({
-  selector: "date-from-to",
+  selector: 'mdm-date-from-to',
   templateUrl: './date-from-to.component.html'
   // providers: [
   //   //  { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }

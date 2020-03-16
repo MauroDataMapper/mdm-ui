@@ -31,15 +31,15 @@
             <mat-tab-group>
                 <mat-tab label="Members">
                     <ng-template matTabContent>
-                        <div style="width: 100%;">              
-                       <app-group-member-table [parent]="group" ></app-group-member-table> 
+                        <div style="width: 100%;">
+                       <mdm-group-member-table [parent]="group" ></mdm-group-member-table>
                        </div>
-                    </ng-template>           
+                    </ng-template>
                 </mat-tab>
                 <mat-tab label="History">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <app-history [parent]="group" [parentType]="'UserGroup'" ></app-history>
+                            <mdm-history [parent]="group" [parentType]="'UserGroup'" ></mdm-history>
                         </div>
                     </ng-template>
                     </mat-tab>

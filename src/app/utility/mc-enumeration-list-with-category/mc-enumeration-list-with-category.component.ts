@@ -9,7 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 
 @Component({
-  selector: 'app-mc-enumeration-list-with-category',
+  selector: 'mdm-mc-enumeration-list-with-category',
   templateUrl: './mc-enumeration-list-with-category.component.html',
   styleUrls: ['./mc-enumeration-list-with-category.component.sass']
 })
@@ -62,10 +62,10 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.enumerationValues != null && this.enumerationValues != undefined) {
+    if (this.enumerationValues !== null && this.enumerationValues !== undefined) {
       this.showRecords(this.enumerationValues);
 
-      if (this.parent != null && this.parent != undefined) {
+      if (this.parent !== null && this.parent !== undefined) {
         const access = this.securityHandler.elementAccess(this.parent);
         this.showEdit = access.showEdit;
       }
@@ -74,9 +74,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   // Drag and drop
   dropTable(event: CdkDragDrop<any[]>) {
-    const prevIndex = this.displayItems.findIndex(function(r) {
-      return r.id === event.item.data.id;
-    });
+    const prevIndex = this.displayItems.findIndex(r => r.id === event.item.data.id);
 
     moveItemInArray(this.displayItems, prevIndex, event.currentIndex);
 
@@ -359,7 +357,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       isNew: true
     };
 
-    if (this.displayItems == undefined) {
+    if (this.displayItems === undefined) {
       this.displayItems = [];
     }
 
@@ -370,18 +368,18 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     let isValid = true;
     record.edit.errors = [];
 
-    if (record.edit['key'].trim().length === 0) {
-      record.edit.errors['key'] = 'Key can\'t be empty!';
+    if (record.edit.key.trim().length === 0) {
+      record.edit.errors.key = 'Key can\'t be empty!';
       isValid = false;
     }
-    if (record.edit['value'].trim().length === 0) {
-      record.edit.errors['value'] = 'Value can\'t be empty!';
+    if (record.edit.value.trim().length === 0) {
+      record.edit.errors.value = 'Value can\'t be empty!';
       isValid = false;
     }
 
     if (
-      this.allRecordsWithGroups != null &&
-      this.allRecordsWithGroups != undefined
+      this.allRecordsWithGroups !== null &&
+      this.allRecordsWithGroups !== undefined
     ) {
       for (let i = 0; i < this.allRecordsWithGroups.length; i++) {
         if (!this.allRecordsWithGroups[i]) {
@@ -394,10 +392,10 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
           continue;
         }
         if (
-          this.allRecordsWithGroups[i]['key'].toLowerCase().trim() ===
-          record.edit['key'].toLowerCase().trim()
+          this.allRecordsWithGroups[i].key.toLowerCase().trim() ===
+          record.edit.key.toLowerCase().trim()
         ) {
-          record.edit.errors['key'] = 'Key already exists';
+          record.edit.errors.key = 'Key already exists';
           isValid = false;
         }
       }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {SharedService} from "./shared.service"
+import {SharedService} from './shared.service';
 import { Observable } from 'rxjs';
-import {SecurityHandlerService} from "./handlers/security-handler.service";
+import {SecurityHandlerService} from './handlers/security-handler.service';
 import { mergeMap } from 'rxjs/operators';
 
 @Injectable({
@@ -17,48 +17,48 @@ export class YoutrackService {
         private sharedService: SharedService,
         private securityHandlerService: SecurityHandlerService
     ) {
-        this.username = securityHandlerService.getUserFromCookie().firstName + " " +
-            securityHandlerService.getUserFromCookie().lastName
+        this.username = securityHandlerService.getUserFromCookie().firstName + ' ' +
+            securityHandlerService.getUserFromCookie().lastName;
     }
 
     reportIssueToYouTrack(summary: string,
                           description: string): Observable<object> {
-        //make sure youTrack is configured
+        // make sure youTrack is configured
 
 
         return this.getYoutrackProjectId(this.sharedService.youTrack.project).pipe(
-          mergeMap((data: object) => this.submitIssueToYouTrack(data[0]["id"], summary, description))
+          mergeMap((data: object) => this.submitIssueToYouTrack(data[0].id, summary, description))
         );
     }
 
-    getYoutrackProjectId(shortName: string): Observable<Object> {
-        var url:string = this.sharedService.youTrack.url + "/api/admin/projects?fields=id,name,shortName&query=" + encodeURIComponent(shortName);
+    getYoutrackProjectId(shortName: string): Observable<object> {
+        const url: string = this.sharedService.youTrack.url + '/api/admin/projects?fields=id,name,shortName&query=' + encodeURIComponent(shortName);
 
-        return this.httpClient.get(url)
+        return this.httpClient.get(url);
     }
 
 
     submitIssueToYouTrack(projectId: string,
                           summary: string,
-                          description: string): Observable<Object> {
+                          description: string): Observable<object> {
 
-        var url = this.sharedService.youTrack.url + "/api/issues";
+        const url = this.sharedService.youTrack.url + '/api/issues';
 
 
-        var body = {
-            summary: summary,
-            description: description,
+        const body = {
+            summary,
+            description,
             project: {
                 id: projectId
             },
             customFields: [ {
                 value: this.username,
-                name: "Reporter's name",
-                $type: "SimpleIssueCustomField"
+                name: 'Reporter\'s name',
+                $type: 'SimpleIssueCustomField'
             } ]
         };
 
-        return this.httpClient.post(url, body)
+        return this.httpClient.post(url, body);
 
     }
 

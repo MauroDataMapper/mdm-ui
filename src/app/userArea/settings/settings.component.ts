@@ -5,7 +5,7 @@ import { DialogPosition } from '@angular/material/dialog';
 import { UserSettingsHandlerService } from '../../services/utility/user-settings-handler.service';
 
 @Component({
-  selector: 'app-settings',
+  selector: 'mdm-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })

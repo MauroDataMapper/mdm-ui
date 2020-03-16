@@ -6,7 +6,7 @@
             </div>
             <div style="padding-left: 8px;margin-top: 5px;">
                 <strong>Terminology*</strong>
-                <mc-select
+                <mdm-select
                         width="'100%'"
                         [accept-typed-input]="false"
                         [value-type]="'static'"
@@ -18,7 +18,7 @@
                     <ng-template #lineContent let-item>
                         <div>{{item.label}}</div>
                     </ng-template>
-                </mc-select>
+                </mdm-select>
             </div>
             <div style="padding-left: 8px;">
                 <strong>Term</strong>
@@ -44,10 +44,10 @@
                                            name="showSupersededModels"
                                            (change)="termToggle(element)"
                                            [(ngModel)]="element.checked">
-                                    <element-link
+                                    <mdm-element-link
                                                   [new-window]= "true"
                                                   [show-href]="true"
-                                                  [element]="element"></element-link>
+                                                  [element]="element"></mdm-element-link>
 
 
 
@@ -76,7 +76,7 @@
                 <div style="font-weight: bold;">Selected Terms</div>
                 <div  style="min-height: 200px;">
                     <div style="position: relative; border: 1px solid #DDD;padding: 5px;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
-                        <mc-paged-list
+                        <mdm-paged-list
                                 [name]="'linkType'"
                                 [mc-title]="'linkType'"
                                 [type]="'static'"
@@ -89,11 +89,11 @@
                                             <span>
                                                 <i class="fas fa-times warning" (click)="removeTerm(item)"></i>
                                             </span>
-                                            <element-link [element]="item"></element-link>
+                                            <mdm-element-link [element]="item"></mdm-element-link>
                                         </div>
                                         <div>
                                             <span style="font-size: 12px; padding-left: 5px;margin-right: 2px; padding-right: 4px;">
-                                                <element-link [element]="item.terminology"></element-link>
+                                                <mdm-element-link [element]="item.terminology"></mdm-element-link>
                                             </span>
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@
 
                             </ng-template>
 
-                        </mc-paged-list>
+                        </mdm-paged-list>
                     </div>
                     <div style="margin-top: 5px;" *ngIf="!hideAddButton">
                         <button type="button" class="btn btn-sm btn-default themeColor" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>

@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ContentChildren,
   ElementRef,
@@ -28,11 +29,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
 
 @Component({
-  selector: "term-details",
+  selector: 'mdm-term-details',
   templateUrl: './term-details.component.html',
   styleUrls: ['./term-details.component.scss']
 })
-export class TermDetailsComponent implements OnInit {
+export class TermDetailsComponent implements OnInit, AfterViewInit {
   securitySection = false;
   processing = false;
   exportError = null;
@@ -118,15 +119,15 @@ export class TermDetailsComponent implements OnInit {
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
-      this.editableForm.description = this.mcTerm['description'];
-      this.editableForm.url = this.mcTerm['url'];
-      if (this.mcTerm['classifiers']) {
-        this.mcTerm['classifiers'].forEach(item => {
+      this.editableForm.description = this.mcTerm.description;
+      this.editableForm.url = this.mcTerm.url;
+      if (this.mcTerm.classifiers) {
+        this.mcTerm.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
         });
       }
-      if (this.mcTerm['aliases']) {
-        this.mcTerm['aliases'].forEach(item => {
+      if (this.mcTerm.aliases) {
+        this.mcTerm.aliases.forEach(item => {
           this.editableForm.aliases.push(item);
         });
       }
@@ -145,28 +146,28 @@ export class TermDetailsComponent implements OnInit {
       serverResult => {
         this.mcTerm = serverResult;
 
-        this.editableForm.url = this.mcTerm['url'];
-        this.editableForm.description = this.mcTerm['description'];
-        if (this.mcTerm['classifiers']) {
-          this.mcTerm['classifiers'].forEach(item => {
+        this.editableForm.url = this.mcTerm.url;
+        this.editableForm.description = this.mcTerm.description;
+        if (this.mcTerm.classifiers) {
+          this.mcTerm.classifiers.forEach(item => {
             this.editableForm.classifiers.push(item);
           });
         }
-        if (this.mcTerm['aliases']) {
-          this.mcTerm['aliases'].forEach(item => {
+        if (this.mcTerm.aliases) {
+          this.mcTerm.aliases.forEach(item => {
             this.editableForm.aliases.push(item);
           });
         }
-        if (this.mcTerm['semanticLinks']) {
-          this.mcTerm['semanticLinks'].forEach(link => {
+        if (this.mcTerm.semanticLinks) {
+          this.mcTerm.semanticLinks.forEach(link => {
             if (link.linkType === 'New Version Of') {
               this.compareToList.push(link.target);
             }
           });
         }
 
-        if (this.mcTerm['semanticLinks']) {
-          this.mcTerm['semanticLinks'].forEach(link => {
+        if (this.mcTerm.semanticLinks) {
+          this.mcTerm.semanticLinks.forEach(link => {
             if (link.linkType === 'Superseded By') {
               this.compareToList.push(link.target);
             }
@@ -183,7 +184,7 @@ export class TermDetailsComponent implements OnInit {
 
   watchDataModelObject() {
     const access: any = this.securityHandler.elementAccess(this.mcTerm);
-    if (access != undefined) {
+    if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
       this.showDelete = access.showDelete;
@@ -224,11 +225,11 @@ export class TermDetailsComponent implements OnInit {
       aliases.push(alias);
     });
     const resource = {
-      id: this.mcTerm['id'],
-      code: this.mcTerm['code'],
-      definition: this.mcTerm['definition'],
+      id: this.mcTerm.id,
+      code: this.mcTerm.code,
+      definition: this.mcTerm.definition,
       description: this.editableForm.description,
-      terminology: this.mcTerm['terminology'],
+      terminology: this.mcTerm.terminology,
       aliases,
       classifiers
     };

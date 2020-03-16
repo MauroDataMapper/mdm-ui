@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-data-class-step3',
+  selector: 'mdm-data-class-step3',
   templateUrl: './data-class-step3.component.html',
   styleUrls: ['./data-class-step3.component.sass']
 })

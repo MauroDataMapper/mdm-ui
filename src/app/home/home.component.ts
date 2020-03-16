@@ -8,7 +8,7 @@ import { RegisterModalComponent } from '../modals/register-modal/register-modal.
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-home',
+  selector: 'mdm-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass']
 })

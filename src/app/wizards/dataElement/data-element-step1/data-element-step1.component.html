@@ -3,8 +3,8 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span>
                 How do you want to add new Data Element(s) to <span>
-                    <element-link [new-window]="true"
-                                  [element]="model.parent"></element-link>
+                    <mdm-element-link [new-window]="true"
+                                  [element]="model.parent"></mdm-element-link>
                 </span> ?
             </span>
         </div>
@@ -43,7 +43,7 @@
                                    style="cursor: pointer">
                             <span style="cursor: pointer;">Copy Data Element(s) from...</span>
                             <div style="margin-left: 45px;">
-                                <model-selector-tree
+                                <mdm-model-selector-tree
                                         [(on-select)]="onSelect"
                                         [default-elements]="model.copyFromDataClass"
                                         [placeholder]="'Select Data Class...'"
@@ -53,7 +53,7 @@
                                         (ngModelChange)="model.copyFromDataClass = $event"
                                         [accepts]="['DataClass']">
 
-                                </model-selector-tree>
+                                </mdm-model-selector-tree>
                             </div>
                         </div>
                     </div>

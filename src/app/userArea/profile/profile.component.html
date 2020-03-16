@@ -15,9 +15,9 @@
 	<div>
 	</div>
 </div>
-<app-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></app-img-croppie>
+<mdm-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></mdm-img-croppie>
 <div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px;">
 	<button (click)="clear()" type="button" class="btn btn-default btn-xs">Cancel</button>
 	<button (click)="savePicture()" type="button" class="btn btn-primary btn-xs">Save</button>
 </div>
-<app-user-details [after-save]="afterSave" (refreshUserDetails)='userDetails()'></app-user-details>
+<mdm-user-details [after-save]="afterSave" (refreshUserDetails)='userDetails()'></mdm-user-details>

@@ -7,7 +7,7 @@ export class FilterPipe implements PipeTransform {
 
   transform(value: any) {
 
-  return value.filter(val => val.canExportMultipleDomains == true);
+  return value.filter(val => val.canExportMultipleDomains === true);
   }
 
 }

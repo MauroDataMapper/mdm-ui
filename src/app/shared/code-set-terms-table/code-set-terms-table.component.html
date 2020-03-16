@@ -27,8 +27,8 @@
                     </div>
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-                    <element-link
-                       [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}"></element-link>
+                    <mdm-element-link
+                       [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}"></mdm-element-link>
                                     </td>
             </ng-container>
             <ng-container matColumnDef="term">
@@ -42,10 +42,10 @@
                     </div>
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-                    <element-link
+                    <mdm-element-link
                             [parent-data-model]="{id:record.dataModel}"
                             [parent-data-class]="{id:record.dataClass}"
-                            [element]="record"></element-link>
+                            [element]="record"></mdm-element-link>
 
                 </td>
             </ng-container>
@@ -65,7 +65,7 @@
                     </div>
 
                     <div title="Aliases">
-                        <app-element-alias [aliases]="record.aliases"></app-element-alias>
+                        <mdm-element-alias [aliases]="record.aliases"></mdm-element-alias>
                     </div>
                 </td>
             </ng-container>
@@ -74,7 +74,7 @@
                 <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
                     <div *ngIf="access && access.showEdit">
 
-                        <table-buttons [record]="record" [index]="i"  (delete)="delete($event[0],$event[1])"  [hide-edit]="true" ></table-buttons>
+                        <mdm-table-buttons [record]="record" [index]="i"  (delete)="delete($event[0],$event[1])"  [hide-edit]="true" ></mdm-table-buttons>
                     </div>
                 </td>
             </ng-container>

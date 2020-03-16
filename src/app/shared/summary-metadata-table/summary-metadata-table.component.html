@@ -26,25 +26,25 @@
                 </th>
                 <td  *matCellDef="let record" style="max-width: 65%;width: 65%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="record.summaryMetadataType === 'map'">
-                        <summary-metadata-map [summary]="record" [chart-type]="'bar'"  [show-more-details-btn]="true"></summary-metadata-map>
+                        <mdm-summary-metadata-map [summary]="record" [chart-type]="'bar'"  [show-more-details-btn]="true"></mdm-summary-metadata-map>
                     </div>
 
                     <div *ngIf="record.summaryMetadataType === 'number' ">
-                        <summary-metadata-map [summary]="record" [chart-type]="'line'"  [show-more-details-btn]="true"></summary-metadata-map>
+                        <mdm-summary-metadata-map [summary]="record" [chart-type]="'line'"  [show-more-details-btn]="true"></mdm-summary-metadata-map>
                     </div>
                 </td>
             </ng-container>
-            
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
     </div>
-    
-    <mat-card *ngIf="isLoadingResults" 
+
+    <mat-card *ngIf="isLoadingResults"
               style="display: flex; justify-content: center; align-items: center">
-        <mat-progress-spinner 
-            color="primary" 
+        <mat-progress-spinner
+            color="primary"
             mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>

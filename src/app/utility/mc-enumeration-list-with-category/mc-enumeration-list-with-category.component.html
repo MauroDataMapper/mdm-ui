@@ -38,7 +38,7 @@
 
 				<div *ngIf="record.inEdit">
 					<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['category']}">
-						<mc-select [width]="'100%'"
+						<mdm-select [width]="'100%'"
 								   [accept-typed-input]="true"
 								   [value-type]="'static'"
 								   [default-value]="{key:record.edit.category, value:record.edit.category}"
@@ -53,7 +53,7 @@
 							<ng-template #lineContent let-item>
 								<div>{{item.value}}</div>
 							</ng-template>
-						</mc-select>
+						</mdm-select>
 						<small *ngIf="record.edit.errors && record.edit.errors['category']" class="errorMessage">{{record.edit.errors['category']}}</small>
 					</div>
 				</div>
@@ -145,7 +145,7 @@
 
 		<tr mat-header-row *matHeaderRowDef="displayedColumnsEnums"></tr>
 		<tr mat-row *matRowDef="let record; columns: displayedColumnsEnums;" cdkDrag [cdkDragData]="record" [cdkDragDisabled]="record.isCategoryRow"></tr>
-		
+
 	</table>
 	<!--<div *ngIf="displayItems && displayItems.length > 0">-->
 

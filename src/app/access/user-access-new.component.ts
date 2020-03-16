@@ -13,7 +13,7 @@ import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-user-access-new',
+  selector: 'mdm-user-access-new',
   templateUrl: './user-access-new.component.html',
   styleUrls: ['./user-access-new.component.sass']
 })
@@ -83,11 +83,11 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
     this.folderResult = this.messageService.getFolderPermissions();
     for (
       let i = 0;
-      this.folderResult['writeableByUsers'] &&
-      i < this.folderResult['writeableByUsers'].length;
+      this.folderResult.writeableByUsers &&
+      i < this.folderResult.writeableByUsers.length;
       i++
     ) {
-      const user = this.folderResult['writeableByUsers'][i];
+      const user = this.folderResult.writeableByUsers[i];
       this.usersMap[user.emailAddress] = {
         user,
         readAccess: false,
@@ -97,11 +97,11 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
 
     for (
       let i = 0;
-      this.folderResult['readableByUsers'] &&
-      i < this.folderResult['readableByUsers'].length;
+      this.folderResult.readableByUsers &&
+      i < this.folderResult.readableByUsers.length;
       i++
     ) {
-      const user = this.folderResult['readableByUsers'][i];
+      const user = this.folderResult.readableByUsers[i];
       if (!this.usersMap[user.emailAddress]) {
         this.usersMap[user.emailAddress] = {
           user,

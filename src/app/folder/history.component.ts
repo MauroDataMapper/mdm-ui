@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { ResourcesService } from '../services/resources.service';
 import { SearchResult } from '../model/folderModel';
 import { ElementTypesService } from '../services/element-types.service';
@@ -7,12 +7,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-    selector: 'app-history',
+    selector: 'mdm-history',
     templateUrl: './history.component.html',
     // styleUrls: ['./history.component.sass']
 })
 
-export class HistoryComponent implements OnInit {
+export class HistoryComponent implements OnInit, AfterViewInit {
 
     public result: SearchResult;
     public dataSetResult: any[];
@@ -72,7 +72,7 @@ export class HistoryComponent implements OnInit {
         let resource = this.elementMap.find(x => x.id === this.parentType);
 
         for (const type in this.elementMap) {
-            if (this.elementMap[type].id == this.parentTypeVal) {
+            if (this.elementMap[type].id === this.parentTypeVal) {
                 resource = this.elementMap[type];
                 break;
             }

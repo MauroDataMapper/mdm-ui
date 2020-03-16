@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChildren, ViewChild } from '@angular/core';
+import {Component, OnInit, ElementRef, ViewChildren, ViewChild, AfterViewInit} from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '../../../services/utility/message-handler.service';
 import { ResourcesService } from '../../../services/resources.service';
@@ -9,11 +9,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-modules',
+  selector: 'mdm-modules',
   templateUrl: './modules.component.html',
   styleUrls: ['./modules.component.sass']
 })
-export class ModulesComponent implements OnInit {
+export class ModulesComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -76,9 +76,9 @@ export class ModulesComponent implements OnInit {
 
       this.totalItemCount = this.records.length;
       this.dataSource.data = this.records;
-    }),
+    },
       err => {
         this.messageHandler.showError('There was a problem loading the modules.', err );
-      }
+      });
   }
 }

@@ -4,7 +4,7 @@ import { StateHandlerService } from '../../services/handlers/state-handler.servi
 import { SharedService } from '../../services/shared.service';
 
 @Component({
-  selector: 'app-home',
+  selector: 'mdm-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass']
 })

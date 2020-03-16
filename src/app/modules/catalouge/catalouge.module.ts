@@ -57,7 +57,7 @@ import { DataClassComponent } from 'src/app/dataClass/data-class/data-class.comp
 import { DataClassDetailsComponent } from 'src/app/dataClass/data-class-details/data-class-details.component';
 import { ShowIfRolesWritableDirective } from 'src/app/directives/show-if-roles-writable.directive';
 import { DataModelMainComponent } from 'src/app/wizards/dataModel/data-model-main/data-model-main.component';
-import { DclWrapper } from 'src/app/wizards/dcl-wrapper.component';
+import { DclWrapperComponent } from 'src/app/wizards/dcl-wrapper.component';
 import { DataModelStep1Component } from 'src/app/wizards/dataModel/data-model-step1/data-model-step1.component';
 import { DataModelStep2Component } from 'src/app/wizards/dataModel/data-model-step2/data-model-step2.component';
 import { DataClassMainComponent } from 'src/app/wizards/dataClass/data-class-main/data-class-main.component';
@@ -194,7 +194,7 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
     DataModelMainComponent,
-    DclWrapper,
+    DclWrapperComponent,
     DataModelStep1Component,
     DataModelStep2Component,
     DataClassMainComponent,
@@ -346,7 +346,7 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
     DataModelMainComponent,
-    DclWrapper,
+    DclWrapperComponent,
     DataModelStep1Component,
     DataModelStep2Component,
     DataClassMainComponent,

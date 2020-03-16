@@ -3,9 +3,9 @@
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<span>
 				How do you want to add new Data Type(s) to <span>
-					<element-link [parent-data-model]="{id:model.parent}"
+					<mdm-element-link [parent-data-model]="{id:model.parent}"
 					              [new-window]="true"
-					              [element]="model.parent"></element-link>
+					              [element]="model.parent"></mdm-element-link>
 				</span> ? <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
 			</span>
 		</div>
@@ -44,7 +44,7 @@
 								   style="cursor: pointer">
 							<span style="cursor: pointer;">Copy Data Type(s) from...</span>
 							<div style="margin-left: 45px;">
-								<model-selector-tree [(on-select)]="onSelect"
+								<mdm-model-selector-tree [(on-select)]="onSelect"
 													 [default-elements]="model.copyFromDataModel"
 													 [placeholder]="'Select Data Model...'"
 													 [processing]="model.createType != 'copy'"
@@ -53,7 +53,7 @@
 													 [tree-search-domain-type]="'DataModel'"
 													 (ngModelChange)="model.copyFromDataModel = $event"
 													 [accepts]="['DataModel']">
-								</model-selector-tree>
+								</mdm-model-selector-tree>
 							</div>
 						</div>
 					</div>

@@ -7,7 +7,7 @@
 
     <div class="row" style="margin-bottom: 10px;">
         <div class="col-lg-6 col-md-6 col-xs-10 col-sm-10">
-            <mc-select [width]="'100%'"
+            <mdm-select [width]="'100%'"
                        [multi-select]="false"
                        [accept-typed-input]="false"
                        [value-type]="'static'"
@@ -19,17 +19,17 @@
                 <ng-template #lineContent let-item>
                     <div>{{item.displayName}} <span style="font-style: italic;font-size: 10px;">{{item.version}}</span></div>
                 </ng-template>
-            </mc-select>
+            </mdm-select>
         </div>
     </div>
 
 
     <div class="row" style="margin-bottom: 10px;" *ngIf="dataTypes">
         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-            <element-owned-data-type-list [parent]="{editable:false}"
+            <mdm-element-owned-data-type-list [parent]="{editable:false}"
                                           [type]="'static'"
                                           [loading-data]="loadingData"
-                                          [child-owned-data-types]="dataTypes"></element-owned-data-type-list>
+                                          [child-owned-data-types]="dataTypes"></mdm-element-owned-data-type-list>
         </div>
     </div>
 

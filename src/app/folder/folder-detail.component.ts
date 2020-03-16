@@ -1,6 +1,15 @@
 // @ts-ignore
 import { FolderResult, Editable } from '../model/folderModel';
-import { Component, OnInit, AfterViewInit, Input, ViewChildren, QueryList, ContentChildren } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  Input,
+  ViewChildren,
+  QueryList,
+  ContentChildren,
+  OnDestroy
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
@@ -13,11 +22,11 @@ import { DialogPosition } from '@angular/material/dialog';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
 
 @Component({
-  selector: 'app-folder-detail',
+  selector: 'mdm-folder-detail',
   templateUrl: './folder-detail.component.html',
   styleUrls: ['./folder-detail.component.css']
 })
-export class FolderDetailComponent implements OnInit, AfterViewInit {
+export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
@@ -87,7 +96,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit {
       this.editableForm.label = this.result.label;
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
-      this.editableForm.description = this.result['description'];
+      this.editableForm.description = this.result.description;
     };
 
     // this.subscription = this.messageService.editMode.subscribe((message: boolean) => {
@@ -130,7 +139,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit {
       serverResult => {
         this.result = serverResult;
         this.editableForm.label = this.result.label;
-        this.editableForm.description = this.result['description'];
+        this.editableForm.description = this.result.description;
         const access: any = this.securityHandler.folderAccess(this.result);
         this.showEdit = access.showEdit;
         this.showPermission = access.showPermission;
@@ -187,7 +196,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit {
     this.errorMessage = '';
 
     const resource = {
-      id: this.result['id'],
+      id: this.result.id,
       label: this.editableForm.label,
       description: this.editableForm.description
     };

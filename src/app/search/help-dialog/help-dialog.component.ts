@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 
 @Component({
-  selector: 'app-help-dialog',
+  selector: 'mdm-help-dialog',
   templateUrl: './help-dialog.component.html',
 
 })

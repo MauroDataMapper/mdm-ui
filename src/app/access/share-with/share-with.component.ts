@@ -5,7 +5,7 @@ import { ResourcesService } from '../../services/resources.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-share-with',
+  selector: 'mdm-share-with',
   templateUrl: './share-with.component.html',
   styleUrls: ['./share-with.component.sass']
 })
@@ -37,8 +37,8 @@ export class ShareWithComponent implements OnInit {
 
   ngOnInit() {
     this.folderResult = this.messageService.getFolderPermissions();
-    this.readableByEveryone = this.folderResult['readableByEveryone'];
-    this.readableByAuthenticated = this.folderResult['readableByAuthenticated'];
+    this.readableByEveryone = this.folderResult.readableByEveryone;
+    this.readableByAuthenticated = this.folderResult.readableByAuthenticated;
     this.type = this.supportedDomainTypes[this.mcDomainType];
     this.endPoint = this.resourcesService[this.type.name];
     this.message = this.type.message;

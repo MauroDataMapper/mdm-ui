@@ -2,7 +2,7 @@ import { Component, AfterViewInit, ViewChild, HostListener, ElementRef, Renderer
 import { trigger, state, transition, animate, style } from '@angular/animations';
 
 @Component({
-  selector: "two-side-panel",
+  selector: 'mdm-two-side-panel',
   templateUrl: './two-side-panel.component.html',
   styleUrls: ['./two-side-panel.component.sass'],
   animations: [
@@ -27,15 +27,17 @@ import { trigger, state, transition, animate, style } from '@angular/animations'
   ]
 })
 export class TwoSidePanelComponent implements AfterViewInit {
+
+  constructor(private renderer: Renderer2) {}
   @ViewChild('showHideLeftPane', { static: false }) showHideLeftPane;
   @ViewChild('resizableLeft', { static: false }) resizableLeft;
   @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
 
   showLeftPane: boolean;
 
-  constructor(private renderer: Renderer2) {}
-
   expand = false;
+
+  state = 'inactive';
 
   ngAfterViewInit() {
     const width = window.innerWidth;
@@ -45,8 +47,6 @@ export class TwoSidePanelComponent implements AfterViewInit {
   toggle = () => {
     this.expand = !this.expand;
   };
-
-  state = 'inactive';
 
   hideShowLeftPane() {
     this.state = this.state === 'inactive' ? 'active' : 'inactive';

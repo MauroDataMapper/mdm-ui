@@ -1,8 +1,9 @@
 import {
+  AfterViewInit,
   Component,
   ContentChildren,
   ElementRef,
-  Input,
+  Input, OnDestroy,
   OnInit,
   QueryList,
   Renderer2,
@@ -32,11 +33,11 @@ import {CodeSetResult} from '../../model/codeSetModel';
 import {DialogPosition, MatDialog} from '@angular/material/dialog';
 
 @Component({
-  selector: 'code-set-details',
+  selector: 'mdm-code-set-details',
   templateUrl: './code-set-details.component.html',
   styleUrls: ['./code-set-details.component.scss']
 })
-export class CodeSetDetailsComponent implements OnInit {
+export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   result: CodeSetResult;
   hasResult = false;
@@ -61,11 +62,11 @@ export class CodeSetDetailsComponent implements OnInit {
   exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+  @ViewChild('aLink', {static: false}) aLink: ElementRef;
   download: any;
   downloadLink: any;
   urlText: any;
- @Input('after-save') afterSave: any;
+  @Input('after-save') afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
@@ -73,10 +74,24 @@ export class CodeSetDetailsComponent implements OnInit {
   @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
+
   // @ViewChildren("aliases") aliases: QueryList<any>;
 
-  constructor(private renderer: Renderer2, private resourcesService: ResourcesService, private messageService: MessageService, private messageHandler: MessageHandlerService, private securityHandler: SecurityHandlerService, private folderHandler: FolderHandlerService, private stateHandler: StateHandlerService, private sharedService: SharedService, private elementDialogueService: ElementSelectorDialogueService, private broadcastSvc: BroadcastService, private helpDialogueService: HelpDialogueHandlerService, private dialog: MatDialog,
-              private favouriteHandler: FavouriteHandlerService, private exportHandler: ExportHandlerService, private domSanitizer: DomSanitizer) {
+  constructor(private renderer: Renderer2,
+              private resourcesService: ResourcesService,
+              private messageService: MessageService,
+              private messageHandler: MessageHandlerService,
+              private securityHandler: SecurityHandlerService,
+              private folderHandler: FolderHandlerService,
+              private stateHandler: StateHandlerService,
+              private sharedService: SharedService,
+              private elementDialogueService: ElementSelectorDialogueService,
+              private broadcastSvc: BroadcastService,
+              private helpDialogueService: HelpDialogueHandlerService,
+              private dialog: MatDialog,
+              private favouriteHandler: FavouriteHandlerService,
+              private exportHandler: ExportHandlerService,
+              private domSanitizer: DomSanitizer) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
@@ -84,6 +99,7 @@ export class CodeSetDetailsComponent implements OnInit {
 
 
   }
+
   public showAddElementToMarkdown() { // Remove from here & put in markdown
     this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
   }
@@ -95,14 +111,15 @@ export class CodeSetDetailsComponent implements OnInit {
 
 
     this.editableForm.show = () => {
-      this.editForm.forEach(x => x.edit({ editing: true,
+      this.editForm.forEach(x => x.edit({
+        editing: true,
         focus: x._name === 'moduleName' ? true : false
       }));
       this.editableForm.visible = true;
     };
 
     this.editableForm.cancel = () => {
-      this.editForm.forEach(x => x.edit({ editing: false }));
+      this.editForm.forEach(x => x.edit({editing: false}));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -200,7 +217,7 @@ export class CodeSetDetailsComponent implements OnInit {
 
   watchDataModelObject() {
     const access: any = this.securityHandler.elementAccess(this.result);
-    if (access != undefined) {
+    if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
       this.showDelete = access.showDelete;
@@ -214,6 +231,7 @@ export class CodeSetDetailsComponent implements OnInit {
   toggleSecuritySection() {
     this.messageService.toggleUserGroupAccess();
   }
+
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
@@ -239,19 +257,19 @@ export class CodeSetDetailsComponent implements OnInit {
     this.deleteInProgress = true;
 
     this.resourcesService.codeSet.delete(this.result.id, null, queryString, null).subscribe(result => {
-          if (permanent) {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
-          } else {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.stateHandler.reload();
-          }
+        if (permanent) {
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
+        } else {
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.reload();
+        }
 
-        },
-        error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError('There was a problem deleting the Code Set.', error);
-        });
+      },
+      error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Code Set.', error);
+      });
 
   }
 
@@ -262,14 +280,14 @@ export class CodeSetDetailsComponent implements OnInit {
     const promise = new Promise((resolve, reject) => {
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
-          {
-            hasBackdrop: false,
-            data: {
-              title: 'Code Set',
-              message:
-                  'Are you sure you want to delete this Code Set?<br>The Code Set will be marked as deleted and will not be viewable by users except Administrators.'
-            }
-          });
+        {
+          hasBackdrop: false,
+          data: {
+            title: 'Code Set',
+            message:
+              'Are you sure you want to delete this Code Set?<br>The Code Set will be marked as deleted and will not be viewable by users except Administrators.'
+          }
+        });
 
       dialog.afterClosed().subscribe(result => {
         if (result.status !== 'ok') {
@@ -290,14 +308,14 @@ export class CodeSetDetailsComponent implements OnInit {
     }
     const promise = new Promise((resolve, reject) => {
       const dialog = this.dialog.open(ConfirmationModalComponent,
-          {
-            hasBackdrop: false,
-            data: {
-              title: 'Code Set',
-              message:
-                  'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
-            }
-          });
+        {
+          hasBackdrop: false,
+          data: {
+            title: 'Code Set',
+            message:
+              'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
+          }
+        });
 
       dialog.afterClosed().subscribe(result => {
         if (result.status !== 'ok') {
@@ -305,17 +323,17 @@ export class CodeSetDetailsComponent implements OnInit {
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent,
-            {
-              hasBackdrop: false,
-              data: {
-                title: 'Data Model',
-                message:
-                    '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
-              }
-            });
+          {
+            hasBackdrop: false,
+            data: {
+              title: 'Data Model',
+              message:
+                '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
+            }
+          });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== 'ok') {
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
             // reject(null);
             return;
           }
@@ -329,14 +347,20 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
 
-  formBeforeSave =  () => {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
     // this.editForm.forEach(x => this.result["label"] = x.getHotState().value);
     this.editForm.forEach((modules) => {
-      if (modules.config.name == 'moduleName') { this.result.label = modules.getHotState().value; }
-      if (modules.config.name == 'moduleNameAuthor') { this.result.author = modules.getHotState().value; }
-      if (modules.config.name == 'moduleNameOrganisation') { this.result.organisation = modules.getHotState().value; }
+      if (modules.config.name === 'moduleName') {
+        this.result.label = modules.getHotState().value;
+      }
+      if (modules.config.name === 'moduleNameAuthor') {
+        this.result.author = modules.getHotState().value;
+      }
+      if (modules.config.name === 'moduleNameOrganisation') {
+        this.result.organisation = modules.getHotState().value;
+      }
 
     });
 
@@ -362,18 +386,18 @@ export class CodeSetDetailsComponent implements OnInit {
     if (this.validateLabel(this.result.label)) {
 
 
-      const call = from(this.resourcesService.codeSet.put(resource.id, null, { resource })).subscribe(result => {
-            if (this.afterSave) {
-              this.afterSave(result);
-            }
-            this.messageHandler.showSuccess('Code Set updated successfully.');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
+      const call = from(this.resourcesService.codeSet.put(resource.id, null, {resource})).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
+          }
+          this.messageHandler.showSuccess('Code Set updated successfully.');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({editing: false}));
 
-          },
-          error => {
-            this.messageHandler.showError('There was a problem updating the Code Set.', error);
-          });
+        },
+        error => {
+          this.messageHandler.showError('There was a problem updating the Code Set.', error);
+        });
     }
 
 
@@ -400,11 +424,13 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Edit_model_details', { my: 'right top', at: 'bottom'} as DialogPosition);
+    this.helpDialogueService.open('Edit_model_details', {my: 'right top', at: 'bottom'} as DialogPosition);
   }
 
   toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.result)) { this.addedToFavourite = this.favouriteHandler.isAdded(this.result); }
+    if (this.favouriteHandler.toggle(this.result)) {
+      this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
+    }
 
   }
 
@@ -414,15 +440,15 @@ export class CodeSetDetailsComponent implements OnInit {
     const promise = new Promise((resolve, reject) => {
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
-          {
-            hasBackdrop: false,
-            data: {
-              title: 'Are you sure you want to finalise the Code Set ?',
-              message:
-                  'Once you finalise a CodeSet, you can not edit it anymore!<br>\ \n' +
-                  'but you can create new version of it.'
-            }
-          });
+        {
+          hasBackdrop: false,
+          data: {
+            title: 'Are you sure you want to finalise the Code Set ?',
+            message:
+              'Once you finalise a CodeSet, you can not edit it anymore!<br>\ \n' +
+              'but you can create new version of it.'
+          }
+        });
 
       dialog.afterClosed().subscribe(result => {
         if (result.status !== 'ok') {
@@ -430,16 +456,16 @@ export class CodeSetDetailsComponent implements OnInit {
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result => {
-              this.processing = false;
-              this.messageHandler.showSuccess('Code Set finalised successfully.');
-              this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
+        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result2 => {
+            this.processing = false;
+            this.messageHandler.showSuccess('Code Set finalised successfully.');
+            this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
 
-            },
-            error => {
-              this.processing = false;
-              this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
-            });
+          },
+          error => {
+            this.processing = false;
+            this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
+          });
 
       });
     });

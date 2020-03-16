@@ -18,7 +18,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-link-suggestion',
+  selector: 'mdm-link-suggestion',
   templateUrl: './link-suggestion.component.html',
   styleUrls: ['./link-suggestion.component.scss']
 })

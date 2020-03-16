@@ -1,4 +1,14 @@
-import { Component, Input, ViewChildren, ViewChild, AfterViewInit, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChildren,
+  ViewChild,
+  AfterViewInit,
+  ElementRef,
+  EventEmitter,
+  ChangeDetectorRef,
+  OnInit
+} from '@angular/core';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { merge, Observable, forkJoin } from 'rxjs';
@@ -8,11 +18,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: "element-child-data-classes-list",
+  selector: 'mdm-element-child-data-classes-list',
   templateUrl: './element-child-data-classes-list.component.html',
   styleUrls: ['./element-child-data-classes-list.component.sass']
 })
-export class ElementChildDataClassesListComponent implements AfterViewInit {
+export class ElementChildDataClassesListComponent implements AfterViewInit, OnInit {
   @Input('parent-data-model') parentDataModel: any;
   @Input('parent-data-class') parentDataClass: any;
   @Input('mc-data-class') mcDataClass: any;
@@ -82,7 +92,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;

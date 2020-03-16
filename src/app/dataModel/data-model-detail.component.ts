@@ -1,7 +1,19 @@
 import { ResourcesService } from '../services/resources.service';
 // @ts-ignore
 import { EditableDataModel } from '../model/dataModelModel';
-import { Component, OnInit, Input, ViewChildren, QueryList, ViewChild, ContentChildren, ElementRef, Renderer2, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChildren,
+  QueryList,
+  ViewChild,
+  ContentChildren,
+  ElementRef,
+  Renderer2,
+  ViewEncapsulation,
+  AfterViewInit, OnDestroy
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
@@ -20,12 +32,12 @@ import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-data-model-detail',
+  selector: 'mdm-data-model-detail',
   templateUrl: './data-model-detail.component.html',
   styleUrls: ['./data-model-detail.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class DataModelDetailComponent implements OnInit {
+export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   result: DataModelResult;
   hasResult = false;
   subscription: Subscription;
@@ -123,7 +135,7 @@ export class DataModelDetailComponent implements OnInit {
         });
       }
       if (this.result.aliases) {
-        this.result['aliases'].forEach(item => {
+        this.result.aliases.forEach(item => {
           this.editableForm.aliases.push(item);
         });
       }
@@ -212,7 +224,7 @@ export class DataModelDetailComponent implements OnInit {
 
   watchDataModelObject() {
     const access: any = this.securityHandler.elementAccess(this.result);
-    if (access != undefined) {
+    if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
       this.showDelete = access.showDelete;
@@ -330,8 +342,8 @@ export class DataModelDetailComponent implements OnInit {
           }
         });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== 'ok') {
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
             // reject(null);
             return;
           }

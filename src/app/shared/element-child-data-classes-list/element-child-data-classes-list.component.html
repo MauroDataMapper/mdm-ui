@@ -3,10 +3,10 @@
         <span class="title">Data Classes <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
 
         <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parentDataModel.editable && !parentDataModel.finalised">
-            <data-type-list-buttons [display-records]="records"
+            <mdm-data-type-list-buttons [display-records]="records"
                                     (delete-rows)="deleteRows()"
                                     [delete-in-progress] ="deleteInProgress"
-                                    [add]="add"></data-type-list-buttons>
+                                    [add]="add"></mdm-data-type-list-buttons>
         </div>
     </div>
 
@@ -40,7 +40,7 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
                     <div>
-                        <element-link [element]="record" [parent-data-model]="{id:record.dataModel}"></element-link>
+                        <mdm-element-link [element]="record" [parent-data-model]="{id:record.dataModel}"></mdm-element-link>
                     </div>
                 </td>
             </ng-container>
@@ -57,10 +57,10 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="record.description && record.description.length > 0" style="margin-bottom: 10px;">
-                        <more-description [description]="record.description"></more-description>
+                        <mdm-more-description [description]="record.description"></mdm-more-description>
                     </div>
                     <div>
-                        <all-links-in-paged-list [parent]="record" ></all-links-in-paged-list>
+                        <mdm-all-links-in-paged-list [parent]="record" ></mdm-all-links-in-paged-list>
                     </div>
                 </td>
             </ng-container>

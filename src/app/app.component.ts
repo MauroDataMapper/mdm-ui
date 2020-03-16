@@ -3,7 +3,7 @@ import { UserIdleService } from 'angular-user-idle';
 import { SharedService } from './services/shared.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'mdm-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })

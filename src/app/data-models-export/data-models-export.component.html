@@ -5,14 +5,14 @@
 
 <div style="margin-bottom: 10px">
     <span>Please select your Data Model(s):</span>
-        <model-selector-tree [(ng-model)]="selectedDataModels" 
+        <mdm-model-selector-tree [(ng-model)]="selectedDataModels"
                                 [(on-select)]="onSelect" [multiple]="true"
-                                [tree-search-domain-type]="'DataModel'" 
+                                [tree-search-domain-type]="'DataModel'"
                                 [accepts]="['DataModel']"
-                                [default-elements]="selectedDataModels" 
+                                [default-elements]="selectedDataModels"
                                 [placeholder]="'Select Data Model...'"
                                 (ngModelChange)="selectedDataModels = $event">
-        </model-selector-tree>
+        </mdm-model-selector-tree>
 </div>
 <div *ngIf="step === 2">
     <mat-form-field appearance="outline" class="mdm--block">
@@ -36,11 +36,11 @@
     </div>
     <div style="clear: both;">
         <button mat-button type="reset" [disabled]="processing" (click)="reset()">Reset</button>
-        <button mat-flat-button 
+        <button mat-flat-button
                 color="primary"
                 class="custom"
-                type="submit" 
-                (click)="export()" 
+                type="submit"
+                (click)="export()"
                 [disabled]="!selectedExporterObj  || (selectedModels && selectedDataModels.length==0) || processing || (selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1)">
                 Export Model(s)
         </button>

@@ -5,11 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalSettingsService {
   globalSettings = {
-    "appIsEditable": { value: true, access: "public" }
+    appIsEditable: { value: true, access: 'public' }
   };
   constructor() { }
-  getGlobalSettings(val)
-  {
+  getGlobalSettings(val) {
     return this.globalSettings[val].value;
   }
 }

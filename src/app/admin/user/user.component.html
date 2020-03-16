@@ -58,7 +58,7 @@
     </div>
     <div class="mdm--form-input mdm--block">
         <mat-label>Role*</mat-label>
-        <mc-select
+        <mdm-select
         [width]="'100%'"
         [multi-select]="true"
         [accept-typed-input]="false"
@@ -72,7 +72,7 @@
         <ng-template #lineContent let-item>
             <div>{{item.label}}</div>
         </ng-template>
-    </mc-select>
+    </mdm-select>
     </div>
 
     <button mat-button type="button" (click)="cancel()">

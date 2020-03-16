@@ -17,7 +17,7 @@ import { BroadcastService } from '../../services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
-  selector: 'app-term',
+  selector: 'mdm-term',
   templateUrl: './term.component.html',
   styleUrls: ['./term.component.scss']
 })
@@ -192,7 +192,7 @@ export class TermComponent implements OnInit {
     this.stateHandler.Go(
       'term',
       { tabView: tab.name },
-      { notify: false, location: tab.index != 0 }
+      { notify: false, location: tab.index !== 0 }
     );
     this.activeTab = tab.index;
   }

@@ -1,9 +1,9 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, Input} from '@angular/core';
-import {ResourcesService} from "../../services/resources.service";
-import {ContentSearchHandlerService} from "../../services/content-search.handler.service";
-import {fromEvent} from "rxjs";
-import {debounceTime, distinctUntilChanged, filter, map} from "rxjs/operators";
-import {MatTableDataSource} from "@angular/material/table";
+import {ResourcesService} from '../../services/resources.service';
+import {ContentSearchHandlerService} from '../../services/content-search.handler.service';
+import {fromEvent} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'multiple-terms-selector',
@@ -11,7 +11,7 @@ import {MatTableDataSource} from "@angular/material/table";
   styleUrls: ['./multiple-terms-selector.component.scss']
 })
 export class MultipleTermsSelectorComponent implements OnInit {
-  pageSize: number = 40;
+  pageSize = 40;
   displayedColumns: string[] = ['label'];
   @Input() hideAddButton = true;
   selectorSection = {
@@ -32,14 +32,14 @@ export class MultipleTermsSelectorComponent implements OnInit {
   };
   loading = false;
   @Output() onSelectedTermsChange = new EventEmitter<any[]>();
-  @Input("on-add-button-click") onAddButtonClick: any;
+  @Input('on-add-button-click') onAddButtonClick: any;
   dataSource = new MatTableDataSource();
   currentRecord: number;
   totalItemCount: number;
-  isProcessing: boolean = false;
+  isProcessing = false;
   private searchControlInput: ElementRef;
-  selectedItems : any;
-  //@Input() selectedTerms: any;
+  selectedItems: any;
+  // @Input() selectedTerms: any;
   @Input()
   get selectedTerms() {
     return this.selectedItems;
@@ -166,24 +166,24 @@ export class MultipleTermsSelectorComponent implements OnInit {
     // return deferred.promise;
   });
   };
-  fetch = (pageSize, offset) =>{
-    if(this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology){
-      //load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
-      return this.loadAllTerms(this.selectorSection.selectedTerminology,pageSize, offset);
-    }else {
+  fetch = (pageSize, offset) => {
+    if (this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology) {
+      // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
+      return this.loadAllTerms(this.selectorSection.selectedTerminology, pageSize, offset);
+    } else {
      // var deferred = $q.defer();
       this.selectorSection.searchResultOffset = offset;
       this.loading = true;
-      //$scope.safeApply();
+      // $scope.safeApply();
 
-      var position = offset * this.selectorSection.searchResultPageSize;
+      const position = offset * this.selectorSection.searchResultPageSize;
 
-      this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ["Term"], null,null, null,null,null,null,null,null).subscribe(result => {
+      this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ['Term'], null, null, null, null, null, null, null, null).subscribe(result => {
         this.selectorSection.searchResult = result.items;
-        //make check=true if element is already selected
+        // make check=true if element is already selected
         result.items.forEach( (item) => {
           item.terminology = this.selectorSection.selectedTerminology;
-          if(this.selectorSection.selectedTerms[item.id]){
+          if (this.selectorSection.selectedTerms[item.id]) {
             item.checked = true;
           }
         });
@@ -198,7 +198,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
         //   pageSize: $scope.selectorSection.searchResultPageSize
         // });
 
-      },error => {
+      }, error => {
         this.loading = false;
         this.isProcessing = false;
       });
@@ -263,19 +263,19 @@ export class MultipleTermsSelectorComponent implements OnInit {
     }
 
   //  if(this.onSelectedTermsChange){
-      this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
-    //}
+    this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
+    // }
     // if(this.selectorSection.selectedTermsCount >0)
     //   this.hideAddButton = false;
    // this.cd.detectChanges();
 
   };
-  removeTerm = ($item) =>{
-    var i = this.selectorSection.selectedTermsArray.length - 1;
-    while(i >= 0){
-      if(this.selectorSection.selectedTermsArray[i].id === $item.id){
-        this.selectorSection.selectedTermsArray.splice(i,1);
-        let local = this.selectorSection.selectedTermsArray;
+  removeTerm = ($item) => {
+    let i = this.selectorSection.selectedTermsArray.length - 1;
+    while (i >= 0) {
+      if (this.selectorSection.selectedTermsArray[i].id === $item.id) {
+        this.selectorSection.selectedTermsArray.splice(i, 1);
+        const local = this.selectorSection.selectedTermsArray;
         this.selectorSection.selectedTermsArray = [];
         this.selectorSection.selectedTermsArray = Object.assign([], local);
       }

@@ -57,11 +57,11 @@
 				</h4>
 			</div>
 			<div *ngFor="let record of selectedElements">
-				<element-link [show-type-title]="true"
+				<mdm-element-link [show-type-title]="true"
 				[new-window]="true"
 				[parent-data-model]="{id:record.dataModel}"
 				[parent-data-class]="{id:record.dataClass}"
-				[element]="record"></element-link>
+				[element]="record"></mdm-element-link>
 			</div>
 			<div style="padding-top: 20px;">
 				<button mat-stroked-button color="warn" type="button" class="custom" style="margin-right: 10px;" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">

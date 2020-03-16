@@ -5,7 +5,7 @@ import { ElementSelectorDialogueService } from '../services/element-selector-dia
 import { MessageService } from '../services/message.service';
 
 @Component({
-  selector: "markdown-text-area",
+  selector: 'mdm-markdown-text-area',
   templateUrl: './markdown-text-area.component.html'
   // styleUrls: ['./markdown-text-area.component.sass']
 })
@@ -65,7 +65,7 @@ export class MarkdownTextAreaComponent implements OnInit {
     if (!this.editableForm) {
       this.formData.description = this.description;
     } else {
-      this.formData.description = this.editableForm['description'];
+      this.formData.description = this.editableForm.description;
     }
 
     this.elementSelected();
@@ -104,12 +104,12 @@ export class MarkdownTextAreaComponent implements OnInit {
           const startPos = this.editableTextArea.nativeElement.selectionStart;
           this.editableTextArea.nativeElement.focus();
 
-          this.editableTextArea.nativeElement.value = this.editableTextArea.nativeElement.value.substr(0,this.editableTextArea.nativeElement.selectionStart) + ' ' + markdownLink + ' ' + this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length);
+          this.editableTextArea.nativeElement.value = this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart) + ' ' + markdownLink + ' ' + this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length);
 
           this.editableTextArea.nativeElement.selectionStart = startPos;
           this.editableTextArea.nativeElement.focus();
           if (this.editableForm) {
-            this.editableForm['description'] = this.editableTextArea.nativeElement.value;
+            this.editableForm.description = this.editableTextArea.nativeElement.value;
           } else {
             this.description = this.editableTextArea.nativeElement.value;
           }

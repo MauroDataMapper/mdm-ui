@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: "table-buttons",
+  selector: 'mdm-table-buttons',
   templateUrl: './table-buttons.component.html',
   styleUrls: ['./table-buttons.component.sass']
 })

@@ -19,7 +19,7 @@
                             <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                         </div>
                         <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
-                        <div style="margin-left: 5px;"><markdown-text-area [description]="record.description" [in-edit-mode]="false" [rows]="'4'"></markdown-text-area></div>
+                        <div style="margin-left: 5px;"><mdm-markdown-text-area [description]="record.description" [in-edit-mode]="false" [rows]="'4'"></mdm-markdown-text-area></div>
                         <div>
                             <button class="btn btn-xs btn-default" (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
                                 <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
@@ -36,7 +36,7 @@
                                         </div>
                                     </div>
                                     <div style="padding:5px 5px 5px 10px;">
-                                        <markdown-text-area [description]="childAnnotation.description" [in-edit-mode]="false" [rows]="'4'"></markdown-text-area>
+                                        <mdm-markdown-text-area [description]="childAnnotation.description" [in-edit-mode]="false" [rows]="'4'"></mdm-markdown-text-area>
                                     </div>
                                 </div>
                                 <div>
@@ -57,7 +57,7 @@
                                 </div>
                                 <div style="padding-left: 10px;">
                                     <!--<textarea rows="'4'" class="form-control annotation-description" ng-model="record.newChildText"></textarea>-->
-                                    <markdown-text-area #childEditor [(description)]="record.newChildText" [in-edit-mode]="true" [rows]="'4'"></markdown-text-area>
+                                    <mdm-markdown-text-area #childEditor [(description)]="record.newChildText" [in-edit-mode]="true" [rows]="'4'"></mdm-markdown-text-area>
                                     <div style="margin:3px 0px;">
                                         <button class="btn btn-xs btn-default" (click)="addChild(record)"
                                                 [disabled]="record.newChildText.length == 0">
@@ -78,17 +78,17 @@
                         </div>
                         <div>
                             <span>Description :</span>
-                            <markdown-text-area [description]="record.edit.description" [in-edit-mode]="true" [rows]="'4'"></markdown-text-area>
+                            <mdm-markdown-text-area [description]="record.edit.description" [in-edit-mode]="true" [rows]="'4'"></mdm-markdown-text-area>
 
                             <!--<textarea rows="'4'" class="form-control annotation-description"-->
                             <!--ng-model="record.edit.description"></textarea>-->
                         </div>
                         <div style="margin-top: 5px;">
-                            <table-buttons [record]="record"
+                            <mdm-table-buttons [record]="record"
                                            [index]="i"
                                            (save)="saveParent($event[0],$event[1])"
                                            (cancel-edit)="cancelEdit($event[0],$event[1])">
-                            </table-buttons>
+                            </mdm-table-buttons>
                         </div>
                     </div>
                 </td>

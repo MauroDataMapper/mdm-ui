@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, DoCheck, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-data-type-step1',
+  selector: 'mdm-data-type-step1',
   templateUrl: './data-type-step1.component.html',
   styleUrls: ['./data-type-step1.component.sass']
 })
-export class DataTypeStep1Component implements OnInit {
+export class DataTypeStep1Component implements OnInit, DoCheck {
   step: any;
   modelVal: any;
 
@@ -18,7 +18,8 @@ export class DataTypeStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit() {
     this.model = this.step.scope.model;
@@ -49,10 +50,11 @@ export class DataTypeStep1Component implements OnInit {
     this.model.createType = createType;
   };
 
-  //TODO CORRECT
-  onSelect = () => {};
+  // TODO CORRECT
+  onSelect = () => {
+  };
 
   loadHelp = () => {
-    //TODO
+    // TODO
   };
 }

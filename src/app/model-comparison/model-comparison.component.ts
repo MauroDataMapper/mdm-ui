@@ -3,7 +3,6 @@ import { ResourcesService } from '../services/resources.service';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
-import { _ } from 'underscore';
 import { forkJoin, Observable } from 'rxjs';
 
 @Component({
@@ -477,7 +476,7 @@ export class ModelComparisonComponent implements OnInit {
                 }
               });
 
-              diff[diffElement].deleted.forEach(el => {
+              diff[diffElement].deleted?.forEach(el => {
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
                 diffMap[el.id].deleted = true;
@@ -825,20 +824,12 @@ export class ModelComparisonComponent implements OnInit {
         );
         return;
       }
-      this.diffs.filteredDataElements = _.filter(
-        this.diffs.dataElements,
-        function(dataType) {
-          if (this.form.dataElementFilter === 'deleted' && dataType.deleted) {
-            return dataType;
-          }
-          if (this.form.dataElementFilter === 'created' && dataType.created) {
-            return dataType;
-          }
-          if (this.form.dataElementFilter === 'modified' && dataType.modified) {
-            return dataType;
-          }
-        }
-      );
+
+      this.diffs.filteredDataElements = this.diffs.dataElements.filter(dataType => {
+        return (this.form.dataElementFilter === 'deleted' && dataType.deleted) ||
+                (this.form.dataElementFilter === 'created' && dataType.created) ||
+                (this.form.dataElementFilter === 'modified' && dataType.modified);
+      });
     }
   };
 
@@ -848,18 +839,11 @@ export class ModelComparisonComponent implements OnInit {
         this.diffs.filteredDataTypes = Object.assign([], this.diffs.dataTypes);
         return;
       }
-      this.diffs.filteredDataTypes = _.filter(
-        this.diffs.dataTypes,
-        dataType => {
-          if (this.form.dataTypeFilter === 'deleted' && dataType.deleted) {
-            return dataType;
-          }
-          if (this.form.dataTypeFilter === 'created' && dataType.created) {
-            return dataType;
-          }
-          if (this.form.dataTypeFilter === 'modified' && dataType.modified) {
-            return dataType;
-          }
+
+      this.diffs.filteredDataTypes = this.diffs.dataTypes.filter(dataType => {
+          return (this.form.dataTypeFilter === 'deleted' && dataType.deleted) ||
+                  (this.form.dataTypeFilter === 'created' && dataType.created) ||
+                  (this.form.dataTypeFilter === 'modified' && dataType.modified);
         }
       );
     }

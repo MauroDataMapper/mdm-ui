@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'mdm-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.sass']
 })
@@ -66,7 +66,7 @@ export class NavbarComponent implements OnInit {
                 }
                 this.profile = user;
 
-                let latestURL = this.securityHandler.getLatestURL();
+                const latestURL = this.securityHandler.getLatestURL();
                 if (latestURL) {
                     this.broadcastSvc.broadcast('userLoggedIn');
                     this.securityHandler.removeLatestURL();

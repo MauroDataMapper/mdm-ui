@@ -1,3 +1,16 @@
+html, body, mdm-root, #mdm-ui, mdm-ui-view {
+  height: 100%;
+}
+body, mdm-root {
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+}
+mdm-footer {
+  flex-shrink: 0;
+}
 strong {
   font-weight: 600;
 }
@@ -20,16 +33,11 @@ label {
   @include font(20px, 500);
   margin-bottom: 0;
 }
-// table.mat-table, table.mat-table tr, table.mat-table td, .table > thead > tr > th {
-//   border: none !important;
-// }
-
 .table > thead > tr > th {
   border: none !important;
 }
-
 table.mat-table .mat-header-cell {
-  font-size: 18px;
+  font-size: $defaultFontSize;
   font-weight: 500;
 }
 table.table-striped tbody tr:nth-of-type(odd) {
@@ -83,19 +91,6 @@ mat-progress-bar.mat-progress-bar.mat-primary {
   font-size: 13px;
   line-height: 1.5;
 }
-
-// .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
-//   background: $defaultLinkColour;
-//   height: 5px;
-// } 
-
-// /* label style */
-// .mat-tab-label{
-//   background: $defaultLinkColour;;
-//   color:white;
-// }
-
-
 .fa.fa-remove:before {
   content: "\f2ed";
 }

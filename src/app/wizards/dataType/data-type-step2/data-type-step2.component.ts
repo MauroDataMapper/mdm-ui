@@ -10,16 +10,16 @@ import {
   ChangeDetectorRef,
   AfterViewInit, OnDestroy
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Subscription, Observable, merge } from 'rxjs';
-import { ValidatorService } from '../../../services/validator.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { ElementTypesService } from '../../../services/element-types.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import {NgForm} from '@angular/forms';
+import {Subscription, Observable, merge} from 'rxjs';
+import {ValidatorService} from '../../../services/validator.service';
+import {ResourcesService} from '../../../services/resources.service';
+import {MessageHandlerService} from '../../../services/utility/message-handler.service';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {ElementTypesService} from '../../../services/element-types.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 
 @Component({
   selector: 'mdm-data-type-step2',
@@ -63,8 +63,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
   filterEvent = new EventEmitter<string>();
 
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild('myForm', {static: false}) myForm: NgForm;
+  @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
 
@@ -73,7 +73,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     private resourceService: ResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
-
     private elementTypes: ElementTypesService
   ) {
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
@@ -103,6 +102,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       }
     );
   }
+
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after aech backend call
   dataTypesFetch(pageSize, pageIndex, sortBy, sortType, filters) {
@@ -146,8 +146,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       this.sort
         .toArray()[0]
         .sortChange.subscribe(
-          () => (this.paginator.toArray()[0].pageIndex = 0)
-        );
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
       this.filterEvent.subscribe(
         () => (this.paginator.toArray()[0].pageIndex = 0)
       );
@@ -159,8 +159,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       this.sort
         .toArray()[1]
         .sortChange.subscribe(
-          () => (this.paginator.toArray()[1].pageIndex = 0)
-        );
+        () => (this.paginator.toArray()[1].pageIndex = 0)
+      );
       this.dataSourceSelectedDataTypes.paginator = this.paginator.toArray()[1];
 
       if (
@@ -254,20 +254,20 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   };
 
   onCheckAll = () => {
-    for (let i = 0; i < this.recordsDataTypes.length; i++) {
-      this.recordsDataTypes[i].checked = this.checkAllCheckbox;
+    this.recordsDataTypes.forEach(element => {
+      element.checked = this.checkAllCheckbox;
 
       if (this.checkAllCheckbox) {
-        this.model.selectedDataTypes.push(this.recordsDataTypes[i]);
+        this.model.selectedDataTypes.push(element);
       } else {
-        const currentId = this.recordsDataTypes[i].id;
+        const currentId = element.id;
         const index = this.model.selectedDataTypes.findIndex(r => r.id === currentId);
 
         if (index !== -1) {
           this.model.selectedDataTypes.splice(index, 1);
         }
       }
-    }
+    });
 
     this.validate();
 
@@ -389,13 +389,13 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
             } else {
               this.failCount++;
               const errorText = '';
-              this.finalResult[dt.id] = { result: errorText, hasError: true };
+              this.finalResult[dt.id] = {result: errorText, hasError: true};
             }
           },
           error => {
             this.failCount++;
             const errorText = this.messageHandler.getErrorText(error);
-            this.finalResult[dt.id] = { result: errorText, hasError: true };
+            this.finalResult[dt.id] = {result: errorText, hasError: true};
           }
         );
     });

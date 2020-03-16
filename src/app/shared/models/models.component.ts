@@ -281,7 +281,7 @@ export class ModelsComponent implements OnInit {
       });
   };
 
-  onAddFolder = function (event?, folder?) {
+  onAddFolder = function(event?, folder?) {
     let parentId;
     if (folder) {
       parentId = folder.id;
@@ -457,7 +457,7 @@ export class ModelsComponent implements OnInit {
     }
   };
 
-  filterClassifications = function () {
+  filterClassifications = function() {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
       this.formData.filterCriteria = '';
       this.sharedService.searchCriteria = this.formData.ClassificationFilterCriteria;

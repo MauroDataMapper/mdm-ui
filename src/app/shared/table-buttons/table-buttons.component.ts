@@ -11,7 +11,7 @@ export class TableButtonsComponent implements OnInit {
   @Input() hideDelete: boolean;
   @Input() hideEdit: any;
 
-  @Input() validate: Function;
+  @Input() validate: (record: any, index: any) => boolean;
   @Input() records: any;
 
   @Output() cancelEdit = new EventEmitter<any>();
@@ -37,8 +37,8 @@ export class TableButtonsComponent implements OnInit {
   editClicked(record, index) {
     record.inEdit = true;
     record.edit = Object.assign({}, record);
-    if (this.onEdit) {
-      this.onEdit.emit([record, index]);
+    if (this.edit) {
+      this.edit.emit([record, index]);
     }
   }
 

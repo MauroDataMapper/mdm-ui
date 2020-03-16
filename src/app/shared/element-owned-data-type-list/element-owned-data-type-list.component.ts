@@ -39,7 +39,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
   allDataTypes: any;
   allDataTypesMap: any;
-  showStaticRecords: Function;
+  // showStaticRecords: () => void;
   loading = false;
   records: any[] = [];
   total: number;

@@ -27,7 +27,7 @@ export interface SortEvent {
     '(click)': 'rotate()'
   }
 })
-export class NgbdSortableHeader {
+export class NgbdSortableHeaderDirective {
 
   @Input() sortable: string;
   @Input() direction: SortDirection = '';

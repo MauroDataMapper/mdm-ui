@@ -322,7 +322,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     if (this.onSelect) {
       this.onSelect(this.selectedElements);
-      this.onSelectChange.emit(this.selectedElements);
+      this.selectChange.emit(this.selectedElements);
     }
     if (!this.multiple) {
       this.searchCriteria = this.selectedElements[0].label;

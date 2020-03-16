@@ -93,10 +93,9 @@ export class ElementLinkListComponent implements AfterViewInit {
         })
       )
       .subscribe(data => {
-        for (let i = 0; i < data.length; i++) {
-          data[i].status =
-            data[i].source.id === this.parent.id ? 'source' : 'target';
-        }
+        data.forEach( element => {
+         element.status = element.source.id === this.parent.id ? 'source' : 'target';
+        });
 
         this.records = data;
       });

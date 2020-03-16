@@ -74,8 +74,8 @@ export class ElementDataTypeComponent implements OnInit {
         this.allRecords = [].concat(this.elementDataType.enumerationValues);
         this.enumsCount = this.allRecords.length;
         this.hasCategory = false;
-        for (let i = 0; i < this.allRecords.length; i++) {
-          if (this.allRecords[i] && this.allRecords[i].category) {
+        for (const element of this.allRecords) {
+          if (element && element.category) {
             this.hasCategory = true;
             break;
           }
@@ -86,11 +86,11 @@ export class ElementDataTypeComponent implements OnInit {
           mergeMap(group => group.pipe(toArray()))
         );
 
-        categories.subscribe((categories: Categories[]) => {
+        categories.subscribe((cats: Categories[]) => {
           const categoryNames = [];
           let hasEmptyCategory = false;
 
-          categories.forEach(x => {
+          cats.forEach(x => {
             if (x.category !== null) {
               categoryNames.push(x.category);
             } else {
@@ -116,8 +116,7 @@ export class ElementDataTypeComponent implements OnInit {
               isCategoryRow: true
             });
 
-            categories
-              .filter(x => x.category === category)
+            cats.filter(x => x.category === category)
               .forEach(row => {
                 this.allRecordsWithGroups.push(row);
               });
@@ -138,16 +137,16 @@ export class ElementDataTypeComponent implements OnInit {
       const elements = element.parentElement.offsetParent.getElementsByClassName(
         'moreEnumerationKeyValue'
       );
-      for (let i = 0; i < elements.length; i++) {
-        elements[i].classList.remove('hiddenMoreEnumerationKeyValue');
+      for (const elem of elements) {
+        elem.classList.remove('hiddenMoreEnumerationKeyValue');
       }
       element.innerHTML = 'hide <span class=\'fas fa-caret-up\'></span>';
     } else {
       const elements = element.parentElement.offsetParent.getElementsByClassName(
         'moreEnumerationKeyValue'
       );
-      for (let i = 0; i < elements.length; i++) {
-        elements[i].classList.add('hiddenMoreEnumerationKeyValue');
+      for (const elem of elements) {
+        elem.classList.add('hiddenMoreEnumerationKeyValue');
       }
       element.innerHTML = '... more <span class=\'fas fa-caret-down\'></span>';
     }

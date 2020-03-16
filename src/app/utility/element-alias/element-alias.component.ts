@@ -38,8 +38,8 @@ export class ElementAliasComponent implements OnInit {
       return;
     }
     if (this.aliases) {
-      for (let i = 0; i < this.aliases.length; i++) {
-        if (this.aliases[i] === this.typedAlias) {
+      for (const element of this.aliases) {
+        if (element === this.typedAlias) {
           return;
         }
       }

@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
-import { UserSettingsHandlerService } from '../../services/utility/user-settings-handler.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ValidatorService } from '../../services/validator.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTable } from '@angular/material/table';
+import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
+import {UserSettingsHandlerService} from '../../services/utility/user-settings-handler.service';
+import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
+import {ResourcesService} from '../../services/resources.service';
+import {MessageHandlerService} from '../../services/utility/message-handler.service';
+import {ValidatorService} from '../../services/validator.service';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTable} from '@angular/material/table';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -22,9 +22,9 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   @Output() afterSave = new EventEmitter<any>();
 
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
-  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  @ViewChild(MatTable, {static: false}) table: MatTable<any>;
 
   dataSource: any;
 
@@ -59,7 +59,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     private resourcesService: ResourcesService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     if (this.enumerationValues !== null && this.enumerationValues !== undefined) {
@@ -233,8 +234,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     this.enumsCount = this.allRecords.length;
     this.hasCategory = false;
 
-    for (let i = 0; i < this.allRecords.length; i++) {
-      if (this.allRecords[i] && this.allRecords[i].category) {
+    for (const record of this.allRecords) {
+      if (record && record.category) {
         this.hasCategory = true;
         break;
       }
@@ -269,7 +270,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       // TODO sort
       // categories[category] = _.sortBy(categories[category], 'index');
       if (category !== null && category !== '' && category !== undefined) {
-        this.categories.push({ key: category, value: category });
+        this.categories.push({key: category, value: category});
       }
 
       allRecordsWithGroups.push({
@@ -381,18 +382,18 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       this.allRecordsWithGroups !== null &&
       this.allRecordsWithGroups !== undefined
     ) {
-      for (let i = 0; i < this.allRecordsWithGroups.length; i++) {
-        if (!this.allRecordsWithGroups[i]) {
+      for (const recordWithGroup of this.allRecordsWithGroups) {
+        if (!recordWithGroup) {
           continue;
         }
         if (
-          this.allRecordsWithGroups[i].isCategoryRow ||
-          record.id === this.allRecordsWithGroups[i].id
+          recordWithGroup.isCategoryRow ||
+          record.id === recordWithGroup.id
         ) {
           continue;
         }
         if (
-          this.allRecordsWithGroups[i].key.toLowerCase().trim() ===
+          recordWithGroup.key.toLowerCase().trim() ===
           record.edit.key.toLowerCase().trim()
         ) {
           record.edit.errors.key = 'Key already exists';
@@ -542,7 +543,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         });
     } else {
       this.resourcesService.enumerationValues
-        .post(this.parent.dataModel, this.parent.id, { resource })
+        .post(this.parent.dataModel, this.parent.id, {resource})
         .subscribe(
           () => {
             this.reloadRecordsFromServer().subscribe(data => {

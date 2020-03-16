@@ -297,12 +297,12 @@ export class ElementTypesService {
     getBaseWithUserTypes() {
         const array = [];
         const baseTypes = this.getType('baseTypes');
-        for (const type in this.baseTypes) {
+        for (const type of this.baseTypes) {
             array.push(this.baseTypes[type]);
         }
 
         const userTypes = this.getType('userTypes');
-        for (const type in this.userTypes) {
+        for (const type of this.userTypes) {
             array.push(this.userTypes[type]);
         }
         return array;

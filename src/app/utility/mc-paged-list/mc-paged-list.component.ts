@@ -32,7 +32,7 @@ export class McPagedListComponent implements OnInit {
     this.ngOnInit();
   }
   fetchMethod: any; // when it's 'type=dynamic'
-  @Input('page-size') pageSize: any;
+  @Input() pageSize: any;
   editBtnTooltip: any;
   editBtnText: any;
 

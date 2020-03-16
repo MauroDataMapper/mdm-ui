@@ -9,9 +9,9 @@ export class ExportHandlerService {
   constructor(private resources: ResourcesService) { }
 
     createFileName(label, exporter) {
-      let extension = exporter.fileExtension ? exporter.fileExtension : 'json';
-      let rightNow = new Date();
-      let res = rightNow.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '');
+      const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
+      const rightNow = new Date();
+      const res = rightNow.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '');
       // remove space from dataModelLabel and replace all spaces with _ and also add date/time and extension
       return label.trim().toLowerCase().split(' ').join('_') + '_' + res + '.' + extension;
     }
@@ -25,8 +25,8 @@ export class ExportHandlerService {
   exportDataModel2(dataModels, exporter) {
     // var deferred = $q.defer();
     this.resources.dataModel.export(dataModels, exporter, exporter.fileType).subscribe(fileBlob => {
-      let label = dataModels.length === 1 ? dataModels[0].label : 'data_model_export';
-      let fileName = this.createFileName(label, exporter);
+      const label = dataModels.length === 1 ? dataModels[0].label : 'data_model_export';
+      const fileName = this.createFileName(label, exporter);
       return ({fileBlob, fileName});
     }, error => {
       // throwError
@@ -51,11 +51,11 @@ export class ExportHandlerService {
       createBlobLink(blob, fileName) {
         // http://jsbin.com/kelijatigo/edit?html,js,output
         // https://github.com/keeweb/keeweb/issues/130
-        let url = (window.URL || window.webkitURL).createObjectURL(blob);
-        let link = document.createElement('a');
+        const url = (window.URL || window.webkitURL).createObjectURL(blob);
+        const link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('download', fileName);
-        let linkText = document.createTextNode(fileName);
+        const linkText = document.createTextNode(fileName);
         link.appendChild(linkText);
         link.setAttribute('title', fileName);
         // DO NOT set target!!!!!

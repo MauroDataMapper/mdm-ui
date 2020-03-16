@@ -259,8 +259,8 @@ export class TerminologyDetailsComponent implements OnInit {
             }
           })
           .afterClosed()
-          .subscribe(result => {
-            if (result.status !== 'ok') {
+          .subscribe(result2 => {
+            if (result2.status !== 'ok') {
               return;
             }
             this.delete(true);
@@ -337,8 +337,8 @@ export class TerminologyDetailsComponent implements OnInit {
         return;
       }
       this.resources.public.dataModelExporterPlugins().subscribe(
-        result => {
-          this.exportList = result;
+        result2 => {
+          this.exportList = result2;
         },
         error => {
           this.messageHandler.showError(

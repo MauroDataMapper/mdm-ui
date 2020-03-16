@@ -33,7 +33,7 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
                     <div>
-                        <element-link [element]="record" [parent-data-model]="{id:record.dataModel}"></element-link>
+                        <mdm-element-link [element]="record" [parent-data-model]="{id:record.dataModel}"></mdm-element-link>
                     </div>
                 </td>
             </ng-container>
@@ -50,7 +50,7 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
-                        <more-description [description]="record.description"></more-description>
+                        <mdm-more-description [description]="record.description"></mdm-more-description>
                     </div>
                 </td>
             </ng-container>
@@ -69,7 +69,7 @@
                         {{allDataTypesMap[record.domainType]["displayLabel"]}}
                     </div>
                     <div style="width: 100%;">
-                        <element-data-type [element-data-type]="record" [hide-name]="true" [show-ref-data-class]="true" [hide-enum-list]="false"></element-data-type>
+                        <mdm-element-data-type [element-data-type]="record" [hide-name]="true" [show-ref-data-class]="true" [hide-enum-list]="false"></mdm-element-data-type>
                     </div>
                 </td>
             </ng-container>

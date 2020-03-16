@@ -225,7 +225,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.model.selectedDataTypes.forEach((sdt: any) => {
       const currentId = sdt.id;
       const item = this.recordsDataTypes.find(r => r.id === currentId);
-      if (item !== null && item != undefined) {
+      if (item !== null && item !== undefined) {
         item.checked = true;
       }
 

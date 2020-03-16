@@ -10,7 +10,7 @@
                         <tr class="parent">
                             <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Parent *</th>
                             <td>
-                                <model-path [path]="model.parent.breadcrumbs"></model-path>
+                                <mdm-model-path [path]="model.parent.breadcrumbs"></mdm-model-path>
                             </td>
                         </tr>
 
@@ -64,7 +64,7 @@
                         <tr>
                             <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
                             <td>
-                                <app-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></app-element-classifications>
+                                <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></mdm-element-classifications>
                             </td>
                         </tr>
                     </tbody>
@@ -75,7 +75,7 @@
     <div *ngIf="model.createType == 'copy' && step.active == true" class="row" style="margin-bottom:20px;">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span>Please Select Data Class(s):</span>
-            <model-selector-tree [default-checked-map]="defaultCheckedMap"
+            <mdm-model-selector-tree [default-checked-map]="defaultCheckedMap"
                                  [root]="model.copyFromDataModel[0]"
                                  [show-checkbox-for]="['DataClass']"
                                  [propagate-checkbox]="true"
@@ -86,7 +86,7 @@
                                  [on-check]="onCheck"
                                  [placeholder]="'Select Data Class(s)'"
                                  [accepts]="['DataClass']">
-            </model-selector-tree>
+            </mdm-model-selector-tree>
         </div>
     </div>
 

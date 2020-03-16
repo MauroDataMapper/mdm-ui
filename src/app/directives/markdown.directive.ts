@@ -2,7 +2,7 @@ import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { MarkdownParserService } from '../utility/markdown-parser.service';
 
 @Directive({
-  selector: '[appMarkdown]'
+  selector: '[mdmMarkdown]'
 })
 export class MarkdownDirective implements OnInit {
   private markdown_: any;

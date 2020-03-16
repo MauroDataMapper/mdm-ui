@@ -456,7 +456,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result => {
+        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result2 => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully.');
             this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});

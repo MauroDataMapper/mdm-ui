@@ -31,7 +31,7 @@
                 <mat-tab label="History">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <app-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></app-history>
+                            <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></mdm-history>
                         </div>
                     </ng-template>
                 </mat-tab>
@@ -39,7 +39,7 @@
                 <mat-tab label="Links">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></element-link-list>
+                            <mdm-element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-element-link-list>
                         </div>
                     </ng-template>
                 </mat-tab>

@@ -1,4 +1,14 @@
-import { Component, Input, ViewChildren, ViewChild, QueryList, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChildren,
+  ViewChild,
+  QueryList,
+  EventEmitter,
+  AfterViewInit,
+  ChangeDetectorRef,
+  OnInit
+} from '@angular/core';
 import { ElementTypesService } from '../../services/element-types.service';
 import { ResourcesService } from '../../services/resources.service';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
@@ -10,11 +20,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: "element-owned-data-type-list",
+  selector: 'mdm-element-owned-data-type-list',
   templateUrl: './element-owned-data-type-list.component.html',
   styleUrls: ['./element-owned-data-type-list.component.sass']
 })
-export class ElementOwnedDataTypeListComponent implements AfterViewInit {
+export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
   @Input() type: any;
 
@@ -75,7 +85,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
     this.allDataTypesMap = this.elementTypes.getAllDataTypesMap();
 
-    if (this.type == 'dynamic') {
+    if (this.type === 'dynamic') {
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
@@ -97,7 +107,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
           map((data: any) => {
             this.totalItemCount = data.body.count;
 
-            return data.body['items'];
+            return data.body.items;
           }),
           catchError(() => {
             this.isLoadingResults = false;
@@ -112,7 +122,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit {
         });
     }
 
-    if (this.type == 'static') {
+    if (this.type === 'static') {
       this.isLoadingResults = true;
       this.records = [];
       this.records = [].concat(this.childOwnedDataTypes.items);

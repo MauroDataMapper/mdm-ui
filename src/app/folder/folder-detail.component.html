@@ -5,7 +5,7 @@
                 <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
                     <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
                         <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
-                            <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"  ></app-inline-text-edit>
+                            <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
                             <span class="publiclyReadable" [hidden]="!result.readableByEveryone">
                                 <i class="fas fa-globe" aria-hidden="true" title="Publicly Readable"></i>
                             </span>
@@ -32,7 +32,7 @@
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
-                            <markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></markdown-text-area>
+                            <mdm-markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -41,16 +41,16 @@
                         <div style="float: right;margin-bottom: 3px;margin-left: 5px;"
                             [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
                             <div style="float: right;margin-bottom: 3px;margin-left: 5px;"
-                                 [hidden]="editableForm.visible || editableForm.deletePending" 
+                                 [hidden]="editableForm.visible || editableForm.deletePending"
                                  uib-dropdown
-                                 is-open="false" 
+                                 is-open="false"
                                  *ngIf="showDelete">
-                                <button mat-stroked-button 
+                                <button mat-stroked-button
                                         type="button"
                                         matTooltip="Delete"
                                         aria-label="Delete"
-                                        class="paddingless dropdown-toggle" 
-                                        [disabled]="deleteInProgress || exporting" 
+                                        class="paddingless dropdown-toggle"
+                                        [disabled]="deleteInProgress || exporting"
                                         [matMenuTriggerFor]="menu">
                                         <i class="far fa-trash-alt warning"></i>
                                 </button>
@@ -68,22 +68,22 @@
 
                         <div style="float: right;margin-bottom: 3px">
                             <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button mat-stroked-button 
-                                        id="singleX-button" 
-                                        type="button" 
-                                        class="addNewModelButton" 
-                                        [hidden]="editableForm.visible || editableForm.deletePending" 
-                                        [disabled]="deleteInProgress || exporting || result.finalised" 
-                                        matTooltip="Edit" 
+                                <button mat-stroked-button
+                                        id="singleX-button"
+                                        type="button"
+                                        class="addNewModelButton"
+                                        [hidden]="editableForm.visible || editableForm.deletePending"
+                                        [disabled]="deleteInProgress || exporting || result.finalised"
+                                        matTooltip="Edit"
                                         aria-label="Delete"
-                                        (click)="showForm();" 
+                                        (click)="showForm();"
                                         uib-dropdown-toggle>
                                         <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>
-                            <editable-form-buttons [hidden]="!editableForm.visible" [on-cancel-edit]="onCancelEdit"
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [on-cancel-edit]="onCancelEdit"
                                 [editable]="editableForm" [text-location]="'left'" [hide-delete]="true"
-                                [hide-cancel]="false" [processing]="deleteInProgress"></editable-form-buttons>
+                                [hide-cancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
                         <!--                        <div class="deleteInProgressSpinner"-->
                         <!--                             style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;"-->
@@ -95,10 +95,10 @@
 
 
                         <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button 
-                                    type="button" 
-                                    class="addNewModelButton paddingless"  
-                                    matTooltip="Search"  
+                            <button mat-stroked-button
+                                    type="button"
+                                    class="addNewModelButton paddingless"
+                                    matTooltip="Search"
                                     aria-label="Search"
                                     ng-disabled="processing"
                                     (click)="toggleShowSearch()" >
@@ -107,9 +107,9 @@
                         </div>
 
                         <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button 
-                                    type="button" 
-                                    class="addNewModelButton paddingless"  
+                            <button mat-stroked-button
+                                    type="button"
+                                    class="addNewModelButton paddingless"
                                     matTooltip="User & Group Access"
                                     aria-label="User & Group Access"
                                     *ngIf="showPermission"

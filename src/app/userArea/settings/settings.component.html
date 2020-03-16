@@ -1,5 +1,5 @@
 <div class="heading-container">
-    <h4>Preferences </h4> 
+    <h4>Preferences </h4>
     <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
 </div>
 <form class="mdm--form" name="settingForm" (ngSubmit)="saveSettings()" novalidate enctype="multipart/form-data">
@@ -21,7 +21,7 @@
         </div>
         <div>
             <small>
-                <more-description description="If checked, description will be expanded automatically regardless of its characters count."></more-description> 
+                <mdm-more-description description="If checked, description will be expanded automatically regardless of its characters count."></mdm-more-description>
             </small>
         </div>
     </div>

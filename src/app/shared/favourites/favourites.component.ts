@@ -6,7 +6,7 @@ import { forkJoin } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-  selector: "favourites",
+  selector: 'mdm-favourites',
   templateUrl: './favourites.component.html',
   styleUrls: ['./favourites.component.sass']
 })

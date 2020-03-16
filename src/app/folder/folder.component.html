@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
         <div style="width: 100%">
-            <app-folder-detail [after-save]="afterSave" [editMode]="editMode"></app-folder-detail>
+            <mdm-folder-detail [after-save]="afterSave" [editMode]="editMode"></mdm-folder-detail>
         </div>
 
         <div *ngIf="showSearch">
@@ -37,13 +37,13 @@
                     <div style="width:100%;" ng-if="activeTab.name === 'access' && folder">
                         <div class="userAccess"
                              style="margin: 10px 0px 50px 0px">
-                            <app-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></app-share-with>
+                            <mdm-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></mdm-share-with>
                             <div colspan="2">
                                 <div style="margin-top: 10px">
                                     <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
                                 </div>
                                 <div style="margin-top: 50px">
-                                    <app-group-access-new [parent]="'folder'" [parentType]="'Folder'"></app-group-access-new>
+                                    <mdm-group-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-group-access-new>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                 </mat-tab>
                 <mat-tab label="History">
                     <div style="width:100%;" ng-if="activeTab.name === 'history' && folder">
-                        <app-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></app-history>
+                        <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></mdm-history>
                     </div>
                 </mat-tab>
             </mat-tab-group>

@@ -1,12 +1,12 @@
-//import { TestBed } from '@angular/core/testing';
+// import { TestBed } from '@angular/core/testing';
 
-//import { ElementTypesService } from './element-types.service';
+// import { ElementTypesService } from './element-types.service';
 
-//describe('ElementTypesService', () => {
+// describe('ElementTypesService', () => {
 //  beforeEach(() => TestBed.configureTestingModule({}));
 
 //  it('should be created', () => {
 //    const service: ElementTypesService = TestBed.get(ElementTypesService);
 //    expect(service).toBeTruthy();
 //  });
-//});
+// });

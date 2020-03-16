@@ -1,19 +1,19 @@
 import { Directive, ElementRef, Input } from '@angular/core';
-import { SecurityHandlerService } from "../services/handlers/security-handler.service";
+import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 
 @Directive({
-  selector: '[appShowIfRoleIsWritable]'
+  selector: '[mdmShowIfRoleIsWritable]'
 })
 export class ShowIfRoleIsWritableDirective  {
 
-    @Input() appShowIfRoleIsWritable: any;
+    @Input() mdmShowIfRoleIsWritable: any;
 
     constructor(private  securityHandler: SecurityHandlerService) { }
 
     OnInit() {
-        var show = this.securityHandler.showIfRoleIsWritable(this.appShowIfRoleIsWritable);
+        const show = this.securityHandler.showIfRoleIsWritable(this.mdmShowIfRoleIsWritable);
         if (!show) {
-            this.appShowIfRoleIsWritable.nativeElement.hidden = true;
+            this.mdmShowIfRoleIsWritable.nativeElement.hidden = true;
             return;
         }
     }

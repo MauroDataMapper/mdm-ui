@@ -12,8 +12,8 @@ export class GridService {
     let filter: any = '';
     if (filters) {
       filters.forEach((x: any) => {
-        let name = x.nativeElement.name;
-        let value = x.nativeElement.value;
+        const name = x.nativeElement.name;
+        const value = x.nativeElement.value;
 
         if (value !== '') {
           filter += name + '=' + value;

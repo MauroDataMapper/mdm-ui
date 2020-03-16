@@ -263,12 +263,12 @@
                 <div style="margin-top: 5px;">
                     <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
                     <div style="margin-top: 2px;">
-                          <model-selector-tree
+                          <mdm-model-selector-tree
                                 [(on-select)]="onContextSelected"
                                 [placeholder]="'Choose a Folder or Data Model or Data Class'"
                                 [accepts]="['Folder', 'DataModel', 'DataClass']"
                                 [used-in-modal-dialogue]="true">
-                        </model-selector-tree>
+                        </mdm-model-selector-tree>
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@
                         <ng-container matColumnDef="expandedDetail">
                             <mat-cell  *matCellDef = "let record">
 
-                                <model-path [path]="record.element.breadcrumbs" [show-href]="false" [new-window]="true" ></model-path>
+                                <mdm-model-path [path]="record.element.breadcrumbs" [show-href]="false" [new-window]="true" ></mdm-model-path>
 
                             </mat-cell>
                         </ng-container>
@@ -352,13 +352,13 @@
                 <div style="margin-top: 5px;">
                     <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
                     <div style="margin-top: 2px;">
-                        <model-selector-tree
+                        <mdm-model-selector-tree
                                 [(on-select)]="onContextSelected"
                                 [placeholder] ="'Choose a Folder or Data Model'"
                                 [do-not-show-data-classes]="true"
                                 [accepts]="['Folder', 'DataModel']"
                                 [used-in-modal-dialogue]="true">
-                        </model-selector-tree>
+                        </mdm-model-selector-tree>
                     </div>
                 </div>
                 <div style="height: 240px">
@@ -377,7 +377,7 @@
                         <ng-container matColumnDef="expandedDetail">
                             <mat-cell  *matCellDef = "let record">
 
-                                <model-path [path]="record.element.breadcrumbs" [show-href]="false" [new-window]="true" ></model-path>
+                                <mdm-model-path [path]="record.element.breadcrumbs" [show-href]="false" [new-window]="true" ></mdm-model-path>
 
                             </mat-cell>
                         </ng-container>

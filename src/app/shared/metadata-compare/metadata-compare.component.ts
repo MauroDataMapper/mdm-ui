@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-metadata-compare',
+  selector: 'mdm-metadata-compare',
   templateUrl: './metadata-compare.component.html',
   styleUrls: ['./metadata-compare.component.scss']
 })

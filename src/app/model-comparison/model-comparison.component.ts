@@ -7,7 +7,7 @@ import { _ } from 'underscore';
 import { forkJoin, Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-model-comparison',
+  selector: 'mdm-model-comparison',
   templateUrl: './model-comparison.component.html',
   styleUrls: ['./model-comparison.component.scss']
 })

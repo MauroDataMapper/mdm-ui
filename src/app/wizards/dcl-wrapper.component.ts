@@ -10,7 +10,7 @@ import {
   ComponentFactory,
   ComponentFactoryResolver,
   ChangeDetectorRef,
-  EventEmitter
+  EventEmitter, OnChanges, AfterViewInit
 } from '@angular/core';
 
 // Helper component to add dynamic components
@@ -19,7 +19,7 @@ import {
   template: `
     <div #target></div>`
 })
-export class DclWrapperComponent {
+export class DclWrapperComponent implements OnChanges, AfterViewInit {
   @ViewChild('target', {read: ViewContainerRef, static: false}) target;
   @Input() type;
 

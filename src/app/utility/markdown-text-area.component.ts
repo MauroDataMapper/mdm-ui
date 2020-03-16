@@ -5,7 +5,7 @@ import { ElementSelectorDialogueService } from '../services/element-selector-dia
 import { MessageService } from '../services/message.service';
 
 @Component({
-  selector: 'markdown-text-area',
+  selector: 'mdm-markdown-text-area',
   templateUrl: './markdown-text-area.component.html'
   // styleUrls: ['./markdown-text-area.component.sass']
 })

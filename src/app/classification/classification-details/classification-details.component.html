@@ -6,7 +6,7 @@
                     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
                         <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
                             <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
-                                     <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"  ></app-inline-text-edit >
+                                     <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit >
                                 <span class="publiclyReadable" [hidden]="!result.readableByEveryone">
                                     <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
                                 </span>
@@ -36,48 +36,48 @@
                         <td class="detailsRowHeader col-md-2">Description</td>
                         <td class="elementDetailDescription">
                             <div *ngIf="hasResult">
-                                <markdown-text-area [editable-form]="editableForm" [element]="result"
-                                    [property]="'description'"></markdown-text-area>
+                                <mdm-markdown-text-area [editable-form]="editableForm" [element]="result"
+                                    [property]="'description'"></mdm-markdown-text-area>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: right;">
                             <div style="float: right">
-                                <editable-form-buttons  [hidden]="editableForm.visible" 
+                                <mdm-editable-form-buttons  [hidden]="editableForm.visible"
                                                         [on-cancel-edit]="onCancelEdit"
-                                                        [editable]="editableForm" 
-                                                        [text-location]="'left'" 
+                                                        [editable]="editableForm"
+                                                        [text-location]="'left'"
                                                         [hide-delete]="false"
-                                                        [hide-cancel]="false" 
-                                                        [hide-edit]="true" 
+                                                        [hide-cancel]="false"
+                                                        [hide-edit]="true"
                                                         (delete)="delete()"
                                                         [processing]="deleteInProgress">
-                                </editable-form-buttons>
+                                </mdm-editable-form-buttons>
                             </div>
 
                             <div style="float: right;margin-bottom: 3px">
                                 <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                    <button mat-stroked-button 
+                                    <button mat-stroked-button
                                             type="button"
-                                            id="singleX-button" 
+                                            id="singleX-button"
                                             class="dropdown-toggle addNewModelButton paddingless"
                                             [hidden]="editableForm.visible || editableForm.deletePending"
-                                            [disabled]="deleteInProgress || exporting || result.finalised" 
+                                            [disabled]="deleteInProgress || exporting || result.finalised"
                                             matTooltip="Edit"
-                                            (click)="showForm();" 
+                                            (click)="showForm();"
                                             uib-dropdown-toggle>
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
                                 </div>
-                                <editable-form-buttons  [hidden]="!editableForm.visible" 
+                                <mdm-editable-form-buttons  [hidden]="!editableForm.visible"
                                                         [on-cancel-edit]="onCancelEdit"
-                                                        [editable]="editableForm" 
-                                                        [text-location]="'left'" 
+                                                        [editable]="editableForm"
+                                                        [text-location]="'left'"
                                                         [hide-delete]="true"
-                                                        [hide-cancel]="false" 
+                                                        [hide-cancel]="false"
                                                         [processing]="deleteInProgress">
-                                </editable-form-buttons>
+                                </mdm-editable-form-buttons>
                             </div>
 
                             <!--                        <div class="deleteInProgressSpinner"-->
@@ -92,10 +92,10 @@
 
 
                             <div matTooltip="User & Group Access" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button mat-stroked-button 
-                                        type="button" 
+                                <button mat-stroked-button
+                                        type="button"
                                         class="addNewModelButton paddingless"
-                                        (click)="toggleSecuritySection()" 
+                                        (click)="toggleSecuritySection()"
                                         *ngIf="showPermission"
                                         [disabled]="deleteInProgress || processing"
                                         [hidden]="editableForm.visible || editableForm.deletePending">

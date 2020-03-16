@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-enumeration-compare',
+  selector: 'mdm-enumeration-compare',
   templateUrl: './enumeration-compare.component.html',
   styleUrls: ['./enumeration-compare.component.scss']
 })

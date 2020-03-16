@@ -2,7 +2,7 @@ import { Directive, ElementRef, Injector, Input, Output, EventEmitter} from '@an
 import { UpgradeComponent } from '@angular/upgrade/static';
 
 @Directive({
-    selector: 'model-selector-tree3'
+    selector: 'mdm-model-selector-tree3'
 
 })
 export class ModelSelectorTreeDirective extends UpgradeComponent {

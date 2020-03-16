@@ -28,7 +28,7 @@
             </div>
         </div>
         <div style="clear: both;">
-            <span appMarkdown [markdown]="formData.description" *ngIf="(formData.showMarkDownPreview && inEditMode) || (!inEditMode)" makdown></span>
+            <span mdmMarkdown [markdown]="formData.description" *ngIf="(formData.showMarkDownPreview && inEditMode) || (!inEditMode)" makdown></span>
         </div>
     </div>
 
@@ -62,8 +62,8 @@
         </div>
 
         <div style="clear: both;">
-            <span appMarkdown [markdown]="editableForm[property]" *ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
-            <span appMarkdown [markdown]="element[property]" *ngIf="!editableForm.visible"></span>
+            <span mdmMarkdown [markdown]="editableForm[property]" *ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
+            <span mdmMarkdown [markdown]="element[property]" *ngIf="!editableForm.visible"></span>
         </div>
     </div>
 </div>

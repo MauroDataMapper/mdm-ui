@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, ViewChildren, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChildren,
+  ElementRef,
+  ViewChild,
+  ChangeDetectorRef,
+  AfterViewInit
+} from '@angular/core';
 import { ROLES } from '../../constants/roles';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
@@ -10,11 +19,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-group-member-table',
+  selector: 'mdm-group-member-table',
   templateUrl: './group-member-table.component.html',
   styleUrls: ['./group-member-table.component.scss']
 })
-export class GroupMemberTableComponent implements OnInit {
+export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   @Input() parent: any;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;

@@ -16,7 +16,16 @@ export class UserComponent implements OnInit {
   id: any;
   result = [];
   allGroups = [];
-  errors = [];
+  errors = {
+    id: null,
+    emailAddress: '',
+    firstName: '',
+    lastName: '',
+    organisation: '',
+    jobTitle: '',
+    userRole: 'EDITOR',
+    groups: []
+  };
   user = {
     id: null,
     emailAddress: '',
@@ -81,7 +90,6 @@ export class UserComponent implements OnInit {
 
   validate = () => {
     let isValid = true;
-    this.errors = [];
     if (this.user.emailAddress.trim().length === 0) {
       this.errors.emailAddress = 'Email can\'t be empty!';
       isValid = false;

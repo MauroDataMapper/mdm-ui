@@ -3,7 +3,7 @@ import { ElementTypesService } from '../../services/element-types.service';
 
 @
 Component({
-    selector: 'model-path',
+    selector: 'mdm-model-path',
     templateUrl: './model-path.component.html',
 })
 

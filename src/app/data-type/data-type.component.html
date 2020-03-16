@@ -19,11 +19,11 @@
       *ngIf="dataType && dataType.domainType == 'EnumerationType'"
     >
       <div style="width:100%;margin-bottom: 45px;">
-        <app-mc-enumeration-list-with-category
+        <mdm-mc-enumeration-list-with-category
           [parent]="dataType"
           [type]="'static'"
           [enumeration-values]="dataType.enumerationValues"
-        ></app-mc-enumeration-list-with-category>
+        ></mdm-mc-enumeration-list-with-category>
       </div>
     </div>
   </div>
@@ -45,10 +45,10 @@
       <mat-tab label="Data Elements">
         <ng-template matTabContent>
           <div style="width: 100%;" *ngIf="dataType">
-          <app-element-child-data-elements-list    [parentDataModel]="dataModel"
+          <mdm-element-child-data-elements-list    [parentDataModel]="dataModel"
           [parentDataType]="dataType"
           [type] = "'dynamic'"
-          [loadingData]="loadingData"></app-element-child-data-elements-list>
+          [loadingData]="loadingData"></mdm-element-child-data-elements-list>
           </div>
         </ng-template>
       </mat-tab>
@@ -65,10 +65,10 @@
       <mat-tab label="Links">
         <ng-template matTabContent>
           <div style="width: 100%;">
-            <element-link-list
+            <mdm-element-link-list
               *ngIf="dataType"
               [parent]="dataType"
-            ></element-link-list>
+            ></mdm-element-link-list>
           </div>
         </ng-template>
       </mat-tab>

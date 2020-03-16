@@ -1,4 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChildren,
+  ElementRef,
+  ViewChild,
+  ChangeDetectorRef,
+  AfterViewInit
+} from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { GridService } from '../../services/grid.service';
 import { merge } from 'rxjs';
@@ -7,11 +18,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-element-child-data-elements-list',
+  selector: 'mdm-element-child-data-elements-list',
   templateUrl: './element-child-data-elements-list.component.html',
   styleUrls: ['./element-child-data-elements-list.component.scss']
 })
-export class ElementChildDataElementsListComponent implements OnInit {
+export class ElementChildDataElementsListComponent implements OnInit, AfterViewInit {
   constructor(
     private gridSvc: GridService,
     private changeRef: ChangeDetectorRef,
@@ -74,7 +85,7 @@ export class ElementChildDataElementsListComponent implements OnInit {
             this.totalItemCount = data.body.count;
             this.isLoadingResults = false;
             this.changeRef.detectChanges();
-            return data.body['items'];
+            return data.body.items;
           }),
           catchError(() => {
             this.isLoadingResults = false;

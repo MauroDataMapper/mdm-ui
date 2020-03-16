@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: "mc-paged-list",
+  selector: 'mdm-paged-list',
   templateUrl: './mc-paged-list.component.html',
   styleUrls: ['./mc-paged-list.component.sass']
 })
@@ -11,7 +11,7 @@ export class McPagedListComponent implements OnInit {
   @ContentChild('pageListTemplate', { static: true })
   pageListTemplateTmpl: TemplateRef<any>;
 
-  @Input() type: any; //static,dynamic
+  @Input() type: any; // static,dynamic
   @Input() name: any;
   @Input('mc-title') mcTitle: any;
   @Output() onItemsChange = new EventEmitter();
@@ -31,7 +31,7 @@ export class McPagedListComponent implements OnInit {
     this.onItemsChange.emit(this.itemValues);
     this.ngOnInit();
   }
-  fetchMethod: any; //when it's 'type=dynamic'
+  fetchMethod: any; // when it's 'type=dynamic'
   @Input('page-size') pageSize: any;
   editBtnTooltip: any;
   editBtnText: any;

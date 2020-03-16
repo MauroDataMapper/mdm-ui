@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter } from '@angular/core';
+import {Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit} from '@angular/core';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
@@ -9,11 +9,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-groups-table',
+  selector: 'mdm-groups-table',
   templateUrl: './groups-table.component.html',
   styleUrls: ['./groups-table.component.sass']
 })
-export class GroupsTableComponent implements OnInit {
+export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -62,7 +62,7 @@ export class GroupsTableComponent implements OnInit {
         map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
-          return data.body['items'];
+          return data.body.items;
         }),
         catchError(() => {
           this.isLoadingResults = false;
@@ -81,10 +81,10 @@ export class GroupsTableComponent implements OnInit {
       this.records = resp.body.items;
       this.totalItemCount = this.records.length;
       this.dataSource.data = this.records;
-    }),
+    },
       err => {
-        this.messageHandlerService.showError('There was a problem loading groups.',err);
-      };
+        this.messageHandlerService.showError('There was a problem loading groups.', err);
+      });
   }
 
   groupsFetch(
@@ -148,14 +148,14 @@ export class GroupsTableComponent implements OnInit {
       ).subscribe(data => {
         this.records = data.body.items;
         this.dataSource.data = this.records;
-      }),
+      },
         err => {
           this.messageHandlerService.showError('There was a problem loading the groups.', err);
-        };
-    }),
+        });
+    },
       err => {
-        this.messageHandlerService.showError('There was a problem deleting the group.',err);
-      };
+        this.messageHandlerService.showError('There was a problem deleting the group.', err);
+      });
   }
 
   add = () => {

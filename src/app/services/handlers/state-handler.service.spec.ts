@@ -35,9 +35,7 @@ describe('StateHandlerService', () => {
     /**
      * Allow tests to control the result by setting currentText.
      */
-    spyRouter.stateService.current.toString = jasmine.createSpy('toString()').and.callFake(function() {
-      return currentText;
-    });
+    spyRouter.stateService.current.toString = jasmine.createSpy('toString()').and.callFake(() => currentText);
 
     /**
      * Set up the test bed to support creation of StateHandlerService instances.
@@ -59,7 +57,7 @@ describe('StateHandlerService', () => {
    * Verifies that calling reload() gets passed through to the UIRouter's
    * reload and that no arguments are passed.
    */
-  it('should reload', function() {
+  it('should reload', () => {
     const handlerService = TestBed.get(StateHandlerService);
 
     handlerService.reload();

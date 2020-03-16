@@ -4,7 +4,7 @@ import {ForgotPasswordModalComponent} from '../forgot-password-modal/forgot-pass
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-login-modal',
+  selector: 'mdm-login-modal',
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.sass']
 })

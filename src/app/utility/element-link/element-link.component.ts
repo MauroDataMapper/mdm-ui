@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
-  selector: 'element-link',
+  selector: 'mdm-element-link',
   inputs: [
     'hideVersionNumber: hide-Version-Number',
     'justShowCodeForTerm: just-show-code-for-term'
@@ -60,7 +60,7 @@ export class ElementLinkComponent implements OnInit {
       this.element?.domainType !== 'Term' &&
       this.element?.domainType !== 'Terminology'
     ) {
-      let parentDM =
+      const parentDM =
         this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
@@ -80,10 +80,10 @@ export class ElementLinkComponent implements OnInit {
     if (
       this.element &&
       this.element.domainType &&
-      this.types.filter(x => x.id == this.element.domainType)
+      this.types.filter(x => x.id === this.element.domainType)
     ) {
       this.elementTypeTitle = this.types.filter(
-        x => x.id == this.element.domainType
+        x => x.id === this.element.domainType
       )[0].title;
     }
   }

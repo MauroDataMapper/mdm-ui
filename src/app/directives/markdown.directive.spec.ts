@@ -1,8 +1,8 @@
-//import { MarkdownDirective } from './markdown.directive';
+// import { MarkdownDirective } from './markdown.directive';
 
-//describe('MarkdownDirective', () => {
+// describe('MarkdownDirective', () => {
 //  it('should create an instance', () => {
 //    const directive = new MarkdownDirective();
 //    expect(directive).toBeTruthy();
 //  });
-//});
+// });

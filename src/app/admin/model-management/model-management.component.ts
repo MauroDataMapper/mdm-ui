@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from 'src/app/modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
-  selector: 'app-model-management',
+  selector: 'mdm-model-management',
   templateUrl: './model-management.component.html',
   styleUrls: ['./model-management.component.sass']
 })
@@ -142,7 +142,7 @@ export class ModelManagementComponent implements OnInit {
   };
 
   onNodeChecked = function(node) {
-    const currentIdx = this.selectedElements.findIndex(x => x.id == [node.id]);
+    const currentIdx = this.selectedElements.findIndex(x => x.id === [node.id]);
     if (currentIdx === -1) {
       this.selectedElements.push(node);
       this.selectedElementsCount++;

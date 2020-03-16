@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output,  EventEmitter, forwardRef } from '@an
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
-  selector: 'app-inline-text-edit',
+  selector: 'mdm-inline-text-edit',
   templateUrl: './inline-text-edit.component.html',
   styleUrls: ['./inline-text-edit.component.scss'],
   providers: [

@@ -12,7 +12,7 @@
           <tr class="parent">
             <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Parent Data Class</th>
             <td>
-              <model-path [path]="model.parent.breadcrumbs"></model-path>
+              <mdm-model-path [path]="model.parent.breadcrumbs"></mdm-model-path>
             </td>
           </tr>
 
@@ -69,9 +69,9 @@
             <td>
 
               <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
-                <element-data-type
+                <mdm-element-data-type
                   [element-data-type]="model.dataType"
-                  [mc-parent-data-model]="model.parentDataModel"></element-data-type>
+                  [mc-parent-data-model]="model.parentDataModel"></mdm-element-data-type>
               </div>
 
               <div *ngIf="model.allDataTypesCount === 0">
@@ -110,7 +110,7 @@
                     <ng-template #lineContent let-item = 'item' let-searchTerm = "inputText" >
                       <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
                       <div>
-                        <element-link [element]="item" [show-type-title]="true" [show-link]="false"></element-link>
+                        <mdm-element-link [element]="item" [show-type-title]="true" [show-link]="false"></mdm-element-link>
                       </div>
                     </ng-template>
                   </mdm-select>
@@ -122,7 +122,7 @@
           <tr>
             <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
             <td>
-              <app-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></app-element-classifications>
+              <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></mdm-element-classifications>
             </td>
           </tr>
           </tbody>
@@ -187,11 +187,11 @@
                 </div>
               </th>
               <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
-                <element-data-type
+                <mdm-element-data-type
                   [new-window]="true"
                   [hide-enum-list]="true"
                   [element-data-type]="record.dataType"
-                  [mc-parent-data-model]="{id:model.copyFromDataClass[0].dataModel}"></element-data-type>
+                  [mc-parent-data-model]="{id:model.copyFromDataClass[0].dataModel}"></mdm-element-data-type>
               </td>
             </ng-container>
 

@@ -83,9 +83,9 @@ export class CodeSetComponent implements OnInit, OnDestroy {
 
   CodeSetPermissions(id: any) {
     this.resourcesService.codeSet.get(id, 'permissions', null).subscribe((permissions: {body: {[x: string]: any; }; }) => {
-      for (let attrname in permissions.body) {
+      permissions.body.forEach( attrname => {
         this.codeSetModel[attrname] = permissions.body[attrname];
-      }
+      });
       // Send it to message service to receive in child components
       this.messageService.FolderSendMessage(this.codeSetModel);
       this.messageService.dataChanged(this.codeSetModel);

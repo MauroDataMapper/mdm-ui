@@ -35,13 +35,13 @@
                     <div style="width:100%;" ng-if="activeTab.name === 'access' && folder">
                         <div class="userAccess"
                              style="margin: 10px 0px 50px 0px">
-                            <app-share-with [mcElement]="'mcClassification'" [mcDomainType]="'Classifier'"></app-share-with>
+                            <mdm-share-with [mcElement]="'mcClassification'" [mcDomainType]="'Classifier'"></mdm-share-with>
                             <div colspan="2">
                                 <div style="margin-top: 10px">
                                     <mdm-user-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-user-access-new>
                                 </div>
                                 <div style="margin-top: 50px">
-                                    <app-group-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></app-group-access-new>
+                                    <mdm-group-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-group-access-new>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +83,7 @@
             <mat-tab label="History">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <app-history *ngIf="result" [parent]="result" [parentType]="'Classifier'" [parentId]=parentId></app-history>
+                        <mdm-history *ngIf="result" [parent]="result" [parentType]="'Classifier'" [parentId]=parentId></mdm-history>
                     </div>
                 </ng-template>
             </mat-tab>

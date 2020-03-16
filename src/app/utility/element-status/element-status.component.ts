@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from "../../services/message.service";
-import { Subscription } from "rxjs";
-import { DataModelResult } from "../../model/dataModelModel";
+import { MessageService } from '../../services/message.service';
+import { Subscription } from 'rxjs';
+import { DataModelResult } from '../../model/dataModelModel';
 
 @Component({
-    selector: 'app-element-status',
+    selector: 'mdm-element-status',
     templateUrl: './element-status.component.html',
     // styleUrls: ['./element-status.component.sass']
 })

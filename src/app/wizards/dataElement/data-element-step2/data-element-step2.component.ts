@@ -166,10 +166,10 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
       if (
         this.sort != null &&
-        this.sort != undefined &&
+        this.sort !== undefined &&
         this.sort.length > 0 &&
         this.paginator != null &&
-        this.paginator != undefined &&
+        this.paginator !== undefined &&
         this.paginator.length > 0
       ) {
         merge(

@@ -49,13 +49,13 @@
                     <div style="width:100%;">
                         <div class="userAccess"
                              style="margin: 10px 0px 50px 0px">
-                            <app-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></app-share-with>
+                            <mdm-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></mdm-share-with>
                             <div colspan="2">
                                 <div style="margin-top: 10px">
                                     <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
                                 </div>
                                 <div style="margin-top: 50px">
-                                    <app-group-access-new [parent]="'folder'" [parentType]="'Folder'"></app-group-access-new>
+                                    <mdm-group-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-group-access-new>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                 </mat-tab>
                 <mat-tab label="History">
                     <div style="width:100%;" ng-if="activeTab.name === 'history' && folder">
-                        <app-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></app-history>
+                        <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></mdm-history>
                     </div>
                 </mat-tab>
             </mat-tab-group >
@@ -75,14 +75,14 @@
             <mat-tab label="Data Classes">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <element-child-data-classes-list *ngIf="dataModel" [parent-data-model]="dataModel" [parent-data-class]="{id:null}" [mc-data-class]="{id:null}" [type]="'dynamic'"></element-child-data-classes-list>
+                        <mdm-element-child-data-classes-list *ngIf="dataModel" [parent-data-model]="dataModel" [parent-data-class]="{id:null}" [mc-data-class]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
                     </div>
                 </ng-template>
             </mat-tab>
             <mat-tab label="Types">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></element-owned-data-type-list>
+                        <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mdm-element-owned-data-type-list>
                     </div>
                 </ng-template>
             </mat-tab>
@@ -110,7 +110,7 @@
             <mat-tab label="History">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <app-history *ngIf="dataModel" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="parentId"></app-history>
+                        <mdm-history *ngIf="dataModel" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="parentId"></mdm-history>
                     </div>
                 </ng-template>
             </mat-tab>
@@ -124,7 +124,7 @@
             <mat-tab label="Links">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                        <element-link-list *ngIf="dataModel" [parent]="dataModel"></element-link-list>
+                        <mdm-element-link-list *ngIf="dataModel" [parent]="dataModel"></mdm-element-link-list>
                     </div>
                 </ng-template>
             </mat-tab>

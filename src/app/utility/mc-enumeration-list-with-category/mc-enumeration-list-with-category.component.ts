@@ -9,7 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 
 @Component({
-  selector: 'app-mc-enumeration-list-with-category',
+  selector: 'mdm-mc-enumeration-list-with-category',
   templateUrl: './mc-enumeration-list-with-category.component.html',
   styleUrls: ['./mc-enumeration-list-with-category.component.sass']
 })
@@ -74,9 +74,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   // Drag and drop
   dropTable(event: CdkDragDrop<any[]>) {
-    const prevIndex = this.displayItems.findIndex(function(r) {
-      return r.id === event.item.data.id;
-    });
+    const prevIndex = this.displayItems.findIndex(r => r.id === event.item.data.id);
 
     moveItemInArray(this.displayItems, prevIndex, event.currentIndex);
 

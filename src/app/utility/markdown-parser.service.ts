@@ -9,7 +9,7 @@ export class MarkdownParserService {
 
   constructor(private elementTypes: ElementTypesService) {}
 
-  initialised: boolean = false;
+  initialised = false;
 
   public htmlRenderer() {
     const renderer = new marked.Renderer();

@@ -37,11 +37,11 @@
                             <span style="font-size: 13px;color:#777;font-style: italic" [innerHtml]="record.source.label| mchighlighter: searchCriteria"></span>
                         </div>
                         <div *ngIf="record.status == 'target'">
-                            <element-link [show-parent-data-model-name]="true"
+                            <mdm-element-link [show-parent-data-model-name]="true"
                                           [element]="record.source"
                                           [parent-data-model]="record.source.dataModel"
                                           [parent-data-class]="record.source.dataClass"
-                                          [show-type-title]="'true'"></element-link>
+                                          [show-type-title]="'true'"></mdm-element-link>
                         </div>
                     </div>
                 </td>
@@ -84,7 +84,7 @@
                         <div style="float:left; width:80%;">
                             <div *ngIf="!record.inEdit">
                                 <div *ngIf="record.status == 'source'">
-                                    <element-link [element]="record.target" [show-parent-data-model-name]="true" [show-type-title]="'true'"></element-link>
+                                    <mdm-element-link [element]="record.target" [show-parent-data-model-name]="true" [show-type-title]="'true'"></mdm-element-link>
                                 </div>
                                 <div *ngIf="record.status == 'target'">
                                     <span style="font-size: 13px;color:#777;font-style: italic" [innerHtml]="record.target.label| mchighlighter:searchCriteria"></span>
@@ -92,7 +92,7 @@
                             </div>
                             <div *ngIf="record.inEdit">
                                 <div *ngIf="record.status == 'source'">
-                                    <element-link [element]="record.edit.target" [show-parent-data-model-name]="true" [show-type-title]="'true'"></element-link>
+                                    <mdm-element-link [element]="record.edit.target" [show-parent-data-model-name]="true" [show-type-title]="'true'"></mdm-element-link>
                                 </div>
                                 <div *ngIf="record.status == 'target'">
                                     <span style="font-size: 13px;color:#777;font-style: italic" [innerHtml]="record.target.label| mchighlighter:searchCriteria"></span>

@@ -43,7 +43,7 @@
                                    style="cursor: pointer">
                             <span style="cursor: pointer;">Copy Data Element(s) from...</span>
                             <div style="margin-left: 45px;">
-                                <model-selector-tree
+                                <mdm-model-selector-tree
                                         [(on-select)]="onSelect"
                                         [default-elements]="model.copyFromDataClass"
                                         [placeholder]="'Select Data Class...'"
@@ -53,7 +53,7 @@
                                         (ngModelChange)="model.copyFromDataClass = $event"
                                         [accepts]="['DataClass']">
 
-                                </model-selector-tree>
+                                </mdm-model-selector-tree>
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import { ResourcesService } from '../services/resources.service';
 import { FolderResult } from '../model/folderModel';
-import { Component, OnInit, Input, EventEmitter, Output, Inject } from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output, Inject, OnDestroy} from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { MessageService } from '../services/message.service';
 import { Subscription } from 'rxjs';
@@ -9,11 +9,11 @@ import { ToastrService } from 'ngx-toastr';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 
 @Component({
-    selector: 'app-folder',
+    selector: 'mdm-folder',
     templateUrl: './folder.component.html',
     styleUrls: ['./folder.component.css']
 })
-export class FolderComponent implements OnInit {
+export class FolderComponent implements OnInit, OnDestroy {
     result: FolderResult;
     showSecuritySection: boolean;
     subscription: Subscription;
@@ -103,7 +103,7 @@ export class FolderComponent implements OnInit {
     }
 
     tabSelected(itemsName) {
-        let tab = this.getTabDetail(itemsName);
+        const tab = this.getTabDetail(itemsName);
         this.stateHandler.Go('folder', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
     }
 

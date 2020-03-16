@@ -10,7 +10,7 @@ import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-element-selector',
+    selector: 'mdm-element-selector',
     templateUrl: './element-selector.component.html',
     animations: [
         trigger('detailExpand', [
@@ -90,7 +90,7 @@ export class ElementSelectorComponent implements OnInit {
   reloading = false;
 
     private searchControlInput: ElementRef;
-    isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
+    isExpansionDetailRow = (i: number, row: object) => row.hasOwnProperty('detailRow');
 
     closeHelp(): void {
         this.dialogRef.close();
@@ -229,8 +229,8 @@ export class ElementSelectorComponent implements OnInit {
         const buffer = 200;
         const limit = tableScrollHeight - tableViewHeight - buffer;
         if (scrollLocation > limit && limit > 0) {
-            let requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length + this.pageSize;
-            if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing == false) {
+            const requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length + this.pageSize;
+            if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing === false) {
                 this.isProcessing = true;
                 this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length, true);
             }
@@ -242,7 +242,7 @@ export class ElementSelectorComponent implements OnInit {
             return;
         }
 
-        let found = false;
+        const found = false;
         // if(this.notAllowedToSelectIds && $scope.notAllowedToSelectIds.length > 0){
         //     angular.forEach($scope.notAllowedToSelectIds, function (notAllowedId) {
         //         if(node.id === notAllowedId){
@@ -319,7 +319,7 @@ export class ElementSelectorComponent implements OnInit {
                 });
 
                 // if(element.hasOwnProperty("breadcrumbs"))
-                if (infinateScrollCall == true) {
+                if (infinateScrollCall === true) {
                     // this.dataSource.data = this.dataSource.data.concat(rows);
                     // this.dataSource._updateChangeSubscription();
                     this.isProcessing = true;
@@ -356,7 +356,7 @@ export class ElementSelectorComponent implements OnInit {
     }
 
     loadAllDataElements(dataClass, pageSize, pageIndex) {
-        let options = {
+        const options = {
             pageSize,
             pageIndex ,
             sortBy: 'label',

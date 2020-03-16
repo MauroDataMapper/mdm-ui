@@ -8,7 +8,7 @@
     </div>
     <div *ngIf="total">
         <div *ngFor="let linkType of linkTypes">
-            <mc-paged-list [name]="linkType"
+            <mdm-paged-list [name]="linkType"
                            [mc-title]="linkType"
                            [type]="'static'"
                            [items]="allLinksMap[linkType].links"
@@ -16,17 +16,17 @@
 
                 <ng-template #pageListTemplate let-item>
                     <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
-                        <element-link [element]="item.target"
+                        <mdm-element-link [element]="item.target"
                                       [show-parent-data-model-name]="true"
                                       [show-link]="true"
-                                      [show-type-title]="true"></element-link>
+                                      [show-type-title]="true"></mdm-element-link>
                         <div style="padding-left: 3px" *ngIf="showDescription && item.target.description && item.target.description.length>0">
-                            <more-description [description]="item.source.description"></more-description>
+                            <mdm-more-description [description]="item.source.description"></mdm-more-description>
                         </div>
                     </div>
                 </ng-template>
 
-            </mc-paged-list>
+            </mdm-paged-list>
         </div>
     </div>
     <div *ngIf="total == 0 && showNoLinksMessage" style="font-style: italic; font-size: 14px;padding-left: 2px;">

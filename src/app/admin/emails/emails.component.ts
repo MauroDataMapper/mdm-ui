@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef, AfterViewInit} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
@@ -6,11 +6,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-emails',
+  selector: 'mdm-app-emails',
   templateUrl: './emails.component.html',
   styleUrls: ['./emails.component.sass']
 })
-export class EmailsComponent implements OnInit {
+export class EmailsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -92,13 +92,13 @@ export class EmailsComponent implements OnInit {
       });
       this.totalItemCount = this.records.length;
       this.refreshDataSource();
-    }),
+    },
       err => {
         this.messageHandler.showError(
           'There was a problem loading user emails.',
           err
         );
-      };
+      });
   }
 
   applyFilter = () => {

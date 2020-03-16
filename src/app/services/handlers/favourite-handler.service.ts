@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {UserSettingsHandlerService} from '../utility/user-settings-handler.service';
 import {MessageHandlerService} from '../utility/message-handler.service';
-import { BroadcastService } from '../broadcast.service';
+import {BroadcastService} from '../broadcast.service';
 
 
 @Injectable({
@@ -9,10 +9,11 @@ import { BroadcastService } from '../broadcast.service';
 })
 export class FavouriteHandlerService {
 
-  constructor(private userSettingsHandler: UserSettingsHandlerService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) { }
+  constructor(private userSettingsHandler: UserSettingsHandlerService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
+  }
 
   add(element) {
-    let favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.userSettingsHandler.get('favourites');
     let fvt = false;
     favorites.forEach(favorite => {
       if (favorite.id === element.id) {
@@ -39,10 +40,11 @@ export class FavouriteHandlerService {
   }
 
   isAdded(element) {
-    let favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.userSettingsHandler.get('favourites');
     let fvt = false;
     favorites.forEach(favorite => {
-      if (favorite.id === element.id) { fvt = true;
+      if (favorite.id === element.id) {
+        fvt = true;
         return;
       }
     });
@@ -57,38 +59,39 @@ export class FavouriteHandlerService {
   remove(element) {
     // var deferred = $q.defer();
 
-    let favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.userSettingsHandler.get('favourites');
     // var index = _.findIndex(favorites, function (favorite) {
     //   return favorite.id === element.id;
     // });
     const index = favorites.findIndex(favorite =>
-           favorite.id == element.id
-      );
+      favorite.id === element.id
+    );
     if (index === -1) {
       // deferred.resolve(favorites);
-      return ;
+      return;
     }
 
     favorites.splice(index, 1);
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(result => {
       this.messageHandler.showSuccess('Removed from Favorites successfully.');
-      this.broadcastSvc.broadcast('favourites', { name: 'remove', element});
+      this.broadcastSvc.broadcast('favourites', {name: 'remove', element});
       // deferred.resolve(favorites);
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
-     // deferred.reject(favorites);
+      // deferred.reject(favorites);
     });
     // return deferred.promise;
   }
 
   toggle(element) {
-    let favorites = this.userSettingsHandler.get('favourites');
+    const favorites = this.userSettingsHandler.get('favourites');
     let processFinish = false;
     let fvt = false;
-    favorites.forEach (favorite => {
-      if (favorite.id === element.id) {fvt = true;
-       return;
+    favorites.forEach(favorite => {
+      if (favorite.id === element.id) {
+        fvt = true;
+        return;
       }
     });
     if (!fvt) {

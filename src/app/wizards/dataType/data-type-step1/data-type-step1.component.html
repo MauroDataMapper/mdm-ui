@@ -44,7 +44,7 @@
 								   style="cursor: pointer">
 							<span style="cursor: pointer;">Copy Data Type(s) from...</span>
 							<div style="margin-left: 45px;">
-								<model-selector-tree [(on-select)]="onSelect"
+								<mdm-model-selector-tree [(on-select)]="onSelect"
 													 [default-elements]="model.copyFromDataModel"
 													 [placeholder]="'Select Data Model...'"
 													 [processing]="model.createType != 'copy'"
@@ -53,7 +53,7 @@
 													 [tree-search-domain-type]="'DataModel'"
 													 (ngModelChange)="model.copyFromDataModel = $event"
 													 [accepts]="['DataModel']">
-								</model-selector-tree>
+								</mdm-model-selector-tree>
 							</div>
 						</div>
 					</div>

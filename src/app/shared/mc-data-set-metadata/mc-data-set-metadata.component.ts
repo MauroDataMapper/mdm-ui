@@ -141,7 +141,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         };
 
         if (options.filters) {
-            if (options.filters.indexOf('namespace') != -1) {
+            if (options.filters.indexOf('namespace') !== -1) {
                 options.filters = options.filters.replace('namespace', 'ns');
             }
         }

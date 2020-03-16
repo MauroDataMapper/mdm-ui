@@ -7,18 +7,18 @@ import {
   ElementRef,
   HostListener,
   SimpleChanges,
-  ChangeDetectorRef
+  ChangeDetectorRef, OnChanges
 } from '@angular/core';
 import {ResourcesService} from '../services/resources.service';
 import {SecurityHandlerService} from '../services/handlers/security-handler.service';
 import {UserSettingsHandlerService} from '../services/utility/user-settings-handler.service';
 
 @Component({
-  selector: 'model-selector-tree',
+  selector: 'mdm-model-selector-tree',
   templateUrl: './model-selector-tree.component.html',
   // styleUrls: ['./model-selector-tree.component.sass']
 })
-export class ModelSelectorTreeComponent implements OnInit {
+export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
   @Input() root: any;
   @Output() rootChange = new EventEmitter<any>();

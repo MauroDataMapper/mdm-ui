@@ -3,7 +3,7 @@ import {DataModelResult} from '../../model/dataModelModel';
 import {DataClassResult} from '../../model/dataClassModel';
 
 @Component({
-  selector: 'app-element-alias',
+  selector: 'mdm-element-alias',
   templateUrl: './element-alias.component.html',
   // styleUrls: ['./element-alias.component.sass']
 })
@@ -22,7 +22,7 @@ export class ElementAliasComponent implements OnInit {
   }
 
   remove(element) {
-    const index = this.aliases.findIndex(alias => alias == element);
+    const index = this.aliases.findIndex(alias => alias === element);
     if (index !== -1) {
      this.aliases.splice(index, 1);
      this.editableForm.aliases = this.aliases;
@@ -31,7 +31,7 @@ export class ElementAliasComponent implements OnInit {
   }
 
 
-  add () {
+  add() {
     if (this.typedAlias.trim() === '') {
       return;
     }

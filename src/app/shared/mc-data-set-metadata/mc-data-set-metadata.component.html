@@ -97,13 +97,13 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="!record.inEdit">
-                        <more-description [description]="record.value" [length]="100"></more-description>
+                        <mdm-more-description [description]="record.value" [length]="100"></mdm-more-description>
                     </div>
                     <div *ngIf="record.inEdit">
                         <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
 
 
-                            <markdown-text-area rows="'4'" [(description)]="record.edit.value" [in-edit-mode]="true" [hide-help-text]="true"></markdown-text-area>
+                            <mdm-markdown-text-area rows="'4'" [(description)]="record.edit.value" [in-edit-mode]="true" [hide-help-text]="true"></mdm-markdown-text-area>
 
                             <small *ngIf="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
                         </div>

@@ -2,7 +2,7 @@ import { MatDateFormats } from '@angular/material/core/datetime/date-formats';
 import { NativeDateAdapter } from '@angular/material/core/datetime/native-date-adapter';
 
 export class AppDateAdapter extends NativeDateAdapter {
-  format(date: Date, displayFormat: Object): string {
+  format(date: Date, displayFormat: any): string {
     if (displayFormat === 'input') {
       let day: string = date.getDate().toString();
       day = +day < 10 ? '0' + day : day;

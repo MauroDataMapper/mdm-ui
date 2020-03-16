@@ -21,12 +21,12 @@
                     <span style="font-weight: bold;">Restrict your search to:</span>
                     <br>
                     <div style="margin-right: 10px; width:60%;">
-                        <model-selector-tree
+                        <mdm-model-selector-tree
                             [ng-model]="context"
                             [on-select]="onContextSelected"
                             [placeholder]="'Choose a Folder, Data Model or Data Class'"
                             [accepts]="['Folder', 'DataModel', 'DataClass']">
-                        </model-selector-tree>
+                        </mdm-model-selector-tree>
                     </div>
                 </div>
             </div>
@@ -138,11 +138,11 @@
                                 <div style="padding: 2px 0px">
                                     <div>
                                         <div>
-                                            <element-link [show-type-title]="true"
+                                            <mdm-element-link [show-type-title]="true"
                                                             [new-window]="!doNotOpenLinkInNewWindow"
                                                             [parent-data-model]="{id:record.dataModel}"
                                                             [parent-data-class]="{id:record.dataClass}"
-                                                            [element]="record"></element-link>
+                                                            [element]="record"></mdm-element-link>
                                         </div>
                                         <div *ngIf="record.aliases">
                                             <ul class="aliasSearchResult">
@@ -154,10 +154,10 @@
                                             </ul>
                                         </div>
 
-                                        <model-path [path]="record.breadcrumbs" [new-window]="!doNotOpenLinkInNewWindow" [do-not-display-status]="doNotDisplayModelPathStatus"></model-path>
+                                        <mdm-model-path [path]="record.breadcrumbs" [new-window]="!doNotOpenLinkInNewWindow" [do-not-display-status]="doNotDisplayModelPathStatus"></mdm-model-path>
 
                                     </div>
-                                    <markdown-text-area rows="'4'" [description]="record.description" [in-edit-mode]="false" [hide-help-text]="true"></markdown-text-area>
+                                    <mdm-markdown-text-area rows="'4'" [description]="record.description" [in-edit-mode]="false" [hide-help-text]="true"></mdm-markdown-text-area>
                                 </div>
 
                             </td>

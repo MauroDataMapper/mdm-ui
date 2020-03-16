@@ -10,18 +10,16 @@ export class ObjectEnhancerService {
 
   diff(newObj, oldObj) {
     return Object.keys(newObj)
-      .filter(function (key) {
-        return newObj[key] !== oldObj[key];
-      })
-      .reduce(function (res, key) {
+      .filter(key => newObj[key] !== oldObj[key])
+      .reduce((res, key) => {
         res[key] = newObj[key];
         return res;
       }, {});
   }
 
   diffCollection(newObj, oldObj) {
-    return Object.keys(this.diff(newObj, oldObj)).reduce(function (res, key) {
-      var obj = {};
+    return Object.keys(this.diff(newObj, oldObj)).reduce((res, key) => {
+      const obj = {};
       obj[key] = newObj[key];
       res.push(obj);
       return res;

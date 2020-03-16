@@ -1,4 +1,4 @@
-import {Component, OnInit, ElementRef, ViewChildren, ViewChild} from '@angular/core';
+import {Component, OnInit, ElementRef, ViewChildren, ViewChild, AfterViewInit} from '@angular/core';
 import {StateService} from '@uirouter/core';
 import {MessageHandlerService} from '../../../services/utility/message-handler.service';
 import {ResourcesService} from '../../../services/resources.service';
@@ -8,11 +8,11 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
-  selector: 'app-plugins',
+  selector: 'mdm-plugins',
   templateUrl: './plugins.component.html',
   styleUrls: ['./plugins.component.sass']
 })
-export class PluginsComponent implements OnInit {
+export class PluginsComponent implements OnInit, AfterViewInit {
 
   @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -40,7 +40,7 @@ export class PluginsComponent implements OnInit {
 
   ngAfterViewInit() {
 
-    this.displayedColumns;
+    // this.displayedColumns;
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -48,7 +48,7 @@ export class PluginsComponent implements OnInit {
 
   requestDataFromMultipleSources(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
 
-    let options = {
+    const options = {
       pageSize,
       pageIndex,
       filters,
@@ -61,44 +61,44 @@ export class PluginsComponent implements OnInit {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }),
+    },
       (err) => {
 
         this.messageHandler.showError('There was a problem loading the importers.', err);
-      };
+      });
 
     this.resourcesService.admin.get('plugins/emailers', options).subscribe(resp => {
 
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }),
+    },
       (err) => {
 
         this.messageHandler.showError('There was a problem loading the emailers.', err);
-      };
+      });
 
     this.resourcesService.admin.get('plugins/dataLoaders', options).subscribe(resp => {
 
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }),
+    },
       (err) => {
 
         this.messageHandler.showError('There was a problem loading the dataLoaders.', err);
-      };
+      });
 
     this.resourcesService.admin.get('plugins/exporters', options).subscribe(resp => {
 
       this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
       this.totalItemCount = this.dataSource.data.length;
-    }),
+    },
       (err: any) => {
 
         this.messageHandler.showError('There was a problem loading the exporters.', err);
-      };
+      });
   }
 
   // TODO

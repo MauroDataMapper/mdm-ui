@@ -14,7 +14,7 @@
                 <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="!record.inEdit">
                         <div class="annotation-item-header">
-                            <profile-picture [user]="record.createdBy"></profile-picture>
+                            <mdm-profile-picture [user]="record.createdBy"></mdm-profile-picture>
                             <span class="annotation-username">{{record.createdBy.firstName}}&nbsp;{{record.createdBy.lastName}}</span>
                             <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                         </div>
@@ -29,7 +29,7 @@
                             <div *ngFor="let childAnnotation of record.childAnnotations" [hidden]="!(record.show)">
                                 <div class="annotation-item">
                                     <div class="annotation-child-item-header">
-                                        <profile-picture [user]="childAnnotation.createdBy"></profile-picture>
+                                        <mdm-profile-picture [user]="childAnnotation.createdBy"></mdm-profile-picture>
                                         <span class="annotation-username">{{childAnnotation.createdBy.firstName}}&nbsp;{{childAnnotation.createdBy.lastName}}</span>
                                         <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                                         <div style="float: right;margin-right: 5px">

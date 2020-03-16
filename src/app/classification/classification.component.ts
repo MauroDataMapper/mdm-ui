@@ -136,7 +136,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     this.resourcesService.classifier
       .get(id, 'permissions', null)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
-        permissions.body.forEach(attrname => {
+        Object.keys(permissions.body).forEach(attrname => {
           this.result[attrname] = permissions.body[attrname];
         });
         // Send it to message service to receive in child components

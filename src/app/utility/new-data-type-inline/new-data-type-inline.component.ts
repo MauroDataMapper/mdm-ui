@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
-  selector: "new-data-type-inline",
+  selector: 'mdm-data-type-inline',
   templateUrl: './new-data-type-inline.component.html',
   styleUrls: ['./new-data-type-inline.component.sass']
 })
-export class NewDataTypeInlineComponent implements OnInit {
+export class NewDataTypeInlineComponent implements OnInit, DoCheck {
   @Output() validationStatusEvent = new EventEmitter<string>();
 
   @Input('parent-data-model') parentDataModel;

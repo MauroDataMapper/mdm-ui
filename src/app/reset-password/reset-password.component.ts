@@ -6,12 +6,12 @@ import { StateService } from '@uirouter/core';
 import { SharedService } from '../services/shared.service';
 
 @Component({
-  selector: 'app-reset-password',
+  selector: 'mdm-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit {
-  errors = [];
+  errors: any;
   confirmed = false;
   processing = false;
   message: string;
@@ -41,16 +41,16 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   validate = () => {
-    this.errors = [];
+    this.errors = null;
     let isValid = true;
 
     if (this.user.password.trim().length < 4) {
-      this.errors['password'] = 'Password must be at least 4 characters long!';
+      this.errors.password = 'Password must be at least 4 characters long!';
       isValid = false;
     }
     if (this.user.password.trim() !== this.user.confirmPassword.trim()) {
-      this.errors['password'] = ' ';
-      this.errors['confirmPassword'] = 'These passwords don\'t match';
+      this.errors.password = ' ';
+      this.errors.confirmPassword = 'These passwords don\'t match';
       isValid = false;
     }
     if (isValid) {

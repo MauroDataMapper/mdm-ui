@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-my-tree',
+  selector: 'mdm-my-tree',
   templateUrl: './my-tree.component.html',
   styleUrls: ['./my-tree.component.sass']
 })

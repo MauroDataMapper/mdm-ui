@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-pending-users',
+  selector: 'mdm-pending-users',
   templateUrl: './pending-users.component.html',
   styleUrls: ['./pending-users.component.sass']
 })

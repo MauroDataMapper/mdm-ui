@@ -6,7 +6,7 @@ import { ValidatorService } from '../../services/validator.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 
 @Component({
-  selector: 'app-new-version-data-model',
+  selector: 'mdm-new-version-data-model',
   templateUrl: './new-version-data-model.component.html',
   styleUrls: ['./new-version-data-model.component.sass']
 })

@@ -7,7 +7,7 @@ import {ErrorComponent} from '../error.component';
 
 const columns: string[] = ['field', 'value'];
 @Component({
-  selector: 'app-not-found-error',
+  selector: 'mdm-not-found-error',
   templateUrl: '../error.component.html',
   styleUrls: []
 })

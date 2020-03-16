@@ -65,16 +65,14 @@ describe('RestHandlerService', () => {
       value => {
         if (!expectSuccess) {
           fail('Should not have succeeded');
-        }
-        else {
+        } else {
           somethingHappened = true;
         }
       },
       err => {
         if (expectSuccess) {
           fail('Should not have received an error');
-        }
-        else {
+        } else {
           somethingHappened = true;
         }
       },

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter } from '@angular/core';
+import {Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
@@ -6,11 +6,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-pending-users-table',
+  selector: 'mdm-pending-users-table',
   templateUrl: './pending-users-table.component.html',
   styleUrls: ['./pending-users-table.component.sass']
 })
-export class PendingUsersTableComponent implements OnInit {
+export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -81,10 +81,10 @@ export class PendingUsersTableComponent implements OnInit {
         this.records = resp.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
-      }),
+      },
       err => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
-      };
+      });
   }
 
   refreshDataSource() {

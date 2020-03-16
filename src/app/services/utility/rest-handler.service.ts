@@ -13,24 +13,23 @@ export class RestHandlerService {
     serverError = new Subject<any>();
 
 
-    constructor(private messageService : MessageService, private http: HttpClient, private broadcastSvc: BroadcastService, private stateHandler: StateHandlerService) { }
+    constructor(private messageService: MessageService, private http: HttpClient, private broadcastSvc: BroadcastService, private stateHandler: StateHandlerService) { }
 
     restHandler(options: any) {
-        if (options.withCredentials == undefined ||
-            options.withCredentials == null ||
-            (options.withCredentials != undefined && options.withCredentials == false)) {
-            throw new Error("withCredentials is not provided!");
+        if (options.withCredentials === undefined ||
+            options.withCredentials === null ||
+            (options.withCredentials !== undefined && options.withCredentials === false)) {
+            throw new Error('withCredentials is not provided!');
         }
 
-        if (options.responseType) { }
-        else {
+        if (options.responseType) { } else {
             options.responseType = undefined;
         }
 
         options.headers = options.headers || {};
-        //STOP IE11 from Caching HTTP GET
+        // STOP IE11 from Caching HTTP GET
         options.headers['Cache-Control'] = 'no-cache';
-        options.headers['Pragma'] = 'no-cache';
+        options.headers.Pragma = 'no-cache';
 
 
         return this.http.request(options.method, options.url, {
@@ -53,7 +52,7 @@ export class RestHandlerService {
             } else if (response.status === 501) {
                 this.stateHandler.NotImplemented(response);
                 this.messageService.lastError = response;
-            } else if (response.status >= 400 && response.status < 500 && options.method == 'GET') {
+            } else if (response.status >= 400 && response.status < 500 && options.method === 'GET') {
                 this.stateHandler.NotFound(response);
                 this.broadcastSvc.broadcast('resourceNotFound', response);
                 this.messageService.lastError = response;

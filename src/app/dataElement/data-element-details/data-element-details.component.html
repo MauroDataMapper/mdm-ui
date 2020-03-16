@@ -54,12 +54,12 @@
                             <span *ngIf="showNewInlineDataType">Please <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">select a Data Type </a> or Add a new one:</span>
 
                             <div *ngIf="showNewInlineDataType">
-                                <new-data-type-inline
+                                <mdm-data-type-inline
                                         [model]="newlyAddedDataType"
                                         [parent-data-model]="parentDataModel"
                                         [show-classification]="false"
                                         [show-parent-data-model]="false">
-                                </new-data-type-inline>
+                                </mdm-data-type-inline>
                             </div>
 
 

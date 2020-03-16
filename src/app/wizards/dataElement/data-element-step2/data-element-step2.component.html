@@ -84,13 +84,13 @@
               </div>
 
               <div *ngIf="model.showNewInlineDataType">
-                <new-data-type-inline
+                <mdm-data-type-inline
                   [parent-scope-handler]="parentScopeHandler"
                   [model]="model.newlyAddedDataType"
                   [parent-data-model]="model.parentDataModel"
                   [show-parent-data-model]="false"
                   (validationStatusEvent)="validationStatusEmitter($event)">
-                </new-data-type-inline>
+                </mdm-data-type-inline>
               </div>
               <div *ngIf="!model.showNewInlineDataType">
                 <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">

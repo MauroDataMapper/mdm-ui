@@ -90,7 +90,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
     this.resourcesService.dataModel
       .get(id, 'permissions', null)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
-        permissions.body.forEach( attrname => {
+        Object.keys(permissions.body).forEach( attrname => {
           this.dataModel[attrname] = permissions.body[attrname];
         });
         // Send it to message service to receive in child components

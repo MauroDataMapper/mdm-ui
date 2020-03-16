@@ -1,7 +1,7 @@
 import {Directive, Input} from '@angular/core';
 
 @Directive({
-  selector: '[appProperties]'
+  selector: '[mdmProperties]'
 })
 export class PropertiesDirective {
   private aliases_: any;

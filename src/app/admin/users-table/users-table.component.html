@@ -11,7 +11,7 @@
 
 		<ng-container matColumnDef="firstName">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 15%; width: 15%;" columnName="firstName">
+				style="cursor: pointer; max-width: 19%; width: 19%;" columnName="firstName">
 				<span [hidden]="!hideFilters">First name</span>
 				<div [hidden]="hideFilters">
 					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -20,7 +20,7 @@
 					</mat-form-field>
 				</div>
 			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+			<td mat-cell *matCellDef="let record" style="max-width: 19%; width: 19%; text-align: left; word-wrap: break-word;">
 				<div>
 					{{record.firstName}}
 				</div>
@@ -65,7 +65,7 @@
 		</ng-container>
 		<ng-container matColumnDef="organisation">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 18%; width: 18%;" columnName="lastName">
+				style="cursor: pointer; max-width: 16%; width: 16%;" columnName="lastName">
 				<span [hidden]="!hideFilters">Organisation</span>
 				<div [hidden]="hideFilters">
 					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -111,7 +111,7 @@
 		</ng-container>
 		<ng-container matColumnDef="status">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 10%; width: 10%;" columnName="status">
+				style="cursor: pointer; max-width: 9%; width: 9%;" columnName="status">
 				<span [hidden]="!hideFilters">Status</span>
 			</th>
 			<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
@@ -124,24 +124,24 @@
 
 		<ng-container matColumnDef="icons">
 			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;" columnName="icons"></th>
-			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 18%; width: 18%; text-align: left; word-wrap: break-word;">
+			<td mat-cell *matCellDef="let record; let i = index" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
 				<div style="float: right;margin-bottom: 3px">
 
-					<button mat-flat-button color="primary" [matMenuTriggerFor]="actions">Action </button>
+					<button mat-flat-button color="primary" [matMenuTriggerFor]="actions" style="color: #1157a9; border: 1px solid rgba(17, 87, 169, 0.3); background-color: #fff;">Actions <i class="fas fa-chevron-down fa-xs"></i></button>
 					<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
-						<a href="#"  mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
+						<button mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
 							<i class="fas fa-key" color="primary"></i> Reset password
-						</a>
-						<a href="#" mat-menu-item (click)="editUser(record)">
+						</button>
+						<button mat-menu-item (click)="editUser(record)">
 							<i class="fas fa-pencil-alt" color="primary"></i> Edit user
-						</a>
-						<a href="#" mat-menu-item *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">
+						</button>
+						<button mat-menu-item *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">
 							<i class="fas fa-ban warning"></i> Deactivate
-						</a>
-						<a href="#" mat-menu-item *ngIf="record.disabled" (click)="toggleDeactivate(record)" aria-label="Activate">
+						</button>
+						<button mat-menu-item *ngIf="record.disabled" (click)="toggleDeactivate(record)" aria-label="Activate">
 							<i class="fas fa-check saveButton"></i> Activate
-						</a>
-				</mat-menu>
+						</button>
+					</mat-menu>
 				</div>
 			</td>
 		</ng-container>

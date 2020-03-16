@@ -27,7 +27,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   failCount: number;
   total: number;
 
-  displayedColumns: string[] = ['status', 'emailAddress', 'firstName', 'lastName', 'organisation', 'groups', 'userRole', 'icons'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'emailAddress', 'organisation', 'userRole', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(private messageHandler: MessageHandlerService, private resources: ResourcesService, private stateHandler: StateHandlerService) {}
@@ -38,12 +38,8 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
-
           return this.usersFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter);
         }),
         map((data: any) => {
@@ -62,26 +58,14 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   }
 
   usersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
+    const options = { pageSize, pageIndex, sortBy, sortType, filters };
 
     return this.resources.catalogueUser.get(null, null, options);
   }
 
   editUser(row) {
     if (row) {
-      this.stateHandler.Go(
-        'admin.user',
-        {
-          id: row.id
-        },
-        null
-      );
+      this.stateHandler.Go('admin.user', { id: row.id, }, null);
     }
   }
 

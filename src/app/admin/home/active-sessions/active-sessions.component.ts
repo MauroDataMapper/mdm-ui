@@ -28,24 +28,14 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   hideFilters = true;
   dataSource = new MatTableDataSource<any>();
 
-  constructor(
-    private messageHandler: MessageHandlerService,
-    private resourcesService: ResourcesService
-  ) {
-    this.displayedColumns = [
-      'userEmailAddress',
-      'userName',
-      'userOrganisation',
-      'start',
-      'lastAccess'
-    ];
+  constructor(private messageHandler: MessageHandlerService, private resourcesService: ResourcesService) {
+    this.displayedColumns = [ 'userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
   }
 
   ngOnInit() {
     if (this.sort) {
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     }
-
     this.activeSessionsFetch();
   }
 
@@ -63,24 +53,13 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.admin
-      .get('activeSessions', options)
-      .subscribe(resp => {
+    this.resourcesService.admin.get('activeSessions', options).subscribe(resp => {
         for (const [key, value] of Object.entries(resp.body)) {
           resp.body[key].start = new Date(resp.body[key].sessionOpened);
           resp.body[key].last = new Date(resp.body[key].lastAccess);
 
           this.records.push(resp.body[key]);
         }
-
-        // this.records.push({
-        // 	'userEmailAddress': 'aa@gmail.com',
-        // 	'userName': 'd',
-        // 	'userOrganisation': 'dd',
-        // 	'start': new Date(resp.body['8DEEA326AC4210ABD5882C45C8A4671D'].sessionOpened),
-        // 	'last': new Date(resp.body['8DEEA326AC4210ABD5882C45C8A4671D'].sessionOpened)
-        // });
-
         this.totalItemCount = this.records.length;
         this.dataSource.data = this.records;
       },
@@ -92,11 +71,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   isToday(date) {
     const today = new Date();
 
-    if (
-      today.getUTCFullYear() === date.getUTCFullYear() &&
-      today.getUTCMonth() === date.getUTCMonth() &&
-      today.getUTCDate() === date.getUTCDate()
-    ) {
+    if (today.getUTCFullYear() === date.getUTCFullYear() && today.getUTCMonth() === date.getUTCMonth() && today.getUTCDate() === date.getUTCDate()) {
       return true;
     }
 

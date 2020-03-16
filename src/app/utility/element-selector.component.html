@@ -202,12 +202,12 @@
                             <mat-header-row *matHeaderCellDef> Term </mat-header-row>
                             <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
                                 <!--                                <a target="_blank" style="width:100%" href=null>{{element.label}}</a>-->
-                                <element-link [show-type-title]="true"
+                                <mdm-element-link [show-type-title]="true"
                                               [new-window]= "true"
                                               [parent-data-model]="{id:element.dataModel}"
                                               [parent-data-class]="{id:element.dataClass}"
                                               [show-href]="false"
-                                              [element]="element"></element-link>
+                                              [element]="element"></mdm-element-link>
 
                             </mat-cell>
                         </ng-container>

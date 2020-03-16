@@ -8,5 +8,16 @@
         <div class="mdm--block">
             <p class="text-muted">Copyright &copy; {{year}} Clinical Informatics, NIHR Oxford Biomedical Research Centre</p>
         </div>
+        <!-- <div class="visible-xs">
+            <div style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">Copyright &copy; {{year}}</p></div>
+            <div style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">Clinical Informatics,</p></div>
+            <div style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">NIHR Oxford Biomedical Research Centre</p></div>
+            <br>
+            <div style="display: inline-block;padding-right: 5px;"><a ui-sref="appContainer.mainApp.about">About</a></div>
+            <br>
+            <div *ngIf="wiki && wiki.length>0 && showWikiLink"   style="display: inline-block;padding-right: 5px;"><a href="{{wiki}}" target="_blank">Wiki</a></div>
+            <br>
+            <div *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" style="display: inline-block;padding-right: 5px;"><a href="{{youTrack.url}}/newIssue" target="_blank">Report Issue</a></div>
+        </div> -->
     </div>
 </footer>

@@ -423,4 +423,4 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent]
 })
-export class CatalougeModule { }
+export class CatalogueModule { }

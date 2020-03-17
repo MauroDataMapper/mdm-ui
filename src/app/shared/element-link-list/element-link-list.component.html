@@ -63,7 +63,7 @@
                     <div *ngIf="record.inEdit">
                         <select class="form-control wizardInput mcSelect" [(ngModel)]="record.edit.linkType">
                             <ng-container  *ngFor="let rec of semanticLinkTypes | keyvalue">
-                                <option *ngIf="rec.value.editable"  (value)="rec.key">{{rec.value.title}}</option>
+                                <option *ngIf="rec.value.editable"  value="rec.key">{{rec.value.title}}</option>
                                 </ng-container>
                         </select>
                     </div>

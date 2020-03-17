@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { CatalougeModule } from './modules/catalouge/catalouge.module';
+import { CatalogueModule } from './modules/catalogue/catalogue.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { UsersModule } from './modules/users/users.module';
 import { APP_BASE_HREF, LocationStrategy, HashLocationStrategy } from '@angular/common';
@@ -24,7 +24,7 @@ import { AppRoutingModule } from './app-routing.module';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    CatalougeModule,
+    CatalogueModule,
     AdminModule,
     UsersModule,
     SharedModule,

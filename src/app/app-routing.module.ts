@@ -26,7 +26,6 @@ import { DataClassComponent } from './dataClass/data-class/data-class.component'
 import { DataElementComponent } from './dataElement/data-element/data-element.component';
 import { ClassificationComponent } from './classification/classification.component';
 import { ClassifierMainComponent } from './wizards/classifier/classifier-main/classifier-main.component';
-import { DiagramComponent } from './diagram/diagram.component';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { AppComponent } from './app.component';
 
@@ -56,11 +55,6 @@ export const PagesRoutes = {
       name: 'appContainer.mainApp.about',
       url: '/about',
       component: AboutComponent
-    },
-    {
-      name: 'appContainer.mainApp.diagram',
-      url: '/diagram/:id',
-      component: DiagramComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel',

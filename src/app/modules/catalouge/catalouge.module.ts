@@ -108,7 +108,6 @@ import { McEnumerationListWithCategoryComponent } from 'src/app/utility/mc-enume
 import { ClassificationComponent } from 'src/app/classification/classification.component';
 import { ClassificationDetailsComponent } from 'src/app/classification/classification-details/classification-details.component';
 import { ClassifiedElementsListComponent } from 'src/app/shared/classified-elements-list/classified-elements-list.component';
-import { DiagramComponent } from 'src/app/diagram/diagram.component';
 import { AppContainerComponent } from 'src/app/app-container/app-container.component';
 import { NavbarComponent } from 'src/app/navbar/navbar.component';
 import { CapitalizePipe } from 'src/app/pipes/capitalize.pipe';
@@ -246,7 +245,6 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     ClassificationComponent,
     ClassificationDetailsComponent,
     ClassifiedElementsListComponent,
-    DiagramComponent,
     AppContainerComponent,
     NavbarComponent,
     CapitalizePipe,
@@ -398,7 +396,6 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     ClassificationComponent,
     ClassificationDetailsComponent,
     ClassifiedElementsListComponent,
-    DiagramComponent,
     AppContainerComponent,
     NavbarComponent,
     CapitalizePipe,

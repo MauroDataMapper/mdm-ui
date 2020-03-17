@@ -121,7 +121,7 @@ describe('RestHandlerService', () => {
   it('should object to missing credentials', () => {
     const service: RestHandlerService = TestBed.get(RestHandlerService);
 
-    const options = {};
+    const options: any = { };
     expect(() => service.restHandler(options)).toThrowError();
     options.withCredentials = false;
     expect(() => service.restHandler(options)).toThrowError();

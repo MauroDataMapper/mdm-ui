@@ -117,7 +117,7 @@
             <mat-tab label="Diagram">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                      <mdm-diagram-tab></mdm-diagram-tab>
+                      <mdm-diagram-tab [parent]="dataModel"  [mode]="'umlclass'"></mdm-diagram-tab>
                     </div>
                 </ng-template>
             </mat-tab>
@@ -138,7 +138,7 @@
             <mat-tab label="Dataflow" *ngIf="dataModel && dataModel.type === 'Data Asset'">
                 <ng-template matTabContent>
                     <div style="width: 100%;">
-                      <!-- TODO -->
+                      <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow'"></mdm-diagram-tab>
                     </div>
                 </ng-template>
             </mat-tab>

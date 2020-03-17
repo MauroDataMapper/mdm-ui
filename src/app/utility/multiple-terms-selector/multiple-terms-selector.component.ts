@@ -47,7 +47,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
 
   set selectedTerms(val) {
     this.selectedItems = val;
-    this.onSelectedTermsChange.emit(this.selectedItems);
+    this.selectedTermsChange.emit(this.selectedItems);
   }
 
   @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
@@ -263,7 +263,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     }
 
   //  if(this.onSelectedTermsChange){
-    this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
+    this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     // }
     // if(this.selectorSection.selectedTermsCount >0)
     //   this.hideAddButton = false;
@@ -293,8 +293,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
     delete this.selectorSection.selectedTerms[$item.id];
     this.selectorSection.selectedTermsCount--;
 
-    if (this.onSelectedTermsChange) {
-      this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
+    if (this.selectedTermsChange) {
+      this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     }
   };
   addSelectedTerms = terms => {

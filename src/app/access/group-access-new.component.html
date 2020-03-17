@@ -28,17 +28,17 @@
                             </div>
                             <div *ngIf="record.isNew">
                                 <mdm-select [width]="'100%'"
-                                           [accept-typed-input]="false"
-                                           [value-type]="'static'"
-                                           [default-value]="record.group"
-                                           [static-values]="allGroups"
-                                           [min-input-length]="1"
-                                           [has-error]="record.edit.errors && record.edit.errors['group']"
+                                           [acceptTypedInput]="false"
+                                           [valueType]="'static'"
+                                           [defaultValue]="record.group"
+                                           [staticValues]="allGroups"
+                                           [minInputLength]="1"
+                                           [hasError]="record.edit.errors && record.edit.errors['group']"
                                            [record]="record"
-                                           [id-property]="'id'"
-                                           [display-property]="'label'"
-                                           [search-property]="'label'"
-                                           (on-select)="onGroupSelect($event[0],$event[1])">
+                                           [idProperty]="'id'"
+                                           [displayProperty]="'label'"
+                                           [searchProperty]="'label'"
+                                           (selectEvent)="onGroupSelect($event[0],$event[1])">
                                     <ng-template #lineContent let-item>
                                         <div>{{item.label}}</div>
                                     </ng-template>

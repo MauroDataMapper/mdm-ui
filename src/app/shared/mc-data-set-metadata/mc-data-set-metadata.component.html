@@ -28,17 +28,17 @@
                     </div>
                     <div *ngIf="rec.inEdit">
                         <mdm-select [width]="'100%'"
-                                   [accept-typed-input]="true"
-                                   [value-type]="'static'"
-                                   [static-values]="namespaces"
-                                   [default-value]="rec.namespace"
-                                   [has-error]="rec.edit.errors && rec.edit.errors['namespace']"
-                                   [(record)]="records[rec]"
-                                   [min-input-length]="0"
-                                   [id-property]="'id'"
-                                   [display-property]="'namespace'"
-                                   [search-property]="'namespace'"
-                                   (on-select)="onNamespaceSelect($event[0],$event[1])"
+                                   [acceptTypedInput]="true"
+                                   [valueType]="'static'"
+                                   [staticValues]="namespaces"
+                                   [defaultValue]="rec.namespace"
+                                   [hasError]="rec.edit.errors && rec.edit.errors['namespace']"
+                                   [record]="records[rec]"
+                                   [minInputLength]="0"
+                                   [idProperty]="'id'"
+                                   [displayProperty]="'namespace'"
+                                   [searchProperty]="'namespace'"
+                                   (selectEvent)="onNamespaceSelect($event[0],$event[1])"
                                    name="test">
                             <ng-template #lineContent let-item>
                                 <div>{{item.namespace}}</div>
@@ -64,17 +64,17 @@
                     </div>
                     <div *ngIf="record.inEdit">
                         <mdm-select [width]="'100%'"
-                                   [accept-typed-input]="true"
-                                   [value-type]="'static'"
-                                   [static-values]="record.metadataKeys"
-                                   [default-value]="record.key"
-                                   [has-error]="record.edit.errors && record.edit.errors['key']"
-                                   [(record)]="records[record]"
-                                   [min-input-length]="0"
-                                   [id-property]="'id'"
-                                   [display-property]="'key'"
-                                   [search-property]="'key'"
-                                   (on-select)="onKeySelect($event[0],$event[1])">
+                                   [acceptTypedInput]="true"
+                                   [valueType]="'static'"
+                                   [staticValues]="record.metadataKeys"
+                                   [defaultValue]="record.key"
+                                   [hasError]="record.edit.errors && record.edit.errors['key']"
+                                   [record]="records[record]"
+                                   [minInputLength]="0"
+                                   [idProperty]="'id'"
+                                   [displayProperty]="'key'"
+                                   [searchProperty]="'key'"
+                                   (selectEvent)="onKeySelect($event[0],$event[1])">
                             <ng-template #lineContent let-item>
                                 <div>{{item.key}}</div>
                             </ng-template>
@@ -103,7 +103,7 @@
                         <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
 
 
-                            <mdm-markdown-text-area rows="'4'" [(description)]="record.edit.value" [in-edit-mode]="true" [hide-help-text]="true"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area rows="'4'" [(description)]="record.edit.value" [inEditMode]="true" [hideHelpText]="true"></mdm-markdown-text-area>
 
                             <small *ngIf="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
                         </div>
@@ -114,7 +114,7 @@
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
                     <div ng-if="access && access.canAddMetadata">
-                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancel-edit)="cancelEdit($event[0],$event[1])" (on-edit)="onEdit($event[0],$event[1])" ></mdm-table-buttons>
+                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])" ></mdm-table-buttons>
                     </div>
                 </td>
             </ng-container>

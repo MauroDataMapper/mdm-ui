@@ -30,7 +30,7 @@ export class SemanticLinkHandlerService {
 
     private action(source, target, linkId, linkType, operation) {
 
-        let resource = {
+        const resource = {
             target: { id: target.id },
             linkType,
             domainType: this.findSemanticLinkType(source, target)

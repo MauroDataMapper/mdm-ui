@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor }
 })
 export class ElementClassificationsComponent implements OnInit {
 
-    @Input('editable-form') editableForm: any;
+    @Input() editableForm: any;
 
     classificationsVal: any[];
     @Output() classificationsChanged = new EventEmitter<any[]>();
@@ -26,9 +26,9 @@ export class ElementClassificationsComponent implements OnInit {
         this.classificationsChanged.emit(this.classificationsVal);
     }
 
-    @Input('in-edit-mode') inEditMode: boolean;
-    @Input('property') property: string;
-    @Input('element') element: DataModelResult;
+    @Input() inEditMode: boolean;
+    @Input() property: string;
+    @Input() element: DataModelResult;
     @Input() newWindow = false;
     target: string;
     lastWasShiftKey: any;

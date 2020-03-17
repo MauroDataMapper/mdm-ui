@@ -9,17 +9,17 @@
     <div *ngIf="total">
         <div *ngFor="let linkType of linkTypes">
             <mdm-paged-list [name]="linkType"
-                           [mc-title]="linkType"
+                           [mcTitle]="linkType"
                            [type]="'static'"
                            [items]="allLinksMap[linkType].links"
-                           [page-size]="3">
+                           [pageSize]="3">
 
                 <ng-template #pageListTemplate let-item>
                     <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
                         <mdm-element-link [element]="item.target"
-                                      [show-parent-data-model-name]="true"
-                                      [show-link]="true"
-                                      [show-type-title]="true"></mdm-element-link>
+                                      [showParentDataModelName]="true"
+                                      [showLink]="true"
+                                      [showTypeTitle]="true"></mdm-element-link>
                         <div style="padding-left: 3px" *ngIf="showDescription && item.target.description && item.target.description.length>0">
                             <mdm-more-description [description]="item.source.description"></mdm-more-description>
                         </div>

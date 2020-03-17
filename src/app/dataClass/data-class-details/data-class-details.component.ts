@@ -29,7 +29,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   hasResult = false;
   subscription: Subscription;
   editableForm: EditableDataClass;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   @ViewChildren('editableMinText') editFormMinText: QueryList<any>;

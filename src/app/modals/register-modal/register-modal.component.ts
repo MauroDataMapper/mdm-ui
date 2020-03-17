@@ -8,7 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 
 @Component({
-  selector: 'app-register-modal',
+  selector: 'mdm-register-modal',
   templateUrl: './register-modal.component.html',
   styleUrls: ['./register-modal.component.sass']
 })
@@ -59,7 +59,7 @@ export class RegisterModalComponent implements OnInit {
         this.registerSuccess();
       },
       error => {
-        let firstError: String = error.error.errors[0].message;
+        let firstError: string = error.error.errors[0].message;
 
         if (firstError.indexOf('Property [emailAddress] of class [class ox.softeng.metadatacatalogue.core.user.CatalogueUser] with value') >= 0 &&
           firstError.indexOf('must be unique') >= 0

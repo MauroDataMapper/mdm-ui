@@ -5,11 +5,11 @@
 
 <div style="margin-bottom: 10px">
     <span>Please select your Data Model(s):</span>
-        <mdm-model-selector-tree [(ng-model)]="selectedDataModels"
-                                [(on-select)]="onSelect" [multiple]="true"
-                                [tree-search-domain-type]="'DataModel'"
+        <mdm-model-selector-tree [(ngModel)]="selectedDataModels"
+                                [onSelect]="onSelect" [multiple]="true"
+                                [treeSearchDomainType]="'DataModel'"
                                 [accepts]="['DataModel']"
-                                [default-elements]="selectedDataModels"
+                                [defaultElements]="selectedDataModels"
                                 [placeholder]="'Select Data Model...'"
                                 (ngModelChange)="selectedDataModels = $event">
         </mdm-model-selector-tree>

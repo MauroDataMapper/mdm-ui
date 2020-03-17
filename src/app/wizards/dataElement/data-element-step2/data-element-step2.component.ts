@@ -13,8 +13,8 @@ import {NgForm} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {ValidatorService} from '../../../services/validator.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { McSelectPagination } from '../../../utility/mc-select/mc-select.component';
+import {ResourcesService} from '../../../services/resources.service';
+import {McSelectPagination} from '../../../utility/mc-select/mc-select.component';
 import {MatTableDataSource} from '@angular/material/table';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MessageHandlerService} from '../../../services/utility/message-handler.service';
@@ -56,8 +56,8 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
   formChangesSubscription: Subscription;
 
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild('myForm', {static: false}) myForm: NgForm;
+  @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
   // @ViewChild(MatSort, { static: false }) sort: MatSort;
   // @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
@@ -111,8 +111,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     };
 
     const dataClass = this.model.copyFromDataClass[0];
-    return this.resources.dataClass.get(dataClass.dataModel, null , dataClass.id, 'dataElements', options);
+    return this.resources.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
   }
+
   onLoad() {
 
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
@@ -156,7 +157,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       this.dataSourceDataElements.sort = this.sort.toArray()[0];
 
       // Selected Data Elements table
-     // this.dataSourceSelectedDataTypes.sort = this.sort.toArray()[1];
+      // this.dataSourceSelectedDataTypes.sort = this.sort.toArray()[1];
       // this.sort
       //   .toArray()[1]
       //   .sortChange.subscribe(
@@ -312,24 +313,23 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
   onCheckAll = () => {
 
-    for (let i = 0; i < this.recordsDataElements.length; i++) {
-
-      this.recordsDataElements[i].checked = this.checkAllCheckbox;
+    this.recordsDataElements.forEach(element => {
+      element.checked = this.checkAllCheckbox;
 
       if (this.checkAllCheckbox) {
 
-        this.model.selectedDataElements.push(this.recordsDataElements[i]);
+        this.model.selectedDataElements.push(element);
 
       } else {
 
-        const currentId = this.recordsDataElements[i].id;
+        const currentId = element.id;
         const index = this.model.selectedDataElements.findIndex(r => r.id === currentId);
 
         if (index !== -1) {
           this.model.selectedDataElements.splice(index, 1);
         }
       }
-    }
+    });
 
     this.validate();
 
@@ -372,7 +372,6 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       }
     }
   };
-
 
 
   validate = (newValue?) => {
@@ -428,8 +427,8 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     };
 
     this.pagination = {
-      limit : options.pageSize,
-      offset : options.pageIndex
+      limit: options.pageSize,
+      offset: options.pageIndex
 
     };
 
@@ -442,7 +441,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
   };
 
-  onTargetSelect =  (selectedValue) => {
+  onTargetSelect = (selectedValue) => {
     this.model.dataType = selectedValue;
     this.validate(this.model);
   };
@@ -499,18 +498,18 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
           if (result) {
             this.successCount++;
-            this.finalResult[dt.id] = { result: result.body, hasError: false };
+            this.finalResult[dt.id] = {result: result.body, hasError: false};
 
           } else {
             this.failCount++;
             const errorText = '';
-            this.finalResult[dt.id] = { result: errorText, hasError: true };
+            this.finalResult[dt.id] = {result: errorText, hasError: true};
           }
         },
         (error) => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dt.id] = { result: errorText, hasError: true };
+          this.finalResult[dt.id] = {result: errorText, hasError: true};
         });
     });
   }

@@ -1,18 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
-  selector: "new-data-type-inline",
+  selector: 'mdm-data-type-inline',
   templateUrl: './new-data-type-inline.component.html',
   styleUrls: ['./new-data-type-inline.component.sass']
 })
-export class NewDataTypeInlineComponent implements OnInit {
+export class NewDataTypeInlineComponent implements OnInit, DoCheck {
   @Output() validationStatusEvent = new EventEmitter<string>();
 
-  @Input('parent-data-model') parentDataModel;
-  @Input('show-parent-data-model') showParentDataModel = false;
-  @Input('show-classification') showClassification = false;
+  @Input() parentDataModel;
+  @Input() showParentDataModel = false;
+  @Input() showClassification = false;
   @Input() model: any = {
     label: '',
     description: '',
@@ -23,7 +23,7 @@ export class NewDataTypeInlineComponent implements OnInit {
 
   childDataClasses: any; // TODO - FIGURE OUT IF NEEDED
 
-  @Input('parent-scope-handler') parentScopeHandler;
+  @Input() parentScopeHandler;
   allDataTypes;
   isValid = false;
   reloading = false;

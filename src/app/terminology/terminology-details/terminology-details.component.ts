@@ -17,14 +17,14 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./terminology-details.component.sass']
 })
 export class TerminologyDetailsComponent implements OnInit {
-  @Input('mc-terminology') mcTerminology: any;
-  @Input('hide-edit-button') hideEditButton: boolean;
+  @Input() mcTerminology: any;
+  @Input() hideEditButton: boolean;
 
-  @Output('after-save') afterSave = new EventEmitter<any>();
+  @Output() afterSave = new EventEmitter<any>();
 
   openEditFormVal: any;
-  @Output('open-edit-form-changed') openEditFormChanged = new EventEmitter<any>();
-  @Input('open-edit-form')
+  @Output() openEditFormChanged = new EventEmitter<any>();
+  @Input()
   get openEditForm() {
     return this.openEditFormVal;
   }

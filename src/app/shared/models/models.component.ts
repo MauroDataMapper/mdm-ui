@@ -1,14 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { UserSettingsHandlerService } from '../../services/utility/user-settings-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { FolderHandlerService } from '../../services/handlers/folder-handler.service';
-import { ValidatorService } from '../../services/validator.service';
-import { BroadcastService } from '../../services/broadcast.service';
-import { SharedService } from '../../services/shared.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import {Component, OnInit, Inject} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
+import {UserSettingsHandlerService} from '../../services/utility/user-settings-handler.service';
+import {ResourcesService} from '../../services/resources.service';
+import {StateHandlerService} from '../../services/handlers/state-handler.service';
+import {FolderHandlerService} from '../../services/handlers/folder-handler.service';
+import {ValidatorService} from '../../services/validator.service';
+import {BroadcastService} from '../../services/broadcast.service';
+import {SharedService} from '../../services/shared.service';
+import {MessageHandlerService} from '../../services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-models',
@@ -42,61 +42,6 @@ export class ModelsComponent implements OnInit {
   classifiers: any;
 
   searchText: any;
-
-  constructor(
-    private sharedService: SharedService,
-    private validator: ValidatorService,
-    private folderHandler: FolderHandlerService,
-    private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
-    private title: Title,
-    private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
-    private userSettingsHandler: UserSettingsHandlerService,
-    protected messageHandler: MessageHandlerService
-  ) {}
-
-  ngOnInit() {
-    this.title.setTitle('Models');
-
-    if (this.sharedService.isLoggedIn()) {
-      this.includeSupersededDocModels = this.userSettingsHandler.get('includeSupersededDocModels') || false;
-      this.showSupersededModels = this.userSettingsHandler.get('showSupersededModels') || false;
-      this.showDeletedModels = this.userSettingsHandler.get('showDeletedModels') || false;
-    }
-
-    if (
-      this.sharedService.searchCriteria &&
-      this.sharedService.searchCriteria.length > 0
-    ) {
-      this.formData.filterCriteria = this.sharedService.searchCriteria;
-    }
-
-    this.initializeModelsTree();
-
-    this.broadcastSvc.subscribe('$reloadClassifiers', () => {
-      this.resources.classifier
-        .get(null, null, { all: true })
-        .subscribe(data => {
-          this.allClassifiers = data.items;
-          this.classifiers = {
-            children: data,
-            isRoot: true
-          };
-        });
-    });
-
-    this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
-      this.loadFolders();
-    });
-
-    this.currentClassification = null;
-    this.allClassifications = [];
-  }
-
-  isLoggedIn() {
-    return this.sharedService.isLoggedIn();
-  }
 
   levels = {
     current: 0,
@@ -160,6 +105,66 @@ export class ModelsComponent implements OnInit {
     }
   };
 
+  constructor(
+    private sharedService: SharedService,
+    private validator: ValidatorService,
+    private folderHandler: FolderHandlerService,
+    private stateHandler: StateHandlerService,
+    private resources: ResourcesService,
+    private title: Title,
+    private securityHandler: SecurityHandlerService,
+    private broadcastSvc: BroadcastService,
+    private userSettingsHandler: UserSettingsHandlerService,
+    protected messageHandler: MessageHandlerService
+  ) {
+  }
+
+  ngOnInit() {
+    this.title.setTitle('Models');
+
+    if (this.sharedService.isLoggedIn()) {
+      this.includeSupersededDocModels =
+        this.userSettingsHandler.get('includeSupersededDocModels') || false;
+      this.showSupersededModels =
+        this.userSettingsHandler.get('showSupersededModels') || false;
+      this.showDeletedModels =
+        this.userSettingsHandler.get('showDeletedModels') || false;
+    }
+
+    if (
+      this.sharedService.searchCriteria &&
+      this.sharedService.searchCriteria.length > 0
+    ) {
+      this.formData.filterCriteria = this.sharedService.searchCriteria;
+    }
+
+    this.initializeModelsTree();
+
+    this.broadcastSvc.subscribe('$reloadClassifiers', () => {
+      this.resources.classifier
+        .get(null, null, {all: true})
+        .subscribe(data => {
+          this.allClassifiers = data.items;
+          this.classifiers = {
+            children: data,
+            isRoot: true
+          };
+        });
+    });
+
+    this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
+      this.loadFolders();
+    });
+
+    this.currentClassification = null;
+    this.allClassifications = [];
+  }
+
+  isLoggedIn() {
+    return this.sharedService.isLoggedIn();
+  }
+
+
   tabSelected = tabIndex => {
     switch (tabIndex) {
       case 0: {
@@ -179,7 +184,7 @@ export class ModelsComponent implements OnInit {
 
   loadClassifiers = () => {
     this.classifierLoading = true;
-    this.resources.classifier.get(null, null, { all: true }).subscribe(
+    this.resources.classifier.get(null, null, {all: true}).subscribe(
       result => {
         const data = result.body;
         this.allClassifiers = data.items;
@@ -261,7 +266,7 @@ export class ModelsComponent implements OnInit {
 
   loadModelsToCompare = dataModel => {
     this.resources.dataModel
-      .get(dataModel.id, 'semanticLinks', { filters: 'all=true' })
+      .get(dataModel.id, 'semanticLinks', {filters: 'all=true'})
       .subscribe(result => {
         const compareToList = [];
         const semanticLinks = result.body;
@@ -283,9 +288,9 @@ export class ModelsComponent implements OnInit {
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.folder.post(parentId, 'folders', { resource: {} });
+      endpoint = this.folder.post(parentId, 'folders', {resource: {}});
     } else {
-      endpoint = this.resources.folder.post(null, null, { resource: {} });
+      endpoint = this.resources.folder.post(null, null, {resource: {}});
     }
     endpoint.subscribe(
       res => {
@@ -301,7 +306,7 @@ export class ModelsComponent implements OnInit {
         }
 
         // go to folder
-        this.stateHandler.Go('Folder', { id: result.id, edit: true });
+        this.stateHandler.Go('Folder', {id: result.id, edit: true});
 
         this.messageHandler.showSuccess('Folder created successfully.');
       },
@@ -315,11 +320,11 @@ export class ModelsComponent implements OnInit {
   };
 
   onAddDataModel = (event, folder) => {
-    this.stateHandler.Go('NewDataModelNew', { parentFolderId: folder.id });
+    this.stateHandler.Go('NewDataModelNew', {parentFolderId: folder.id});
   };
 
   onAddCodeSet = (event, folder) => {
-    this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
+    this.stateHandler.Go('NewCodeSet', {parentFolderId: folder.id});
   };
 
   onAddChildDataClass = (event, element) => {
@@ -343,7 +348,7 @@ export class ModelsComponent implements OnInit {
   };
 
   onAddChildDataType = (event, element) => {
-    this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
+    this.stateHandler.Go('NewDataType', {parentDataModelId: element.id});
   };
 
   toggleFilterMenu = () => {
@@ -441,7 +446,7 @@ export class ModelsComponent implements OnInit {
   };
 
   classifierTreeOnSelect = node => {
-    this.stateHandler.Go('classification', { id: node.id });
+    this.stateHandler.Go('classification', {id: node.id});
   };
 
   classificationFilterChange = val => {

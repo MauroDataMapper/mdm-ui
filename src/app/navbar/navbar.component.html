@@ -116,19 +116,19 @@
             <div class="aside-main-navigation">
                 <div *ngIf="!isLoggedIn()" class="aside-separator"></div>
                 <h5 class="mat-h5 marginless text-muted section-title">Main navigation</h5>
-                <a mat-menu-item uiSref="appContainer.mainApp.home">
+                <a mat-menu-item uiSref="appContainer.mainApp.home" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">
+                <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel"  (click)="sidenav.toggle()"uiSrefActive="active">
                     <i class="fas fa-folder-open"></i>
                     <span>Browse Models</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.search">
+                <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.search" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-search"></i>
                     <span>Search</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.mainApp.about">
+                <a mat-menu-item uiSref="appContainer.mainApp.about" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-info-circle"></i>
                     <span>About</span>
                 </a>
@@ -136,46 +136,46 @@
 
             <div *ngIf="isLoggedIn()">
                 <h5 class="mat-h5 marginless text-muted section-title">Account settings</h5>
-                <a mat-menu-item uiSref="appContainer.userArea.profile" (click)="sidenav.toggle()">
+                <a mat-menu-item uiSref="appContainer.userArea.profile" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-id-card"></i>
                     <span>My profile</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.userArea.settings">
+                <a mat-menu-item uiSref="appContainer.userArea.settings" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-sliders-h"></i>
                     <span>Preferences</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.userArea.changePassword">
+                <a mat-menu-item uiSref="appContainer.userArea.changePassword" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-user-lock"></i>
                     <span>Change password</span>
                 </a>
             </div>
             <div *ngIf="isLoggedIn()" ng-show="isAdmin()">
                 <h5 class="mat-h5 marginless text-muted section-title">Admin settings</h5>
-                <a mat-menu-item uiSref="appContainer.adminArea.home">
+                <a mat-menu-item uiSref="appContainer.adminArea.home" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.adminArea.modelManagement">
+                <a mat-menu-item uiSref="appContainer.adminArea.modelManagement" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-list" aria-hidden="true"></i>
                     <span>Model management</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.adminArea.emails">
+                <a mat-menu-item uiSref="appContainer.adminArea.emails" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-envelope" aria-hidden="true"></i>
                     <span>Emails</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.adminArea.users">
+                <a mat-menu-item uiSref="appContainer.adminArea.users" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-user" aria-hidden="true"></i>
                     <span>Manage users</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers">
+                <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-user-clock"></i>
                     <span>Pending users</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.adminArea.groups">
+                <a mat-menu-item uiSref="appContainer.adminArea.groups" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-users" aria-hidden="true"></i>
                     <span>Manage groups</span>
                 </a>
-                <a mat-menu-item uiSref="appContainer.adminArea.configuration">
+                <a mat-menu-item uiSref="appContainer.adminArea.configuration" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-cog" aria-hidden="true"></i>
                     <span>Configuration</span>
                 </a>

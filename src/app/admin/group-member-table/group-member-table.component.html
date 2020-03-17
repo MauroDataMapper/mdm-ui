@@ -29,15 +29,15 @@
                     <div *ngIf="record.isNew">
                         <mdm-select
                                 [width]="'100%'"
-                                [value-type]="'dynamic'"
-                                [load-dynamic-values]="fetchUser"
-                                [min-input-length]="1"
+                                [valueType]="'dynamic'"
+                                [loadDynamicValues]="fetchUser"
+                                [minInputLength]="1"
                                 [record]="record"
-                                [id-property]="'id'"
-                                [display-property]="'emailAddress'"
-                                [search-property]="'emailAddress'"
-                                [(pagination)]="pagination"
-                                (on-select)="onUserSelect">
+                                [idProperty]="'id'"
+                                [displayProperty]="'emailAddress'"
+                                [searchProperty]="'emailAddress'"
+                                [pagination]="pagination"
+                                (selectEvent)="onUserSelect">
                             <div>
                                 <ng-template #lineContent let-item>
                                     <div>{{item.emailAddress}}</div>

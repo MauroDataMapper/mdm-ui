@@ -78,12 +78,9 @@ export class ImportComponent implements OnInit {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 
-      for (let g = 0; g < this.selectedImporterGroups.length; g++) {
-        const parameters = this.selectedImporterGroups[g].parameters;
-
-        for (let i = 0; i < parameters.length; i++) {
-          const option = parameters[i];
-
+      this.selectedImporterGroups.forEach(selectedImporterGroup => {
+        const parameters = selectedImporterGroup.parameters;
+        parameters.forEach(option => {
           // add default value
           option.value = '';
 
@@ -97,10 +94,11 @@ export class ImportComponent implements OnInit {
             option.optional = true;
             option.value = false;
           }
-        }
-      }
+
+        });
+      });
     });
-  };
+  }
 
   importerChanged = () => {
     this.step = 2;
@@ -129,12 +127,9 @@ export class ImportComponent implements OnInit {
     const version = this.selectedImporterObj.version;
     this.formData = new FormData();
 
-    for (let g = 0; g < this.selectedImporterGroups.length; g++) {
-      const parameters = this.selectedImporterGroups[g].parameters;
-
-      for (let i = 0; i < parameters.length; i++) {
-        const param = parameters[i];
-
+    this.selectedImporterGroups.forEach( selectedImporterGroup => {
+      const parameters = selectedImporterGroup.parameters;
+      parameters.forEach(param => {
         if (param.type === 'File') {
           this.formData.append(param.name, this.getFile(param.name));
         } else if (param.type === 'DataModel') {
@@ -144,8 +139,9 @@ export class ImportComponent implements OnInit {
         } else {
           this.formData.append(param.name, param.value);
         }
-      }
-    }
+      });
+    });
+
 
     this.resources.dataModel
       .import(`${namespace}/${name}/${version}`, this.formData)

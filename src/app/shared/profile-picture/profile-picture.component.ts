@@ -1,16 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "profile-picture",
+  selector: 'mdm-profile-picture',
   templateUrl: './profile-picture.component.html',
   styleUrls: ['./profile-picture.component.sass']
 })
 export class ProfilePictureComponent implements OnInit {
   constructor() {}
 
-  @Input('user') user: any;
+  @Input() user: any;
   image: any;
-  dynamicTooltipText: String;
+  dynamicTooltipText: string;
 
   ngOnInit() {
     this.dynamicTooltipText =

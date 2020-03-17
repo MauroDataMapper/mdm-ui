@@ -8,14 +8,14 @@
     <div class="row" style="margin-bottom: 10px;">
         <div class="col-lg-6 col-md-6 col-xs-10 col-sm-10">
             <mdm-select [width]="'100%'"
-                       [multi-select]="false"
-                       [accept-typed-input]="false"
-                       [value-type]="'static'"
-                       [static-values]="defaultDataTypeProviders"
-                       [id-property]="'name'"
-                       [display-property]="'displayName'"
-                       [search-property]="'displayName'"
-                       (on-select)="onSelectDataTypeProvider($event)">
+                       [multiSelect]="false"
+                       [acceptTypedInput]="false"
+                       [valueType]="'static'"
+                       [staticValues]="defaultDataTypeProviders"
+                       [idProperty]="'name'"
+                       [displayProperty]="'displayName'"
+                       [searchProperty]="'displayName'"
+                       (selectEvent)="onSelectDataTypeProvider($event)">
                 <ng-template #lineContent let-item>
                     <div>{{item.displayName}} <span style="font-style: italic;font-size: 10px;">{{item.version}}</span></div>
                 </ng-template>
@@ -28,8 +28,8 @@
         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
             <mdm-element-owned-data-type-list [parent]="{editable:false}"
                                           [type]="'static'"
-                                          [loading-data]="loadingData"
-                                          [child-owned-data-types]="dataTypes"></mdm-element-owned-data-type-list>
+                                          [loadingData]="loadingData"
+                                          [childOwnedDataTypes]="dataTypes"></mdm-element-owned-data-type-list>
         </div>
     </div>
 

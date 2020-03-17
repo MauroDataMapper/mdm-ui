@@ -13,11 +13,11 @@
               <mdm-model-selector-tree
                 [processing]="model.loadingSource"
                 [placeholder]="'Select Source Data Model...'"
-                (on-select)="onSourceSelect"
-                [default-elements]="[model.source]"
-                [do-not-show-data-classes]="true"
-                [(ng-model)]="model.source"
-                [tree-search-domain-type]="'DataModel'"
+                [onSelect]="onSourceSelect"
+                [defaultElements]="[model.source]"
+                [doNotShowDataClasses]="true"
+                [ngModel]="model.source"
+                [treeSearchDomainType]="'DataModel'"
                 [accepts]="['DataModel']">
               </mdm-model-selector-tree>
             </div>
@@ -26,11 +26,11 @@
               <span>Source Data Element</span>
               <div style="padding-left: 5px;">
                 <mdm-element-link
-                  [new-window]="true"
-                  [show-type-title]="true"
+                  [newWindow]="true"
+                  [showTypeTitle]="true"
                   [element]="model.source"></mdm-element-link>
                 <br>
-                <mdm-model-path [path]="model.source.breadcrumbs" [new-window]="true"></mdm-model-path>
+                <mdm-model-path [path]="model.source.breadcrumbs" [newWindow]="true"></mdm-model-path>
               </div>
             </div>
           </div>
@@ -42,11 +42,11 @@
             <mdm-model-selector-tree
               [processing]="model.processing"
               [placeholder]="'Select Target Data Model...'"
-              [(on-select)]="onTargetSelect "
-              [default-elements]="[model.target]"
-              [do-not-show-data-classes]="true"
-              [(ng-model)]="model.target"
-              [tree-search-domain-type]="'DataModel'"
+              [onSelect]="onTargetSelect "
+              [defaultElements]="[model.target]"
+              [doNotShowDataClasses]="true"
+              [ngModel]="model.target"
+              [treeSearchDomainType]="'DataModel'"
               [accepts]="['DataModel']">
             </mdm-model-selector-tree>
           </div>
@@ -126,13 +126,13 @@
                         style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
                       <div style="margin-bottom: 10px;">
                         <mdm-element-link
-                          [new-window]="true"
-                          [show-type-title]="false"
+                          [newWindow]="true"
+                          [showTypeTitle]="false"
                           [element]="suggest.sourceDataElement"></mdm-element-link>
                       </div>
                       <mdm-model-path [path]="suggest.sourceDataElement.breadcrumbs"
-                                  [new-window]="true"
-                                  [do-not-display-status]="true"
+                                  [newWindow]="true"
+                                  [doNotDisplayStatus]="true"
                                   [doNotShowParentDataModel]="true"></mdm-model-path>
                     </td>
                   </ng-container>
@@ -147,13 +147,13 @@
                         <div *ngIf="suggest.selectedTarget" style="float:left;">
                           <div style="margin-bottom: 10px;">
                             <mdm-element-link
-                              [new-window]="true"
-                              [show-type-title]="false"
+                              [newWindow]="true"
+                              [showTypeTitle]="false"
                               [element]="suggest.selectedTarget.dataElement"></mdm-element-link>
                           </div>
                           <mdm-model-path [path]="suggest.selectedTarget.dataElement.breadcrumbs"
-                                      [new-window]="true"
-                                      [do-not-display-status]="true"
+                                      [newWindow]="true"
+                                      [doNotDisplayStatus]="true"
                                       [doNotShowParentDataModel]="true"></mdm-model-path>
                         </div>
                         <div style="float:right;top:0;right:0;position: relative;"
@@ -172,15 +172,15 @@
                           <mdm-select
                             [record]="suggest"
                             [width]="'100%'"
-                            [default-value]="suggest.selectedTarget"
-                            [multi-select]="false"
-                            [accept-typed-input]="false"
-                            [value-type]="'static'"
-                            [static-values]="suggest.results"
-                            [id-property]="'dataElement.id'"
-                            [display-property]="'dataElement.label'"
-                            [search-property]="'dataElement.label'"
-                            (on-select)="onTargetDateElementSelect($event[0],$event[1])">
+                            [defaultValue]="suggest.selectedTarget"
+                            [multiSelect]="false"
+                            [acceptTypedInput]="false"
+                            [valueType]="'static'"
+                            [staticValues]="suggest.results"
+                            [idProperty]="'dataElement.id'"
+                            [displayProperty]="'dataElement.label'"
+                            [searchProperty]="'dataElement.label'"
+                            (selectEvent)="onTargetDateElementSelect($event[0],$event[1])">
                             <ng-template #lineContent let-item>
                               <div>
                                 <div>
@@ -189,8 +189,8 @@
                                   </div>
                                   <div>
                                     <mdm-model-path [path]="item.dataElement.breadcrumbs"
-                                                [new-window]="true"
-                                                [do-not-display-status]="true"
+                                                [newWindow]="true"
+                                                [doNotDisplayStatus]="true"
                                                 [doNotShowParentDataModel]="true"></mdm-model-path>
                                   </div>
                                 </div>

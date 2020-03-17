@@ -11,7 +11,7 @@
                 <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
                     <div>
                         <div style="float: left;margin: 3px;">
-                            <profile-picture [user]="element.createdBy"></profile-picture>
+                            <mdm-profile-picture [user]="element.createdBy"></mdm-profile-picture>
                         </div>
                         <div style="float: left;margin: 4px 3px;">
                             <div title="{{element.createdBy.emailAddress}}">
@@ -37,11 +37,11 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
-    
-    <mat-card *ngIf="isLoading" 
+
+    <mat-card *ngIf="isLoading"
               style="display: flex; justify-content: center; align-items: center">
-        <mat-progress-spinner 
-            color="primary" 
+        <mat-progress-spinner
+            color="primary"
             mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>

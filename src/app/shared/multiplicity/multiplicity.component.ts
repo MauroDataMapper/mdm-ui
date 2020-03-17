@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: "multiplicity",
+  selector: 'mdm-multiplicity',
   templateUrl: './multiplicity.component.html',
   styleUrls: ['./multiplicity.component.sass']
 })

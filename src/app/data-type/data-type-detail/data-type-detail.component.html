@@ -19,7 +19,7 @@
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editable-form]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                     </td>
                 </tr>
@@ -27,7 +27,7 @@
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
 
-                        <mdm-markdown-text-area [editable-form]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></mdm-markdown-text-area>
+                        <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></mdm-markdown-text-area>
 
                     </td>
                 </tr>
@@ -41,17 +41,17 @@
                     <th class="detailsRowHeader">Type</th>
                     <td>
                         {{allDataTypesMap[mcDataTypeObject.domainType]["displayLabel"]}}
-                        <mdm-element-data-type [element-data-type]="mcDataTypeObject"
-                                           [hide-name]="true"
-                                           [show-type-name]="true"
-                                           [show-ref-data-class]="true"
-                                           [hide-enum-list]="true"></mdm-element-data-type>
+                        <mdm-element-data-type [elementDataType]="mcDataTypeObject"
+                                           [hideName]="true"
+                                           [showTypeName]="true"
+                                           [onlyShowRefDataClass]="true"
+                                           [hideEnumList]="true"></mdm-element-data-type>
                     </td>
                 </tr>
                 <tr>
                     <th class="detailsRowHeader">Classifications</th>
                     <td>
-                        <mdm-element-classifications [(classifications)]="mcDataTypeObject.classifiers" [editable-form]="editableForm"></mdm-element-classifications>
+                        <mdm-element-classifications [classifications]="mcDataTypeObject.classifiers" [editableForm]="editableForm"></mdm-element-classifications>
                     </td>
                 </tr>
 
@@ -59,11 +59,11 @@
                     <td colspan="2" style="text-align: right;">
                         <div style="float: right">
                             <mdm-editable-form-buttons
-                                    [hide-edit]="true"
-                                    [hide-delete]="true"
-                                    [on-cancel-edit]="onCancelEdit"
+                                    [hideEdit]="true"
+                                    [hideDelete]="true"
+                                    [onCancelEdit]="onCancelEdit"
                                     [editable]="editableForm"
-                                    [text-location]="'left'">
+                                    [textLocation]="'left'">
                             </mdm-editable-form-buttons>
                         </div>
                         <div style="float: right">

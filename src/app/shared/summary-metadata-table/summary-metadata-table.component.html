@@ -26,11 +26,11 @@
                 </th>
                 <td  *matCellDef="let record" style="max-width: 65%;width: 65%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="record.summaryMetadataType === 'map'">
-                        <mdm-summary-metadata-map [summary]="record" [chart-type]="'bar'"  [show-more-details-btn]="true"></mdm-summary-metadata-map>
+                        <mdm-summary-metadata-map [summary]="record" [chartType]="'bar'"  [showMoreDetailsBtn]="true"></mdm-summary-metadata-map>
                     </div>
 
                     <div *ngIf="record.summaryMetadataType === 'number' ">
-                        <mdm-summary-metadata-map [summary]="record" [chart-type]="'line'"  [show-more-details-btn]="true"></mdm-summary-metadata-map>
+                        <mdm-summary-metadata-map [summary]="record" [chartType]="'line'"  [showMoreDetailsBtn]="true"></mdm-summary-metadata-map>
                     </div>
                 </td>
             </ng-container>

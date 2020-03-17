@@ -6,7 +6,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
-  selector: 'multiple-terms-selector',
+  selector: 'mdm-multiple-terms-selector',
   templateUrl: './multiple-terms-selector.component.html',
   styleUrls: ['./multiple-terms-selector.component.scss']
 })
@@ -31,8 +31,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
     loading: false
   };
   loading = false;
-  @Output() onSelectedTermsChange = new EventEmitter<any[]>();
-  @Input('on-add-button-click') onAddButtonClick: any;
+  @Output() selectedTermsChange = new EventEmitter<any[]>();
+  @Input() onAddButtonClick: any;
   dataSource = new MatTableDataSource();
   currentRecord: number;
   totalItemCount: number;
@@ -47,7 +47,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
 
   set selectedTerms(val) {
     this.selectedItems = val;
-    this.onSelectedTermsChange.emit(this.selectedItems);
+    this.selectedTermsChange.emit(this.selectedItems);
   }
 
   @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
@@ -263,7 +263,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     }
 
   //  if(this.onSelectedTermsChange){
-    this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
+    this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     // }
     // if(this.selectorSection.selectedTermsCount >0)
     //   this.hideAddButton = false;
@@ -293,8 +293,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
     delete this.selectorSection.selectedTerms[$item.id];
     this.selectorSection.selectedTermsCount--;
 
-    if (this.onSelectedTermsChange) {
-      this.onSelectedTermsChange.emit(this.selectorSection.selectedTermsArray);
+    if (this.selectedTermsChange) {
+      this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
     }
   };
   addSelectedTerms = terms => {

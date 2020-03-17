@@ -6,18 +6,18 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./table-buttons.component.sass']
 })
 export class TableButtonsComponent implements OnInit {
-  @Input('record') record: any;
-  @Input('index') index: any;
-  @Input('hide-delete') hideDelete: boolean;
-  @Input('hide-edit') hideEdit: any;
+  @Input() record: any;
+  @Input() index: any;
+  @Input() hideDelete: boolean;
+  @Input() hideEdit: any;
 
-  @Input('validate') validate: Function;
-  @Input('records') records: any;
+  @Input() validate: (record: any, index: any) => boolean;
+  @Input() records: any;
 
-  @Output('cancel-edit') cancelEdit = new EventEmitter<any>();
-  @Output('on-edit') onEdit = new EventEmitter<any>();
-  @Output('delete') delete = new EventEmitter<any>();
-  @Output('save') save = new EventEmitter<any>();
+  @Output() cancelEdit = new EventEmitter<any>();
+  @Output() edit = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
+  @Output() save = new EventEmitter<any>();
 
   constructor() {}
 
@@ -37,8 +37,8 @@ export class TableButtonsComponent implements OnInit {
   editClicked(record, index) {
     record.inEdit = true;
     record.edit = Object.assign({}, record);
-    if (this.onEdit) {
-      this.onEdit.emit([record, index]);
+    if (this.edit) {
+      this.edit.emit([record, index]);
     }
   }
 

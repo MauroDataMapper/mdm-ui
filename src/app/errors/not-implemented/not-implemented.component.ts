@@ -6,7 +6,7 @@ import {SharedService} from '../../services/shared.service';
 import {ErrorComponent} from '../error.component';
 const columns: string[] = ['field', 'value'];
 @Component({
-  selector: 'app-not-implemented-error',
+  selector: 'mdm-not-implemented-error',
   templateUrl: '../error.component.html',
   styleUrls: []
 })

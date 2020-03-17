@@ -20,6 +20,8 @@ import { SharedService } from '../services/shared.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
+import { ResourcesService } from '../services/resources.service';
+import { MessageHandlerService } from '../services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -44,7 +46,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEditMode = false;
   processing: boolean;
 
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
@@ -57,11 +59,15 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private resourcesService: ResourcesService,
+    private messageHandlerService: MessageHandlerService
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
+    this.resourcesService = resourcesService;
+    this.messageHandlerService = messageHandlerService;
     this.FolderDetails();
   }
 
@@ -209,7 +215,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.afterSave) {
               this.afterSave(result);
             }
-            this.messageHandler.showSuccess('Folder updated successfully.');
+            this.messageHandlerService.showSuccess('Folder updated successfully.');
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
           },

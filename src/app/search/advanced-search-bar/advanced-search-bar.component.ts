@@ -17,12 +17,12 @@ export class AdvancedSearchBarComponent implements OnInit {
   displayedColumns: string[] = ['label'];
 
   @Input() placeholder: string;
-  @Input('do-not-display-model-path-status') doNotDisplayModelPathStatus: boolean;
-  @Input('do-not-show-data-model-in-model-path') doNotShowDataModelInModelPath: boolean;
-  @Input('show-restrict-to') showRestrictTo: boolean;
+  @Input() doNotDisplayModelPathStatus: boolean;
+  @Input() doNotShowDataModelInModelPath: boolean;
+  @Input() showRestrictTo: boolean;
   @Input() parent: FolderResult;
-  @Input('show-domain-types') showDomainTypes: string[];
-  @Input('do-not-open-link-in-new-window') doNotOpenLinkInNewWindow: boolean;
+  @Input() showDomainTypes: string[];
+  @Input() doNotOpenLinkInNewWindow: boolean;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('searchInputControl', { static: true })

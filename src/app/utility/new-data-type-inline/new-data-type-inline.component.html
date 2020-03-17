@@ -25,7 +25,7 @@
 				<tr *ngIf="showClassification">
 					<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
 					<td>
-						<mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}">
+						<mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}">
 						</mdm-element-classifications>
 					</td>
 				</tr>
@@ -67,15 +67,15 @@
 					<td>
 						<div *ngIf="model.domainType === 'TerminologyType' && terminologies">
 							<mdm-select [width]="'100%'"
-									   [accept-typed-input]="false"
-									   [value-type]="'static'"
-									   [static-values]="terminologies"
-									   [min-input-length]="1"
-									   [has-error]="false"
-									   [id-property]="'id'"
-									   [display-property]="'label'"
-									   [search-property]="'label'"
-									   (on-select)="onTerminologySelect($event[0],$event[1])">
+									   [acceptTypedInput]="false"
+									   [valueType]="'static'"
+									   [staticValues]="terminologies"
+									   [minInputLength]="1"
+									   [hasError]="false"
+									   [idProperty]="'id'"
+									   [displayProperty]="'label'"
+									   [searchProperty]="'label'"
+									   (selectEvent)="onTerminologySelect($event[0],$event[1])">
 								<ng-template #lineContent let-item>
 									<div>{{item.label}}</div>
 								</ng-template>
@@ -84,17 +84,17 @@
 						<div *ngIf="model.domainType === 'ReferenceType'">
 							<mdm-model-selector-tree
 								(ngModelChange)="onDataClassSelect($event)"
-												 [default-elements]="model.referencedDataClass"
+												 [defaultElements]="model.referencedDataClass"
 												 [root]="parentDataModel"
 												 [placeholder]="'Select Data Class'"
-												 [read-only-search-input]="true"
+												 [readOnlySearchInput]="true"
 												 [accepts]="['DataClass']">
 							</mdm-model-selector-tree>
 						</div>
 						<div *ngIf="model.domainType === 'EnumerationType'" style="margin-top: 5px;">
-							<mdm-mc-enumeration-list-with-category [(on-update)]="onEnumListUpdated"
-																   [client-side]="true"
-																   [enumeration-values]="model.enumerationValues"></mdm-mc-enumeration-list-with-category>
+							<mdm-mc-enumeration-list-with-category [onUpdate]="onEnumListUpdated"
+																   [clientSide]="true"
+																   [enumerationValues]="model.enumerationValues"></mdm-mc-enumeration-list-with-category>
 						</div>
 					</td>
 				</tr>

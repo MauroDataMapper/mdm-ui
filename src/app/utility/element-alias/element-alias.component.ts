@@ -8,14 +8,16 @@ import {DataClassResult} from '../../model/dataClassModel';
   // styleUrls: ['./element-alias.component.sass']
 })
 export class ElementAliasComponent implements OnInit {
- @Input() aliases: any[] = [];
-  @Input('editable-form') editableForm: any;
-  @Input('property') property: string;
-  @Input('element') element: DataClassResult;
+  @Input() aliases: any[] = [];
+  @Input() editableForm: any;
+  @Input() property: string;
+  @Input() element: DataClassResult;
   typedAlias: string;
- @Input() inEditMode: false;
+  @Input() inEditMode: false;
   @ViewChild('typedAliasId', {static: false}) alias: ElementRef;
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit() {
 
@@ -24,8 +26,8 @@ export class ElementAliasComponent implements OnInit {
   remove(element) {
     const index = this.aliases.findIndex(alias => alias === element);
     if (index !== -1) {
-     this.aliases.splice(index, 1);
-     this.editableForm.aliases = this.aliases;
+      this.aliases.splice(index, 1);
+      this.editableForm.aliases = this.aliases;
     }
 
   }
@@ -36,13 +38,13 @@ export class ElementAliasComponent implements OnInit {
       return;
     }
     if (this.aliases) {
-        for (let i = 0; i < this.aliases.length; i++) {
-            if (this.aliases[i] === this.typedAlias) {
-                return;
-            }
+      for (const element of this.aliases) {
+        if (element === this.typedAlias) {
+          return;
         }
+      }
     } else {
-        this.aliases = [];
+      this.aliases = [];
     }
     this.aliases.push(this.typedAlias);
     // this.editableForm["aliases"] = this.aliases;

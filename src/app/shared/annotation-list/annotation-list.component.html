@@ -14,12 +14,12 @@
                 <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="!record.inEdit">
                         <div class="annotation-item-header">
-                            <profile-picture [user]="record.createdBy"></profile-picture>
+                            <mdm-profile-picture [user]="record.createdBy"></mdm-profile-picture>
                             <span class="annotation-username">{{record.createdBy.firstName}}&nbsp;{{record.createdBy.lastName}}</span>
                             <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                         </div>
                         <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
-                        <div style="margin-left: 5px;"><mdm-markdown-text-area [description]="record.description" [in-edit-mode]="false" [rows]="'4'"></mdm-markdown-text-area></div>
+                        <div style="margin-left: 5px;"><mdm-markdown-text-area [description]="record.description" [inEditMode]="false" [rows]="'4'"></mdm-markdown-text-area></div>
                         <div>
                             <button class="btn btn-xs btn-default" (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
                                 <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
@@ -29,14 +29,14 @@
                             <div *ngFor="let childAnnotation of record.childAnnotations" [hidden]="!(record.show)">
                                 <div class="annotation-item">
                                     <div class="annotation-child-item-header">
-                                        <profile-picture [user]="childAnnotation.createdBy"></profile-picture>
+                                        <mdm-profile-picture [user]="childAnnotation.createdBy"></mdm-profile-picture>
                                         <span class="annotation-username">{{childAnnotation.createdBy.firstName}}&nbsp;{{childAnnotation.createdBy.lastName}}</span>
                                         <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                                         <div style="float: right;margin-right: 5px">
                                         </div>
                                     </div>
                                     <div style="padding:5px 5px 5px 10px;">
-                                        <mdm-markdown-text-area [description]="childAnnotation.description" [in-edit-mode]="false" [rows]="'4'"></mdm-markdown-text-area>
+                                        <mdm-markdown-text-area [description]="childAnnotation.description" [inEditMode]="false" [rows]="'4'"></mdm-markdown-text-area>
                                     </div>
                                 </div>
                                 <div>
@@ -57,7 +57,7 @@
                                 </div>
                                 <div style="padding-left: 10px;">
                                     <!--<textarea rows="'4'" class="form-control annotation-description" ng-model="record.newChildText"></textarea>-->
-                                    <mdm-markdown-text-area #childEditor [(description)]="record.newChildText" [in-edit-mode]="true" [rows]="'4'"></mdm-markdown-text-area>
+                                    <mdm-markdown-text-area #childEditor [(description)]="record.newChildText" [inEditMode]="true" [rows]="'4'"></mdm-markdown-text-area>
                                     <div style="margin:3px 0px;">
                                         <button class="btn btn-xs btn-default" (click)="addChild(record)"
                                                 [disabled]="record.newChildText.length == 0">
@@ -78,7 +78,7 @@
                         </div>
                         <div>
                             <span>Description :</span>
-                            <mdm-markdown-text-area [description]="record.edit.description" [in-edit-mode]="true" [rows]="'4'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [description]="record.edit.description" [inEditMode]="true" [rows]="'4'"></mdm-markdown-text-area>
 
                             <!--<textarea rows="'4'" class="form-control annotation-description"-->
                             <!--ng-model="record.edit.description"></textarea>-->
@@ -87,7 +87,7 @@
                             <mdm-table-buttons [record]="record"
                                            [index]="i"
                                            (save)="saveParent($event[0],$event[1])"
-                                           (cancel-edit)="cancelEdit($event[0],$event[1])">
+                                           (cancelEdit)="cancelEdit($event[0],$event[1])">
                             </mdm-table-buttons>
                         </div>
                     </div>

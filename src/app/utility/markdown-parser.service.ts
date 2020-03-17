@@ -114,7 +114,7 @@ export class MarkdownParserService {
       renderer,
       gfm: true,
       breaks: true,
-      sanitize: true,
+      // sanitize: true,
       sanitizer: (code) => {
         return code;
       }

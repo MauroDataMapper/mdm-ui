@@ -11,7 +11,7 @@ export class MessageHandlerService {
     showError(defaultMessage, error) {
         let text = defaultMessage;
         if (error && error.status === 422) {
-            let result = this.getErrorText(error);
+            const result = this.getErrorText(error);
             if (result) {
                 text = result;
             }

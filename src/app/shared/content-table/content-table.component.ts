@@ -13,9 +13,9 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./content-table.component.sass']
 })
 export class ContentTableComponent implements AfterViewInit {
-  @Input('parent-data-model') parentDataModel: any;
-  @Input('grand-parent-data-class') grandParentDataClass: any;
-  @Input('parent-data-class') parentDataClass: any;
+  @Input() parentDataModel: any;
+  @Input() grandParentDataClass: any;
+  @Input() parentDataClass: any;
   @Input() loadingData: any;
   checkAllCheckbox = false;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];

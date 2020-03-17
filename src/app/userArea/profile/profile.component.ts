@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
@@ -14,11 +14,11 @@ import { environment } from '../../../environments/environment';
 import { DialogPosition } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'mdm-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.sass']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
   user: UserDetailsResult;
   currentUser: any;
   imageVersion = 1;
@@ -60,10 +60,10 @@ export class ProfileComponent implements OnInit {
 
       // Create a trusted image URL
       this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.backendUrl}/catalogueUsers/${this.user.id}/image?thumnail${this.imageVersion}`);
-    }),
+    },
       err => {
         this.messageHandler.showError('There was a problem loading user details.', err);
-      };
+      });
   }
 
   sendMessage(): void {

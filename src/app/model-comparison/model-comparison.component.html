@@ -4,11 +4,11 @@
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Left</strong>
                 <mdm-model-selector-tree
-                        [tree-search-domain-type]="'DataModel'"
-                        [(ng-model)]="sourceModel"
+                        [treeSearchDomainType]="'DataModel'"
+                        [ngModel]="sourceModel"
                         [processing]="processing"
-                        [default-elements]="[sourceModel]"
-                        [(on-select)]="onLeftModelSelect"
+                        [defaultElements]="[sourceModel]"
+                        [onSelect]="onLeftModelSelect"
                         [accepts]="['DataModel']" ></mdm-model-selector-tree>
             </div>
             <div class="leftTree" *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
@@ -32,11 +32,11 @@
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Right</strong>
                 <mdm-model-selector-tree
-                        [tree-search-domain-type]="'DataModel'"
-                        [(ng-model)]="targetModel"
+                        [treeSearchDomainType]="'DataModel'"
+                        [ngModel]="targetModel"
                         [processing]="processing"
-                        [default-elements]="[targetModel]"
-                        [(on-select)]="onRightModelSelect"
+                        [defaultElements]="[targetModel]"
+                        [onSelect]="onRightModelSelect"
                         [accepts]="['DataModel']" ></mdm-model-selector-tree>
             </div>
             <div *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
@@ -162,10 +162,10 @@
                                         <td style="text-align:left;">
                                             <div>
                                                 <div *ngIf="diff.deleted || diff.created">
-                                                    <mdm-element-link [new-window]="'true'" [element]="diff"></mdm-element-link>
+                                                    <mdm-element-link [newWindow]="'true'" [element]="diff"></mdm-element-link>
                                                 </div>
                                                 <div *ngIf="diff.modified">
-                                                    <mdm-element-link  [new-window]="'true'"
+                                                    <mdm-element-link  [newWindow]="'true'"
                                                                    [element]="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataType'}"></mdm-element-link>
                                                 </div>
                                                 <div *ngIf="diff.modified" style="padding-top: 5px;">
@@ -255,10 +255,10 @@
                                     <td style="text-align:left;">
                                         <div>
                                             <div *ngIf="diff.deleted || diff.created">
-                                                <mdm-element-link  [new-window]="'true'"  [element]="diff"></mdm-element-link>
+                                                <mdm-element-link  [newWindow]="'true'"  [element]="diff"></mdm-element-link>
                                             </div>
                                             <div *ngIf="diff.modified">
-                                                <mdm-element-link  [new-window]="'true'"
+                                                <mdm-element-link  [newWindow]="'true'"
                                                                [element]="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataElement'}"></mdm-element-link>
                                             </div>
                                             <div *ngIf="diff.modified">

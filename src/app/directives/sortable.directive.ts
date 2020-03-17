@@ -20,14 +20,14 @@ export interface SortEvent {
 }
 
 @Directive({
-  selector: 'th[sortable]',
+  selector: 'th[mdmSortable]',
   host: {
     '[class.asc]': 'direction === "asc"',
     '[class.desc]': 'direction === "desc"',
     '(click)': 'rotate()'
   }
 })
-export class NgbdSortableHeader {
+export class NgbdSortableHeaderDirective {
 
   @Input() sortable: string;
   @Input() direction: SortDirection = '';

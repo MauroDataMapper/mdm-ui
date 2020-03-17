@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
         <div style="width: 100%">
-            <mdm-term-details [after-save]="afterSave"
-                          [open-edit-form]="openEditForm"></mdm-term-details>
+            <mdm-term-details [afterSave]="afterSave"
+                          [openEditForm]="openEditForm"></mdm-term-details>
         </div>
 
 
@@ -11,10 +11,10 @@
                 <div class="panel-heading"><strong>Links</strong></div>
                 <div class="panel-body" style="padding-top: 5px !important;">
                     <mdm-all-links-in-paged-list
-                            [show-loading-spinner]="true"
+                            [showLoadingSpinner]="true"
                             [parent]="term"
-                            [show-description]="true"
-                            [show-no-links-message]="true"
+                            [showDescription]="true"
+                            [showNoLinksMessage]="true"
                             [type]="'static'">
                     </mdm-all-links-in-paged-list>
                 </div>

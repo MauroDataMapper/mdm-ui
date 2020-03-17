@@ -6,12 +6,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./all-links-in-paged-list.component.sass']
 })
 export class AllLinksInPagedListComponent implements OnInit {
-  @Input()
-  parent: any;
+  @Input() parent: any;
 
-  @Input('show-description') showDescription: any;
-  @Input('show-no-links-message') showNoLinksMessage: any;
-  @Input('show-loading-spinner') showLoadingSpinner: any;
+  @Input() showDescription: any;
+  @Input() showNoLinksMessage: any;
+  @Input() showLoadingSpinner: any;
   @Input() type: any;
 
   mcLinks = {

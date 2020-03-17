@@ -29,7 +29,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   isWritable: boolean;
   errorMessage = '';
 
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
 
   @Output() refreshUserDetails: EventEmitter<any> = new EventEmitter();
 

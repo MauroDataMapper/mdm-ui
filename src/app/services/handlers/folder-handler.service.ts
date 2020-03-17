@@ -76,14 +76,14 @@ export class FolderHandlerService {
           }
         });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== 'ok') {
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
             reject(null);
             return;
           }
           this.delete(id, true)
-            .then((result) => {
-              resolve(result);
+            .then((result3) => {
+              resolve(result3);
             })
             .catch((error) => {
               reject(error);

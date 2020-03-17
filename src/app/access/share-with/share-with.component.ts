@@ -63,7 +63,7 @@ export class ShareWithComponent implements OnInit {
             this.endPoint
               .get(this.folderResult.id, 'permissions', null)
               .subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of permissions.body) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });
@@ -78,7 +78,7 @@ export class ShareWithComponent implements OnInit {
             this.endPoint
               .get(this.folderResult.id, 'permissions', null)
               .subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of permissions.body) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });
@@ -114,7 +114,7 @@ export class ShareWithComponent implements OnInit {
             this.endPoint
               .get(this.folderResult.id, 'permissions', null)
               .subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of permissions.body) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });
@@ -129,7 +129,7 @@ export class ShareWithComponent implements OnInit {
             this.endPoint
               .get(this.folderResult.id, 'permissions', null)
               .subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of permissions.body) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });

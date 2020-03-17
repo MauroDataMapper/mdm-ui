@@ -70,8 +70,8 @@
 
               <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
                 <mdm-element-data-type
-                  [element-data-type]="model.dataType"
-                  [mc-parent-data-model]="model.parentDataModel"></mdm-element-data-type>
+                  [elementDataType]="model.dataType"
+                  [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
               </div>
 
               <div *ngIf="model.allDataTypesCount === 0">
@@ -84,33 +84,33 @@
               </div>
 
               <div *ngIf="model.showNewInlineDataType">
-                <new-data-type-inline
-                  [parent-scope-handler]="parentScopeHandler"
+                <mdm-data-type-inline
+                  [parentScopeHandler]="parentScopeHandler"
                   [model]="model.newlyAddedDataType"
-                  [parent-data-model]="model.parentDataModel"
-                  [show-parent-data-model]="false"
+                  [parentDataModel]="model.parentDataModel"
+                  [showParentDataModel]="false"
                   (validationStatusEvent)="validationStatusEmitter($event)">
-                </new-data-type-inline>
+                </mdm-data-type-inline>
               </div>
               <div *ngIf="!model.showNewInlineDataType">
                 <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
                   <mdm-select
                     [width]="'100%'"
-                    [accept-typed-input]="false"
-                    [value-type]="'dynamic'"
-                    [default-value]="model.dataType"
-                    [load-dynamic-values]="fetchDataTypes"
-                    [min-input-length]="1"
-                    [id-property]="'id'"
-                    [display-property]="'label'"
-                    [search-property]="'label'"
-                    [load-all-on-click]="true"
-                    [(pagination)]="pagination"
-                    (on-select)="onTargetSelect($event[0])">
+                    [acceptTypedInput]="false"
+                    [valueType]="'dynamic'"
+                    [defaultValue]="model.dataType"
+                    [loadDynamicValues]="fetchDataTypes"
+                    [minInputLength]="1"
+                    [idProperty]="'id'"
+                    [displayProperty]="'label'"
+                    [searchProperty]="'label'"
+                    [loadAllOnClick]="true"
+                    [pagination]="pagination"
+                    (selectEvent)="onTargetSelect($event[0])">
                     <ng-template #lineContent let-item = 'item' let-searchTerm = "inputText" >
                       <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
                       <div>
-                        <mdm-element-link [element]="item" [show-type-title]="true" [show-link]="false"></mdm-element-link>
+                        <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
                       </div>
                     </ng-template>
                   </mdm-select>
@@ -122,7 +122,7 @@
           <tr>
             <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
             <td>
-              <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></mdm-element-classifications>
+              <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
             </td>
           </tr>
           </tbody>
@@ -188,10 +188,10 @@
               </th>
               <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
                 <mdm-element-data-type
-                  [new-window]="true"
-                  [hide-enum-list]="true"
-                  [element-data-type]="record.dataType"
-                  [mc-parent-data-model]="{id:model.copyFromDataClass[0].dataModel}"></mdm-element-data-type>
+                  [newWindow]="true"
+                  [hideEnumList]="true"
+                  [elementDataType]="record.dataType"
+                  [mcParentDataModel]="{id:model.copyFromDataClass[0].dataModel}"></mdm-element-data-type>
               </td>
             </ng-container>
 

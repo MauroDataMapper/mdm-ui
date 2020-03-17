@@ -29,10 +29,10 @@ export class ElementLinkListComponent implements AfterViewInit {
     private elementSelector: ElementSelectorDialogueService
   ) {}
 
-  @Input('parent') parent: any;
-  @Input('search-criteria') searchCriteria: any;
+  @Input() parent: any;
+  @Input() searchCriteria: any;
   @Input() type: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   @ViewChildren('filters', { read: ElementRef })
@@ -93,10 +93,9 @@ export class ElementLinkListComponent implements AfterViewInit {
         })
       )
       .subscribe(data => {
-        for (let i = 0; i < data.length; i++) {
-          data[i].status =
-            data[i].source.id === this.parent.id ? 'source' : 'target';
-        }
+        data.forEach( element => {
+         element.status = element.source.id === this.parent.id ? 'source' : 'target';
+        });
 
         this.records = data;
       });

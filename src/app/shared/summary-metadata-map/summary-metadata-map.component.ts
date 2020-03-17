@@ -6,9 +6,9 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./summary-metadata-map.component.sass']
 })
 export class SummaryMetadataMapComponent implements OnInit {
-  @Input('summary') summary: any;
-  @Input('chart-type') chartType: any;
-  @Input('show-more-details-btn') showMoreDetailsBtn: boolean;
+  @Input() summary: any;
+  @Input() chartType: any;
+  @Input() showMoreDetailsBtn: boolean;
 
   constructor() {}
 

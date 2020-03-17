@@ -13,8 +13,8 @@ export class McPagedListComponent implements OnInit {
 
   @Input() type: any; // static,dynamic
   @Input() name: any;
-  @Input('mc-title') mcTitle: any;
-  @Output() onItemsChange = new EventEmitter();
+  @Input() mcTitle: any;
+  @Output() itemsChange = new EventEmitter();
   itemValues: any;
   // @Input() items: any;//when it's 'type=static'
   @Input()
@@ -28,11 +28,11 @@ export class McPagedListComponent implements OnInit {
     } else {
       this.itemValues = val;
     }
-    this.onItemsChange.emit(this.itemValues);
+    this.itemsChange.emit(this.itemValues);
     this.ngOnInit();
   }
   fetchMethod: any; // when it's 'type=dynamic'
-  @Input('page-size') pageSize: any;
+  @Input() pageSize: any;
   editBtnTooltip: any;
   editBtnText: any;
 

@@ -36,7 +36,7 @@
                         <td class="detailsRowHeader col-md-2">Description</td>
                         <td class="elementDetailDescription">
                             <div *ngIf="hasResult">
-                                <mdm-markdown-text-area [editable-form]="editableForm" [element]="result"
+                                <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
                                     [property]="'description'"></mdm-markdown-text-area>
                             </div>
                         </td>
@@ -45,12 +45,12 @@
                         <td colspan="2" style="text-align: right;">
                             <div style="float: right">
                                 <mdm-editable-form-buttons  [hidden]="editableForm.visible"
-                                                        [on-cancel-edit]="onCancelEdit"
+                                                        [onCancelEdit]="onCancelEdit"
                                                         [editable]="editableForm"
-                                                        [text-location]="'left'"
-                                                        [hide-delete]="false"
-                                                        [hide-cancel]="false"
-                                                        [hide-edit]="true"
+                                                        [textLocation]="'left'"
+                                                        [hideDelete]="false"
+                                                        [hideCancel]="false"
+                                                        [hideEdit]="true"
                                                         (delete)="delete()"
                                                         [processing]="deleteInProgress">
                                 </mdm-editable-form-buttons>
@@ -71,11 +71,11 @@
                                     </button>
                                 </div>
                                 <mdm-editable-form-buttons  [hidden]="!editableForm.visible"
-                                                        [on-cancel-edit]="onCancelEdit"
+                                                        [onCancelEdit]="onCancelEdit"
                                                         [editable]="editableForm"
-                                                        [text-location]="'left'"
-                                                        [hide-delete]="true"
-                                                        [hide-cancel]="false"
+                                                        [textLocation]="'left'"
+                                                        [hideDelete]="true"
+                                                        [hideCancel]="false"
                                                         [processing]="deleteInProgress">
                                 </mdm-editable-form-buttons>
                             </div>

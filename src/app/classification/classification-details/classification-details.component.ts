@@ -45,9 +45,9 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   showEditMode = false;
   processing = false;
 
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
-  @Input('mc-classification') mcClassification = false;
+  @Input() mcClassification = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;

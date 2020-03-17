@@ -6,7 +6,7 @@ import {SharedService} from '../../services/shared.service';
 import {ErrorComponent} from '../error.component';
 const columns: string[] = ['field', 'value'];
 @Component({
-  selector: 'app-not-authorized-error',
+  selector: 'mdm-not-authorized-error',
   templateUrl: '../error.component.html',
   styleUrls: []
 })

@@ -63,12 +63,12 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
   mcTerm: TermResult;
-  @Input('mc-terminology') mcTerminology: any;
-  @Input('hide-edit-button') hideEditButton: any;
-  @Input('open-edit-form') openEditForm: any;
+  @Input() mcTerminology: any;
+  @Input() hideEditButton: any;
+  @Input() openEditForm: any;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;

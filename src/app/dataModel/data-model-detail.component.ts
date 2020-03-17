@@ -65,7 +65,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
@@ -419,11 +419,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
-  public loadHelp() {
-    this.helpDialogueService.open('Edit_model_details', {
-      my: 'right top',
-      at: 'bottom'
-    } as DialogPosition);
+  loadHelp() {
+    this.helpDialogueService.open('Edit_model_details', { my: 'right top', at: 'bottom' } as DialogPosition);
   }
 
   toggleFavourite() {

@@ -23,6 +23,8 @@ export class NewVersionDataModelComponent implements OnInit {
 
     moveDataFlows: false
   };
+
+  // isCompleted = false;
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
@@ -47,6 +49,7 @@ export class NewVersionDataModelComponent implements OnInit {
 
   versionTypeChecked() {
     this.step++;
+    // this.isCompleted = true;
   }
 
   validate() {
@@ -59,16 +62,13 @@ export class NewVersionDataModelComponent implements OnInit {
     if (this.versionType === 'newElementVersion') {
       if (this.validator.isEmpty(this.form.label)) {
         this.errors = this.errors || {};
-        this.errors.label = 'Name can not be empty!';
+        this.errors.label = 'Data Model name can not be empty!';
       } else if (
         this.form.label.trim().toLowerCase() ===
         this.dataModel.label.trim().toLowerCase()
       ) {
         this.errors = this.errors || {};
-        this.errors.label =
-          'The name should be different from the current version name \'' +
-          this.dataModel.label +
-          '\'';
+        this.errors.label = `The name should be different from the current version name ${this.dataModel.label}`;
       }
     }
     return !this.errors;
@@ -87,55 +87,29 @@ export class NewVersionDataModelComponent implements OnInit {
         copyDataFlows: this.form.copyDataFlows
       };
       this.processing = true;
-      this.resources.dataModel
-        .put(this.dataModel.id, 'newVersion', { resource })
-        .subscribe(
+      this.resources.dataModel.put(this.dataModel.id, 'newVersion', { resource }).subscribe(
           response => {
             this.processing = false;
-            this.messageHandler.showSuccess(
-              'New Data Model version created successfully.'
-            );
-            this.stateHandler.Go(
-              'datamodel',
-              { id: response.body.id },
-              { reload: true }
-            );
+            this.messageHandler.showSuccess('New Data Model version created successfully.');
+            this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
           },
           error => {
             this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem creating the new Data Model version.',
-              error
-            );
+            this.messageHandler.showError('There was a problem creating the new Data Model version.', error);
           }
         );
     } else if (this.versionType === 'newDocumentVersion') {
-      const resources = {
-        moveDataFlows: this.form.moveDataFlows
-      };
+      const resources = {moveDataFlows: this.form.moveDataFlows};
       this.processing = true;
-      this.resources.dataModel
-        .put(this.dataModel.id, 'newDocumentationVersion', {
-          resource: resources
-        })
-        .subscribe(
+      this.resources.dataModel.put(this.dataModel.id, 'newDocumentationVersion', { resource: resources }).subscribe(
           response => {
             this.processing = false;
-            this.messageHandler.showSuccess(
-              'New Document Model version created successfully.'
-            );
-            this.stateHandler.Go(
-              'datamodel',
-              { id: response.body.id },
-              { reload: true }
-            );
+            this.messageHandler.showSuccess('New Document Model version created successfully.');
+            this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true } );
           },
           error => {
             this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem creating the new Document Model version.',
-              error
-            );
+            this.messageHandler.showError('There was a problem creating the new Document Model version.', error );
           }
         );
     }

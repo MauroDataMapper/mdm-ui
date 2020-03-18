@@ -7,19 +7,9 @@ import { trigger, state, transition, animate, style } from '@angular/animations'
   styleUrls: ['./two-side-panel.component.sass'],
   animations: [
     trigger('toggleHeight', [
-      state(
-        'inactive',
-        style({
-          height: '0',
-          opacity: '0'
-        })
+      state( 'inactive', style({ height: '0', opacity: '0' })
       ),
-      state(
-        'active',
-        style({
-          height: '*',
-          opacity: '1'
-        })
+      state( 'active', style({ height: '*', opacity: '1' })
       ),
       transition('inactive => active', animate('200ms ease-in')),
       transition('active => inactive', animate('200ms ease-out'))

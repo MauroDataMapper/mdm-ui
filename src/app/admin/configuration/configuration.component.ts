@@ -34,7 +34,6 @@ export class ConfigurationComponent implements OnInit {
   ngOnInit() {
     this.getConfig();
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
-
     this.indexingStatus = '';
   }
 
@@ -71,11 +70,7 @@ export class ConfigurationComponent implements OnInit {
 
   tabSelected(itemsName) {
     const tab = this.getTabDetail(itemsName);
-    this.stateHandler.Go(
-      'configuration',
-      { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
-    );
+    this.stateHandler.Go('configuration', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
   }
 
   getTabDetail(tabIndex) {

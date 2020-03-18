@@ -148,10 +148,14 @@
                                      [hideCancel]="false"
                                      [processing]="deleteInProgress"></mdm-editable-form-buttons>
             </div>
-            <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" matTooltip="Finalise"
-                 style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-              <button class="btn btn-xs btn-default"
-                      (click)="finalise()" matTooltip="Finalise" type="button"
+
+            <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+              <button mat-stroked-button
+                      type="button"
+                      class="paddingless"
+                      (click)="finalise()" 
+                      matTooltip="Finalise" 
+                      color="accent"
                       [disabled]="deleteInProgress || processing">
                 <i class="fas fa-check-circle" aria-hidden="true"></i>
               </button>

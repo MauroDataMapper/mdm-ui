@@ -575,21 +575,10 @@ ul.myTree li:focus {
 }
 
 .hideShowLeftPaneBtn {
-  color: $navTextColor;
   cursor: pointer;
   text-align: center;
   padding: 2px;
   margin-bottom: 5px;
-
-  -webkit-border-radius: 4px !important;
-  -moz-border-radius: 4px !important;
-  border-radius: 4px !important;
-  -webkit-border-top: 4px !important;
-  -moz-border-top: 4px !important;
-  border-top: 4px !important;
-  -webkit-border-bottom: 4px !important;
-  -moz-border-bottom: 4px !important;
-  border-bottom: 4px !important;
 }
 
 .hideShowLeftPaneBtn > i {

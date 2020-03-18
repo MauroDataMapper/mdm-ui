@@ -1,12 +1,12 @@
 <div class="container">
     <div class="row">
 
-        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 col-md-12 col-lg-4 visible-xs" (click)="hideShowLeftPane();" style="display: none;">
+        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 col-md-12 col-lg-4 d-none d-sm-block d-md-none" (click)="hideShowLeftPane();">
             <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
             <small #showHidePaneText id="showHidePaneText" style="font-style: italic;padding-left: 5px;">Show Models Tree</small>
         </div>
 
-        <div #resizableLeft [hidden]="expand" class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4">
+        <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4">
             <!-- <div (click)="toggle()" [hidden]="expand" title="Minimize" class="visible-xs"> TO DO
             </div> -->
             <div id="mdm--model-list" ui-view="left"></div>

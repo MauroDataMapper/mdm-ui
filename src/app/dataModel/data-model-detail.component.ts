@@ -432,9 +432,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   finalise() {
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
+        hasBackdrop: true,
+        autoFocus: false,
         data: {
           title: 'Are you sure you want to finalise the Data Model ?',
+          okBtnTitle: 'Finalise model',
           message:
             'Once you finalise a Data Model, you can not edit it anymore!<br> \n' +
             'but you can create new version of it.'

@@ -79,6 +79,8 @@ export class ResourcesService {
   metadata: MetaData = new MetaData(this);
   facets: Facets = new Facets(this);
   dataModel: DataModel = new DataModel(this);
+  hierarchy: Hierarchy = new Hierarchy(this);
+  dataFlow: DataFlow = new DataFlow(this);
   dataClass: DataClass = new DataClass(this);
   dataType: DataType = new DataType(this);
   public: Public = new Public(this);
@@ -578,11 +580,22 @@ class Tree {
 }
 
 class Hierarchy {
-  constructor(private resourcesService: ResourcesService) {
+  constructor(private resourcesService: ResourcesService) { }
+  get(id?, options?) {
+    return this.resourcesService.get('dataModels/', id, 'hierarchy', options);
   }
+}
 
-  get(id?, action?, options?) {
-    return this.resourcesService.get('hierarchy', id, action, options);
+class DataFlow {
+  constructor(private resourcesService: ResourcesService) { }
+  getAllFlows(id?, options?) {
+    return this.resourcesService.get('dataModels/', id, 'dataFlows', options);
+  }
+  getFlow(dataModelId?, dataFlowId?, options?) {
+    return this.resourcesService.get(`dataModels/${dataModelId}/dataFlows`, dataFlowId, 'dataClassFlows', options);
+  }
+  getFlowComponents(dataModelId?, dataFlowId?, dataClassId?, options?) {
+    return this.resourcesService.get(`dataModels/${dataModelId}/dataFlows/${dataFlowId}/dataClassFlows/${dataClassId}/dataFlowComponents`, null, '', {all: true});
   }
 }
 

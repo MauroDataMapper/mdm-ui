@@ -1,18 +1,17 @@
 <span *ngIf="val.close == true" style="padding-right:9px;"></span>
-
-<i
-    [ngClass]="{'fa':true, 'fa-plus':val.close ,'fa-minus':!val.close, 'plusMinusElement':true,'comparisonTree':true}"
-    style="margin-right: 3px; font-size: 10px; font-weight: normal" (click)="toggleExpand()"></i>
-
-<span
-    [ngClass]="{'nodeLabel':true, 'comparisonTree':true, 'created':val.created, 'deleted':val.deleted, 'selected':val.selected, 'isGhost':val.isGhost, 'modified':val.modified}"
+<i [ngClass]="{'fas':true, 'fa-plus':val.close ,'fa-minus':!val.close, 'plusMinusElement':true,'comparisonTree':true}" style="margin-right: 3px; font-size: 10px;" (click)="toggleExpand()"></i>
+<span [ngClass]="{'nodeLabel':true, 'comparisonTree':true, 'created':val.created, 'deleted':val.deleted, 'selected':val.selected, 'isGhost':val.isGhost, 'modified':val.modified}"
     (click)="nodeClickFn()">{{val.label}}</span>
 
 <ul [ngClass]="{'myTree':true, 'comparisonTree':true, 'hide':val.close}">
     <li class="myTreeEmptyRoot comparisonTree node" *ngFor="let item of val.items">
-        <mdm-comparison-tree [val]="item" [parentData]="val.items" [childElementName]="childElementName"
-            [treeName]="treeName" [type]="type" [diffMap]="diffMap" [nodeClick]="nodeClick"
-            [nodeExpand]="nodeExpand">
-        </mdm-comparison-tree>
+        <mdm-comparison-tree [val]="item" 
+                            [parentData]="val.items" 
+                            [childElementName]="childElementName"
+                            [treeName]="treeName" 
+                            [type]="type" 
+                            [diffMap]="diffMap" 
+                            [nodeClick]="nodeClick"
+                            [nodeExpand]="nodeExpand"></mdm-comparison-tree>
     </li>
 </ul>

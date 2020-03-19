@@ -2,14 +2,8 @@
     <form editable-form name="form"  onaftersave="onAfterSave()"   (ngSubmit)="formBeforeSave()"   disable-submit-on-enter>
         <div class="panel-body panel-table">
             <h4>
-                <div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
-                       <mdm-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
-                    </div>
-                </div>
-
+                <mdm-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
             </h4>
-
             <small class="elementDetailMCType">Data Type</small><br>
             <span style="font-size: 11px;font-style: italic" class="dataTypeDetailsLastUpdate">Last Update: {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
         </div>

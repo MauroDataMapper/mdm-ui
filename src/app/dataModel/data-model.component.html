@@ -74,7 +74,7 @@
         <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
             <mat-tab label="Data Classes">
                 <ng-template matTabContent>
-                    <div style="width: 100%;">
+                    <div style="width: 100%;" class="mdm--block">
                         <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
                     </div>
                 </ng-template>

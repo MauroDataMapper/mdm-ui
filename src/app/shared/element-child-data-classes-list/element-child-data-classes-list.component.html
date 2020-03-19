@@ -1,6 +1,6 @@
-<div class="mcTableMain">
-    <div class="mcTableTitle">
-        <span class="title">Data Classes <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+<div class="mcTableMain" style="margin-top: 16px;">
+    <div class="mcTableTitle" style="margin-bottom: 16px;">
+        <span class="title">Data Classes<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
 
         <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parentDataModel.editable && !parentDataModel.finalised">
             <mdm-data-type-list-buttons [displayRecords]="records"
@@ -11,10 +11,10 @@
     </div>
 
     <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="mdm--table table table-bordered ">
+        <table mat-table matSort [dataSource]="records" class="mdm--table table table-bordered table-stripped">
             <ng-container matColumnDef="checkbox">
                 <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
-                    <input type="checkbox"   (change)="onChecked()" [(ngModel)]="checkAllCheckbox" class="checkboxAll" style="cursor:pointer;">
+                    <input type="checkbox"  (change)="onChecked()" [(ngModel)]="checkAllCheckbox" class="checkboxAll" style="cursor:pointer;">
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
                     <input style="cursor:pointer;" type="checkbox" [(ngModel)]="record.checked">

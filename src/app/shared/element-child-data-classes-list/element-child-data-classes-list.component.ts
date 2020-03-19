@@ -73,20 +73,10 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
           this.changeRef.detectChanges();
-
-          return this.dataClassesFetch(
-            this.paginator.pageSize,
-            this.paginator.pageIndex,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
+          return this.dataClassesFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter );
         }),
         map((data: any) => {
           this.totalItemCount = data.body.count;
@@ -109,26 +99,11 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     if (!dataClass || (dataClass && !dataClass.id)) {
       return '';
     }
-    this.stateHandler.NewWindow(
-      'dataClass',
-      {
-        dataModelId: this.parentDataModel.id,
-        dataClassId: this.parentDataClass ? this.parentDataClass.id : null,
-        id: dataClass.id
-      },
-      null
-    );
+    this.stateHandler.NewWindow('dataClass', { dataModelId: this.parentDataModel.id, dataClassId: this.parentDataClass ? this.parentDataClass.id : null, id: dataClass.id}, null);
   };
 
   add = () => {
-    this.stateHandler.Go(
-      'newDataClass',
-      {
-        parentDataModelId: this.parentDataModel.id,
-        parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null
-      },
-      null
-    );
+    this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null );
   };
 
   deleteRows = () => {

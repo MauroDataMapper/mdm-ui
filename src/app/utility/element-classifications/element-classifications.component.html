@@ -1,31 +1,23 @@
-<div>
-    <div mdmProperties [classifiers]="editableForm[property]" *ngIf="(!editableForm.visible)">
-        <div *ngFor="let path of classifications">
-            <div style="float: left;">
-                <ul class="breadcrumbClassification">
-                    <li>
+<div mdmProperties [classifiers]="editableForm[property]" *ngIf="(!editableForm.visible)">
+    <div *ngFor="let path of classifications">
+        <div style="float: left;">
+            <ul class="breadcrumbClassification">
+                <li>
                     <span ng-show="!editable || !editable.$visible">
                         <a href="{{path.link}}" target="{{target}}" >
                             <span>{{path.label}} </span>
                             <i class="fas fa-tags" aria-hidden="false"></i>
                         </a>
-                 </span>
-<!--                        <span ng-show="editable && editable.$visible">-->
-<!--                        <span>{{::path.label}} </span>-->
-<!--                    </span>-->
-<!--                        <span class="breadcrumbRemoveButton"-->
-<!--                              ng-disabled="editable && editable.$waiting"-->
-<!--                              ng-show="editable && editable.$visible" ng-click="remove($index)">-->
-<!--                    </span>-->
-                    </li>
-                </ul>
-            </div>
+                </span>
+                </li>
+            </ul>
         </div>
     </div>
-    <div *ngIf="editableForm.visible" style="clear: both;">
-        <mat-select multiple placeholder="Classifications" class="form-control" name="classification" [(ngModel)]="selectedClassification" (ngModelChange)="onModelChanged()">
+</div>
+<div *ngIf="editableForm.visible" style="clear: both;">
+    <mat-form-field appearance="outline" class="mdm--input mdm--block">
+        <mat-select multiple placeholder="Classifications" name="classification" [(ngModel)]="selectedClassification" (ngModelChange)="onModelChanged()">
             <mat-option *ngFor="let classification of allClassifications" [value]="classification">{{classification.label}}</mat-option>
         </mat-select>
-
-    </div>
+    </mat-form-field>
 </div>

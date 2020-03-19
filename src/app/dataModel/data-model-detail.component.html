@@ -65,17 +65,20 @@
         <tr>
           <td class="detailsRowHeader">Author</td>
           <td *ngIf="result">
-            <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.author"
-                                  class="dataModelDetailsLabel" name="moduleNameAuthor" size="20"
-                                  style="width: 45%"></mdm-inline-text-edit>
+            <mdm-inline-text-edit [inEditMode]="editableForm.visible" 
+                                  [(ngModel)]="editableForm.author"
+                                  class="dataModelDetailsLabel" 
+                                  name="moduleNameAuthor"></mdm-inline-text-edit>
           </td>
         </tr>
         <tr>
           <td class="detailsRowHeader">Organisation</td>
           <td *ngIf="result">
-            <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.organisation"
-                                  class="dataModelDetailsLabel" name="moduleNameOrganisation" size="20"
-                                  style="width: 45%"></mdm-inline-text-edit>
+            <mdm-inline-text-edit [inEditMode]="editableForm.visible" 
+                                  [(ngModel)]="editableForm.organisation"
+                                  class="dataModelDetailsLabel" 
+                                  name="moduleNameOrganisation" 
+                                  size="20"></mdm-inline-text-edit>
           </td>
         </tr>
         <tr>
@@ -127,16 +130,14 @@
             </div>
 
             <div style="float: right;margin-bottom: 3px">
-              <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending"
-                   class="btn-group-xs" uib-dropdown is-open="false"
-                   style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                <button id="singleX-button" type="button"
-                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
+              <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                <button mat-stroked-button
+                        type="button"
+                        class="paddingless"
                         [hidden]="editableForm.visible || editableForm.deletePending"
                         [disabled]="deleteInProgress || exporting || result.finalised"
                         matTooltip="Edit"
-                        (click)="showForm();"
-                        uib-dropdown-toggle>
+                        (click)="showForm();">
                   <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                 </button>
               </div>

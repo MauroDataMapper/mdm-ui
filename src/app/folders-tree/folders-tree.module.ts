@@ -12,6 +12,8 @@ import { HighlighterPipe } from '../pipes/highlighter.pipe';
 import { StringifyPipe } from '../pipes/stringify.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FolderService } from './folder.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   imports: [
@@ -23,7 +25,9 @@ import { FolderService } from './folder.service';
     MatIconModule,
     MatMenuModule,
     MatCheckboxModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   declarations: [
     FoldersTreeComponent,
@@ -36,7 +40,9 @@ import { FolderService } from './folder.service';
   exports: [
     FoldersTreeComponent,
     HighlighterPipe,
-    StringifyPipe
+    StringifyPipe,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     FolderService

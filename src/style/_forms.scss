@@ -56,9 +56,15 @@ form.mdm--form.mdm--form-modal {
 }
 
 .outlined-input {
-  border-radius: 5px;
-  border: 1px solid #e8e8e8!important;
   height: 44px;
   line-height: 44px;
+  border-radius: 5px;
+  border: 1px solid #e8e8e8!important;
+  box-shadow: none;
+}
+
+.outlined-block {
+  border-radius: 5px;
+  border: 1px solid #e8e8e8!important;
   box-shadow: none;
 }

@@ -6,7 +6,7 @@
                     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
                         <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
                             <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
-                                     <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit >
+                                     <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit >
                                 <span class="publiclyReadable" [hidden]="!result.readableByEveryone">
                                     <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
                                 </span>

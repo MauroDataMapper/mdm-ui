@@ -6,8 +6,8 @@ import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'mdm-markdown-text-area',
-  templateUrl: './markdown-text-area.component.html'
-  // styleUrls: ['./markdown-text-area.component.sass']
+  templateUrl: './markdown-text-area.component.html',
+  styleUrls: ['./markdown-text-area.component.sass']
 })
 export class MarkdownTextAreaComponent implements OnInit {
   @Output() descriptionChange = new EventEmitter<string>();

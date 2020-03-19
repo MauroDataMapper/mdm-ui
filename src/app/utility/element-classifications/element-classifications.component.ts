@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor }
 @Component({
     selector: 'mdm-element-classifications',
     templateUrl: './element-classifications.component.html',
-    // styleUrls: ['./element-classifications.component.sass']
+    styleUrls: ['./element-classifications.component.sass']
 })
 export class ElementClassificationsComponent implements OnInit {
 

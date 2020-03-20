@@ -18,6 +18,7 @@ import {McSelectPagination} from '../../../utility/mc-select/mc-select.component
 import {MatTableDataSource} from '@angular/material/table';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MessageHandlerService} from '../../../services/utility/message-handler.service';
+import {BroadcastService} from '../../../services/broadcast.service';
 
 @Component({
   selector: 'mdm-data-element-step2',
@@ -25,13 +26,6 @@ import {MessageHandlerService} from '../../../services/utility/message-handler.s
   styleUrls: ['./data-element-step2.component.sass']
 })
 export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestroy {
-
-  // constructor() { }
-
-  // ngOnInit() {
-  //
-  //   this.model = this.step.scope.model;
-  // }
 
   step: any;
   model: any;
@@ -47,11 +41,12 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   failCount: any; // TODO
   parentScopeHandler: any;
   hideFiltersSelectedDataTypes = true;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   isProcessComplete = false;
   finalResult = {};
   successCount: number;
+
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
 
   formChangesSubscription: Subscription;
@@ -74,9 +69,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   recordsDataElements: any[] = [];
   isAllChecked = true;
   checkAllCheckbox = false;
-  totalSelectedItemsCount: number;
+  totalSelectedItemsCount = 0;
 
-  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService, private messageHandler: MessageHandlerService) {
+  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
 
     this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
   }
@@ -353,6 +348,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.validate();
 
     this.dataSourceSelectedDataElements.data = this.model.selectedDataElements;
+    this.totalSelectedItemsCount = this.model.selectedDataElements.length;
   }
 
   toggleShowNewInlineDataType() {
@@ -371,7 +367,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         this.model.selectedDataClasses.push(element.node);
       }
     }
-  };
+ };
 
 
   validate = (newValue?) => {
@@ -486,32 +482,45 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.hideFiltersSelectedDataTypes = !this.hideFiltersSelectedDataTypes;
   };
 
-  async saveCopiedDataTypes() {
+  saveCopiedDataClasses = () => {
     this.processing = true;
     this.isProcessComplete = false;
 
-    this.model.selectedDataTypes.forEach(async (dt: any) => {
+    let promise = Promise.resolve();
 
-      const action = 'dataTypes/' + dt.dataModel + '/' + dt.id;
+    this.model.selectedDataElements.forEach((dc: any) => {
+      promise = promise
+        .then((result: any) => {
+          const link = 'dataElements/' + dc.dataModel + '/' + dc.dataClass + '/' + dc.id;
+          this.successCount++;
+          this.finalResult[dc.id] = { result, hasError: false };
+          return this.resources.dataClass
+              .post(
+                this.model.parent.dataModel,
+                this.model.parent.id,
+                link,
+                null
+              )
+              .toPromise();
 
-      await this.resources.dataModel.post(this.model.parent.id, action, null).toPromise().then((result) => {
-
-          if (result) {
-            this.successCount++;
-            this.finalResult[dt.id] = {result: result.body, hasError: false};
-
-          } else {
-            this.failCount++;
-            const errorText = '';
-            this.finalResult[dt.id] = {result: errorText, hasError: true};
-          }
-        },
-        (error) => {
+        })
+        .catch(error => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dt.id] = {result: errorText, hasError: true};
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
         });
     });
+
+    promise
+      .then(() => {
+        this.processing = false;
+        this.step.isProcessComplete = true;
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      })
+      .catch(() => {
+        this.processing = false;
+        this.step.isProcessComplete = true;
+      });
   }
 
 

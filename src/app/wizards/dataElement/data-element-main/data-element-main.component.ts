@@ -66,7 +66,8 @@ export class DataElementMainComponent implements OnInit {
       referencedDataType: { id: '' },
       referencedTerminology: { id: '' },
       referencedDataClass: { id: '' }
-    }
+    },
+    isProcessComplete : false
   };
 
   ngOnInit() {
@@ -84,13 +85,13 @@ export class DataElementMainComponent implements OnInit {
     step1.component = DataElementStep1Component;
     step1.scope = this;
     step1.hasForm = true;
-    step1.invalid = false;
+    step1.invalid = true;
 
     const step2 = new Step();
     step2.title = 'Element Details';
     step2.component = DataElementStep2Component;
     step2.scope = this;
-    step2.invalid = false;
+    step2.invalid = true;
 
     // this.resources.dataClass
     //     .get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null,null).toPromise()
@@ -144,7 +145,7 @@ export class DataElementMainComponent implements OnInit {
       this.validateDataType();
       this.saveNewDataElement();
     } else {
-      // this.saveCopiedDataClasses();
+       this.saveCopiedDataClasses();
     }
   };
 
@@ -420,4 +421,8 @@ export class DataElementMainComponent implements OnInit {
     // else
     //   return true;
   }
+
+  saveCopiedDataClasses = () => {
+    this.steps[1].compRef.instance.saveCopiedDataClasses();
+  };
 }

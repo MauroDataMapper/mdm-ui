@@ -24,12 +24,13 @@ export class DataElementStep1Component implements OnInit, DoCheck {
   }
 
   validate = () => {
-    if (!this.model.createType) {
+
+if (!this.model.createType) {
       this.step.invalid = true;
       return;
     }
 
-    if (
+if (
       this.model.createType === 'copy' &&
       this.model.copyFromDataClass.length === 0
     ) {
@@ -37,7 +38,7 @@ export class DataElementStep1Component implements OnInit, DoCheck {
       return;
     }
 
-    this.step.invalid = false;
+this.step.invalid = false;
   };
 
   ngOnInit() {

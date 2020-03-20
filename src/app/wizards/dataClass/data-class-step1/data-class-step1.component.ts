@@ -35,6 +35,7 @@ export class DataClassStep1Component implements OnInit, DoCheck {
   onLoad() {}
 
   validate = () => {
+
     if (!this.model.createType) {
       this.step.invalid = true;
       return;

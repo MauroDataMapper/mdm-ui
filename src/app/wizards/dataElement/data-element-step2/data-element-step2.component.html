@@ -211,6 +211,12 @@
   <!--    Put Submit button in this page -AS-->
   <div *ngIf="model.createType == 'copy'" class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="mcTableMain">
+      <div class="mcTableTitle">
+        <span class="title">Summary of Selected Data Elements <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalSelectedItemsCount}}</span></span>
+
+      </div>
+      <div class="mcTableContainer">
       <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="table table-bordered">
         <ng-container matColumnDef="label">
           <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="label">
@@ -277,10 +283,11 @@
         <tr mat-row *matRowDef="let record; columns: displayedColumnsSelectedDataTypes;"></tr>
 
       </table>
-
+    </div>
       <div class="d-flex justify-content-between p-2">
         <mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
       </div>
+    </div>
       <div style="margin-top: 50px;">
         <div *ngIf="processing">
           <mat-progress-bar
@@ -290,11 +297,11 @@
             mode="indeterminate">
           </mat-progress-bar>
         </div>
-        <div ng-show="!processing && isProcessComplete">
-          <div class="alert alert-success" ng-if="failCount === 0">
+        <div *ngIf="!processing && isProcessComplete">
+          <div class="alert alert-success" *ngIf="failCount === 0">
             <strong>Success!</strong> All copied successfully!
           </div>
-          <div class="alert alert-danger" ng-if="failCount > 0">
+          <div class="alert alert-danger" *ngIf="failCount > 0">
             <strong>Error!</strong> {{failCount}} Error(s) in copy process!
           </div>
         </div>

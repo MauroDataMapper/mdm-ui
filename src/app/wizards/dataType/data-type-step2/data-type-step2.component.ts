@@ -30,7 +30,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   @Input() parent;
 
   successCount: number;
-  failCount: number;
+  failCount = 0 ;
   totalItemCount: number;
   totalSelectedItemsCount: number;
   filter: string;
@@ -44,13 +44,14 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   isAllChecked = true;
   hideFilters = true;
   hideFiltersSelectedDataTypes = true;
-  processing = true;
+  processing = false;
   isProcessComplete = false;
   recordsDataTypes: any[] = [];
   displayedColumnsDataTypes: string[];
   displayedColumnsSelectedDataTypes: string[];
   recordsSelectedDataTypes: any[] = [];
   allDataTypes;
+
 
   finalResult = {};
   dataSourceSelectedDataTypes = new MatTableDataSource<any>();
@@ -291,6 +292,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.validate();
 
     this.dataSourceSelectedDataTypes.data = this.model.selectedDataTypes;
+    this.totalSelectedItemsCount = this.model.selectedDataTypes.length;
   }
 
   validate = (newValue?) => {
@@ -368,7 +370,47 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.hideFiltersSelectedDataTypes = !this.hideFiltersSelectedDataTypes;
   };
 
-  async saveCopiedDataTypes() {
+  saveCopiedDataTypes = () => {
+    this.processing = true;
+    this.isProcessComplete = false;
+
+    let promise = Promise.resolve();
+
+    this.model.selectedDataTypes.forEach((dc: any) => {
+      promise = promise
+        .then((result: any) => {
+          const action = 'dataTypes/' + dc.dataModel + '/' + dc.id;
+          this.successCount++;
+          this.finalResult[dc.id] = { result, hasError: false };
+          return this.resourceService.dataModel
+            .post(
+              this.model.parent.id,
+              action,
+              null
+            )
+            .toPromise();
+
+        })
+        .catch(error => {
+          this.failCount++;
+          const errorText = this.messageHandler.getErrorText(error);
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
+        });
+    });
+
+    promise
+      .then(() => {
+        this.processing = false;
+        this.step.isProcessComplete = true;
+        this.model.isProcessComplete = true;
+       })
+      .catch(() => {
+        this.processing = false;
+        this.step.isProcessComplete = true;
+        this.model.isProcessComplete = true;
+      });
+  }
+  async saveCopiedDataTypes2() { // Not in use
     this.processing = true;
     this.isProcessComplete = false;
 

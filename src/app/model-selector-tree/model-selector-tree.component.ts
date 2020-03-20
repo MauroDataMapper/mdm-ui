@@ -81,7 +81,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   rootNode: any;
   filteredRootNode: any;
   markChildren: any;
-  selectedElements = [];
+  selectedElements: any[] = [];
   searchCriteria: any;
   hasValidationError: boolean;
   inSearchMode: any;
@@ -95,7 +95,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     // Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     // Add '${implements OnChanges}' to the class.
     if (changes.defaultElements) {
-      this.selectedElements.push(this.defaultElements);
+      // this.selectedElements.push(this.defaultElements);  TODO check why this is needed
       if (!this.multiple) {
         this.searchCriteria = this.selectedElements[0] ? this.selectedElements[0].label : null;
       }
@@ -147,7 +147,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
     this.showTree = this.alwaysShowTree;
     this.placeholderStr = this.placeholder ? this.placeholder : 'Select';
     this.reload();

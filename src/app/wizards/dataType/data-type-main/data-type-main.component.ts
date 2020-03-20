@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../../../services/handlers/state-handler.service';
 import { ResourcesService } from '../../../services/resources.service';
@@ -45,7 +45,8 @@ export class DataTypeMainComponent implements OnInit {
     classifiers: [],
     referencedDataType: { id: '' },
     referencedTerminology: { id: '' },
-    referencedDataClass: { id: '' }
+    referencedDataClass: { id: '' },
+    isProcessComplete : false
   };
 
   ngOnInit() {

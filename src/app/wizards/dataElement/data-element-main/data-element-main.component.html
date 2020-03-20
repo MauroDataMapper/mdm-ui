@@ -23,7 +23,7 @@
                             Next
                             <span class="fa fa-chevron-right"></span>
                         </button>
-                        <button class="btn btn-success btn-sm" *ngIf="(i+1) === steps.length" [disabled]="step.invalid"  (click)="save()">Submit</button>
+                        <button class="btn btn-success btn-sm" *ngIf="(i+1) === steps.length" [disabled]="step.invalid || isProcessComplete"  (click)="save()">Submit</button>
                     </div>
                 </div>
             </mat-step>

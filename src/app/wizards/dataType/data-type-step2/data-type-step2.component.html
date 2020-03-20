@@ -190,7 +190,10 @@
 	<!--    Submit at step 2- AS-->
 	<div *ngIf="model.createType == 'copy'" class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="mcTableTitle">
+        <span class="title">Summary of Selected Data Types <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalSelectedItemsCount}}</span></span>
 
+      </div>
 			<table mat-table [dataSource]="dataSourceSelectedDataTypes" matSort class="table table-bordered">
 				<ng-container matColumnDef="label">
 					<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="label">
@@ -262,12 +265,15 @@
 				<mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
 			</div>
 			<div style="margin-top: 50px;">
-				<div [hidden]="processing">
-					<!--<uib-progressbar max="max" value="dynamic" class="progress-striped active">
-						<span style="color:white; white-space:nowrap;"></span>
-					</uib-progressbar>-->
+				<div *ngIf="processing">
+          <mat-progress-bar
+            value="50"
+            bufferValue="75"
+            color="primary"
+            mode="indeterminate">
+          </mat-progress-bar>
 				</div>
-				<div [hidden]="!processing && isProcessComplete">
+				<div *ngIf="!processing && isProcessComplete">
 					<div class="alert alert-success" *ngIf="failCount === 0">
 						<strong>Success!</strong> All copied successfully!
 					</div>

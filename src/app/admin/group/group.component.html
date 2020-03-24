@@ -17,10 +17,10 @@
         </mat-error>
     </mat-form-field>
 
-    <button mat-flat-button type="button" (click)="cancel()">
+    <button mat-stroked-button color="warn" type="button" (click)="cancel()" style="margin-right: 16px;">
         Cancel
     </button>
-    <button mat-flat-button color="primary" type="submit" class="custom" (click)="save()">
+    <button mat-flat-button color="primary" type="submit" class="" (click)="save()">
         Save group
     </button>
 </form>
@@ -32,18 +32,18 @@
                 <mat-tab label="Members">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                       <mdm-group-member-table [parent]="group" ></mdm-group-member-table>
-                       </div>
+                            <mdm-group-member-table [parent]="group"></mdm-group-member-table>
+                        </div>
                     </ng-template>
                 </mat-tab>
                 <mat-tab label="History">
                     <ng-template matTabContent>
                         <div style="width: 100%;">
-                            <mdm-history [parent]="group" [parentType]="'UserGroup'" ></mdm-history>
+                            <mdm-history [parent]="group" [parentType]="'UserGroup'"></mdm-history>
                         </div>
                     </ng-template>
-                    </mat-tab>
-                </mat-tab-group>
+                </mat-tab>
+            </mat-tab-group>
         </div>
     </div>
 </div>

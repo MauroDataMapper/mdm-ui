@@ -15,9 +15,7 @@
                                 <span class="help-block">{{errorMessage}}</span>
                             </div>
                         </span>
-
                     </div>
-
                 </h4>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
                     <small class="elementDetailMCType">Classifier</small>
@@ -30,10 +28,10 @@
 
             </div>
 
-            <table class="table dataModelDetailTable">
+            <table class="table table-bordered">
                 <tbody>
                     <tr>
-                        <td class="detailsRowHeader col-md-2">Description</td>
+                        <td class="detailsRowHeader">Description</td>
                         <td class="elementDetailDescription">
                             <div *ngIf="hasResult">
                                 <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
@@ -57,11 +55,10 @@
                             </div>
 
                             <div style="float: right;margin-bottom: 3px">
-                                <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                                     <button mat-stroked-button
                                             type="button"
-                                            id="singleX-button"
-                                            class="dropdown-toggle addNewModelButton paddingless"
+                                            class="paddingless"
                                             [hidden]="editableForm.visible || editableForm.deletePending"
                                             [disabled]="deleteInProgress || exporting || result.finalised"
                                             matTooltip="Edit"
@@ -91,13 +88,14 @@
 
 
 
-                            <div matTooltip="User & Group Access" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                                 <button mat-stroked-button
                                         type="button"
-                                        class="addNewModelButton paddingless"
+                                        class="paddingless"
                                         (click)="toggleSecuritySection()"
                                         *ngIf="showPermission"
                                         [disabled]="deleteInProgress || processing"
+                                        matTooltip="User & Group Access"
                                         [hidden]="editableForm.visible || editableForm.deletePending">
                                     <i class="fas fa-user userAccess"></i>
                                 </button>

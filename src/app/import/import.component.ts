@@ -69,9 +69,7 @@ export class ImportComponent implements OnInit {
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
-      selectedItem.name
-    );
+    this.importerHelp = this.helpDialogueHandler.getImporterHelp(selectedItem.name);
 
     const action = `parameters/${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
     this.resources.importer.get(action).subscribe(res => {

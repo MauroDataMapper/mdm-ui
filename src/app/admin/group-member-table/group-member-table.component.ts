@@ -40,15 +40,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   mcDisplayRecords: any;
   ROLES = this.roles.map;
   errors: any;
-  displayedColumns = [
-    'disabled',
-    'emailAddress',
-    'firstName',
-    'lastName',
-    'organisation',
-    'userRole',
-    'empty'
-  ];
+  displayedColumns = ['disabled', 'emailAddress', 'firstName', 'lastName', 'organisation', 'userRole', 'empty'];
   pagination: McSelectPagination;
   totalItemCount: number;
   isLoadingResults: boolean;
@@ -61,19 +53,9 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    this.gridService.reloadEvent.subscribe(
-      () => (this.paginator.pageIndex = 0)
-    );
-    merge(
-      this.sort.sortChange,
-      this.paginator.page,
-      this.gridService.reloadEvent
-    )
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    this.gridService.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
+    merge(this.sort.sortChange, this.paginator.page, this.gridService.reloadEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
-
           return this.groupMembersFetch(
             this.paginator.pageSize,
             this.paginator.pageIndex,
@@ -106,11 +88,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
       sortType,
       filters
     };
-    return this.resources.userGroup.get(
-      this.parent.id,
-      'catalogueUsers',
-      options
-    );
+    return this.resources.userGroup.get(this.parent.id, 'catalogueUsers', options);
   };
 
   validate = () => {
@@ -143,9 +121,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
 
   fetchUser = (text, offset, limit) => {
     this.pagination.limit = this.pagination.limit ? this.pagination.limit : 10;
-    this.pagination.offset = this.pagination.offset
-      ? this.pagination.offset
-      : 0;
+    this.pagination.offset = this.pagination.offset ? this.pagination.offset : 0;
 
     const options = {
       pageSize: limit,
@@ -177,18 +153,12 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     if (!record.id || !record.emailAddress) {
       return;
     }
-    this.resources.userGroup
-      .put(this.parent.id, 'catalogueUsers/' + record.id, null)
-      .subscribe(
-        () => {
+    this.resources.userGroup.put(this.parent.id, 'catalogueUsers/' + record.id, null).subscribe(() => {
           this.mcDisplayRecords[$index] = record;
           this.messageHandler.showSuccess('User added successfully.');
         },
         error => {
-          this.messageHandler.showError(
-            'There was a problem adding the user to the group.',
-            error
-          );
+          this.messageHandler.showError('There was a problem adding the user to the group.', error);
         }
       );
   };
@@ -198,19 +168,13 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   };
 
   confirmRemove = (record, $index) => {
-    this.resources.userGroup
-      .delete(this.parent.id, 'catalogueUsers/' + record.id)
-      .subscribe(
-        () => {
+    this.resources.userGroup.delete(this.parent.id, 'catalogueUsers/' + record.id).subscribe(() => {
           delete record.deletePending;
           this.mcDisplayRecords.splice($index, 1);
           this.messageHandler.showSuccess('User removed successfully.');
         },
         error => {
-          this.messageHandler.showError(
-            'There was a problem removing the user from the group.',
-            error
-          );
+          this.messageHandler.showError('There was a problem removing the user from the group.', error);
         }
       );
   };

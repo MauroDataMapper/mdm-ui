@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
 import {ForgotPasswordModalComponent} from '../forgot-password-modal/forgot-password-modal.component';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {RegisterModalComponent} from '../register-modal/register-modal.component';
 
 @Component({
   selector: 'mdm-login-modal',
@@ -22,8 +23,7 @@ export class LoginModalComponent implements OnInit {
   }
 
   login = () => {
-    this.securityHandler.login(this.username, this.password).then(
-      user => {
+    this.securityHandler.login(this.username, this.password).then(user => {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
       },
@@ -40,28 +40,17 @@ export class LoginModalComponent implements OnInit {
     );
   };
 
-  cancel = () => {
-    this.securityHandler.loginModalDisplayed = false;
-    this.dialogRef.close();
-  };
-
   keyEntered = event => {
     if (event.which === 13) {
       this.login();
     }
   };
-
-  close = () => {
-    this.securityHandler.loginModalDisplayed = false;
-    this.dialogRef.close();
-  };
-
-  reset = () => {
+  forgotPassword = () => {
     this.dialogRef.close();
     this.dialog.open(ForgotPasswordModalComponent);
   };
   signUp = () => {
     this.dialogRef.close();
-    this.dialog.open(LoginModalComponent);
-  }
+    this.dialog.open(RegisterModalComponent);
+  };
 }

@@ -8,14 +8,14 @@
     </div>
 
     <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
+        <table mat-table matSort [dataSource]="records" class="table table-bordered mdm--table table-striped">
             <ng-container matColumnDef="disabled">
                 <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
                   Status
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
-                    <span *ngIf="!record.isNew && record.disabled" style="font-size:11px;color: #a94442; font-weight: bold;">Disabled</span>
-                    <span *ngIf="!record.isNew && !record.disabled" style="font-size:11px">Active</span>
+                    <span *ngIf="!record.isNew && record.disabled" style="color: #a94442;">Disabled</span>
+                    <span *ngIf="!record.isNew && !record.disabled">Active</span>
                 </td>
             </ng-container>
             <ng-container matColumnDef="emailAddress">
@@ -86,42 +86,47 @@
                 <td mat-cell *matCellDef="let record; let i = index" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
                     <div *ngIf="parent.createdBy && parent.createdBy.id != record.id">
                         <div *ngIf="record.isNew">
-                            <button type="button"
-                                    class="btn btn-default btn-xs"
+                            <button mat-stroked-button 
+                                    color="warn"
+                                    type="button"
+                                    class="paddingless"
                                     (click)="cancelEdit(record, i)">
                                 <i class="fas fa-times cancelEditButton"></i>
                             </button>
-                            <button type="submit"
-                                    class="btn btn-default btn-xs"
+                            <button mat-button
+                                    color="accent"
+                                    type="submit"
                                     (click)="confirmAddMember(record, i)">
-                                <i class="fas fa-check saveButton"></i>
+                                <i class="fas fa-check"></i>
                             </button>
                         </div>
                         <div *ngIf="!record.isNew">
-                            <button
+                            <button mat-stroked-button
+                                    color="warn"
                                     *ngIf="!record.deletePending"
                                     type="button"
-                                    class="btn btn-default btn-xs"
                                     matTooltip="Remove from Group"
                                     (click)="removeMember(record)">
-                                <i class="far fa-trash-alt confirmDeleteButton"></i>
+                                <i class="far fa-trash-alt"></i>
                             </button>
 
                             <span  *ngIf="record.deletePending"  style="font-size: 11px;">Are you sure?</span>
                             <!-- Confirm Delete -->
-                            <button type="button"
+                            <button mat-flat-button
+                                    type="button"
+                                    color="warn"
                                     *ngIf="record.deletePending"
-                                    class="btn btn-default btn-xs"
                                     (click)="confirmRemove(record,i)">
-                                <i class="fas fa-check editButton mcTableApproveBtn"></i>
+                                <i class="fas fa-check editButton"></i> Yes
                             </button>
 
                             <!-- Cancel Delete-->
-                            <button type="button"
+                            <button mat-button
+                                    type="button"
+                                    color="warn"
                                     *ngIf="record.deletePending"
-                                    class="btn btn-default btn-xs"
                                     (click)="cancelRemove(record)">
-                                <i class="fas fa-times cancelButton"></i>
+                                <i class="fas fa-times"></i> Cancel
                             </button>
 
                         </div>
@@ -132,8 +137,8 @@
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         </table>
 

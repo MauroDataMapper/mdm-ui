@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
 import {ResourcesService} from '../../services/resources.service';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {LoginModalComponent} from '../login-modal/login-modal.component';
+import {RegisterModalComponent} from '../register-modal/register-modal.component';
 
 @Component({
   selector: 'mdm-forgot-password-modal',
@@ -30,18 +30,12 @@ export class ForgotPasswordModalComponent implements OnInit {
       }
     );
   };
-
-  cancel = () => {
-    this.dialogRef.close();
-  };
-
   keyEntered = event => {
     event.preventDefault();
     return false;
   };
-
-  close = () => {
+  login = () => {
     this.dialogRef.close();
+    this.dialog.open(RegisterModalComponent);
   }
-
 }

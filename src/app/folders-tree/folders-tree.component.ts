@@ -166,7 +166,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         return this.treeControl.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder';
       case DOMAIN_TYPE.DataModel:
         if (fnode.type === 'Data Standard') {
-          return 'fa-file-text-o';
+          return 'fa-file-alt';
         } else if (fnode.type === 'Data Asset') {
           return 'fa-database';
         }

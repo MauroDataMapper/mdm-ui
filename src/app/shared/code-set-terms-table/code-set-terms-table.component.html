@@ -1,10 +1,10 @@
 <div class="mcTableMain">
     <div class="mcTableTitle">
-        <span class="title">Terms <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+        <span class="title">Terms <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
         <div *ngIf="(access && access.showEdit) || clientSide" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
             <button type="button"   class="btn btn-xs btn-default addNewModelButton themeColor" (click)="toggleAddTermsSection()">
-                <i class="fa fa-plus"  uib-tooltip="Add Term" aria-hidden="true" *ngIf="!showAddTerm"></i>
-                <i class="fa fa-times" uib-tooltip="Close" aria-hidden="true" *ngIf="showAddTerm"></i>
+                <i class="fas fa-plus"  uib-tooltip="Add Term" aria-hidden="true" *ngIf="!showAddTerm"></i>
+                <i class="fas fa-times" uib-tooltip="Close" aria-hidden="true" *ngIf="showAddTerm"></i>
             </button>
         </div>
     </div>

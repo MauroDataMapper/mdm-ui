@@ -20,7 +20,7 @@
 <div *ngIf="step === 2">
     <mat-form-field appearance="outline" class="mdm--block">
         <mat-label>Select an exporter</mat-label>
-        <mat-select aria-label="selectedExporterStr" [(ngModel)]="selectedExporterStr" placeholder="Select..." [disabled]="processing" (selectionChange)="exporterChanged()" required>
+        <mat-select aria-label="selectedExporterStr" name="selectedExporterStr" [(ngModel)]="selectedExporterStr" placeholder="Select..." [disabled]="processing" (selectionChange)="exporterChanged()" required>
             <mat-option *ngFor="let item of exportersList" [value]="item">{{item.displayName}}</mat-option>
         </mat-select>
     </mat-form-field>

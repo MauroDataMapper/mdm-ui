@@ -9,9 +9,8 @@
                     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
                         <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
                                 <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
-<!--                                <inline-editor #editableText type="text" [(ngModel)]="result.label" size="20" class="dataModelDetailsLabel" [editOnClick]="false" (input)="onLabelChange($event.target.value)" style="width: 45%" name="moduleName"></inline-editor>-->
                                     <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="result.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
-                                    <i [ngClass]="{'fa fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
+                                    <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
                                        (click)="toggleFavourite()"
                                        uib-tooltip="Favourite"></i>
 
@@ -48,10 +47,10 @@
                 </div>
             </div>
 
-            <table class="table table-condensed dataModelDetailTable">
+            <table class="table dataModelDetailTable">
                 <tbody>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                    <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%">
                             <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="result?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
@@ -59,20 +58,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Author</td>
+                    <td class="detailsRowHeader">Author</td>
                     <td *ngIf="result">
                       <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="result.author" [name]="'moduleNameAuthor'" size="20"  [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
 
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation</td>
+                    <td class="detailsRowHeader">Organisation</td>
                     <td *ngIf="result">
                       <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="result.organisation" [name]="'moduleNameOrganisation'" size="20"  [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader col-md-2">Description</td>
+                    <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
                             <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
@@ -81,7 +80,7 @@
                 </tr>
 
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</td>
+                    <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
                         <mdm-element-classifications [classifications]="result.classifiers" [editableForm]="editableForm" [element]="result" [property]="'classifiers'"></mdm-element-classifications>
 

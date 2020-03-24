@@ -1,3 +1,12 @@
 mdm-footer {
     margin-top: 32px;
 }
+
+.footer--links {
+    a:first-child {
+        margin-right: 8px;
+    }
+    a:last-child {
+        margin-left: 8px;
+    }
+}

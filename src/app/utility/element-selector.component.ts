@@ -165,10 +165,10 @@ export class ElementSelectorComponent implements OnInit {
     }
   loadAllFolders = function() {
     this.loading = true;
-    this.resourceService.tree.get(null, null, { foldersOnly: true }).subscribe( (data) => {
+    this.resourceService.folder.get(null, null, { foldersOnly: true }).subscribe( (data) => {
       this.loading = false;
       this.rootNode = {
-        children: data.body,
+        children: data.body.items,
         isRoot: true
       };
     }, function(error) {

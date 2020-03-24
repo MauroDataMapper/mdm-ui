@@ -10,8 +10,8 @@
                         <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
                                 <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
 <!--                                <inline-editor #editableText type="text" [(ngModel)]="result.label" size="20" class="dataModelDetailsLabel" [editOnClick]="false" (input)="onLabelChange($event.target.value)" style="width: 45%" name="moduleName"></inline-editor>-->
-
-                                    <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
+                                    <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="result.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
+                                    <i [ngClass]="{'fa fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
                                        (click)="toggleFavourite()"
                                        uib-tooltip="Favourite"></i>
 
@@ -61,13 +61,14 @@
                 <tr>
                     <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Author</td>
                     <td *ngIf="result">
-                        <inline-editor empty="" #editableText type="text" [(ngModel)]="result.author" size="20" class="dataModelDetailsLabel" style="width: 45%" name="moduleNameAuthor"></inline-editor>
+                      <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="result.author" [name]="'moduleName'" size="20"  [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
+
                     </td>
                 </tr>
                 <tr>
                     <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation</td>
                     <td *ngIf="result">
-                        <inline-editor empty="" #editableText type="text" [(ngModel)]="result.organisation" size="20" class="dataModelDetailsLabel" style="width: 45%" name="moduleNameOrganisation"></inline-editor>
+                      <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="result.organisation" [name]="'moduleName'" size="20"  [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
                     </td>
                 </tr>
                 <tr>

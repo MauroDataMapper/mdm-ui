@@ -164,7 +164,9 @@ export class DataElementMainComponent implements OnInit {
 
       if (i === tab.selectedIndex) {
         if (step.compRef) {
+          if (step.compRef.instance.onLoad !== undefined) {
           step.compRef.instance.onLoad();
+          }
           step.active = true;
           this.changeRef.detectChanges();
         }

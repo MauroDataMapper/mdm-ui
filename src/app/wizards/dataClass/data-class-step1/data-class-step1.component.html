@@ -38,7 +38,7 @@
                         <div>
                             <i style="margin:0px 3px 0px 10px;" class="fas fa-copy"></i>
                             <input type="radio"
-                                   name="createType"
+                                   name="createTypecopy"
                                    [(ngModel)]="model.createType"
                                    [checked]="model.createType === 'copy'"
                                    value="copy"
@@ -46,7 +46,7 @@
                             <span style="cursor: pointer;">Copy Data Class(s) from...</span>
                             <div style="margin-left: 45px;">
                                 <mdm-model-selector-tree [onSelect]="onSelect"
-
+                                                       ngDefaultControl
                                                      [placeholder]="'Select Data Model...'"
                                                      [processing]="model.createType != 'copy'"
                                                      [doNotShowDataClasses]="true"

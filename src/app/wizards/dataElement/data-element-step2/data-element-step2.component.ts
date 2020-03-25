@@ -202,10 +202,10 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
             // Sorting/paging is making a backend call and looses the checked checkboxes
             if (
-              this.model.selectedDataTypes != null &&
-              this.model.selectedDataTypes.length > 0
+              this.model.selectedDataElements != null &&
+              this.model.selectedDataElements.length > 0
             ) {
-              this.reCheckSelectedDataTypes();
+              this.reCheckSelectedDataElements();
             }
           });
       }
@@ -280,11 +280,11 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
   }
 
-  reCheckSelectedDataTypes() {
+  reCheckSelectedDataElements() {
 
     let currentPageSelectedItemsNum = 0;
 
-    this.model.selectedDataTypes.forEach((sdt: any) => {
+    this.model.selectedDataElements.forEach((sdt: any) => {
 
       const currentId = sdt.id;
       const item = this.recordsDataElements.find(r => r.id === currentId);

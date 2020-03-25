@@ -46,10 +46,7 @@ export class DataModelMainComponent implements OnInit {
     // });
 
     this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder
-      .get(this.parentFolderId, null, null)
-      .toPromise()
-      .then(result => {
+    this.resources.folder.get(this.parentFolderId, null, null).toPromise().then(result => {
         result.domainType = 'Folder';
         this.parentFolder = result.body;
 
@@ -68,10 +65,7 @@ export class DataModelMainComponent implements OnInit {
         this.steps.push(step2);
       })
       .catch(error => {
-        this.messageHandler.showError(
-          'There was a problem loading the Folder.',
-          error
-        );
+        this.messageHandler.showError('There was a problem loading the Folder.', error);
       });
   }
 
@@ -110,23 +104,13 @@ export class DataModelMainComponent implements OnInit {
       };
     }
 
-    this.resources.dataModel
-      .post(null, null, {resource, queryStringParams})
-      .subscribe(
-        response => {
+    this.resources.dataModel.post(null, null, {resource, queryStringParams}).subscribe(response => {
           this.messageHandler.showSuccess('Data Model saved successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.stateHandler.Go(
-            'dataModel',
-            { id: response.body.id },
-            { reload: true, location: true }
-          );
+          this.stateHandler.Go('dataModel', { id: response.body.id }, { reload: true, location: true });
         },
         error => {
-          this.messageHandler.showError(
-            'There was a problem saving the Data Model.',
-            error
-          );
+          this.messageHandler.showError('There was a problem saving the Data Model.', error);
         }
       );
   }

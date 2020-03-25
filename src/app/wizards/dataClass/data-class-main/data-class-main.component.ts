@@ -132,7 +132,9 @@ export class DataClassMainComponent implements AfterViewInit {
 
       if (i === tab.selectedIndex) {
         if (step.compRef) {
-          step.compRef.instance.onLoad();
+          if (step.compRef.instance.onLoad !== undefined) {
+            step.compRef.instance.onLoad();
+          }
           step.active = true;
         }
       } else {

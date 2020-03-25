@@ -6,10 +6,10 @@
 <div style="margin-bottom: 10px">
     <span>Please select your Data Model(s):</span>
         <mdm-model-selector-tree [(ngModel)]="selectedDataModels"
-                                [onSelect]="onSelect" 
+                                [onSelect]="onSelect"
                                 [multiple]="true"
-                                [name]="selectedDataModels"
                                 ngDefaultControl
+                                name="selectedDataModels"
                                 [treeSearchDomainType]="'DataModel'"
                                 [accepts]="['DataModel']"
                                 [defaultElements]="selectedDataModels"

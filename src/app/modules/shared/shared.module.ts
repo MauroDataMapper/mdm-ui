@@ -36,7 +36,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ReactiveFormsModule,
     MatPasswordStrengthModule,
     NgxJsonViewerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -54,7 +55,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     EnumerationCompareComponent,
     NgxJsonViewerModule,
     ErrorComponent,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule
   ]
 })
 export class SharedModule {}

@@ -10,6 +10,7 @@ import { BroadcastService } from '../../services/broadcast.service';
 import { SharedService } from '../../services/shared.service';
 import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import {FavouriteHandlerService} from '../../services/handlers/favourite-handler.service';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -42,7 +43,8 @@ export class TerminologyDetailsComponent implements OnInit {
     private resources: ResourcesService,
     private exportHandler: ExportHandlerService,
     private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private favouriteHandler: FavouriteHandlerService,
   ) {}
 
   securitySection = false;
@@ -92,6 +94,7 @@ export class TerminologyDetailsComponent implements OnInit {
     };
 
     this.loadExporterList();
+    this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
   }
 
   validateLabel = data => {
@@ -199,7 +202,7 @@ export class TerminologyDetailsComponent implements OnInit {
             this.stateHandler.reload();
           }
           this.broadcastSvc.broadcast('$elementDeleted', () => {
-            this.mcTerminology, permanent;
+           // this.mcTerminology, permanent;  TODO
           });
         },
         error => {
@@ -350,8 +353,10 @@ export class TerminologyDetailsComponent implements OnInit {
     });
   };
 
-  toggleFavourite = function() {
-    this.favouriteHandler.toggle(this.mcTerminology);
+  toggleFavourite = () => {
+    if (this.favouriteHandler.toggle(this.mcTerminology)) {
+      this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
+    }
   };
 
   loadHelp = () => {

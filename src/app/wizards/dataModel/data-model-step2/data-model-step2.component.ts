@@ -19,15 +19,11 @@ export class DataModelStep2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.resources.public.get('defaultDataTypeProviders').subscribe(
-      result => {
+    this.resources.public.get('defaultDataTypeProviders').subscribe(result => {
         this.defaultDataTypeProviders = result.body;
       },
       error => {
-        this.messageHandler.showError(
-          'There was a problem loading Data Type Providers',
-          error
-        );
+        this.messageHandler.showError('There was a problem loading Data Type Providers', error);
       }
     );
   }

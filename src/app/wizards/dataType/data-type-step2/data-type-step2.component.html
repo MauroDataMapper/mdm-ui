@@ -6,7 +6,8 @@
 
 				<mdm-data-type-inline [parentScopeHandler]="parentScopeHandler"
 									  [model]="model"
-									  [parentDataModel]="model.parent.breadcrumbs"
+                    [(ngModel)] ="model"
+									  [parentDataModel]="model.parent"
 									  [showParentDataModel]="true"
 									  [showClassification]="true"
 									  (validationStatusEvent)="validationStatusEmitter($event)">

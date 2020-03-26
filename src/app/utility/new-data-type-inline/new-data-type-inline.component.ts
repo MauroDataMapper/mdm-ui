@@ -81,7 +81,7 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
     // Check if for ReferenceType, the dataClass is selected
     if (
       this.model.domainType === 'ReferenceType' &&
-      !this.model.referencedDataClass
+      (!this.model.referencedDataClass || this.model.referencedDataClass.id === '')
     ) {
       isValid = false;
     }

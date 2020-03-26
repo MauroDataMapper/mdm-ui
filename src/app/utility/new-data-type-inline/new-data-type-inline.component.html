@@ -5,7 +5,7 @@
 				<tr class="parent" *ngIf="showParentDataModel">
 					<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Data Model *</th>
 					<td>
-						<mdm-model-path [path]="parentDataModel"></mdm-model-path>
+						<mdm-model-path [path]="[parentDataModel]"></mdm-model-path>
 					</td>
 				</tr>
 				<tr>
@@ -86,8 +86,8 @@
 						</div>
 						<div *ngIf="model.domainType === 'ReferenceType'">
 							<mdm-model-selector-tree
-								(ngModelChange)="onDataClassSelect($event)"
-												 [defaultElements]="model.referencedDataClass"
+								         (ngModelChange)="onDataClassSelect($event)"
+                         [defaultElements]="model.referencedDataClass"
 												 [root]="parentDataModel"
 												 [placeholder]="'Select Data Class'"
 												 [readOnlySearchInput]="true"

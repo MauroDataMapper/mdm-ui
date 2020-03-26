@@ -84,8 +84,9 @@
                     <tr>
                         <td class="detailsRowHeade">URL</td>
                         <td *ngIf="mcTerm?.url">
-                            <inline-editor empty="" #editableText type="text" [(ngModel)]="mcTerm.url" size="20"
-                                class="dataModelDetailsLabel" style="width: 45%" name="moduleNameUrl"></inline-editor>
+<!--                            <inline-editor empty="" #editableText type="text" [(ngModel)]="mcTerm.url" size="20"-->
+<!--                                class="dataModelDetailsLabel" style="width: 45%" name="moduleNameUrl"></inline-editor>-->
+                          <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="mcTerm.url" [name]="'moduleNameUrl'" size="20"  [styleCss]="'dataModelDetailsLabel'"  ></mdm-inline-text-edit>
                         </td>
                         <td *ngIf="!mcTerm?.url"></td>
                     </tr>

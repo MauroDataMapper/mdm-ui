@@ -1,63 +1,31 @@
-<div class="form-group" *ngIf="model">
+<div *ngIf="model">
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <span>
-                How do you want to add new Data Element(s) to <span>
-                    <mdm-element-link [newWindow]="true"
-                                  [element]="model.parent"></mdm-element-link>
-                </span> ?
-            </span>
-        </div>
-        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <div class="panel panel-default" style="margin-left: 10px;cursor: pointer;" (click)="selectCreateType('new')">
-                <div class="panel-body">
-                    <div>
-                        <div>
-                            <i style="margin:0px 3px 0px 10px;" class="fas fa-plus"></i>
-                            <input type="radio"
-                                   name="createType"
-                                   [(ngModel)]="model.createType"
-                                   [checked]="model.createType === 'new'"
-                                   value="new"
-                                   style="cursor: pointer">
-                            <span style="cursor: pointer;">Create a New Data Element</span>
-                            <div style="margin-left: 45px;">You can add label, description...</div>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+            <div>
+                How do you want to add a new Data Element(s) to
+                <mdm-element-link [newWindow]="true" [element]="model.parent"></mdm-element-link>
+                 ?
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <div class="panel panel-default" style="margin-left: 10px;cursor: pointer;" (click)="selectCreateType('copy')">
-                <div class="panel-body">
-                    <div>
-                        <div>
-                            <i style="margin:0px 3px 0px 10px;" class="fas fa-copy"></i>
-                            <input type="radio"
-                                   name="createType"
-                                   [(ngModel)]="model.createType"
-                                   [checked]="model.createType === 'copy'"
-                                   value="copy"
-                                   style="cursor: pointer">
-                            <span style="cursor: pointer;">Copy Data Element(s) from...</span>
-                            <div style="margin-left: 45px;">
-                                <mdm-model-selector-tree
-                                  ngDefaultControl
-                                        [onSelect]="onSelect"
-
-                                        [placeholder]="'Select Data Class...'"
-                                        [processing]="model.createType != 'copy'"
-                                        [(ngModel)]="model.copyFromDataClass"
-                                        [treeSearchDomainType]="'DataClass'"
-                                        (ngModelChange)="model.copyFromDataClass = $event"
-                                        [accepts]="['DataClass']">
-
-                                </mdm-model-selector-tree>
-                            </div>
-                        </div>
-                    </div>
+            <div (click)="selectCreateType('new')">
+                <mat-radio-group name="createType" [(ngModel)]="model.createType">
+                    <mat-radio-button [checked]="model.createType === 'new'" value="new">Create a New Data Element</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div (click)="selectCreateType('copy')">
+                <mat-radio-group name="createType" [(ngModel)]="model.createType">
+                    <mat-radio-button [checked]="model.createType === 'copy'" value="copy">Copy Data Element(s) from...</mat-radio-button>
+                </mat-radio-group>
+                <div class="mdm--block">
+                    <mdm-model-selector-tree
+                            ngDefaultControl
+                            [onSelect]="onSelect"
+                            [placeholder]="'Select Data Class...'"
+                            [processing]="model.createType != 'copy'"
+                            [(ngModel)]="model.copyFromDataClass"
+                            [treeSearchDomainType]="'DataClass'"
+                            (ngModelChange)="model.copyFromDataClass = $event"
+                            [accepts]="['DataClass']">
+                    </mdm-model-selector-tree>
                 </div>
             </div>
         </div>

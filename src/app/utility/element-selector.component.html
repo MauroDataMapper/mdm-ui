@@ -104,16 +104,19 @@
                 Please select a Folder:
             </div>
 
-            <div class="treeDropDown">
-                <div style="width: 100%; height: 300px;overflow-y: auto;">
-                    <mdm-folders-tree
-                        [doNotMakeSelectedBold]="true"
-                        [justShowFolders]="true"
-                        [doNotShowDataClasses]="true"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                        [node]="rootNode"></mdm-folders-tree>
-                </div>
+                <div class="treeDropDown">
+                        <mdm-folders-tree
+                            [doNotMakeSelectedBold]="true"
+                            [justShowFolders]="true"
+                            [doNotShowDataClasses]="true"
+                            [expandOnNodeClickFor]="['Folder']"
+                            (nodeClickEvent)="onNodeInTreeSelect($event)"
+                            [node]="rootNode"></mdm-folders-tree>
+                <div style="margin-top: 10px;" *ngIf="showPrevBtn">
+                    <button class="btn btn-default btn-xs modelSelectorDialogueBtn" (click)="previousStep()">&lt; Previous</button>
             </div>
+                </div>
+           
             <div style="margin-top: 10px;" *ngIf="showPrevBtn">
                 <button mat-stroked-button (click)="previousStep()"><i class="fas fa-chevron-left"></i> Previous step</button>
             </div>

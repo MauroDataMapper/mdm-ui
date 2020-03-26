@@ -86,9 +86,9 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     let children = [];
-    if (this.justShowFolders) {
+    if (this.justShowFolders && node.children) {
       children = node.children.filter(c => c.domainType === DOMAIN_TYPE.Folder);
-    } else if (this.doNotShowDataClasses) {
+    } else if (this.doNotShowDataClasses && node.children) {
       children = node.children.filter(c => c.domainType !== DOMAIN_TYPE.DataClass);
     } else {
       children = node.children;
@@ -152,11 +152,15 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Get whether the node has children or not. Tree branch control. */
   hasChild(index: number, node: FlatNode) {
-    if (node.domainType === DOMAIN_TYPE.DataModel && this.doNotShowDataClasses) {
+    if (node?.domainType === DOMAIN_TYPE.DataModel && this.doNotShowDataClasses) {
       return false;
     }
 
-    return node?.hasChildren || node?.hasChildFolders;
+    if (this.expandOnNodeClickFor && !this.expandOnNodeClickFor?.includes(node?.domainType)) {
+      return false;
+    }
+
+    return node?.hasChildFolders || node?.hasChildren;
   }
 
   /** Determine which tree node icon to use based on given node's domain type */
@@ -219,9 +223,9 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         const fnode = this.treeControl.dataNodes.find(dn => this.treeControl.getLevel(dn) === j && dn.id === path[j]);
 
         // Load children if they are not available
-        if (fnode?.hasChildren && !fnode?.children) {
+        if (this.hasChild(-1, fnode) && !fnode?.children) {
           const data = await this.expand(fnode.node);
-          fnode.children = data.body;
+          fnode.children = data;
 
           // Manually construct the FlatNodes and insert into the tree's dataNodes array
           const newNodes = fnode.children.map((c: any) => {
@@ -288,7 +292,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
     if (!this.inSearchMode && !flatNode.children) {
       const data = await this.expand(flatNode.node);
-      flatNode.children = data.body;
+      flatNode.children = data;
     }
 
     this.refreshTree();
@@ -309,17 +313,21 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       switch (node.domainType) {
         case DOMAIN_TYPE.Folder:
           if (this.justShowFolders) {
-            return await this.resources.tree.get(node.id, null, { foldersOnly: true }).toPromise();
+            const folderResponse = await this.resources.folder.get(node.id, 'folders', {}).toPromise();
+            return folderResponse.body.items;
           } else {
             return node.children;
           }
         case DOMAIN_TYPE.DataModel:
         case DOMAIN_TYPE.DataClass:
-          return await this.resources.tree.get(node.id).toPromise();
+          const response = await this.resources.tree.get(node.id).toPromise();
+          return response.body;
         case DOMAIN_TYPE.Terminology:
-          return await this.resources.terminology.get(node.id, 'tree').toPromise();
+          const terminologyResponse = await this.resources.terminology.get(node.id, 'tree').toPromise();
+          return terminologyResponse.body;
         case DOMAIN_TYPE.Term:
-          return await this.resources.term.get(node.terminology, node.id, 'tree').toPromise();
+          const termResponse = await this.resources.term.get(node.terminology, node.id, 'tree').toPromise();
+          return termResponse.body;
         default:
           return [];
       }

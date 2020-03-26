@@ -11,15 +11,18 @@
 				<tr>
 					<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
 					<td>
-						<input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label"
-							   required="required">
+						<mat-form-field appearance="outline">
+							<input matInput name="label" [(ngModel)]="model.label" required>
+						</mat-form-field>
 					</td>
+
 				</tr>
 				<tr>
 					<th class="detailsRowHeader col-md-2">Description</th>
 					<td>
-						<textarea type="text" class="form-control" id="description" name="description"
-								  [(ngModel)]="model.description"></textarea>
+						<mat-form-field appearance="outline">
+							<textarea matInput name="description" [(ngModel)]="model.description"></textarea>
+						</mat-form-field>
 					</td>
 				</tr>
 				<tr *ngIf="showClassification">
@@ -32,13 +35,13 @@
 				<tr class="type" style="border-top: 0px;">
 					<th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Type *</th>
 					<td>
-						<select class="form-control  wizardInput mcSelect"
-								id="dataModelType" name="dataModelType"
-								[(ngModel)]="model.domainType"
-								required="required"
-								(ngModelChange)="onTypeSelect()" >
-							<option [value]="dt.id" *ngFor="let dt of allDataTypes" [selected]="dt">{{dt.displayLabel}}</option>
-						</select>
+						<div class="mdm--form-input">
+							<mat-form-field appearance="outline">
+								<mat-select name="dataModelType" [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
+									<mat-option [value]="dt.id" *ngFor="let dt of allDataTypes" [selected]="dt">{{dt.displayLabel}}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
 					</td>
 				</tr>
 				<tr class="type" *ngIf="model.domainType != 'PrimitiveType'">

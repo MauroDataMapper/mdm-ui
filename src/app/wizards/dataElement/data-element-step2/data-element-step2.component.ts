@@ -373,6 +373,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   validate = (newValue?) => {
 
     let invalid = false;
+    this.step.invalid = false;
     if (newValue && this.model.createType === 'new') {
       // check Min/Max
       this.multiplicityError = this.validator.validateMultiplicities(newValue.minMultiplicity, newValue.maxMultiplicity);

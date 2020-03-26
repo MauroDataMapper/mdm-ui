@@ -111,7 +111,7 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-    const resource = {
+      const resource = {
       label: this.model.label,
       description: this.model.description,
       organisation: this.model.organisation,
@@ -152,19 +152,19 @@ export class DataTypeMainComponent implements OnInit {
       })
     };
 
-    const deferred = this.resources.dataModel.post(
+      const deferred = this.resources.dataModel.post(
       this.model.parent.id,
       'dataTypes',
       { resource }
     );
 
-    deferred.subscribe(
+      deferred.subscribe(
       response => {
         this.messageHandler.showSuccess('Data Type saved successfully.');
 
         this.stateHandler.Go(
           'DataType',
-          { dataModelId: response.dataModel, id: response.id },
+          { dataModelId: response.body.dataModel, id: response.body.id },
           { reload: true, location: true }
         );
       },

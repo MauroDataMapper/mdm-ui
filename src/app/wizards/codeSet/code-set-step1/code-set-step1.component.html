@@ -1,66 +1,40 @@
-<div class="form-group">
-    <form #myForm="ngForm" ngNativeValidate>
-        <span>Please enter Code Set details:</span>
+<form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
+    
+    <div class="mdm--block">
+        <strong>Selected folder: </strong>
+        <mdm-element-link [showTypeTitle] = "true" [newWindow]="true" [element]="model.parentFolder"></mdm-element-link>
+    </div>
+    
+    <span>Please enter the Code Set details:</span>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Label</mat-label>
+            <input matInput type="text" class="wizardInput" [(ngModel)]="model.label" name="label" required>
+        </mat-form-field>
+    </div>
 
-        <table class="table table-bordered dataModelDetailTable" ngModelGroup="model">
-            <tbody>
-            <tr>
-                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Folder *</th>
-                <td>
-                    <mdm-element-link
-                            [showTypeTitle] = "true"
-                            [newWindow]="true"
-                            [element]="model.parentFolder"></mdm-element-link>
-                </td>
-            </tr>
-            <tr>
-                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
-                <td>
-                    <input type="text" class="form-control wizardInput" id="label" [(ngModel)]="model.label" name="label"
-                           required="required">
-                </td>
-            </tr>
-            <tr>
-                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Author *</th>
-                <td>
-                    <input type="text" class="form-control wizardInput" id="author" [(ngModel)]="model.author" name="author"
-                           required="required">
-                </td>
-            </tr>
-            <tr>
-                <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation *</th>
-                <td>
-                    <input type="text" class="form-control wizardInput" id="organisation" [(ngModel)]="model.organisation" name="organisation"
-                           required="required">
-                </td>
-            </tr>
-            <tr>
-                <th class="detailsRowHeader col-md-2">Description</th>
-                <td>
-                    <textarea type="text" class="form-control" id="description" name="description" [(ngModel)]="model.description"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
-                <td>
-                    <mdm-element-classifications
-                            name="classifiers"
-                            (classificationsChanged)="model.classifiers = $event"
-                            [editableForm]="{visible :true}"></mdm-element-classifications>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Author</mat-label>
+            <input matInput type="text" class="wizardInput" [(ngModel)]="model.author" name="author" required>
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Organisation</mat-label>
+            <input matInput type="text" class="wizardInput" [(ngModel)]="model.organisation" name="organisation" required>
+        </mat-form-field>
+    </div>
 
-        <span style="margin-top: 20px;">Please add Term(s):</span><span style="font-style: italic; font-size: 12px;margin-left: 3px;">Code Set should have at least one Term *</span>
-
-        <!--        <multiple-terms-selector on-selected-terms-change="onSelectedTermsChange" hide-add-button="true"></multiple-terms-selector>-->
-<mdm-multiple-terms-selector  (selectedTermsChange)="model.terms = $event"></mdm-multiple-terms-selector>
-<!--        <div style="margin-top: 10px;">-->
-<!--            <button type="submit" ng-click="save()" class="btn btn-success" [disabled]="detailForm.$invalid || savingInProgress || model.terms.length === 0">Save</button>-->
-<!--            <button type="reset"  ng-click="cancelWizard()"         class="btn btn-default" ng-disabled="importingInProgress" >Cancel</button>-->
-<!--        </div>-->
-    </form>
-</div>
-
-
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
+        </mat-form-field>
+    </div>
+    <mdm-element-classifications name="classifiers" 
+                                 (classificationsChanged)="model.classifiers = $event" 
+                                 [editableForm]="{visible :true}"
+                                 class="mdm--block"></mdm-element-classifications>
+    <mdm-multiple-terms-selector (selectedTermsChange)="model.terms = $event"></mdm-multiple-terms-selector>
+</form>

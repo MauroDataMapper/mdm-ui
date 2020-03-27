@@ -1,32 +1,26 @@
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <mat-horizontal-stepper #stepper>
-            <mat-step *ngFor="let stp of steps; let i = index">
-                <ng-template matStepLabel>{{stp.title}}</ng-template>
-                <mdm-dcl-wrapper [type]="stp.component" [step]="steps[i]"></mdm-dcl-wrapper>
-                <div class="row">
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        <button class="btn btn-default btn-sm" style="margin-right: 5px" matStepperPrevious>
-                            <i class="fas fa-chevron-left"></i>
-                             Previous
-                        </button>
-                        <button class="btn btn-default btn-sm" (click)="cancelWizard()">
-                            Cancel
-                        </button>
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
-                        <strong>{{(i+1)}} / {{steps.length}}</strong>
-                    </div>
-
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
-                        <button class="btn btn-default btn-sm" *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="stp.invalid">
-                            Next
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                        <button class="btn btn-success btn-sm" *ngIf="(i+1) === steps.length" (click)="save()">Submit</button>
-                    </div>
+<mat-vertical-stepper #stepper>
+    <mat-step *ngFor="let stp of steps; let i = index">
+        <ng-template matStepLabel>{{stp.title}}</ng-template>
+        <mdm-dcl-wrapper [type]="stp.component" [step]="steps[i]"></mdm-dcl-wrapper>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div *ngIf="i !== 0">
+                    <button mat-stroked-button color="primary" class="custom" matStepperPrevious>
+                        <i class="fas fa-chevron-left"></i>
+                        Previous step
+                    </button>
+                    <button mat-button color="warn" (click)="cancelWizard()">
+                        Cancel
+                    </button>
                 </div>
-            </mat-step>
-        </mat-horizontal-stepper>
-    </div>
-</div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align: right">
+                <button mat-stroked-button color="primary" class="custom" *ngIf="(i+1) !== steps.length" matStepperNext>
+                    Next step
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button mat-flat-button color="primary" class="custom" *ngIf="(i+1) === steps.length" (click)="save()">Submit Data Model</button>
+            </div>
+        </div>
+    </mat-step>
+</mat-vertical-stepper>

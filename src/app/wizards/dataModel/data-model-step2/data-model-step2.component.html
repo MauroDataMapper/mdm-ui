@@ -1,27 +1,25 @@
-<div class="form-group">
-    <div style="margin: 10px 0px;">
-        <span>Default Data Types (optional):</span>
-        <br>You can add default Data Types for this Data Model.
-        <br>Please select one of the Data Type categories that you expect to have all its Data Types in this Data Model:
-    </div>
+<div class="mdm--block">
+    <p>
+        You can add a default Data Types for this Data Model.
+        <br>Select one of the Data Type categories that you expect to have all its Data Types in this Data Model:
+    </p>
+</div>
 
-    <div class="row" style="margin-bottom: 10px;">
-        <div class="col-lg-6 col-md-6 col-xs-10 col-sm-10">
-            <mdm-select [width]="'100%'"
-                       [multiSelect]="false"
-                       [acceptTypedInput]="false"
-                       [valueType]="'static'"
-                       [staticValues]="defaultDataTypeProviders"
-                       [idProperty]="'name'"
-                       [displayProperty]="'displayName'"
-                       [searchProperty]="'displayName'"
-                       (selectEvent)="onSelectDataTypeProvider($event)">
-                <ng-template #lineContent let-item>
-                    <div>{{item.displayName}} <span style="font-style: italic;font-size: 10px;">{{item.version}}</span></div>
-                </ng-template>
-            </mdm-select>
-        </div>
-    </div>
+<div class="mdm--block">
+    <mdm-select [width]="'100%'"
+                [multiSelect]="false"
+                [acceptTypedInput]="false"
+                [valueType]="'static'"
+                [staticValues]="defaultDataTypeProviders"
+                [idProperty]="'name'"
+                [displayProperty]="'displayName'"
+                [searchProperty]="'displayName'"
+                (selectEvent)="onSelectDataTypeProvider($event)">
+        <ng-template #lineContent let-item>
+        <div>{{item.displayName}} <span style="font-style: italic;font-size: 10px;">{{item.version}}</span></div>
+        </ng-template>
+    </mdm-select>
+</div>
 
 
     <div class="row" style="margin-bottom: 10px;" *ngIf="dataTypes">

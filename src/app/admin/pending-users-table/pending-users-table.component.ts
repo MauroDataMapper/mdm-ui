@@ -75,9 +75,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       sortType
     };
 
-    this.resourcesService.catalogueUser
-      .get(null, 'pending', options)
-      .subscribe(resp => {
+    this.resourcesService.catalogueUser.get(null, 'pending', options).subscribe(resp => {
         this.records = resp.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();

@@ -81,14 +81,14 @@ export class DataElementMainComponent implements OnInit {
     }
     this.model.parentDataModel.id = this.parentDataModelId;
     const step1 = new Step();
-    step1.title = 'How to create';
+    step1.title = 'Data Element Import Method';
     step1.component = DataElementStep1Component;
     step1.scope = this;
     step1.hasForm = true;
     step1.invalid = true;
 
     const step2 = new Step();
-    step2.title = 'Element Details';
+    step2.title = 'Data Element Details';
     step2.component = DataElementStep2Component;
     step2.scope = this;
     step2.invalid = true;

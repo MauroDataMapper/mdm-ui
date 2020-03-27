@@ -98,6 +98,7 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 
+tr td, tr th,
 tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
   padding: 0.75em;
   border-bottom: .07rem dashed #ebedf2;
@@ -106,4 +107,68 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
 
 .input-group > .custom-select:not(:last-child), .input-group > .form-control:not(:last-child) {
   border-radius: 5px;
+}
+
+
+/* Breadcrumbs */
+
+.breadcrumbSimple {
+  padding: 2px 2px;
+  margin-bottom: 2px;
+  list-style: none;
+  font-size: 12px;
+  font-style: italic;
+}
+.breadcrumbSimple > li {
+  display: inline-block;
+}
+.breadcrumbSimple > li + li:before {
+  padding: 0px 1px 0px 1px;
+  color: #ccc;
+  content: "/";
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.breadcrumbSimple > .active {
+  color: #777;
+}
+
+.breadcrumbClassification.emptyBackground {
+  background-color: transparent !important;
+}
+
+.breadcrumbClassification {
+  margin-right: 8px;
+  padding: 2px 8px;
+  margin-bottom: 2px;
+  list-style: none;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  display: inline-block;
+
+  > li {
+    display: inline-block;
+
+    .breadcrumbRemoveButton {
+      &:before {
+        content: none;
+      }
+
+      padding-left: 3px;
+      color: #c62828;
+    }
+  }
+}
+.breadcrumbClassification > li {
+	display: inline-block;
+}
+.breadcrumbClassification > li + li:before {
+  padding: 0px 0px 0px 3px;
+  color: #000;
+  content: "/";
+}
+
+.breadcrumbClassification > li.breadcrumbRemoveButton:before {
+  content: none;
 }

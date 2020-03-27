@@ -1,27 +1,27 @@
-<form #myForm="ngForm" ngNativeValidate class="mdm--form">
+<form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
     <div class="mdm--block">
         <strong>Selected folder: </strong>
         <mdm-element-link [showTypeTitle]="false" [newWindow]="true" [element]="step.scope.parentFolder"></mdm-element-link>
     </div>
     
-    <span>Please enter the Data Model details:<i class="fas fa-info-circle helpIcon" style="margin: 5px;" (click)="loadHelp()" matTooltipPosition="left" matTooltip="Help"></i></span>
+    <span>Please enter the Data Model details: <i class="fas fa-info-circle helpIcon" style="margin: 5px;" (click)="loadHelp()" matTooltipPosition="left" matTooltip="Help"></i></span>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Label</mat-label>
-            <input matInput type="text" class="wizardInput" name="label" [(ngModel)]="model.label" required>
+            <input matInput type="text" name="label" [(ngModel)]="model.label" required>
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Author</mat-label>
-            <input matInput type="text" class="wizardInput" name="author" [(ngModel)]="model.author" required>
+            <input matInput type="text" name="author" [(ngModel)]="model.author" required>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Organisation</mat-label>
-            <input matInput type="text" class="wizardInput" name="organisation" [(ngModel)]="model.organisation" required>
+            <input matInput type="text" name="organisation" [(ngModel)]="model.organisation" required>
         </mat-form-field>
     </div>
 
@@ -35,19 +35,17 @@
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Select a Data Model Type</mat-label>
-            <mat-select class="wizardInput" name="dataModelType" [(ngModel)]="model.dataModelType" required="DataModel Type can not be Empty">
+            <mat-select name="dataModelType" [(ngModel)]="model.dataModelType" required="DataModel Type can not be Empty">
                 <mat-option *ngFor="let option of allDataModelTypes" [value]="option">{{option}}</mat-option>
             </mat-select>
         </mat-form-field>
     </div>
     
-
     <div class="mdm--form-input" *ngIf="model.dataModelType == 'Database'">
         <mat-form-field appearance="outline">
             <mat-label>Database Dialect</mat-label>
-            <input matInput type="text" class="wizardInput" name="databaseDialect" [(ngModel)]="model.dialect" required>
+            <input matInput type="text" name="databaseDialect" [(ngModel)]="model.dialect" required>
         </mat-form-field>
     </div>
-
     <mdm-element-classifications name="classifiers"  (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>   
 </form>

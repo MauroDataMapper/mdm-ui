@@ -1,64 +1,22 @@
-<div class="form-group">
-	<div class="row">
-		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<span>
-				How do you want to add new Data Type(s) to <span>
-					<mdm-element-link [parentDataModel]="{id:model.parent}"
-					              [newWindow]="true"
-					              [element]="model.parent"></mdm-element-link>
-				</span> ? <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
-			</span>
-		</div>
-		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-			<div class="panel panel-default" style="margin-left: 10px;cursor: pointer;" (click)="selectCreateType('new')">
-				<div class="panel-body">
-					<div>
-						<div>
-							<i style="margin:0px 3px 0px 10px;" class="fas fa-plus"></i>
-							<input type="radio"
-								   name="createType"
-								   [(ngModel)]="model.createType"
-								   [checked]="model.createType === 'new'"
-								   value="new"
-								   style="cursor: pointer">
-							<span style="cursor: pointer;">Create a New Data Type</span>
-							<div style="margin-left: 45px;">You can add label, description, type...</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-			<div class="panel panel-default" style="margin-left: 10px;cursor: pointer;" (click)="selectCreateType('copy')">
-				<div class="panel-body">
-					<div>
-						<div style="cursor: pointer;">
-							<i style="margin:0px 3px 0px 10px;" class="fas fa-copy"></i>
-							<input type="radio"
-								   name="createType"
-								   [(ngModel)]="model.createType"
-								   [checked]="model.createType === 'copy'"
-								   value="copy"
-								   style="cursor: pointer">
-							<span style="cursor: pointer;">Copy Data Type(s) from...</span>
-							<div style="margin-left: 45px;">
-								<mdm-model-selector-tree [onSelect]="onSelect"
-													ngDefaultControl
-													 [placeholder]="'Select Data Model...'"
-													 [processing]="model.createType != 'copy'"
-													 [doNotShowDataClasses]="true"
-													 [ngModel]="model.copyFromDataModel"
-													 [treeSearchDomainType]="'DataModel'"
-													 (ngModelChange)="model.copyFromDataModel = $event"
-													 [accepts]="['DataModel']">
-								</mdm-model-selector-tree>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<div *ngIf="model" class="mdm--block">
+	<span>How do you want to add a new Data Type(s) to </span>
+	<mdm-element-link [parentDataModel]="{id:model.parent}" [newWindow]="true" [element]="model.parent"></mdm-element-link>
+	<span>? <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i></span>
+	<mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('new')">
+		<mat-radio-button [checked]="model.createType === 'new'" value="new">Create a New Data Type</mat-radio-button>
+	</mat-radio-group>
+	<mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('copy')">
+		<mat-radio-button [checked]="model.createType === 'copy'" value="copy">Copy Data Type(s) from...</mat-radio-button>
+	</mat-radio-group>
+
+	<mdm-model-selector-tree [onSelect]="onSelect"
+		ngDefaultControl
+		[placeholder]="'Select Data Model...'"
+		[processing]="model.createType != 'copy'"
+		[doNotShowDataClasses]="true"
+		[ngModel]="model.copyFromDataModel"
+		[treeSearchDomainType]="'DataModel'"
+		(ngModelChange)="model.copyFromDataModel = $event"
+		[accepts]="['DataModel']">
+	</mdm-model-selector-tree>
 </div>

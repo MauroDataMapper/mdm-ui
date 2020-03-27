@@ -57,7 +57,7 @@ export class DataModelMainComponent implements OnInit {
         step1.hasForm = true;
 
         const step2 = new Step();
-        step2.title = 'Default Data Types';
+        step2.title = 'Default Data Types (optional)';
         step2.component = DataModelStep2Component;
         step2.scope = this;
 

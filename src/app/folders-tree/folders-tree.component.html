@@ -1,12 +1,12 @@
 <mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="20">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
         <button mat-icon-button disabled></button>
 
         <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
         <ng-container *ngTemplateOutlet="nodeContentTemplate; context:{$implicit: node}"></ng-container>
     </mat-tree-node>
 
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20" (contextmenu)="noop($event)">
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25" (contextmenu)="noop($event)">
         <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
         <ng-container *ngIf="!hasChild(-1,node)">
             <button mat-icon-button disabled></button>

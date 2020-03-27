@@ -1,95 +1,93 @@
 <div *ngIf="model">
   <div *ngIf="model.createType == 'new'">
-    <div style="margin-top: 8px;">
-      <form #myForm="ngForm" ngNativeValidate class="mdm--form">
-        <div>Parent Data Class:</div>
-        <mdm-model-path [path]="model.parent.breadcrumbs" class="mdm--block"></mdm-model-path>
-        <div class="mdm--form-input">
-          <mat-form-field appearance="outline">
-            <mat-label>Label</mat-label>
-            <input matInput type="text" [(ngModel)]="model.label" name="label" required>
-          </mat-form-field>
-        </div>
+    <form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
+      <div>Parent Data Class:</div>
+      <mdm-model-path [path]="model.parent.breadcrumbs" class="mdm--block"></mdm-model-path>
+      <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+          <mat-label>Label</mat-label>
+          <input matInput type="text" [(ngModel)]="model.label" name="label" required>
+        </mat-form-field>
+      </div>
 
-        <div class="mdm--form-input">
-          <mat-form-field appearance="outline">
-            <mat-label>Description</mat-label>
-            <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
-          </mat-form-field>
-        </div>
+      <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
+        </mat-form-field>
+      </div>
 
-        <div class="mdm--form-input">
-          <label>Multiplicity</label>
-          <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
-          <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
-            <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-              <mat-form-field appearance="outline">
-                <mat-label>Min</mat-label>
-                <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
-              </mat-form-field>
-            </div>
-            <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-              <mat-form-field appearance="outline" class="paddingless">
-                <mat-label>Max</mat-label>
-                <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
-              </mat-form-field>
-            </div>
+      <div class="mdm--form-input">
+        <label>Multiplicity</label>
+        <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
+        <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
+          <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+            <mat-form-field appearance="outline">
+              <mat-label>Min</mat-label>
+              <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
+            </mat-form-field>
+          </div>
+          <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+            <mat-form-field appearance="outline" class="paddingless">
+              <mat-label>Max</mat-label>
+              <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
+            </mat-form-field>
           </div>
         </div>
+      </div>
 
-        <div class="error text-danger">
-          <span *ngIf="multiplicityError">{{multiplicityError}}</span>
-        </div>
+      <div class="error text-danger">
+        <span *ngIf="multiplicityError">{{multiplicityError}}</span>
+      </div>
 
-        <label>Data Type *</label>
-        <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
-          <mdm-element-data-type [elementDataType]="model.dataType" [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
-        </div>
+      <label>Data Type *</label>
+      <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
+        <mdm-element-data-type [elementDataType]="model.dataType" [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
+      </div>
 
-        <div *ngIf="model.allDataTypesCount === 0">
-          <label>
-            No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.
-            <br>Please enter Data Type details:
-          </label>
-        </div>
+      <div *ngIf="model.allDataTypesCount === 0">
+        <label>
+          No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.
+          <br>Please enter Data Type details:
+        </label>
+      </div>
 
-        <div *ngIf="model.allDataTypesCount != 0" class="mdm--block">
-          <div *ngIf="!model.showNewInlineDataType">
-            Please select a Data Type or
-            <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new one</button>
-          </div>
-          <div *ngIf="model.showNewInlineDataType">
-            Please
-            <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
-            or Add a new one:</div>
+      <div *ngIf="model.allDataTypesCount != 0" class="mdm--block">
+        <div *ngIf="!model.showNewInlineDataType">
+          Please select a Data Type or
+          <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new one</button>
         </div>
+        <div *ngIf="model.showNewInlineDataType">
+          Please
+          <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
+          or Add a new one:</div>
+      </div>
 
-        <div *ngIf="model.showNewInlineDataType" class="mdm--block">
-          <mdm-data-type-inline [parentScopeHandler]="parentScopeHandler" [model]="model.newlyAddedDataType"
-            [parentDataModel]="model.parentDataModel" [showParentDataModel]="false"
-            (validationStatusEvent)="validationStatusEmitter($event)">
-          </mdm-data-type-inline>
+      <div *ngIf="model.showNewInlineDataType" class="mdm--block">
+        <mdm-data-type-inline [parentScopeHandler]="parentScopeHandler" [model]="model.newlyAddedDataType"
+          [parentDataModel]="model.parentDataModel" [showParentDataModel]="false"
+          (validationStatusEvent)="validationStatusEmitter($event)">
+        </mdm-data-type-inline>
+      </div>
+      <div *ngIf="!model.showNewInlineDataType" class="mdm--block">
+        <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
+          <mdm-select [width]="'100%'" [acceptTypedInput]="false" [valueType]="'dynamic'"
+            [defaultValue]="model.dataType" [loadDynamicValues]="fetchDataTypes" [minInputLength]="1"
+            [idProperty]="'id'" [displayProperty]="'label'" [searchProperty]="'label'" [loadAllOnClick]="true"
+            [pagination]="pagination" (selectEvent)="onTargetSelect($event[0])">
+            <ng-template #lineContent let-item='item' let-searchTerm="inputText">
+              <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
+              <div>
+                <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
+              </div>
+            </ng-template>
+          </mdm-select>
         </div>
-        <div *ngIf="!model.showNewInlineDataType" class="mdm--block">
-          <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
-            <mdm-select [width]="'100%'" [acceptTypedInput]="false" [valueType]="'dynamic'"
-              [defaultValue]="model.dataType" [loadDynamicValues]="fetchDataTypes" [minInputLength]="1"
-              [idProperty]="'id'" [displayProperty]="'label'" [searchProperty]="'label'" [loadAllOnClick]="true"
-              [pagination]="pagination" (selectEvent)="onTargetSelect($event[0])">
-              <ng-template #lineContent let-item='item' let-searchTerm="inputText">
-                <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
-                <div>
-                  <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
-                </div>
-              </ng-template>
-            </mdm-select>
-          </div>
-        </div>
+      </div>
 
-        <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event"
-          [editableForm]="{visible :true}"></mdm-element-classifications>
-      </form>
-    </div>
+      <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event"
+        [editableForm]="{visible :true}"></mdm-element-classifications>
+    </form>
   </div>
   <div *ngIf="model.createType == 'copy'" class="row" style="margin-bottom:20px;">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

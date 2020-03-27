@@ -247,7 +247,7 @@ a.moreLink:visited {
 .modelPathSimple {
   font-size: 11px;
   text-decoration: none;
-  color: #707070 !important;
+  color: #333;
 }
 
 .classificationIcon {
@@ -360,24 +360,7 @@ a.moreLink:visited {
   cursor: pointer;
 }
 
-.breadcrumbSimple {
-  padding: 2px 2px;
-  margin-bottom: 2px;
-  list-style: none;
-  font-size: 12px;
-  font-style: italic;
-}
-.breadcrumbSimple > li {
-  display: inline-block;
-}
-.breadcrumbSimple > li + li:before {
-  padding: 0px 1px 0px 1px;
-  color: #ccc;
-  content: "/";
-}
-.breadcrumbSimple > .active {
-  color: #777;
-}
+
 
 ul.changeTrackList {
   list-style: none;
@@ -401,45 +384,7 @@ ul.changeTrackList > li:hover {
   color: #4cae4c !important;
 }
 
-.breadcrumbClassification.emptyBackground {
-  background-color: transparent !important;
-}
 
-.breadcrumbClassification {
-  margin-right: 8px;
-  padding: 2px 8px;
-  margin-bottom: 2px;
-  list-style: none;
-  font-size: 12px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-  display: inline-block;
-
-  > li {
-    display: inline-block;
-
-    .breadcrumbRemoveButton {
-      &:before {
-        content: none;
-      }
-
-      padding-left: 3px;
-      color: #c62828;
-    }
-  }
-}
-// .breadcrumbClassification > li {
-// 	display: inline-block;
-// }
-.breadcrumbClassification > li + li:before {
-  padding: 0px 0px 0px 3px;
-  color: #000;
-  content: "/";
-}
-
-// .breadcrumbClassification > li.breadcrumbRemoveButton:before {
-//   content: none;
-// }
 
 [ng\:cloak],
 [ng-cloak],

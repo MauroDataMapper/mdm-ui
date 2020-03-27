@@ -1,26 +1,19 @@
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <mat-vertical-stepper #stepper>
-            <mat-step *ngFor="let stp of steps; let i = index">
-                <ng-template matStepLabel>{{stp.title}}</ng-template>
-                <mdm-dcl-wrapper [type]="stp.component" [step]="steps[i]"></mdm-dcl-wrapper>
-                <div class="row">
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-
-                    </div>
-
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
-                        <button mat-button color="warn" class="custom" style="margin-right: 8px;" (click)="cancelWizard()">
-                            Cancel
-                        </button>
-                        <button mat-flat-button color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="stp.invalid || savingInProgress || model.terms.length == 0" (click)="save()">Submit Code Set</button>
-                        <span *ngIf="stp.isProcessComplete">  
-                            <button mat-stroked-button color="warn" class="custom" (click)="cancelWizard()">Cancel</button>
-                        </span>
-                    </div>
-
-                </div>
-            </mat-step>
-        </mat-vertical-stepper>
-    </div>
-</div>
+<mat-vertical-stepper #stepper>
+    <mat-step *ngFor="let stp of steps; let i = index">
+        <ng-template matStepLabel>{{stp.title}}</ng-template>
+        <mdm-dcl-wrapper [type]="stp.component" [step]="steps[i]"></mdm-dcl-wrapper>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <button mat-button color="warn" class="custom" (click)="cancelWizard()">
+                    Cancel
+                </button>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align: right">
+                <button mat-flat-button color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="stp.invalid || savingInProgress || model.terms.length == 0" (click)="save()">Submit Code Set</button>
+                <span *ngIf="stp.isProcessComplete">  
+                    <button mat-button color="warn" class="primary" (click)="cancelWizard()">Close</button>
+                </span>
+            </div>
+        </div>
+    </mat-step>
+</mat-vertical-stepper>

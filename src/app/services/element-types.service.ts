@@ -295,16 +295,10 @@ export class ElementTypesService {
     }
 
     getBaseWithUserTypes() {
-        const array = [];
-        const baseTypes = this.getType('baseTypes');
-        for (const type of this.baseTypes) {
-            array.push(this.baseTypes[type]);
-        }
-
-        const userTypes = this.getType('userTypes');
-        for (const type of this.userTypes) {
-            array.push(this.userTypes[type]);
-        }
+        const array = [
+          ...Object.keys(this.baseTypes).map(p => this.baseTypes[p]),
+          ...Object.keys(this.userTypes).map(p => this.userTypes[p])
+        ];
         return array;
     }
 

@@ -9,56 +9,45 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } 
 import { BasicDiagramService } from '../services/basic-diagram.service';
 import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DiagramComponent } from '../diagram/diagram.component';
-import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component';
+import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
 
 @Component({
-  selector: 'mdm-diagram-tab',
-  templateUrl: './diagram-tab.component.html'
+  selector: 'mdm-diagram-popup',
+  templateUrl: './diagram-popup.component.html'
 })
 
-export class DiagramTabComponent implements OnInit {
-
-  @Input() mode: string;
-  @Input() parent: string;
+export class DiagramPopupComponent implements OnInit {
 
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
+  @ViewChild(DiagramToolbarComponent) toolbarComponent: DiagramToolbarComponent;
 
   constructor(protected resourcesService: ResourcesService,
               protected messageHandler: MessageHandlerService,
-              protected matDialog: MatDialog) {
-    // super(resourcesService, messageHandler, matDialog);
+              protected matDialog: MatDialog,
+              protected dialogRef: MatDialogRef<DiagramPopupComponent>,
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
+
   }
 
   ngOnInit(): void {
-
   }
 
-  popUp(): void {
-    // console.log('Popping up...');
-    const dialogRef = this.matDialog.open(DiagramPopupComponent, {
-      width: '100%',
-      height: '100%',
-      data: {
-        diagramComponent: this.diagramComponent
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
-      this.diagramComponent.diagramComponent = result.diagramComponent;
-      this.diagramComponent.diagramService = result.diagramComponent.diagramService;
-      this.diagramComponent.resetPaper();
-    });
+  popDown(): void {
+    this.dialogRef.close({ diagramComponent: this.diagramComponent});
   }
 
   toolbarClick(buttonName: string) {
     switch (buttonName) {
-      case 'popUp':
-        this.popUp();
+      case 'popDown':
+        this.popDown();
         break;
       default:
         this.diagramComponent.toolbarClick(buttonName);
     }
   }
+
+
+
 
 }
 

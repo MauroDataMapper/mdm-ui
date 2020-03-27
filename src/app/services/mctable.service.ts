@@ -2,9 +2,9 @@ import {Injectable, PipeTransform} from '@angular/core';
 import {BehaviorSubject, Observable, of, pipe, Subject} from 'rxjs';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
-import {SortDirection} from '../directives/sortable.directive';
 import {ResourcesService} from './resources.service';
 
+export type SortDirection = 'asc' | 'desc' | '';
 
 interface SearchResult {
   countries: [];

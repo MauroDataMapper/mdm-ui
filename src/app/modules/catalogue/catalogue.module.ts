@@ -14,7 +14,6 @@ import { AdvancedSearchBarComponent } from 'src/app/search/advanced-search-bar/a
 import { ShareWithComponent } from 'src/app/access/share-with/share-with.component';
 import { DataModelsExportComponent } from 'src/app/data-models-export/data-models-export.component';
 import { UserAccessNewComponent } from 'src/app/access/user-access-new.component';
-import { DiagramTabComponent } from 'src/app/diagram/diagram-tab/diagram-tab.component';
 import { GroupAccessNewComponent } from 'src/app/access/group-access-new.component';
 import { HistoryComponent } from 'src/app/folder/history.component';
 import { MarkdownTextAreaComponent } from 'src/app/utility/markdown-text-area.component';
@@ -138,6 +137,10 @@ import { UserIdleModule } from 'angular-user-idle';
 import {CodeSetComponent} from '../../code-set/code-set/code-set.component';
 import {CodeSetDetailsComponent} from '../../code-set/code-set-details/code-set-details.component';
 import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code-set-terms-table.component';
+import { DiagramTabComponent } from '../../diagram/diagram-tab/diagram-tab.component';
+import { DiagramPopupComponent } from '../../diagram/diagram-popup/diagram-popup.component';
+import { DiagramComponent } from '../../diagram/diagram/diagram.component';
+import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-toolbar.component';
 
 
 
@@ -149,7 +152,10 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     ShareWithComponent,
     DataModelsExportComponent ,
     UserAccessNewComponent,
+    DiagramComponent,
     DiagramTabComponent,
+    DiagramPopupComponent,
+    DiagramToolbarComponent,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
@@ -300,7 +306,6 @@ import {CodeSetTermsTableComponent} from '../../shared/code-set-terms-table/code
     ShareWithComponent,
     DataModelsExportComponent ,
     UserAccessNewComponent,
-    DiagramTabComponent,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,

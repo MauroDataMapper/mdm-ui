@@ -19,6 +19,8 @@ import { StateHandlerService } from './services/handlers/state-handler.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { AppRoutingModule } from './app-routing.module';
+import { DiagramComponent } from './diagram/diagram/diagram.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogRef } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,8 +42,9 @@ import { AppRoutingModule } from './app-routing.module';
       useValue: 'en-GB'
     },
     { provide: APP_BASE_HREF, useValue: '/' },
-    { provide: LocationStrategy, useClass: HashLocationStrategy }
-  ],
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: MatDialogRef, useValue: {} }
+],
   bootstrap: [UiViewComponent]
 })
 export class AppModule {

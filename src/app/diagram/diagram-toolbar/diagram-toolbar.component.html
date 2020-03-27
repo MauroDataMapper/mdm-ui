@@ -1,0 +1,72 @@
+<div #diagramToolbar style="width: 100%; height: 2.5em; margin: 0.5em 0; border-bottom: 1px solid rgb(221, 221, 221)">
+  <button mat-stroked-button
+          type="button"
+          color="primary"
+          class="paddingless"
+          style="float: left; margin-left: 4px;"
+          matTooltip="Move up a level of hierarchy"
+          (click)="this.click('goUp')">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <section layout="row" style="margin-left: 40px;">
+    <button mat-stroked-button
+            type="button"
+            color="primary"
+            class="paddingless"
+            style="float: left; margin-left: 40px;"
+            matTooltip="Zoom in"
+            (click)="this.click('zoomIn')">
+      <i class="fas fa-plus"></i>
+    </button>
+    <button mat-stroked-button
+            type="button"
+            color="primary"
+            class="paddingless"
+            style="float: left; margin-left: 4px;"
+            matTooltip="Reset zoom and canvas"
+            (click)="this.click('resetZoom')">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+    <button mat-stroked-button
+            type="button"
+            color="primary"
+            class="paddingless"
+            style="float: left; margin-left: 4px;"
+            matTooltip="Zoom out"
+            (click)="this.click('zoomOut')">
+      <i class="fas fa-minus"></i>
+    </button>
+  </section>
+
+
+  <button mat-stroked-button
+          type="button"
+          color="primary"
+          class="paddingless"
+          style="float: right; margin-right: 4px;"
+          matTooltip="Popup in full screen"
+          (click)="this.click('popUp')"
+          *ngIf="!isPopup">
+    <i class="fas fa-window-maximize"></i>
+  </button>
+  <button mat-stroked-button
+          type="button"
+          color="primary"
+          class="paddingless"
+          style="float: right; margin-right: 4px;"
+          matTooltip="Close full screen"
+          (click)="this.click('popDown')"
+          *ngIf="isPopup">
+    <i class="fas fa-window-close"></i>
+  </button>
+  <button mat-stroked-button
+          type="button"
+          color="primary"
+          class="paddingless"
+          style="float: right; margin-right: 40px;"
+          matTooltip="Download as image"
+          (click)="this.click('download')">
+    <i class="fas fa-file-export"></i>
+  </button>
+
+</div>

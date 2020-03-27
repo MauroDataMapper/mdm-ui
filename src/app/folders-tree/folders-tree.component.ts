@@ -313,7 +313,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       switch (node.domainType) {
         case DOMAIN_TYPE.Folder:
           if (this.justShowFolders) {
-            const folderResponse = await this.resources.folder.get(node.id, 'folders', {}).toPromise();
+            const folderResponse = await this.resources.folder.get(node.id, 'folders', { all: true }).toPromise();
             return folderResponse.body.items;
           } else {
             return node.children;

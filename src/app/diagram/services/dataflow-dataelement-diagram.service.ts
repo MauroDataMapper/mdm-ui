@@ -85,7 +85,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }*/
           }
         });
-        link1.connector('rounded');
+        link1.connector('rounded', {radius: 40});
         this.graph.addCell(link1);
       });
       flowComponent.targetElements.forEach((targetElement) => {
@@ -104,7 +104,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }*/
           }
         });
-        link2.connector('rounded');
+        link2.connector('rounded', {radius: 40});
         this.graph.addCell(link2);
       });
     });
@@ -121,7 +121,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       const umlClassCell = this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text'), classAttributes[classId], new joint.g.Point({
         x: oldPosition.x,
         y: oldPosition.y
-      }));
+      }), null);
       // umlClassCell.set('position');
     });
 
@@ -147,7 +147,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }
           }
         });
-        link1.connector('rounded');
+        link1.connector('rounded', {radius: 40});
         this.graph.addCell(link1);
       });
       flowComponent.targetElements.forEach((targetElement) => {
@@ -166,7 +166,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }
           }
         });
-        link2.connector('rounded');
+        link2.connector('rounded', {radius: 40});
         this.graph.addCell(link2);
       });
     });

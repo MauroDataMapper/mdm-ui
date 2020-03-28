@@ -1,17 +1,15 @@
-import { Component, ElementRef, Inject, Input, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
 import * as joint from 'jointjs';
-import { forkJoin } from 'rxjs';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { BasicDiagramService } from '../services/basic-diagram.service';
 import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DataflowDataclassDiagramService } from '../services/dataflow-dataclass-diagram.service';
 import { DataflowDataelementDiagramService } from '../services/dataflow-dataelement-diagram.service';
-import * as saveSvgAsPng from 'save-svg-as-png';
-import { saveAs } from 'file-saver';
 import { DownloadService } from '../../utility/download.service';
+import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
 
 @Component({
   selector: 'mdm-diagram',
@@ -53,10 +51,7 @@ export class DiagramComponent implements OnInit {
 
 
   public ngOnInit(): void {
-    // console.log('this.diagramComponent');
-    // console.log(this.diagramComponent);
     if (this.diagramComponent) {
-      // console.log('loading from existing component');
       this.diagramService = this.diagramComponent.diagramService;
     } else {
       // we're loading from scratch
@@ -66,7 +61,6 @@ export class DiagramComponent implements OnInit {
   }
 
   initializeDiagramService(params): void {
-    // console.log('initializing diagram...' + this.mode);
     switch (this.mode) {
       case 'dataflow-model':
         this.diagramService = new DataflowDatamodelDiagramService(this.resourcesService, this.messageHandler);
@@ -77,17 +71,15 @@ export class DiagramComponent implements OnInit {
       case 'dataflow-element':
         this.diagramService = new DataflowDataelementDiagramService(this.resourcesService, this.messageHandler);
         break;
+      case 'umlclass':
+        this.diagramService = new UmlClassDiagramService(this.resourcesService, this.messageHandler);
+        break;
     }
 
     const observable = this.diagramService.getDiagramContent(params);
-    // console.log('observable');
-    // console.log(observable);
     observable.subscribe(data => {
         // The diagram service is responsible for the graph
-        // console.log('subscription returns data');
-        // console.log(data);
         this.diagramService.render(data);
-        // console.log('laying out nodes... component');
         this.diagramService.layoutNodes();
 
       },
@@ -106,18 +98,6 @@ export class DiagramComponent implements OnInit {
     this.isLoading = false;
 
   }
-
-  /*
-      if (this.isPopup) {
-        this.setUpGraph();
-        this.jointjsDiv.nativeElement.height = '100%';
-        this.diagramFinalise();
-        this.svgPanZoom.pan(this.pan);
-        this.svgPanZoom.zoom(this.zoom);
-        this.isLoading = false;
-      }
-  */
-
 
   public finaliseDiagram() {
     this.paper = new joint.dia.Paper({
@@ -161,11 +141,8 @@ export class DiagramComponent implements OnInit {
     });
 
     this.diagramService.getClickSubject().subscribe(result => {
-      // console.log('clicked: diagram component');
-      // console.log(result);
       if (result.newMode) {
         this.mode = result.newMode;
-        // console.log('initializing again...');
         this.initializeDiagramService(result);
         this.resetPaper();
       }
@@ -173,13 +150,8 @@ export class DiagramComponent implements OnInit {
     });
 
     this.diagramService.getGoUpSubject().subscribe(result => {
-      // console.log('clicked: diagram component');
-      // console.log(result);
-
-
       if (result.newMode) {
         this.mode = result.newMode;
-        // console.log('initializing again...');
         this.initializeDiagramService(result);
         this.resetPaper();
       }

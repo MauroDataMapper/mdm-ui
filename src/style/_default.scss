@@ -33,6 +33,9 @@ label {
   @include font(20px, 500);
   margin-bottom: 0;
 }
+em {
+  font-style: oblique;
+}
 .table > thead > tr > th {
   border: none !important;
 }

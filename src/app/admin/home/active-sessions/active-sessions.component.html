@@ -3,10 +3,9 @@
 </div>
 
 <div class="mcTableContainer">
-	<table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-responsive">
+	<table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped table-responsive">
 		<ng-container matColumnDef="userEmailAddress">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 30%; width: 30%;" columnName="userEmailAddress">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; max-width: 30%; width: 30%;" columnName="userEmailAddress">
 				<span [hidden]="!hideFilters">Email</span>
 				<div [hidden]="hideFilters">
 					<mat-form-field class="filter" floatLabel="never">
@@ -23,8 +22,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="userName">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 15%; width: 15%;" columnName="userName">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="userName">
 				<span [hidden]="!hideFilters">Name</span>
 				<div [hidden]="hideFilters">
 					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -41,8 +39,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="userOrganisation">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="userOrganisation" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 22%; width: 22%;" columnName="userOrganisation">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="userOrganisation" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="userOrganisation">
 				<span [hidden]="!hideFilters">Organisation</span>
 				<div [hidden]="hideFilters">
 					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -69,7 +66,6 @@
 				</div>
 			</th>
 			<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-
 				<span *ngIf="isToday(record.start)">
 					{{record.start | date: 'h:mm a' }}
 				</span>

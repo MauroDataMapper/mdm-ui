@@ -24,9 +24,7 @@ export class TwoSidePanelComponent implements AfterViewInit {
   @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
 
   showLeftPane: boolean;
-
   expand = false;
-
   state = 'inactive';
 
   ngAfterViewInit() {
@@ -41,42 +39,14 @@ export class TwoSidePanelComponent implements AfterViewInit {
   hideShowLeftPane() {
     this.state = this.state === 'inactive' ? 'active' : 'inactive';
 
-    if (
-      this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')
-    ) {
-      this.renderer.removeClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-up'
-      );
-      this.renderer.addClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-down'
-      );
+    if (this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')) {
+      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
+      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
       this.resizableLeft.nativeElement.hidden = true;
-      if (this.showHidePaneText) {
-        this.renderer.setProperty(
-          this.showHidePaneText.nativeElement,
-          'innerText',
-          'Show Models Tree'
-        );
-      }
     } else {
-      this.renderer.removeClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-down'
-      );
-      this.renderer.addClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-up'
-      );
+      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
       this.resizableLeft.nativeElement.hidden = false;
-      if (this.showHidePaneText) {
-        this.renderer.setProperty(
-          this.showHidePaneText.nativeElement,
-          'innerText',
-          'Minimise Models Tree'
-        );
-      }
     }
   }
 
@@ -89,38 +59,12 @@ export class TwoSidePanelComponent implements AfterViewInit {
   windowSetup = width => {
     if (width > 800) {
       this.resizableLeft.nativeElement.hidden = false;
-      this.renderer.removeClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-down'
-      );
-      this.renderer.addClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-up'
-      );
-      if (this.showHidePaneText) {
-        this.renderer.setProperty(
-          this.showHidePaneText.nativeElement,
-          'innerText',
-          'Minimise Models Tree'
-        );
-      }
+      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up' );
     } else {
       this.resizableLeft.nativeElement.hidden = true;
-      this.renderer.removeClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-up'
-      );
-      this.renderer.addClass(
-        this.showHideLeftPane.nativeElement,
-        'fa-chevron-down'
-      );
-      if (this.showHidePaneText) {
-        this.renderer.setProperty(
-          this.showHidePaneText.nativeElement,
-          'innerText',
-          'Show Models Tree'
-        );
-      }
+      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
+      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
     }
   }
 }

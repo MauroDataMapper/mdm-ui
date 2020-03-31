@@ -54,7 +54,7 @@
 
 <div style="margin-top: 5px;" *ngIf="selectorSection.selectedTermsArray.length > 0">
     <div class="mdm--block" style="position: relative;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
-        <label>Selected Terms</label>
+        <span>Selected Terms</span>
         <mdm-paged-list [name]="'linkType'" [mcTitle]="'linkType'" [type]="'static'" [items]="selectorSection.selectedTermsArray" [pageSize]="10">
             <ng-template #pageListTemplate let-item>
                 <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">

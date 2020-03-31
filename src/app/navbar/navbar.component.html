@@ -170,6 +170,7 @@
                 <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers">
                     <i class="fas fa-user-clock"></i>
                     <span>Pending users</span>
+                    <span class="badge pill-card--red" aria-hidden="false" *ngIf="pendingUsersCount > 0" style="margin-left: 6px;"> {{pendingUsersCount}} </span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.groups">
                     <i class="fas fa-users" aria-hidden="true"></i>

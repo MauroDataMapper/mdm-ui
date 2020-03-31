@@ -1,113 +1,78 @@
-<div>
-    <div style="padding: 10px; border: 1px solid #DDD;margin-right: 0px !important;  margin-left: 0px !important; " class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <div>
-                <div style="font-style: italic;font-size: 14px;"><span class="badge importFormStep themeBackgroundColor">1</span> Please choose a Terminology and then select Term(s):</div>
-            </div>
-            <div style="padding-left: 8px;margin-top: 5px;">
-                <strong>Terminology*</strong>
-                <mdm-select
-                        width="'100%'"
-                        [acceptTypedInput]="false"
-                        [valueType]="'static'"
-                        [staticValues]="selectorSection.terminologies"
-                        [idProperty]="'id'"
-                        [displayProperty]="'label'"
-                        [searchProperty]="'label'"
-                        (selectEvent)="onTerminologySelect($event[0],$event[1])">
-                    <ng-template #lineContent let-item>
-                        <div>{{item.label}}</div>
-                    </ng-template>
-                </mdm-select>
-            </div>
-            <div style="padding-left: 8px;">
-                <strong>Term</strong>
-                <input type="text"
-                       class="form-control input-sm"
-                       [(ngModel)]="selectorSection.termSearchText"
-                       [disabled]="!selectorSection.selectedTerminology"
-                       (change)="runTermSearch()"
-                       [ngModelOptions]="{ debounce: 500 }"
-                       placeholder="Search for Terms...">
-                <div style="margin-top: 5px;">
-                    <div style="height: 240px">
-                        <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
+  
+<!-- <div>Please choose a Terminology and your Term(s):</div> -->
+<div class="mdm--block">
+    <label>Terminology<sup class="warn">*</sup></label>
+    <mdm-select width="'100%'"
+                [acceptTypedInput]="false"
+                [valueType]="'static'"
+                [staticValues]="selectorSection.terminologies"
+                [idProperty]="'id'"
+                [displayProperty]="'label'"
+                [searchProperty]="'label'"
+                (selectEvent)="onTerminologySelect($event[0],$event[1])">
+        <ng-template #lineContent let-item>
+            <div>{{item.label}}</div>
+        </ng-template>
+    </mdm-select>
+</div>
+<div class="mdm--block">
+    <strong>Term</strong>
+    <input type="text"
+            class="form-control outlined-input"
+            [(ngModel)]="selectorSection.termSearchText"
+            [disabled]="!selectorSection.selectedTerminology"
+            (change)="runTermSearch()"
+            [ngModelOptions]="{ debounce: 500 }"
+            placeholder="Search for Terms...">
+    <div style="margin-top: 5px;">
+        <div>
+            <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
+                <!-- Position Column -->
+                <ng-container matColumnDef="label">
+                    <mat-header-row *matHeaderCellDef> Term </mat-header-row>
+                    <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
+                        <mat-checkbox name="showSupersededModels" (change)="termToggle(element)" [(ngModel)]="element.checked">
+                            <mdm-element-link [newWindow]= "true" [showHref]="true" [element]="element"></mdm-element-link>
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
 
-                            <!-- Position Column -->
-                            <ng-container matColumnDef="label">
-                                <mat-header-row *matHeaderCellDef> Term </mat-header-row>
-                                <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
-                                    <!--                                <a target="_blank" style="width:100%" href=null>{{element.label}}</a>-->
-
-                                    <input type="checkbox"
-                                           style="cursor:pointer;"
-                                           name="showSupersededModels"
-                                           (change)="termToggle(element)"
-                                           [(ngModel)]="element.checked">
-                                    <mdm-element-link
-                                                  [newWindow]= "true"
-                                                  [showHref]="true"
-                                                  [element]="element"></mdm-element-link>
-
-
-
-                                </mat-cell>
-                            </ng-container>
-
-                            <mat-row class="mat-table-row-select"  *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                        </mat-table>
-                    </div>
-                    <div *ngIf="totalItemCount > 0" style="float: right;">
-                        <span *ngIf="loading">
-                            <i class="fas fa-sync-alt fa-spin"></i>
-                        </span>
-                        <span style="font-size: 11px; font-style: italic;">
-                            {{currentRecord}} / {{totalItemCount}}
-                        </span>
-                    </div>
-                </div>
-            </div>
+                <mat-row class="mat-table-row-select"  *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
         </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <div style="font-style: italic;font-size: 14px;"><span class="badge importFormStep themeBackgroundColor">2</span> Press Add button to add selected terms to the Code Set:</div>
-
-            <div style="padding-left: 10px;margin-top: 5px;">
-                <div style="font-weight: bold;">Selected Terms</div>
-                <div  style="min-height: 200px;">
-                    <div style="position: relative; border: 1px solid #DDD;padding: 5px;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
-                        <mdm-paged-list
-                                [name]="'linkType'"
-                                [mcTitle]="'linkType'"
-                                [type]="'static'"
-                                [items]="selectorSection.selectedTermsArray"
-                                [pageSize]="10">
-                            <ng-template #pageListTemplate let-item>
-                                <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
-                                    <div>
-                                        <div>
-                                            <span>
-                                                <i class="fas fa-times warning" (click)="removeTerm(item)"></i>
-                                            </span>
-                                            <mdm-element-link [element]="item"></mdm-element-link>
-                                        </div>
-                                        <div>
-                                            <span style="font-size: 12px; padding-left: 5px;margin-right: 2px; padding-right: 4px;">
-                                                <mdm-element-link [element]="item.terminology"></mdm-element-link>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </ng-template>
-
-                        </mdm-paged-list>
-                    </div>
-                    <div style="margin-top: 5px;" *ngIf="!hideAddButton">
-                        <button type="button" class="btn btn-sm btn-default themeColor" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
-                    </div>
-                </div>
-            </div>
+        <div *ngIf="totalItemCount > 0">
+            <span *ngIf="loading">
+                <i class="fas fa-sync-alt fa-spin"></i>
+            </span>
+            <span style="font-size: 11px; font-style: italic;">
+                {{currentRecord}} / {{totalItemCount}}
+            </span>
         </div>
     </div>
+</div>
+
+<!-- TODO <div class="mdm--block"> Press Add button to add selected terms to the Code Set:</div> -->
+
+<div style="margin-top: 5px;" *ngIf="selectorSection.selectedTermsArray.length > 0">
+    <div class="mdm--block" style="position: relative;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
+        <span>Selected Terms</span>
+        <mdm-paged-list [name]="'linkType'" [mcTitle]="'linkType'" [type]="'static'" [items]="selectorSection.selectedTermsArray" [pageSize]="10">
+            <ng-template #pageListTemplate let-item>
+                <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
+                    <div>
+                        <i class="fas fa-times warning" style="margin-right: 8px;" (click)="removeTerm(item)"></i>
+                        <mdm-element-link [element]="item"></mdm-element-link>
+                    </div>
+                    <div>
+                        <span style="font-size: 12px; padding-left: 5px;margin-right: 2px; padding-right: 4px;">
+                            <mdm-element-link [element]="item.terminology"></mdm-element-link>
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+        </mdm-paged-list>
+    </div>
+    <!-- TODO <div style="margin-top: 5px;" *ngIf="!hideAddButton"> 
+        <button type="button" class="btn btn-sm btn-default themeColor" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
+    </div> -->
 </div>

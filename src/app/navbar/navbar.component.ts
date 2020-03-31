@@ -23,6 +23,8 @@ export class NavbarComponent implements OnInit {
   current: any;
   HDFLink: any;
   sideNav: any;
+  pendingUsersCount = 0;
+
   constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService) { }
 
   ngOnInit() {
@@ -35,6 +37,10 @@ export class NavbarComponent implements OnInit {
       this.backendURL = this.sharedService.backendURL;
       this.HDFLink = this.sharedService.HDFLink;
       this.current = this.sharedService.current;
+
+      this.sharedService.pendingUsersCount().subscribe(data => {
+        this.pendingUsersCount = data.body.count;
+      });
   }
 
   openProfile = () => {

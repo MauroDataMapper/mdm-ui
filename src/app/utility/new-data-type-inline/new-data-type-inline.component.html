@@ -37,7 +37,7 @@
 					<div class="mdm--form-input">
 						<mat-form-field appearance="outline">
 							<mat-select name="dataModelType" [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
-								<mat-option [value]="dt.id" *ngFor="let dt of allDataTypes" [selected]="dt">{{dt.displayLabel}}</mat-option>
+								<mat-option [value]="dt.id" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
 							</mat-select>
 						</mat-form-field>
 					</div>

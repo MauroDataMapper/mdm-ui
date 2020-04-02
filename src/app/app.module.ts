@@ -8,7 +8,6 @@ import { UsersModule } from './modules/users/users.module';
 import { APP_BASE_HREF, LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { ROLES } from './constants/roles';
-import { CookieService } from 'ngx-cookie-service';
 import { UIRouterModule, TransitionService } from '@uirouter/angular';
 import { SharedModule } from './modules/shared/shared.module';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
@@ -34,7 +33,6 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogRef } from '@angular/material/dial
     UIRouterModule.forRoot({ useHash: true })
   ],
   providers: [
-    CookieService,
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },
     { provide: ROLES, useClass: ROLES },
     {

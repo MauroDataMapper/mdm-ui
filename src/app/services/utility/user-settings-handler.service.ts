@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ResourcesService } from '../resources.service';
-import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,8 +17,7 @@ export class UserSettingsHandlerService {
     dataFlowDiagramsSetting: {}
   };
   constructor(
-    private resources: ResourcesService,
-    private cookies: CookieService
+    private resources: ResourcesService
   ) {}
 
   getUserSettings() {
@@ -39,7 +37,7 @@ export class UserSettingsHandlerService {
 
     const promise = new Promise((resolve, reject) => {
     this.resources.catalogueUser
-      .get(this.cookies.get('userId'), 'userPreferences', null)
+      .get(sessionStorage.getItem('userId'), 'userPreferences', null)
       .subscribe(
         res => {
           const result = res.body;
@@ -94,7 +92,7 @@ export class UserSettingsHandlerService {
     const defaultSettings = this.getUserSettings();
     const settingsStr = JSON.stringify(defaultSettings);
     return this.resources.catalogueUser.put(
-      this.cookies.get('userId'),
+      sessionStorage.getItem('userId'),
       'userPreferences',
       { resource: settingsStr, contentType: 'text/plain' }
     );

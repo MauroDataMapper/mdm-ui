@@ -60,7 +60,7 @@ export class ModelsComponent implements OnInit {
 
       this.reloading = true;
 
-      if (node.domainType === 'DataModel') {
+      if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
         this.resources.tree.get(this.levels.currentFocusedElement.id).subscribe(
           result => {
             const children = result.body;
@@ -80,7 +80,7 @@ export class ModelsComponent implements OnInit {
             this.reloading = false;
           }
         );
-      } else if (node.domainType === 'Terminology') {
+      } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
         this.resources.terminology
           .get(this.levels.currentFocusedElement.id, 'tree')
           .subscribe(

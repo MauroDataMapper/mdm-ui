@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
   selector: 'mdm-select',
   templateUrl: './mc-select.component.html',
   styleUrls: ['./mc-select.component.sass'],
-  host: {'(click)': 'onClick($event)'}
+  host: {'(click)': 'onClick($event)'} //TODO - check if this is needed
 })
 export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -56,7 +56,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   holderStyle: any;
 
   @Output() selectEvent = new EventEmitter<any>();
-
   recordVal: any;
   @Output() recordChanged = new EventEmitter<any>();
 
@@ -67,7 +66,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
   set record(val) {
     this.recordVal = val;
-    this.recordChanged.emit();
+    this.recordChanged.emit(val);
   }
 
   @Input() loadAllOnClick: boolean;
@@ -190,6 +189,8 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
         } else if (this.inputText) {
           if (this.acceptTypedInput && this.inputText.trim().length !== 0) {
             this.input.nativeElement.value = this.inputText;
+            this.recordChanged.emit(this.inputText);
+
           } else {
             // clear the input
             this.inputText = '';
@@ -334,13 +335,14 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.acceptTypedInput) {
         const selected = {};
         selected[this.searchProperty] = this.inputText;
+        this.recordChanged.emit(this.inputText);
         if (this.idProperty) {
           selected[this.idProperty] = -1;
         }
         this.onElementSelect(selected);
       }
     });
-  }
+    }
 
   filterValues(inputValue) {
 
@@ -362,6 +364,8 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
           });
 
           resolve(found);
+        } else {
+          resolve([]);
         }
       } else if (this.valueType === 'dynamic') {
 

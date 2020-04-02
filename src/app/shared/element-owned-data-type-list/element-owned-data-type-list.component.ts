@@ -53,8 +53,10 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   filter: string;
   deleteInProgress: boolean;
   parentDataModel: any; // TODO find use for this
+  domainType;
 
   checkAllCheckbox = false;
+
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -131,7 +133,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     }
   }
 
-  applyFilter = () => {
+  applyFilter = (filterValue?: any, filterName?) => {
     let filter: any = '';
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
@@ -141,9 +143,22 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         filter += name + '=' + value;
       }
     });
+
+    if (
+      filterValue !== null &&
+      filterValue !== undefined &&
+      filterName !== null &&
+      filterName !== undefined
+    ) {
+      filter += filterName + '=' + filterValue.id + '&';
+    }
     this.filter = filter;
     this.filterEvent.emit(filter);
   };
+
+  applyMatSelectFilter(filterValue: any, filterName) {
+    this.applyFilter(filterValue, filterName);
+  }
 
   openEdit = dataType => {
     if (!dataType || (dataType && !dataType.id)) {

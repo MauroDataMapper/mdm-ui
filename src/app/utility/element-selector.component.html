@@ -19,7 +19,7 @@
                 What type of element are you looking for?
                 <div style="margin-top: 10px;">
                     <ul class="list-group" style="cursor: pointer;">
-                        <li class="list-group-item" ng-hide="hideOptions['Folder']">
+                        <li class="list-group-item" *ngIf="!hideOptions['Folder']">
                             <div class="radio" style="margin: 0px !important;" (click)="onElementTypeSelect('Folder')">
                                 <label>
                                     <input type="radio"
@@ -29,7 +29,7 @@
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-hide="hideOptions['DataType']">
+                        <li class="list-group-item" *ngIf="!hideOptions['DataType']">
                             <div class="radio" style="margin: 0px !important;" (click)="onElementTypeSelect('DataType')">
                                 <label>
                                     <input type="radio"
@@ -39,7 +39,7 @@
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-hide="hideOptions['DataModel']">
+                        <li class="list-group-item" *ngIf="!hideOptions['DataModel']">
                             <div class="radio" style="margin: 0px !important;" (click)="onElementTypeSelect('DataModel')">
                                 <label>
                                     <input type="radio"
@@ -49,7 +49,7 @@
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-hide="hideOptions['DataClass']">
+                        <li class="list-group-item" *ngIf="!hideOptions['DataClass']">
                             <div class="radio" style="margin: 0px !important;" (click)="onElementTypeSelect('DataClass')">
                                 <label>
                                     <input type="radio"
@@ -59,7 +59,7 @@
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-hide="hideOptions['DataElement']">
+                        <li class="list-group-item" *ngIf="!hideOptions['DataElement']">
                             <div class="radio" style="margin: 0px !important;" (click)="onElementTypeSelect('DataElement')">
                                 <label>
                                     <input type="radio"
@@ -69,7 +69,7 @@
                                 </label>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-hide="hideOptions['Term']">
+                        <li class="list-group-item" *ngIf="!hideOptions['Term']">
                             <div class="radio" style="margin: 0px !important;" (click)="onElementTypeSelect('Term')">
                                 <label>
                                     <input type="radio"

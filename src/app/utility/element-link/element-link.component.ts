@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { ElementTypesService } from '../../services/element-types.service';
 
 @Component({
@@ -9,13 +9,26 @@ export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
   @Input() justShowCodeForTerm: boolean;
   @Input() showTypeTitle: boolean;
-  @Input() element: any;
+ // @Input() element: any;
   @Input() newWindow: boolean;
   @Input() parentDataModel: any;
   @Input() parentDataClass: any;
   @Input() showHref = true;
   @Input() showParentDataModelName: boolean;
   @Input() showLink = true;
+  elementVal: any;
+  @Output() selectedElementsChange = new EventEmitter<any[]>();
+
+  @Input()
+  get element() {
+    return this.elementVal;
+  }
+
+  set element(val) {
+    this.elementVal = val;
+    this.selectedElementsChange.emit(this.elementVal);
+    this.ngOnInit();
+  }
 
   label: string;
   versionNumber: string;
@@ -60,8 +73,8 @@ export class ElementLinkComponent implements OnInit {
         this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
-      this.label = parentDM?.label + ' : ' + this.label;
-      if (this.label === undefined) {
+      this.label = parentDM?.label ? (parentDM?.label + ' : ' + this.label) : this.label;
+      if (this.label === 'undefined : undefined') {
         this.label = '';
       }
     }

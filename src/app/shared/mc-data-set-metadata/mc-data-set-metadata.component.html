@@ -33,7 +33,7 @@
                                    [staticValues]="namespaces"
                                    [defaultValue]="rec.namespace"
                                    [hasError]="rec.edit.errors && rec.edit.errors['namespace']"
-                                   [record]="records[rec]"
+                                   [record]="records[i]"
                                    [minInputLength]="0"
                                    [idProperty]="'id'"
                                    [displayProperty]="'namespace'"
@@ -58,7 +58,7 @@
                         </mat-form-field>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                <td mat-cell *matCellDef="let record ; let i = index" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
                     <div *ngIf="!record.inEdit">
                         {{record.key}}
                     </div>
@@ -69,7 +69,7 @@
                                    [staticValues]="record.metadataKeys"
                                    [defaultValue]="record.key"
                                    [hasError]="record.edit.errors && record.edit.errors['key']"
-                                   [record]="records[record]"
+                                   [record]="records[i]"
                                    [minInputLength]="0"
                                    [idProperty]="'id'"
                                    [displayProperty]="'key'"

@@ -56,7 +56,7 @@ export class ElementSelectorComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {}
   pageSize = 40;
-  hideOptions = {};
+  hideOptions = [];
   public searchInput: string;
   loading = true;
   formData = {
@@ -105,25 +105,22 @@ export class ElementSelectorComponent implements OnInit {
         this.currentRecord = 0;
         this.reLoad();
     }
-    // $scope.$watch('validTypesToSelect', function (newValue, oldValue, scope) { TODO
-    //
-    //     if(newValue){
-    //         if($scope.validTypesToSelect.length === 1){
-    //             $scope.showPrevBtn = false;
-    //             $scope.onElementTypeSelect($scope.validTypesToSelect[0]);
-    //         }else{
-    //             $scope.hideOptions['Folder']    = $scope.validTypesToSelect.indexOf("Folder") === -1 ;
-    //             $scope.hideOptions['DataModel'] = $scope.validTypesToSelect.indexOf("DataModel") === -1 ;
-    //             $scope.hideOptions['DataClass'] = $scope.validTypesToSelect.indexOf("DataClass") === -1 ;
-    //             $scope.hideOptions['DataElement'] = $scope.validTypesToSelect.indexOf("DataElement") === -1 ;
-    //             $scope.hideOptions['DataType'] = $scope.validTypesToSelect.indexOf("DataType") === -1 ;
-    //             $scope.hideOptions['Term'] = $scope.validTypesToSelect.indexOf("Term") === -1 ;
-    //             $scope.showPrevBtn = true;
-    //         }
-    //     }else{
-    //         $scope.showPrevBtn = true;
-    //     }
-    // });
+  validTypesToSelect = (validTypesToSelect: any[]) => {
+            if (validTypesToSelect.length === 1) {
+                this.showPrevBtn = false;
+                this.onElementTypeSelect(this.validTypesToSelect[0]);
+            } else {
+
+              this.hideOptions['Folder']    = validTypesToSelect.indexOf('Folder') === -1 ;
+              this.hideOptions['DataModel'] = validTypesToSelect.indexOf('DataModel') === -1 ;
+              this.hideOptions['DataClass'] = validTypesToSelect.indexOf('DataClass') === -1 ;
+              this.hideOptions['DataElement'] = validTypesToSelect.indexOf('DataElement') === -1 ;
+              this.hideOptions['DataType'] = validTypesToSelect.indexOf('DataType') === -1 ;
+              this.hideOptions['Term'] = validTypesToSelect.indexOf('Term') === -1 ;
+              this.showPrevBtn = true;
+            }
+
+    };
 
     reLoad() {
         if (['DataModel', 'DataClass'].indexOf(this.formData.selectedType) !== -1) {
@@ -255,12 +252,12 @@ export class ElementSelectorComponent implements OnInit {
         }
 
         this.messageService.elementSelectorSendData(node);
-        this.dialogRef.close();
+        this.dialogRef.close(node);
     }
 
     onTermSelect(element) {
         this.messageService.elementSelectorSendData(element);
-        this.dialogRef.close();
+        this.dialogRef.close(element);
     }
 
     public searchTextChanged2() {
@@ -544,5 +541,7 @@ export class ElementSelectorComponent implements OnInit {
     this.fetch(40, 0);
   };
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.validTypesToSelect(this.data.validTypesToSelect);
+  }
 }

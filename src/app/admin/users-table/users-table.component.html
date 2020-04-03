@@ -83,27 +83,27 @@
 		</ng-container>
 		<ng-container matColumnDef="userRole">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="userRole" [disabled]="!hideFilters"
-				style="cursor: pointer; max-width: 13%; width: 13%;" columnName="userRole">
+				style="cursor: pointer; max-width: 11%; width: 11%;" columnName="userRole">
 				<span [hidden]="!hideFilters">Role</span>
 			</th>
 			<td mat-cell *matCellDef="let record"
-				style="max-width: 13%; width: 13%; text-align: left; word-wrap: break-word;">
+				style="max-width: 11%; width: 11%; text-align: left; word-wrap: break-word;">
 				<div>
 					{{record.userRole | titlecase }}
 				</div>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="groups">
-			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 12%; width: 12%;"
+			<th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 14%; width: 14%;"
 				columnName="groups">
 				<span [hidden]="!hideFilters">Groups</span>
 			</th>
 			<td mat-cell *matCellDef="let record"
-				style="max-width: 12%; width: 12%; text-align: left; word-wrap: break-word;">
+				style="max-width: 14%; width: 14%; text-align: left; word-wrap: break-word;">
 				<div>
 					<span *ngFor="let group of record.groups">
 						<div class="group">
-							<a href="#" (click)="editGroup(group)">{{group.label}}</a>
+							<span (click)="editGroup(group)">{{group.label}}</span>
 						</div>
 					</span>
 				</div>

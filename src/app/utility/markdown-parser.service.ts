@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ElementTypesService } from '../services/element-types.service';
-import * as marked from 'marked';
+import marked from 'marked/lib/marked';
 
 @Injectable({
   providedIn: 'root'

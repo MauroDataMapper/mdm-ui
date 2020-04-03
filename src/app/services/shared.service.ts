@@ -66,7 +66,7 @@ export class SharedService {
   };
 
   pendingUsersCount = () => {
-    return this.resources.catalogueUser.get(null, 'pending', { filters: 'count=true' });
+    return this.resources.catalogueUser.get(null, 'pending', {});
   }
 
 }

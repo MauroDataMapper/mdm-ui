@@ -7,7 +7,7 @@
 </div>
 
 <div class="mcTableContainer">
-	<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped">
+	<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped table-responsive">
 		<ng-container matColumnDef="name">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="label">
 				<span [hidden]="!hideFilters">Name</span>

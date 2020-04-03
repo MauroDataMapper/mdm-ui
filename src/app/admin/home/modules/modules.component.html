@@ -3,7 +3,7 @@
 </div>
 
 <div class="mcTableContainer">
-	<table mat-table matSort [dataSource]="dataSource" class="table table-borderless mdm--table table-striped">
+	<table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped table-responsive">
 		<ng-container matColumnDef="name">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="name" [disabled]="!hideFilters" style="cursor: pointer; max-width: 78%; width: 78%;" columnName="name">
 				<span [hidden]="!hideFilters">Name</span>

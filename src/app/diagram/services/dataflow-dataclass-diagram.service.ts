@@ -32,7 +32,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
         target: {id: flow.target.id},
       });
       // link.id = flow.id as string;
-      link.connector('rounded');
+      link.connector('rounded', {radius: 40});
       link.toBack();
       this.graph.addCell(link);
     });

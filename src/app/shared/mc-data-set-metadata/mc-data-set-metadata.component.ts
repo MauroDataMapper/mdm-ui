@@ -53,7 +53,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   filterEvent = new EventEmitter<string>();
   filter: string;
 
-
   constructor(private resources: ResourcesService,
               private securityHandler: SecurityHandlerService,
               private messageHandler: MessageHandlerService,
@@ -340,8 +339,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         // after successfully saving the row, it if is a new row,then remove its newRow property
         record.id = response.body.id;
         record.namespace = response.body.namespace;
-        record.key = response.key;
-        record.value = response.value;
+        record.key = response.body.key;
+        record.value = response.body.value;
         record.inEdit = false;
         delete record.edit;
 

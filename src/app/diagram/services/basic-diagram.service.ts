@@ -5,6 +5,7 @@ import dagre from 'dagre';
 import graphlib from 'graphlib';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { LayoutConfigOptions } from '@angular/flex-layout';
 
 @Injectable({
   providedIn: 'root'
@@ -43,15 +44,22 @@ export abstract class BasicDiagramService {
 
   }
 
-  public layoutNodes(): void {
+  public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
     // console.log('laying out nodes...');
+    let nodeSep = 100;
+    let rankSep = 400;
+    if (rankDir === 'TB') {
+      nodeSep = 100;
+      rankSep = 250;
+    }
+
     joint.layout.DirectedGraph.layout(this.graph, {
       setLabels: true,
       setVertices: true,
       setLinkVertices: true,
       dagre,
       graphlib,
-      rankDir: 'LR',
+      rankDir,
       marginX: 40,
       marginY: 40,
       nodeSep: 100,
@@ -109,25 +117,39 @@ export abstract class BasicDiagramService {
 
   }
 
-  protected addUmlClassCell(id: string, label: string, attributes: Array<any>, @Optional() position: joint.g.Point = null): joint.dia.Cell {
+  protected addUmlClassCell(id: string, label: string, attributes: Array<any>,
+                            @Optional() position: joint.g.Point = null,
+                            @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
     const cells: Array<joint.dia.Cell> = [];
+    console.log(attributes);
     if (!position) {
       position = new joint.g.Point({x: 0, y: 0});
     }
-    const classBox = new joint.shapes.standard.Rectangle({
-      id,
-      position,
-      z: 2,
-      size: {width: 300, height: attributes.length * 25 + 31},
-      attrs: {
-        body: {
-          fill: this.lightBackground,
-          fillOpacity: 0
-        }
-      }
 
-    });
-    classBox.attr('rect/fontWeight', 'bold');
+    let classBox = null;
+    if (existingClassBox) {
+      classBox = existingClassBox;
+      position = existingClassBox.position();
+      // classBox.attr('body/fill', this.lightBackground);
+      classBox.attr('body/fillOpacity', 0);
+      classBox.attr('z', 2);
+    } else {
+      classBox = new joint.shapes.standard.Rectangle({
+        id,
+        position,
+        z: 2,
+        size: {width: 300, height: attributes.length * 25 + 31},
+        attrs: {
+          body: {
+            fill: this.lightBackground,
+            fillOpacity: 0
+          }
+        }
+      });
+      classBox.attr('rect/fontWeight', 'bold');
+      cells.push(classBox);
+    }
+
 
     const classNameBox = new joint.shapes.standard.Rectangle({
       id: id + '-name',
@@ -147,7 +169,7 @@ export abstract class BasicDiagramService {
     });
     classBox.embed(classNameBox);
     cells.push(classNameBox);
-
+    console.log(attributes);
     attributes.forEach((attribute, idx) => {
 
       const attributeBox = new joint.shapes.standard.Rectangle({
@@ -174,7 +196,7 @@ export abstract class BasicDiagramService {
       classBox.embed(attributeBox);
       cells.push(attributeBox);
     });
-    cells.push(classBox);
+
     this.graph.addCells(cells);
     return classBox;
 

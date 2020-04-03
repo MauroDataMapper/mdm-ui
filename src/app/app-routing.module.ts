@@ -153,7 +153,7 @@ export const PagesRoutes = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
-      url: '/terminologyNew/:id/{tabView:string}',
+      url: '/terminology/:id/{tabView:string}',
       component: TerminologyComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
     },

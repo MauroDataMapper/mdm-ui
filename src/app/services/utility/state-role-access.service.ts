@@ -1,5 +1,4 @@
 import { Injectable, forwardRef, Inject } from '@angular/core';
-// import {CookieService} from "ngx-cookie-service";
 import { SecurityHandlerService } from '../handlers/security-handler.service';
 
 @Injectable({

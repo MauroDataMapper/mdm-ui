@@ -348,6 +348,8 @@ export class ElementLinkListComponent implements AfterViewInit {
         }
       });
 
+    this.changeRef.detectChanges();
+
     // elementSelectorDialogue.open(domainTypes, notAllowedToSelectIds).then(function (selectedElement) {
     //    if (!selectedElement) {
     //        return;

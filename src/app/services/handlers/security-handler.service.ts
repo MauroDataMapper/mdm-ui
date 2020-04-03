@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { ResourcesService } from '../resources.service';
 import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
@@ -14,58 +13,57 @@ export class SecurityHandlerService {
   constructor(
     private elementTypes: ElementTypesService,
     private resources: ResourcesService,
-    private cookies: CookieService,
     private stateHandler: StateHandlerService
   ) {}
 
   removeCookie() {
-    this.cookies.delete('token');
-    this.cookies.delete('userId');
-    this.cookies.delete('firstName');
-    this.cookies.delete('lastName');
-    this.cookies.delete('username');
-    this.cookies.delete('role');
-    this.cookies.delete('needsToResetPassword');
-    this.cookies.delete('userId');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('firstName');
+    sessionStorage.removeItem('lastName');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('needsToResetPassword');
+    sessionStorage.removeItem('userId');
   }
 
   getUserFromCookie() {
     if (
-      this.cookies.get('username') &&
-      this.cookies.get('username').length > 0
+      sessionStorage.getItem('username') &&
+      sessionStorage.getItem('username').length > 0
     ) {
       return {
-        id: this.cookies.get('userId'),
-        token: this.cookies.get('token'),
-        username: this.cookies.get('username'),
-        email: this.cookies.get('username'),
-        firstName: this.cookies.get('firstName'),
-        lastName: this.cookies.get('lastName'),
-        role: this.cookies.get('role'),
-        needsToResetPassword: this.cookies.get('needsToResetPassword')
+        id: sessionStorage.getItem('userId'),
+        token: sessionStorage.getItem('token'),
+        username: sessionStorage.getItem('username'),
+        email: sessionStorage.getItem('username'),
+        firstName: sessionStorage.getItem('firstName'),
+        lastName: sessionStorage.getItem('lastName'),
+        role: sessionStorage.getItem('role'),
+        needsToResetPassword: sessionStorage.getItem('needsToResetPassword')
       };
     }
     return null;
   }
 
   getEmailFromCookies() {
-    return this.cookies.get('email');
+    return sessionStorage.getItem('email');
   }
 
   addToCookie(user) {
-    this.cookies.set('userId', user.id);
-    this.cookies.set('token', user.token);
-    this.cookies.set('firstName', user.firstName);
-    this.cookies.set('lastName', user.lastName);
-    this.cookies.set('username', user.username);
-    this.cookies.set('userId', user.id);
+    sessionStorage.setItem('userId', user.id);
+    sessionStorage.setItem('token', user.token);
+    sessionStorage.setItem('firstName', user.firstName);
+    sessionStorage.setItem('lastName', user.lastName);
+    sessionStorage.setItem('username', user.username);
+    sessionStorage.setItem('userId', user.id);
 
     // Keep username for 100 days
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 100);
-    this.cookies.set('email', user.username, expireDate);
-    this.cookies.set('role', user.role);
-    this.cookies.set('needsToResetPassword', user.needsToResetPassword);
+    sessionStorage.setItem('email', user.username); // , expireDate);
+    sessionStorage.setItem('role', user.role);
+    sessionStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
   login(username, password) {
@@ -128,7 +126,7 @@ export class SecurityHandlerService {
   }
 
   expireToken() {
-    this.cookies.delete('token');
+    sessionStorage.removeItem('token');
   }
 
   isValidSession() {
@@ -211,13 +209,13 @@ export class SecurityHandlerService {
   }
 
   saveLatestURL(url) {
-    this.cookies.set('latestURL', url);
+    sessionStorage.setItem('latestURL', url);
   }
   getLatestURL() {
-    return this.cookies.get('latestURL');
+    return sessionStorage.getItem('latestURL');
   }
   removeLatestURL() {
-    this.cookies.delete('latestURL');
+    sessionStorage.removeItem('latestURL');
   }
 
   dataModelAccess(element) {

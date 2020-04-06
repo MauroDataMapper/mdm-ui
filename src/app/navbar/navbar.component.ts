@@ -74,9 +74,7 @@ export class NavbarComponent implements OnInit {
   };
 
   logout = () => {
-    this.securityHandler.logout().subscribe(() => {
-      this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
-    });
+    this.securityHandler.logout();
   };
 
   forgottenPassword = () => {

@@ -43,17 +43,12 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  openProfile = () => {
-      this.stateHandler.Go('userarea.profile');
-  };
-
   isLoggedIn = () => {
       return this.securityHandler.isLoggedIn();
   };
 
   login = () => {
     this.dialog.open(LoginModalComponent, {
-        minWidth: 600,
         hasBackdrop: true,
         autoFocus: false
       }).afterClosed().subscribe((user) => {
@@ -79,21 +74,18 @@ export class NavbarComponent implements OnInit {
   };
 
   logout = () => {
-    this.securityHandler.logout();
+    this.securityHandler.logout().subscribe(() => {
+      this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
+    });
   };
 
   forgottenPassword = () => {
     this.dialog.open(ForgotPasswordModalComponent, {
-      minWidth: 600,
       hasBackdrop: true
-    }).afterClosed().subscribe(user => {
-      if (user) {
-      }
     });
   };
   register = () => {
     this.dialog.open(RegisterModalComponent, {
-        minWidth: 600,
         hasBackdrop: true,
         autoFocus: false
       }).afterClosed().subscribe(user => {

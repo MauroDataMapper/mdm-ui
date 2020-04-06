@@ -46,7 +46,7 @@ export class SecurityHandlerService {
     return null;
   }
 
-  getEmailFromCookies() {
+  getEmailFromStorage() {
     return sessionStorage.getItem('email');
   }
 

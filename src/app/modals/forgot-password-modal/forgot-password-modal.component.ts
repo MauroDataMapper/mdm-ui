@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
 import {ResourcesService} from '../../services/resources.service';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {RegisterModalComponent} from '../register-modal/register-modal.component';
+import { LoginModalComponent } from '../login-modal/login-modal.component';
 
 @Component({
   selector: 'mdm-forgot-password-modal',
@@ -16,7 +16,7 @@ export class ForgotPasswordModalComponent implements OnInit {
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
 
   ngOnInit() {
-    this.username = this.securityHandler.getEmailFromCookies();
+    this.username = this.securityHandler.getEmailFromStorage();
   }
 
   resetPassword = function() {
@@ -36,6 +36,6 @@ export class ForgotPasswordModalComponent implements OnInit {
   };
   login = () => {
     this.dialogRef.close();
-    this.dialog.open(RegisterModalComponent);
+    this.dialog.open(LoginModalComponent);
   }
 }

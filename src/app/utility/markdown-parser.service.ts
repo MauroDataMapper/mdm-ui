@@ -17,22 +17,22 @@ export class MarkdownParserService {
     renderer.link = (href: string, title: any, text: string) => {
       if (href && href.indexOf('MC|') === 0) {
         const link = this.createLink(href, title, text);
-        return '<a href="' + link + '">' + text + '</a>';
+        return `<a href='${link}'>${text}</a>`;
       }
       // return the actual format if it does not star with MC
-      return '<a href="' + href + '" target="_blank">' + text + '</a>';
+      return `<a href='${href}' target="_blank">${text}</a>`;
     };
 
     // just reduce header tags for one level
     renderer.heading = (text, level, rawtext) => {
       const l = level + 1;
-      return '<h' + l + '>' + text + '</h' + l + '>';
+      return `<h${l}>${text}</h${l}>`;
     };
 
     renderer.table = (header, body) => {
-      let table = '<table class="table table-bordered">';
+      let table = `<table class='table table-bordered'>`;
       table += header + body;
-      table += '</table>';
+      table += `</table>`;
       return table;
     };
     return renderer;
@@ -75,10 +75,10 @@ export class MarkdownParserService {
     (render.html = (html) => {
       return '';
     }),
-      // render just the text of a paragraph
-      (render.paragraph = text => {
-        return this.htmlEscapeToText(text) + '\r\n';
-      });
+    // render just the text of a paragraph
+    (render.paragraph = text => {
+      return this.htmlEscapeToText(text) + '\r\n';
+    });
 
     // render just the text of a heading element, but indecate level
     render.heading = (text, level) => {
@@ -132,12 +132,7 @@ export class MarkdownParserService {
         return dt.id;
       });
 
-    let str =
-      '[' +
-      element.label +
-      '](MC|' +
-      baseTypes.find(x => x.id === element.domainType).markdown +
-      '|';
+    let str = `[${element.label}](MC|${baseTypes.find(x => x.id === element.domainType).markdown}|`;
 
     if (element.domainType === 'Folder') {
       str += element.id;
@@ -166,10 +161,7 @@ export class MarkdownParserService {
         element.breadcrumbs[element.breadcrumbs.length - 1].id;
     }
 
-    if (
-      element.domainType === 'DataType' ||
-      dataTypeNames.indexOf(element.domainType) !== -1
-    ) {
+    if (element.domainType === 'DataType' || dataTypeNames.indexOf(element.domainType) !== -1) {
       str += dataModelId + '|' + element.id;
     }
 

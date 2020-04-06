@@ -14,7 +14,6 @@ import { RegisterModalComponent } from '../modals/register-modal/register-modal.
   styleUrls: ['./navbar.component.sass']
 })
 export class NavbarComponent implements OnInit {
-  @Input() navCollapsed: boolean;
 
   profilePictureReloadIndex = 0;
   profile: any;
@@ -30,17 +29,15 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
       if (this.securityHandler.isLoggedIn()) {
           this.profile = this.securityHandler.getCurrentUser();
+
+          this.sharedService.pendingUsersCount().subscribe(data => {
+            this.pendingUsersCount = data.body.count;
+          });
       }
-      if (!this.navCollapsed) {
-          this.navCollapsed = true;
-      }
+
       this.backendURL = this.sharedService.backendURL;
       this.HDFLink = this.sharedService.HDFLink;
       this.current = this.sharedService.current;
-
-      this.sharedService.pendingUsersCount().subscribe(data => {
-        this.pendingUsersCount = data.body.count;
-      });
   }
 
   isLoggedIn = () => {

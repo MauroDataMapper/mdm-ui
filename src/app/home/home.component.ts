@@ -59,12 +59,6 @@ export class HomeComponent implements OnInit {
     });
   };
 
-  logout = () => {
-    this.securityHandler.logout().subscribe(() => {
-      this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
-    });
-  };
-
   forgottenPassword = () => {
     this.dialog.open(ForgotPasswordModalComponent, {
       hasBackdrop: true

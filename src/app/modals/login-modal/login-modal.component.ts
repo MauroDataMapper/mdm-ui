@@ -17,7 +17,7 @@ export class LoginModalComponent implements OnInit {
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<LoginModalComponent>, private securityHandler: SecurityHandlerService) {}
 
   ngOnInit() {
-    const un = this.securityHandler.getEmailFromCookies();
+    const un = this.securityHandler.getEmailFromStorage();
     this.username = un === 'undefined' ? '' : un;
     this.password = '';
   }

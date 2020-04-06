@@ -26,7 +26,7 @@ export class ConfirmationModalComponent implements OnInit {
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
     this.title = this.data.title;
     this.message = this.data.message;
-    // this.username = securityHandler.getEmailFromCookies();
+    // this.username = securityHandler.getEmailFromStorage();
     this.password = '';
     this.cancelShown =
       this.data.cancelShown != null ? this.data.cancelShown : true;

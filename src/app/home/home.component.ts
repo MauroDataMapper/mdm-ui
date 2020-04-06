@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.securityHandler.isLoggedIn()) {
@@ -29,66 +29,18 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  openProfile = () => {
-    this.stateHandler.Go('userarea.profile', null, null);
-  };
-
   isLoggedIn = () => {
     return this.securityHandler.isLoggedIn();
   };
 
   login = () => {
     this.dialog.open(LoginModalComponent, {
-        minWidth: 600,
-        hasBackdrop: true,
-        autoFocus: false
-      }).afterClosed().subscribe((user) => {
-      if (user) {
-        if (user.needsToResetPassword) {
-            this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
-            return;
-        }
-        this.profile = user;
-
-        const latestURL = this.securityHandler.getLatestURL();
-        if (latestURL) {
-            this.broadcastSvc.broadcast('userLoggedIn');
-            this.securityHandler.removeLatestURL();
-            this.stateHandler.CurrentWindow(latestURL);
-            return;
-        } else {
-            this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-            return;
-        }
-      }
-    });
-  };
-
-  logout = function() {
-    this.securityHandler.logout().subscribe(() => {
-      this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
-    });
-  };
-
-  forgottenPassword = () => {
-    this.dialog.open(ForgotPasswordModalComponent, {
-        minWidth: 600,
-        hasBackdrop: true
-      }).afterClosed().subscribe(user => {
-        if (user) {
-        }
-      });
-  };
-
-  register = () => {
-    this.dialog.open(RegisterModalComponent, {
-      minWidth: 600,
       hasBackdrop: true,
       autoFocus: false
-    }).afterClosed().subscribe(user => {
+    }).afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.userArea.change-password'});
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
           return;
         }
         this.profile = user;
@@ -100,7 +52,45 @@ export class HomeComponent implements OnInit {
           this.stateHandler.CurrentWindow(latestURL);
           return;
         } else {
-          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'});
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+          return;
+        }
+      }
+    });
+  };
+
+  logout = () => {
+    this.securityHandler.logout().subscribe(() => {
+      this.broadcastSvc.broadcast('userLoggedOut', { goTo: 'home' });
+    });
+  };
+
+  forgottenPassword = () => {
+    this.dialog.open(ForgotPasswordModalComponent, {
+      hasBackdrop: true
+    });
+  };
+
+  register = () => {
+    this.dialog.open(RegisterModalComponent, {
+      hasBackdrop: true,
+      autoFocus: false
+    }).afterClosed().subscribe(user => {
+      if (user) {
+        if (user.needsToResetPassword) {
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.change-password' });
+          return;
+        }
+        this.profile = user;
+
+        const latestURL = this.securityHandler.getLatestURL();
+        if (latestURL) {
+          this.broadcastSvc.broadcast('userLoggedIn');
+          this.securityHandler.removeLatestURL();
+          this.stateHandler.CurrentWindow(latestURL);
+          return;
+        } else {
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
           return;
         }
       }

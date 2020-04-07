@@ -16,6 +16,7 @@ import { MaterialModule } from '../material/material.module';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from 'src/app/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ComparisonTreeComponent,
     MetadataCompareComponent,
     EnumerationCompareComponent,
-    ErrorComponent
+    ErrorComponent,
+    MdmPaginatorComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +56,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     EnumerationCompareComponent,
     NgxJsonViewerModule,
     ErrorComponent,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MdmPaginatorComponent
   ]
 })
 export class SharedModule {}

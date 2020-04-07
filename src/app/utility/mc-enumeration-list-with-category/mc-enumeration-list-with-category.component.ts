@@ -7,6 +7,7 @@ import {ValidatorService} from '../../services/validator.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
+import {MdmPaginatorComponent} from "../../shared/mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -22,7 +23,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   @Output() afterSave = new EventEmitter<any>();
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   @ViewChild(MatTable, {static: false}) table: MatTable<any>;
 
@@ -596,7 +597,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   pageSizeClicked(paginator) {
     this.pageSize = paginator.pageSize;
-    this.currentPage = paginator.pageIndex;
+    this.currentPage = paginator.pageOffset();
     this.showRecords(this.allRecords);
   }
 }

@@ -7,6 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import {MdmPaginatorComponent} from "../../shared/mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-groups-table',
@@ -16,7 +17,8 @@ import { MatTableDataSource } from '@angular/material/table';
 export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+
 
   filterEvent = new EventEmitter<string>();
   isLoadingResults: boolean;
@@ -53,7 +55,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = true;
           return this.groupsFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
             this.filter

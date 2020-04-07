@@ -7,6 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -31,7 +32,7 @@ export class AnnotationListComponent implements AfterViewInit {
   childEditor: MarkdownTextAreaComponent;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   @ViewChild('childEditor', { static: false })
   set content(content: MarkdownTextAreaComponent) {
@@ -59,7 +60,7 @@ export class AnnotationListComponent implements AfterViewInit {
 
           return this.annotationFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction
           );

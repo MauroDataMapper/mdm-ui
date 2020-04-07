@@ -17,6 +17,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {ElementTypesService} from '../../services/element-types.service';
 import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
+import {MdmPaginatorComponent} from "../mdm-paginator/mdm-paginator";
+
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -39,7 +41,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   access: any;
   @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   baseTypes: any;
   classifiableBaseTypes: any;
   filterValue: any;
@@ -86,7 +88,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
             this.isLoadingResults = true;
 
             return this.termFetch(this.paginator.pageSize,
-              this.paginator.pageIndex,
+              this.paginator.pageOffset,
               this.sort.active,
               this.sort.direction,
               this.filter);

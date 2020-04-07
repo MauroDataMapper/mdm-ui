@@ -18,6 +18,7 @@ import { MessageHandlerService } from '../../services/utility/message-handler.se
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',
@@ -35,7 +36,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+
 
   allDataTypes: any;
   allDataTypesMap: any;
@@ -100,7 +102,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
             return this.dataTypesFetch(
               this.paginator.pageSize,
-              this.paginator.pageIndex,
+              this.paginator.pageOffset,
               this.sort.active,
               this.sort.direction,
               this.filter

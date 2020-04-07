@@ -16,6 +16,7 @@ import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from "../mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-element-child-data-elements-list',
@@ -42,7 +43,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<string>();
   filter: string;
@@ -75,7 +76,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
 
             return this.dataElementsFetch(
               this.paginator.pageSize,
-              this.paginator.pageIndex,
+              this.paginator.pageOffset,
               this.sort.active,
               this.sort.direction,
               this.filter

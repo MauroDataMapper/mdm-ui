@@ -17,6 +17,7 @@ import { BroadcastService } from '../../../services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import {MdmPaginatorComponent} from "../../../shared/mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-data-class-step2',
@@ -44,7 +45,8 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+
 
   filterEvent = new EventEmitter<string>();
   filter: string;

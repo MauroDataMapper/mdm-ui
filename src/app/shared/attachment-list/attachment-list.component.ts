@@ -6,6 +6,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-attachment-list',
@@ -25,8 +26,7 @@ export class AttachmentListComponent implements AfterViewInit {
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
-  @ViewChild(MatPaginator, { static: false })
-  paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   reloadEvent = new EventEmitter<string>();
   hideFilters = true;
@@ -55,7 +55,7 @@ export class AttachmentListComponent implements AfterViewInit {
 
           return this.attachmentFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
             this.filter

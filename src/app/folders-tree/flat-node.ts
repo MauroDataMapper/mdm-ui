@@ -1,7 +1,11 @@
 /** (Partial) Structure of source node */
 export interface Node {
     children?: Node[];
+    created?: boolean;
     deleted?: boolean;
+    selected?: boolean;
+    isGhost?: boolean;
+    modified?: boolean;
     finalised?: boolean;
     domainType: DOMAIN_TYPE;
     type?: string;
@@ -73,11 +77,39 @@ export class FlatNode {
         return this.node.dataModel;
     }
 
+    get created() {
+        return this.node.created;
+    }
+    set created(c: boolean) {
+        this.node.created = c;
+    }
+
     get deleted() {
         return this.node.deleted;
     }
     set deleted(d: boolean) {
         this.node.deleted = d;
+    }
+
+    get selected() {
+        return this.node.selected;
+    }
+    set selected(s: boolean) {
+        this.node.selected = s;
+    }
+
+    get isGhost() {
+        return this.node.isGhost;
+    }
+    set isGhost(ig: boolean) {
+        this.node.isGhost = ig;
+    }
+
+    get modified() {
+        return this.node.modified;
+    }
+    set modified(m: boolean) {
+        this.node.modified = m;
     }
 
     get finalised() {

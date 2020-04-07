@@ -1,26 +1,25 @@
-<div>
+<div class="container">
     <div class="row">
         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Left</strong>
                 <mdm-model-selector-tree
-                        [treeSearchDomainType]="'DataModel'"
-                        [ngModel]="sourceModel"
-                        [processing]="processing"
-                        [defaultElements]="[sourceModel]"
-                        [onSelect]="onLeftModelSelect"
-                        [accepts]="['DataModel']" ></mdm-model-selector-tree>
+                    [treeSearchDomainType]="'DataModel'"
+                    [ngModel]="sourceModel"
+                    [processing]="processing"
+                    [defaultElements]="[sourceModel]"
+                    [onSelect]="onLeftModelSelect"
+                    [accepts]="['DataModel']"
+                    ngDefaultControl></mdm-model-selector-tree>
             </div>
             <div class="leftTree" *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
-                <mdm-comparison-tree
-                        [val]="sourceModel"
-                        [diffMap]="diffMapLeft"
-                        [type]="'dynamic'"
-                        [nodeExpand]="onNodeExpand"
-                        [treeName]="'left'"
-                        [nodeClick]="onNodeClick"
-                        child-element-name="'children'">
-                </mdm-comparison-tree>
+                <mdm-folders-tree
+                    [node]="{children: [sourceModel]}"
+                    treeName="left"
+                    [initialExpandedPaths] = "[sourceModel.id]"
+                    isComparisonTree = true
+                    (nodeClickEvent)="onNodeClick($event)">
+                </mdm-folders-tree>
             </div>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center;">
@@ -32,23 +31,21 @@
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Right</strong>
                 <mdm-model-selector-tree
-                        [treeSearchDomainType]="'DataModel'"
-                        [ngModel]="targetModel"
-                        [processing]="processing"
-                        [defaultElements]="[targetModel]"
-                        [onSelect]="onRightModelSelect"
-                        [accepts]="['DataModel']" ></mdm-model-selector-tree>
+                    [treeSearchDomainType]="'DataModel'"
+                    [ngModel]="targetModel"
+                    [processing]="processing"
+                    [defaultElements]="[targetModel]"
+                    [onSelect]="onRightModelSelect"
+                    [accepts]="['DataModel']" ngDefaultControl></mdm-model-selector-tree>
             </div>
             <div *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
-                <mdm-comparison-tree
-                        [val]="targetModel"
-                        [diffMap]="diffMapRight"
-                        [type]="'dynamic'"
-                        [nodeExpand]="onNodeExpand"
-                        [treeName]="'right'"
-                        [nodeClick]="onNodeClick"
-                        [childElementName]="'children'">
-                    </mdm-comparison-tree>
+                <mdm-folders-tree
+                    [node]="{children: [targetModel]}"
+                    treeName="right"
+                    [initialExpandedPaths] = "[targetModel.id]"
+                    isComparisonTree = true
+                    (nodeClickEvent)="onNodeClick($event)">
+                </mdm-folders-tree>
             </div>
         </div>
     </div>

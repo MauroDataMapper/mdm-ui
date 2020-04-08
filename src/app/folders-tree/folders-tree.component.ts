@@ -55,7 +55,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() inSearchMode: any;
 
-  @Input() initialExpandedPaths = [];
+  @Input() initialExpandedPaths: string[];
   @Input() isComparisonTree = false;
 
   @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
@@ -127,22 +127,17 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener, []);
   }
 
-  ngOnInit() {
-    if (this.initialExpandedPaths) {
-      this.expandedPaths = this.initialExpandedPaths;
-      this.refreshTree();
-    }
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.node) {
-      if (this.node && this.node.children) {
+      if (this.node?.children) {
         this.refreshTree();
       }
     }
 
-    if (changes.initialExpandedPaths) {
-      if (this.initialExpandedPaths) {
+    if (changes.initialExpandedPaths && this.node?.children) {
+      if (this.initialExpandedPaths?.length > 0) {
         this.expandedPaths = this.initialExpandedPaths;
         this.refreshTree();
       }

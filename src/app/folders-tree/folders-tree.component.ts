@@ -190,7 +190,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Additional CSS classes to add to the tree node. fa-lg is requied to make sure fa icon is properly sized. */
   getCssClass(node: FlatNode) {
-    return `fa-lg ${node.deleted ? 'deleted-folder' : 'themeColor'}`;
+    return `fa-sm ${node.deleted ? 'deleted-folder' : ''}`;
   }
 
   private async refreshTree() {

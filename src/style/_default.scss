@@ -23,6 +23,10 @@ ol li, ul li {
     width: 1600px;
   }
 }
+.mdm--container-hd {
+  max-width: 1800px;
+  margin: auto;
+}
 .container {
   @include respond-to(992px) {
     max-width: 100%;

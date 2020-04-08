@@ -11,36 +11,46 @@ mat-tree-node.mat-tree-node {
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
-    margin-right: 8px;
+    margin-right: 5px;
     vertical-align: 0.09em;
     line-height: 1;
     min-width: 20px;
-    width: 20px;
     color: #f19e3f;
     text-align: center;
-    line-height: 25px;
+    line-height: 20px;
+    @include size(20px, 20px);
 
     &.fa-folder-open {
       font-weight: 400;
     }
   }
   button.mat-icon-button {
+    @include size(25px, 22px);
     color: #a06829;
-    @include size(30px, 30px);
-    line-height: 30px;
+    line-height: 22px;
+    bottom: 1px;
+    font-size: 16px;
   }
   .node-title, .mat-tree-node-active {
     color: #333;
-    font-size: 17px;
+    font-size: 15px;
     cursor: pointer;
+    line-height: 1.5;
   }
-  .mat-icon.fa-lg{
-    font-size: 19px;
-  }
+}
+.foldersTree.folderTreeIcon {
+  margin-right: 8px;
+  vertical-align: 0.09em;
+  line-height: 1;
+  min-width: 20px;
+  width: 20px;
+  color: #f19e3f;
+  text-align: center;
+  line-height: 25px;
 }
 
 .mat-tree {
-  padding: 10px;
+  padding: 0 10px 10px 10px;
 }
 .fa-folder, .mat-icon.fa-folder-open, .fa-folder-plus, .dataModelTypeIcon {
   color: #f19e3f;
@@ -58,9 +68,6 @@ i.favouritesIcon.addedToFavourite {
   right: 30px;
   cursor: pointer;
 }
-// .fa-star.favouritesIcon {
-//   color: #ffa743;;
-// }
 
 div.mat-menu-panel.filterMenu {
   width: 100%;
@@ -75,18 +82,20 @@ span.tree-top-actions button, .import-folder-actions button {
 }
 
 div.mat-tab-label {
-  // opacity: 1;
   min-width: 25px;
   padding: 0 16px;
-  // background-color: transparent;
-  // color: $defaultThemeColour;
+  font-size: 18px;
+}
+div.mat-tab-label {
+  height: 38px;
+}
+.table td, .table th, tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
+  padding: .5rem .75rem;
 }
 
 /* Styles for the active tab label */
 .mat-tab-label.mat-tab-label-active {
   min-width: 25px !important;
-  // background-color: transparent;
-  // color: $defaultThemeColour;
   font-weight: 700;
 }
 
@@ -102,7 +111,6 @@ div.mat-tab-label {
   background-color:#FFF; 
   width:100%;
   z-index: 900;
-  // margin-top: 14px;
 }
 
 
@@ -130,13 +138,9 @@ table.mat-table .mat-header-cell {
   vertical-align: middle;
 }
 
-tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
-      padding: 0.75em;
-}
 
 
 /* Favourites */
-
 div.noFilterResult {
   color: #686868;
   font-style: italic;

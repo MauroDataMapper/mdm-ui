@@ -46,7 +46,8 @@
         </mat-progress-spinner>
     </mat-card>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10"
-        (page)="getServerData($event)" showFirstLastButtons></mat-paginator>
+    <div class="mdm--mat-pagination">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons></mat-paginator>
+    </div>
 </div>
 

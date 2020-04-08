@@ -1,8 +1,6 @@
 .heading-container {
   padding: 24px 32px;
   margin-bottom: 16px;
-  // height: 80px;
-  // line-height: 85px;
   position: relative;
   border: 1px solid #f3f3f3;
   h4 {
@@ -10,9 +8,15 @@
     display: inline;
     font-weight: 500;
   }
+  .fas.fa-filter {
+    @include respond-to($desktop) {
+      display: none;
+    }
+  }
 }
 
-.mdm--mat-pagination, .table thead {
+.mdm--mat-pagination, 
+table.table thead {
   border: 1px solid #f3f3f3;
 }
 
@@ -73,18 +77,12 @@
   }
 }
 
-.addUserTrigger {
-  position: absolute;
-  top: 0;
-  right: 32px;
-}
-
 table.mdm--table {
   table-layout: fixed;
   width: 100%;
   margin-bottom: 5px !important;
   td {
-    height: 60px;
+    min-height: 60px;
     vertical-align: middle !important;
   }
   th {
@@ -94,6 +92,72 @@ table.mdm--table {
 td.mat-cell:last-of-type {
   padding-right: 16px !important;
 }
+
+
+table.mdm--table-responsive {
+  border: 1px solid #ccc;
+}
+
+table.mdm--table-responsive tr {
+  border: 1px solid #f3f3f3;
+  padding: .35em;
+}
+
+table.mdm--table-responsive th, 
+table.mdm--table-responsive td {
+  padding: .5em;
+}
+.mdm--td-cell {
+  display: none;
+}
+
+@media screen and (max-width: $desktop) {
+  table.mdm--table-responsive {
+    border: 0;
+  }
+  table.mdm--table-responsive th.mat-header-cell:first-of-type, 
+  table.mdm--table-responsive td.mat-cell:first-of-type, 
+  table.mdm--table-responsive td.mat-footer-cell:first-of-type {
+    padding: 0.5rem 0.75rem
+  }
+  table.table-striped.mdm--table-responsive tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+  }
+  
+  table.mdm--table-responsive thead {
+    display: none
+  }
+  
+  table.mdm--table-responsive tr {
+    border-bottom: 8px solid #f3f3f3;
+    display: block;
+    height: auto;
+    min-height: 40px;
+    margin-bottom: 24px;
+    border-radius: 5px;
+  }
+  
+  table.mdm--table-responsive td {
+    border-bottom: 1px solid #f3f3f3;
+    display: block;
+    height: auto;
+    min-height: 40px;
+    text-align: right!important;
+  }
+  
+  .mdm--td-cell {
+    display: inline;
+    float: left;
+    font-weight: bold;
+  }
+
+  table.mdm--table-responsive td:last-child {
+    border-bottom: 0;
+  }
+}
+
+
+
 
 .group {
   padding: 5px 10px;

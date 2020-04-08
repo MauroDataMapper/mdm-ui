@@ -2,7 +2,7 @@
 
 $custom-typography: mat-typography-config(
   $font-family: "Nunito Sans, sans-serif",
-  $body-1: mat-typography-level(18px, 26px, 500),
+  $body-1: mat-typography-level(17px, 26px, 500),
   $body-2: mat-typography-level(18px, 26px, 500),
   $headline: mat-typography-level(36px, 42px, 600),
   $title: mat-typography-level(32px, 38px, 600),
@@ -12,14 +12,6 @@ $custom-typography: mat-typography-config(
   $input: mat-typography-level(18px, 1.125, 500)
 );
 
-$primary-color-dark:   #388E3C;
-$primary-color:        #4CAF50;
-$primary-color-light:  #C8E6C9;
-$primary-color-text:   #FFFFFF;
-$accent-color:         #7C4DFF;
-$primary-text-color:   #212121;
-$secondary-text-color: #757575;
-$divider-color:        #BDBDBD;
 
 /* Primary values */
 $bdi-primary: (

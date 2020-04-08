@@ -117,7 +117,8 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     this.treeFlattener = new MatTreeFlattener(
       (node: Node, level: number) => new FlatNode(node, level),
       (node: FlatNode) => node.level,
-      (node: FlatNode) => node.hasChildren || node.hasChildFolders, this.getChildren);
+      (node: FlatNode) => node?.hasChildren || node?.hasChildFolders,
+      this.getChildren);
 
     this.treeControl = new FlatTreeControl(
       (node: FlatNode) => node.level,
@@ -136,6 +137,13 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.node) {
       if (this.node && this.node.children) {
+        this.refreshTree();
+      }
+    }
+
+    if (changes.initialExpandedPaths) {
+      if (this.initialExpandedPaths) {
+        this.expandedPaths = this.initialExpandedPaths;
         this.refreshTree();
       }
     }

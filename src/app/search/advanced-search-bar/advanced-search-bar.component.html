@@ -172,7 +172,9 @@
                         <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
                     </mat-card>
 
-                    <mat-paginator *ngIf="formData.showSearchResult" [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons></mat-paginator>
+                    <div class="mdm--mat-pagination">
+                        <mat-paginator *ngIf="formData.showSearchResult" [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons></mat-paginator>
+                    </div>
                 </div>
             </div>
         </div>

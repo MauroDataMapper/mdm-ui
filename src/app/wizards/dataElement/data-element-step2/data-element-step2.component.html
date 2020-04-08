@@ -116,83 +116,50 @@
                   <input #filters matInput name="label" (keyup)="applyFilter()">
                 </mat-form-field>
               </div>
-              <div style="font-size: 12px;clear: both;margin: 2px 0px" class="error text-danger">
-                                    <span *ngIf="multiplicityError">
-                                        {{multiplicityError}}
-                                    </span>
-              </div>
-              <div style="clear: both;font-size: 11px;font-style: italic;">
-                Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
-              </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="max-width: 23%; width: 23%; text-align: left;">
+              {{record.label}}
             </td>
-          </tr>
-          <tr>
-            <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Data Type *</th>
-            <td>
-
-              <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
-                <mdm-element-data-type
-                  [elementDataType]="model.dataType"
-                  [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="description">
+              <span [hidden]="!hideFilters">Description</span>
+              <div [hidden]="hideFilters">
+                <mat-form-field class="filter" floatLabel="never">
+                  <mat-label>Description</mat-label>
+                  <input #filters matInput name="description" (keyup)="applyFilter()">
+                </mat-form-field>
               </div>
-
-              <div *ngIf="model.allDataTypesCount === 0">
-                <label>No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.<br>Please enter Data Type details:</label>
-              </div>
-
-              <div *ngIf="model.allDataTypesCount != 0">
-                <label *ngIf="!model.showNewInlineDataType">Please select a Data Type or <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">Add a new one</a>:</label>
-                <label *ngIf="model.showNewInlineDataType">Please <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">select a Data Type </a> or Add a new one:</label>
-              </div>
-
-              <div *ngIf="model.showNewInlineDataType">
-                <mdm-data-type-inline
-                  [parentScopeHandler]="parentScopeHandler"
-                  [model]="model.newlyAddedDataType"
-                  [parentDataModel]="model.parentDataModel"
-                  [showParentDataModel]="false"
-                  (validationStatusEvent)="validationStatusEmitter($event)">
-                </mdm-data-type-inline>
-              </div>
-              <div *ngIf="!model.showNewInlineDataType">
-                <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
-                  <mdm-select
-                    [width]="'100%'"
-                    [acceptTypedInput]="false"
-                    [valueType]="'dynamic'"
-                    [defaultValue]="model.dataType"
-                    [loadDynamicValues]="fetchDataTypes"
-                    [minInputLength]="1"
-                    [idProperty]="'id'"
-                    [displayProperty]="'label'"
-                    [searchProperty]="'label'"
-                    [loadAllOnClick]="true"
-                    [pagination]="pagination"
-                    (selectEvent)="onTargetSelect($event[0])">
-                    <ng-template #lineContent let-item = 'item' let-searchTerm = "inputText" >
-                      <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
-                      <div>
-                        <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
-                      </div>
-                    </ng-template>
-                  </mdm-select>
-                </div>
-              </div>
+            </th>
+            <td mat-cell *matCellDef="let record"
+              style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+              <mdm-more-description description="{{record.description}}"></mdm-more-description>
             </td>
-          </tr>
-
-          <tr>
-            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
-            <td>
-              <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
+          </ng-container>
+          <ng-container matColumnDef="domainType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="domainType">
+              <span [hidden]="!hideFilters">Type</span>
+              <div [hidden]="hideFilters">
+                <mat-label>Type</mat-label>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+              <mdm-element-data-type [newWindow]="true" [hideEnumList]="true" [elementDataType]="record.dataType" [mcParentDataModel]="{id:model.copyFromDataClass[0].dataModel}"></mdm-element-data-type>
             </td>
-          </tr>
-          </tbody>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsDataTypes"></tr>
+          <tr mat-row *matRowDef="let record; columns: displayedColumnsDataTypes;"></tr>
         </table>
-      </form>
+      </div>
+      <div class="mdm--mat-pagination">
+        <mdm-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount"
+          showFirstLastButtons></mdm-paginator>
+      </div>
     </div>
   </div>
-  <div *ngIf="model.createType == 'copy'" class="row" style="margin-bottom:20px;">
+
+  <div *ngIf="model.createType == 'copy'" class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <div>
         <span>
@@ -200,152 +167,80 @@
           <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalSelectedItemsCount}}</span>
         </span>
         <div>
-          <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--table table table-borderless table-striped table-responsive">
+          <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--table table table-borderless table-striped table-responsive-sm">
             <ng-container matColumnDef="label">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" columnName="label" style="cursor: pointer; max-width: 23%; width: 23%;" class="mcTableCheckbox">
-                <span [hidden]="!hideFilters" style="font-weight: 700; color: black">Name</span>
-                <div [hidden]="hideFilters">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label">
+                <span [hidden]="!hideFiltersSelectedDataTypes">Name</span>
+                <div [hidden]="hideFiltersSelectedDataTypes">
                   <mat-form-field class="filter" floatLabel="never">
                     <mat-label>Name</mat-label>
                     <input #filters matInput name="label" (keyup)="applyFilter()">
                   </mat-form-field>
                 </div>
               </th>
-              <td mat-cell *matCellDef="let record" style="max-width: 23%; width: 23%; text-align: center;" class="mcTableCheckbox">
-                {{record.label}}
+              <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                <span>
+                  {{record.label}}
+                </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="description">
-                <span [hidden]="!hideFilters">Description</span>
-                <div [hidden]="hideFilters">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="description">
+                <span [hidden]="!hideFiltersSelectedDataTypes">Description</span>
+                <div [hidden]="hideFiltersSelectedDataTypes">
                   <mat-form-field class="filter" floatLabel="never">
                     <mat-label>Description</mat-label>
                     <input #filters matInput name="description" (keyup)="applyFilter()">
                   </mat-form-field>
                 </div>
               </th>
-              <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
-               <mdm-more-description description="{{record.description}}"></mdm-more-description>
+              <td mat-cell *matCellDef="let record" style="max-width: 35%; width: 35%; text-align: left; word-wrap: break-word;">
+                <span>{{record.description}}</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="domainType">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="domainType">
-                <span [hidden]="!hideFilters">Type</span>
-                <div [hidden]="hideFilters">
-                  <mat-label>Type</mat-label>
-
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="domainType">
+                <span [hidden]="!hideFiltersSelectedDataTypes">Type</span>
+                <div [hidden]="hideFiltersSelectedDataTypes">
+                  <mat-form-field class="filter" floatLabel="never">
+                    <mat-label>Type</mat-label>
+                    <input #filters matInput name="domainType" (keyup)="applyFilter()">
+                  </mat-form-field>
                 </div>
               </th>
-              <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
-                <mdm-element-data-type
-                  [newWindow]="true"
-                  [hideEnumList]="true"
-                  [elementDataType]="record.dataType"
-                  [mcParentDataModel]="{id:model.copyFromDataClass[0].dataModel}"></mdm-element-data-type>
+              <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                <span>{{record.domainType}}</span>
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsDataTypes" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let record; columns: displayedColumnsDataTypes;" style="height: auto"></tr>
+            <ng-container matColumnDef="status">
+
+              <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;">
+                Status
+              </th>
+              <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+                <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
+                  <div><i class="fas fa-times copyElementError"></i></div>
+                  <div class="errorMessage">{{finalResult[record.id].result}}</div>
+                </span>
+                <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
+                  <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsSelectedDataTypes"></tr>
+            <tr mat-row *matRowDef="let record; columns: displayedColumnsSelectedDataTypes;"></tr>
 
           </table>
-
+        </div>
+        <div class="mdm--mat-pagination">
+          <mdm-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalSelectedItemsCount" showFirstLastButtons></mdm-paginator>
         </div>
       </div>
-      <div class="d-flex justify-content-between p-2">
-        <mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
-      </div>
-    </div>
-  </div>
-
-  <!--    Put Submit button in this page -AS-->
-  <div *ngIf="model.createType == 'copy'" class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <div class="mcTableMain">
-      <div class="mcTableTitle">
-        <span class="title">Summary of Selected Data Elements <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalSelectedItemsCount}}</span></span>
-
-      </div>
-      <div class="mcTableContainer">
-      <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="table table-bordered">
-        <ng-container matColumnDef="label">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="label">
-            <span [hidden]="!hideFiltersSelectedDataTypes">Name</span>
-            <div [hidden]="hideFiltersSelectedDataTypes">
-              <mat-form-field class="filter" floatLabel="never">
-                <mat-label>Name</mat-label>
-                <input #filters matInput name="label" (keyup)="applyFilter()">
-              </mat-form-field>
-            </div>
-          </th>
-          <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
-						<span>
-							{{record.label}}
-						</span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="description">
-            <span [hidden]="!hideFiltersSelectedDataTypes">Description</span>
-            <div [hidden]="hideFiltersSelectedDataTypes">
-              <mat-form-field class="filter" floatLabel="never">
-                <mat-label>Description</mat-label>
-                <input #filters matInput name="description" (keyup)="applyFilter()">
-              </mat-form-field>
-            </div>
-          </th>
-          <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
-            <span>{{record.description}}</span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="domainType">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="domainType">
-            <span [hidden]="!hideFiltersSelectedDataTypes">Type</span>
-            <div [hidden]="hideFiltersSelectedDataTypes">
-              <mat-form-field class="filter" floatLabel="never">
-                <mat-label>Type</mat-label>
-                <input #filters matInput name="domainType" (keyup)="applyFilter()">
-              </mat-form-field>
-            </div>
-          </th>
-          <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
-            <span>{{record.domainType}}</span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
-
-          <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;">
-            Status
-          </th>
-          <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
-						<span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
-							<div><i class="fas fa-times copyElementError"></i></div>
-							<div class="errorMessage">{{finalResult[record.id].result}}</div>
-						</span>
-            <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
-							<div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
-						</span>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsSelectedDataTypes"></tr>
-        <tr mat-row *matRowDef="let record; columns: displayedColumnsSelectedDataTypes;"></tr>
-
-      </table>
-    </div>
-      <div class="d-flex justify-content-between p-2">
-        <mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
-      </div>
-    </div>
       <div style="margin-top: 50px;">
         <div *ngIf="processing">
-          <mat-progress-bar
-            value="50"
-            bufferValue="75"
-            color="primary"
-            mode="indeterminate">
+          <mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate">
           </mat-progress-bar>
         </div>
         <div *ngIf="!processing && isProcessComplete">

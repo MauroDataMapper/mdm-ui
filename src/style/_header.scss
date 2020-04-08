@@ -89,6 +89,8 @@ header#mdm--header {
     max-width: unset !important;
     max-width: none;
     @include size(50px !important, 50px !important);
+    min-width: 50px;
+    flex: none!important;
     text-align: center;
     align-content: center;
     vertical-align: middle;

@@ -9,9 +9,9 @@
 
 <div *ngIf="totalItemCount > 0">
 	<div class="mcTableContainer">
-		<table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped table-responsive">
+		<table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
 			<ng-container matColumnDef="sentToEmailAddress">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="sentToEmailAddress">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="sentToEmailAddress">
 					<span [hidden]="!hideFilters">To</span>
 					<div [hidden]="hideFilters">
 						<mat-form-field class="filter" floatLabel="never">
@@ -20,20 +20,26 @@
 						</mat-form-field>
 					</div>
 				</th>
-				<td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+				<td mat-cell *matCellDef="let record" style=" text-align: left; word-wrap: break-word;">
+					<div class="mdm--td-cell">
+						To
+					</div>
 					<span>{{record.sentToEmailAddress}}</span>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="dateTimeSent">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%;" columnName="dateTimeSent">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="dateTimeSent">
 					<span [hidden]="!hideFilters">Date/Time</span>
 				</th>
-				<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+					<div class="mdm--td-cell">
+						Date/Time
+					</div>
 					<span>{{record.dateTimeSentString}}</span>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="subject">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 50%; width: 50%;" columnName="subject">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="subject">
 					<span [hidden]="!hideFilters">Subject/Body</span>
 					<div [hidden]="hideFilters">
 						<mat-form-field class="filter" floatLabel="never">
@@ -42,25 +48,33 @@
 						</mat-form-field>
 					</div>
 				</th>
-				<td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
+				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+					<div class="mdm--td-cell">
+						Subject/Body
+					</div>
 					<span style="font-weight: bold;">{{record.subject}}</span>
 					<br>
-					<more-description [description]="record.body" [length]="200"></more-description>
+					<mdm-more-description [description]="record.body" [length]="200" style="display: block; max-width: 80%; margin-left: auto;"></mdm-more-description>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="successfullySent">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%; text-align: left;" columnName="successfullySent">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; text-align: left;" columnName="successfullySent">
 					<span [hidden]="!hideFilters">Status</span>
 				</th>
-				<td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-					<a *ngIf="record.successfullySent">
-						Successful
-					</a>
-					<a *ngIf="!record.successfullySent" (click)="toggleMessage(record)" style="text-decoration: none; cursor: pointer;">
-						Failed
-					</a>
-					<div *ngIf="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
-						{{record.failureReason}}
+				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+					<div class="mdm--td-cell">
+						Status
+					</div>
+					<div>
+						<a *ngIf="record.successfullySent">
+							Successful
+						</a>
+						<a *ngIf="!record.successfullySent" (click)="toggleMessage(record)" style="text-decoration: none; cursor: pointer;">
+							Failed
+						</a>
+						<div *ngIf="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
+							{{record.failureReason}}
+						</div>
 					</div>
 				</td>
 			</ng-container>
@@ -68,7 +82,7 @@
 			<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
 		</table>
 	</div>
-	<div>
-		<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
-	</div>
+</div>
+<div class="mdm--mat-pagination">
+	<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 </div>

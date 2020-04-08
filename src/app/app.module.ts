@@ -81,7 +81,6 @@ export class AppModule {
     this.broadcast.subscribe('userLoggedIn', args => {
       this.userSettingsHandler.init().then(() => {
         // To remove any ngToast messages specifically sessionExpiry,...
-        console.log('User Logged In');
         this.toast.toasts.forEach(x => this.toast.clear(x.toastId));
         if (args && args.goTo) {
           this.stateHandler.Go(args.goTo, {}, { reload: true, inherit: false, notify: true });

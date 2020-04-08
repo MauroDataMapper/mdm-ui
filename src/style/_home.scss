@@ -14,9 +14,9 @@
       @include respond-to(960px) {
         width: 50%;
       }
-      @include respond-to($mobile-xs) {
-        width: 100%;
-      }
+      // @include respond-to($tablet) {
+      //   display: none;
+      // }
     }
   }
 }
@@ -41,4 +41,9 @@
     background-color: rgba(10, 133, 53, 0.1);
     color: #0a8535;
   }
+}
+
+
+.flex-block > div {
+  flex-basis: auto!important;
 }

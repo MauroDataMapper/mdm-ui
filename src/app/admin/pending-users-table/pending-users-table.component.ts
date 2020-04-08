@@ -1,4 +1,12 @@
-import {Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChildren,
+  ViewChild,
+  EventEmitter,
+  AfterViewInit,
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
@@ -8,7 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'mdm-pending-users-table',
   templateUrl: './pending-users-table.component.html',
-  styleUrls: ['./pending-users-table.component.sass']
+  styleUrls: ['./pending-users-table.component.sass'],
 })
 export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -22,20 +30,11 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   filter: string;
 
   records: any[] = [];
-  displayedColumns = [
-    'emailAddress',
-    'firstName',
-    'lastName',
-    'organisation',
-    'empty'
-  ];
+  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'empty'];
 
   dataSource = new MatTableDataSource<any>();
 
-  constructor(
-    private messageHandler: MessageHandlerService,
-    private resourcesService: ResourcesService
-  ) {
+  constructor(private messageHandler: MessageHandlerService, private resourcesService: ResourcesService ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 

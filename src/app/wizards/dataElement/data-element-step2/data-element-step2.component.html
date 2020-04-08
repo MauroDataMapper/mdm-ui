@@ -189,7 +189,11 @@
           </tr>
           </tbody>
         </table>
-      </form>
+      </div>
+      <div class="mdm--mat-pagination">
+        <mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount"
+          showFirstLastButtons></mat-paginator>
+      </div>
     </div>
   </div>
   <div *ngIf="model.createType == 'copy'" class="row" style="margin-bottom:20px;">
@@ -200,7 +204,7 @@
           <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalSelectedItemsCount}}</span>
         </span>
         <div>
-          <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--table table table-borderless table-striped table-responsive">
+          <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--table table table-borderless table-striped table-responsive-sm">
             <ng-container matColumnDef="label">
               <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" columnName="label" style="cursor: pointer; max-width: 23%; width: 23%;" class="mcTableCheckbox">
                 <span [hidden]="!hideFilters" style="font-weight: 700; color: black">Name</span>
@@ -251,6 +255,9 @@
 
           </table>
 
+        </div>
+        <div class="mdm--mat-pagination">
+          <mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
         </div>
       </div>
       <div class="d-flex justify-content-between p-2">

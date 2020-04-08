@@ -141,8 +141,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
   FolderDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.result = serverResult;
         this.editableForm.label = this.result.label;
         this.editableForm.description = this.result.description;

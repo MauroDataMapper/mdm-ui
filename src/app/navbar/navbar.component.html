@@ -21,9 +21,7 @@
                     </div>
 
                     <div *ngIf="isLoggedIn()">
-                        <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column"
-                            fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px"
-                            fxLayoutAlign="center center">
+                        <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign="center center" style="width: 185px;">
                             <div class="profile-img" fxFlex="30" fxFlex.sm="100" fxFlex.xs="100">
                                 <img class="img-rounded" style="width: 30px; height: auto;"
                                     src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}"

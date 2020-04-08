@@ -219,6 +219,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       if (this.onSelect) {
         this.onSelect(this.selectedElements);
       }
+      this.selectChange.emit(element);
     }
   }
 
@@ -244,6 +245,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       if (this.onSelect) {
         this.onSelect(this.selectedElements);
       }
+      this.selectChange.emit(this.selectedElements);
     }
     this.searchCriteria = null;
     /// this.filteredRootNode = angular.copy(this.rootNode);TODO
@@ -321,8 +323,9 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     if (this.onSelect) {
       this.onSelect(this.selectedElements);
-      this.selectChange.emit(this.selectedElements);
     }
+    this.selectChange.emit(this.selectedElements);
+
     if (!this.multiple) {
       this.searchCriteria = this.selectedElements[0].label;
       this.showTree = false;

@@ -4,19 +4,20 @@
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Left</strong>
                 <mdm-model-selector-tree
-                    [treeSearchDomainType]="'DataModel'"
+                    treeSearchDomainType="DataModel"
                     [ngModel]="sourceModel"
                     [processing]="processing"
                     [defaultElements]="[sourceModel]"
-                    [onSelect]="onLeftModelSelect"
+                    (selectChange)="onModelSelect($event, 'left')"
                     [accepts]="['DataModel']"
+                    doNotShowDataClasses = "true"
                     ngDefaultControl></mdm-model-selector-tree>
             </div>
-            <div class="leftTree" *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
+            <div class="leftTree" *ngIf="sourceModel" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
                 <mdm-folders-tree
                     [node]="{children: [sourceModel]}"
                     treeName="left"
-                    [initialExpandedPaths] = "[sourceModel.id]"
+                    [initialExpandedPaths] = "[sourceModel?.id]"
                     isComparisonTree = true
                     (nodeClickEvent)="onNodeClick($event)">
                 </mdm-folders-tree>
@@ -31,18 +32,20 @@
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Right</strong>
                 <mdm-model-selector-tree
-                    [treeSearchDomainType]="'DataModel'"
+                    treeSearchDomainType="DataModel"
                     [ngModel]="targetModel"
                     [processing]="processing"
                     [defaultElements]="[targetModel]"
-                    [onSelect]="onRightModelSelect"
-                    [accepts]="['DataModel']" ngDefaultControl></mdm-model-selector-tree>
+                    (selectChange)="onModelSelect($event, 'right')"
+                    doNotShowDataClasses = "true"
+                    [accepts]="['DataModel']"
+                    ngDefaultControl></mdm-model-selector-tree>
             </div>
-            <div *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
+            <div *ngIf="targetModel" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
                 <mdm-folders-tree
                     [node]="{children: [targetModel]}"
                     treeName="right"
-                    [initialExpandedPaths] = "[targetModel.id]"
+                    [initialExpandedPaths] = "[targetModel?.id]"
                     isComparisonTree = true
                     (nodeClickEvent)="onNodeClick($event)">
                 </mdm-folders-tree>
@@ -205,11 +208,12 @@
                         <table class="table table-bordered">
                             <thead>
                             <tr>
-                                <th style="width: 2px;">
+                                <th style="min-width: 18px;width: 18px;">
                                     &nbsp;
                                 </th>
-                                <th style="cursor:pointer;max-width: 30%;width: 30%;">
-                                    <div style="float: left; font-weight: normal !important;">
+                                <th style="cursor:pointer;">
+                                  <div style="display: flex; justify-content: flex-end;">
+                                    <div style="font-weight: normal !important;">
                                         Filter:
                                         <select  [(ngModel)]="form.dataElementFilter" style="width:150px !important;"
                                                 class="mcSelect"
@@ -221,31 +225,31 @@
                                         </select>
                                     </div>
 
-                                    <div style="float:left" *ngIf="diffs.dataElementsStatus.deleted > 0" matToolTip="Deleted">
+                                    <div style="" *ngIf="diffs.dataElementsStatus.deleted > 0" matToolTip="Deleted">
                                         <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
                                              class="diffStatusCount comparisonRow deleted">
                                             &nbsp;{{diffs.dataElementsStatus.deleted}}&nbsp;
                                         </div>
                                     </div>
-                                    <div style="float:left" *ngIf="diffs.dataElementsStatus.created > 0" matToolTip="Created">
+                                    <div style="" *ngIf="diffs.dataElementsStatus.created > 0" matToolTip="Created">
                                         <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
                                              class="diffStatusCount comparisonRow created">
                                             &nbsp;{{diffs.dataElementsStatus.created}}&nbsp;
                                         </div>
                                     </div>
-                                    <div style="float:left" *ngIf="diffs.dataElementsStatus.modified > 0"  matToolTip="Modified">
+                                    <div style="" *ngIf="diffs.dataElementsStatus.modified > 0"  matToolTip="Modified">
                                         <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
                                              class="diffStatusCount comparisonRow modified">
                                             &nbsp;{{diffs.dataElementsStatus.modified}}&nbsp;
                                         </div>
                                     </div>
-
+                                  </div>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let diff of diffs.filteredDataElements">
-                                    <td style="width: 2px;"
+                                    <td style="min-width: 18px;width: 18px;"
                                         [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}">
                                         &nbsp;
                                     </td>

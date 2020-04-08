@@ -14,9 +14,9 @@ import { ResourcesService } from '../../services/resources.service';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '../../services/element-types.service';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-classified-elements-list',
@@ -34,7 +34,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   checkAllCheckbox = false;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   processing: boolean;
   failCount: number;
@@ -106,7 +106,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
 
           return this.classificationFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
             this.filter

@@ -14,6 +14,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatInput } from '@angular/material/input';
+import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-summary-metadata-table',
@@ -32,7 +33,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   records: any[] = [];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChildren('filters') filters: QueryList<MatInput>;
 
   result: any;
@@ -59,7 +60,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
 
           return this.summaryMetadataFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
             this.filter

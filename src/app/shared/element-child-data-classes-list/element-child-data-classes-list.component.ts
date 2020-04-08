@@ -15,7 +15,7 @@ import { merge, Observable, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -31,7 +31,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   processing: boolean;
   failCount: number;
@@ -76,7 +76,14 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
           this.changeRef.detectChanges();
-          return this.dataClassesFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter );
+
+          return this.dataClassesFetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction,
+            this.filter
+          );
         }),
         map((data: any) => {
           this.totalItemCount = data.body.count;

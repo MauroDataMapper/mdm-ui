@@ -20,6 +20,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatInput} from '@angular/material/input';
 import {DialogPosition} from '@angular/material/dialog';
+import {MdmPaginatorComponent} from "../mdm-paginator/mdm-paginator";
 
 
 @Component({
@@ -37,7 +38,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   @Input() afterSave: any;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChildren('filters') filters: QueryList<MatInput>;
 
   namespaces: any[];
@@ -88,7 +89,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                   this.changeDetectorRefs.detectChanges();
 
                   return this.metadataFetch(this.paginator.pageSize,
-                    this.paginator.pageIndex,
+                    this.paginator.pageOffset,
                     this.sort.active,
                     this.sort.direction,
                     this.filter);

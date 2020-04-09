@@ -114,7 +114,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     this.loading = true;
     const options = {
       pageSize,
-      pageIndex: offset * pageSize
+      pageIndex: offset
     };
 
     this.selectorSection.loading = true;
@@ -176,8 +176,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
       this.loading = true;
       // $scope.safeApply();
 
-      const position = offset * this.selectorSection.searchResultPageSize;
-
+    //  const position = offset * this.selectorSection.searchResultPageSize;
+      const position = offset;
       this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ['Term'], null, null, null, null, null, null, null, null).subscribe(result => {
         this.selectorSection.searchResult = result.items;
         // make check=true if element is already selected

@@ -2,12 +2,11 @@ import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetecto
 import { ResourcesService } from '../../services/resources.service';
 import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { merge, Observable, BehaviorSubject } from 'rxjs';
+import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-annotation-list',

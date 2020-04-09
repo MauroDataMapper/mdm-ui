@@ -116,7 +116,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             </div>
-            <div class="mdm--mat-pagination"">
+            <div class="mdm--mat-pagination">
                 <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" showFirstLastButtons></mdm-paginator>
             </div>
         </div>
@@ -132,6 +132,24 @@
                     <strong>Error!</strong> {{failCount}} Error(s) in copy process!
                 </div>
             </div>
+        </div>
+
+
+    </div>
+    <div class="mdm--mat-pagination">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
+<div style="margin-top: 50px; width: 100%;">
+    <div *ngIf="processing">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div *ngIf="!processing && isProcessComplete">
+        <div class="alert alert-success" *ngIf="failCount === 0">
+            <strong>Success!</strong> All copied successfully!
+        </div>
+        <div class="alert alert-danger" *ngIf="failCount > 0">
+            <strong>Error!</strong> {{failCount}} Error(s) in copy process!
         </div>
     </div>
 </div>

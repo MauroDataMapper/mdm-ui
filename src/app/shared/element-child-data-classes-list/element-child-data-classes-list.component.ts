@@ -15,8 +15,7 @@ import { merge, Observable, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',

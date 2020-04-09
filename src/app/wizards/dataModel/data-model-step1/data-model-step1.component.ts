@@ -24,13 +24,9 @@ export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('myForm', { static: false }) myForm: NgForm;
 
   ngOnInit() {
-    this.resources.dataModel
-      .get(null, 'types')
-      .toPromise()
-      .then(dataTypes => {
+    this.resources.dataModel.get(null, 'types').toPromise().then(dataTypes => {
         this.allDataModelTypes = dataTypes.body;
-      });
-
+    });
     this.model = this.step.scope.model;
   }
 
@@ -39,11 +35,9 @@ export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      () => {
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(() => {
         this.step.invalid = this.myForm.invalid;
-      }
-    );
+    });
   }
 
   loadHelp = () => {

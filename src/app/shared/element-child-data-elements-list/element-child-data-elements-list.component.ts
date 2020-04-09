@@ -15,8 +15,7 @@ import { GridService } from '../../services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import {MdmPaginatorComponent} from "../mdm-paginator/mdm-paginator";
+import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-child-data-elements-list',

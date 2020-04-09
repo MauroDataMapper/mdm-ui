@@ -58,10 +58,10 @@
 			</div>
 			<div *ngFor="let record of selectedElements">
 				<mdm-element-link [showTypeTitle]="true"
-				[newWindow]="true"
-				[parentDataModel]="{id:record.dataModel}"
-				[parentDataClass]="{id:record.dataClass}"
-				[element]="record"></mdm-element-link>
+								  [newWindow]="true"
+								  [parentDataModel]="{id:record.dataModel}"
+								  [parentDataClass]="{id:record.dataClass}"
+								  [element]="record"></mdm-element-link>
 			</div>
 			<div style="padding-top: 20px;">
 				<button mat-stroked-button color="warn" type="button" class="custom" style="margin-right: 10px; margin-bottom: 8px;" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">

@@ -16,7 +16,7 @@
                 [onSelect]="onSourceSelect"
                 [defaultElements]="[model.source]"
                 [doNotShowDataClasses]="true"
-                [ngModel]="model.source"
+                [ngModel]="[model.source]"
                 [treeSearchDomainType]="'DataModel'"
                 [accepts]="['DataModel']">
               </mdm-model-selector-tree>
@@ -45,7 +45,7 @@
               [onSelect]="onTargetSelect "
               [defaultElements]="[model.target]"
               [doNotShowDataClasses]="true"
-              [ngModel]="model.target"
+              [ngModel]="[model.target]"
               [treeSearchDomainType]="'DataModel'"
               [accepts]="['DataModel']">
             </mdm-model-selector-tree>

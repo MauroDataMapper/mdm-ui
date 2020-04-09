@@ -383,7 +383,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         this.step.invalid = true;
         return;
       }
-      if (!this.model.showNewInlineDataType && !newValue.dataType) {
+      if (!this.model.showNewInlineDataType && !this.model.dataType) {
         this.step.invalid = true;
         return;
       }

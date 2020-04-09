@@ -17,6 +17,7 @@ import { GridService } from '../../services/grid.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from '../../shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-group-member-table',
@@ -27,7 +28,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   @Input() parent: any;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   constructor(
     private roles: ROLES,
@@ -76,7 +77,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
 
           return this.groupMembersFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
             this.filter

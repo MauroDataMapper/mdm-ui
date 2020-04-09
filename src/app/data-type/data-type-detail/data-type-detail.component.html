@@ -4,7 +4,7 @@
             <h4>
                 <div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
-                       <mdm-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
+                       <mdm-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [name]="'moduleName'"  [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
                             <div *ngIf="!editableForm.visible && !editableForm.deletePending" class="btn-group-xs" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                                 <button matTooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
                                         (click)="editableForm.show();"
-                                        [hidden]="!editableForm.visible || !editableForm.deletePending" [disabled]="deleteInProgress">
+                                        [hidden]="editableForm.visible" [disabled]="deleteInProgress">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>

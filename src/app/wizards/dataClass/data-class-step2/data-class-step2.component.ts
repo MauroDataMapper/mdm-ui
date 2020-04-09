@@ -72,11 +72,12 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      () => {
-         // this.validate(x);
-      }
-    );
+
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
+      this.validate(x);
+     });
+
+
   }
 
   onLoad() {

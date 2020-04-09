@@ -279,7 +279,7 @@ export class ElementSelectorComponent implements OnInit {
 
     public fetch(pageSize: number, offset: number, infinateScrollCall: boolean = false): any {
         if ((!this.searchInput || (this.searchInput && this.searchInput.trim().length === 0)) && this.formData.currentContext) {
-            offset = offset / pageSize;
+          //  offset = offset / pageSize;
             // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
             this.loadAllContextElements(this.formData.currentContext, this.formData.selectedType, pageSize, offset);
         } else {
@@ -287,7 +287,7 @@ export class ElementSelectorComponent implements OnInit {
             this.formData.searchResultOffset = offset;
 
             this.loading = true;
-            offset = offset / pageSize;
+          //  offset = offset / pageSize;
             // $scope.safeApply();
             // var position = offset * this.formData.searchResultPageSize;
             this.contextSearchHandler.search(

@@ -82,6 +82,21 @@ export class DataTypeDetailComponent implements OnInit {
     }
   };
 
+  ngAfterViewInit(): void {
+    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
+    this.editForm.changes.subscribe(() => {
+     // if (this.editMode) {
+        this.editForm.forEach(x =>
+          x.edit({
+            editing: true,
+            focus: x._name === 'moduleName' ? true : false
+          })
+        );
+       // this.showForm();
+      //}
+    });
+  }
+
   formBeforeSave = () => {
     const resource = {
       id: this.mcDataTypeObject.id,

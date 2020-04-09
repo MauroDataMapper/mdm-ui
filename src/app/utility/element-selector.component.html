@@ -297,13 +297,13 @@
 
 
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                        <mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"
                                  matRipple
                                  class="element-row mat-table-row-select"
                                  [class.expanded]="expandedElement == row"
                                  (mouseover)="expandedElement = row"
-                                 (click)="onTermSelect(row.element)"></mat-row>
-                        <mat-row class="mat-table-row-select" (click)="onTermSelect(row.element)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                                 (click)="onTermSelect(row)"></mat-row>
+                        <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
                                  [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
                                  style="overflow: hidden">
                         </mat-row>
@@ -389,8 +389,8 @@
                                  class="element-row mat-table-row-select"
                                  [class.expanded]="expandedElement == row"
                                  (mouseover)="expandedElement = row"
-                                 (click)="onTermSelect(row.element)"></mat-row>
-                        <mat-row class="mat-table-row-select" (click)="onTermSelect(row.element)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                                 (click)="onTermSelect(row)"></mat-row>
+                        <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
                                  [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
                                  style="overflow: hidden">
                         </mat-row>

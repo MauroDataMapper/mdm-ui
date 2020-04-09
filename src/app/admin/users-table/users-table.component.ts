@@ -6,6 +6,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from "../../shared/mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-users-table',
@@ -15,7 +16,7 @@ import { MatPaginator } from '@angular/material/paginator';
 export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<string>();
   hideFilters = true;
@@ -44,7 +45,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
 
-          return this.usersFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter);
+          return this.usersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
         }),
         map((data: any) => {
           this.totalItemCount = data.body.count;

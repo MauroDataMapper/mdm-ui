@@ -49,11 +49,11 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
     public getServerData($event) {
         // var offset = $event.pageIndex * $event.pageSize;
-        this.fetch($event.pageSize, $event.pageIndex, $event.pageIndex, this.sort.active, this.sort.direction, null);
+        this.fetch($event.pageSize, $event.pageIndex, $event.pageIndex, this.sort.active, this.sort.direction);
     }
 
     public getSortedData($event) {
-        this.fetch(this.paginator.pageSize, this.paginator.pageIndex, this.paginator.pageIndex, $event.active, $event.direction, null);
+        this.fetch(this.paginator.pageSize, this.paginator.pageIndex, this.paginator.pageIndex, $event.active, $event.direction);
     }
 
     ngOnInit() {
@@ -107,7 +107,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
   }
     public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
-        this.isLoading = true;
+        // this.isLoading = true;
 
         this.options = {
             pageSize,
@@ -154,6 +154,5 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     }
 
 }
-
 
 

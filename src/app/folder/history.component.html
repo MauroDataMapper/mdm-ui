@@ -4,7 +4,7 @@
         <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
     </div>
     <div class="mcTableContainer">
-        <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--table table table-borderless table-striped table-responsive">
+        <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="table mdm--table table-bordered">
 
             <ng-container matColumnDef="createdBy">
                 <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header> User </th>
@@ -45,9 +45,7 @@
             mode="indeterminate">
         </mat-progress-spinner>
     </mat-card>
-
-    <div class="mdm--mat-pagination">
-        <mdm-paginator [pageSizeOptions]="[5, 10, 20, 50]" [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons></mdm-paginator>
-    </div>
+  <div class="mdm--mat-pagination">
+    <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+  </div>
 </div>
-

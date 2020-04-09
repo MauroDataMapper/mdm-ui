@@ -28,7 +28,6 @@ export class ElementSelectorDialogueService {
 
     const dg = this.dialog.open(ElementSelectorComponent, {
       hasBackdrop: false,
-      minHeight: '600px',
       minWidth: '600px',
       maxWidth: '500px',
       position,

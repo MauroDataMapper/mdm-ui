@@ -18,7 +18,8 @@
 
         <i [hidden]="!(!show && !loadingDynamicData && showCaret)" style="position: absolute;height: 10px;top: 40%;right: 10px;margin-top: -2px;cursor: pointer;" class="fas fa-caret-down mcSelect2" #mcSelect2 aria-hidden="true"></i>
 
-        <i [hidden]="!(!show && selectedValue && !multiSelect)" style="position: absolute;height: 10px;top: 35%;right: 25px;margin-top: -2px;cursor: pointer;" class="fas fa-times mcSelect2Delete" #mcSelect2Delete aria-hidden="true" (click)="remove($event)"></i>
+        <i [hidden]="!(!show && selectedValue && !multiSelect)" style="position: absolute;height: 10px;top: 35%;right: 25px;margin-top: -2px;cursor: pointer;" class="fas fa-times warning" #mcSelect2Delete aria-hidden="true" (click)="remove($event)"></i>
+
 
         <input [ngClass]="{ 'extraCssClass':true,  'outlined-input' :true, 'mcSelectHasError': hasError}"
                type="text"

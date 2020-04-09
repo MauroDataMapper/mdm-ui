@@ -3,8 +3,8 @@
     <div flex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="16px">
         <div id="settings-container--left" fxFlex="18" fxFlex.md="18" fxHide.sm fxHide.xs>
             <ul class="list-group-settings">
-                <h5 class="mat-h5 marginless text-muted">Account settings</h5>
-                <li uiSrefActive="active" class="item active">
+                <h5 class="mat-h5 marginless text-muted" style="padding-left: 16px;">Account settings</h5>
+                <li>
                     <a uiSref="appContainer.userArea.profile" uiSrefActive="active">
                         <i class="fas fa-id-card"></i>
                         <span>My profile</span>
@@ -25,7 +25,7 @@
             </ul>
 
             <ul class="list-group-settings" ng-show="isAdmin()">
-                <h5 class="mat-h5 marginless text-muted">Admin settings</h5>
+                <h5 class="mat-h5 marginless text-muted" style="padding-left: 16px;">Admin settings</h5>
                 <li>
                     <a uiSref="appContainer.adminArea.home" uiSrefActive="active">
                         <i class="fas fa-tachometer-alt"></i>

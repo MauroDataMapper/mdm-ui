@@ -17,8 +17,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',

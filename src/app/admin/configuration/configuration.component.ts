@@ -46,10 +46,7 @@ export class ConfigurationComponent implements OnInit {
         this.oldConfiguration = Object.assign({}, this.properties);
       },
       err => {
-        this.messageHandler.showError(
-          'There was a problem getting the configuration properties.',
-          err
-        );
+        this.messageHandler.showError('There was a problem getting the configuration properties.', err);
       });
   }
 

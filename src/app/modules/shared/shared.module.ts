@@ -16,7 +16,7 @@ import { MaterialModule } from '../material/material.module';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from 'src/app/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,8 @@ import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginato
     ReactiveFormsModule,
     MatPasswordStrengthModule,
     NgxJsonViewerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule
   ],
   exports: [
     EditableFormButtonsComponent,

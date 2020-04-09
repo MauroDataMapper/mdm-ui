@@ -1,4 +1,12 @@
-import {Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef, AfterViewInit} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  EventEmitter,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { ResourcesService } from '../../services/resources.service';
@@ -74,31 +82,33 @@ export class EmailsComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.admin.get("emails", options).subscribe(resp => {     
-      this.records = resp.body.items;
-      this.records.forEach(row => {
-        row.dateTimeSentString =
-          row.dateTimeSent.year +
-          '/' +
-          row.dateTimeSent.monthValue +
-          '/' +
-          row.dateTimeSent.dayOfMonth +
-          ' ' +
-          row.dateTimeSent.hour +
-          ':' +
-          row.dateTimeSent.minute +
-          ':' +
-          row.dateTimeSent.second;
-      });
-      this.totalItemCount = this.records.length;
-      this.refreshDataSource();
-    },
+    this.resourcesService.admin.get('emails', options).subscribe(
+      resp => {
+        this.records = resp.body;
+        this.records.forEach(row => {
+          row.dateTimeSentString =
+            row.dateTimeSent.year +
+            '/' +
+            row.dateTimeSent.monthValue +
+            '/' +
+            row.dateTimeSent.dayOfMonth +
+            ' ' +
+            row.dateTimeSent.hour +
+            ':' +
+            row.dateTimeSent.minute +
+            ':' +
+            row.dateTimeSent.second;
+        });
+        this.totalItemCount = this.records.length;
+        this.refreshDataSource();
+      },
       err => {
         this.messageHandler.showError(
           'There was a problem loading user emails.',
           err
         );
-      });
+      }
+    );
   }
 
   applyFilter = () => {

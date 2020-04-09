@@ -14,10 +14,9 @@ import { ResourcesService } from '../../services/resources.service';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '../../services/element-types.service';
-import { MdmPaginatorComponent } from 'src/app/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-classified-elements-list',

@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
 import {ResourcesService} from '../../services/resources.service';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
+import {MatDialogRef} from '@angular/material/dialog';
+import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
   selector: 'mdm-forgot-password-modal',
@@ -10,16 +10,16 @@ import { LoginModalComponent } from '../login-modal/login-modal.component';
   styleUrls: ['./forgot-password-modal.component.sass']
 })
 export class ForgotPasswordModalComponent implements OnInit {
-  username: any;
-  message: any;
+  username: string;
+  message: string;
 
-  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
+  constructor(public broadcastService: BroadcastService, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
 
   ngOnInit() {
     this.username = this.securityHandler.getEmailFromStorage();
   }
 
-  resetPassword = function() {
+  resetPassword() {
     this.resources.catalogueUser.get(this.username, 'resetPasswordLink').subscribe(
       result => {
         this.message = 'success';
@@ -29,13 +29,10 @@ export class ForgotPasswordModalComponent implements OnInit {
         this.message = 'error';
       }
     );
-  };
-  keyEntered = event => {
-    event.preventDefault();
-    return false;
-  };
-  login = () => {
+  }
+
+  login() {
     this.dialogRef.close();
-    this.dialog.open(LoginModalComponent);
+    this.broadcastService.broadcast('openLoginModalDialog');
   }
 }

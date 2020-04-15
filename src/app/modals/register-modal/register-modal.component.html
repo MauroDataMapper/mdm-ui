@@ -1,8 +1,8 @@
-<form class="mdm--form mdm--form-modal" role='form' (keyup)='$event.keyCode != 13;'>
+<form class="mdm--form mdm--form-modal" role='form' (keyup)="$event.keyCode != 13;">
     <h3 class='modal-title text-center'>Request an account</h3>
     <p class="mdm--block text-center">Please request an account in order to continue using our Catalogue</p>
-    <div *ngIf='message' class='alert alert-danger'>
-        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+    <div *ngIf="message" class="alert alert-danger">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{message}}
     </div>
     <div class="form-row">
@@ -10,7 +10,7 @@
             <div class="mdm--form-input">
                 <mat-form-field appearance="outline">
                     <mat-label>First name</mat-label>
-                    <input required matInput id='firstName' name='firstName' [(ngModel)]='firstName'>
+                    <input required matInput id="firstName" name="firstName" [(ngModel)]="firstName">
                 </mat-form-field>
             </div>
         </div>
@@ -18,7 +18,7 @@
             <div class="mdm--form-input">
                 <mat-form-field appearance="outline">
                     <mat-label>Last name</mat-label>
-                    <input required matInput id='lastName' name='lastName' [(ngModel)]='lastName'>
+                    <input required matInput id="lastName" name="lastName" [(ngModel)]="lastName">
                 </mat-form-field>
             </div>
         </div>
@@ -26,28 +26,28 @@
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Email address</mat-label>
-            <input required matInput id='email' name='email' [(ngModel)]='email'>
+            <input required matInput id="email" name="email" [(ngModel)]="email">
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Organisation</mat-label>
-            <input matInput id='organisation' name='organisation' [(ngModel)]='organisation'>
+            <input matInput id="organisation" name="organisation" [(ngModel)]="organisation">
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Role in organisation</mat-label>
-            <input matInput id='roleInOrganisation' name='roleInOrganisation' [(ngModel)]='roleInOrganisation'>
+            <input matInput id="roleInOrganisation" name="roleInOrganisation" [(ngModel)]="roleInOrganisation">
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field class="paddingless" appearance="outline">
             <mat-label>Password</mat-label>
             <mat-pass-toggle-visibility #togglePassword matSuffix></mat-pass-toggle-visibility>
-            <input required matInput [type]='togglePassword.type' id='password' name='password' [(ngModel)]='password'>
+            <input required matInput [type]="togglePassword.type" id="password" name="password" [(ngModel)]="password">
         </mat-form-field>
-        <mat-password-strength [password]='password' class="green mdm--block" [enableDigitRule]="true"
+        <mat-password-strength [password]="password" class="green mdm--block" [enableDigitRule]="true"
             [enableLengthRule]="true" [enableLowerCaseLetterRule]="true" [enableSpecialCharRule]="false"
             [enableUpperCaseLetterRule]="true">
         </mat-password-strength>
@@ -56,7 +56,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Confirm password</mat-label>
             <mat-pass-toggle-visibility #toggleConfirmPassword matSuffix></mat-pass-toggle-visibility>
-            <input matInput [type]='toggleConfirmPassword.type' id='confirmPassword' name='confirmPassword' [(ngModel)]='confirmPassword' required>
+            <input matInput [type]="toggleConfirmPassword.type" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
         </mat-form-field>
     </div>
     <div class="mdm--block text-center">

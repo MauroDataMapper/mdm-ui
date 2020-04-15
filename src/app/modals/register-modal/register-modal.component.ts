@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
 import { ResourcesService } from '../../services/resources.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { LoginModalComponent } from '../login-modal/login-modal.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
   selector: 'mdm-register-modal',
@@ -20,7 +20,7 @@ export class RegisterModalComponent implements OnInit {
   confirmPassword: any;
   message: any;
 
-  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
+  constructor(public broadcastService: BroadcastService, public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
 
   ngOnInit() {
     this.email = '';
@@ -32,7 +32,7 @@ export class RegisterModalComponent implements OnInit {
     this.confirmPassword = '';
   }
 
-  register = () => {
+  register() {
     const resource = {
       emailAddress: this.email,
       firstName: this.firstName,
@@ -56,9 +56,9 @@ export class RegisterModalComponent implements OnInit {
         this.message = 'Error in registration: ' + firstError;
       }
     );
-  };
+  }
 
-  registerSuccess = () => {
+  registerSuccess() {
     const dialog = this.dialog.open(ConfirmationModalComponent, {
       hasBackdrop: true,
       autoFocus: false,
@@ -75,16 +75,10 @@ export class RegisterModalComponent implements OnInit {
         // reject("cancelled");
       }
     });
-  };
+  }
 
-  keyEntered = event => {
-    if (event.which === 13) {
-      this.register();
-    }
-  };
-
-  login = () => {
+  login() {
     this.dialogRef.close();
-    this.dialog.open(LoginModalComponent);
+    this.broadcastService.broadcast('openLoginModalDialog');
   }
 }

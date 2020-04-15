@@ -23,7 +23,6 @@ import { DateFromToComponent } from 'src/app/search/date-from-to/date-from-to.co
 import { MarkdownDirective } from 'src/app/directives/markdown.directive';
 import { ModelPathComponent } from 'src/app/utility/model-path/model-path.component';
 import { ElementSelectorComponent } from 'src/app/utility/element-selector.component';
-import { ConfirmationModalComponent } from 'src/app/modals/confirmation-modal/confirmation-modal.component';
 import { ModelSelectorTreeComponent } from 'src/app/model-selector-tree/model-selector-tree.component';
 import { NotFoundComponent } from 'src/app/errors/not-found/not-found.component';
 import { DataModelDefaultComponent } from 'src/app/utility/data-model-default.component';
@@ -88,8 +87,6 @@ import { DataElementMainComponent } from 'src/app/wizards/dataElement/data-eleme
 import { DataElementStep1Component } from 'src/app/wizards/dataElement/data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from 'src/app/wizards/dataElement/data-element-step2/data-element-step2.component';
 import { DataElementStep3Component } from 'src/app/wizards/dataElement/data-element-step3/data-element-step3.component';
-import { LoginModalComponent } from 'src/app/modals/login-modal/login-modal.component';
-import { ForgotPasswordModalComponent } from 'src/app/modals/forgot-password-modal/forgot-password-modal.component';
 import { HomeComponent } from 'src/app/home/home.component';
 import { ImportComponent } from 'src/app/import/import.component';
 import { SearchComponent } from 'src/app/search/search.component';
@@ -110,7 +107,6 @@ import { ClassifiedElementsListComponent } from 'src/app/shared/classified-eleme
 import { AppContainerComponent } from 'src/app/app-container/app-container.component';
 import { NavbarComponent } from 'src/app/navbar/navbar.component';
 import { CapitalizePipe } from 'src/app/pipes/capitalize.pipe';
-import { RegisterModalComponent } from 'src/app/modals/register-modal/register-modal.component';
 import { FilterPipe } from 'src/app/directives/filter-pipe.directive';
 import { ByteArrayToBase64Pipe } from 'src/app/pipes/byte-array-to-base64.pipe';
 import { GroupComponent } from 'src/app/admin/group/group.component';
@@ -166,7 +162,6 @@ import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-t
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ConfirmationModalComponent,
     ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
@@ -232,8 +227,6 @@ import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-t
     DataElementStep1Component,
     DataElementStep2Component,
     DataElementStep3Component,
-    LoginModalComponent,
-    ForgotPasswordModalComponent,
     HomeComponent,
     ImportComponent,
     SearchComponent,
@@ -254,7 +247,6 @@ import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-t
     AppContainerComponent,
     NavbarComponent,
     CapitalizePipe,
-    RegisterModalComponent,
     FilterPipe,
     ByteArrayToBase64Pipe,
     GroupComponent,
@@ -316,7 +308,6 @@ import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-t
     ModelPathComponent,
     ElementSelectorComponent,
     ModelPathComponent,
-    ConfirmationModalComponent,
     ModelSelectorTreeComponent,
     NotFoundComponent,
     DataModelDefaultComponent,
@@ -382,8 +373,6 @@ import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-t
     DataElementStep1Component,
     DataElementStep2Component,
     DataElementStep3Component,
-    LoginModalComponent,
-    ForgotPasswordModalComponent,
     HomeComponent,
     ImportComponent,
     SearchComponent,
@@ -404,7 +393,6 @@ import { DiagramToolbarComponent } from '../../diagram/diagram-toolbar/diagram-t
     AppContainerComponent,
     NavbarComponent,
     CapitalizePipe,
-    RegisterModalComponent,
     FilterPipe,
     ByteArrayToBase64Pipe,
     GroupComponent,

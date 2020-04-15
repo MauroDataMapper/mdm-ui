@@ -20,6 +20,7 @@ import { UserSettingsHandlerService } from './services/utility/user-settings-han
 import { AppRoutingModule } from './app-routing.module';
 import { DiagramComponent } from './diagram/diagram/diagram.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogRef } from '@angular/material/dialog';
+import { ModalModule } from './modals/modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +31,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogRef } from '@angular/material/dial
     UsersModule,
     SharedModule,
     AppRoutingModule,
+    ModalModule,
     UIRouterModule.forRoot({ useHash: true })
   ],
   providers: [

@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-password-modal.component';
@@ -20,7 +21,8 @@ import { ModalService } from './modal.service';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatPasswordStrengthModule
   ],
   declarations: [
     RegisterModalComponent,
@@ -35,8 +37,7 @@ import { ModalService } from './modal.service';
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
-    ConfirmationModalComponent,
-    ModalService
+    ConfirmationModalComponent
   ]
 })
 export class ModalModule {

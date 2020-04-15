@@ -39,7 +39,7 @@ export class ErrorComponent implements OnInit {
   ) {
     this.lastError = messageService.lastError;
     this.isLoggedIn = sharedService.isLoggedIn();
-    this.summary = `Error ${this.lastError.error.status} : ${this.lastError.error.message}`;
+    this.summary = `Error ${this.lastError.error?.status} : ${this.lastError.error?.message}`;
   }
 
   ngOnInit() {}

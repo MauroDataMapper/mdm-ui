@@ -481,7 +481,7 @@ class CatalogueUser {
   constructor(private resourcesService: ResourcesService) {
   }
 
-  get(id, action, options) {
+  get(id, action, options = {}) {
     if (!options) {
       options = {};
     }

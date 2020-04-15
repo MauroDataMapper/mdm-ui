@@ -17,8 +17,8 @@ export class YoutrackService {
         private sharedService: SharedService,
         private securityHandlerService: SecurityHandlerService
     ) {
-        this.username = securityHandlerService.getUserFromCookie().firstName + ' ' +
-            securityHandlerService.getUserFromCookie().lastName;
+        this.username = securityHandlerService.getUserFromCookie()?.firstName + ' ' +
+            securityHandlerService.getUserFromCookie()?.lastName;
     }
 
     reportIssueToYouTrack(summary: string,
@@ -43,6 +43,9 @@ export class YoutrackService {
                           description: string): Observable<object> {
 
         const url = this.sharedService.youTrack.url + '/api/issues';
+
+        this.username = this.securityHandlerService.getUserFromCookie()?.firstName + ' ' +
+            this.securityHandlerService.getUserFromCookie()?.lastName;
 
 
         const body = {

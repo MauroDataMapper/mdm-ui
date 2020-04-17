@@ -45,7 +45,6 @@ export abstract class BasicDiagramService {
   }
 
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
-    // console.log('laying out nodes...');
     let nodeSep = 100;
     let rankSep = 400;
     if (rankDir === 'TB') {
@@ -121,7 +120,6 @@ export abstract class BasicDiagramService {
                             @Optional() position: joint.g.Point = null,
                             @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
     const cells: Array<joint.dia.Cell> = [];
-    console.log(attributes);
     if (!position) {
       position = new joint.g.Point({x: 0, y: 0});
     }
@@ -169,7 +167,6 @@ export abstract class BasicDiagramService {
     });
     classBox.embed(classNameBox);
     cells.push(classNameBox);
-    console.log(attributes);
     attributes.forEach((attribute, idx) => {
 
       const attributeBox = new joint.shapes.standard.Rectangle({

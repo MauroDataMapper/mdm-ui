@@ -183,7 +183,8 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
   margin-bottom: 20px;
   border-radius: 4px;
   .panel-body {
-    padding: 20px
+    padding: 20px;
+    border: 1px solid #f3f3f3;
   }
 
   table td {

@@ -14,10 +14,6 @@
                   <span class="inline-block">
                     <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
                   </span>
-                  <div class="detail-icons--cta">
-                    <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-                    <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
-                  </div>
                 </div>
                 <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
                     <span class="help-block">{{errorMessage}}</span>

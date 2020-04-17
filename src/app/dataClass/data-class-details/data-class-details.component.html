@@ -3,7 +3,7 @@
         <div class="panel-body panel-table">
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                  <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                  <h4 class="inline-block marginless">
                     <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
                                 [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
                   </h4>

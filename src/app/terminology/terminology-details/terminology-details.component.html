@@ -1,197 +1,141 @@
 <div *ngIf="mcTerminology">
-    <div class="panel panel-default">
-        <form editable-form
-              name="editableForm"
-              onaftersave="onAfterSave()"
-              (ngSubmit)="formBeforeSave()"
-              onkeypress="return event.keyCode != 13;">
-            <div class="panel-body panel-table">
-                <h4>
-                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;">
-                        <span [ngClass]="{'deletedDataModelTitle':mcTerminology?.deleted, 'xeditableInput':true}">
+    <div class="panel panel-default mdm--shadow-block">
+        <form editable-form name="editableForm" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" onkeypress="return event.keyCode != 13;">
+            <div class="panel-body">
+                <div *ngIf="mcTerminology">
+                    <div [ngClass]="{ 'has-error': errorMessage != ''}">
+                        <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': mcTerminology?.deleted}">
+                            <span class="dataModelTypeIcon">
+                                <i matTooltip="Terminology" class="fas fa-book"></i>
+                            </span>
                             <span [innerHTML]="mcTerminology.label" class="dataModelDetailsLabel">
                                 <!-- TODO ADD SEARCH CRITERA PIPE -->
                             </span>
-                            <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
-                               (click)="toggleFavourite()"
-                               matTooltip="Favourite"></i>
-                            <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="left" matTooltip="Help"></i>
+                        </h4>
+                        <span class="inline-block">
+                            <small *ngIf="mcTerminology?.deleted" class="warning"> | Deleted</small>
                         </span>
-                        <span class="publiclyReadable" *ngIf="mcTerminology.readableByEveryone">
-                            <i class="fas fa-globe-europe" aria-hidden="true" title="Publicly Readable"></i>
-                        </span>
+                        <div class="detail-icons--cta">
+                            <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
+                            <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
+                        </div>
                     </div>
-                    <div class="dataModelTypeIcon">
-                        <i matTooltip="Terminology" style="font-size: 30px;" class="fas fa-book"></i>
+                    <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                        <span class="help-block">{{errorMessage}}</span>
                     </div>
-                </h4>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
-                    <small class="elementDetailMCType">Terminology</small>
-                    <mdm-element-status [result]="mcTerminology"></mdm-element-status>
-                    <span *ngIf="mcTerminology.deleted" class="label label-danger"
-                          style="vertical-align: middle; font-size: 9px;">Deleted</span>
-                    <br>
-                    <div style="font-size: 12px; font-style: italic;">
-                        Version: {{mcTerminology.documentationVersion}}
+                </div>
+
+                <div class="detail-icons">
+                    <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
+                        <small>
+                            <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
+                            <span><strong>Availability: </strong>Publicly Readable</span>
+                        </small>
                     </div>
-                    <span style="font-size: 11px; font-style: italic" class="dataModelDetailsLastUpdate">Last Update: {{mcTerminology.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    <span *ngIf="mcTerminology.finalised && mcTerminology.dateFinalised"
-                          style="font-size: 11px; font-style: italic; margin-left: 10px"
-                          class="dataModelDetailsLastUpdate">Finalised On: {{mcTerminology.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+
+                    <div class="text-muted" *ngIf="mcTerminology">
+                        <small>
+                            <i class="fas fa-code-branch" matTooltip="Version"></i>
+                            <span><strong>Version: </strong>{{mcTerminology.documentationVersion}}</span>
+                        </small>
+                    </div>
+
+                    <div class="text-muted" *ngIf="mcTerminology">
+                        <small>
+                            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                            <span><strong>Last update: </strong>
+                                {{mcTerminology.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </small>
+                    </div>
+
+                    <div class="text-muted" *ngIf="mcTerminology && mcTerminology.finalised && mcTerminology.dateFinalised">
+                        <small>
+                            <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
+                            <span><strong><mdm-element-status [result]="mcTerminology"></mdm-element-status> on:</strong> {{mcTerminology.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </small>
+                    </div>
                 </div>
             </div>
-            <table class="table table-bordered">
+            <table class="mdm--table table table-bordered">
                 <tbody>
                     <tr>
                         <td class="detailsRowHeader">Aliases</td>
                         <td>
-                            <div style="width: 50%">
-                                <mdm-element-alias [inEditMode]="false"
-                                                   [aliases]="mcTerminology.editAliases"></mdm-element-alias>
-                            </div>
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="editableForm?.aliass">
+                            </mdm-element-alias>
                         </td>
                     </tr>
                     <tr>
                         <td class="detailsRowHeader">Author</td>
-                        <td>
-                            {{mcTerminology.author}}
-                        </td>
+                        <td>{{mcTerminology.author}}</td>
                     </tr>
                     <tr>
                         <td class="detailsRowHeader">Organisation</td>
-                        <td>
-                            {{mcTerminology.organisation}}
-                        </td>
+                        <td>{{mcTerminology.organisation}}</td>
                     </tr>
                     <tr>
                         <td class="detailsRowHeader">Description</td>
                         <td class="elementDetailDescription">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcTerminology" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcTerminology"
+                                [property]="'description'"></mdm-markdown-text-area>
                         </td>
                     </tr>
                     <tr>
                         <td class="detailsRowHeader">Classifications</td>
                         <td>
-                            <mdm-element-classifications [classifications]="mcTerminology.classifiers" [editableForm]="editableForm"></mdm-element-classifications>
+                            <mdm-element-classifications [classifications]="mcTerminology.classifiers"
+                                [editableForm]="editableForm"></mdm-element-classifications>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: right;">
 
                             <div style="float: right; margin-bottom: 3px; margin-left: 5px;"
-                                 [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                                <div style="float: right; margin-bottom: 3px; margin-left: 5px;"
-                                     [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown
-                                     is-open="false" *ngIf="showDelete">
-                                    <button type="button"
-                                            matTooltip="Delete"
-                                            class="btn btn-default btn-xs dropdown-toggle"
-                                            [disabled]="deleteInProgress || exporting"
-                                            [matMenuTriggerFor]="menu">
+                                [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                                <div style="float: right; margin-bottom: 3px; margin-left: 5px;">
+                                    <button mat-stroked-button color="primary" type="button" matTooltip="Delete"
+                                        aria-label="Delete" class="paddingless dropdown-toggle"
+                                        [disabled]="deleteInProgress || exporting" [matMenuTriggerFor]="menu">
                                         <i class="far fa-trash-alt warning"></i>
-                                        <span class="caret" style="margin-right: 2px;"></span>
                                     </button>
 
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item class="modelFilterItem" (click)="askForSoftDelete()"
-                                                *ngIf="!mcTerminology?.deleted">
+                                            *ngIf="!mcTerminology?.deleted">
                                             <a title="Just mark it as deleted">Mark as deleted</a>
                                         </button>
                                         <button mat-menu-item class="modelFilterItem" (click)="askForPermanentDelete()">
-                                            <a title="Permanently delete the Terminology">Delete <span class="errorMessage">permanently</span></a>
+                                            <a title="Permanently delete the Terminology">Delete <span
+                                                    class="errorMessage">permanently</span></a>
                                         </button>
                                     </mat-menu>
                                 </div>
                             </div>
 
-                            <div style="float: right; margin-bottom: 3px">
-                                <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending"
-                                     class="btn-group-xs" uib-dropdown is-open="false"
-                                     style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;">
-                                    <button id="singleX-button" type="button"
-                                            class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
-                                            [hidden]="editableForm.visible || editableForm.deletePending"
-                                            [disabled]="deleteInProgress || exporting || mcTerminology.finalised"
-                                            matTooltip="Edit"
-                                            (click)="showForm();"
-                                            uib-dropdown-toggle>
-                                        <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                                <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                       [onCancelEdit]="onCancelEdit"
-                                                       [editable]="editableForm"
-                                                       [textLocation]="'left'"
-                                                       [hideDelete]="true"
-                                                       [hideCancel]="false"
-                                                       [processing]="deleteInProgress"></mdm-editable-form-buttons>
-                            </div>
-
-                            <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" class="btn-group-xs" style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;">
-                                <button class="btn btn-xs btn-default"
-                                        (click)="finalise()" matTooltip="Finalise" type="button"
-                                        [disabled]="deleteInProgress || processing">
-                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
-                                </button>
-                            </div>
-
-                            <div *ngIf="showPermission" matTooltip="User & Group Access" class="btn-group-xs" style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button class="btn btn-xs btn-default addNewModelButton"
-                                        (click)="toggleSecuritySection()"
-                                        type="button"
-                                        *ngIf="showPermission"
-                                        [disabled]="deleteInProgress || processing"
-                                        [hidden]="editableForm.visible || editableForm.deletePending">
+                            <div *ngIf="showPermission"
+                                style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;"
+                                [hidden]="editableForm.visible || editableForm.deletePending">
+                                <button mat-stroked-button color="primary" type="button" class="paddingless"
+                                    matTooltip="User & Group Access" aria-label="User & Group Access"
+                                    *ngIf="showPermission" [disabled]="deleteInProgress || processing"
+                                    (click)="toggleSecuritySection()">
                                     <i class="fas fa-user userAccess"></i>
                                 </button>
-
                             </div>
-
-                            <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" class="btn-group-xs" style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;">
-                                <button class="btn btn-xs btn-default addNewModelButton" (click)="newVersion()" type="button" matTooltip="Create a New Version" [disabled]="deleteInProgress || processing">
-                                    <i class="fas fa-copy userAccess"></i>
-                                </button>
-                            </div>
-                            <!--  <div class="deleteInProgressSpinner"
-                                       style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;"
-                                       ng-show="deleteInProgress">
-                                <a style="font-size: 14px; text-decoration: none;">
-                                    <i class="fas fa-sync-alt fa-spin"></i> Deleting...
-                                </a>
-                            </div>
-
-
-                            <div style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;"
-                                 ng-show="exportedFileIsReady">
-                                <div id="exportFileDownload"></div>
-                            </div>
-                            <div style="clear: both;" ng-show="processing">
-                                <uib-progressbar max="100" value="100" class="progress-striped active">
-                                    <span style="color:white; white-space:nowrap;"></span>
-                                </uib-progressbar>
-                            </div>
-                            <div style="text-align: left" ng-show="exportError">
-                                <div style="padding-top: 25px;">
-                                    <div class="alert alert-danger">
-                                        <a class="close" ng-click="resetExportError()" aria-label="close">&times;</a>
-                                        <strong>Error!</strong> {{exportError}}
-                                    </div>
-                                </div>
-                            </div>-->
                         </td>
                     </tr>
                 </tbody>
             </table>
         </form>
     </div>
-    <div class="userAccess" *ngIf="securitySection"
-         style="margin: 10px 0px 50px 0px">
+    <div class="userAccess" *ngIf="securitySection" style="margin: 10px 0px 50px 0px">
+
         <mdm-share-with [mcElement]="mcTerminology" [mcDomainType]="'Terminology'"></mdm-share-with>
         <div>
             <div style="margin-top: 10px">
                 <mdm-user-access-new [parent]="mcTerminology" [parentType]="'Terminology'"></mdm-user-access-new>
             </div>
-            <div style="margin-top: 50px">
+            <div style="margin-top: 10px">
                 <mdm-group-access-new [parent]="mcTerminology" [parentType]="'Terminology'"></mdm-group-access-new>
             </div>
         </div>

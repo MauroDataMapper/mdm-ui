@@ -1,113 +1,111 @@
-<div>
-    <div class="panel panel-default">
-        <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
-            <div class="panel-body panel-table">
-                <h4>
-                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
-                        <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
-                            <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
-                                     <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit >
-                                <span class="publiclyReadable" [hidden]="!result.readableByEveryone">
-                                    <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
-                                </span>
-                            </div>
-                            <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                                <span class="help-block">{{errorMessage}}</span>
-                            </div>
-                        </span>
-                    </div>
-                </h4>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
-                    <small class="elementDetailMCType">Classifier</small>
-                    <span *ngIf="result?.deleted" class="label label-danger"
-                          style="vertical-align: middle;font-size: 9px;">Deleted</span>
-                    <div>
-                    <span *ngIf="result" style="font-size: 11px;font-style: italic" class="dataClassDetailsLastUpdate">Last Update: {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </div>
+<div class="panel panel-default mdm--shadow-block">
+    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body">
+            <div *ngIf="result">
+                <div [ngClass]="{ 'has-error': errorMessage != ''}">
+                  <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                    <span class="dataModelTypeIcon">
+                        <i matTooltip="Classifier" class="fas fa-tag"></i>
+                    </span>
+
+                    <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit >
+
+                  </h4>
+                  <span class="inline-block">
+                    <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
+                  </span>
+                  <div class="detail-icons--cta">
+                    <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
+                    <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
+                  </div>
                 </div>
-
+                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                    <span class="help-block">{{errorMessage}}</span>
+                </div>
             </div>
+            <div class="detail-icons"> 
+                <div class="text-muted" *ngIf="result?.readableByEveryone">
+                  <small>
+                    <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
+                    <span><strong>Availability: </strong>Publicly Readable</span>
+                  </small>
+                </div>
+                <div class="text-muted" *ngIf="result">
+                  <small>
+                    <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                    <span><strong>Last update: </strong> {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span> 
+                  </small>
+                </div>
+            </div>
+        </div>
 
-            <table class="table table-bordered">
-                <tbody>
-                    <tr>
-                        <td class="detailsRowHeader">Description</td>
-                        <td class="elementDetailDescription">
-                            <div *ngIf="hasResult">
-                                <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
-                                    [property]="'description'"></mdm-markdown-text-area>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: right;">
-                            <div style="float: right">
-                                <mdm-editable-form-buttons  [hidden]="editableForm.visible"
-                                                        [onCancelEdit]="onCancelEdit"
-                                                        [editable]="editableForm"
-                                                        [textLocation]="'left'"
-                                                        [hideDelete]="false"
-                                                        [hideCancel]="false"
-                                                        [hideEdit]="true"
-                                                        (delete)="delete()"
-                                                        [processing]="deleteInProgress">
-                                </mdm-editable-form-buttons>
-                            </div>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td class="detailsRowHeader">Description</td>
+                    <td class="elementDetailDescription">
+                        <div *ngIf="hasResult">
+                            <mdm-markdown-text-area [editableForm]="editableForm"
+                                                    [element]="result"
+                                                    [property]="'description'"></mdm-markdown-text-area>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+                        <div style="float: right">
+                            <mdm-editable-form-buttons [hidden]="editableForm.visible"
+                                                       [onCancelEdit]="onCancelEdit"
+                                                       [editable]="editableForm"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="false"
+                                                       [hideCancel]="false"
+                                                       [hideEdit]="true"
+                                                       (delete)="delete()"
+                                                       [processing]="deleteInProgress">
+                            </mdm-editable-form-buttons>
+                        </div>
 
-                            <div style="float: right;margin-bottom: 3px">
-                                <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                    <button mat-stroked-button
-                                            type="button"
-                                            class="paddingless"
-                                            [hidden]="editableForm.visible || editableForm.deletePending"
-                                            [disabled]="deleteInProgress || exporting || result.finalised"
-                                            matTooltip="Edit"
-                                            (click)="showForm();"
-                                            uib-dropdown-toggle>
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                </div>
-                                <mdm-editable-form-buttons  [hidden]="!editableForm.visible"
-                                                        [onCancelEdit]="onCancelEdit"
-                                                        [editable]="editableForm"
-                                                        [textLocation]="'left'"
-                                                        [hideDelete]="true"
-                                                        [hideCancel]="false"
-                                                        [processing]="deleteInProgress">
-                                </mdm-editable-form-buttons>
-                            </div>
-
-                            <!--                        <div class="deleteInProgressSpinner"-->
-                            <!--                             style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;"-->
-                            <!--                             ng-show="deleteInProgress">-->
-                            <!--                            <a style="font-size: 14px; text-decoration: none;">-->
-                            <!--                                <i class="fas fa-sync-alt fa-spin"></i> Deleting...-->
-                            <!--                            </a>-->
-                            <!--                        </div>-->
-
-
-
-
-                            <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <div style="float: right;margin-bottom: 3px">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
+                                        color="primary" 
                                         type="button"
                                         class="paddingless"
-                                        (click)="toggleSecuritySection()"
-                                        *ngIf="showPermission"
-                                        [disabled]="deleteInProgress || processing"
-                                        matTooltip="User & Group Access"
-                                        [hidden]="editableForm.visible || editableForm.deletePending">
-                                    <i class="fas fa-user userAccess"></i>
+                                        [disabled]="deleteInProgress || exporting || result.finalised"
+                                        matTooltip="Edit"
+                                        aria-label="Edit" 
+                                        (click)="showForm();">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </button>
-
                             </div>
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
+                                                       [onCancelEdit]="onCancelEdit"
+                                                       [editable]="editableForm"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="true"
+                                                       [hideCancel]="false"
+                                                       [processing]="deleteInProgress">
+                            </mdm-editable-form-buttons>
+                        </div>
 
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-
+                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button mat-stroked-button
+                                    color="primary" 
+                                    type="button"
+                                    class="paddingless"
+                                    (click)="toggleSecuritySection()"
+                                    *ngIf="showPermission"
+                                    [disabled]="deleteInProgress || processing"
+                                    matTooltip="User & Group Access"
+                                    aria-label="User & Group Access"
+                                    [hidden]="editableForm.visible || editableForm.deletePending">
+                                <i class="fas fa-user userAccess"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>
-

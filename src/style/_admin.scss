@@ -1,6 +1,6 @@
 .heading-container {
   padding: 24px 32px;
-  margin-bottom: 16px;
+  border-bottom: none;
   position: relative;
   border: 1px solid #f3f3f3;
   h4 {
@@ -80,7 +80,7 @@ table.table thead {
 table.mdm--table {
   table-layout: fixed;
   width: 100%;
-  margin-bottom: 5px !important;
+  margin-bottom: 0 !important;
   td {
     min-height: 60px;
     vertical-align: middle !important;

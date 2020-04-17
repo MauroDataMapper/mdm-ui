@@ -37,7 +37,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
    // dataSource = new MatTableDataSource();
    // isLoading = false;
  // pagination: McSelectPagination;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
 
   records: any[] = [];
   filter: any = '';
@@ -70,19 +70,9 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    this.gridService.reloadEvent.subscribe(
-      () => (this.paginator.pageIndex = 0)
-    );
-    merge(
-      this.sort.sortChange,
-      this.paginator.page,
-      this.gridService.reloadEvent
-    )
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    this.gridService.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
+    merge(this.sort.sortChange, this.paginator.page, this.gridService.reloadEvent ).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
-
           return this.fetch(
             this.paginator.pageSize,
             this.paginator.pageOffset,
@@ -90,13 +80,11 @@ export class HistoryComponent implements OnInit, AfterViewInit {
             this.sort.direction,
             this.filter
           );
-        }),
-        map((data: any) => {
+        }), map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
-        }),
-        catchError(() => {
+        }), catchError(() => {
           this.isLoadingResults = false;
           return [];
         })
@@ -116,8 +104,6 @@ export class HistoryComponent implements OnInit, AfterViewInit {
             sortType,
             filters
         };
-
-
         this.elementMap = this.elementTypeService.getBaseWithUserTypes();
         let resource = this.elementMap.find(x => x.id === this.parentType);
 
@@ -152,7 +138,4 @@ export class HistoryComponent implements OnInit, AfterViewInit {
        // this.isLoading = false;
 
     }
-
 }
-
-

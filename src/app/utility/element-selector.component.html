@@ -1,7 +1,6 @@
 <mat-dialog-content style="height: 100%;">
     
     <div style="padding:24px;">
-        <!-- <h4>Element Selector</h4> -->
         <div class="row" style="margin-bottom: 10px;">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 10px;" *ngIf="formData.step === 0">
                 What type of element are you looking for?
@@ -174,7 +173,7 @@
         </div>
         <div *ngIf="formData.selectedType ===  'DataElement'" style="background-color: #FFF;">
             <div style="margin-bottom: 10px;margin-left: 5px;">
-                Please select a {{formData.selectedType}} ?
+                Please select a {{formData.selectedType}}
             </div>
             <div style="margin-top: 10px;">
                 <input type="text" id="dataElementsearchInput"
@@ -253,8 +252,8 @@
                 Please select a Data Type
             </div>
             <div style="margin-top: 10px;">
-                <input type="text" id="dataTypesearchInput"
-                        class="form-control ng-pristine ng-valid ng-touched outlined-input"
+                <input type="text"
+                        class="form-control outlined-input"
                         autocomplete="off"
                         [(ngModel)]="searchInput"
                         (ngModelChange)="searchTextChanged()"
@@ -276,9 +275,6 @@
             </div>
             <div style="height: 240px">
                 <mat-table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
-
-                    <!--- Note that these columns can be defined in any order.
-                    The actual rendered columns are set as a property on the row definition" -->
                     <!-- Position Column -->
                     <ng-container matColumnDef="label">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
@@ -289,12 +285,9 @@
                     <!-- Expanded Content Column - The detail row is made up of this one column -->
                     <ng-container matColumnDef="expandedDetail">
                         <mat-cell  *matCellDef = "let record">
-
                             <mdm-model-path [path]="record.element.breadcrumbs" [showHref]="false" [newWindow]="true" ></mdm-model-path>
-
                         </mat-cell>
                     </ng-container>
-
 
                     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -310,16 +303,13 @@
                 </mat-table>
             </div>
 
-
-
-
             <div *ngIf="totalItemCount > 0" style="float: right;">
-                    <span *ngIf="loading">
-                        <i class="fas fa-sync-alt fa-spin"></i>
-                    </span>
+                <span *ngIf="loading">
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                </span>
                 <span style="font-size: 11px; font-style: italic;">
-                        {{currentRecord}} / {{totalItemCount}}
-                    </span>
+                    {{currentRecord}} / {{totalItemCount}}
+                </span>
             </div>
             <div style="margin-top: 10px;" *ngIf="showPrevBtn">
                 <button mat-stroked-button (click)="previousStep()"><i class="fas fa-chevron-left"></i> Previous step</button>

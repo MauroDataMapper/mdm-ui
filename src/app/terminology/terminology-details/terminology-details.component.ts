@@ -119,8 +119,7 @@ export class TerminologyDetailsComponent implements OnInit {
       })
     };
 
-    this.resources.terminology.put(resource.id, null, { resource }).subscribe(
-      res => {
+    this.resources.terminology.put(resource.id, null, { resource }).subscribe(res => {
         const result = res.body;
 
         if (this.afterSave) {
@@ -278,11 +277,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   newVersion = () => {
-    this.stateHandler.Go(
-      'newVersionTerminology',
-      { id: this.mcTerminology.id },
-      { location: true }
-    );
+    this.stateHandler.Go('newVersionTerminology', { id: this.mcTerminology.id }, { location: true });
   };
 
   finalise = () => {

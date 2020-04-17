@@ -72,13 +72,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     // Add 'implements OnInit' to the class.
 
     if (this.parent.editable && !this.parent.finalised) {
-      this.displayedColumns = [
-        'checkbox',
-        'name',
-        'description',
-        'type',
-        'buttons'
-      ];
+      this.displayedColumns = [ 'checkbox', 'name', 'description', 'type', 'buttons' ];
     } else {
       this.displayedColumns = ['name', 'description', 'type', 'buttons'];
     }

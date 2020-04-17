@@ -1,148 +1,144 @@
-<div class="mcTableMain">
-    <div class="mcTableTitle">
-        <span class="title">Links <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
-
-        <div id="addContent" class="btn-group-xs" uib-dropdown is-open="false" style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="access && access.canAddLink">
-            <button matTooltip="Add" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
-                    [matMenuTriggerFor]="menu">
-                <i class="fas fa-plus" aria-hidden="true"></i>
-            </button>
-
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item class="modelFilterItem" (click)="add()">Add Link</button>
-                <button *ngIf="showLinkSuggestion" mat-menu-item class="modelFilterItem" (click)="linkSuggestion()">Link Suggestions</button>
-            </mat-menu>
+<div class="heading-container">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
+        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
+            <h4 class="marginless">
+                Links 
+                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
+                <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+            </h4>
         </div>
-
-        <div *ngIf="access && !access.canAddLink && showLinkSuggestion" style="float: right; margin-top: -2px; margin-left: 9px; cursor: pointer; font-size: 12px; font-style: italic !important; font-weight: normal !important;">
-            <a (click)="linkSuggestion()">Link Suggestions</a>
+        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
+            <div style="margin-top: -2px; margin-left: 9px;" *ngIf="access && access.canAddLink">
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" style="margin-right: 8px;">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+                <button mat-flat-button color="primary" (click)="add()">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    Add Link
+                </button>
+            </div>
+            <div *ngIf="access && !access.canAddLink && showLinkSuggestion">
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+            </div>
         </div>
     </div>
-
-    <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-bordered" >
-            <ng-container matColumnDef="source">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="source.label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="name">
-                    <span [hidden]="!hideFilters">Source</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Source</mat-label>
-                            <input #filters matInput name="source" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
-                    <div>
-                        <div *ngIf="record.status == 'source'">
-                            <span style="font-size: 13px;color:#777;font-style: italic" [innerHtml]="record.source.label| mchighlighter: searchCriteria"></span>
-                        </div>
-                        <div *ngIf="record.status == 'target'">
-                            <mdm-element-link [showParentDataModelName]="true"
-                                          [element]="record.source"
-                                          [parentDataModel]="record.source.dataModel"
-                                          [parentDataClass]="record.source.dataClass"
-                                          [showTypeTitle]="'true'"></mdm-element-link>
-                        </div>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="link">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name">
-                    <span [hidden]="!hideFilters">Link</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Link</mat-label>
-                            <input #filters matInput name="link" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
-                    <div *ngIf="!record.inEdit">
-                        {{semanticLinkTypes[record.linkType].title}}
-                    </div>
-                    <div *ngIf="record.inEdit">
-                        <select class="form-control wizardInput mcSelect" [(ngModel)]="record.edit.linkType">
-                            <ng-container  *ngFor="let rec of (semanticLinkTypes | keyvalue); let i = index">
-                                <option *ngIf="rec.value.editable"  [ngValue]="rec.key">{{rec.value.title}}</option>
-                                </ng-container>
-                        </select>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="target">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="target.label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="name">
-                    <span [hidden]="!hideFilters">Target</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Target</mat-label>
-                            <input #filters matInput name="target" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word;">
-                    <div>
-                        <div style="float:left; width:80%;">
-                            <div *ngIf="!record.inEdit">
-                                <div *ngIf="record.status == 'source'">
-                                    <mdm-element-link [element]="record.target" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
-                                </div>
-                                <div *ngIf="record.status == 'target'">
-                                    <span style="font-size: 13px;color:#777;font-style: italic" [innerHtml]="record.target.label| mchighlighter:searchCriteria"></span>
-                                </div>
-                            </div>
-                            <div *ngIf="record.inEdit">
-                                <div *ngIf="record.status == 'source'">
-                                    <mdm-element-link [element]="record.edit.target" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
-                                </div>
-                                <div *ngIf="record.status == 'target'">
-                                    <span style="font-size: 13px;color:#777;font-style: italic" [innerHtml]="record.target.label| mchighlighter:searchCriteria"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="float:right">
-                            <div *ngIf="record.inEdit">
-                                <button class="btn btn-default btn-xs" type="button" (click)="findElement(record)">
-                                    <i class="fas fa-search"></i>...
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="other">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 8%; width: 8%;" columnName="name">
-                    <span [hidden]="!hideFilters"></span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Name</mat-label>
-                            <input #filters matInput name="label" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record; let i = index; " style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
-                    <div *ngIf="access && access.canAddLink && record.status == 'source' && semanticLinkTypes[record.linkType].editable == true">
-                        <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])"></mdm-table-buttons>
-                    </div>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        </table>
-
-        <mat-card *ngIf="isLoadingResults"
-                  style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
-            <mat-progress-spinner color="primary"
-                                  mode="indeterminate">
-            </mat-progress-spinner>
-        </mat-card>
-    </div>
-
-
-    <div class="mdm--mat-pagination">
-        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
-    </div>
-
 </div>
 
+<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped">
+    <ng-container matColumnDef="source">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="source.label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="name">
+            <span [hidden]="!hideFilters">Source</span>
+            <div [hidden]="hideFilters">
+                <mat-form-field class="filter" floatLabel="never">
+                    <mat-label>Source</mat-label>
+                    <input #filters matInput name="source" (keyup)="applyFilter()">
+                </mat-form-field>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+            <div>
+                <div *ngIf="record.status == 'source'">
+                    <span [innerHtml]="record.source.label| mchighlighter: searchCriteria"></span>
+                </div>
+                <div *ngIf="record.status == 'target'">
+                    <mdm-element-link [showParentDataModelName]="true"
+                                    [element]="record.source"
+                                    [parentDataModel]="record.source.dataModel"
+                                    [parentDataClass]="record.source.dataClass"
+                                    [showTypeTitle]="'true'"></mdm-element-link>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="link">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name">
+            <span [hidden]="!hideFilters">Link</span>
+            <div [hidden]="hideFilters">
+                <mat-form-field class="filter" floatLabel="never">
+                    <mat-label>Link</mat-label>
+                    <input #filters matInput name="link" (keyup)="applyFilter()">
+                </mat-form-field>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+            <div *ngIf="!record.inEdit">
+                {{semanticLinkTypes[record.linkType].title}}
+            </div>
+            <div *ngIf="record.inEdit">
+                <select class="form-control" [(ngModel)]="record.edit.linkType">
+                    <ng-container  *ngFor="let rec of (semanticLinkTypes | keyvalue); let i = index">
+                        <option *ngIf="rec.value.editable"  [ngValue]="rec.key">{{rec.value.title}}</option>
+                    </ng-container>
+                </select>
+            </div>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="target">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="target.label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="name">
+            <span [hidden]="!hideFilters">Target</span>
+            <div [hidden]="hideFilters">
+                <mat-form-field class="filter" floatLabel="never">
+                    <mat-label>Target</mat-label>
+                    <input #filters matInput name="target" (keyup)="applyFilter()">
+                </mat-form-field>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word;">
+            <div>
+                <div style="width:80%;">
+                    <div *ngIf="!record.inEdit">
+                        <div *ngIf="record.status == 'source'">
+                            <mdm-element-link [element]="record.target" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
+                        </div>
+                        <div *ngIf="record.status == 'target'">
+                            <span [innerHtml]="record.target.label| mchighlighter:searchCriteria"></span>
+                        </div>
+                    </div>
+                    <div *ngIf="record.inEdit">
+                        <div *ngIf="record.status == 'source'">
+                            <mdm-element-link [element]="record.edit.target" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
+                        </div>
+                        <div *ngIf="record.status == 'target'">
+                            <span [innerHtml]="record.target.label| mchighlighter:searchCriteria"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div *ngIf="record.inEdit">
+                    <button mat-stroked-button color="primary" type="button" (click)="findElement(record)">
+                        Add target
+                    </button>
+                </div>
+            </div>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="other">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 8%; width: 8%;" columnName="name">
+            <span [hidden]="!hideFilters"></span>
+            <div [hidden]="hideFilters">
+                <mat-form-field class="filter" floatLabel="never">
+                    <mat-label>Name</mat-label>
+                    <input #filters matInput name="label" (keyup)="applyFilter()">
+                </mat-form-field>
+            </div>
+        </th>
+        <td mat-cell *matCellDef="let record; let i = index; " style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
+            <div *ngIf="access && access.canAddLink && record.status == 'source' && semanticLinkTypes[record.linkType].editable == true">
+                <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])"></mdm-table-buttons>
+            </div>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<mat-card *ngIf="isLoadingResults"
+            style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner color="primary"
+                            mode="indeterminate">
+    </mat-progress-spinner>
+</mat-card>
+
+<div class="mdm--mat-pagination">
+    <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+</div>

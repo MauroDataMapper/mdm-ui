@@ -1,42 +1,42 @@
-<div>
-    <div class="panel panel-default">
-        <form name="form"
-              onaftersave="onAfterSave()"
-              (ngSubmit)="formBeforeSave()"
-              disable-submit-on-enter>
-            <div class="panel-body panel-table">
-
-                    <div style="padding: 0px !important;" *ngIf="result">
-                        <h4> <span class="xeditableInput">
-                                <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                                <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
-                                <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
-                              <span class="help-block">{{errorMessage}}</span>
-                            </div>
-                            </div>
-                        </span></h4>
-                        <small class="elementDetailMCType">Data Class</small>
-                        <div>
-                            <span *ngIf="result" style="font-size: 11px;font-style: italic" class="dataClassDetailsLastUpdate">Last Update: {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                            <span *ngIf="result && result.finalised && result.dateFinalised" style="font-size: 11px;font-style: italic; margin-left: 10px" class="dataModelDetailsLastUpdate">Finalised On: {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                        </div>
-                    </div>
+<div class="panel panel-default mdm--shadow-block">
+    <form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body panel-table">
+            <div *ngIf="result">
+                <div [ngClass]="{ 'has-error': errorMessage != ''}">
+                  <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
+                                [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
+                  </h4>
+              </div>
+              <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                <span class="help-block">{{errorMessage}}</span>
+              </div>
             </div>
-            <table class="table table-bordered">
-                <tbody>
+
+            <div class="detail-icons">         
+                <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
+                  <small>
+                    <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
+                    <span><strong>Finalised on:</strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                  </small>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <tbody>
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <div style="width:50%">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
-                        </div>
+                        <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result"
+                            [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                     </td>
                 </tr>
                 <tr>
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="result">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
+                                [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -50,29 +50,36 @@
                     <th class="detailsRowHeader">Multiplicity</th>
                     <td class="dataClassDetailsModelPath">
 
-                       <div *ngIf="!editableForm.visible && result">
-                           <mdm-multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity"></mdm-multiplicity>
+                        <div *ngIf="!editableForm.visible && result">
+                            <mdm-multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity">
+                            </mdm-multiplicity>
                         </div>
                         <div *ngIf="result">
                             <div style="float: left;">
-                                <div *ngIf="editableForm.visible" style="padding-left: 8px">Min
-                                <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" size="5" ></mdm-inline-text-edit>
-
-                            </div>
-                                <span *ngIf="!editableForm.visible && (result.minMultiplicity && result.minMultiplicity == 0)">..</span>
+                                <div *ngIf="editableForm.visible" style="padding-left: 8px">
+                                    Min
+                                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="min"
+                                        [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20"
+                                        size="5"></mdm-inline-text-edit>
+                                </div>
+                                <span
+                                    *ngIf="!editableForm.visible && (result.minMultiplicity && result.minMultiplicity == 0)">..</span>
                                 <span *ngIf="editableForm.visible" style="padding-right: 10px"></span>
                             </div>
 
                             <div style="float: left;margin-right: 13px;">
-                                <div *ngIf="editableForm.visible" style="padding-left: 6px">Max
-                                <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="max" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20" size="5" ></mdm-inline-text-edit>
-                            </div>
+                                <div *ngIf="editableForm.visible" style="padding-left: 6px">
+                                    Max
+                                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="max"
+                                        [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20"
+                                        size="5"></mdm-inline-text-edit>
+                                </div>
                             </div>
                             <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
                                 <span class="help-block">{{error}}</span>
                             </div>
 
-                            <div style="clear: both;font-size: 11px;font-style: italic;" *ngIf="editableForm.visible" >
+                            <div style="clear: both;font-size: 11px;font-style: italic;" *ngIf="editableForm.visible">
                                 Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
                             </div>
                         </div>
@@ -81,7 +88,9 @@
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <mdm-element-classifications [classifications]="result.classifiers" [editableForm]="editableForm" [element]="result" [property]="'classifiers'"></mdm-element-classifications>
+                        <mdm-element-classifications [classifications]="result.classifiers"
+                            [editableForm]="editableForm" [element]="result" [property]="'classifiers'">
+                        </mdm-element-classifications>
 
                     </td>
                 </tr>
@@ -89,49 +98,38 @@
                     <td colspan="2" style="text-align: right;">
 
 
-                        <div *ngIf="result" mdmShowIfRolesWritable [result]="result" style="float: right;margin-bottom: 3px">
+                        <div *ngIf="result" mdmShowIfRolesWritable [result]="result"
+                            style="float: right;margin-bottom: 3px">
                             <div style="float: right">
-                            <mdm-editable-form-buttons [hidden]="editableForm.visible"
-                                                   [onCancelEdit]="onCancelEdit"
-                                                   [editable]="editableForm"
-                                                   [textLocation]="'left'"
-                                                   [hideDelete]="false"
-                                                   [hideCancel]="false"
-                                                   [hideEdit] = "true"
-                                                   (delete)="delete()"
-                                                   [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                                <mdm-editable-form-buttons [hidden]="editableForm.visible" [onCancelEdit]="onCancelEdit"
+                                    [editable]="editableForm" [textLocation]="'left'" [hideDelete]="false"
+                                    [hideCancel]="false" [hideEdit]="true" (delete)="delete()"
+                                    [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
                             <div [hidden]="editableForm.visible || editableForm.deletePending"
-                                 class="btn-group-xs" uib-dropdown is-open="false"
-                                 style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button id="singleX-button" type="button"
-                                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
-                                        [hidden]="editableForm.visible || editableForm.deletePending"
-                                        [disabled]="deleteInProgress"
-                                        matTooltip="Edit"
-                                        (click)="showForm();"
-                                        uib-dropdown-toggle>
-                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                <button mat-stroked-button color="primary" type="button" [disabled]="deleteInProgress"
+                                    matTooltip="Edit" aria-label="Edit" (click)="showForm();">
+                                    <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                   [onCancelEdit]="onCancelEdit"
-                                                   [editable]="editableForm"
-                                                   [textLocation]="'left'"
-                                                   [hideDelete]="true"
-                                                   [hideCancel]="false"
-                                                   [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
+                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
+                                [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
 
 
-                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button type="button" class="paddingless addNewModelButton" matTooltipPosition="below" matTooltip="Search"  [disabled]="processing" (click)="toggleShowSearch()">
+                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;"
+                            [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button mat-stroked-button color="primary" type="button" class="paddingless"
+                                matTooltipPosition="below" matTooltip="Search" aria-label="Search"
+                                [disabled]="processing" (click)="toggleShowSearch()">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
 
                         <div style="clear: both;" *ngIf="processing">
-                            <mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate"> </mat-progress-bar>
+                            <mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate"></mat-progress-bar>
                         </div>
                         <div style="text-align: left" *ngIf="exportError">
                             <div style="padding-top: 25px;">
@@ -143,9 +141,8 @@
                         </div>
                     </td>
                 </tr>
-                </tbody>
-            </table>
+            </tbody>
+        </table>
 
-        </form>
-    </div>
+    </form>
 </div>

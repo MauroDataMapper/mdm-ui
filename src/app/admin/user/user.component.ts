@@ -50,15 +50,13 @@ export class UserComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.title.setTitle('Admin - Create User');
+    this.title.setTitle('Admin - Add User');
     this.roles = this.role.notPendingArray;
 
     this.id = this.stateSvc.params.id;
 
     if (this.id) {
-      this.resourcesService.catalogueUser
-        .get(this.id, null, null)
-        .subscribe(res => {
+      this.resourcesService.catalogueUser.get(this.id, null, null).subscribe(res => {
           const user = res.body;
           this.user = user;
           this.title.setTitle('Admin - Edit User');
@@ -75,43 +73,36 @@ export class UserComponent implements OnInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.userGroup.get(null, null, options).subscribe(
-      res => {
+    this.resourcesService.userGroup.get(null, null, options).subscribe(res => {
         this.allGroups = res.body.items;
       },
       error => {
-        this.messageHandler.showError(
-          'There was a problem getting the group list',
-          error
-        );
+        this.messageHandler.showError('There was a problem getting the group list', error);
       }
     );
   }
 
   validate = () => {
     let isValid = true;
-    if (this.user.emailAddress.trim().length === 0) {
+    if (!this.user.emailAddress.trim().length) {
       this.errors.emailAddress = 'Email can\'t be empty!';
       isValid = false;
     }
 
-    if (
-      this.user.emailAddress &&
-      !this.validator.validateEmail(this.user.emailAddress)
-    ) {
+    if (this.user.emailAddress && !this.validator.validateEmail(this.user.emailAddress)) {
       this.errors.emailAddress = 'Invalid Email';
       isValid = false;
     }
 
-    if (this.user.firstName.trim().length === 0) {
+    if (!this.user.firstName.trim().length) {
       this.errors.firstName = 'First Name can\'t be empty!';
       isValid = false;
     }
-    if (this.user.lastName.trim().length === 0) {
+    if (!this.user.lastName.trim().length) {
       this.errors.lastName = 'Last Name can\'t be empty!';
       isValid = false;
     }
-    if (this.user.userRole.trim().length === 0) {
+    if (!this.user.userRole.trim().length) {
       this.errors.userRole = 'Role can\'t be empty!';
       isValid = false;
     }
@@ -137,36 +128,22 @@ export class UserComponent implements OnInit {
     // it's in edit mode
     if (this.user.id) {
       // it's in edit mode (update)
-      this.resourcesService.catalogueUser
-        .put(this.user.id, null, { resource })
-        .subscribe(
-          result => {
-            this.messageHandler.showSuccess('User updated successfully.');
-            this.stateHandler.Go('admin.users');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem updating the user.',
-              error
-            );
-          }
-        );
+      this.resourcesService.catalogueUser.put(this.user.id, null, { resource }).subscribe(() => {
+          this.messageHandler.showSuccess('User updated successfully.');
+          this.stateHandler.Go('admin.users');
+        },
+        error => {
+          this.messageHandler.showError('There was a problem updating the user.', error);
+      });
     } else {
       // it's in new mode (create)
-      this.resourcesService.catalogueUser
-        .post(null, 'adminRegister', { resource })
-        .subscribe(
-          result => {
-            this.messageHandler.showSuccess('User saved successfully.');
-            this.stateHandler.Go('admin.users');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem saving the user.',
-              error
-            );
-          }
-        );
+      this.resourcesService.catalogueUser.post(null, 'adminRegister', { resource }).subscribe(() => {
+          this.messageHandler.showSuccess('User saved successfully.');
+          this.stateHandler.Go('admin.users');
+        },
+        error => {
+          this.messageHandler.showError('There was a problem saving the user.', error);
+      });
     }
   };
 

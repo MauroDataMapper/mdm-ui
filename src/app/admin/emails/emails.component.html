@@ -1,14 +1,14 @@
-<div class="heading-container">
-	<h4 *ngIf="totalItemCount > 0">
-		There are {{totalItemCount}} emails in this repository. 
-	</h4>
-	<h4 *ngIf="totalItemCount === 0">
-		There are no emails in this repository. 
-	</h4>
-</div>
+<div class="mdm--shadow-block">
+	<div class="heading-container">
+		<h4 *ngIf="totalItemCount > 0" class="marginless">
+			There are {{totalItemCount}} emails in this repository. 
+		</h4>
+		<h4 *ngIf="totalItemCount === 0" class="marginless">
+			There are no emails in this repository. 
+		</h4>
+	</div>
 
-<div *ngIf="totalItemCount > 0">
-	<div class="mcTableContainer">
+	<div *ngIf="totalItemCount > 0">
 		<table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
 			<ng-container matColumnDef="sentToEmailAddress">
 				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="sentToEmailAddress">
@@ -21,9 +21,7 @@
 					</div>
 				</th>
 				<td mat-cell *matCellDef="let record" style=" text-align: left; word-wrap: break-word;">
-					<div class="mdm--td-cell">
-						To
-					</div>
+					<div class="mdm--td-cell">To</div>
 					<span>{{record.sentToEmailAddress}}</span>
 				</td>
 			</ng-container>
@@ -32,9 +30,7 @@
 					<span [hidden]="!hideFilters">Date/Time</span>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-					<div class="mdm--td-cell">
-						Date/Time
-					</div>
+					<div class="mdm--td-cell">Date/Time</div>
 					<span>{{record.dateTimeSentString}}</span>
 				</td>
 			</ng-container>
@@ -49,9 +45,7 @@
 					</div>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-					<div class="mdm--td-cell">
-						Subject/Body
-					</div>
+					<div class="mdm--td-cell">Subject/Body</div>
 					<span style="font-weight: bold;">{{record.subject}}</span>
 					<br>
 					<mdm-more-description [description]="record.body" [length]="200" style="display: block; max-width: 80%; margin-left: auto;"></mdm-more-description>
@@ -62,9 +56,7 @@
 					<span [hidden]="!hideFilters">Status</span>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-					<div class="mdm--td-cell">
-						Status
-					</div>
+					<div class="mdm--td-cell">Status</div>
 					<div>
 						<a *ngIf="record.successfullySent">
 							Successful
@@ -81,8 +73,8 @@
 			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 			<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
 		</table>
+		<div class="mdm--mat-pagination" *ngIf="totalItemCount > 5">
+			<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+		</div>
 	</div>
-</div>
-<div class="mdm--mat-pagination">
-	<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 </div>

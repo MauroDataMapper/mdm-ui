@@ -1,6 +1,5 @@
-<!-- <div>Please choose a Terminology and your Term(s):</div> -->
 <div class="mdm--block">
-    <label>Terminology<sup class="warn">*</sup></label>
+    <label>Select a Terminology<sup class="warn">*</sup></label>
     <mdm-select width="'100%'"
                 [acceptTypedInput]="false"
                 [valueType]="'static'"
@@ -15,7 +14,7 @@
     </mdm-select>
 </div>
 <div class="mdm--block">
-    <strong>Term</strong>
+    <strong>Select a Term</strong>
     <input type="text"
             class="form-control outlined-input"
             [(ngModel)]="selectorSection.termSearchText"
@@ -24,9 +23,8 @@
             [ngModelOptions]="{ debounce: 500 }"
             placeholder="Search for Terms...">
     <div style="margin-top: 5px;">
-        <div>
+        <div style="max-height: 400px; overflow: auto;">
             <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
-                <!-- Position Column -->
                 <ng-container matColumnDef="label">
                     <mat-header-row *matHeaderCellDef> Term </mat-header-row>
                     <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
@@ -35,7 +33,6 @@
                         </mat-checkbox>
                     </mat-cell>
                 </ng-container>
-
                 <mat-row class="mat-table-row-select"  *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
         </div>
@@ -50,11 +47,10 @@
     </div>
 </div>
 
-<!-- TODO <div class="mdm--block"> Press Add button to add selected terms to the Code Set:</div> -->
 
 <div style="margin-top: 5px;" *ngIf="selectorSection.selectedTermsArray.length > 0">
     <div class="mdm--block" style="position: relative;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
-        <span>Selected Terms</span>
+        <span>Summary of Selected Terms</span>
         <mdm-paged-list [name]="'linkType'" [mcTitle]="'linkType'" [type]="'static'" [items]="selectorSection.selectedTermsArray" [pageSize]="10">
             <ng-template #pageListTemplate let-item>
                 <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
@@ -71,8 +67,8 @@
             </ng-template>
         </mdm-paged-list>
     </div>
-    <!-- TODO <div style="margin-top: 5px;" *ngIf="!hideAddButton"> 
-        <button type="button" class="btn btn-sm btn-default themeColor" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
-    </div> -->
+    <div style="margin-top: 5px; margin-bottom: 12px;" *ngIf="!hideAddButton"> 
+        <button mat-flat-button color="primary" type="button" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
+    </div>
 </div>
 

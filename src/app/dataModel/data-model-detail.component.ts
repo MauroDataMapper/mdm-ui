@@ -70,9 +70,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<
-    any
-  >;
+  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   // @ViewChildren("aliases") aliases: QueryList<any>;
@@ -100,12 +98,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open(
-      'Search_Help',
-      'left' as DialogPosition,
-      null,
-      null
-    );
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
   }
 
   ngOnInit() {
@@ -261,17 +254,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
 
-    this.resourcesService.dataModel
-      .delete(this.result.id, null, queryString, null)
-      .subscribe(
-        () => {
+    this.resourcesService.dataModel.delete(this.result.id, null, queryString, null).subscribe(() => {
           if (permanent) {
             this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.stateHandler.Go(
-              'allDataModel',
-              { reload: true, location: true },
-              null
-            );
+            this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
           } else {
             this.broadcastSvc.broadcast('$reloadFoldersTree');
             this.stateHandler.reload();
@@ -279,10 +265,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         },
         error => {
           this.deleteInProgress = false;
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Model.',
-            error
-          );
+          this.messageHandler.showError('There was a problem deleting the Data Model.', error);
         }
       );
   }

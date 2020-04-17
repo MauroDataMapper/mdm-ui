@@ -23,7 +23,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   filterEvent = new EventEmitter<string>();
   isLoadingResults: boolean;
   filter: string;
-  totalItemCount: number;
+  totalItemCount = 0;
   hideFilters = true;
 
   dataSource = new MatTableDataSource<any>();
@@ -48,30 +48,26 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     this.dataSource.sort = this.sort;
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
-          return this.groupsFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
-        }),
-        map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          return data.body.items;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          return [];
-        })
-      )
-      .subscribe(data => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+      this.isLoadingResults = true;
+      return this.groupsFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter
+        );
+      }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.items;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })
+      ).subscribe(data => {
         this.records = data;
         this.dataSource.data = this.records;
       });

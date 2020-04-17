@@ -1,9 +1,9 @@
-<div class="heading-container">
-	<h4>There are {{totalItemCount}} modules in this repository. </h4>
-</div>
+<div class="mdm--shadow-block">
+	<div class="heading-container">
+		<h4>There are {{totalItemCount}} modules in this repository. </h4>
+	</div>
 
-<div class="mcTableContainer">
-	<table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped table-responsive">
+	<table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped">
 		<ng-container matColumnDef="name">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="name" [disabled]="!hideFilters" style="cursor: pointer; max-width: 78%; width: 78%;" columnName="name">
 				<span [hidden]="!hideFilters">Name</span>
@@ -42,4 +42,3 @@
 
 	</table>
 </div>
-<br>

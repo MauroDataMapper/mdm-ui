@@ -30,7 +30,8 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   filter: string;
 
   records: any[] = [];
-  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'empty'];
+  // displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'empty']; TO DO -- add the action that allows admins to approve/reject new accounts
+  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation'];
 
   dataSource = new MatTableDataSource<any>();
 

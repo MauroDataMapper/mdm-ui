@@ -63,10 +63,10 @@ i.favouritesIcon.addedToFavourite {
   text-decoration: line-through;
 }
 .dataModelTypeIcon {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  cursor: pointer;
+  margin-right: 10px;
+  i {
+    font-size: 24px;
+  }
 }
 
 div.mat-menu-panel.filterMenu {
@@ -136,6 +136,7 @@ table.mat-table .mat-header-cell {
   font-size: 18px;
   font-weight: 500;
   vertical-align: middle;
+  border-bottom: 2px solid #e9ecef;
 }
 
 
@@ -194,4 +195,28 @@ ul.favourites li:focus {
 
 .favouritesIcon.addedToFavourite {
   color: #ff9933;
+}
+
+.detail-icons {
+  margin-top: 6px;
+
+  small {
+  margin-right: 16px;
+  font-size: 90%;
+    > span {
+      margin-left: 4px;
+    }
+    i {
+      font-size: 17px;
+      width: 18px;
+      text-align: center;
+    }
+  }
+}
+.detail-icons--cta {
+  float: right;
+  font-size: 24px;
+  i.helpIcon {
+    margin-right: 10px;
+  }
 }

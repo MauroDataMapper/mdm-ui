@@ -28,7 +28,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   failCount: number;
   total: number;
 
-  displayedColumns: string[] = ['firstName', 'lastName', 'emailAddress', 'organisation', 'userRole', 'groups', 'status', 'icons'];
+  displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'userRole', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(private messageHandler: MessageHandlerService, private resources: ResourcesService, private stateHandler: StateHandlerService) {}

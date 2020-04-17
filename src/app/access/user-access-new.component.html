@@ -1,155 +1,152 @@
-<form>
-    <div class="form-group form-inline">
-        <!--        Search: <input class="form-control ml-2" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>-->
-        <!--        <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>-->
+<div class="mdm--shadow-block">
+    <div class="heading-container">
+        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
+            <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
+                <h4 class="marginless">Restrict User access based on user(s)</h4>
+                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{dataSource.data.length}}</span>
+            </div>
+            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
+                <div *ngIf="folderResult['editable']" style="float: right;">
+                    <button mat-flat-button color="primary" type="button" (click)="add()" title="Add">
+                        <i class="fas fa-plus"></i> 
+                        Add User
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+    <form>
+        <table mat-table [dataSource]="dataSource" matSort class="mdm--table table table-borderless table-striped">
+            <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+                <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 
-    <div class="mcTableMain">
-        <div class="mcTableTitle">
-            <span class="title">User Access</span>
-            <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{dataSource.data.length}}</span>
-            <div *ngIf="folderResult['editable']" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
-            <button type="button" class="btn btn-default btn-sm" style="float: right;  padding: 0px; margin-right: 10px;" (click)="add()" title="Add"> <i style="width: 20px;" class="fas fa-plus addNewModelButton"></i></button>
-        </div>
-        </div>
-        <div class="mcTableContainer">
-            <table mat-table [dataSource]="dataSource" matSort class="table able-bordered">
-                <ng-container matColumnDef="user">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 30%; width: 30%; font-weight: bold">User</th>
-                    <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <div *ngIf="!record.inEdit">
+                        {{record.user.emailAddress}}
+                    </div>
 
-                        <div *ngIf="!record.inEdit">
+                    <div *ngIf="record.inEdit">
+                        <div *ngIf="!record.isNew">
                             {{record.user.emailAddress}}
                         </div>
+                        <div *ngIf="record.isNew">
+                            <mdm-select [width]="'100%'"
+                                        [acceptTypedInput]="true"
+                                        [valueType]="'dynamic'"
+                                        [defaultValue]="record.user"
+                                        [loadDynamicValues]="fetchUser"
+                                        [minInputLength]="1"
+                                        [hasError]="record.edit.errors && record.edit.errors['user']"
+                                        [record]="record"
+                                        [idProperty]="'id'"
+                                        [displayProperty]="'emailAddress'"
+                                        [searchProperty]="'emailAddress'"
+                                        [pagination]="pagination"
+                                        (selectEvent)="onUserSelect($event[0],$event[1])">
+                                <ng-template #lineContent let-item>
+                                    <div>{{item.emailAddress}}</div>
+                                </ng-template>
 
-                        <div *ngIf="record.inEdit">
-                            <div *ngIf="!record.isNew">
-                                {{record.user.emailAddress}}
-                            </div>
-                            <div *ngIf="record.isNew">
-                                <mdm-select [width]="'100%'"
-                                           [acceptTypedInput]="true"
-                                           [valueType]="'dynamic'"
-                                           [defaultValue]="record.user"
-                                           [loadDynamicValues]="fetchUser"
-                                           [minInputLength]="1"
-                                           [hasError]="record.edit.errors && record.edit.errors['user']"
-                                           [record]="record"
-                                           [idProperty]="'id'"
-                                           [displayProperty]="'emailAddress'"
-                                           [searchProperty]="'emailAddress'"
-                                           [pagination]="pagination"
-                                           (selectEvent)="onUserSelect($event[0],$event[1])">
-                                    <ng-template #lineContent let-item>
-                                       <div>{{item.emailAddress}}</div>
-                                    </ng-template>
-
-                                </mdm-select>
-                                <small *ngIf="record.edit.errors && record.edit.errors['user']" class="errorMessage">{{record.edit.errors['user']}}</small>
-                            </div>
+                            </mdm-select>
+                            <small *ngIf="record.edit.errors && record.edit.errors['user']" class="errorMessage">{{record.edit.errors['user']}}</small>
                         </div>
-                    </td>
-                </ng-container>
+                    </div>
+                </td>
+            </ng-container>
 
-                <ng-container matColumnDef="firstName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 20%; width: 20%;"><b>First Name</b></th>
-                    <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
-                        <div [hidden]="record.inEdit">
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+                <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+                    <div [hidden]="record.inEdit">
+                        {{record.user.firstName}}
+                    </div>
+
+                    <div [hidden]="!record.inEdit">
+                        <div [hidden]="record.isNew">
                             {{record.user.firstName}}
                         </div>
-
-                        <div [hidden]="!record.inEdit">
-                            <div [hidden]="record.isNew">
-                                {{record.user.firstName}}
-                            </div>
-                            <div *ngIf="record.isNew">
-                                <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['firstName']}">
-                                    <input class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
-                                    <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="errorMessage">{{record.edit.errors['firstName']}}</small>
-                                </div>
+                        <div *ngIf="record.isNew">
+                            <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['firstName']}">
+                                <input class="form-control" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
+                                <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="errorMessage">{{record.edit.errors['firstName']}}</small>
                             </div>
                         </div>
+                    </div>
 
-                    </td>
-                </ng-container>
+                </td>
+            </ng-container>
 
-                <ng-container matColumnDef="lastName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 20%; width: 20%; height: 15px">Last Name</th>
-                    <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
-                        <div [hidden]="record.inEdit">
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+                <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+                    <div [hidden]="record.inEdit">
+                        {{record.user.lastName}}
+                    </div>
+
+                    <div [hidden]="!record.inEdit">
+                        <div [hidden]="record.isNew">
                             {{record.user.lastName}}
                         </div>
-
-                        <div [hidden]="!record.inEdit">
-                            <div [hidden]="record.isNew">
-                                {{record.user.lastName}}
-                            </div>
-                            <div *ngIf="record.isNew">
-                                <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['lastName']}">
-                                    <input class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
-                                    <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="errorMessage">{{record.edit.errors['lastName']}}</small>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="read">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%; ">Read</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align:  center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
-                        <span *ngIf="record.readAccess && record.user.userRole == 'ADMINISTRATOR'">
-                            <i class="fas fa-check userAccessCheckBox" aria-hidden="true"></i>
-                        </span>
-                        <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
-                            <input type="checkbox" [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
-                        </span>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="write">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%;">Write</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
-                        <span *ngIf="record.writeAccess && record.user.userRole == 'ADMINISTRATOR'">
-                            <i class="fas fa-check userAccessCheckBox" aria-hidden="true"></i>
-                        </span>
-                        <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
-                            <input type="checkbox" [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
-                        </span>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="edit">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%; "></th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
                         <div *ngIf="record.isNew">
-                            <div>
-                                <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
-                                    <i class="fas fa-check editButton saveButton mcTableApproveBtn"></i>
-                                </button>
-                                <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
-                                    <i class="fas fa-times editButton"></i>
-                                </button>
+                            <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['lastName']}">
+                                <input class="form-control" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
+                                <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="errorMessage">{{record.edit.errors['lastName']}}</small>
                             </div>
                         </div>
+                    </div>
+                </td>
+            </ng-container>
 
-                        <div *ngIf="!record.isNew && record.inEdit">
-                            <div *ngIf="record.user.userRole === 'ADMINISTRATOR'">
-                                <small style="font-style: italic">Admin</small>
-                            </div>
+            <ng-container matColumnDef="read">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
+                <td mat-cell *matCellDef="let record; let i = index" style="text-align:  left; word-wrap: break-word;">
+                    <span *ngIf="record.readAccess && record.user.userRole == 'ADMINISTRATOR'">
+                        <i class="fas fa-check" aria-hidden="true"></i>
+                    </span>
+                    <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
+                        <mat-checkbox [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
+                        </mat-checkbox>
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="write">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
+                <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
+                    <span *ngIf="record.writeAccess && record.user.userRole == 'ADMINISTRATOR'">
+                        <i class="fas fa-check userAccessCheckBox" aria-hidden="true"></i>
+                    </span>
+                    <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
+                        <mat-checkbox [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
+                        </mat-checkbox>
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                <td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
+                    <div *ngIf="record.isNew">
+                        <button mat-stroked-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button mat-stroked-button color="primary" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+
+                    <div *ngIf="!record.isNew && record.inEdit">
+                        <div *ngIf="record.user.userRole === 'ADMINISTRATOR'">
+                            <small style="font-style: italic">Admin</small>
                         </div>
-                    </td>
-                </ng-container>
-
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-            </table>
-        </div>
-
-        <div class="mdm--mat-pagination">
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
-        </div>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </form>
+    <div class="mdm--mat-pagination">
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
     </div>
-
-</form>
+</div>

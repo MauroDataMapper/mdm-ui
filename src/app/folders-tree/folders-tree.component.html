@@ -85,7 +85,7 @@
 <ng-template #nodeContentTemplate let-node>
     <div class="mat-tree-node-content">
         <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
-        <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet'].includes(node.domainType)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
+        <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet', 'Classification'].includes(node.domainType)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
         <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
         <span *ngIf="node.superseded" style='font-size: 11px'>({{node.documentationVersion}})</span>
         <i style="font-size: 10px;" class="fas fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>

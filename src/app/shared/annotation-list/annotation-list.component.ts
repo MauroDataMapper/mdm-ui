@@ -50,10 +50,7 @@ export class AnnotationListComponent implements AfterViewInit {
     this.changeRef.detectChanges();
     this.currentUser = this.securityHandler.getCurrentUser();
 
-    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
           this.changeRef.detectChanges();
 
@@ -63,20 +60,17 @@ export class AnnotationListComponent implements AfterViewInit {
             this.sort.active,
             this.sort.direction
           );
-        }),
-        map((data: any) => {
+        }), map((data: any) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
           return data.body.items;
-        }),
-        catchError(() => {
+        }), catchError(() => {
           this.isLoadingResults = false;
           // this.changeRef.detectChanges();
           return [];
         })
-      )
-      .subscribe(data => {
+      ).subscribe(data => {
         this.records = data;
       });
 

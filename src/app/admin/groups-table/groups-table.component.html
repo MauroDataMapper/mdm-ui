@@ -1,16 +1,15 @@
-<div class="heading-container">
-	<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-		<div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="80" style="align-items: center;">
-			<h4 class="marginless">There are {{totalItemCount}} groups in this repository. </h4>
-			<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
-		</div>
-		<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25%" fxFlex.xs="25%" style="text-align: right; justify-content: flex-end; align-items: center;">
-			<mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
+<div class="mdm--shadow-block">
+	<div class="heading-container">
+		<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
+			<div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="80" style="align-items: center;">
+				<h4 class="marginless">There are {{totalItemCount}} groups in this repository. </h4>
+				<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+			</div>
+			<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25%" fxFlex.xs="25%" style="text-align: right; justify-content: flex-end; align-items: center;">
+				<mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
+			</div>
 		</div>
 	</div>
-</div>
-
-<div>
 	<table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
 		<ng-container matColumnDef="name">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="label">
@@ -43,7 +42,7 @@
 		<ng-container matColumnDef="icons">
 			<th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="icons">
 			</th>
-			<td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
+			<td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
 
 				<button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">Actions <i class="fas fa-chevron-down fa-xs"></i></button>
 				<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
@@ -60,7 +59,7 @@
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
 	</table>
-</div>
-<div class="mdm--mat-pagination">
-	<mdm-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+	<div class="mdm--mat-pagination">
+		<mdm-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+	</div>
 </div>

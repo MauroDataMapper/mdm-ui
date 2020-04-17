@@ -1,31 +1,30 @@
 <div style="float: left;" *ngIf="deletePending">
     <span *ngIf="textLocation == 'left'" style="font-size: 11px !important;">Are you sure?</span>
     <!-- Cancel Delete-->
-    <button type="button" class="btn btn-default" (click)="cancelDeleteClicked()">
+    <button mat-button color="primary" class="paddingless" type="button" (click)="cancelDeleteClicked()">
         <i class="fas fa-times cancelButton"></i>
     </button>
     <!-- Confirm Delete -->
-    <button type="button" class="btn btn-default" (click)="confirmDeleteClicked()">
+    <button mat-button color="warn" class="paddingless" type="button" (click)="confirmDeleteClicked()">
         <i class="fas fa-check saveButton"></i>
     </button>
     <span *ngIf="textLocation == 'bottom'" style="font-size: 11px !important;"><br>Are you sure?</span>
 </div>
 
-<div class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; float: left; margin-right:8px;"
-    *ngIf="deleteInProgress">
+<div class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; float: left; margin-right:8px;" *ngIf="deleteInProgress">
     <a style="font-size: 14px; text-decoration: none;">
         <i class="fas fa-sync-alt fa-spin"></i>
     </a>
 </div>
 
 <div style="float: left;" *ngIf="showDeleteButton" [hidden]="deletePending">
-    <button type="button" class="btn btn-default" (click)="onAskDelete()" [disabled]="deleteInProgress">
-        <i class="far fa-trash-alt warning"></i>
+    <button mat-button color="warn" class="paddingless" type="button" (click)="onAskDelete()" [disabled]="deleteInProgress">
+        <i class="far fa-trash-alt"></i>
     </button>
 </div>
 
 <div id="addContent" style="float: left;" [hidden]="deletePending" *ngIf="!showContentDropdown">
-    <div style="float: right; margin-left: 2px;">
+    <div style="float: right; margin-left: 8px;">
         <button mat-flat-button type="button" color="primary" (click)="add()" [disabled]="deleteInProgress">
             <i class="fas fa-plus"></i>  Add
         </button>

@@ -68,7 +68,7 @@
 				</div>
 				<div *ngIf="record.inEdit">
 					<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['key']}">
-						<input class="form-control input-sm" type="text" [(ngModel)]="record.edit.key"
+						<input class="form-control" type="text" [(ngModel)]="record.edit.key"
 							autocomplete="off" />
 						<small [hidden]="!record.edit.errors && !record.edit.errors['key']"
 							class="errorMessage">{{record.edit.errors['key']}}</small>
@@ -90,7 +90,7 @@
 				</div>
 				<div *ngIf="record.inEdit">
 					<div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
-						<input class="form-control input-sm" type="text" [(ngModel)]="record.edit.value"
+						<input class="form-control" type="text" [(ngModel)]="record.edit.value"
 							autocomplete="off" />
 						<small [hidden]="!record.edit.errors && !record.edit.errors['value']"
 							class="errorMessage">{{record.edit.errors['value']}}</small>

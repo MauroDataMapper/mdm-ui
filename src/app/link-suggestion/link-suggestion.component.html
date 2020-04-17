@@ -1,246 +1,249 @@
-<div class="row" style="padding: 5px">
-  <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="padding: 15px;">
-    <div>
-      <div class="row">
-        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
-          <div *ngIf="!model.loadingSource" class="form-group">
+<div class="container">
 
-            <div *ngIf="model.source.domainType === 'DataModel'">
-              <span class="badge importFormStep themeBackgroundColor">1</span>
-              <span>Source Data Model<span style="margin-left:3px;font-size: 12px;cursor: pointer;"
-                                           *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank"><i
-                class="fas fa-external-link-alt"></i></a></span></span>
+  <div class="row" style="padding: 5px">
+    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="padding: 15px;">
+      <div>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+            <div *ngIf="!model.loadingSource" class="form-group">
+
+              <div *ngIf="model.source.domainType === 'DataModel'">
+                <span class="badge importFormStep themeBackgroundColor">1</span>
+                <span>Source Data Model<span style="margin-left:3px;font-size: 12px;cursor: pointer;"
+                                            *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank"><i
+                  class="fas fa-external-link-alt"></i></a></span></span>
+                <mdm-model-selector-tree
+                  [processing]="model.loadingSource"
+                  [placeholder]="'Select Source Data Model...'"
+                  [onSelect]="onSourceSelect"
+                  [defaultElements]="[model.source]"
+                  [doNotShowDataClasses]="true"
+                  [ngModel]="[model.source]"
+                  [treeSearchDomainType]="'DataModel'"
+                  [accepts]="['DataModel']">
+                </mdm-model-selector-tree>
+              </div>
+              <div *ngIf="model.source.domainType === 'DataElement'">
+                <span class="badge importFormStep themeBackgroundColor">1</span>
+                <span>Source Data Element</span>
+                <div style="padding-left: 5px;">
+                  <mdm-element-link
+                    [newWindow]="true"
+                    [showTypeTitle]="true"
+                    [element]="model.source"></mdm-element-link>
+                  <br>
+                  <mdm-model-path [path]="model.source.breadcrumbs" [newWindow]="true"></mdm-model-path>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <span class="badge importFormStep themeBackgroundColor">2</span>
+              <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
+                                                  *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank"><i
+              class="fas fa-external-link-alt"></i></a></span>
               <mdm-model-selector-tree
-                [processing]="model.loadingSource"
-                [placeholder]="'Select Source Data Model...'"
-                [onSelect]="onSourceSelect"
-                [defaultElements]="[model.source]"
+                [processing]="model.processing"
+                [placeholder]="'Select Target Data Model...'"
+                [onSelect]="onTargetSelect "
+                [defaultElements]="[model.target]"
                 [doNotShowDataClasses]="true"
-                [ngModel]="[model.source]"
+                [ngModel]="[model.target]"
                 [treeSearchDomainType]="'DataModel'"
                 [accepts]="['DataModel']">
               </mdm-model-selector-tree>
             </div>
-            <div *ngIf="model.source.domainType === 'DataElement'">
-              <span class="badge importFormStep themeBackgroundColor">1</span>
-              <span>Source Data Element</span>
-              <div style="padding-left: 5px;">
-                <mdm-element-link
-                  [newWindow]="true"
-                  [showTypeTitle]="true"
-                  [element]="model.source"></mdm-element-link>
-                <br>
-                <mdm-model-path [path]="model.source.breadcrumbs" [newWindow]="true"></mdm-model-path>
+
+            <div class="form-group">
+              <div style="margin-bottom: 20px">
+                <input type="checkbox"
+                      style="cursor: pointer"
+                      [(ngModel)]="doNotSuggest">
+                <span
+                  style="vertical-align: top;">&nbsp;Do not suggest for Data Elements which already have Links. </span>
               </div>
             </div>
-          </div>
-          <div class="form-group">
-            <span class="badge importFormStep themeBackgroundColor">2</span>
-            <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
-                                                *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank"><i
-            class="fas fa-external-link-alt"></i></a></span>
-            <mdm-model-selector-tree
-              [processing]="model.processing"
-              [placeholder]="'Select Target Data Model...'"
-              [onSelect]="onTargetSelect "
-              [defaultElements]="[model.target]"
-              [doNotShowDataClasses]="true"
-              [ngModel]="[model.target]"
-              [treeSearchDomainType]="'DataModel'"
-              [accepts]="['DataModel']">
-            </mdm-model-selector-tree>
-          </div>
 
-          <div class="form-group">
-            <div style="margin-bottom: 20px">
-              <input type="checkbox"
-                     style="cursor: pointer"
-                     [(ngModel)]="doNotSuggest">
-              <span
-                style="vertical-align: top;">&nbsp;Do not suggest for Data Elements which already have Links. </span>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 5px;">
-            <button type="button" class="btn btn-success btn-sm" (click)="suggest()"
-                    [disabled]="model.processing || !model.source || !model.target || (model.source && model.target && model.source.id === model.target.id)">
-              Suggest
-            </button>
-          </div>
-
-          <div style="width:100%;min-height: 30px;">
-            <div class="alert alert-warning" *ngIf="!model.sourceEditable">
-              <span
-                *ngIf="model.source.domainType==='DataModel'"><strong>Source Data Model</strong> is not editable! <br>You can get link suggestions but can't add Links.</span>
-              <span *ngIf="model.source.domainType==='DataElement'"><strong>Source Data Element</strong> is not editable! <br>You can get link suggestions but can't add Links.</span>
+            <div style="margin-bottom: 5px;">
+              <button type="button" class="btn btn-success btn-sm" (click)="suggest()"
+                      [disabled]="model.processing || !model.source || !model.target || (model.source && model.target && model.source.id === model.target.id)">
+                Suggest
+              </button>
             </div>
 
-            <div class="alert alert-danger" *ngIf="model.source && model.target && model.source.id === model.target.id">
-              Source and Target Data Model can not be the same!
+            <div style="width:100%;min-height: 30px;">
+              <div class="alert alert-warning" *ngIf="!model.sourceEditable">
+                <span
+                  *ngIf="model.source.domainType==='DataModel'"><strong>Source Data Model</strong> is not editable! <br>You can get link suggestions but can't add Links.</span>
+                <span *ngIf="model.source.domainType==='DataElement'"><strong>Source Data Element</strong> is not editable! <br>You can get link suggestions but can't add Links.</span>
+              </div>
+
+              <div class="alert alert-danger" *ngIf="model.source && model.target && model.source.id === model.target.id">
+                Source and Target Data Model can not be the same!
+              </div>
+
+              <mat-progress-bar *ngIf="model.processing" color="primary" mode="indeterminate"></mat-progress-bar>
+
             </div>
-
-            <mat-progress-bar *ngIf="model.processing" color="primary" mode="indeterminate"></mat-progress-bar>
-
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-          <div>
-            <div class="mcTableMain">
-              <div class="mcTableTitle">
-                        <span class="title">Suggested Links<i class="fas fa-filter" (click)="filterClick()"
-                                                              style="visibility: hidden; cursor: pointer;margin-left: 2px;"></i>
-                            <div class="btn-group-xs"
-                                 style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
-                                 *ngIf="model.successfullyAdded > 0">
-                                Successfully Added <span style="font-weight: normal !important;"
-                                                         class="badge badge-success">{{model.successfullyAdded}}</span>
+        <div class="row">
+          <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+            <div>
+              <div class="mcTableMain">
+                <div class="mcTableTitle">
+                          <span class="title">Suggested Links<i class="fas fa-filter" (click)="filterClick()"
+                                                                style="visibility: hidden; cursor: pointer;margin-left: 2px;"></i>
+                              <div class="btn-group-xs"
+                                  style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
+                                  *ngIf="model.successfullyAdded > 0">
+                                  Successfully Added <span style="font-weight: normal !important;"
+                                                          class="badge badge-success">{{model.successfullyAdded}}</span>
+                              </div>
+
+                              <div class="btn-group-xs"
+                                  style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
+                                  *ngIf="model. totalIgnoredLinks > 0">
+                                  Ignored <span style="font-weight: normal !important;"
+                                                class="badge badge-success">{{model.totalIgnoredLinks}}</span>
+                              </div>
+
+                              <div class="btn-group-xs"
+                                  style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
+                                  *ngIf="model. totalSuggestionLinks > 0 && model.source.domainType === 'DataModel'">
+                                  Total Suggested Links <span style="font-weight: normal !important;"
+                                                              class="badge badge-success">{{model.totalSuggestionLinks}}</span>
+                              </div>
+
+                          </span>
+                </div>
+
+                <div class="mcTableContainer">
+                  <table mat-table matSort [dataSource]="datasource" class="table table-bordered">
+                    <ng-container matColumnDef="source">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="source" [disabled]="!hideFilters"
+                          style="cursor:pointer;max-width: 20%;width: 20%;" columnName="source">
+                        Source Data Element
+                      </th>
+                      <td mat-cell *matCellDef="let suggest"
+                          style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                        <div style="margin-bottom: 10px;">
+                          <mdm-element-link
+                            [newWindow]="true"
+                            [showTypeTitle]="false"
+                            [element]="suggest.sourceDataElement"></mdm-element-link>
+                        </div>
+                        <mdm-model-path [path]="suggest.sourceDataElement.breadcrumbs"
+                                    [newWindow]="true"
+                                    [doNotDisplayStatus]="true"
+                                    [doNotShowParentDataModel]="true"></mdm-model-path>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="target">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header="target" [disabled]="!hideFilters"
+                          style="cursor:pointer;max-width: 20%;width: 20%;" columnName="target">
+                        Target Data Element
+                      </th>
+                      <td mat-cell *matCellDef="let suggest"
+                          style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
+                        <div *ngIf="!suggest.showMore">
+                          <div *ngIf="suggest.selectedTarget" style="float:left;">
+                            <div style="margin-bottom: 10px;">
+                              <mdm-element-link
+                                [newWindow]="true"
+                                [showTypeTitle]="false"
+                                [element]="suggest.selectedTarget.dataElement"></mdm-element-link>
                             </div>
-
-                            <div class="btn-group-xs"
-                                 style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
-                                 *ngIf="model. totalIgnoredLinks > 0">
-                                Ignored <span style="font-weight: normal !important;"
-                                              class="badge badge-success">{{model.totalIgnoredLinks}}</span>
-                            </div>
-
-                            <div class="btn-group-xs"
-                                 style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
-                                 *ngIf="model. totalSuggestionLinks > 0 && model.source.domainType === 'DataModel'">
-                                Total Suggested Links <span style="font-weight: normal !important;"
-                                                            class="badge badge-success">{{model.totalSuggestionLinks}}</span>
-                            </div>
-
-                        </span>
-              </div>
-
-              <div class="mcTableContainer">
-                <table mat-table matSort [dataSource]="datasource" class="table table-bordered">
-                  <ng-container matColumnDef="source">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="source" [disabled]="!hideFilters"
-                        style="cursor:pointer;max-width: 20%;width: 20%;" columnName="source">
-                      Source Data Element
-                    </th>
-                    <td mat-cell *matCellDef="let suggest"
-                        style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
-                      <div style="margin-bottom: 10px;">
-                        <mdm-element-link
-                          [newWindow]="true"
-                          [showTypeTitle]="false"
-                          [element]="suggest.sourceDataElement"></mdm-element-link>
-                      </div>
-                      <mdm-model-path [path]="suggest.sourceDataElement.breadcrumbs"
-                                  [newWindow]="true"
-                                  [doNotDisplayStatus]="true"
-                                  [doNotShowParentDataModel]="true"></mdm-model-path>
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="target">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="target" [disabled]="!hideFilters"
-                        style="cursor:pointer;max-width: 20%;width: 20%;" columnName="target">
-                      Target Data Element
-                    </th>
-                    <td mat-cell *matCellDef="let suggest"
-                        style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
-                      <div *ngIf="!suggest.showMore">
-                        <div *ngIf="suggest.selectedTarget" style="float:left;">
-                          <div style="margin-bottom: 10px;">
-                            <mdm-element-link
-                              [newWindow]="true"
-                              [showTypeTitle]="false"
-                              [element]="suggest.selectedTarget.dataElement"></mdm-element-link>
+                            <mdm-model-path [path]="suggest.selectedTarget.dataElement.breadcrumbs"
+                                        [newWindow]="true"
+                                        [doNotDisplayStatus]="true"
+                                        [doNotShowParentDataModel]="true"></mdm-model-path>
                           </div>
-                          <mdm-model-path [path]="suggest.selectedTarget.dataElement.breadcrumbs"
-                                      [newWindow]="true"
-                                      [doNotDisplayStatus]="true"
-                                      [doNotShowParentDataModel]="true"></mdm-model-path>
-                        </div>
-                        <div style="float:right;top:0;right:0;position: relative;"
-                             *ngIf="suggest.results && suggest.results.length > 0">
-                          <a style="font-size: 12px; font-style:italic; cursor: pointer;margin:5px;"
-                             (click)="toggleShowMore(suggest)">more suggestions <i class="fas fa-caret-down"
-                                                                                   aria-hidden="true"></i></a>
-                        </div>
-                        <div *ngIf="suggest.results && suggest.results.length === 0" style="font-style: italic;">
-                          No Suggestions!
-                        </div>
+                          <div style="float:right;top:0;right:0;position: relative;"
+                              *ngIf="suggest.results && suggest.results.length > 0">
+                            <a style="font-size: 12px; font-style:italic; cursor: pointer;margin:5px;"
+                              (click)="toggleShowMore(suggest)">more suggestions <i class="fas fa-caret-down"
+                                                                                    aria-hidden="true"></i></a>
+                          </div>
+                          <div *ngIf="suggest.results && suggest.results.length === 0" style="font-style: italic;">
+                            No Suggestions!
+                          </div>
 
-                      </div>
-                      <div *ngIf="suggest.showMore">
-                        <div style="float:left;width: 90%;">
-                          <mdm-select
-                            [record]="suggest"
-                            [width]="'100%'"
-                            [defaultValue]="suggest.selectedTarget"
-                            [multiSelect]="false"
-                            [acceptTypedInput]="false"
-                            [valueType]="'static'"
-                            [staticValues]="suggest.results"
-                            [idProperty]="'dataElement.id'"
-                            [displayProperty]="'dataElement.label'"
-                            [searchProperty]="'dataElement.label'"
-                            (selectEvent)="onTargetDateElementSelect($event[0],$event[1])">
-                            <ng-template #lineContent let-item>
-                              <div>
+                        </div>
+                        <div *ngIf="suggest.showMore">
+                          <div style="float:left;width: 90%;">
+                            <mdm-select
+                              [record]="suggest"
+                              [width]="'100%'"
+                              [defaultValue]="suggest.selectedTarget"
+                              [multiSelect]="false"
+                              [acceptTypedInput]="false"
+                              [valueType]="'static'"
+                              [staticValues]="suggest.results"
+                              [idProperty]="'dataElement.id'"
+                              [displayProperty]="'dataElement.label'"
+                              [searchProperty]="'dataElement.label'"
+                              (selectEvent)="onTargetDateElementSelect($event[0],$event[1])">
+                              <ng-template #lineContent let-item>
                                 <div>
                                   <div>
-                                    {{item.dataElement.label}}
-                                  </div>
-                                  <div>
-                                    <mdm-model-path [path]="item.dataElement.breadcrumbs"
-                                                [newWindow]="true"
-                                                [doNotDisplayStatus]="true"
-                                                [doNotShowParentDataModel]="true"></mdm-model-path>
+                                    <div>
+                                      {{item.dataElement.label}}
+                                    </div>
+                                    <div>
+                                      <mdm-model-path [path]="item.dataElement.breadcrumbs"
+                                                  [newWindow]="true"
+                                                  [doNotDisplayStatus]="true"
+                                                  [doNotShowParentDataModel]="true"></mdm-model-path>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </ng-template>
-                          </mdm-select>
+                              </ng-template>
+                            </mdm-select>
+                          </div>
+                          <div style="float:left;margin-left:5px;margin-top:10px;">
+                            <a style="font-size: 12px; font-style:italic;cursor: pointer;"
+                              (click)="toggleShowMore(suggest)">close</a>
+                          </div>
                         </div>
-                        <div style="float:left;margin-left:5px;margin-top:10px;">
-                          <a style="font-size: 12px; font-style:italic;cursor: pointer;"
-                             (click)="toggleShowMore(suggest)">close</a>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="buttons">
+                      <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 8%;width: 8%;"
+                          columnName="buttons" sortable="true">
+                      </th>
+                      <td mat-cell *matCellDef="let suggest; let i = index"
+                          style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
+                        <div *ngIf="!suggest.success && !suggest.processing">
+                          <button type="button" class="btn btn-success btn-sm"
+                                  style="margin-bottom: 2px; min-width: 55px !important;"
+                                  (click)="approveSuggestion(suggest)"
+                                  [disabled]="!suggest.selectedTarget || !model.sourceEditable">
+                            Add
+                          </button>
+                          <button type="button" class="btn btn-default btn-sm"
+                                  style="margin-bottom: 2px; min-width: 55px !important;"
+                                  (click)="ignoreSuggestion(suggest)" [disabled]="!model.sourceEditable">
+                            Ignore
+                          </button>
                         </div>
-                      </div>
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="buttons">
-                    <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 8%;width: 8%;"
-                        columnName="buttons" sortable="true">
-                    </th>
-                    <td mat-cell *matCellDef="let suggest; let i = index"
-                        style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
-                      <div *ngIf="!suggest.success && !suggest.processing">
-                        <button type="button" class="btn btn-success btn-sm"
-                                style="margin-bottom: 2px; min-width: 55px !important;"
-                                (click)="approveSuggestion(suggest)"
-                                [disabled]="!suggest.selectedTarget || !model.sourceEditable">
-                          Add
-                        </button>
-                        <button type="button" class="btn btn-default btn-sm"
-                                style="margin-bottom: 2px; min-width: 55px !important;"
-                                (click)="ignoreSuggestion(suggest)" [disabled]="!model.sourceEditable">
-                          Ignore
-                        </button>
-                      </div>
-                      <div *ngIf="suggest.success">
-                        <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;</div>
-                      </div>
-                      <div style="width:100%;height:100%;text-align: center" *ngIf="suggest.processing">
-                        <div style="padding-top: 10%;">
-                          <i style="font-size: 20px;" class="fas fa-sync-alt fa-spin"></i>
+                        <div *ngIf="suggest.success">
+                          <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;</div>
                         </div>
-                      </div>
-                    </td>
-                  </ng-container>
+                        <div style="width:100%;height:100%;text-align: center" *ngIf="suggest.processing">
+                          <div style="padding-top: 10%;">
+                            <i style="font-size: 20px;" class="fas fa-sync-alt fa-spin"></i>
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
 
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-              </div>
-              <div class="mdm--mat-pagination">
-                <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="model.totalSuggestionLinks" showFirstLastButtons></mat-paginator>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+                <div class="mdm--mat-pagination">
+                  <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="model.totalSuggestionLinks" showFirstLastButtons></mat-paginator>
+                </div>
               </div>
             </div>
           </div>
@@ -248,4 +251,5 @@
       </div>
     </div>
   </div>
+
 </div>

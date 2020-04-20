@@ -85,38 +85,34 @@ export class DataTypeDetailComponent implements OnInit {
   ngAfterViewInit(): void {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe(() => {
-     // if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
             editing: true,
             focus: x._name === 'moduleName' ? true : false
           })
         );
-       // this.showForm();
-      //}
     });
   }
 
   formBeforeSave = () => {
+    const aliases = [];
+    this.editableForm.aliases.forEach(alias => {
+      aliases.push(alias);
+    });
+
     const resource = {
       id: this.mcDataTypeObject.id,
       label: this.editableForm.label,
       description: this.editableForm.description,
-      aliases: this.mcDataTypeObject.editAliases,
+      aliases,
       domainType: this.mcDataTypeObject.domainType,
       classifiers: this.mcDataTypeObject.classifiers.map(cls => ({id: cls.id}))
     };
-
-    this.resources.dataType
-      .put(this.mcParentDataModel.id, this.mcDataTypeObject.id, null, {
-        resource
-      })
-      .subscribe((res) => {
+    this.resources.dataType.put(this.mcParentDataModel.id, this.mcDataTypeObject.id, null, { resource }).subscribe((res) => {
         const result = res.body;
         if (this.afterSave) {
           this.afterSave(resource);
         }
-
         this.mcDataTypeObject.aliases = Object.assign([], result.aliases);
         this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
         this.mcDataTypeObject.label = result.label;
@@ -126,7 +122,6 @@ export class DataTypeDetailComponent implements OnInit {
 
       }, (error) => {
         this.messageHandler.showError('There was a problem updating the Data Type.', error);
-
       });
 
     this.changeRef.detectChanges();
@@ -139,32 +134,19 @@ export class DataTypeDetailComponent implements OnInit {
   };
 
   onCancelEdit = () => {
-    this.mcDataTypeObject.editAliases = Object.assign(
-      [],
-      this.mcDataTypeObject.aliases
-    );
+    this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases );
     this.changeRef.detectChanges();
   };
 
   delete = () => {
-    this.resources.dataType
-      .delete(this.mcParentDataModel.id, this.mcDataTypeObject.id)
-      .subscribe(
-        result => {
-          this.messageHandler.showSuccess('Data Type deleted successfully.');
-          this.stateHandler.Go(
-            'dataModel',
-            {id: this.mcParentDataModel.id},
-            {reload: true, location: true}
-          );
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Type.',
-            error
-          );
-        }
-      );
+    this.resources.dataType.delete(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe(() => {
+        this.messageHandler.showSuccess('Data Type deleted successfully.');
+        this.stateHandler.Go('dataModel', {id: this.mcParentDataModel.id}, {reload: true, location: true});
+      },
+      error => {
+        this.messageHandler.showError('There was a problem deleting the Data Type.', error);
+      }
+    );
   };
 
   askToDelete = () => {
@@ -173,49 +155,29 @@ export class DataTypeDetailComponent implements OnInit {
     }
 
     // check if it has DataElements
-    this.resources.dataType
-      .get(
-        this.mcParentDataModel.id,
-        this.mcDataTypeObject.id,
-        'dataElements',
-        null
-      )
-      .subscribe(res => {
-        const result = res.body;
-        const dataElementsCount = result.count;
+    this.resources.dataType.get(this.mcParentDataModel.id, this.mcDataTypeObject.id, 'dataElements', null).subscribe(res => {
+      const result = res.body;
+      const dataElementsCount = result.count;
 
-        let message =
-          'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Data Type?';
-        if (dataElementsCount > 0) {
-          message +=
-            '<br>All it\'s Data Elements <strong>(' +
-            dataElementsCount +
-            ')</strong> will be deleted <span class=\'errorMessage\'>permanently</span> as well:<br>';
+      let message = `Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?`;
+      if (dataElementsCount > 0) {
+        message += `<br>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:<br>`;
 
-          for (let i = 0; i < Math.min(5, result.items.length); i++) {
-            const link = this.elementTypes.getLinkUrl(result.items[i]);
-
-            message +=
-              '<a target=\'_blank\' href=\'' +
-              link +
-              '\'>' +
-              result.items[i].label +
-              '</a><br>';
-          }
-          if (result.count > 5) {
-            message += ' ...';
-          }
+        for (let i = 0; i < Math.min(5, result.items.length); i++) {
+          const link = this.elementTypes.getLinkUrl(result.items[i]);
+          message += `<a target='_blank' href='${link}'>${result.items[i].label}</a><br>`;
         }
+        if (result.count > 5) {
+          message += ' ...';
+        }
+      }
 
-        this.dialog
-          .open(ConfirmationModalComponent, {data: {message}})
-          .afterClosed()
-          .subscribe(result2 => {
-            if (result2.status !== 'ok') {
-              return;
-            }
-            this.delete();
-          });
-      });
+      this.dialog.open(ConfirmationModalComponent, {data: {message}}).afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
+            return;
+          }
+          this.delete();
+        });
+    });
   }
 }

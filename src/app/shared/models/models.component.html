@@ -11,7 +11,7 @@
                             <div class="input-group">
                                 <input type="search" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" [disabled]="levels.current === 1" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)">
 
-                                <span class="input-group-btn tree-top-actions">
+                                <span class="tree-top-actions">
 
                                     <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Search" (click)="search()" aria-label="Search">
                                         <i class="fas fa-search"></i>
@@ -56,15 +56,23 @@
                 <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: scroll">
 
                     <div style="margin:3px 0px 0px 0px" *ngIf="filteredModels && filteredModels.children && filteredModels.children.length!=0">
-                        <button class="btn btn-default"
+                        <button mat-button
+                                color="primary"
                                 type="button"
+                                class="paddingless"
+                                matTooltip="Previous level"
+                                aria-label="Previous level"
                                 [disabled]="levels.current === 0"
                                 (click)="levels.folders()">
                             <i class="fas fa-arrow-left"></i>
                         </button>
 
-                        <button class="btn btn-default"
+                        <button mat-button
+                                color="primary"
                                 type="button"
+                                class="paddingless"
+                                matTooltip="Next level"
+                                aria-label="Next level"
                                 [disabled]="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
                                 (click)="levels.focusedElement()">
                             <i class="fas fa-arrow-right"></i>

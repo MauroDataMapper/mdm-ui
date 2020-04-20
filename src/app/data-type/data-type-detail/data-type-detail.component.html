@@ -1,18 +1,27 @@
-<div class="panel panel-default">
-    <form editable-form name="form"  onaftersave="onAfterSave()"   (ngSubmit)="formBeforeSave()"   disable-submit-on-enter>
-        <div class="panel-body panel-table">
-            <h4>
-                <mdm-inline-text-edit [(ngModel)]="editableForm.label" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
+<div class="panel panel-default mdm--shadow-block">
+    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body">
+            <h4 class="marginless">
+                <mdm-inline-text-edit [(ngModel)]="editableForm.label" name="labelName" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
             </h4>
-            <small class="elementDetailMCType">Data Type</small><br>
-            <span style="font-size: 11px;font-style: italic" class="dataTypeDetailsLastUpdate">Last Update: {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+            <div class="detail-icons">
+                <div class="text-muted">
+                  <small>
+                    <i class="far fa-calendar-check" matTooltip="Last update"></i>
+                    <span><strong>Last Update:</strong> {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                  </small>
+                </div>
+            </div>
         </div>
         <table class="table table-bordered">
             <tbody>
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <div style="width:50%">
+                        <div *ngIf="!editableForm.visible" style="max-width: 100%;">
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                        </div>
+                        <div *ngIf="editableForm.visible" style="max-width: 50%;">
                             <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                     </td>
@@ -20,9 +29,7 @@
                 <tr>
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
-
                         <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></mdm-markdown-text-area>
-
                     </td>
                 </tr>
                 <tr>
@@ -61,25 +68,35 @@
                             </mdm-editable-form-buttons>
                         </div>
                         <div style="float: right">
-                            <div *ngIf="!editableForm.visible && !editableForm.deletePending" class="btn-group-xs" is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button matTooltip="Edit" id="singleX-button" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
-                                        (click)="editableForm.show();"
-                                        [hidden]="editableForm.visible" [disabled]="deleteInProgress">
-                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div style="float: right">
-                            <div  [hidden]="editableForm.visible || editableForm.deletePending" class="btn-group-xs"  is-open="false" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button matTooltip="Delete" type="button" class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
+                            <div  [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; margin-right:4px;">
+                                <button mat-stroked-button
+                                        color="warn"
+                                        type="button"
+                                        matTooltip="Delete"
+                                        aria-label="Delete"
+                                        class="paddingless"
                                         (click)="askToDelete()"
                                         *ngIf="!editableForm.visible && !editableForm.deletePending"
-                                        [disabled]="deleteInProgress" >
+                                        [disabled]="deleteInProgress">
                                     <i class="far fa-trash-alt warning" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
-
+                        <div style="float: right">
+                            <div *ngIf="!editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; margin-right:4px;">
+                                <button mat-stroked-button
+                                        color="primary"
+                                        type="button" 
+                                        matTooltip="Edit"
+                                        aria-label="Edit"
+                                        class="paddingless"
+                                        (click)="editableForm.show();"
+                                        [hidden]="editableForm.visible" 
+                                        [disabled]="deleteInProgress">
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>

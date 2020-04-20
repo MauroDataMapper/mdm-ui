@@ -301,16 +301,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       aliases.push(alias);
     });
 
-    if (
-      this.validateLabel(this.result.label) &&
-      this.validateMultiplicity(this.min, this.max)
-    ) {
-      if (
-        this.min != null &&
-        this.min !== '' &&
-        this.max != null &&
-        this.max !== ''
-      ) {
+    if (this.validateLabel(this.result.label) && this.validateMultiplicity(this.min, this.max)) {
+      if (this.min != null && this.min !== '' && this.max != null && this.max !== '') {
         if (this.newMinText === '*') {
           this.newMinText = -1;
         }

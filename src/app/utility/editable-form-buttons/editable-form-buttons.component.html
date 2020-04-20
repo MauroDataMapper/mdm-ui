@@ -12,12 +12,12 @@
     </button>
 
     <!-- Delete -->
-    <button mat-stroked-button 
-            type="button" 
+    <button mat-stroked-button
+            type="button"
             class="paddingless"
-            matTooltip="Delete" 
+            matTooltip="Delete"
             [disabled]="editable.waiting || processing"
-            *ngIf="!hideDelete && !editable.deletePending" 
+            *ngIf="!hideDelete && !editable.deletePending"
             (click)="deleteClicked()"
             aria-label="Delete">
         <i [ngClass]="!displayDeleteIcon ? ['far','displayDeleteIcon','warning','']: ['far','fa-trash-alt','warning']"></i>
@@ -29,20 +29,22 @@
         <span (show)="textLocation == 'left'" style="font-size: 11px;">Are you sure?</span>
         <!-- Confirm Delete -->
         <button mat-stroked-button
-                type="button" 
-                class="paddingless" 
+                color="accent"
+                type="button"
+                class="paddingless"
                 (click)="confirmDeleteClicked()"
                 aria-label="Confirm delete">
-            <i class="fas fa-check saveButton"></i>
+            <i class="fas fa-check"></i>
         </button>
 
         <!-- Cancel Delete-->
-        <button mat-stroked-button 
-                type="button" 
-                class="paddingless" 
+        <button mat-stroked-button
+                color="warn"
+                type="button"
+                class="paddingless"
                 (click)="cancelDeleteClicked()"
                 aria-label="Cancel delete">
-            <i class="fas fa-times cancelButton"></i>
+            <i class="fas fa-times"></i>
         </button>
 
         <span [hidden]="textLocation != 'bottom'" style="font-size: 11px;"><br>Are you sure?</span>
@@ -50,11 +52,11 @@
 
 
         <!--edit Cancel -->
-    <button mat-button 
+    <button mat-button
             color="warn"
-            type="button" 
+            type="button"
             [disabled]="editable.waiting || processing"
-            *ngIf="editable.visible && !hideCancel" 
+            *ngIf="editable.visible && !hideCancel"
             (click)="cancelEditClicked()"
             aria-label="Cancel edit">
             Cancel edit
@@ -63,10 +65,10 @@
     <!-- Save -->
     <button mat-flat-button
             color="primary"
-            type="submit" 
+            type="submit"
             class="custom"
             [disabled]="editable.waiting || editable.validationError"
-            *ngIf="editable.visible" 
+            *ngIf="editable.visible"
             (click)="saveClicked()"
             aria-label="Save">
             Save changes

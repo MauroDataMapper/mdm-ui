@@ -55,11 +55,9 @@
 
             <div class="form-group">
               <div style="margin-bottom: 20px">
-                <input type="checkbox"
-                      style="cursor: pointer"
-                      [(ngModel)]="doNotSuggest">
-                <span
-                  style="vertical-align: top;">&nbsp;Do not suggest for Data Elements which already have Links. </span>
+                    <mat-checkbox [(ngModel)]="doNotSuggest">
+                      Do not suggest for Data Elements which already have Links.
+                    </mat-checkbox>
               </div>
             </div>
 
@@ -117,7 +115,7 @@
                           </span>
                 </div>
 
-                <div class="mcTableContainer">
+                <div>
                   <table mat-table matSort [dataSource]="datasource" class="table table-bordered">
                     <ng-container matColumnDef="source">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header="source" [disabled]="!hideFilters"

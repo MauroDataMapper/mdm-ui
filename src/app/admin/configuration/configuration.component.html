@@ -163,9 +163,7 @@
 					<br>Once it is complete, you will be notified in this page.
 					<br>Please be patient and don't leave this page while reindexing is in progress.
 				</p>
-				<!-- <input ng-disabled="indexingStatus == 'start'" type="button" class="btn btn-primary"
-					(click)="rebuildIndex()" value="Rebuild Index" /> -->
-				<button mat-flat-button class="custom" color="primary" ng-disabled="indexingStatus == 'start'"
+				<button mat-flat-button class="custom" color="primary" [ngDisabled]="indexingStatus == 'start'"
 					(click)="rebuildIndex()">Rebuild index</button>
 			</div>
 		</div>
@@ -184,7 +182,7 @@
 				</div>
 				<div *ngIf="indexingStatus == 'success'">
 					<div style="margin-left: 30%">
-						<p class="rebuildingIndexSuccess">
+						<p>
 							<i class="fas fa-check"></i>
 						</p>
 					</div>

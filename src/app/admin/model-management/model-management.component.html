@@ -1,7 +1,7 @@
 <div class="heading-container">
     <h4>Data models bulk delete</h4>
 </div>
-		
+
 <div class="row">
 	<div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
 		<h3>Please select one or more element(s):</h3>
@@ -71,8 +71,8 @@
 				<button mat-flat-button color="warn" type="button" class="custom" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
 					<i class="far fa-trash-alt"></i> Mark as Deleted
 				</button>
-				
-				<span class="deleteInProgressSpinner" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
+
+				<span class="warning" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
 					<a style="font-size: 14px; text-decoration: none;">
 						<i class="fas fa-sync-alt fa-spin"></i> Deleting...
 					</a>

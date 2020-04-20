@@ -64,11 +64,11 @@ a.show-more, a.show-less {
   display: inline-block;
 }
 .pill-card--red {
-  color: #fff; 
+  color: #fff;
   background-color: #A5122A;
 }
 .pill-card--green {
-  color: #fff; 
+  color: #fff;
   background-color: #0A8535;
   // color: #0A8535;
   //   background-color: rgba(29,201,183,.1);
@@ -83,9 +83,6 @@ hr {
   }
 }
 
-input[type="checkbox"] {
-  cursor: pointer;
-}
 .helpIcon {
   color: $defaultLinkColour;
   cursor: pointer;
@@ -188,7 +185,7 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
   }
 
   table td {
-    border: 0.07rem solid #ebedf2; 
+    border: 0.07rem solid #ebedf2;
   }
   .detailsRowHeader {
     background-color: #f9f9f9

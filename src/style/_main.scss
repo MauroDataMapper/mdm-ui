@@ -1,11 +1,3 @@
-$baseColor: #205081;
-$headerBackground: #fff;
-$navTextColor: #fff;
-$stateLoadingSpinnerColor: #fff;
-
-.content {
-  height: 100%;
-}
 
 
 /* Large Devices, Wide Screens */
@@ -112,108 +104,6 @@ $stateLoadingSpinnerColor: #fff;
   background-color: #f9f9f9;
 }
 
-.detailsTableCaption {
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.tableTitle {
-  font-weight: bold;
-  background-color: #e8e8e8;
-}
-
-.jqueryLayoutPane {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  min-width: 400px;
-  _width: 700px;
-}
-
-.treeFont {
-  font-size: 12px !important;
-  // font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-/*We had to add this, as jquery-layout needs all parent elements have height
-As angular adds ng-scope on the background we had to add this to fix the problem,
-we might be able to fix this by adding the jQuery layout in a directive instead
-*/
-// .ng-scope{
-// 	height: 100%;
-// }
-
-.dashboardPanelHeader {
-  font-weight: bold;
-}
-
-.hideForSecurity {
-  display: none !important;
-}
-
-a.moreLink {
-  // font-size: 10px;
-  font-size: 0.9em;
-  text-decoration: none;
-  outline: none;
-}
-
-a.moreLink:hover,
-a.moreLink:active,
-a.moreLink:visited {
-  text-decoration: none;
-  color: #337ab7 !important;
-}
-
-.morecontent span {
-  display: none;
-}
-
-.addToSelectionIcon {
-  color: #ddd;
-  cursor: pointer;
-}
-
-.modelIcon {
-  color: #205081;
-  font-size: 9px;
-}
-
-.recently-viewed-name {
-  cursor: pointer;
-}
-
-.recently-viewed-date {
-  color: #707070;
-  font-size: 12px;
-}
-.recently-viewed-user {
-  color: #707070;
-  font-size: 12px;
-}
-.recently-viewed-desc {
-  font-size: 12px;
-}
-
-.childDataElementsCount {
-  font-size: 10px;
-  font-style: italic;
-  font-weight: normal !important;
-}
-
-.elementAddedToSelection {
-  color: Green;
-}
-
-.elementNotAddedToSelection {
-  color: #ddd;
-}
-
-.inBasketText {
-  font-size: 10px;
-  font-style: italic;
-  font-weight: normal !important;
-}
 
 .breadcrumb > li + li:before {
   padding: 0px 0px 0px 5px !important;
@@ -250,23 +140,6 @@ a.moreLink:visited {
   color: #333;
 }
 
-.classificationIcon {
-  color: #205081;
-  font-size: 9px;
-}
-
-.command-icon {
-  outline: none !important;
-}
-
-.command-icon-danger {
-  color: #cc0000;
-}
-
-.editing-background {
-  background: #eee;
-}
-
 .panel-table {
   padding: 5px 10px !important;
 }
@@ -278,105 +151,6 @@ a.moreLink:visited {
   background-color: #777777 !important;
 }
 
-.command-column {
-  width: 35px;
-  text-align: center;
-  padding: 0 !important;
-}
-
-.searchResultDescription {
-  font-size: 11px;
-  text-decoration: none;
-  color: #707070 !important;
-}
-
-.searchResultMCType {
-  font-size: 11px;
-  text-decoration: none;
-  font-style: italic;
-  color: #4cae4c !important;
-}
-
-.annotation-date {
-  color: #707070;
-  font-size: 0.8em;
-  font-style: italic;
-  padding-left: 5px;
-}
-
-.annotation-username {
-  color: #707070;
-  font-size: 0.8em;
-}
-
-.annotation-child-item-header {
-  background-color: #f9f9f9;
-  padding: 3px;
-}
-
-.annotation-item-header {
-  padding: 3px;
-}
-
-.annotation-item {
-  border: 1px solid #ddd;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  margin-left: 10px;
-}
-
-.annotation-description {
-  margin: 5px 0px;
-  width: 99%;
-}
-
-.annotation-item-bottom-line {
-  border-left: 2px solid #ddd;
-  margin-left: 18px;
-  max-height: 5px;
-  width: 100%;
-}
-
-[ui-view].ng-enter {
-  opacity: 0;
-}
-
-[ui-view].ng-enter.ng-enter-active {
-  margin-left: 0;
-  opacity: 1;
-}
-
-.modelsFilter {
-  height: 25px !important;
-  margin-top: 5px !important;
-}
-
-.enabledFilter {
-  cursor: pointer;
-}
-
-.disabledFilter {
-  color: #777777;
-  cursor: pointer;
-}
-
-
-
-ul.changeTrackList {
-  list-style: none;
-}
-
-ul.changeTrackList > li {
-  list-style-type: none;
-
-  border-radius: 5px;
-  margin-bottom: 2px;
-  padding: 2px;
-}
-ul.changeTrackList > li:hover {
-  background-color: #707070;
-}
-
 .elementDetailMCType {
   font-size: 12px;
   text-decoration: none;
@@ -384,28 +158,9 @@ ul.changeTrackList > li:hover {
   color: #4cae4c !important;
 }
 
-
-
-[ng\:cloak],
-[ng-cloak],
-[data-ng-cloak],
-[x-ng-cloak],
-.ng-cloak,
-.x-ng-cloak {
-  display: none !important;
-}
-
 .elementDetailDescription {
   word-break: keep-all !important;
   word-wrap: break-word;
-}
-span.core {
-  white-space: pre-line;
-}
-
-
-.table .table {
-  background-color: transparent;
 }
 
 .enumerationKeyValueTable {
@@ -447,45 +202,18 @@ span.core {
     }
   }
 }
-
-// .enumerationValue{
-//   word-break: keep-all !important;
-//   word-wrap: break-word;
-// }
-
 .dataTypeLabel {
   font-style: italic;
   font-size: 11px;
   color: #4cae4c;
   padding-left: 5px;
 }
-
-
 .enumCaretShow {
   color: #4cae4c;
 }
-// .showMoreEnumerations{
-//   text-decoration: none !important;
-//   cursor: pointer !important;
-// }
-
 .hiddenMoreEnumerationKeyValue {
   display: none;
 }
-
-/* ========== ^ ==========*/
-
-// .enumerationKeyValueTable{
-//    margin-left: 20px;
-//  }
-
-// .enumerationKey{
-//    margin-left: 10px;
-//   vertical-align: top;
-// }
-// .enumerationValue{
-//   margin-left: 10px;
-// }
 
 ul.myTree,
 ul.myTree ul {
@@ -530,43 +258,6 @@ ul.myTree li:focus {
   font-size: 18px;
 }
 
-
-
-div.deleteInProgressSpinner a {
-  color: #c62828 !important;
-}
-.deleteInProgressSpinner a {
-  color: #c62828 !important;
-}
-
-.editButton {
-  cursor: pointer;
-}
-
-.deleteButton {
-  cursor: pointer;
-  color: #d9534f;
-}
-
-.saveButton {
-  cursor: pointer;
-  color: #267526;
-}
-
-.cancelButton {
-  cursor: pointer;
-}
-
-.confirmDeleteButton {
-  cursor: pointer;
-  color: #9c231f; // #267526
-}
-
-.addNewModelButton {
-  cursor: pointer;
-  font-style: normal;
-}
-
 .dataModelDetailTable {
   margin-bottom: 0px;
   border-bottom: none;
@@ -587,59 +278,6 @@ div.deleteInProgressSpinner a {
   }
 }
 
-.dataClassDetailTable {
-  margin-bottom: 0px !important;
-}
-
-.dataClassDetailsDescription {
-  white-space: pre-line;
-  word-break: break-all;
-}
-
-.dataElementDetailTable {
-  margin-bottom: 0px !important;
-}
-
-.dataElementDetailsDescription {
-  white-space: pre-line;
-  word-break: break-all;
-}
-
-.classificationDetailsDescription {
-  white-space: pre-line;
-  word-break: break-all;
-}
-
-.dataTypeDetailTable {
-  margin-bottom: 0px !important;
-}
-
-.dataTypeDetailsDescription {
-  white-space: pre-line;
-  word-break: break-all;
-}
-
-.dataElementsTable {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.wizardInput {
-  padding: 6px !important;
-  height: 30px !important;
-}
-
-div.ui-select-container input.wizardInput {
-  padding: 6px !important;
-  height: 30px !important;
-}
-
-.sample-show-hide {
-  padding: 10px;
-  border: 1px solid black;
-  background: white;
-}
-
 .my-tree-fade.ng-hide-remove {
   -webkit-transition: all linear 0.5s;
   transition: all linear 0.5s;
@@ -651,128 +289,6 @@ div.ui-select-container input.wizardInput {
   opacity: 0;
 }
 
-.editable-click {
-  color: #000000;
-  border-bottom: none;
-}
-
-.editable-textarea {
-  width: 100%;
-  .editable-controls {
-    width: 100%;
-    textarea.editable-input {
-      width: 80%;
-    }
-  }
-}
-
-// .menuTwoSidePanel {
-//   .leftPanel {
-//     height: 100%;
-//     padding: 0;
-
-//     .leftMenu {
-//       position:fixed;
-//       top: 0;
-//       left: 0;
-//       bottom: 0;
-//       width: 100% / 6; //maching col-XX-2
-//       padding-top: 56px;
-//       background-color: #222d32;
-//       border-color: #222d32;
-//       height: 100%;
-//       h4 {
-//         color: #4b646f;
-//         margin-left: 10px;
-//       }
-//       .list-group-item {
-//         border: none;
-//         background-color: transparent;
-//         border-radius: 0;
-//         transition: border-color .5s, background-color .5s;
-
-//         &:hover {
-//           border-left: 5px solid;
-//           border-left-color: darker(#4b646f,5%);
-//           padding-left: 10px;
-//           background-color: lighten(#222d32, 10%);
-//         }
-
-//         a {
-//           width: 100%;
-//           color: #b8c7ce;
-//           text-decoration: none;
-
-//           &:hover {
-//             color: #ffffff;
-//           }
-//         }
-//       }
-
-//       .rightPanel {
-//         height: 100%;
-//       }
-
-//       .resultsTitle {
-//         margin-top: 10px;
-//         color: #ffffff;
-//       }
-//     }
-//   }
-// }
-
-li.modelFilterItem {
-  cursor: pointer;
-}
-
-span.publiclyReadable {
-  vertical-align: middle;
-}
-
-div.publiclyReadableCheckBox {
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-}
-
-span.deletedElement {
-  background-color: #f2dede;
-  border: 1px solid #fff;
-  text-decoration: line-through;
-  padding: 2px;
-}
-
-span.newElement {
-  background-color: #dff0d8;
-  border: 1px solid #fff;
-  padding: 2px;
-}
-
-span.updatedElement {
-  background-color: #fcf8e3;
-  border: 1px solid #fff;
-  padding: 2px;
-}
-
-div.deletedElementTip {
-  background-color: #f2dede;
-  width: 10px;
-  height: 10px;
-}
-div.newElementTip {
-  background-color: #dff0d8;
-  width: 10px;
-  height: 10px;
-}
-
-div.updatedElementTip {
-  background-color: #fcf8e3;
-  width: 10px;
-  height: 10px;
-}
-
-.mcHighlighter {
-  background-color: yellow !important;
-}
 
 /*** Style the buttons ***/
 
@@ -825,143 +341,6 @@ span.newUserInviteEmail {
 }
 
 
-nav {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-
-  &.main-menu {
-    background: #222d32;
-    border-right: 1px solid lighten(#222d32, 20%);
-    position: fixed;
-    padding-top: 5px;
-    top: 0;
-    bottom: 0;
-    height: 100%;
-    left: 0;
-    width: 60px;
-    overflow: hidden;
-    -webkit-transition: width 0.05s ease;
-    transition: width 0.05s ease;
-    z-index: 900;
-    pointer-events: none; //Disable Hover on any sub items, except for i
-
-    .divider {
-      margin: 10px 0;
-    }
-
-    .fa-2x {
-      font-size: 2em;
-    }
-
-    .fa {
-      position: relative;
-      display: table-cell;
-      width: 60px;
-      height: 36px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 20px;
-    }
-
-    &:hover {
-      width: 250px;
-      overflow: visible;
-    }
-
-    > ul {
-      margin: 7px 0;
-
-      &.logout {
-        position: absolute;
-        left: 0;
-        bottom: 56px;
-      }
-
-      li {
-        position: relative;
-        display: block;
-        width: 250px;
-
-        > a {
-          position: relative;
-          display: table;
-          border-collapse: collapse;
-          border-spacing: 0;
-          color: #999;
-          font-family: arial;
-          font-size: 14px;
-          text-decoration: none;
-          -webkit-transition: all 0.1s linear;
-          transition: all 0.1s linear;
-
-          > div > i {
-            pointer-events: all; //enable hover just on i
-          }
-        }
-      }
-    }
-
-    ul {
-      outline: 0;
-      margin-top: 56px;
-      padding: 0;
-    }
-
-    li {
-      outline: 0;
-      margin: 0;
-      padding: 0;
-
-      &:hover,
-      &:active {
-        > a {
-          color: #fff;
-          background-color: $baseColor;
-        }
-      }
-    }
-
-    a {
-      &:hover,
-      &:focus {
-        text-decoration: none;
-      }
-    }
-
-    .expanded {
-      width: 250px;
-      overflow: visible;
-    }
-
-    .nav-icon {
-      position: relative;
-      display: table-cell;
-      width: 60px;
-      height: 36px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 18px;
-    }
-
-    .nav-text {
-      position: relative;
-      display: table-cell;
-      vertical-align: middle;
-      width: 190px;
-    }
-
-    .area {
-      float: left;
-      background: #e2e2e2;
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
-
 .onlineUser {
   color: #268c21;
 }
@@ -971,49 +350,7 @@ nav {
   font-style: italic;
 }
 
-.rebuildingIndexInProgress {
-  font-size: 75px;
-}
 
-.rebuildingIndexSuccess {
-  font-size: 75px;
-  color: #5cb85c;
-}
-
-.rebuildingIndexError {
-  font-size: 75px;
-  color: #d9534f;
-}
-
-.importForm {
-  font-size: 12px;
-  font-style: italic;
-}
-
-.importFormStep {
-  font-size: 11px;
-}
-
-.importFormStepTitle {
-  font-size: 1.1em;
-}
-
-.informationText {
-  font-size: 12px;
-  font-style: italic;
-  padding-left: 5px;
-}
-
-.foundCount {
-  background-color: yellow;
-  color: #000;
-  font-style: italic;
-  font-weight: normal;
-  font-size: 10px;
-  padding: 3px 5px !important;
-  border: 1px solid #000;
-  padding-left: 20px;
-}
 
 .MCElementType {
   font-size: 11px;
@@ -1049,9 +386,6 @@ th.metadataNamespaceHeader {
   font-weight: bold !important;
 }
 
-.modelPathIcon {
-  color: #000;
-}
 
 #paper-html-elements {
   position: relative;
@@ -1066,103 +400,8 @@ th.metadataNamespaceHeader {
 #paper-html-elements svg .link {
   z-index: 2;
 }
-.html-element {
-  position: absolute;
-  background: #3498db;
-  /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
-  pointer-events: none;
-  -webkit-user-select: none;
-  border-radius: 4px;
-  border: 2px solid #2980b9;
-  box-shadow: inset 0 0 5px black, 2px 2px 1px gray;
-  padding: 5px;
-  box-sizing: border-box;
-  z-index: 2;
-}
-.html-element select,
-.html-element input,
-.html-element button {
-  /* Enable interacting with inputs only. */
-  pointer-events: auto;
-}
-.html-element button.delete {
-  color: white;
-  border: none;
-  background-color: #c0392b;
-  border-radius: 20px;
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  text-align: middle;
-  position: absolute;
-  top: -15px;
-  left: -15px;
-  padding: 0;
-  margin: 0;
-  font-weight: bold;
-  cursor: pointer;
-}
-.html-element button.delete:hover {
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-}
-.html-element select {
-  position: absolute;
-  right: 2px;
-  bottom: 28px;
-}
-.html-element input {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: none;
-  color: #333;
-  padding: 5px;
-  height: 16px;
-}
-.html-element label {
-  color: #333;
-  text-shadow: 1px 0 0 lightgray;
-  font-weight: bold;
-}
-.html-element span {
-  position: absolute;
-  top: 2px;
-  right: 9px;
-  color: white;
-  font-size: 10px;
-}
 
-.data-model-element {
-  position: absolute;
-  background: #fff;
-  /* Make sure events are propagated to the JointJS element so, e.g. dragging works.*/
-  pointer-events: none;
-  -webkit-user-select: none;
-  border: 1px solid #000;
-  z-index: 2;
-  padding: 3px;
-}
 
-.data-model-element-selected {
-  border: 2px solid #000;
-}
-
-.data-model-element select,
-.data-model-element input,
-.data-model-element button,
-.data-model-element span a.linkToElement {
-  /* Enable interacting with inputs only. */
-  pointer-events: auto;
-}
-
-.data-model-element div.title {
-  font-size: 11px;
-  border-bottom: 1px solid #000;
-  padding: 3px;
-}
 
 div.diagram-tool-box {
   color: #000;
@@ -1176,42 +415,6 @@ div.diagram-tool-box {
 div.diagram-tool-box-icon {
   cursor: pointer;
 }
-
-//Splitter Style .................................................................
-.split p {
-  padding: 20px;
-}
-
-.split {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.gutter {
-  background-color: #eee;
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.gutter.gutter-horizontal {
-  background-image: url("assets/images/grips/vertical.png");
-  cursor: ew-resize;
-}
-
-.gutter.gutter-vertical {
-  background-image: url("assets/images/grips/horizontal.png");
-  cursor: ns-resize;
-}
-
-.split.split-horizontal,
-.gutter.gutter-horizontal {
-  height: 100%;
-  float: left;
-}
-//...............................................................................
 
 //Fix for UI problem in jointjs
 //https://stackoverflow.com/questions/34767763/jointjs-using-router-on-links-behaves-weird
@@ -1251,86 +454,8 @@ div.mcSelectHolder {
   z-index: 1000;
 }
 
-.mcSelectHasError {
-  border: 1px solid #a94442;
-}
 
-.hasNoDataClasses {
-  font-size: 16px;
-  font-weight: bold;
-  color: #838384;
-  padding-top: 10px;
-}
 
-.hasNoDataFlow {
-  font-weight: bold;
-  color: #838384;
-  padding-top: 10px;
-}
-
-///...NEW MC-TABLE.....................................................................
-
-// .mcTableTitle{
-//   width: 100%;
-//   border: 1px solid #DDD;
-//   background-color: #E8E8E8;
-//   line-height: 18px;
-//   font-weight: bold;
-//   padding: 5px;
-// }
-
-.mcTableContainer {
-  width: 100%;
-  position: relative;
-}
-ul.mcTablePagination {
-  margin: 0px 0 !important;
-}
-
-.mcTableDeleteBtn {
-  color: #d9534f;
-}
-
-.mcTableApproveBtn {
-  color: #267526;
-}
-
-div.mcTablePageIndexHolder {
-  float: left;
-}
-
-div.mcTablePageSizesHolder {
-  float: right;
-}
-
-a.mcTablePaginationLink {
-  cursor: pointer;
-}
-
-i.graySort {
-  color: #ddd;
-}
-
-i.blackSort {
-  color: #000;
-}
-
-.mcTooltip {
-  min-width: 250px;
-}
-
-div.noDataModel {
-  color: #686868;
-  padding: 5px;
-  .title {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  .content {
-    font-style: italic;
-    padding-left: 3px;
-  }
-}
 
 div.noClassification {
   color: #686868;
@@ -1377,41 +502,6 @@ div.disabledPageListBtn {
 i.pageListRightBtn {
   margin-right: -2px;
 }
-
-i.pageListLeftBtn {
-  margin-left: -2px;
-}
-
-div.pageList.displayItems {
-  padding-left: 5px;
-}
-
-div.pageList.editBtn {
-  display: inline-block;
-  color: #205081;
-
-  margin-right: 3px;
-  padding: 1px;
-  height: 100%;
-
-  text-align: center;
-  font-size: 13px !important;
-
-  cursor: pointer;
-
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-}
-
-div.pageList.displayItems > div.pagedElement {
-  border-bottom: 1px dotted #ddd;
-  margin-bottom: 2px;
-}
-
-div.pageList.displayItems > div.pagedElement:last-of-type {
-  border-bottom: none !important;
-}
-
 tr.contentTable.dataClassRecord {
   background-color: #f5f5f5;
 }
@@ -1425,76 +515,15 @@ img.profilePicture {
   cursor: pointer;
 }
 
-.tooltip.profilePictureToolTip .tooltip-inner {
-  text-align: left;
-  //color: #880000;
-  //background-color: #ffff66;
-  //box-shadow: 0 6px 12px rgba(0,0,0,.175);
-}
-
-.selectedDataTypesToolTip .tooltip-inner {
-  text-align: left;
-}
 
 .deletedDataModelTitle {
   text-decoration: line-through;
-}
-
-.errorSubmitted {
-  font-size: 35px;
-  color: #5cb85c;
-}
-
-select.mcSelect {
-  text-indent: 1px;
-  text-overflow: "";
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding: 0px 2px 2px 5px;
-  background: transparent
-    url("data:image/svg+xml;charset=utf-8,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20fill%3D%22%23555555%22%20%0A%09%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%22-261%20145.2%2024%2024%22%20style%3D%22enable-background%3Anew%20-261%20145.2%2024%2024%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cpath%20d%3D%22M-245.3%2C156.1l-3.6-6.5l-3.7%2C6.5%20M-252.7%2C159l3.7%2C6.5l3.6-6.5%22%2F%3E%0A%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: right center;
-  border: 1px solid #ddd;
-}
-
-select.mcSelect::-ms-expand {
-  display: none;
-}
-
-.deletedTreeItem {
-  text-decoration: line-through;
-  opacity: 0.6;
 }
 
 .supersededByItem {
   opacity: 0.6;
 }
 
-
-.filterIcon {
-  color: #777;
-}
-
-.newlyAddedDataModel {
-  border: 1px solid #ff9933;
-  border-radius: 3px;
-  padding: 1px;
-  background-color: #ffff99;
-}
-
-.newlyAddedDataModel::after {
-  content: "New";
-  color: #ff9933;
-  font-size: 12px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.tooltip.infoText .tooltip-inner {
-  text-align: left;
-}
 
 .not-allowed-cursor {
   cursor: not-allowed;
@@ -1594,104 +623,11 @@ li.aliasSearchResult {
   margin-right: 3px;
 }
 
-ul.context-menu-list:not(.context-menu-root) {
-  list-style: none;
-  width: 100%;
-}
-ul.context-menu-list:not(.context-menu-root) > li {
-  width: auto;
-  padding: 5px;
-  display: block;
-  position: relative;
-  border-bottom: 1px solid #ddd;
-  font-size: 12px;
-}
-ul.context-menu-list:not(.context-menu-root) > li:last-child {
-  border-bottom: none;
-}
-
-.descTopBorder {
-  border-top: 1px solid #ddd;
-}
-
 .descBottomBorder {
   border-bottom: 1px solid #ddd;
 }
 
-//ul.context-menu-list:not(.context-menu-root) {
-//  list-style:none;
-//  width:300px;
-//}
-//ul.context-menu-list:not(.context-menu-root)  > li{
-//  width: auto;
-//  padding:5px;
-//  display:block;
-//}
 
-//ul.context-menu-list:not(.context-menu-root) {
-//  //width: 300px !important;
-//  //min-width: 300px !important;
-//  white-space: nowrap;
-//}
-
-//ul.context-menu-list:not(.context-menu-root)  > li{
-//  display: inline-block;
-//}
-
-/*****************************************************************/
-.foldersTree.hide {
-  display: none;
-}
-
-.foldersTree.deleted {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
-
-.foldersTree.nodeLabel {
-  padding: 2px 20px 2px 2px;
-  min-width: 30px;
-  //border: 1px solid red;
-}
-
-.foldersTree.nodeLabel.draggableHover {
-  padding: 1px !important;
-  border: 1px solid #ff9933;
-  //border-radius: 3px;
-  background-color: #ffff99;
-}
-
-.foldersTree.nodeLabel.selected {
-  font-weight: bold;
-}
-
-.foldersTree.node {
-  margin: 2px;
-}
-
-.foldersTree.folderTreeIcon {
-  padding-right: 2px;
-}
-
-.foldersTree.deletedFolder {
-  color: #aaa;
-}
-
-.foldersTreeSelectorButton.removeButton.hasError {
-  border-top: 1px solid #a94442;
-  border-bottom: 1px solid #a94442;
-}
-
-.foldersTreeSelectorButton.openButton.hasError {
-  border-top: 1px solid #a94442;
-  border-bottom: 1px solid #a94442;
-  border-right: 1px solid #a94442;
-}
-
-/*****************************************************************/
-a.forgotPassword:focus {
-  outline-width: 0;
-}
 
 .copyElementSuccess {
   color: #5cb85c;
@@ -1703,126 +639,9 @@ a.forgotPassword:focus {
   font-size: 26px;
 }
 
-.mcLinkHighlight {
-  stroke-width: 3 !important;
-  stroke: #ff9933 !important;
-}
-
-.dataModel.addNewDataflow {
-  border: 2px solid #d8d8d8;
-  width: 200px;
-  height: 50px;
-  text-align: center;
-  overflow: hidden;
-  padding-top: 5px;
-  background-color: #ededed;
-}
-
-.dataModel.addNewDataflow.rootDataModel {
-  border: 3px solid #205081 !important;
-  background-color: #e0edf9 !important;
-}
-
-.dataModelTitle.addNewDataflow {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-}
-
 .linkSuggestion.fadeOut {
   opacity: 0.1;
   transition: opacity 300ms linear;
-}
-
-
-.ui-dialog {
-  z-index: 9999 !important;
-}
-
-.dropdown-submenu {
-  position: relative;
-}
-
-.dropdown-submenu > .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -6px;
-  margin-left: -1px;
-  -webkit-border-radius: 0 6px 6px 6px;
-  -moz-border-radius: 0 6px 6px;
-  border-radius: 0 6px 6px 6px;
-}
-
-.dropdown-submenu:hover > .dropdown-menu {
-  display: block;
-}
-
-.dropdown-submenu > a:after {
-  display: block;
-  content: " ";
-  float: right;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-left-color: #ccc;
-  margin-top: 5px;
-  margin-right: -10px;
-}
-
-.dropdown-submenu:hover > a:after {
-  border-left-color: #fff;
-}
-
-.dropdown-submenu.pull-left {
-  float: none;
-}
-
-.dropdown-submenu.pull-left > .dropdown-menu {
-  left: -100%;
-  margin-left: 10px;
-  -webkit-border-radius: 6px 0 6px 6px;
-  -moz-border-radius: 6px 0 6px 6px;
-  border-radius: 6px 0 6px 6px;
-}
-
-ul.elementHierarchy,
-ul.elementHierarchy ul {
-  list-style-type: none;
-  background: url(assets/images/simpleView/elementHierarchy/vline.png) repeat-y;
-  margin: 0;
-  padding: 0;
-}
-
-ul.elementHierarchy ul {
-  margin-left: 10px;
-}
-
-ul.elementHierarchy li {
-  margin: 0;
-  padding: 0 12px;
-  line-height: 20px;
-  background: url(assets/images/simpleView/elementHierarchy/node.png) no-repeat;
-  color: #369;
-}
-
-ul.elementHierarchy li.last {
-  background: #fff url(assets/images/simpleView/elementHierarchy/lastnode.png)
-    no-repeat;
-}
-
-ul.elementHierarchy li:last-child {
-  background: #fff url(assets/images/simpleView/elementHierarchy/lastnode.png)
-    no-repeat;
-}
-
-ul.elementHierarchy .root {
-  background: #fff !important;
-}
-
-ul.elementHierarchy li.root {
-  padding-left: 0px !important;
 }
 
 small.simpleView.elementType {
@@ -1838,118 +657,6 @@ small.simpleView.elementType {
 .simpleViewHomeContainer {
   height: calc(100vh);
   min-height: calc(100vh);
-}
-
-/* This is used to create a fix element page on simpleViewResultElement*/
-div.simpleViewResultElement.affix {
-  top: 70px; /* Set the top position of pinned element */
-  margin-right: 15px;
-}
-
-div.advancedViewLink {
-  padding: 0px !important;
-  font-size: 11px !important;
-  float: right;
-}
-
-h4.simpleViewMainLabel {
-  padding-top: 20px !important;
-}
-
-//These all handles the elementHierarchy directive .....................................................................
-div.hierarchyTree ul.hierarchyElement {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-div.hierarchyTree ul.hierarchyElement li.hierarchyElement {
-  margin-left: 15px;
-  position: relative;
-  padding-left: 5px;
-}
-div.hierarchyTree ul.hierarchyElement li.hierarchyElement.root {
-  margin-left: 0px !important;
-}
-
-ul.hierarchyElement:not(.root) li.hierarchyElement::before {
-  content: " ";
-  position: absolute;
-  width: 1px;
-  background-color: #000;
-  top: 0;
-  bottom: -12px;
-  left: -10px;
-}
-div.hierarchyTree
-  > ul.hierarchyElement
-  > li.hierarchyElement:first-child::before {
-  top: 12px;
-}
-ul.hierarchyElement li.hierarchyElement:not(:first-child):last-child::before {
-  display: none;
-}
-ul.hierarchyElement:not(.root) li.hierarchyElement:only-child::before {
-  display: list-item;
-  content: " ";
-  position: absolute;
-  width: 1px;
-  background-color: #000;
-  top: 0px;
-  bottom: 0px;
-  height: 13px;
-  left: -10px;
-}
-ul.hierarchyElement:not(.root) li.hierarchyElement::after {
-  content: " ";
-  position: absolute;
-  left: -10px;
-  width: 10px;
-  height: 1px;
-  background-color: #000;
-  top: 12px;
-}
-a.hierarchyElementLabel {
-  text-decoration: none;
-}
-div.hierarchyTree div.description {
-  margin-left: 5px;
-  font-style: italic;
-  font-size: 12px;
-  color: #000;
-  padding-left: 20px;
-}
-div.hierarchyTree div.descriptionBorder {
-  border-left: 1px solid black;
-}
-//......................................................................................................................
-
-.simpleViewDetailTable {
-  margin-bottom: 0px;
-  border-bottom: none;
-  .simpleViewDetailHeader {
-    border-right: 1px solid #eeeeee;
-    border-left: 1px solid #eeeeee;
-    padding-left: 10px;
-    background-color: #fff;
-    font-weight: bold;
-  }
-}
-
-div.descriptionHolder p {
-  padding: 0px !important;
-}
-
-.sortable-placeholder {
-  background-color: #f2f2f2;
-}
-
-.sortableHandler {
-  background-color: #f7f7f7;
-}
-
-i.sortableIcon {
-  color: #777777 !important;
 }
 
 ///.....................................................................................................................
@@ -1992,11 +699,6 @@ label.container:hover input ~ .checkmark {
   background-color: #ccc;
 }
 
-/* When the checkbox is checked, add a blue background */
-label.container input:checked ~ .checkmark {
-  background-color: $baseColor;
-}
-
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
   content: "";
@@ -2022,83 +724,6 @@ label.container .checkmark:after {
   transform: rotate(45deg);
 }
 
-.simpleViewFilter.dataModelItem {
-  background-color: #f9f9f9;
-}
-.simpleViewFilter.dataModelItem.selected {
-  background-color: #e8e8e8;
-}
-
-tr.simpleViewFilterTableTr td ul {
-  padding: 0px 0px 0px 20px !important;
-}
-
-tr.simpleViewFilterTableTr > td {
-  border: 1px solid black !important;
-}
-
-tr.simpleViewFilterTableTr > th {
-  border: 1px solid black !important;
-}
-
-.flat-slider.ui-corner-all,
-.flat-slider .ui-corner-all {
-  border-radius: 0;
-}
-
-.flat-slider.ui-slider {
-  border: 0;
-  background: #ddd;
-  border-radius: 7px;
-}
-
-.flat-slider.ui-slider-horizontal {
-  height: 4px;
-}
-
-.flat-slider.ui-slider-vertical {
-  height: 15em;
-  width: 4px;
-}
-
-.flat-slider .ui-slider-handle {
-  width: 12px;
-  height: 12px;
-  background: $baseColor;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-}
-
-.flat-slider.ui-slider-horizontal .ui-slider-handle {
-  top: 50%;
-  margin-top: -6px;
-}
-
-.flat-slider.ui-slider-vertical .ui-slider-handle {
-  left: 50%;
-  margin-left: -6px;
-}
-
-.flat-slider .ui-slider-handle:hover {
-  opacity: 0.99;
-}
-
-.flat-slider .ui-slider-range {
-  border: 0;
-  border-radius: 7;
-  background: #a8a6a6;
-}
-
-.flat-slider.ui-slider-horizontal .ui-slider-range {
-  top: 0;
-  height: 4px;
-}
-
-.flat-slider.ui-slider-vertical .ui-slider-range {
-  left: 0;
-  width: 6px;
-}
 
 .mat-dialog-container {
   padding: 3px !important;
@@ -2112,9 +737,6 @@ mat-tab-label {
   min-width: 50px !important;
 }
 
-#inlineEditWrapper {
-  margin-right: 0px !important;
-}
 
 .mat-menu-panel {
   min-height: 32px !important;
@@ -2126,54 +748,4 @@ mat-tab-label {
 	padding: 5px 7px;
 	font-size: 12px;
 	font-weight: bold;
-}
-[ng\:cloak], [ng-cloak], .ng-cloak {
-	display: none;
-}
-.panel-heading .panel-title-fix {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	line-height: normal;
-	width: 75%;
-	padding-top: 8px;
-}
-.panel .table tbody tr td .btn-link {
-	padding: 0;
-}
-ul.dropdown-menu {
-	min-width: 90px;
-}
-.alert {
-  padding: 8px;
-}
-
-
-
-//DatePicker===================================================================
-//=============================================================================
-div.uib-daypicker .btn-info.active .text-info {
-	color: #FFF !important;
-}
-
-
-div.uib-daypicker .btn-info.active {
-	color: #fff !important;
-	border-color: #FFF !important;
-}
-
-
-div.uib-daypicker .btn-info{
-	color: #fff !important;
-	border-color: #FFF !important;
-}
-
-div.uib-daypicker .btn-info span.text-info{
-	color: #fff !important;
-}
-//=============================================================================
-//=============================================================================
-//Move Modal form into the middle of the page
-.modal-dialog {
-	top:10% !important;
 }

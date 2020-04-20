@@ -5,7 +5,7 @@
 
   <div style="padding: 16px;">
     <div style="padding-left: 5px">
-      <mat-checkbox name="shareReadWithEveryone" type="checkbox" [(ngModel)]="readableByEveryone" data-md-icheck (change)="shareReadWithEveryoneChanged()">
+      <mat-checkbox name="shareReadWithEveryone" [(ngModel)]="readableByEveryone" data-md-icheck (change)="shareReadWithEveryoneChanged()">
         Publicly readable
       </mat-checkbox>
 
@@ -18,7 +18,7 @@
     </div>
     <div style="padding-left: 5px">
 
-      <mat-checkbox name="shareReadWithAuthenticated" type="checkbox" [(ngModel)]="readableByAuthenticated" data-md-icheck (change)="shareReadWithAuthenticatedChanged()">
+      <mat-checkbox name="shareReadWithAuthenticated" [(ngModel)]="readableByAuthenticated" data-md-icheck (change)="shareReadWithAuthenticatedChanged()">
         Readable by authenticated users
       </mat-checkbox>
 

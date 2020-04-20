@@ -100,11 +100,11 @@
                                     </button>
 
                                     <mat-menu #menu="matMenu">
-                                        <button mat-menu-item class="modelFilterItem" (click)="askForSoftDelete()"
+                                        <button mat-menu-item (click)="askForSoftDelete()"
                                             *ngIf="!mcTerminology?.deleted">
                                             <a title="Just mark it as deleted">Mark as deleted</a>
                                         </button>
-                                        <button mat-menu-item class="modelFilterItem" (click)="askForPermanentDelete()">
+                                        <button mat-menu-item (click)="askForPermanentDelete()">
                                             <a title="Permanently delete the Terminology">Delete <span
                                                     class="errorMessage">permanently</span></a>
                                         </button>

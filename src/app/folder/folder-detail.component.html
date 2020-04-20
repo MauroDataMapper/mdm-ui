@@ -54,10 +54,10 @@
                                 </button>
 
                                 <mat-menu #menu="matMenu">
-                                    <button mat-menu-item class="modelFilterItem" (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
                                         <a title="Just mark it as deleted">Mark as deleted</a>
                                     </button>
-                                    <button mat-menu-item class="modelFilterItem" (click)="askForPermanentDelete()">
+                                    <button mat-menu-item (click)="askForPermanentDelete()">
                                         <a title="Permanently delete the Data Model">Delete <span class="errorMessage">permanently</span></a>
                                     </button>
                                 </mat-menu>
@@ -69,7 +69,6 @@
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
-                                        class="addNewModelButton"
                                         [disabled]="deleteInProgress || exporting || result.finalised"
                                         matTooltip="Edit"
                                         aria-label="Edit"

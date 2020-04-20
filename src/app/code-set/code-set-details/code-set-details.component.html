@@ -106,10 +106,10 @@
                                 </button>
 
                                 <mat-menu #menu>
-                                    <button mat-menu-item class="modelFilterItem" (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
                                         <a title="Just mark it as deleted">Mark as deleted</a>
                                     </button>
-                                    <button mat-menu-item class="modelFilterItem" (click)="askForPermanentDelete()">
+                                    <button mat-menu-item (click)="askForPermanentDelete()">
                                         <a title="Permanently delete the Data Model">Delete <span class="errorMessage">permanently</span></a>
                                     </button>
                                 </mat-menu>
@@ -119,7 +119,7 @@
                         <div style="float: right;margin-bottom: 3px">
                             <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending"
                                 style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button mat-stroked-button 
+                                <button mat-stroked-button
                                         color="primary"
                                         type="button"
                                         class="paddingless"
@@ -137,7 +137,7 @@
                         <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
                                     color="accent"
-                                    type="button" 
+                                    type="button"
                                     class="paddingless"
                                     (click)="finalise()"
                                     matTooltip="Finalise"

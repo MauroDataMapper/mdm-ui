@@ -8,7 +8,7 @@
             <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
                 <div *ngIf="folderResult['editable']" style="float: right;">
                     <button mat-flat-button color="primary" type="button" (click)="add()" title="Add">
-                        <i class="fas fa-plus"></i> 
+                        <i class="fas fa-plus"></i>
                         Add User
                     </button>
                 </div>
@@ -114,7 +114,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
                 <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
                     <span *ngIf="record.writeAccess && record.user.userRole == 'ADMINISTRATOR'">
-                        <i class="fas fa-check userAccessCheckBox" aria-hidden="true"></i>
+                        <i class="fas fa-check" aria-hidden="true"></i>
                     </span>
                     <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
                         <mat-checkbox [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">

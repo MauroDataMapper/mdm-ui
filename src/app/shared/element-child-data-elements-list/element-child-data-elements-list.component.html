@@ -3,7 +3,7 @@
         <span class="title">Data Elements <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
    </div>
 
-    <div class="mcTableContainer">
+    <div>
         <table mat-table matSort [dataSource]="records" class="table table-bordered">
             <ng-container matColumnDef="label">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="minMultiplicity" style="cursor:pointer;max-width: 4%;width: 4%;" columnName="label">

@@ -1,6 +1,6 @@
 <div class="panel panel-default mdm--shadow-block">
     <form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
-        <div class="panel-body panel-table">
+        <div class="panel-body">
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
                   <h4 class="inline-block marginless">
@@ -13,7 +13,7 @@
               </div>
             </div>
 
-            <div class="detail-icons">         
+            <div class="detail-icons">
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
                   <small>
                     <i class="far fa-calendar-check" matTooltip="Finalised on"></i>

@@ -28,8 +28,8 @@
           <span class="help-block">{{errorMessage}}</span>
         </div>
       </div>
-        
-      <div class="detail-icons"> 
+
+      <div class="detail-icons">
         <div class="text-muted" *ngIf="result?.readableByEveryone">
           <small>
             <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
@@ -122,10 +122,10 @@
               </button>
 
               <mat-menu #menu>
-                <button mat-menu-item class="modelFilterItem" (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
                   Mark as deleted
                 </button>
-                <button mat-menu-item class="modelFilterItem" (click)="askForPermanentDelete()">
+                <button mat-menu-item (click)="askForPermanentDelete()">
                   Delete <span class="warning">permanently</span>
                 </button>
               </mat-menu>
@@ -203,13 +203,13 @@
                 <i class="fas fa-balance-scale-right" aria-hidden="true"></i>
               </button>
               <mat-menu #compareMenu="matMenu">
-                <button mat-menu-item class="modelFilterItem" (click)="compare()" *ngIf="!result?.deleted">
+                <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
                   <a title="Compare to another Data Model">Compare to another Data Model</a>
                 </button>
                 <div *ngIf="compareToList && compareToList.length > 0" class="divider"></div>
                 <div *ngIf="compareToList && compareToList.length > 0">
                   <div *ngFor="let el of compareToList">
-                    <button mat-menu-item class="modelFilterItem" (click)="compare(el)">
+                    <button mat-menu-item (click)="compare(el)">
                       <a>{{el.label}} <span style="font-style: italic; font-size: 12px;">{{el.documentationVersion}}</span></a>
                     </button>
                   </div>
@@ -220,8 +220,8 @@
           <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
             <button mat-stroked-button
                     color="primary"
-                    type="button" 
-                    *ngIf="isLoggedIn" 
+                    type="button"
+                    *ngIf="isLoggedIn"
                     class="paddingless dropdown-toggle"
                     [disabled]="processing || deleteInProgress"
                     [matMenuTriggerFor]="exporterList"
@@ -232,7 +232,7 @@
             <mat-menu #exporterList="matMenu">
               <div *ngIf="exportList && exportList.length > 0">
                 <div *ngFor="let exporter of exportList">
-                  <button type="button" mat-menu-item class="modelFilterItem" (click)="export(exporter)">
+                  <button type="button" mat-menu-item (click)="export(exporter)">
                     <a title="{{exporter.displayName}}">{{exporter.displayName}}</a>
                   </button>
                 </div>

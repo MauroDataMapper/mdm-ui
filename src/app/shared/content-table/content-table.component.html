@@ -76,7 +76,7 @@
         <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;">
             <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox"></mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;">
             <mat-checkbox [(ngModel)]="record.checked"></mat-checkbox>
         </td>
     </ng-container>

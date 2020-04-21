@@ -26,7 +26,7 @@
                 <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
                 <div style="margin-left: 5px;"><mdm-markdown-text-area [description]="record.description" [inEditMode]="false" [rows]="'4'"></mdm-markdown-text-area></div>
                 <div>
-                    <button class="btn btn-xs btn-default" (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
+                    <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
                         <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
                     </button>
                 </div>

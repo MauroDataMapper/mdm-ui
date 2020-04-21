@@ -1,9 +1,12 @@
 <div class="heading-container">
     <h4>Import a new Data Model </h4>
-    <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
+    <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltip="Help"></i>
 </div>
-<div *ngIf="importers">
-    <p>Select an importer<sup class="required">*</sup> <i *ngIf="importerHelp" id="importerHelpIcon" class="fas fa-info-circle helpIcon" (click)="loadImporterHelp()" matTooltipPosition="below" matTooltip="Help"></i></p>
+<div *ngIf="importers" style="margin-top: 16px;">
+    <h4 class="marginless">
+        Select an importer<sup class="required">*</sup>
+        <i *ngIf="importerHelp" class="fas fa-info-circle helpIcon" (click)="loadImporterHelp()" matTooltip="Help"></i>
+    </h4>
 
     <mat-form-field appearance="outline" class="mdm--block">
         <mat-label>Select importer</mat-label>
@@ -14,79 +17,70 @@
 </div>
 
 <div *ngIf="step >= 2 && selectedImporterGroups && selectedImporterGroups.length > 0">
-
     <form #userForm="ngForm" id="userForm" (ngSubmit)="submitForm(userForm.valid)" novalidate enctype="multipart/form-data" method="POST">
 
         <div *ngFor="let group of selectedImporterGroups">
             <h4>{{group.name}}</h4>
             <div *ngFor="let option of group.parameters" class="mdm--block">
-                <!-- <label>{{option.displayName}}<span [hidden]="option.optional">*</span></label> -->
                 <div class="import-folder" *ngIf="option.type === 'Folder'">
                     <span>Folder location</span>
                     <mdm-model-selector-tree [treeSearchDomainType]="'Folder'"
-                                         [justShowFolders]="true"
-                                         [ngModel]="option.value"
-                                         (ngModelChange)="option.value = $event"
-                                         [accepts]="['Folder']"
-                                         [showValidationError]="option.optional === false"
-                                         [isRequired]="option.optional == false">
+                                             [justShowFolders]="true"
+                                             [ngModel]="option.value"
+                                             name="Folder"
+                                             (ngModelChange)="option.value = $event"
+                                             [accepts]="['Folder']"
+                                             ngDefaultControl
+                                             [showValidationError]="option.optional === false"
+                                             [isRequired]="option.optional == false">
                     </mdm-model-selector-tree>
                 </div>
 
                 <div class="import-dataModel" *ngIf="option.type === 'DataModel'">
-                    <mdm-model-selector-tree [treeSearchDomainType]="'DataModel'"
-                                         [ngModel]="option.value"
-                                         [accepts]="['DataModel']"
-                                         (ngModelChange)="option.value = $event"
-                                         [showValidationError]="option.optional === false"
-                                         [isRequired]="option.optional == false">
+                    <mdm-model-selector-tree [treeSearchDomainType]="'DataModel'" 
+                                             [ngModel]="option.value"
+                                             name="DataModel"
+                                             [accepts]="['DataModel']"
+                                             (ngModelChange)="option.value = $event"
+                                             ngDefaultControl
+                                             [showValidationError]="option.optional === false"
+                                             [isRequired]="option.optional == false">
                     </mdm-model-selector-tree>
                 </div>
 
                 <div class="import-text" *ngIf="option.type === 'Text'">
                     <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
                         <textarea [(ngModel)]="option.value"
-                                  name="{{option.name}}"
-                                  id="{{option.name}}"
-                                  [required]="option.optional == false"
-                                  rows="5"
-                                  class="form-control">
-                        </textarea>
+                        name="{{option.name}}"
+                        [required]="option.optional == false"
+                        rows="5" class="form-control outlined-input"></textarea>
                     </div>
                 </div>
 
                 <div *ngIf="option.type !== 'Folder' && option.type !== 'DataModel' && option.type != 'Text'">
 
                     <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}" class="topping">
-                            <div *ngIf="formOptionsMap[option.type] === 'checkbox'" >
-                                <mat-checkbox  [(ngModel)]="option.value"
-                                               name="{{option.name}}"
-                                               id="{{option.name}}"
-                                               [required]="option.optional === false">
+                        <div *ngIf="formOptionsMap[option.type] === 'checkbox'">
+                            <mat-checkbox [(ngModel)]="option.value" name="{{option.name}}" [required]="option.optional === false">
                                 <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
-                                </mat-checkbox>
-                            </div>
+                            </mat-checkbox>
+                        </div>
 
-                            <div *ngIf="formOptionsMap[option.type] != 'checkbox' && formOptionsMap[option.type] != 'file'">
-                                <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
-                                <input  type="{{formOptionsMap[option.type]}}"
-                                        id="{{option.name}}"
-                                        name="{{option.name}}"
-                                        [(ngModel)]="option.value"
-                                        [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}"
-                                        [required]="option.optional === false">
-                            </div>
+                        <div *ngIf="formOptionsMap[option.type] != 'checkbox' && formOptionsMap[option.type] != 'file'">
+                            <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
+                            <input type="{{formOptionsMap[option.type]}}" name="{{option.name}}" [(ngModel)]="option.value"
+                                [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}"
+                                [required]="option.optional === false">
+                        </div>
 
-                            <div *ngIf="formOptionsMap[option.type] === 'file'">
-                                <input  type="{{formOptionsMap[option.type]}}"
-                                        id="{{option.name}}"
-                                        name="{{option.name}}"
-                                        [(ngModel)]="option.value"
-                                        [ngClass]="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
-                                        [required]="option.optional === false"
-                                        [attr.valid-file]="formOptionsMap[option.type] == 'file'">
-                            </div>
-
+                        <div *ngIf="formOptionsMap[option.type] === 'file'">
+                            <input type="{{formOptionsMap[option.type]}}"
+                                   name="{{option.name}}"
+                                   [(ngModel)]="option.value"
+                                   [ngClass]="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
+                                   [required]="option.optional === false"
+                                   [attr.valid-file]="formOptionsMap[option.type] == 'file'">
+                        </div>
                     </div>
                 </div>
                 <div class="step-description">{{option.description}}</div>
@@ -106,13 +100,10 @@
             </div>
         </div>
         <div>
-            <button mat-button type="reset" class="btn btn-default" [disabled]="importingInProgress">Reset</button>
-            <button mat-flat-button
-                    color="primary"
-                    class="custom"
-                    type="submit"
-                    [disabled]="userForm.invalid || importingInProgress">
-                    Import Model(s)
+            <button mat-button color="warn" type="reset" [disabled]="importingInProgress" style="margin-right: 8px;">Reset</button>
+            <button mat-flat-button color="primary" type="submit" class="custom"
+                [disabled]="userForm.invalid || importingInProgress">
+                Import Model(s)
             </button>
         </div>
     </form>

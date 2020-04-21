@@ -27,8 +27,6 @@ export class ContentTableComponent implements AfterViewInit {
   failCount: number;
   total: number;
 
-  // showStaticRecords: Function;
-
   records: any[] = [];
 
   hideFilters = true;
@@ -48,7 +46,7 @@ export class ContentTableComponent implements AfterViewInit {
   ) {}
   ngAfterViewInit() {
     if (this.parentDataModel.editable && !this.parentDataModel.finalised) {
-      this.displayedColumns = ['name', 'description', 'label', 'checkbox'];
+      this.displayedColumns = ['checkbox', 'name', 'description', 'label'];
     } else {
       this.displayedColumns = ['name', 'description', 'label'];
     }
@@ -56,12 +54,8 @@ export class ContentTableComponent implements AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
-
           return this.contentFetch(
             this.paginator.pageSize,
             this.paginator.pageOffset,
@@ -74,13 +68,11 @@ export class ContentTableComponent implements AfterViewInit {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
-        }),
-        catchError(() => {
+        }), catchError(() => {
           this.isLoadingResults = false;
           return [];
         })
-      )
-      .subscribe(data => {
+      ).subscribe(data => {
         this.records = data;
       });
     this.changeRef.detectChanges();
@@ -90,9 +82,7 @@ export class ContentTableComponent implements AfterViewInit {
     if (!dataClass || (dataClass && !dataClass.id)) {
       return '';
     }
-    this.stateHandler.NewWindow(
-      'dataClass',
-      {
+    this.stateHandler.NewWindow('dataClass', {
         dataModelId: this.parentDataModel.id,
         dataClassId: this.parentDataClass ? this.parentDataClass.id : null,
         id: dataClass.id
@@ -102,9 +92,7 @@ export class ContentTableComponent implements AfterViewInit {
   };
 
   addDataClass = () => {
-    this.stateHandler.Go(
-      'newDataClass',
-      {
+    this.stateHandler.Go('newDataClass', {
         parentDataModelId: this.parentDataModel.id,
         parentDataClassId: this.parentDataClass
           ? this.parentDataClass.id
@@ -116,9 +104,7 @@ export class ContentTableComponent implements AfterViewInit {
   };
 
   addDataElement = () => {
-    this.stateHandler.Go(
-      'newDataElement',
-      {
+    this.stateHandler.Go('newDataElement', {
         parentDataModelId: this.parentDataModel.id,
         parentDataClassId: this.parentDataClass
           ? this.parentDataClass.id
@@ -141,31 +127,20 @@ export class ContentTableComponent implements AfterViewInit {
       }
       this.total++;
       if (record.domainType === 'DataClass') {
-        chain.push(
-          this.resources.dataClass
-            .delete(record.dataModel, record.parentDataClass, record.id)
-            .catch(() => {
-              this.failCount++;
-            })
-        );
+        chain.push(this.resources.dataClass.delete(record.dataModel, record.parentDataClass, record.id).catch(() => {
+          this.failCount++;
+        }));
       } else if (record.domainType === 'DataElement') {
-        chain.push(
-          this.resources.dataElement
-            .delete(record.dataModel, record.dataClass, record.id)
-            .catch(() => {
-              this.failCount++;
-            })
-        );
+        chain.push(this.resources.dataElement.delete(record.dataModel, record.dataClass, record.id).catch(() => {
+            this.failCount++;
+          }));
       }
     });
 
-    forkJoin(chain).subscribe(
-      () => {
+    forkJoin(chain).subscribe(() => {
         this.processing = false;
         if (this.failCount === 0) {
-          this.messageHandler.showSuccess(
-            this.total + ' Elements deleted successfully'
-          );
+          this.messageHandler.showSuccess(this.total + ' Elements deleted successfully');
         } else {
           const successCount = this.total - this.failCount;
           let message = '';
@@ -189,10 +164,7 @@ export class ContentTableComponent implements AfterViewInit {
       },
       error => {
         this.processing = false;
-        this.messageHandler.showError(
-          'There was a problem deleting the elements.',
-          error
-        );
+        this.messageHandler.showError('There was a problem deleting the elements.', error);
       }
     );
   };

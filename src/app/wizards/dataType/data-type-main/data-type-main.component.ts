@@ -62,16 +62,15 @@ export class DataTypeMainComponent implements OnInit {
     step1.component = DataTypeStep1Component;
     step1.scope = this;
     step1.hasForm = true;
+    step1.invalid = false;
 
     const step2 = new Step();
     step2.title = 'Data Type Details';
     step2.component = DataTypeStep2Component;
     step2.scope = this;
+    step2.invalid = true;
 
-    this.resources.dataModel
-      .get(this.parentDataModelId)
-      .toPromise()
-      .then(result => {
+    this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
         result.body.breadcrumbs = [];
         result.body.breadcrumbs.push(Object.assign({}, result.body));
         this.model.parent = result.body;

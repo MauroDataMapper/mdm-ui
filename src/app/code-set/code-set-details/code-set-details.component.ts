@@ -281,7 +281,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
-          hasBackdrop: false,
+          hasBackdrop: true,
           data: {
             title: 'Code Set',
             message:
@@ -309,7 +309,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const promise = new Promise((resolve, reject) => {
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
-          hasBackdrop: false,
+          hasBackdrop: true,
           data: {
             title: 'Code Set',
             message:
@@ -324,7 +324,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent,
           {
-            hasBackdrop: false,
+            hasBackdrop: true,
             data: {
               title: 'Data Model',
               message:
@@ -441,7 +441,8 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
-          hasBackdrop: false,
+          hasBackdrop: true,
+          autoFocus: false,
           data: {
             title: 'Are you sure you want to finalise the Code Set ?',
             message:
@@ -451,7 +452,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }

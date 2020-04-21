@@ -59,7 +59,7 @@ export class DataClassMainComponent implements AfterViewInit {
     }
 
     const step1 = new Step();
-    step1.title = 'Data Class Import Method';
+    step1.title = 'Select an Import Method';
     step1.component = DataClassStep1Component;
     step1.scope = this;
     step1.hasForm = true;

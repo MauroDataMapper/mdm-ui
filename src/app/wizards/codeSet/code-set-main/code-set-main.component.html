@@ -1,18 +1,20 @@
+<div class="heading-container">
+    <h4 class="marginless">New Code Set</h4>
+</div>
 <mat-vertical-stepper #stepper>
-    <mat-step *ngFor="let stp of steps; let i = index">
-        <ng-template matStepLabel>{{stp.title}}</ng-template>
-        <mdm-dcl-wrapper [type]="stp.component" [step]="steps[i]"></mdm-dcl-wrapper>
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    <mat-step *ngFor="let step of steps; let i = index">
+        <ng-template matStepLabel>{{step.title}}</ng-template>
+        <mdm-dcl-wrapper [type]="step.component" [step]="steps[i]"></mdm-dcl-wrapper>
+        <div fxFlex fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
+            <div fxFlex  fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100"></div>
+            <div fxFlex fxLayout="row-reverse" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
+                <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid || savingInProgress || model.terms.length == 0" (click)="save()">Submit Code Set</button>
+                <span *ngIf="step.isProcessComplete">  
+                    <button mat-button color="warn" class="primary" (click)="cancelWizard()">Close</button>
+                </span>
                 <button mat-button color="warn" class="custom" (click)="cancelWizard()">
                     Cancel
                 </button>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align: right">
-                <button mat-flat-button color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="stp.invalid || savingInProgress || model.terms.length == 0" (click)="save()">Submit Code Set</button>
-                <span *ngIf="stp.isProcessComplete">  
-                    <button mat-button color="warn" class="primary" (click)="cancelWizard()">Close</button>
-                </span>
             </div>
         </div>
     </mat-step>

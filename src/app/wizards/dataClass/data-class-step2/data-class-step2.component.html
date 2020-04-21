@@ -41,14 +41,13 @@
         </div>
 
         <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
-            <label>Classifications</label>
+            <span>Classifications</span>
             <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
         </div>
     </form>
 
 </div>
 
-<div class="mdm--shadow-block">
 <div *ngIf="model.createType == 'copy' && step.active == true" class="row mdm--block">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <span>Please Select a Data Class:</span>
@@ -117,7 +116,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             <div class="mdm--mat-pagination">
-                <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" showFirstLastButtons></mdm-paginator>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [length]="totalSelectedItemsCount" [pageSize]="10" showFirstLastButtons></mat-paginator>
             </div>
         <div style="margin-top: 50px; width: 100%;">
             <div *ngIf="processing">
@@ -133,7 +132,6 @@
             </div>
         </div>
     </div>
-</div>
 </div>
 <div style="margin-top: 50px; width: 100%;">
     <div *ngIf="processing">

@@ -35,10 +35,7 @@ export class DataTypeStep1Component implements OnInit, DoCheck {
       return;
     }
 
-    if (
-      this.model.createType === 'copy' &&
-      this.model.copyFromDataModel.length === 0
-    ) {
+    if (this.model.createType === 'copy' && !this.model.copyFromDataModel.length) {
       this.step.invalid = true;
       return;
     }

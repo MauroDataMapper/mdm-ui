@@ -19,12 +19,13 @@
                   [defaultElements]="[model.source]"
                   [doNotShowDataClasses]="true"
                   [ngModel]="[model.source]"
+                  ngDefaultControl
                   [treeSearchDomainType]="'DataModel'"
                   [accepts]="['DataModel']">
                 </mdm-model-selector-tree>
               </div>
               <div *ngIf="model.source.domainType === 'DataElement'">
-                <span class="badge importFormStep themeBackgroundColor">1</span>
+                <span class="badge importFormStep">1</span>
                 <span>Source Data Element</span>
                 <div style="padding-left: 5px;">
                   <mdm-element-link
@@ -37,7 +38,7 @@
               </div>
             </div>
             <div class="form-group">
-              <span class="badge importFormStep themeBackgroundColor">2</span>
+              <span class="badge importFormStep">2</span>
               <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
                                                   *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank"><i
               class="fas fa-external-link-alt"></i></a></span>
@@ -48,6 +49,7 @@
                 [defaultElements]="[model.target]"
                 [doNotShowDataClasses]="true"
                 [ngModel]="[model.target]"
+                ngDefaultControl
                 [treeSearchDomainType]="'DataModel'"
                 [accepts]="['DataModel']">
               </mdm-model-selector-tree>
@@ -62,7 +64,7 @@
             </div>
 
             <div style="margin-bottom: 5px;">
-              <button type="button" class="btn btn-success btn-sm" (click)="suggest()"
+              <button mat-flat-button color="primary" type="button" (click)="suggest()"
                       [disabled]="model.processing || !model.source || !model.target || (model.source && model.target && model.source.id === model.target.id)">
                 Suggest
               </button>
@@ -89,29 +91,21 @@
             <div>
               <div class="mcTableMain">
                 <div class="mcTableTitle">
-                          <span class="title">Suggested Links<i class="fas fa-filter" (click)="filterClick()"
-                                                                style="visibility: hidden; cursor: pointer;margin-left: 2px;"></i>
-                              <div class="btn-group-xs"
-                                  style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
-                                  *ngIf="model.successfullyAdded > 0">
-                                  Successfully Added <span style="font-weight: normal !important;"
-                                                          class="badge badge-success">{{model.successfullyAdded}}</span>
+                          <span class="title">Suggested Links<i class="fas fa-filter" (click)="filterClick()" style="visibility: hidden; cursor: pointer;margin-left: 2px;"></i>
+                              <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model.successfullyAdded > 0">
+                                  Successfully Added 
+                                  <span class="badge badge-success">{{model.successfullyAdded}}</span>
                               </div>
 
-                              <div class="btn-group-xs"
-                                  style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
-                                  *ngIf="model. totalIgnoredLinks > 0">
-                                  Ignored <span style="font-weight: normal !important;"
-                                                class="badge badge-success">{{model.totalIgnoredLinks}}</span>
+                              <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model. totalIgnoredLinks > 0">
+                                  Ignored 
+                                  <span class="badge badge-success">{{model.totalIgnoredLinks}}</span>
                               </div>
 
-                              <div class="btn-group-xs"
-                                  style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;"
-                                  *ngIf="model. totalSuggestionLinks > 0 && model.source.domainType === 'DataModel'">
-                                  Total Suggested Links <span style="font-weight: normal !important;"
-                                                              class="badge badge-success">{{model.totalSuggestionLinks}}</span>
+                              <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model. totalSuggestionLinks > 0 && model.source.domainType === 'DataModel'">
+                                  Total Suggested Links 
+                                  <span class="badge badge-success">{{model.totalSuggestionLinks}}</span>
                               </div>
-
                           </span>
                 </div>
 
@@ -209,18 +203,22 @@
                       <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 8%;width: 8%;"
                           columnName="buttons" sortable="true">
                       </th>
-                      <td mat-cell *matCellDef="let suggest; let i = index"
-                          style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
+                      <td mat-cell *matCellDef="let suggest; let i = index" style="max-width: 8%;width: 8%;text-align: left;word-wrap: break-word;">
                         <div *ngIf="!suggest.success && !suggest.processing">
-                          <button type="button" class="btn btn-success btn-sm"
+                          <button mat-flat-button
+                                  color="accent"
+                                  type="button"
                                   style="margin-bottom: 2px; min-width: 55px !important;"
                                   (click)="approveSuggestion(suggest)"
                                   [disabled]="!suggest.selectedTarget || !model.sourceEditable">
                             Add
                           </button>
-                          <button type="button" class="btn btn-default btn-sm"
+                          <button mat-button 
+                                  color="warn" 
+                                  type="button"
                                   style="margin-bottom: 2px; min-width: 55px !important;"
-                                  (click)="ignoreSuggestion(suggest)" [disabled]="!model.sourceEditable">
+                                  (click)="ignoreSuggestion(suggest)"
+                                  [disabled]="!model.sourceEditable">
                             Ignore
                           </button>
                         </div>

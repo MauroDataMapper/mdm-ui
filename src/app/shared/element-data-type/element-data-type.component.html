@@ -7,7 +7,7 @@
     <span *ngIf="elementDataType.domainType == 'EnumerationType'">
         <a class="dataTypeEnumeration" href="{{link}}"
            [hidden]="hideName">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration" [hidden]="hideName">(Enumeration)</span><span *ngIf="!hideEnumList" class="enumCaretShow" style="margin-right: 2px;cursor: pointer; width:40px;" (click)="showEnums()" matTooltip="Show Enumerations">
-            <span class="caret"></span>
+            <i class="fas fa-caret-down fa-xs"></i>
             &nbsp;&nbsp;&nbsp;
         </span>
 
@@ -46,7 +46,7 @@
                 </ng-container>
                 <tr *ngIf="showMoreIcon" style="list-style: none;">
                     <td [attr.colspan]="hasCategory ? 3 : 2">
-                        <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <span class="fas fa-caret-down"></span></a>
+                        <a class="showMoreEnumerations" (click)="showMore($event.target)">... more <i class="fas fa-caret-down fa-xs"></i></a>
                     </td>
                 </tr>
             </tbody>

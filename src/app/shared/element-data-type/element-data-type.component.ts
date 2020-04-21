@@ -140,7 +140,7 @@ export class ElementDataTypeComponent implements OnInit {
       for (const elem of elements) {
         elem.classList.remove('hiddenMoreEnumerationKeyValue');
       }
-      element.innerHTML = 'hide <span class=\'fas fa-caret-up\'></span>';
+      element.innerHTML = `hide <i class='fas fa-caret-down fa-xs'></i>`;
     } else {
       const elements = element.parentElement.offsetParent.getElementsByClassName(
         'moreEnumerationKeyValue'
@@ -148,7 +148,7 @@ export class ElementDataTypeComponent implements OnInit {
       for (const elem of elements) {
         elem.classList.add('hiddenMoreEnumerationKeyValue');
       }
-      element.innerHTML = '... more <span class=\'fas fa-caret-down\'></span>';
+      element.innerHTML = `... more <i class='fas fa-caret-down fa-xs'></i>`;
     }
     this.showing = !this.showing;
   };

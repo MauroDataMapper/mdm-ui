@@ -33,17 +33,14 @@
 
 <div id="addContentDropdown" style="float: left;" [hidden]="deletePending" *ngIf="showContentDropdown">
     <div style="float: right; margin-left: 2px;">
-        <button type="button" matTooltip="Add" class="btn btn-default" [disabled]="deleteInProgress" [matMenuTriggerFor]="menu">
+        <button mat-flat-button color="primary" type="button" [disabled]="deleteInProgress" [matMenuTriggerFor]="menu">
             <i class="fas fa-plus" aria-hidden="true"></i>
-            <span class="caret" style="margin-right: 2px;"></span>
+             Add
+            <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
         </button>
-        <mat-menu #menu="matMenu" aria-labelledby="single-button">
-            <button mat-menu-item (click)="addDataClass()">
-                <a title="Add Data Class">Add Data Class</a>
-            </button>
-            <button mat-menu-item (click)="addDataElement()">
-                <a title="Add Data Class">Add Data Element</a>
-            </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="addDataClass()">Add Data Class</button>
+            <button mat-menu-item (click)="addDataElement()">Add Data Element</button>
         </mat-menu>
     </div>
 </div>

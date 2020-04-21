@@ -8,11 +8,13 @@
                 <div class="panel-heading">
                     <span>Search</span>
                     <div style="float:right;">
-                        <button type="button"
-                                class="btn btn-default btn-xs"
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                class="paddingless"
                                 (click)="toggleShowSearch()"
-                                aria-hidden="false"
-                                aria-disabled="false" title="close">
+                                matTooltip="Close"
+                                aria-label="Close">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>

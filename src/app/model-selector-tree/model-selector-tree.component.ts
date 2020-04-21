@@ -159,7 +159,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.resources.folder.get(id, null, {all: true, sortBy: 'label'}).subscribe(data => {
       this.loading = false;
       this.rootNode = {
-        children: data.items,
+        children: data.body.items,
         isRoot: true
       };
       this.filteredRootNode = this.rootNode;

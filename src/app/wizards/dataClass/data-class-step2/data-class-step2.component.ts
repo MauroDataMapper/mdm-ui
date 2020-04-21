@@ -6,7 +6,7 @@ import {
   ElementRef,
   EventEmitter,
   AfterViewInit,
-  OnDestroy
+  OnDestroy, QueryList
 } from '@angular/core';
 import { ValidatorService } from '../../../services/validator.service';
 import { NgForm } from '@angular/forms';
@@ -17,7 +17,7 @@ import { BroadcastService } from '../../../services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {MdmPaginatorComponent} from "../../../shared/mdm-paginator/mdm-paginator";
+
 
 @Component({
   selector: 'mdm-data-class-step2',
@@ -33,7 +33,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   defaultCheckedMap: any;
   loaded = false;
   totalItemCount = 0;
-
+  totalSelectedItemsCount: number;
   processing: any;
   isProcessComplete: any;
   finalResult = {};
@@ -44,8 +44,8 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
 
 
   filterEvent = new EventEmitter<string>();
@@ -53,7 +53,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
 
-  dataSource: any;
+  dataSource = new MatTableDataSource<any>();
 
   constructor(
     private validator: ValidatorService,
@@ -82,14 +82,39 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
+    if (
+      this.sort !== null &&
+      this.sort !== undefined &&
+      this.sort.toArray().length > 0 &&
+      this.paginator !== null &&
+      this.paginator !== undefined &&
+      this.paginator.toArray().length > 0
+    ) {
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
+      this.filterEvent.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
 
+
+      // Selected Data Class table
+      this.dataSource.sort = this.sort.toArray()[0];
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
+      this.dataSource.paginator = this.paginator.toArray()[0];
+    }
     if (this.model.selectedDataClassesMap) {
       this.createSelectedArray();
       this.validate();
     }
-
     this.loaded = true;
   }
 
@@ -110,6 +135,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     this.dataSource.data = this.model.selectedDataClasses;
     this.dataSource._updateChangeSubscription();
     this.validate();
+    this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
   };
 
   validate = (newValue?) => {

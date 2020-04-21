@@ -7,13 +7,9 @@
 </div>
 <div *ngIf="isLoggedIn && showYouTrackLink">
     <p>{{errorReportMessage}}</p>
-    <button type="button"
-            class="btn btn-default btn"
-            aria-hidden="false"
-            aria-disabled="false" title="Report Issue"
-            (click)="reportIssueToYouTrack()"
-            *ngIf="!issueReporting && !issueReported && !errorInSubmit">
-        <i class="fas fa-share"></i> Report Issue
+    <button mat-button color="primary" type="button" (click)="reportIssueToYouTrack()" *ngIf="!issueReporting && !issueReported && !errorInSubmit">
+        <i class="fas fa-share"></i> 
+        Report Issue
     </button>
 
 
@@ -37,12 +33,9 @@
     <mat-slide-toggle (change)="changeShowDetails()">Show details</mat-slide-toggle>
     <div [hidden]="!showDetails">
         <h3>Details
-            <button type="button"
-                    class="btn btn-default btn"
-                    aria-hidden="false"
-                    aria-disabled="false" title="Copy to clipboard"
-                    (click)="copyToClipboard()">
-                <i class="fas fa-clipboard"></i> Copy to Clipboard
+            <button mat-button color="primary" type="button" (click)="copyToClipboard()">
+                <i class="fas fa-clipboard"></i> 
+                Copy to Clipboard
             </button>
         </h3>
 

@@ -165,16 +165,15 @@
                                                        (delete)="delete()"
                                                        [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
-                            <div [hidden]="editableForm.visible || editableForm.deletePending"
-                                 class="btn-group-xs" uib-dropdown is-open="false"
-                                 style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button id="singleX-button" type="button"
-                                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton"
-                                        [hidden]="editableForm.visible || editableForm.deletePending"
+                            <div [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                <button mat-stroked-button
+                                        color="primary"
+                                        type="button"
+                                        class="paddingless"
                                         [disabled]="deleteInProgress"
                                         matTooltip="Edit"
-                                        (click)="showForm();"
-                                        uib-dropdown-toggle>
+                                        aria-label="Edit"
+                                        (click)="showForm();">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>

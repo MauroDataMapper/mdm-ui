@@ -163,8 +163,7 @@
 					<br>Once it is complete, you will be notified in this page.
 					<br>Please be patient and don't leave this page while reindexing is in progress.
 				</p>
-				<button mat-flat-button class="custom" color="primary" [ngDisabled]="indexingStatus == 'start'"
-					(click)="rebuildIndex()">Rebuild index</button>
+				<button mat-flat-button class="custom" color="primary" [disabled]="indexingStatus == 'start'" (click)="rebuildIndex()">Rebuild index</button>
 			</div>
 		</div>
 		<div class="row">

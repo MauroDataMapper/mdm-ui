@@ -85,7 +85,7 @@ export class DataElementMainComponent implements OnInit {
     step1.component = DataElementStep1Component;
     step1.scope = this;
     step1.hasForm = true;
-    step1.invalid = true;
+    step1.invalid = false;
 
     const step2 = new Step();
     step2.title = 'Data Element Details';
@@ -111,24 +111,20 @@ export class DataElementMainComponent implements OnInit {
     //   this.steps.push(step2);
     // });
 
-    this.resources.dataClass
-      .get(
+    this.resources.dataClass.get(
         this.parentDataModelId,
         this.grandParentDataClassId,
         this.parentDataClassId,
         null,
         null
-      )
-      .subscribe(result => {
+      ).subscribe(result => {
         // result.body.breadcrumbs.push(Object.assign([],result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
       });
 
-    this.resources.dataModel
-      .get(this.parentDataModelId, 'dataTypes')
-      .subscribe(result => {
+    this.resources.dataModel.get(this.parentDataModelId, 'dataTypes').subscribe(result => {
         this.model.allDataTypesCount = result.count;
         if (result.count === 0) {
           this.model.showNewInlineDataType = true;

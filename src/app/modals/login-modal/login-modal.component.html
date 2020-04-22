@@ -1,5 +1,9 @@
 <form class="mdm--form mdm--form-modal" (keyup)="$event.keyCode != 13;" role="form" autocomplete="on">
     <h3 class='modal-title text-center'>Login</h3>
+  <div *ngIf='message' class='alert alert-danger'>
+    <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+    {{message}}
+  </div>
     <p class="mdm--block text-center">Please log in to continue using our Catalogue</p>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">

@@ -19,9 +19,11 @@ export class LoginModalComponent implements OnInit {
     const un = this.securityHandler.getEmailFromStorage();
     this.username = un === 'undefined' ? '' : un;
     this.password = '';
+    this.message = '';
   }
 
   login() {
+    this.message = '';
     this.securityHandler.login(this.username, this.password).then(user => {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
@@ -47,5 +49,5 @@ export class LoginModalComponent implements OnInit {
   signUp() {
     this.dialogRef.close();
     this.broadcastService.broadcast('openRegisterModalDialog');
-  };
+  }
 }

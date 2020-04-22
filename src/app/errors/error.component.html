@@ -33,7 +33,7 @@
     <mat-slide-toggle (change)="changeShowDetails()">Show details</mat-slide-toggle>
     <div [hidden]="!showDetails">
         <h3>Details
-            <button mat-button color="primary" type="button" (click)="copyToClipboard()">
+            <button mat-stroked-button color="primary" type="button" (click)="copyToClipboard()">
                 <i class="fas fa-clipboard"></i> 
                 Copy to Clipboard
             </button>
@@ -43,7 +43,7 @@
         <table class="table dataModelDetailTable">
             <tbody>
             <tr *ngFor="let item of dataSource">
-                <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">{{item.field}}</td>
+                <td class="detailsRowHeader">{{item.field}}</td>
                 <td>
                     <span *ngIf="!item.code">{{item.value}}</span>
                     <ngx-json-viewer *ngIf="item.code" [json]="item.value" [expanded]="true"></ngx-json-viewer>

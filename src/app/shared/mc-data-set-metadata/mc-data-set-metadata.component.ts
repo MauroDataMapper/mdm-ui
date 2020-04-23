@@ -20,7 +20,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatInput} from '@angular/material/input';
 import {DialogPosition} from '@angular/material/dialog';
-import {MdmPaginatorComponent} from "../mdm-paginator/mdm-paginator";
+import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
 
 
 @Component({

@@ -180,7 +180,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
               return this.dataElementsFetch(
                 this.paginator.toArray()[0].pageSize,
-                this.paginator.toArray()[0].pageIndex,
+                this.paginator.toArray()[0].pageIndex * this.paginator.toArray()[0].pageSize,
                 this.sort.toArray()[0].active,
                 this.sort.toArray()[0].direction,
                 this.filter

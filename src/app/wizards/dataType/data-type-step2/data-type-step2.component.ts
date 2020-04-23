@@ -184,7 +184,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
               return this.dataTypesFetch(
                 this.paginator.toArray()[0].pageSize,
-                this.paginator.toArray()[0].pageIndex,
+                this.paginator.toArray()[0].pageIndex * this.paginator.toArray()[0].pageSize,
                 this.sort.toArray()[0].active,
                 this.sort.toArray()[0].direction,
                 this.filter

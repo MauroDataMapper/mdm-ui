@@ -17,7 +17,8 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
-import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',
@@ -35,7 +36,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
 
   allDataTypes: any;
@@ -55,7 +56,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   deleteInProgress: boolean;
   parentDataModel: any; // TODO find use for this
   domainType;
-
+  dataSource: MatTableDataSource<any>;
   checkAllCheckbox = false;
 
 
@@ -70,7 +71,9 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
-
+    this.dataSource = new MatTableDataSource(this.records);
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
     if (this.parent.editable && !this.parent.finalised) {
       this.displayedColumns = [ 'checkbox', 'name', 'description', 'type', 'buttons' ];
     } else {
@@ -95,7 +98,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
             return this.dataTypesFetch(
               this.paginator.pageSize,
-              this.paginator.pageOffset,
+              this.paginator.pageIndex * this.paginator.pageSize,
               this.sort.active,
               this.sort.direction,
               this.filter
@@ -114,6 +117,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         )
         .subscribe(data => {
           this.records = data;
+          this.refreshDataSource();
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
         });
@@ -123,6 +127,10 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.isLoadingResults = true;
       this.records = [];
       this.records = [].concat(this.childOwnedDataTypes.items);
+      this.totalItemCount = this.childOwnedDataTypes.items.length;
+      this.refreshDataSource();
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
     }
@@ -203,6 +211,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       () => {
         this.processing = false;
         if (this.failCount === 0) {
+          this.refreshDataSource();
           this.messageHandler.showSuccess(
             this.total + ' Elements deleted successfully'
           );
@@ -255,5 +264,10 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
+    this.refreshDataSource();
+  }
+
+  refreshDataSource() {
+    this.dataSource.data = this.records;
   }
 }

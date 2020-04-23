@@ -3,8 +3,8 @@
         <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
             <h4 class="marginless">
                 Data Types
-                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span> 
-                <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> 
+                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
+                <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped table-responsive">
+<table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped table-responsive">
     <ng-container matColumnDef="checkbox">
         <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;">
             <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox"></mat-checkbox>
@@ -102,5 +102,5 @@
     </mat-progress-spinner>
 </mat-card>
 <div class="mdm--mat-pagination">
-    <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 </div>

@@ -14,8 +14,8 @@
 
   <div class="modelSelectorTree" style="position: relative;">
     <div [ngClass]="{'input-group':true,'has-error': hasValidationError}">
-      <input type="text" [readonly]="readOnlySearchInput" [disabled]="processing" class="form-control outlined-input"
-        [(ngModel)]="searchCriteria" ng-model-options='{ debounce: 500 }' focus="inputClick()"
+      <input #searchInputTreeControl id="searchTreeInput" type="text" [readonly]="readOnlySearchInput" [disabled]="processing" class="form-control outlined-input"
+        [(ngModel)]="searchCriteria" [ngModelOptions]='{ debounce: 500 }' focus="inputClick()"
         placeholder="{{placeholderStr}}" [required]="isRequired">
 
       <span class="input-group-btn import-folder-actions">

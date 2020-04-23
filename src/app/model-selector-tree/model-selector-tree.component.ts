@@ -7,11 +7,13 @@ import {
   ElementRef,
   HostListener,
   SimpleChanges,
-  ChangeDetectorRef, OnChanges
+  ChangeDetectorRef, OnChanges, ViewChild
 } from '@angular/core';
 import {ResourcesService} from '../services/resources.service';
 import {SecurityHandlerService} from '../services/handlers/security-handler.service';
 import {UserSettingsHandlerService} from '../services/utility/user-settings-handler.service';
+import {fromEvent, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -32,6 +34,8 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
   @Input() onCheck: any;
   @Output() checkChange = new EventEmitter<any>();
+  @ViewChild('searchInputTreeControl', { static: true })
+  searchInputTreeControl: ElementRef;
 
   selectedElementsVal: any;
   @Output() ngModelChange = new EventEmitter<any>();
@@ -150,6 +154,51 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.showTree = this.alwaysShowTree;
     this.placeholderStr = this.placeholder ? this.placeholder : 'Select';
     this.reload();
+
+    fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
+      .pipe(map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res: any) => res.length >= 0),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        if (text.length !== 0) {
+          if (!this.multiple) {
+            if (this.selectedElements && this.selectedElements.length > 0) {
+              const label = this.selectedElements[0] ? this.selectedElements[0].label : '';
+              if (this.selectedElements && text.trim().toLowerCase() === label.trim().toLowerCase() && label.trim().toLowerCase() !== '') {
+                return;
+              }
+            }
+          }
+
+          const options = {
+            queryStringParams : {
+              domainType: this.treeSearchDomainType,
+              includeDocumentSuperseded: true,
+              includeModelSuperseded: true,
+              includeDeleted: true
+            }
+          };
+
+
+          if (this.searchCriteria.trim().length > 0) {
+            this.inSearchMode = true;
+            this.resources.tree.get(null, 'search/' + this.searchCriteria, options).subscribe( (result) => {
+              this.filteredRootNode = {
+                children: result.body,
+                isRoot: true
+              };
+            });
+          } else {
+            this.inSearchMode = false;
+            this.reload();
+          }
+        } else {
+          this.reload(); }
+      });
 
   }
 
@@ -349,7 +398,9 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       this.loadTree(this.root);
     }
   }
-
+  inputClick = () => {
+    this.showTree = true;
+  };
 
   // TODO NEEDS LOOK AT
   onAddFolder = (var1) => {

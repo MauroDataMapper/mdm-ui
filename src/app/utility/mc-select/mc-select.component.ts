@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
   selector: 'mdm-select',
   templateUrl: './mc-select.component.html',
   styleUrls: ['./mc-select.component.sass'],
-  host: {'(click)': 'onClick($event)'} //TODO - check if this is needed
+  host: {'(click)': 'onClick($event)'} // TODO - check if this is needed
 })
 export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -32,7 +32,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   inputText: any;
-
+  defaultVal: any[];
   paginationVal: McSelectPagination;
 
   @Input() get pagination() {
@@ -44,7 +44,18 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.paginationChanged.emit(val);
   }
 
+  @Input() get defaultValue() {
+    return this.defaultVal;
+  }
+
+  set defaultValue(val) {
+    this.defaultVal = val;
+    this.setDefaultValue();
+    this.defaultValueChanged.emit(val);
+  }
+
   @Output() paginationChanged = new EventEmitter<any>();
+  @Output() defaultValueChanged = new EventEmitter<any>();
 
   loadingDynamicData: boolean;
   processing: boolean;
@@ -71,7 +82,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() loadAllOnClick: boolean;
   @Input() acceptTypedInput: boolean;
-  @Input() defaultValue: any;
+  // @Input() defaultValue: any;
   @Input() minInputLength: number;
   @Input() idProperty: any;
   @Input() displayProperty: any;
@@ -96,12 +107,13 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   @ContentChild('lineContent', {static: true}) lineContentTmpl: TemplateRef<any>;
 
   constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: ResourcesService, private elementRef: ElementRef) {
+    this.setDefaultValue();
   }
 
   ngOnInit() {
     this.pagination = {offset: undefined, count: undefined};
     this.showCaret = true;
-    this.setDefaultValue();
+
     this.inputStyle = {width: this.width, padding: '6px 40px 6px 12px'};
     this.holderStyle = {width: this.width, 'background-color': '#FFF'};
   }
@@ -179,7 +191,9 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.multiSelect === true) {
         // clear the input
         this.inputText = '';
+        if (this.input.val !== undefined) {
         this.input.val('');
+        }
         this.show = false;
       } else {
         // if we have selected element, show it

@@ -1,36 +1,31 @@
 <div style="min-width: 400px;">
     <div style="float:left; margin-left: 10px;">
-        <p class="input-group" style="width:160px;">
-            <input type="text" class="form-control" [min]="date1Options.minDate" [max]="date1Options.maxDate" [matDatepicker]="dp1" [(ngModel)]="dtFrom" [required]="true" (ngModelChange)="datePicker1Changed($event, oldVal); oldVal = $event;" />
+        <div>
+            <p class="marginless">From</p>
+            <input type="text" class="outlined-input" [min]="date1Options.minDate" [max]="date1Options.maxDate" [matDatepicker]="dp1" [(ngModel)]="dtFrom" [required]="true" (ngModelChange)="datePicker1Changed($event, oldVal); oldVal = $event;">
             <mat-datepicker #dp1></mat-datepicker>
-            
             <span class="input-group-btn">
-                <button class="btn btn-default" (click)="clear1()" aria-label="Clear">
+                <button mat-stroked-button color="warn" class="paddingless" (click)="clear1()" aria-label="Clear" matTooltip="Clear">
                     <i class="fas fa-times"></i>
                 </button>
-                <button class="btn btn-default" (click)="open1()" aria-label="Open calendar">
+                <button mat-flat-button color="primary" class="paddingless" (click)="open1()" aria-label="Open calendar" matTooltip="Open calendar">
                     <i class="far fa-calendar-alt"></i>
                 </button>
-
             </span>
-        </p>
-    </div>
-    <div style="float:left; margin-left: 10px;padding-top: 5px;">
-        <span>To</span><br>
+        </div>
     </div>
     <div style="float:left; margin-left: 10px;">
-        <p class="input-group" style="width:160px;">
-  <input type="text" class="form-control" [min]="date2Options.minDate" [max]="date2Options.maxDate" [matDatepicker]="dp2" [(ngModel)]="dtTo" [required]="true" (ngModelChange)="datePicker2Changed($event, oldVal); oldVal = $event;" />
-            <mat-datepicker #dp2></mat-datepicker>
-            <span class="input-group-btn">
-                <button class="btn btn-default" (click)="clear2()" aria-label="Clear">
-                    <i class="fas fa-times"></i>
-                </button>
-                <button class="btn btn-default" (click)="open2()" aria-label="Open calendar">
-                    <i class="far fa-calendar-alt"></i>
-                </button>
 
-            </span>
-        </p>
+        <p class="marginless">To</p>
+        <input type="text" class="outlined-input" [min]="date2Options.minDate" [max]="date2Options.maxDate" [matDatepicker]="dp2" [(ngModel)]="dtTo" [required]="true" (ngModelChange)="datePicker2Changed($event, oldVal); oldVal = $event;">
+        <mat-datepicker #dp2></mat-datepicker>
+        <span class="input-group-btn">
+            <button mat-stroked-button color="warn" class="paddingless" (click)="clear2()" aria-label="Clear" matTooltip="Clear">
+                <i class="fas fa-times"></i>
+            </button>
+            <button mat-flat-button color="primary" class="paddingless" (click)="open2()" aria-label="Open calendar" matTooltip="Open calendar">
+                <i class="far fa-calendar-alt"></i>
+            </button>
+        </span>
     </div>
 </div>

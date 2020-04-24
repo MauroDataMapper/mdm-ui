@@ -2,7 +2,7 @@
 	<mat-tab label="Email template">
 		<form name="form" (ngSubmit)="f.form.valid && submitConfig()" #f="ngForm" class="mdm--form mdm--form-configuration">
 			<div class="mdm--form-input mdm--block">
-				<h4 class="mat-h4">Site URL address</h4>
+				<h4>Site URL address</h4>
 				<mat-form-field appearance="outline">
 					<mat-label>Site URL</mat-label>
 					<input matInput name="siteUrl" #siteUrl="ngModel" [(ngModel)]="properties['site.url']" placeholder="e.g. https://example.com" required>
@@ -12,7 +12,7 @@
 				</mat-form-field>
 			</div>
 			<div class="mdm--form-input mdm--block">
-				<h4 class="mat-h4">From address</h4>
+				<h4>From address</h4>
 				<mat-form-field class="mdm--form-input" appearance="outline">
 					<mat-label>Email address</mat-label>
 					<input matInput type="email" name="fromAddress" [(ngModel)]="properties['email.from.address']" #fromAddress="ngModel" required>
@@ -154,8 +154,8 @@
 	</mat-tab>
 
 	<mat-tab label="Lucene">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+		<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="24px">
+			<div fxFlex  fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
 				<h4>Lucene Index</h4>
 				<p>Please press the following button to rebuild Lucene Search Index.</p>
 				<p>
@@ -163,11 +163,13 @@
 					<br>Once it is complete, you will be notified in this page.
 					<br>Please be patient and don't leave this page while reindexing is in progress.
 				</p>
-				<button mat-flat-button class="custom" color="primary" [disabled]="indexingStatus == 'start'" (click)="rebuildIndex()">Rebuild index</button>
+				<div>
+					<button mat-flat-button class="custom" color="primary" [disabled]="indexingStatus == 'start'" (click)="rebuildIndex()">Rebuild index</button>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="text-align: center;">
+		<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="24px">
+			<div fxFlex  fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
 				<div *ngIf="indexingStatus == 'start'" style="text-align: center;">
 					<div style="margin-left: 40%">
 						<mat-progress-spinner color="primary" mode="indeterminate">

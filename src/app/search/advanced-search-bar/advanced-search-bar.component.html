@@ -2,22 +2,21 @@
   <input #searchInputControl type="text" id="searchInput"
     class="form-control outlined-input ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput"
     [ngModelOptions]="{ debounce: 500 }" placeholder="{{placeHolderText}}" aria-invalid="false">
-  <span class="input-group-btn tree-top-actions">
+  <span class="tree-top-actions">
     <button mat-stroked-button class="paddingless" (click)="search(true)" aria-label="Search">
       <i class="fas fa-search"></i>
     </button>
-    <button mat-stroked-button class="paddingless" id="helpButton" matTooltipPosition="below" matTooltip="Help"
-      (click)="loadHelp()" aria-label="Help">
+    <button mat-stroked-button class="paddingless" matTooltip="Help" (click)="loadHelp()" aria-label="Help">
       <i class="fas fa-info-circle helpIcon"></i>
     </button>
-    <button class="btn btn-default" (click)="toggleAdvancedSearch()" aria-label="Advanced search">
+    <button mat-button color="primary" (click)="toggleAdvancedSearch()">
       Advanced
     </button>
   </span>
 </div>
 <br>
 <ng-template [ngIf]="advancedSearch">
-  <div style="background-color: #efefef; margin: 0px 1px 5px 1px;border-radius: 4px;">
+  <div style="margin: 0px 1px 5px 1px;border-radius: 4px;">
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="showRestrictTo">
         <div style="padding: 10px;">

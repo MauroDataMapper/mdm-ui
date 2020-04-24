@@ -18,15 +18,11 @@
         [(ngModel)]="searchCriteria" ng-model-options='{ debounce: 500 }' focus="inputClick()"
         placeholder="{{placeholderStr}}" [required]="isRequired">
 
-      <span class="input-group-btn import-folder-actions">
-        <button mat-stroked-button [disabled]="processing" *ngIf="!multiple"
-          [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}"
-          (click)="cleanSelection()">
+      <span class="import-folder-actions">
+        <button mat-stroked-button [disabled]="processing" *ngIf="!multiple" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="cleanSelection()">
           <i class="fas fa-times warning" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
         </button>
-        <button mat-stroked-button [disabled]="processing"
-          [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}"
-          (click)="toggleTree()">
+        <button mat-stroked-button [disabled]="processing" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="toggleTree()">
           <i class="fas fa-list" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
         </button>
       </span>
@@ -40,12 +36,22 @@
     <div class="treeDropDown" *ngIf="showTree" [ngStyle]="{'position': alwaysShowTree ? 'relative' : 'relative', 'top': alwaysShowTree ? '0px' : '0'}">
       <div style="width: 100%; height: 400px;overflow-y: auto">
 
-        <mdm-folders-tree [inSearchMode]="inSearchMode" enable-drag="true" enable-drop="true" enable-context-menu="true"
-          (addFolderEvent)="onAddFolder($event)" [doNotShowDataClasses]="doNotShowDataClasses"
-          [doNotShowTerms]="doNotShowTerms" [justShowFolders]="justShowFolders" [defaultCheckedMap]="defaultCheckedMap"
-          [showCheckboxFor]="showCheckboxFor" [propagateCheckbox]="propagateCheckbox" [searchCriteria]="searchCriteria"
-          [node]="filteredRootNode" (nodeClickEvent)="onNodeClick($event)"
-          (nodeCheckedEvent)="onNodeChecked($event[0],$event[1],$event[2])" (nodeDbClickEvent)="onNodeDbClick($event)">
+        <mdm-folders-tree [inSearchMode]="inSearchMode" 
+                          enable-drag="true" 
+                          enable-drop="true" 
+                          enable-context-menu="true"
+                          (addFolderEvent)="onAddFolder($event)"
+                          [doNotShowDataClasses]="doNotShowDataClasses"
+                          [doNotShowTerms]="doNotShowTerms"
+                          [justShowFolders]="justShowFolders"
+                          [defaultCheckedMap]="defaultCheckedMap"
+                          [showCheckboxFor]="showCheckboxFor"
+                          [propagateCheckbox]="propagateCheckbox"
+                          [searchCriteria]="searchCriteria"
+                          [node]="filteredRootNode"
+                          (nodeClickEvent)="onNodeClick($event)"
+                          (nodeCheckedEvent)="onNodeChecked($event[0],$event[1],$event[2])"
+                          (nodeDbClickEvent)="onNodeDbClick($event)">
         </mdm-folders-tree>
 
       </div>

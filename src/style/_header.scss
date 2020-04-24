@@ -74,9 +74,6 @@ header#mdm--header {
   display: flex;
   cursor: pointer;
   font-size: 18px;
-  @include respond-to($tablet) {
-    display: none !important;
-  }
   .profile-name {
     line-height: 1;
     margin-bottom: 8px;
@@ -97,10 +94,25 @@ header#mdm--header {
     align-items: center;
     justify-content: center;
     display: flex;
-    background: #fff;
     color: #333;
-    border-radius: 100%;
     font-weight: 700;
+    img {
+      @include size();
+      border-radius: 100%;
+    }
+  }
+}
+#mdm--navbar-desktop {
+  .mdm--navbar-user { 
+    @include respond-to($tablet) {
+      display: none !important;
+    }
+  }
+}
+#mdm--navbar-mobile .mdm--navbar-user {
+  display: block;
+  .profile-img {
+    margin: 18px auto 10px auto;
   }
 }
 

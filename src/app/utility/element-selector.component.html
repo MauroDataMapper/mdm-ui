@@ -1,8 +1,8 @@
 <mat-dialog-content style="height: 100%;">
     
     <div style="padding:24px;">
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 10px;" *ngIf="formData.step === 0">
+        <div class="mdm--block" style="margin-bottom: 10px;">
+            <div style="margin-top: 10px;" *ngIf="formData.step === 0">
                 What type of element are you looking for?
                 <div style="margin-top: 10px;">
                     <ul class="list-group" style="cursor: pointer;">
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top: 10px;padding-right: 0px;padding-left: 0px;" *ngIf="formData.step === 1">
+        <div style="margin-top: 10px;padding-right: 0px;padding-left: 0px;" *ngIf="formData.step === 1">
 
         <div *ngIf="formData.selectedType === 'DataModel'">
             <div style="margin-bottom: 10px;">

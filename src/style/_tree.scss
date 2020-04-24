@@ -24,6 +24,11 @@ mat-tree-node.mat-tree-node {
       font-weight: 400;
     }
   }
+  .mat-tree-node-content .mat-checkbox {
+    line-height: 1;
+    margin-right: 6px;
+  }
+
   button.mat-icon-button {
     @include size(25px, 22px);
     color: #a06829;

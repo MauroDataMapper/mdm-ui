@@ -23,7 +23,7 @@
                     <div *ngIf="isLoggedIn()">
                         <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign="center center" style="width: 185px;">
                             <div class="profile-img" fxFlex="30" fxFlex.sm="100" fxFlex.xs="100">
-                                <img class="img-rounded" style="width: 30px; height: auto;"
+                                <img class="img-rounded"
                                     src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}"
                                     alt="User profile">
                             </div>
@@ -99,9 +99,9 @@
     <mat-sidenav #sidenav mode="over" id="sidenav" fixedInViewport="fixed" fixedTopGap="0" fixedBottomGap="0" opened="false" position="end" [autoFocus]="false">
         <nav id="sidenav-content">
             <div *ngIf="isLoggedIn()">
-                <div *ngIf="profile">
+                <div *ngIf="profile" class="mdm--navbar-user">
                     <div class="profile-img">
-                        <img class="img-rounded" style="width: 30px; height: auto;" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}" alt="User profile">
+                        <img class="img-rounded" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}" alt="User profile">
                     </div>
                     <div class="profile-details">
                         <div class="profile-name">{{profile.firstName}} {{profile.lastName}}</div>

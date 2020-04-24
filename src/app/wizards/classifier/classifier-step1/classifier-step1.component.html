@@ -1,29 +1,22 @@
 <div class="form-group">
-
-
     <span>Please enter Classifier details:</span>
     <form ngNativeValidate #myForm="ngForm">
-
         <table class="table table-bordered dataModelDetailTable" ngModelGroup="model">
             <tbody>
+                <tr>
+                    <th class="detailsRowHeader">Label *</th>
+                    <td>
+                        <input type="text" class="form-control outlined-input" name="label" [(ngModel)]="model.label"
+                            required="required" />
+                    </td>
+                </tr>
 
-            <tr>
-                <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
-                <td>
-                    <input type="text" class="form-control wizardInput" name="label" [(ngModel)]="model.label"
-                           required="required">
-                </td>
-            </tr>
-
-
-            <tr>
-                <th class="detailsRowHeader col-md-2">Description</th>
-                <td>
-                    <textarea type="text" class="form-control" name="description" [(ngModel)]="model.description"></textarea>
-                </td>
-            </tr>
-
-
+                <tr>
+                    <th class="detailsRowHeader">Description</th>
+                    <td>
+                        <textarea type="text" class="form-control outlined-input" name="description" [(ngModel)]="model.description"></textarea>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </form>

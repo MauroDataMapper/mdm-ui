@@ -1,55 +1,42 @@
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-
-        <div style="width: 100%" *ngIf ="dataModel">
-            <mdm-data-element-details
-            [parentDataModel] = "dataModel"
-            [parentDataClass] = "dataClass">
-            </mdm-data-element-details>
-        </div>
-
-        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-            <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-
-                <mat-tab label="Properties">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mdm-data-set-metadata *ngIf="dataElement" [parent]="dataElement" [type]="'dynamic'"></mdm-data-set-metadata>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Comments">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mdm-annotation-list *ngIf="dataElement" [parent]="dataElement"></mdm-annotation-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Links">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mdm-element-link-list *ngIf="dataElement" [parent]="dataElement"></mdm-element-link-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Summary">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mdm-summary-metadata-table *ngIf="dataElement" [parent]="dataElement"></mdm-summary-metadata-table>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-
-
-                <mat-tab label="Attachments">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mdm-attachment-list *ngIf="dataElement" [parent]="dataElement"></mdm-attachment-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-
-            </mat-tab-group>
-        </div>
-    </div>
+<div style="width: 100%" *ngIf ="dataModel">
+    <mdm-data-element-details [parentDataModel] = "dataModel"
+                              [parentDataClass] = "dataClass">
+    </mdm-data-element-details>
 </div>
+<mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+    <mat-tab label="Properties">
+        <ng-template matTabContent>
+            <div style="width: 100%;">
+                <mdm-data-set-metadata *ngIf="dataElement" [parent]="dataElement" [type]="'dynamic'"></mdm-data-set-metadata>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Comments">
+        <ng-template matTabContent>
+            <div style="width: 100%;">
+                <mdm-annotation-list *ngIf="dataElement" [parent]="dataElement"></mdm-annotation-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Links">
+        <ng-template matTabContent>
+            <div style="width: 100%;">
+                <mdm-element-link-list *ngIf="dataElement" [parent]="dataElement"></mdm-element-link-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Summary">
+        <ng-template matTabContent>
+            <div style="width: 100%;">
+                <mdm-summary-metadata-table *ngIf="dataElement" [parent]="dataElement"></mdm-summary-metadata-table>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Attachments">
+        <ng-template matTabContent>
+            <div style="width: 100%;">
+                <mdm-attachment-list *ngIf="dataElement" [parent]="dataElement"></mdm-attachment-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

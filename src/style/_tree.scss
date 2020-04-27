@@ -16,7 +16,7 @@ mat-tree-node.mat-tree-node {
     min-width: 20px;
     color: #f19e3f;
     text-align: center;
-    line-height: 24px;
+    line-height: 22px;
     @include size(20px, 20px);
 
     &.fa-folder-open {
@@ -44,10 +44,16 @@ mat-tree-node.mat-tree-node {
   div.mat-tree-node-active
   {
     background: #e5eeff;
-    padding: 2px 6px;
+    padding: 2px 8px 2px 6px;
     border-radius: 5px;
     border: 1px solid #b1ccff;
     color: #002147;
+    .mat-tree-node-active {
+      font-size: 15px;
+    }
+    .mat-icon {
+      line-height: 26px;
+    }
   }
 }
 .foldersTree.folderTreeIcon {
@@ -200,7 +206,16 @@ ul.favourites li:focus {
   font-weight: bold;
 }
 /*****************************************************************/
-
+.detail-icons--cta {
+  .favouritesIcon {	
+    color: #aaa;	
+    cursor: pointer;	
+  }	
+  
+  .favouritesIcon.addedToFavourite {	
+    color: #ff9933;	
+  }
+}
 .detail-icons {
   margin-top: 6px;
 
@@ -218,7 +233,7 @@ ul.favourites li:focus {
   }
   .item-type {
     background: rgba(187, 248, 222, 0.3);
-    color: #0A8535;
+    color: #076528; 
     border: 1px solid rgba(10, 133, 53, 0.5);
     border-radius: 5px;
     padding: 4px;

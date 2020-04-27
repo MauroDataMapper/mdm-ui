@@ -3,12 +3,12 @@
         <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
             <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
                 <h4 class="marginless">Restrict user access based on group(s)</h4>
-                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{dataSource.data.length}}</span>
+                <span class="mdm--badge mdm--element-count">{{dataSource.data.length}}</span>
             </div>
             <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
                 <div *ngIf="folderResult['editable']">
-                    <button mat-flat-button color="primary" type="button" (click)="add()" title="Add"> 
-                        <i class="fas fa-plus"></i> 
+                    <button mat-flat-button color="primary" type="button" (click)="add()" title="Add">
+                        <i class="fas fa-plus"></i>
                         Add Group
                     </button>
                 </div>
@@ -20,7 +20,7 @@
             <ng-container matColumnDef="user">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
                 <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
-                    
+
                     <div *ngIf="!record.inEdit">
                         {{record.group.label}}
                     </div>

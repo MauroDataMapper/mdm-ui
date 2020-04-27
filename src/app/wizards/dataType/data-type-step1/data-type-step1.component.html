@@ -1,4 +1,4 @@
-<div *ngIf="model" class="mdm--block">
+<div *ngIf="model" class="mb-2">
 	<span>How do you want to add a new Data Type(s) to </span>
 	<mdm-element-link [parentDataModel]="{id:model.parent}" [newWindow]="true" [element]="model.parent"></mdm-element-link>
 	<span>? <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i></span>
@@ -10,13 +10,13 @@
 	</mat-radio-group>
 
 	<mdm-model-selector-tree [onSelect]="onSelect"
-		ngDefaultControl
-		[placeholder]="'Select Data Model...'"
-		[processing]="model.createType != 'copy'"
-		[doNotShowDataClasses]="true"
-		[ngModel]="model.copyFromDataModel"
-		[treeSearchDomainType]="'DataModel'"
-		(ngModelChange)="model.copyFromDataModel = $event"
-		[accepts]="['DataModel']">
+                            ngDefaultControl
+                            [placeholder]="'Select Data Model...'"
+                            [processing]="model.createType != 'copy'"
+                            [doNotShowDataClasses]="true"
+                            [ngModel]="model.copyFromDataModel"
+                            [treeSearchDomainType]="'DataModel'"
+                            (ngModelChange)="model.copyFromDataModel = $event"
+                            [accepts]="['DataModel']">
 	</mdm-model-selector-tree>
 </div>

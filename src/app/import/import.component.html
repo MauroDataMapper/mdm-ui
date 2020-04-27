@@ -8,7 +8,7 @@
         <i *ngIf="importerHelp" class="fas fa-info-circle helpIcon" (click)="loadImporterHelp()" matTooltip="Help"></i>
     </h4>
 
-    <mat-form-field appearance="outline" class="mdm--block">
+    <mat-form-field appearance="outline" class="mb-2">
         <mat-label>Select importer</mat-label>
         <mat-select aria-label="selectedImporterStr" [(ngModel)]="selectedImporterStr" placeholder="Select..." (selectionChange)="importerChanged()">
           <mat-option *ngFor="let item of importers" [value]="item">{{item.displayName}}</mat-option>
@@ -21,7 +21,7 @@
 
         <div *ngFor="let group of selectedImporterGroups">
             <h4>{{group.name}}</h4>
-            <div *ngFor="let option of group.parameters" class="mdm--block">
+            <div *ngFor="let option of group.parameters" class="mb-2">
                 <div class="import-folder" *ngIf="option.type === 'Folder'">
                     <span>Folder location</span>
                     <mdm-model-selector-tree [treeSearchDomainType]="'Folder'"
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="import-dataModel" *ngIf="option.type === 'DataModel'">
-                    <mdm-model-selector-tree [treeSearchDomainType]="'DataModel'" 
+                    <mdm-model-selector-tree [treeSearchDomainType]="'DataModel'"
                                              [ngModel]="option.value"
                                              name="DataModel"
                                              [accepts]="['DataModel']"

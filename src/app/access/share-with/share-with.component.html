@@ -1,31 +1,28 @@
-<div class="mdm--shadow-block mdm--block" style="border: 1px solid #f3f3f3;">
-  <div class="heading-container">
-    <h4>Restrict user access globally</h4>
-</div>
-
-  <div style="padding: 16px;">
-    <div style="padding-left: 5px">
-      <mat-checkbox name="shareReadWithEveryone" [(ngModel)]="readableByEveryone" data-md-icheck (change)="shareReadWithEveryoneChanged()">
-        Publicly readable
-      </mat-checkbox>
-
-      <div class="globalAccessText">
-        <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
-        By making the {{message}} publicly readable, it would be accessible by all registered and
-        non-registered users.
-      </div>
-
+<div class="mdm--shadow-block mb-2 bordered">
+    <div class="heading-container">
+        <h4 class="marginless">Restrict user access globally</h4>
     </div>
-    <div style="padding-left: 5px">
-
-      <mat-checkbox name="shareReadWithAuthenticated" [(ngModel)]="readableByAuthenticated" data-md-icheck (change)="shareReadWithAuthenticatedChanged()">
-        Readable by authenticated users
-      </mat-checkbox>
-
-      <div class="globalAccessText">
-        <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
-        By making the {{message}} readable by authenticated users, it would be accessible by all registered users.
-      </div>
+    <div style="padding: 16px;">
+        <div class="mb-1">
+            <mat-checkbox name="shareReadWithEveryone" [(ngModel)]="readableByEveryone" data-md-icheck (change)="shareReadWithEveryoneChanged()">
+                Publicly readable
+            </mat-checkbox>
+            <small class="block">
+                <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
+                By making the {{message}} publicly readable, it would be accessible by all registered and
+                non-registered users.
+            </small>
+        </div>
+        <div class="mb-1">
+            <mat-checkbox name="shareReadWithAuthenticated" [(ngModel)]="readableByAuthenticated" data-md-icheck
+                (change)="shareReadWithAuthenticatedChanged()">
+                Readable by authenticated users
+            </mat-checkbox>
+            <small class="block">
+                <i class="fas fa-globe-europe globe" aria-hidden="true"></i>
+                By making the {{message}} readable by authenticated users, it would be accessible by all registered
+                users.
+            </small>
+        </div>
     </div>
-  </div>
 </div>

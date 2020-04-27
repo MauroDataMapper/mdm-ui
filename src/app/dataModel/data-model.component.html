@@ -1,4 +1,4 @@
-<div style="width: 100%">
+<div class="full-width">
     <mdm-data-model-detail [afterSave]="afterSave"></mdm-data-model-detail>
 </div>
 <div *ngIf="showSearch">
@@ -43,17 +43,17 @@
     </div>
 </div>
 
-<div *ngIf="showSecuritySection"  (selectedIndexChange)="tabSelected($event)">
-    <mat-tab-group >
+<div *ngIf="showSecuritySection" (selectedIndexChange)="tabSelected($event)">
+    <mat-tab-group>
         <mat-tab select="tabSelected('access')" label="User & Group Access">
-            <div style="width:100%;">
+            <div class="full-width">
                 <div class="userAccess" style="margin: 10px 0px 50px 0px">
                     <mdm-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></mdm-share-with>
                     <div colspan="2">
-                        <div style="margin-top: 10px">
+                        <div class="mt-1">
                             <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
                         </div>
-                        <div style="margin-top: 10px">
+                        <div class="mt-1">
                             <mdm-group-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-group-access-new>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
             </div>
         </mat-tab>
         <mat-tab label="History">
-            <div style="width:100%;" ng-if="activeTab.name === 'history' && folder">
+            <div class="full-width" *ngIf="activeTab.name === 'history' && 'folder'">
                 <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></mdm-history>
             </div>
         </mat-tab>
@@ -71,70 +71,70 @@
 <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
     <mat-tab label="Data Classes">
         <ng-template matTabContent>
-            <div style="width: 100%;" class="mdm--block">
+            <div class="mb-2 full-width">
                 <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Types">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mdm-element-owned-data-type-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Properties">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-data-set-metadata *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mdm-data-set-metadata>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Summary">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-summary-metadata-table *ngIf="dataModel" [parent]="dataModel"></mdm-summary-metadata-table>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Comments">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-annotation-list *ngIf="dataModel" [parent]="dataModel"></mdm-annotation-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="History">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-history *ngIf="dataModel" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="parentId"></mdm-history>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Diagram">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-diagram-tab [parent]="dataModel"  [mode]="'umlclass'"></mdm-diagram-tab>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Links">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-element-link-list *ngIf="dataModel" [parent]="dataModel"></mdm-element-link-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Attachments">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel"></mdm-attachment-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Dataflow" *ngIf="dataModel && dataModel.type === 'Data Asset'">
         <ng-template matTabContent>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'"></mdm-diagram-tab>
             </div>
         </ng-template>

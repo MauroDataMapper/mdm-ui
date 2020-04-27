@@ -1,7 +1,7 @@
 <div *ngIf="model.createType == 'new'">
     <form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
         <div>Parent Data Class:</div>
-        <mdm-model-path [path]="model.parent.breadcrumbs" class="mdm--block"></mdm-model-path>
+        <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
 
         <div class="mdm--form-input">
             <mat-form-field appearance="outline">
@@ -48,87 +48,82 @@
 
 </div>
 
-<div *ngIf="model.createType == 'copy' && step.active == true" class="row mdm--block">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <span>Please Select a Data Class:</span>
-        <mdm-model-selector-tree [defaultCheckedMap]="defaultCheckedMap"
-                                [root]="model.copyFromDataModel[0]"
-                                [showCheckboxFor]="['DataClass']"
-                                [propagateCheckbox]="true"
-                                [alwaysShowTree]="true"
-                                [hideSelectedElements]="true"
-                                [multiple]="true"
-                                [processing]="processing"
-                                [onCheck]="onCheck"
-                                [placeholder]="'Select Data Class(s)'"
-                                [accepts]="['DataClass']">
-        </mdm-model-selector-tree>
-    </div>
+<div *ngIf="model.createType == 'copy' && step.active == true" class="mb-2">
+    <span>Please Select a Data Class:</span>
+    <mdm-model-selector-tree [defaultCheckedMap]="defaultCheckedMap"
+                            [root]="model.copyFromDataModel[0]"
+                            [showCheckboxFor]="['DataClass']"
+                            [propagateCheckbox]="true"
+                            [alwaysShowTree]="true"
+                            [hideSelectedElements]="true"
+                            [multiple]="true"
+                            [processing]="processing"
+                            [onCheck]="onCheck"
+                            [placeholder]="'Select Data Class(s)'"
+                            [accepts]="['DataClass']">
+    </mdm-model-selector-tree>
 </div>
 
 
-<div *ngIf="model.createType == 'copy'" class="row">
-  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<div *ngIf="model.createType == 'copy'">
+        <div class="heading-container">
+            <h4 class="marginless">Summary of Selected Data Classes</h4>
+            <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+        </div>
+            <table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label"
+                        sortable="true" filterable="true">
+                        Name
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                        <div>
+                            <mdm-element-link [element]="record" [newWindow]="true" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 50%; width: 50%;" columnName="description" sortable="true" filterable="true">
+                        Description
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
+                        <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
+                            <mdm-more-description [description]="record.description"></mdm-more-description>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
 
-            <div class="heading-container">
-                <h4 class="marginless">Summary of Selected Data Classes</h4>
-                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-            </div>
-                <table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped">
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label"
-                            sortable="true" filterable="true">
-                            Name
-                        </th>
-                        <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
-                            <div>
-                                <mdm-element-link [element]="record" [newWindow]="true" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="description">
-                        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 50%; width: 50%;" columnName="description" sortable="true" filterable="true">
-                            Description
-                        </th>
-                        <td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
-                            <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
-                                <mdm-more-description [description]="record.description"></mdm-more-description>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;">
+                        Status
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                        <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
+                            <div><i class="fas fa-times"></i></div>
+                            <div class="errorMessage">{{finalResult[record.id].result}}</div>
+                        </span>
+                        <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
+                            <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
+                        </span>
+                    </td>
+                </ng-container>
 
-                        <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;">
-                            Status
-                        </th>
-                        <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
-                            <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
-                                <div><i class="fas fa-times"></i></div>
-                                <div class="errorMessage">{{finalResult[record.id].result}}</div>
-                            </span>
-                            <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
-                                <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
-                            </span>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            <div class="mdm--mat-pagination">
-                <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [length]="totalSelectedItemsCount" [pageSize]="10" showFirstLastButtons></mat-paginator>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        <div class="mdm--mat-pagination">
+            <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [length]="totalSelectedItemsCount" [pageSize]="10" showFirstLastButtons></mat-paginator>
+        </div>
+    <div style="margin-top: 50px; width: 100%;">
+        <div *ngIf="processing">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <div *ngIf="!processing && isProcessComplete">
+            <div class="alert alert-success" *ngIf="failCount === 0">
+                <strong>Success!</strong> All copied successfully!
             </div>
-        <div style="margin-top: 50px; width: 100%;">
-            <div *ngIf="processing">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </div>
-            <div *ngIf="!processing && isProcessComplete">
-                <div class="alert alert-success" *ngIf="failCount === 0">
-                    <strong>Success!</strong> All copied successfully!
-                </div>
-                <div class="alert alert-danger" *ngIf="failCount > 0">
-                    <strong>Error!</strong> {{failCount}} Error(s) in copy process!
-                </div>
+            <div class="alert alert-danger" *ngIf="failCount > 0">
+                <strong>Error!</strong> {{failCount}} Error(s) in copy process!
             </div>
         </div>
     </div>

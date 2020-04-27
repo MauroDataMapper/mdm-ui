@@ -10,11 +10,11 @@
 								(validationStatusEvent)="validationStatusEmitter($event)"></mdm-data-type-inline>
 	</form>
 </div>
-<div *ngIf="model.createType == 'copy'" class="mdm--block">
+<div *ngIf="model.createType == 'copy'" class="mb-2">
 	<span>Please Select Data Type(s):</span>
 	<div class="heading-container">
 		Data Types
-		<span class="badge element-count" style="margin: 0px 3px;" aria-hidden="false">{{totalItemCount}}</span>
+		<span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
 		<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
 	</div>
 	<table mat-table [dataSource]="dataSourceDataTypes" matSort class="mdm--table table table-borderless table-striped">
@@ -78,10 +78,10 @@
 	</div>
 </div>
 
-<div *ngIf="model.createType == 'copy'" class="mdm--block">
+<div *ngIf="model.createType == 'copy'" class="mb-2">
 	<div class="heading-container">
 		Summary of Selected Data Types
-		<span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalSelectedItemsCount}}</span>
+		<span class="mdm--badge mdm--element-count">{{totalSelectedItemsCount}}</span>
 	</div>
 	<table mat-table [dataSource]="dataSourceSelectedDataTypes" matSort class="mdm--table table table-borderless table-striped">
 		<ng-container matColumnDef="label">

@@ -1,11 +1,11 @@
-<div class="heading-container">
-    <h4>Preferences </h4>
+<div class="heading-container mb-1">
+    <h4 class="marginless">Preferences </h4>
     <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
 </div>
 <form class="mdm--form" name="settingForm" (ngSubmit)="saveSettings()" novalidate enctype="multipart/form-data">
-    <div class="mdm--block">
+    <div class="mb-2">
         <span id="countPerTableLabel">Number of records per table:</span>
-        <mat-radio-group aria-label="countPerTableLabel" name="countPerTable" [(ngModel)]="countPerTable">
+        <mat-radio-group aria-label="countPerTableLabel" name="countPerTable" [(ngModel)]="countPerTable" class="mt-1">
             <mat-radio-button [checked]="countPerTable == 5" [value]="5">5</mat-radio-button>
             <mat-radio-button [checked]="countPerTable == 10" [value]="10">10</mat-radio-button>
             <mat-radio-button [checked]="countPerTable == 20" [value]="20">20</mat-radio-button>
@@ -13,7 +13,7 @@
         </mat-radio-group>
     </div>
 
-    <div class="mdm--block">
+    <div class="mb-2">
         <div>
             <mat-checkbox name="expandMoreDescription" [(ngModel)]="expandMoreDescription" labelPosition="after">
                 Always expand descriptions
@@ -25,7 +25,7 @@
             </small>
         </div>
     </div>
-    <div class="mdm--block">
+    <div class="mb-2">
         <mat-checkbox name="includeSupersededModels" [(ngModel)]="includeSupersededModels" labelPosition="after">
             Include Superseded Document Models in Data Model Tree
         </mat-checkbox>

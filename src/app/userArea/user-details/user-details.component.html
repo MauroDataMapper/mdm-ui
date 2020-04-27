@@ -1,5 +1,5 @@
 <form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter *ngIf="user" #userDetailsForm="ngForm" class="mdm--form">
-	<div class="mdm--block">
+	<div class="mb-2">
 		<h4 class="marginless ">{{user.emailAddress}}</h4>
 		<p class="text-muted">{{user.userRole}}</p>
 	</div>
@@ -24,7 +24,7 @@
 	<div class="mdm--form-input">
 		<mat-form-field appearance="outline">
 			<mat-label>Role in Organisation</mat-label>
-			<input matInput [(ngModel)]="user.jobTitle" name="jobTitle"> 
+			<input matInput [(ngModel)]="user.jobTitle" name="jobTitle">
 		</mat-form-field>
 	</div>
 	<button mat-flat-button class="custom" color="primary">

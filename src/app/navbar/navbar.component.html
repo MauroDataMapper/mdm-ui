@@ -167,8 +167,7 @@
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.pendingUsers" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-user-clock"></i>
-                    <span>Pending users</span>
-                    <span class="badge pill-card--red" aria-hidden="false" *ngIf="pendingUsersCount > 0" style="margin-left: 6px;"> {{pendingUsersCount}} </span>
+                    <span matBadge="{{pendingUsersCount}}" matBadgeOverlap="false" matBadgeColor="warn" [matBadgeHidden]="!pendingUsersCount">Pending users</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.adminArea.groups" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-users" aria-hidden="true"></i>

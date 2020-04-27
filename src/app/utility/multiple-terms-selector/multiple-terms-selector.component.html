@@ -1,4 +1,4 @@
-<div class="mdm--block">
+<div class="mb-2">
     <label>Select a Terminology<sup class="warn">*</sup></label>
     <mdm-select width="'100%'"
                 [acceptTypedInput]="false"
@@ -13,7 +13,7 @@
         </ng-template>
     </mdm-select>
 </div>
-<div class="mdm--block">
+<div class="mb-2">
     <strong>Select a Term</strong>
     <input type="text"
             class="form-control outlined-input"
@@ -49,7 +49,7 @@
 
 
 <div style="margin-top: 5px;" *ngIf="selectorSection.selectedTermsArray.length > 0">
-    <div class="mdm--block" style="position: relative;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
+    <div class="mb-2" style="position: relative;" *ngIf="selectorSection.selectedTermsArray && selectorSection.selectedTermsArray.length > 0">
         <span>Summary of Selected Terms</span>
         <mdm-paged-list [name]="'linkType'" [mcTitle]="'linkType'" [type]="'static'" [items]="selectorSection.selectedTermsArray" [pageSize]="10">
             <ng-template #pageListTemplate let-item>
@@ -67,7 +67,7 @@
             </ng-template>
         </mdm-paged-list>
     </div>
-    <div style="margin-top: 5px; margin-bottom: 12px;" *ngIf="!hideAddButton"> 
+    <div style="margin-top: 5px; margin-bottom: 12px;" *ngIf="!hideAddButton">
         <button mat-flat-button color="primary" type="button" [disabled]="selectorSection.selectedTermsCount === 0" (click)="addSelectedTerms(selectorSection.selectedTermsArray)">Add <span *ngIf="selectorSection.selectedTermsCount > 0">({{selectorSection.selectedTermsCount}})</span></button>
     </div>
 </div>

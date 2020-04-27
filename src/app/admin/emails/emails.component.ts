@@ -26,7 +26,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   filterEvent = new EventEmitter<string>();
   hideFilters = true;
   isLoadingResults: boolean;
-  totalItemCount: number;
+  totalItemCount = 0;
   filter: string;
 
   records: any[] = [];

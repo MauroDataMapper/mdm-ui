@@ -8,7 +8,7 @@
             <div *ngIf="!model.loadingSource" class="form-group">
 
               <div *ngIf="model.source.domainType === 'DataModel'">
-                <span class="badge importFormStep themeBackgroundColor">1</span>
+                <span class="mdm--badge">1</span>
                 <span>Source Data Model<span style="margin-left:3px;font-size: 12px;cursor: pointer;"
                                             *ngIf="model.sourceLink"><a href="{{model.sourceLink}}" target="_blank"><i
                   class="fas fa-external-link-alt"></i></a></span></span>
@@ -25,7 +25,7 @@
                 </mdm-model-selector-tree>
               </div>
               <div *ngIf="model.source.domainType === 'DataElement'">
-                <span class="badge importFormStep">1</span>
+                <span class="mdm--badge">1</span>
                 <span>Source Data Element</span>
                 <div style="padding-left: 5px;">
                   <mdm-element-link
@@ -38,7 +38,7 @@
               </div>
             </div>
             <div class="form-group">
-              <span class="badge importFormStep">2</span>
+              <span class="mdm--badge">2</span>
               <span>Target Data Model</span><span style="margin-left:3px;font-size: 12px;cursor: pointer;"
                                                   *ngIf="model.targetLink"><a href="{{model.targetLink}}" target="_blank"><i
               class="fas fa-external-link-alt"></i></a></span>
@@ -93,17 +93,17 @@
                 <div class="mcTableTitle">
                           <span class="title">Suggested Links<i class="fas fa-filter" (click)="filterClick()" style="visibility: hidden; cursor: pointer;margin-left: 2px;"></i>
                               <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model.successfullyAdded > 0">
-                                  Successfully Added 
+                                  Successfully Added
                                   <span class="badge badge-success">{{model.successfullyAdded}}</span>
                               </div>
 
                               <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model. totalIgnoredLinks > 0">
-                                  Ignored 
+                                  Ignored
                                   <span class="badge badge-success">{{model.totalIgnoredLinks}}</span>
                               </div>
 
                               <div style="float: right; margin-top: -2px; margin-left: 9px;font-weight: normal !important;" *ngIf="model. totalSuggestionLinks > 0 && model.source.domainType === 'DataModel'">
-                                  Total Suggested Links 
+                                  Total Suggested Links
                                   <span class="badge badge-success">{{model.totalSuggestionLinks}}</span>
                               </div>
                           </span>
@@ -213,8 +213,8 @@
                                   [disabled]="!suggest.selectedTarget || !model.sourceEditable">
                             Add
                           </button>
-                          <button mat-button 
-                                  color="warn" 
+                          <button mat-button
+                                  color="warn"
                                   type="button"
                                   style="margin-bottom: 2px; min-width: 55px !important;"
                                   (click)="ignoreSuggestion(suggest)"

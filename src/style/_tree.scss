@@ -13,11 +13,10 @@ mat-tree-node.mat-tree-node {
   .mat-tree-node-content mat-icon.mat-icon {
     margin-right: 5px;
     vertical-align: 0.09em;
-    line-height: 1;
     min-width: 20px;
     color: #f19e3f;
     text-align: center;
-    line-height: 20px;
+    line-height: 24px;
     @include size(20px, 20px);
 
     &.fa-folder-open {
@@ -36,11 +35,19 @@ mat-tree-node.mat-tree-node {
     bottom: 1px;
     font-size: 16px;
   }
-  .node-title, .mat-tree-node-active {
+  .node-title {
     color: #333;
     font-size: 15px;
     cursor: pointer;
     line-height: 1.5;
+  }
+  div.mat-tree-node-active
+  {
+    background: #e5eeff;
+    padding: 2px 6px;
+    border-radius: 5px;
+    border: 1px solid #b1ccff;
+    color: #002147;
   }
 }
 .foldersTree.folderTreeIcon {
@@ -110,10 +117,10 @@ div.mat-tab-label {
 }
 
 .treeDropDown {
-  padding-top: 8px; 
+  padding-top: 8px;
   border: 1px solid #e8e8e8;
   border-radius: 5px;
-  background-color:#FFF; 
+  background-color:#FFF;
   width:100%;
   z-index: 900;
 }
@@ -216,6 +223,13 @@ ul.favourites li:focus {
       width: 18px;
       text-align: center;
     }
+  }
+  .item-type {
+    background: rgba(187, 248, 222, 0.3);
+    color: #0A8535;
+    border: 1px solid rgba(10, 133, 53, 0.5);
+    border-radius: 5px;
+    padding: 4px;
   }
 }
 .detail-icons--cta {

@@ -1,9 +1,9 @@
 <form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
-    <div class="mdm--block">
+    <div class="mb-2">
         <strong>Selected folder: </strong>
         <mdm-element-link [showTypeTitle]="false" [newWindow]="true" [element]="step.scope.parentFolder"></mdm-element-link>
     </div>
-    
+
     <span>Please enter the Data Model details: <i class="fas fa-info-circle helpIcon" style="margin: 5px;" (click)="loadHelp()" matTooltip="Help"></i></span>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
@@ -40,12 +40,12 @@
             </mat-select>
         </mat-form-field>
     </div>
-    
+
     <div class="mdm--form-input" *ngIf="model.dataModelType == 'Database'">
         <mat-form-field appearance="outline">
             <mat-label>Database Dialect</mat-label>
             <input matInput type="text" name="databaseDialect" [(ngModel)]="model.dialect" required>
         </mat-form-field>
     </div>
-    <mdm-element-classifications name="classifiers"  (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>   
+    <mdm-element-classifications name="classifiers"  (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
 </form>

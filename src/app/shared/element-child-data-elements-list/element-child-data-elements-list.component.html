@@ -1,11 +1,10 @@
 <div class="heading-container">
     <h4 class="marginless">
-        Data Elements 
-        <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-        <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> 
+        Data Elements
+        <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+        <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
     </h4>
 </div>
-
 
 <table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped">
     <ng-container matColumnDef="label">

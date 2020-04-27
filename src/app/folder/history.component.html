@@ -1,6 +1,6 @@
 <div class="heading-container">
     <h4 class="marginless">History</h4>
-    <span class="badge element-count" style="margin: 0px 8px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
+    <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
 </div>
 <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--table table table-borderless table-striped">
     <ng-container matColumnDef="createdBy">
@@ -33,7 +33,7 @@
         <th style="cursor:pointer;max-width: 60%;width: 60%;" mat-header-cell *matHeaderCellDef mat-sort-header>
             Description
         </th>
-        <td style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element"> 
+        <td style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
             {{element.description}}
         </td>
     </ng-container>

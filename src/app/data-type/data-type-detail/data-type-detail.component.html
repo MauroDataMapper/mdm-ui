@@ -2,11 +2,17 @@
     <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
         <div class="panel-body">
             <h4 class="marginless">
-                <mdm-inline-text-edit [(ngModel)]="editableForm.label" name="labelName" [inEditMode]="editableForm.visible" [styleCss]= "'dataTypeDetailsLabel'"></mdm-inline-text-edit>
+                <mdm-inline-text-edit [(ngModel)]="editableForm.label" name="labelName" [inEditMode]="editableForm.visible" [styleCss]="'dataTypeDetailsLabel'"></mdm-inline-text-edit>
             </h4>
             <div class="detail-icons">
                 <div class="text-muted">
                   <small>
+                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span><strong>Item type: </strong><span class="item-type">Data Type</span></span>
+                    </small>
+                </div>
+                <div class="text-muted">
+                    <small>
                     <i class="far fa-calendar-check" matTooltip="Last update"></i>
                     <span><strong>Last Update:</strong> {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
                   </small>
@@ -86,12 +92,12 @@
                             <div *ngIf="!editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
-                                        type="button" 
+                                        type="button"
                                         matTooltip="Edit"
                                         aria-label="Edit"
                                         class="paddingless"
                                         (click)="editableForm.show();"
-                                        [hidden]="editableForm.visible" 
+                                        [hidden]="editableForm.visible"
                                         [disabled]="deleteInProgress">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>

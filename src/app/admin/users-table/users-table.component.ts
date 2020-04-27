@@ -22,7 +22,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   hideFilters = true;
   filter: string;
   isLoadingResults: boolean;
-  totalItemCount: number;
+  totalItemCount = 0;
   deleteInProgress: boolean;
   processing: boolean;
   failCount: number;

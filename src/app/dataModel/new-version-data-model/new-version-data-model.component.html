@@ -3,13 +3,13 @@
         <h4>New version</h4>
     </div>
 
-    <div class="mdm--block">
+    <div class="mb-2">
         <p>A new version of the Data Model keeps all Data Classes, Data Types, Data Elements and Properties of the<br> current Data Model
         (<mdm-element-link [parentDataModel]="{id:dataModel.id}" [element]="dataModel"></mdm-element-link>)</p>
     </div>
 
-    <div class="mdm--block">
-        <div class="mdm--block">
+    <div class="mb-2">
+        <div class="mb-2">
             <h4 class="mat-h4 marginless">Select the type of the new version that you want to create:</h4>
             <mat-radio-group  class="marginless" [(ngModel)]="versionType" (click)="versionTypeChecked()" [disabled]="processing">
                 <mat-radio-button value="newElementVersion" checked="true"><i class="fas fa-list"></i> New Data Model version</mat-radio-button>
@@ -29,11 +29,11 @@
     </div>
 
     <div *ngIf="versionType === 'newElementVersion'">
-        <div class="mdm--form-input mdm--block">
+        <div class="mdm--form-input mb-2">
             <h4 class="mat-h4 marginless">Additional details:</h4>
-            
+
             <div [ngClass]="{'form-group':true, 'has-error': errors && errors.label }">
-                <mat-form-field appearance="outline" style="width: 100%;"> 
+                <mat-form-field appearance="outline" style="width: 100%;">
                     <mat-label>Data Model name</mat-label>
                     <input matInput [(ngModel)]="form.label" [disabled]="processing" required>
                     <mat-hint>The name should be different from the current version name '{{dataModel.label}}'</mat-hint>
@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <div class="mdm--block">
+        <div class="mb-2">
             <div [ngClass]="{'has-error': errors }" style="margin-bottom: 0px;">
                 <mat-checkbox [(ngModel)]="form.copyPermissions" [disabled]="processing">
                     Copy Permissions
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <div class="mdm--block">
+        <div class="mb-2">
             <mat-checkbox [(ngModel)]="form.copyDataFlows" [disabled]="processing">
                 Copy DataFlows
             </mat-checkbox>
@@ -82,7 +82,7 @@
         <button mat-flat-button color="primary" class="custom" (click)="save()" [disabled]="processing">
             Add version
         </button>
-        
+
         <div style="margin-top: 5px;" *ngIf="processing">
             <mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate"></mat-progress-bar>
         </div>

@@ -1,34 +1,47 @@
-<div>
-    <div class="panel panel-default">
-        <form editable-form name="form"
-              onaftersave="onAfterSave()"
-              (ngSubmit)="formBeforeSave()"
-              disable-submit-on-enter>
-            <div class="panel-body panel-table">
-
-                <div style="padding: 0px !important;" *ngIf="result">
-                    <h4> <span class="xeditableInput">
-                                <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                                <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target.value)"  name="moduleName" size="20"></mdm-inline-text-edit>
+<div class="panel panel-default mdm--shadow-block">
+    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body">
+            <div *ngIf="result">
+                <h4 class="inline-block marginless" [ngClass]="{ 'has-error': errorMessage != ''}">
+                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
+                        [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target.value)"
+                        name="moduleName" size="20"></mdm-inline-text-edit>
+                </h4>
                                 <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
                               <span class="help-block">{{errorMessage}}</span>
                             </div>
+
+                <div class="detail-icons">
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-cube" matTooltip="Item type"></i>
+                            <span><strong>Item type: </strong><span class="item-type">Data Element</span></span>
+                        </small>
                             </div>
-                        </span></h4>
-                    <small class="elementDetailMCType">Data Element</small>
-                    <div>
-                        <span *ngIf="result" style="font-size: 11px;font-style: italic" class="dataClassDetailsLastUpdate">Last Update: {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                        <span *ngIf="result && result.finalised && result.dateFinalised" style="font-size: 11px;font-style: italic; margin-left: 10px" class="dataModelDetailsLastUpdate">Finalised On: {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    <div class="text-muted" *ngIf="result">
+                        <small>
+                            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                            <span><strong>Last update: </strong>{{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </small>
                     </div>
+                    <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
+                        <small>
+                            <i class="far fa-calendar-alt" matTooltip="Finalised on"></i>
+                            <span><strong>Finalised on: </strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </small>
                 </div>
             </div>
-            <table class="table dataModelDetailTable">
+            </div>
+        </div>
+        <table class="table table-bordered">
                 <tbody>
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <div style="width:50%">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                        <div>
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases"
+                                [element]="result" [editableForm]="editableForm" [property]="'aliases'">
+                            </mdm-element-alias>
                         </div>
                     </td>
                 </tr>
@@ -36,7 +49,8 @@
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="result">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
+                                [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -61,8 +75,6 @@
                                         [showParentDataModel]="false">
                                 </mdm-data-type-inline>
                             </div>
-
-
                             <div *ngIf="!showNewInlineDataType">
 <!--                                <mc-select-2-->
 <!--                                        width="'100%'"-->
@@ -161,7 +173,7 @@
                                                        [textLocation]="'left'"
                                                        [hideDelete]="false"
                                                        [hideCancel]="false"
-                                                       [hideEdit] = "true"
+                                                       [hideEdit]="true"
                                                        (delete)="delete()"
                                                        [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
@@ -207,7 +219,5 @@
                 </tr>
                 </tbody>
             </table>
-
         </form>
     </div>
-</div>

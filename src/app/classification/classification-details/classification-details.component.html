@@ -7,9 +7,7 @@
                     <span class="dataModelTypeIcon">
                         <i matTooltip="Classifier" class="fas fa-tag"></i>
                     </span>
-
-                    <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'"  (input)="onLabelChange($event.target.value)"  size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit >
-
+                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" (input)="onLabelChange($event.target.value)" size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
                   </h4>
                   <span class="inline-block">
                     <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
@@ -19,17 +17,23 @@
                     <span class="help-block">{{errorMessage}}</span>
                 </div>
             </div>
-            <div class="detail-icons"> 
+            <div class="detail-icons">
+                <div class="text-muted">
+                    <small>
+                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span><strong>Item type: </strong><span class="item-type">Classifier</span></span>
+                    </small>
+                </div>
                 <div class="text-muted" *ngIf="result?.readableByEveryone">
                   <small>
-                    <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
+                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
                     <span><strong>Availability: </strong>Publicly Readable</span>
                   </small>
                 </div>
                 <div class="text-muted" *ngIf="result">
                   <small>
                     <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                    <span><strong>Last update: </strong> {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span> 
+                    <span><strong>Last update: </strong> {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
                   </small>
                 </div>
             </div>
@@ -65,12 +69,12 @@
                         <div style="float: right;margin-bottom: 3px">
                             <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
-                                        color="primary" 
+                                        color="primary"
                                         type="button"
                                         class="paddingless"
                                         [disabled]="deleteInProgress || exporting || result.finalised"
                                         matTooltip="Edit"
-                                        aria-label="Edit" 
+                                        aria-label="Edit"
                                         (click)="showForm();">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
@@ -87,7 +91,7 @@
 
                         <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
-                                    color="primary" 
+                                    color="primary"
                                     type="button"
                                     class="paddingless"
                                     (click)="toggleSecuritySection()"

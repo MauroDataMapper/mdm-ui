@@ -1,6 +1,6 @@
 <form class="mdm--form mdm--form-modal" role='form' (keyup)="$event.keyCode != 13;">
     <h3 class='modal-title text-center'>Request an account</h3>
-    <p class="mdm--block text-center">Please request an account in order to continue using our Catalogue</p>
+    <p class="mb-2 text-center">Please request an account in order to continue using our Catalogue</p>
     <div *ngIf="message" class="alert alert-danger">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{message}}
@@ -47,7 +47,7 @@
             <mat-pass-toggle-visibility #togglePassword matSuffix></mat-pass-toggle-visibility>
             <input required matInput [type]="togglePassword.type" id="password" name="password" [(ngModel)]="password">
         </mat-form-field>
-        <mat-password-strength [password]="password" class="green mdm--block" [enableDigitRule]="true"
+        <mat-password-strength [password]="password" class="green mb-2" [enableDigitRule]="true"
             [enableLengthRule]="true" [enableLowerCaseLetterRule]="true" [enableSpecialCharRule]="false"
             [enableUpperCaseLetterRule]="true">
         </mat-password-strength>
@@ -59,7 +59,7 @@
             <input matInput [type]="toggleConfirmPassword.type" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
         </mat-form-field>
     </div>
-    <div class="mdm--block text-center">
+    <div class="mb-2 text-center">
         <button (click)="register()" mat-flat-button class="custom mdm--form-button" color="primary">
             Request account
         </button>

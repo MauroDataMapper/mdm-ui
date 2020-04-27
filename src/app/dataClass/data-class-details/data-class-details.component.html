@@ -3,22 +3,34 @@
         <div class="panel-body">
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                  <h4 class="inline-block marginless">
-                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
-                                [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
-                  </h4>
-              </div>
-              <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                <span class="help-block">{{errorMessage}}</span>
-              </div>
+                    <h4 class="inline-block marginless">
+                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
+                            [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
+                    </h4>
+                </div>
+                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                    <span class="help-block">{{errorMessage}}</span>
+                </div>
             </div>
 
             <div class="detail-icons">
-                <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
+                <div class="text-muted">
                   <small>
-                    <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                    <span><strong>Finalised on:</strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                      <i class="fas fa-cube" matTooltip="Item type"></i>
+                      <span><strong>Item type: </strong><span class="item-type">Data Class</span></span>
                   </small>
+                </div>
+                <div class="text-muted" *ngIf="result">
+                    <small>
+                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                        <span><strong>Last update: </strong>{{ result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    </small>
+                </div>
+                <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
+                    <small>
+                        <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
+                        <span><strong>Finalised on:</strong>{{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    </small>
                 </div>
             </div>
         </div>
@@ -35,8 +47,7 @@
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="result">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
-                                [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -60,7 +71,8 @@
                                     Min
                                     <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="min"
                                         [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20"
-                                        size="5"></mdm-inline-text-edit>
+                                        size="5">
+                                    </mdm-inline-text-edit>
                                 </div>
                                 <span
                                     *ngIf="!editableForm.visible && (result.minMultiplicity && result.minMultiplicity == 0)">..</span>
@@ -72,7 +84,8 @@
                                     Max
                                     <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="max"
                                         [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20"
-                                        size="5"></mdm-inline-text-edit>
+                                        size="5">
+                                    </mdm-inline-text-edit>
                                 </div>
                             </div>
                             <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">

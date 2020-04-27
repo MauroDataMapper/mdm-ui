@@ -1,15 +1,17 @@
 <div class="mdm--shadow-block">
 	<div class="heading-container">
-		<h4 *ngIf="totalItemCount > 0" class="marginless">
-			There are {{totalItemCount}} users in this repository waiting for your approval. 
-		</h4>
-		<h4 *ngIf="totalItemCount == 0" class="marginless">
-			There are no users in this repository. 
-		</h4>
+    <h4 [ngPlural]="totalItemCount" class="marginless">
+      <ng-template ngPluralCase="=1">
+        There is <span class="mdm--badge mdm--element-count">1</span> user in this repository waiting for your approval.
+      </ng-template>
+      <ng-template ngPluralCase="other">
+        There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> users in this repository waiting for your approval.
+      </ng-template>
+    </h4>
 	</div>
 
 	<div *ngIf="totalItemCount > 0">
-		<table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped"> 
+		<table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
 			<ng-container matColumnDef="firstName">
 				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="firstName">
 					<span [hidden]="!hideFilters">First Name</span>
@@ -73,5 +75,9 @@
 		<div class="mdm--mat-pagination" *ngIf="totalItemCount > 5">
 			<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 		</div>
-	</div>
+  </div>
+  <div *ngIf="!totalItemCount" class="pxy-2 bordered">
+    <p class="mt-2">There are no pending users in this repository.</p>
+  </div>
+
 </div>

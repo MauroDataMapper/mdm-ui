@@ -2,8 +2,8 @@
     <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
         <div fxFlex  fxLayout="row" fxFlex="55" fxFlex.md="55" fxFlex.sm="55" fxFlex.xs="55" style="align-items: center;">
             <h4 class="marginless">
-                Links 
-                <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
+                Links
+                <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
@@ -101,7 +101,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div *ngIf="record.inEdit">
                     <button mat-stroked-button color="primary" type="button" (click)="findElement(record)">
                         Add target

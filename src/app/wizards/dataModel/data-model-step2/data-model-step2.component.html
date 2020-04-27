@@ -1,14 +1,19 @@
-<div class="mdm--block">
+<div class="mb-2">
     <p>
         You can add a default Data Types for this Data Model.
         <br>Select one of the Data Type categories that you expect to have all its Data Types in this Data Model:
     </p>
 </div>
 
-<div class="mdm--block">
-    <mdm-select [width]="'100%'" [multiSelect]="false" [acceptTypedInput]="false" [valueType]="'static'"
-        [staticValues]="defaultDataTypeProviders" [idProperty]="'name'" [displayProperty]="'displayName'"
-        [searchProperty]="'displayName'" (selectEvent)="onSelectDataTypeProvider($event)">
+<div class="mb-2">
+    <mdm-select [width]="'100%'"
+                [multiSelect]="false"
+                [acceptTypedInput]="false"
+                [valueType]="'static'"
+                [staticValues]="defaultDataTypeProviders"
+                [idProperty]="'name'" [displayProperty]="'displayName'"
+                [searchProperty]="'displayName'"
+                (selectEvent)="onSelectDataTypeProvider($event)">
         <ng-template #lineContent let-item>
             <div>{{item.displayName}} <span style="font-style: italic;font-size: 10px;">{{item.version}}</span></div>
         </ng-template>
@@ -16,7 +21,10 @@
 </div>
 
 
-<div class="row mdm--block" *ngIf="dataTypes">
-    <mdm-element-owned-data-type-list [parent]="{editable:false}" [type]="'static'" [loadingData]="loadingData"
-        [childOwnedDataTypes]="dataTypes"></mdm-element-owned-data-type-list>
+<div class="mb-2" *ngIf="dataTypes">
+    <mdm-element-owned-data-type-list [parent]="{editable:false}"
+                                      [type]="'static'"
+                                      [loadingData]="loadingData"
+                                      [childOwnedDataTypes]="dataTypes">
+    </mdm-element-owned-data-type-list>
 </div>

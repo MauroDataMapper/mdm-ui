@@ -1,4 +1,11 @@
-import {Component, OnInit, ElementRef, ViewChildren, ViewChild, AfterViewInit} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChildren,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '../../../services/utility/message-handler.service';
 import { ResourcesService } from '../../../services/resources.service';
@@ -21,13 +28,9 @@ export class ModulesComponent implements OnInit, AfterViewInit {
   activeTab: any;
   records: any[] = [];
   displayedColumns = ['name', 'version'];
-
   appVersion: string;
-
-  totalItemCount: number;
-
+  totalItemCount = 0;
   hideFilters = true;
-
   dataSource = new MatTableDataSource<any>();
 
   constructor(
@@ -65,20 +68,18 @@ export class ModulesComponent implements OnInit, AfterViewInit {
     };
 
     this.resourcesService.admin.get('modules', options).subscribe(resp => {
-      this.records = resp.body;
-
-      this.records.push({
-        id: '0',
-        name: 'UI',
-        version: this.appVersion,
-        isUI: true
-      });
-
-      this.totalItemCount = this.records.length;
-      this.dataSource.data = this.records;
-    },
-      err => {
-        this.messageHandler.showError('There was a problem loading the modules.', err );
-      });
+        this.records = resp.body;
+        this.records.push({
+          id: '0',
+          name: 'UI',
+          version: this.appVersion,
+          isUI: true
+        });
+        this.totalItemCount = this.records.length;
+        this.dataSource.data = this.records;
+      }, err => {
+        this.messageHandler.showError('There was a problem loading the modules.', err);
+      }
+    );
   }
 }

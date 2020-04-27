@@ -1,7 +1,7 @@
 <mat-dialog-content style="height: 100%;">
-    
+
     <div style="padding:24px;">
-        <div class="mdm--block" style="margin-bottom: 10px;">
+        <div class="mb-2" style="margin-bottom: 10px;">
             <div style="margin-top: 10px;" *ngIf="formData.step === 0">
                 What type of element are you looking for?
                 <div style="margin-top: 10px;">
@@ -23,12 +23,12 @@
                         </li>
                         <li class="list-group-item" ngHide="hideOptions['DataClass']">
                             <div (click)="onElementTypeSelect('DataClass')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class 
+                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class
                             </div>
                         </li>
                         <li class="list-group-item" ngHide="hideOptions['DataElement']">
                             <div (click)="onElementTypeSelect('DataElement')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element 
+                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element
                             </div>
                         </li>
                         <li class="list-group-item" ngHide="hideOptions['Term']">
@@ -44,7 +44,7 @@
 
         <div *ngIf="formData.selectedType === 'DataModel'">
             <div style="margin-bottom: 10px;">
-                Please select a {{formData.selectedType}} 
+                Please select a {{formData.selectedType}}
             </div>
 
             <input type="text"

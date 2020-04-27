@@ -191,3 +191,26 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
     background-color: #f9f9f9
   }
 }
+
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+  top: 1px;
+  right: -28px;
+}
+
+.mdm--element-count {
+  font-style: italic;
+  font-weight: normal !important;
+  background-color: #777777 !important;
+  margin: 0px 3px;
+}
+.mdm--badge {
+  display: inline-block;
+  padding: .25em .4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25rem;
+}

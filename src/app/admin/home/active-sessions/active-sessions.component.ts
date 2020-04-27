@@ -24,7 +24,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[];
   records: any[] = [];
-  totalItemCount: number;
+  totalItemCount = 0;
   hideFilters = true;
   dataSource = new MatTableDataSource<any>();
 

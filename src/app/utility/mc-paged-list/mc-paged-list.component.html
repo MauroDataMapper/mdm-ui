@@ -1,8 +1,7 @@
 <div style="position: relative;width: 100%;">
     <div *ngIf="!doNotDisplayTitle && displayItems && displayItems.length>0" style="vertical-align:baseline;width: 100%;background-color: #f5f5f5;-moz-border-radius: 2px;border-radius: 2px;margin: 1px 0px;">
         <span style="display: inline-block;padding: 2px 5px;font-style: italic;font-size: 13px; font-weight: bold;">{{mcTitle}}</span>
-        <span class="badge element-count" *ngIf="displayItems && displayItems.length>0">{{total}}</span>
-        <!--<span style="font-style:italic;font-size:11px;"  ng-show="displayItems && displayItems.length==0">(No Link)</span>-->
+        <span class="mdm--badge mdm--element-count" *ngIf="displayItems && displayItems.length>0">{{total}}</span>
     </div>
 
 

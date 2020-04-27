@@ -1,10 +1,10 @@
 <form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
-    
-    <div class="mdm--block">
+
+    <div class="mb-2">
         <strong>Selected folder: </strong>
         <mdm-element-link [showTypeTitle] = "true" [newWindow]="true" [element]="model.parentFolder"></mdm-element-link>
     </div>
-    
+
     <span>Please enter the Code Set details:</span>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
@@ -32,9 +32,9 @@
             <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
         </mat-form-field>
     </div>
-    <mdm-element-classifications name="classifiers" 
-                                 (classificationsChanged)="model.classifiers = $event" 
+    <mdm-element-classifications name="classifiers"
+                                 (classificationsChanged)="model.classifiers = $event"
                                  [editableForm]="{visible :true}"
-                                 class="mdm--block"></mdm-element-classifications>
+                                 class="mb-2"></mdm-element-classifications>
     <mdm-multiple-terms-selector (selectedTermsChange)="model.terms = $event"></mdm-multiple-terms-selector>
 </form>

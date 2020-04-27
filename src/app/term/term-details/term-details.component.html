@@ -3,29 +3,35 @@
         <div class="panel-body">
             <div *ngIf="mcTerm">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                  <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': mcTerm?.deleted}">
-                    <span *ngIf="mcTerm.label" [innerHtml]="mcTerm.label" class="dataModelDetailsLabel"></span>
-                  </h4>
-                  <span class="inline-block">
-                    <small *ngIf="mcTerm && mcTerm.deleted" class="warning"> | Deleted</small>
-                  </span>
-                  <div class="detail-icons--cta">
-                    <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-                    <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
-                  </div>
-              </div>
-              <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                <span class="help-block">{{errorMessage}}</span>
-              </div>
+                    <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': mcTerm?.deleted}">
+                        <span *ngIf="mcTerm.label" [innerHtml]="mcTerm.label" class="dataModelDetailsLabel"></span>
+                    </h4>
+                    <span class="inline-block">
+                        <small *ngIf="mcTerm && mcTerm.deleted" class="warning"> | Deleted</small>
+                    </span>
+                    <div class="detail-icons--cta">
+                        <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
+                        <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
+                    </div>
+                </div>
+                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                    <span class="help-block">{{errorMessage}}</span>
+                </div>
             </div>
 
             <div class="detail-icons">
+                <div class="text-muted">
+                    <small>
+                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span><strong>Item type: </strong><span class="item-type">Term</span></span>
+                    </small>
+                </div>
                 <div class="text-muted" *ngIf="mcTerm?.readableByEveryone">
                     <small>
-                      <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
-                      <span><strong>Availability: </strong>Publicly Readable</span>
+                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
+                        <span><strong>Availability: </strong>Publicly Readable</span>
                     </small>
-                  </div>
+                </div>
                 <div class="text-muted" *ngIf="mcTerm && mcTerm.dateCreated">
                     <small>
                         <i class="far fa-calendar-alt" matTooltip="Last update"></i>
@@ -33,10 +39,9 @@
                     </small>
                 </div>
             </div>
-
         </div>
 
-        <table class="table table-bordered dataModelDetailTable">
+        <table class="table table-bordered">
             <tbody>
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>

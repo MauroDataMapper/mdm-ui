@@ -1,47 +1,41 @@
 <form name="editableForm" class="mdm--form">
-    <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
-            <mat-label>Name</mat-label>
-            <input required matInput name="label" [(ngModel)]="group.label">
-            <mat-error *ngIf="errors && errors['label']">
-                {{errors['label']}}
-            </mat-error>
-        </mat-form-field>
-    </div>
-
-    <mat-form-field class="mdm--form-input" appearance="outline">
+    <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput name="label" [(ngModel)]="group.label" required>
+        <mat-error *ngIf="errors && errors['label']">
+            {{errors['label']}}
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
         <textarea matInput rows="3" name="description" [(ngModel)]="group.description"></textarea>
         <mat-error *ngIf="errors && errors['description']">
             {{errors['description']}}
         </mat-error>
     </mat-form-field>
-
-    <button mat-button color="warn" type="button" (click)="cancel()" style="margin-right: 16px;">
+    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
         Cancel
     </button>
-    <button mat-flat-button color="primary" type="submit" class="" (click)="save()">
+    <button mat-flat-button color="primary" type="submit" (click)="save()">
         Save group
     </button>
 </form>
 <hr>
-<div style="margin-top: 10px">
-    <div *ngIf="group && group.id">
-        <mat-tab-group>
-            <mat-tab label="Members">
-                <ng-template matTabContent>
-                    <div style="width: 100%;">
-                        <mdm-group-member-table [parent]="group"></mdm-group-member-table>
-                    </div>
-                </ng-template>
-            </mat-tab>
-            <mat-tab label="History">
-                <ng-template matTabContent>
-                    <div style="width: 100%;">
-                        <mdm-history [parent]="group" [parentType]="'UserGroup'"></mdm-history>
-                    </div>
-                </ng-template>
-            </mat-tab>
-        </mat-tab-group>
-    </div>
+<div class="mt-2" *ngIf="group && group.id">
+    <mat-tab-group>
+        <mat-tab label="Members">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-group-member-table [parent]="group"></mdm-group-member-table>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="History">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-history [parent]="group" [parentType]="'UserGroup'"></mdm-history>
+                </div>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
 </div>

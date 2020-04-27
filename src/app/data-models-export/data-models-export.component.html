@@ -18,13 +18,13 @@
         </mdm-model-selector-tree>
 </div>
 <div *ngIf="step === 2">
-    <mat-form-field appearance="outline" class="mdm--block">
+    <mat-form-field appearance="outline" class="mb-2 full-width">
         <mat-label>Select an exporter</mat-label>
         <mat-select aria-label="selectedExporterStr" name="selectedExporterStr" [(ngModel)]="selectedExporterStr" placeholder="Select..." [disabled]="processing" (selectionChange)="exporterChanged()" required>
             <mat-option *ngFor="let item of exportersList" [value]="item">{{item.displayName}}</mat-option>
         </mat-select>
     </mat-form-field>
-    <div class="mdm--block" *ngIf="selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1">
+    <div class="mb-2" *ngIf="selectedExporterObj && !selectedExporterObj.canExportMultipleDomains && selectedDataModels.length > 1">
         <div class="errorMessage" style="padding-top: 5px;padding-left: 6px;font-style: italic;">
             <strong>{{selectedExporterObj.displayName}}</strong> does not support multiple Data Models export!<br>
             <div *ngFor="let item of (exportersList  | filter); let i = index">

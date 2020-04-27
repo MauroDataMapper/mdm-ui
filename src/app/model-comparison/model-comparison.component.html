@@ -65,7 +65,7 @@
                 <mat-tab-group #tab [selectedIndex]="activeTab">
                     <mat-tab *ngIf= "diffs?.properties && diffs?.properties.length > 0">
                         <ng-template mat-tab-label>
-                            Details <span class="badge element-count">{{diffs.properties.length}}</span>
+                            Details <span class="mdm--badge mdm--element-count">{{diffs.properties.length}}</span>
                         </ng-template>
                         <ng-template matTabContent>
                     <div *ngIf="diffs.properties && diffs.properties.length>0" style="width:100%;">
@@ -99,7 +99,7 @@
                     </mat-tab>
                 <mat-tab *ngIf="diffs?.metadata && diffs?.metadata.length > 0">
                     <ng-template mat-tab-label>
-                        Properties <span class="badge element-count">{{diffs.metadata.length}}</span>
+                        Properties <span class="mdm--badge mdm--element-count">{{diffs.metadata.length}}</span>
                    </ng-template>
                     <div style="width:100%;">
                         <div *ngIf="diffs?.metadata && diffs?.metadata?.length>0">
@@ -109,7 +109,7 @@
                 </mat-tab>
                 <mat-tab *ngIf="diffs?.dataTypes && diffs?.dataTypes.length > 0">
                     <ng-template mat-tab-label>
-                        Data Types <span class="badge element-count">{{diffs.filteredDataTypes.length}}</span>
+                        Data Types <span class="mdm--badge mdm--element-count">{{diffs.filteredDataTypes.length}}</span>
                   </ng-template>
                     <div *ngIf="diffs?.dataTypes?.length > 0" style="width:100%;position: relative">
                         <table class="table table-bordered">
@@ -202,7 +202,7 @@
                 </mat-tab>
                 <mat-tab *ngIf="diffs?.dataElements && diffs?.dataElements.length > 0">
                     <ng-template mat-tab-label>
-                        Data Elements <span class="badge element-count">{{diffs.filteredDataElements.length}}</span>
+                        Data Elements <span class="mdm--badge mdm--element-count">{{diffs.filteredDataElements.length}}</span>
                     </ng-template>
                     <div *ngIf="diffs?.dataElements.length > 0" style="width:100%;">
                         <table class="table table-bordered">

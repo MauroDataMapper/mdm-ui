@@ -1,88 +1,88 @@
-<div class="heading-container mdm--block">
+<div class="heading-container mb-1">
     <h4 class="marginless">Data models bulk delete</h4>
 </div>
 
-<div>
-	<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
-		<div fxFlex  fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
-			<h4>Please select one or more element(s):</h4>
-			<div class="mdm--block">
-				<label id="filterElement">Filter elements by type:</label>
-				<mat-radio-group aria-label="filterElement" class="marginless" name="filterElement" [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
-					<mat-radio-button value="dataModel">Data Model</mat-radio-button>
-					<mat-radio-button value="terminology">Terminology</mat-radio-button>
-				</mat-radio-group>
-			</div>
-			<div class="mdm--block">
-				<label for="filterStatus">Filter element by status:</label>
-				<mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus" [disabled]="filterElement === ''" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
-					<mat-radio-button value="deleted">Mark as Deleted</mat-radio-button>
-					<mat-radio-button value="documentSuperseded">Document Superseded</mat-radio-button>
-					<mat-radio-button value="modelSuperseded">Model Superseded</mat-radio-button>
-				</mat-radio-group>
-			</div>
+<div class="block">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
+        <div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50"
+            fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
+            <h4>Please select one or more element(s):</h4>
+            <div class="mb-1">
+                <label id="filterElement">Filter elements by type:</label>
+                <mat-radio-group aria-label="filterElement" class="marginless" name="filterElement"
+                    [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
+                    <mat-radio-button value="dataModel">Data Model</mat-radio-button>
+                    <mat-radio-button value="terminology">Terminology</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="mb-1">
+                <label for="filterStatus">Filter element by status:</label>
+                <mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus"
+                    [disabled]="filterElement === ''" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
+                    <mat-radio-button value="deleted">Mark as Deleted</mat-radio-button>
+                    <mat-radio-button value="documentSuperseded">Document Superseded</mat-radio-button>
+                    <mat-radio-button value="modelSuperseded">Model Superseded</mat-radio-button>
+                </mat-radio-group>
+            </div>
 
-			<div *ngIf="!reloading">
-				<div class="treeDropDown">
-					<div style="width: 100%; height: 400px; overflow-y: auto">
-						<mdm-folders-tree
-							doNotMakeSelectedBold="true"
-							doNotShowDataClasses="true"
-							doNotShowTerms="true"
-							defaultCheckedMap="true"
-							showCheckboxFor="['DataModel','Terminology']"
-							propagateCheckbox="true"
-							[node]="folders"
-							tree-name="'folders'"
-							(nodeCheckedEvent)="onNodeChecked($event[0])"></mdm-folders-tree>
-						<!--accepts="['DataModel','Terminology']"-->
-					</div>
-				</div>
-			</div>
-			<div style="height: 100px" *ngIf="reloading">
-				<div style="width: 100%;height: 100%;" class="treeWaitingSpinner">
-					<div style="position: absolute;top:70%;left:40%;">
-						<a style="font-size: 75px;" class="themeColor">
-							<i class="fas fa-sync-alt fa-spin"></i>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
+            <div *ngIf="!reloading">
+                <div class="treeDropDown">
+                    <div style="width: 100%; height: 400px; overflow-y: auto">
+                        <mdm-folders-tree
+                            doNotMakeSelectedBold="true"
+                            doNotShowDataClasses="true"
+                            doNotShowTerms="true"
+                            defaultCheckedMap="true"
+                            showCheckboxFor="['DataModel','Terminology']"
+                            propagateCheckbox="true"
+                            [node]="folders"
+                            tree-name="'folders'"
+                            (nodeCheckedEvent)="onNodeChecked($event[0])"></mdm-folders-tree>
+                        <!--accepts="['DataModel','Terminology']"-->
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100px" *ngIf="reloading">
+                <div style="width: 100%;height: 100%;" class="treeWaitingSpinner">
+                    <div style="position: absolute;top:70%;left:40%;">
+                        <a style="font-size: 75px;" class="themeColor">
+                            <i class="fas fa-sync-alt fa-spin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
-			<div *ngIf="selectedElementsCount > 0">
-				<div style="margin-bottom: 10px">
-					<h4 class="importFormStepTitle">
-						You can delete the following selected element(s) <strong>{{selectedElementsCount}}</strong> :
-					</h4>
-				</div>
-				<div *ngFor="let record of selectedElements">
-					<mdm-element-link [showTypeTitle]="true"
-									[newWindow]="true"
-									[parentDataModel]="{id:record.dataModel}"
-									[parentDataClass]="{id:record.dataClass}"
-									[element]="record"></mdm-element-link>
-				</div>
-				<div style="padding-top: 20px;">
-					<button mat-stroked-button color="warn" type="button" class="custom" style="margin-right: 10px; margin-bottom: 8px;" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">
-						<i class="far fa-trash-alt warning"></i> Delete <strong class="warning">Permanently</strong>
-					</button>
+        <div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
+            <div *ngIf="selectedElementsCount > 0">
+                <div class="mb-1">
+                    <h4>You can delete the following selected element(s) <strong>{{selectedElementsCount}}</strong> :
+                    </h4>
+                </div>
+                <div *ngFor="let record of selectedElements">
+                    <mdm-element-link [showTypeTitle]="true"
+                                      [newWindow]="true"
+                                      [parentDataModel]="{id:record.dataModel}"
+                                      [parentDataClass]="{id:record.dataClass}"
+                                      [element]="record"></mdm-element-link>
+                </div>
+                <div style="padding-top: 20px;">
+                    <button mat-stroked-button color="warn" type="button" class="custom mr-1 mb-1" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">
+                        <i class="far fa-trash-alt warning"></i> Delete <strong class="warning">Permanently</strong>
+                    </button>
 
-					<button mat-flat-button color="warn" type="button" class="custom" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
-						<i class="far fa-trash-alt"></i> Mark as Deleted
-					</button>
+                    <button mat-flat-button color="warn" type="button" class="custom" (click)="askForSoftDelete()" [disabled]="deleteInProgress">
+                        <i class="far fa-trash-alt"></i> Mark as Deleted
+                    </button>
 
-					<span class="warning" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
-						<a style="font-size: 14px; text-decoration: none;">
-							<i class="fas fa-sync-alt fa-spin"></i> Deleting...
-						</a>
-					</span>
-					<div class="alert alert-success" style="margin-top: 10px;" *ngIf="deleteSuccessMessage">
-						{{deleteSuccessMessage}}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <span class="warning" style="margin-bottom: 3px;position: relative; margin-right:8px;" *ngIf="deleteInProgress">
+                        <i class="fas fa-sync-alt fa-spin"></i> Deleting...
+                    </span>
+                    <div class="alert alert-success" style="margin-top: 10px;" *ngIf="deleteSuccessMessage">
+                        {{deleteSuccessMessage}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

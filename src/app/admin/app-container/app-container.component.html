@@ -3,7 +3,7 @@
     <div flex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="16px">
         <div id="settings-container--left" fxFlex="18" fxFlex.md="18" fxHide.sm fxHide.xs>
             <ul class="list-group-settings">
-                <h5 class="mat-h5 marginless text-muted" style="padding-left: 16px;">Account settings</h5>
+                <h5 class="marginless pl-2 text-muted">Account settings</h5>
                 <li>
                     <a uiSref="appContainer.userArea.profile" uiSrefActive="active">
                         <i class="fas fa-id-card"></i>
@@ -25,28 +25,25 @@
             </ul>
 
             <ul class="list-group-settings" ng-show="isAdmin()">
-                <h5 class="mat-h5 marginless text-muted" style="padding-left: 16px;">Admin settings</h5>
+                <h5 class="marginless pl-2 text-muted">Admin settings</h5>
                 <li>
                     <a uiSref="appContainer.adminArea.home" uiSrefActive="active">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-
                 <li>
                     <a uiSref="appContainer.adminArea.modelManagement" uiSrefActive="active">
                         <i class="fas fa-list" aria-hidden="true"></i>
                         <span>Model management</span>
                     </a>
                 </li>
-
                 <li>
                     <a uiSref="appContainer.adminArea.emails" uiSrefActive="active">
                         <i class="fas fa-envelope" aria-hidden="true"></i>
                         <span>Emails</span>
                     </a>
                 </li>
-
                 <li>
                     <a uiSref="appContainer.adminArea.users" uiSrefActive="active">
                         <i class="fas fa-user" aria-hidden="true"></i>
@@ -56,8 +53,7 @@
                 <li>
                     <a uiSref="appContainer.adminArea.pendingUsers" uiSrefActive="active">
                         <i class="fas fa-user-clock"></i>
-                        <span>Pending users</span>
-                        <span class="badge pill-card--red" aria-hidden="false" *ngIf="pendingUsersCount > 0" style="margin-left: 6px;"> {{pendingUsersCount}} </span>
+                        <span matBadge="{{pendingUsersCount}}" matBadgeOverlap="false" matBadgeColor="warn" [matBadgeHidden]="!pendingUsersCount">Pending users</span>
                     </a>
                 </li>
                 <li>
@@ -71,7 +67,6 @@
                         <i class="fas fa-cog" aria-hidden="true"></i>
                         <span>Configuration</span>
                     </a>
-
                 </li>
             </ul>
         </div>

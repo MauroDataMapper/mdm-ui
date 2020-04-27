@@ -1,151 +1,153 @@
-<div class="mdm--shadow-block">
-    <div class="heading-container">
-        <h4 class="marginless">
-            Members
-            <span class="badge element-count" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-        </h4>
-    </div>
-    <table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped table-responsive">
-        <ng-container matColumnDef="disabled">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Status
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                <span *ngIf="!record.isNew && record.disabled" style="color: #a94442;">Disabled</span>
-                <span *ngIf="!record.isNew && !record.disabled">Active</span>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="emailAddress">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Email
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                <div *ngIf="!record.isNew">
-                    <a uiSref="appContainer.adminArea({ id: record.id })">{{record.emailAddress}}</a>
-                </div>
+<div class="heading-container">
+    <h4 class="marginless">
+        Members
+        <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+    </h4>
+</div>
+<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped table-responsive">
+    <ng-container matColumnDef="disabled">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            Status
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            <span *ngIf="!record.isNew && record.disabled" style="color: #a94442;">Disabled</span>
+            <span *ngIf="!record.isNew && !record.disabled">Active</span>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="emailAddress">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            Email
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            <div *ngIf="!record.isNew">
+                <a uiSref="appContainer.adminArea({ id: record.id })">{{record.emailAddress}}</a>
+            </div>
+            <div *ngIf="record.isNew">
+                <mdm-select
+                        [width]="'100%'"
+                        [valueType]="'dynamic'"
+                        [loadDynamicValues]="fetchUser"
+                        [minInputLength]="1"
+                        [record]="record"
+                        [idProperty]="'id'"
+                        [displayProperty]="'emailAddress'"
+                        [searchProperty]="'emailAddress'"
+                        [pagination]="pagination"
+                        (selectEvent)="onUserSelect">
+                    <div>
+                        <ng-template #lineContent let-item>
+                            <div>{{item.emailAddress}}</div>
+                        </ng-template>
+                    </div>
+                </mdm-select>
+            </div>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            First Name
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            {{record.firstName}}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            Last Name
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            {{record.lastName}}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="organisation">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            Organisation
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            {{record.organisation}}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="userRole">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            Role
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            {{ROLES[record.userRole]}}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="empty">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: right;">
+        </th>
+        <td mat-cell *matCellDef="let record; let i = index" style="max-width: 3%; width: 3%; text-align: right;">
+            <div *ngIf="parent.createdBy && parent.createdBy.id != record.id">
                 <div *ngIf="record.isNew">
-                    <mdm-select
-                            [width]="'100%'"
-                            [valueType]="'dynamic'"
-                            [loadDynamicValues]="fetchUser"
-                            [minInputLength]="1"
-                            [record]="record"
-                            [idProperty]="'id'"
-                            [displayProperty]="'emailAddress'"
-                            [searchProperty]="'emailAddress'"
-                            [pagination]="pagination"
-                            (selectEvent)="onUserSelect">
-                        <div>
-                            <ng-template #lineContent let-item>
-                                <div>{{item.emailAddress}}</div>
-                            </ng-template>
-                        </div>
-                    </mdm-select>
+                    <button mat-stroked-button
+                            color="warn"
+                            type="button"
+                            class="paddingless"
+                            matTooltip="Cancel edit"
+                            aria-label="Cancel edit"
+                            (click)="cancelEdit(record, i)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <button mat-button
+                            color="accent"
+                            type="submit"
+                            matTooltip="Confirm member"
+                            aria-label="Confirm member"
+                            (click)="confirmAddMember(record, i)">
+                        <i class="fas fa-check"></i>
+                    </button>
                 </div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="firstName">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                First Name
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{record.firstName}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="lastName">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Last Name
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{record.lastName}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="organisation">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Organisation
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{record.organisation}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="userRole">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Role
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{ROLES[record.userRole]}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="empty">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: right;">
-            </th>
-            <td mat-cell *matCellDef="let record; let i = index" style="max-width: 3%; width: 3%; text-align: right;">
-                <div *ngIf="parent.createdBy && parent.createdBy.id != record.id">
-                    <div *ngIf="record.isNew">
-                        <button mat-stroked-button
-                                color="warn"
-                                type="button"
-                                class="paddingless"
-                                (click)="cancelEdit(record, i)">
-                            <i class="fas fa-times cancelEditButton"></i>
-                        </button>
+                <div *ngIf="!record.isNew">
+                    <button mat-stroked-button
+                            color="warn"
+                            *ngIf="!record.deletePending"
+                            type="button"
+                            matTooltip="Remove from Group"
+                            aria-label="Remove from Group"
+                            (click)="removeMember(record)">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+
+                    <div *ngIf="record.deletePending">
+                      <small>Are you sure?</small>
+                        <!-- Confirm Delete -->
                         <button mat-button
-                                color="accent"
-                                type="submit"
-                                (click)="confirmAddMember(record, i)">
+                            type="button"
+                            color="accent"
+                            matTooltip="Confirm removal"
+                            aria-label="Confirm removal"
+                            class="block"
+                            (click)="confirmRemove(record,i)">
                             <i class="fas fa-check"></i>
                         </button>
-                    </div>
-                    <div *ngIf="!record.isNew">
-                        <button mat-stroked-button
-                                color="warn"
-                                *ngIf="!record.deletePending"
-                                type="button"
-                                matTooltip="Remove from Group"
-                                (click)="removeMember(record)">
-                            <i class="far fa-trash-alt"></i>
+                        <!-- Cancel Delete-->
+                        <button mat-button
+                            type="button"
+                            color="warn"
+                            matTooltip="Cancel edit"
+                            aria-label="Cancel edit"
+                            class="block"
+                            (click)="cancelRemove(record)">
+                            <i class="fas fa-times"></i>
                         </button>
-
-                        <div  *ngIf="record.deletePending"  style="font-size: 11px;">Are you sure?</div>
-                        <div>
-                            <!-- Confirm Delete -->
-                            <button mat-button
-                                type="button"
-                                color="accent"
-                                *ngIf="record.deletePending"
-                                (click)="confirmRemove(record,i)">
-                                <i class="fas fa-check editButton"></i>
-                            </button>
-                        </div>
-
-                        <div>
-                            <!-- Cancel Delete-->
-                            <button mat-button
-                                type="button"
-                                color="warn"
-                                *ngIf="record.deletePending"
-                                (click)="cancelRemove(record)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-
                     </div>
+
                 </div>
-                <div style="font-style: italic;" *ngIf="parent.createdBy && parent.createdBy.id == record.id">
-                    <small>Owner</small>
-                </div>
-            </td>
-        </ng-container>
+            </div>
+            <div style="font-style: italic;" *ngIf="parent.createdBy && parent.createdBy.id == record.id">
+                <small>Owner</small>
+            </div>
+        </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-    </table>
-
-    <mat-card *ngIf="isLoadingResults" style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
-        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-    </mat-card>
-    <div class="mdm--mat-pagination">
-        <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
-    </div>
+<mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</mat-card>
+<div class="mdm--mat-pagination">
+    <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

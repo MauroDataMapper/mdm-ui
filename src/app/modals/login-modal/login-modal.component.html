@@ -4,7 +4,7 @@
     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
     {{message}}
   </div>
-    <p class="mdm--block text-center">Please log in to continue using our Catalogue</p>
+    <p class="mb-2 text-center">Please log in to continue using our Catalogue</p>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
@@ -17,7 +17,7 @@
             <input matInput type="password" name="password" [(ngModel)]='password' autocomplete="on" placeholder="Enter your password" required>
         </mat-form-field>
     </div>
-    <div class="mdm--block text-center">
+    <div class="mb-2 text-center">
         <button (click)="login()" mat-flat-button class="custom mdm--form-button" color="primary"> Log in </button>
     </div>
     <div class="text-center marginless">

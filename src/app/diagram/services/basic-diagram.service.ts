@@ -6,6 +6,7 @@ import graphlib from 'graphlib';
 import { ResourcesService } from '../../services/resources.service';
 import { MessageHandlerService } from '../../services/utility/message-handler.service';
 import { LayoutConfigOptions } from '@angular/flex-layout';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'

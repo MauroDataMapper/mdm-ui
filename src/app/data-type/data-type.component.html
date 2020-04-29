@@ -1,8 +1,8 @@
-<div style="width: 100%">
+<div class="full-width">
   <mdm-data-type-detail *ngIf="dataType" [hideEditButton]="true" [mcDataTypeObject]="dataType" [mcParentDataModel]="dataModel" [openEditForm]="openEditForm"></mdm-data-type-detail>
 </div>
 
-<div style="width: 100%" *ngIf="dataType && dataType.domainType == 'EnumerationType'">
+<div class="full-width" *ngIf="dataType && dataType.domainType == 'EnumerationType'">
   <div style="width:100%; margin-bottom: 45px;">
     <mdm-mc-enumeration-list-with-category [parent]="dataType" [type]="'static'" [enumerationValues]="dataType.enumerationValues"></mdm-mc-enumeration-list-with-category>
   </div>
@@ -12,14 +12,14 @@
   <mat-tab-group #tab>
     <mat-tab label="Properties">
       <ng-template matTabContent>
-        <div style="width: 100%;">
+        <div class="full-width">
           <mdm-data-set-metadata *ngIf="dataType" [parent]="dataType" [type]="'dynamic'"></mdm-data-set-metadata>
         </div>
       </ng-template>
     </mat-tab>
     <mat-tab label="Data Elements">
       <ng-template matTabContent>
-        <div style="width: 100%;" *ngIf="dataType">
+        <div class="full-width" *ngIf="dataType">
           <mdm-element-child-data-elements-list [parentDataModel]="dataModel" [parentDataType]="dataType"
             [type]="'dynamic'" [loadingData]="loadingData"></mdm-element-child-data-elements-list>
         </div>
@@ -27,21 +27,21 @@
     </mat-tab>
     <mat-tab label="Comments">
       <ng-template matTabContent>
-        <div style="width: 100%;">
+        <div class="full-width">
           <mdm-annotation-list *ngIf="dataType" [parent]="dataType"></mdm-annotation-list>
         </div>
       </ng-template>
     </mat-tab>
     <mat-tab label="Links">
       <ng-template matTabContent>
-        <div style="width: 100%;">
+        <div class="full-width">
           <mdm-element-link-list *ngIf="dataType" [parent]="dataType"></mdm-element-link-list>
         </div>
       </ng-template>
     </mat-tab>
     <mat-tab label="Attachments">
       <ng-template matTabContent>
-        <div style="width: 100%;">
+        <div class="full-width">
           <mdm-attachment-list *ngIf="dataType" [parent]="dataType"></mdm-attachment-list>
         </div>
       </ng-template>

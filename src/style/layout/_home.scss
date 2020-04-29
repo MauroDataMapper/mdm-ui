@@ -1,5 +1,4 @@
 .bdi--hero-header {
-  margin-bottom: 32px;
   padding: 0 16px 24px 16px;
   h3:first-child {
     margin-top: 72px;
@@ -7,16 +6,11 @@
       margin-top: 0px;
     }
   }
-  .bdi--hero-header--image {
-    margin-top: 32px;
+  .bdi--hero-header__image {
     img {
-      // width: 100%;
       @include respond-to(960px) {
         width: 50%;
       }
-      // @include respond-to($tablet) {
-      //   display: none;
-      // }
     }
   }
 }
@@ -24,10 +18,8 @@
 .feature-icon {
   @include size(80px, 80px);
   border-radius: 100%;
-  line-height: 5.2;
+  line-height: 5.6;
   display: inline-block;
-  margin-bottom: 16px;
-  margin-top: 32px;
 
   &.feature-icon--3 {
     background-color: rgba(234, 172, 48, 0.1);

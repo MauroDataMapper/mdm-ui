@@ -6,7 +6,7 @@ describe('ObjectEnhancerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ObjectEnhancerService = TestBed.get(ObjectEnhancerService);
+    const service: ObjectEnhancerService = TestBed.inject(ObjectEnhancerService);
     expect(service).toBeTruthy();
   });
 });

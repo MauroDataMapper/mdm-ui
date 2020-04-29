@@ -6,7 +6,7 @@ describe('PropertyRenamingService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: PropertyRenamingService = TestBed.get(PropertyRenamingService);
+    const service: PropertyRenamingService = TestBed.inject(PropertyRenamingService);
     expect(service).toBeTruthy();
   });
 });

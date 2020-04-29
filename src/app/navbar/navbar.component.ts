@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
   HDFLink: any;
   sideNav: any;
   pendingUsersCount = 0;
+  isAdmin = this.securityHandler.isAdmin();
 
   constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService) { }
 

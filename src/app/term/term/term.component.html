@@ -1,68 +1,55 @@
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-        <div style="width: 100%">
-            <mdm-term-details [afterSave]="afterSave"
-                          [openEditForm]="openEditForm"></mdm-term-details>
+<div class="full-width">
+    <mdm-term-details [afterSave]="afterSave"
+                    [openEditForm]="openEditForm"></mdm-term-details>
+</div>
+
+<div *ngIf="term && term.semanticLinks && term.semanticLinks.length > 0">
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>Links</strong></div>
+        <div class="panel-body" style="padding-top: 5px !important;">
+            <mdm-all-links-in-paged-list
+                    [showLoadingSpinner]="true"
+                    [parent]="term"
+                    [showDescription]="true"
+                    [showNoLinksMessage]="true"
+                    [type]="'static'">
+            </mdm-all-links-in-paged-list>
         </div>
-
-
-        <div *ngIf="term && term.semanticLinks && term.semanticLinks.length > 0">
-            <div class="panel panel-default">
-                <div class="panel-heading"><strong>Links</strong></div>
-                <div class="panel-body" style="padding-top: 5px !important;">
-                    <mdm-all-links-in-paged-list
-                            [showLoadingSpinner]="true"
-                            [parent]="term"
-                            [showDescription]="true"
-                            [showNoLinksMessage]="true"
-                            [type]="'static'">
-                    </mdm-all-links-in-paged-list>
-                </div>
-            </div>
-        </div>
-
-
-        <div *ngIf="hasResult">
-            <mdm-term-relationships [term]="result" type="'dynamic'"></mdm-term-relationships>
-        </div>
-
-
-    </div>
-
-    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-        <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-
-            <mat-tab label="Properties">
-                <ng-template matTabContent>
-                    <div style="width: 100%;">
-                        <mdm-data-set-metadata *ngIf="term" [parent]="term" [type]="'dynamic'"></mdm-data-set-metadata>
-                    </div>
-                </ng-template>
-            </mat-tab>
-
-            <mat-tab label="Comments">
-                <ng-template matTabContent>
-                    <div style="width: 100%;">
-                        <mdm-annotation-list *ngIf="term" [parent]="term"></mdm-annotation-list>
-                    </div>
-                </ng-template>
-            </mat-tab>
-
-            <mat-tab label="Links">
-                <ng-template matTabContent>
-                    <div style="width: 100%;">
-                        <mdm-element-link-list *ngIf="term" [parent]="term"></mdm-element-link-list>
-                    </div>
-                </ng-template>
-            </mat-tab>
-            <mat-tab label="Attachments">
-                <ng-template matTabContent>
-                    <div style="width: 100%;">
-                        <mdm-attachment-list *ngIf="term" [parent]="term"></mdm-attachment-list>
-                    </div>
-                </ng-template>
-            </mat-tab>
-
-        </mat-tab-group>
     </div>
 </div>
+
+<div *ngIf="hasResult">
+    <mdm-term-relationships [term]="result" type="'dynamic'"></mdm-term-relationships>
+</div>
+
+<mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+
+    <mat-tab label="Properties">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-data-set-metadata *ngIf="term" [parent]="term" [type]="'dynamic'"></mdm-data-set-metadata>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Comments">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-annotation-list *ngIf="term" [parent]="term"></mdm-annotation-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Links">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-element-link-list *ngIf="term" [parent]="term"></mdm-element-link-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Attachments">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-attachment-list *ngIf="term" [parent]="term"></mdm-attachment-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

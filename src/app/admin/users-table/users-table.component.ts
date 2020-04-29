@@ -5,8 +5,7 @@ import { merge, Observable, from } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { StateHandlerService } from '../../services/handlers/state-handler.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import {MdmPaginatorComponent} from "../../shared/mdm-paginator/mdm-paginator";
+import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-users-table',

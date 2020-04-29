@@ -64,7 +64,6 @@
                             name="domainType"
                             [(ngModel)]="domainType"
                             (ngModelChange)="applyMatSelectFilter($event, 'domainType')">
-                    <mat-option></mat-option>
                     <mat-option [value]="dt" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
                 </mat-select>
             </div>
@@ -73,7 +72,7 @@
             <div>
                 {{allDataTypesMap[record.domainType]["displayLabel"]}}
             </div>
-            <div style="width: 100%;">
+            <div class="full-width">
                 <mdm-element-data-type [elementDataType]="record" [hideName]="true" [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
             </div>
         </td>

@@ -129,22 +129,24 @@ $bdi-theme: mat-light-theme(
   $bdi-theme-warn
 );
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 @include angular-material-theme($bdi-theme);
 
 /* import custom styling */
+/* Abstracts */
+@import "style/abstracts/variables";
+@import "style/abstracts/mixins";
+@import "style/abstracts/helpers";
+
 @import "style/main";
-@import "style/variables";
-@import "style/mixins";
-@import "style/helpers";
 @import "style/default";
-@import "style/header";
-@import "style/home";
-@import "style/forms";
-@import "style/modal";
-@import "style/admin";
-@import "style/browse";
-@import "style/tree";
-@import "style/footer";
+/* Components */
+@import "style/components/header";
+@import "style/components/footer";
+@import "style/components/forms";
+@import "style/components/table";
+@import "style/components/modal";
+/* Layouts */
+@import "style/layout/home";
+@import "style/layout/admin";
+@import "style/layout/browse";
+@import "style/layout/tree";

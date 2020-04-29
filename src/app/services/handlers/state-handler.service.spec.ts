@@ -49,7 +49,7 @@ describe('StateHandlerService', () => {
   });
 
   it('should be created', () => {
-    const handlerService = TestBed.get(StateHandlerService);
+    const handlerService = TestBed.inject(StateHandlerService);
     expect(handlerService).toBeTruthy();
   });
 
@@ -58,7 +58,7 @@ describe('StateHandlerService', () => {
    * reload and that no arguments are passed.
    */
   it('should reload', () => {
-    const handlerService = TestBed.get(StateHandlerService);
+    const handlerService = TestBed.inject(StateHandlerService);
 
     handlerService.reload();
     expect(spyRouter.stateService.reload).toHaveBeenCalledWith();
@@ -68,7 +68,7 @@ describe('StateHandlerService', () => {
    * Getting a Url for a folder.
    */
   it('should get folder url', () => {
-    const handlerService = TestBed.get(StateHandlerService);
+    const handlerService = TestBed.inject(StateHandlerService);
 
     currentText = '';
     const result = handlerService.getURL('folder', null);
@@ -80,7 +80,7 @@ describe('StateHandlerService', () => {
    * The handler responds to a request for a simple app result.
    */
   it('should get simple app result', () => {
-    const handlerService = TestBed.get(StateHandlerService);
+    const handlerService = TestBed.inject(StateHandlerService);
 
     const params = {
       mode: 'notAdvanced',
@@ -103,7 +103,7 @@ describe('StateHandlerService', () => {
    * Unknown result, expect the name passed into become the result.
    */
   it('should get unknown', () => {
-    const handlerService = TestBed.get(StateHandlerService);
+    const handlerService = TestBed.inject(StateHandlerService);
     currentText = '';
     const name = 'Fjord defect';
     const result = handlerService.getURL(name, null);

@@ -1,5 +1,5 @@
 <div *ngIf="model.createType == 'new'">
-    <form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
+    <form #myForm="ngForm" ngNativeValidate class="mdm--form full-width">
         <div>Parent Data Class:</div>
         <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
 
@@ -17,7 +17,7 @@
         </div>
 
         <div class="mdm--form-input">
-            <label>Multiplicity</label>
+            <span>Multiplicity</span>
             <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
             <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
                 <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">

@@ -5,9 +5,8 @@ import {ResourcesService} from '../../services/resources.service';
 import {MessageHandlerService} from '../../services/utility/message-handler.service';
 import {ValidatorService} from '../../services/validator.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
-import {MdmPaginatorComponent} from "../../shared/mdm-paginator/mdm-paginator";
+import {MdmPaginatorComponent} from '../../shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',

@@ -56,7 +56,7 @@ describe('RestHandlerService', () => {
         withCredentials: true,
       };
     }
-    const service: RestHandlerService = TestBed.get(RestHandlerService);
+    const service: RestHandlerService = TestBed.inject(RestHandlerService);
 
     let somethingHappened = false;
     errorCode = errorNumber;
@@ -84,7 +84,7 @@ describe('RestHandlerService', () => {
   }
 
   it('should be created', () => {
-    const service: RestHandlerService = TestBed.get(RestHandlerService);
+    const service: RestHandlerService = TestBed.inject(RestHandlerService);
     expect(service).toBeTruthy();
   });
 
@@ -119,7 +119,7 @@ describe('RestHandlerService', () => {
   }));
 
   it('should object to missing credentials', () => {
-    const service: RestHandlerService = TestBed.get(RestHandlerService);
+    const service: RestHandlerService = TestBed.inject(RestHandlerService);
 
     const options: any = { };
     expect(() => service.restHandler(options)).toThrowError();

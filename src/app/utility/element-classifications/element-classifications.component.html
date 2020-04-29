@@ -1,16 +1,18 @@
 <div mdmProperties [classifiers]="editableForm[property]" *ngIf="(!editableForm.visible)">
     <div *ngFor="let path of classifications">
         <div style="float: left;">
-            <ul class="breadcrumbClassification">
-                <li>
-                    <span ng-show="!editable || !editable.$visible">
-                        <a href="{{path.link}}" target="{{target}}" >
-                            <span>{{path.label}} </span>
-                            <i class="fas fa-tags" aria-hidden="false"></i>
-                        </a>
-                </span>
-                </li>
-            </ul>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <span ng-show="!editable || !editable.$visible">
+                            <a href="{{path.link}}" target="{{target}}" >
+                                <span>{{path.label}} </span>
+                                <i class="fas fa-tags" aria-hidden="false"></i>
+                            </a>
+                        </span>
+                    </li>
+                </ol>
+            </nav>
         </div>
     </div>
 </div>

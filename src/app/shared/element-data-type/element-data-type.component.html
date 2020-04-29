@@ -22,7 +22,7 @@
             <tbody>
                 <ng-container *ngFor="let record of allRecordsWithGroups; let i = index">
                     <tr *ngIf="!record.isCategoryRow || (record.isCategoryRow && hasCategory)"  [ngClass]="{'moreEnumerationKeyValue': i >= showCount,'hiddenMoreEnumerationKeyValue': i >= showCount}" >
-                        <td style="width: 100%" *ngIf="hasCategory && record.isCategoryRow" [attr.colspan]="(hasCategory && record.isCategoryRow) ? 3 : 1">
+                        <td class="full-width" *ngIf="hasCategory && record.isCategoryRow" [attr.colspan]="(hasCategory && record.isCategoryRow) ? 3 : 1">
                             <div *ngIf="record.isCategoryRow" style="font-weight: bold; font-style: italic;">
                                 {{record.category}}
                             </div>

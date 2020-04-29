@@ -33,7 +33,7 @@
             <h4 class="mat-h4 marginless">Additional details:</h4>
 
             <div [ngClass]="{'form-group':true, 'has-error': errors && errors.label }">
-                <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Data Model name</mat-label>
                     <input matInput [(ngModel)]="form.label" [disabled]="processing" required>
                     <mat-hint>The name should be different from the current version name '{{dataModel.label}}'</mat-hint>
@@ -48,9 +48,9 @@
                     Copy Permissions
                 </mat-checkbox>
                 <span class="help-block" *ngIf="errors && errors.copyPermissions"><small>{{errors.copyPermissions}}</small></span>
-                <div class="step-description">
+                <small class="block">
                     If checked, all read/write permissions for users and groups of this Data Model will be copied to the new Data Model.
-                </div>
+                </small>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                 Copy DataFlows
             </mat-checkbox>
             <span class="help-block" *ngIf="errors && errors.copyDataFlows"><small>{{errors.copyDataFlows}}</small></span>
-            <div class="step-description">If checked, all Dataflows which this Data Model is a target of, will be copied to the new Data Model version.</div>
+            <small class="block">If checked, all Dataflows which this Data Model is a target of, will be copied to the new Data Model version.</small>
         </div>
     </div>
 

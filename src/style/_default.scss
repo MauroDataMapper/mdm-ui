@@ -8,9 +8,7 @@ body, mdm-root {
 main {
   flex: 1 0 auto;
 }
-mdm-footer {
-  flex-shrink: 0;
-}
+
 strong {
   font-weight: 600;
 }
@@ -23,34 +21,25 @@ ol li, ul li {
     width: 1600px;
   }
 }
-.mdm--container-hd {
-  max-width: 1800px;
-  margin: auto;
-}
 .container {
   @include respond-to(992px) {
     max-width: 100%;
     width: 100%;
   }
 }
+.mdm--container-hd {
+  max-width: 1800px;
+  margin: auto;
+}
+
 label {
-  @include font(20px, 500);
+  @include font(20px, 600);
   margin-bottom: 0;
 }
 em {
   font-style: oblique;
 }
-table.mat-table .mat-header-cell {
-  font-size: $defaultFontSize;
-  font-weight: 500;
-}
-table.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #fcfcfd;
-}
-.highlight {
-  background-color: #FCFCFC;
-  padding: 24px 0;
-}
+
 a.show-more, a.show-less {
   color: $defaultLinkColour;
   text-decoration:none;
@@ -90,21 +79,10 @@ hr {
 mat-progress-bar.mat-progress-bar.mat-primary {
   margin-top: 16px;
 }
-.step-description {
-  font-size: 13px;
-  line-height: 1.5;
-}
+
 .fa.fa-remove:before {
   content: "\f2ed";
 }
-
-
-tr td, tr th,
-tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
-  padding: 0.75em;
-  border-bottom: .07rem solid #ebedf2;
-}
-
 
 .input-group > .custom-select:not(:last-child), .input-group > .form-control:not(:last-child) {
   border-radius: 5px;
@@ -112,28 +90,6 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
 
 
 /* Breadcrumbs */
-
-.breadcrumbSimple {
-  padding: 2px 2px;
-  margin-bottom: 2px;
-  list-style: none;
-  font-size: 12px;
-  font-style: italic;
-}
-.breadcrumbSimple > li {
-  display: inline-block;
-}
-.breadcrumbSimple > li + li:before {
-  padding: 0px 1px 0px 1px;
-  color: #ccc;
-  content: "/";
-  margin-left: 4px;
-  margin-right: 4px;
-}
-.breadcrumbSimple > .active {
-  color: #777;
-}
-
 .breadcrumbClassification.emptyBackground {
   background-color: transparent !important;
 }
@@ -183,13 +139,6 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
     padding: 20px;
     border: 1px solid #f3f3f3;
   }
-
-  table td {
-    border: 0.07rem solid #ebedf2;
-  }
-  .detailsRowHeader {
-    background-color: #f9f9f9
-  }
 }
 
 .mat-badge-medium.mat-badge-above .mat-badge-content {
@@ -198,19 +147,47 @@ tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
 }
 
 .mdm--element-count {
-  font-style: italic;
-  font-weight: normal !important;
   background-color: #777777 !important;
   margin: 0px 3px;
 }
 .mdm--badge {
   display: inline-block;
-  padding: .25em .4em;
-  font-size: 75%;
+  padding: 5px 9px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
   border-radius: .25rem;
+  font-style: normal;
+}
+
+a {
+  color: #337ab7;
+}
+
+.breadcrumb {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: .5rem .75rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: #e9ecef;
+  border-radius: .25rem;
+  margin-bottom: 0;
+}
+
+.loading-spinner {
+  @include size();
+  div {
+    position: absolute;
+    top:70%;
+    left:40%;
+  }
+  i {
+    font-size: 75px;
+  }
 }

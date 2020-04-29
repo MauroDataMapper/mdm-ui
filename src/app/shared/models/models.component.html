@@ -7,7 +7,7 @@
                 </ng-template>
                 <div style="margin-top: 2px;">
                     <div style="position: relative;">
-                        <div style="width: 100%; float: left;">
+                        <div style="float: left;" class="full-width">
                             <div class="input-group">
                                 <input type="search" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" [disabled]="levels.current === 1" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)">
 
@@ -101,11 +101,9 @@
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
                                         (nodeClickEvent)="onNodeClick($event)"></mdm-folders-tree>
                     </div>
-                    <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" *ngIf="reloading">
-                        <div style="position: absolute;top:30%;left:40%;">
-                            <a style="font-size: 75px;">
-                                <i class="fas fa-sync-alt fa-spin"></i>
-                            </a>
+                    <div class="loading-spinner" *ngIf="reloading">
+                        <div>
+                            <i class="fas fa-sync-alt fa-spin"></i>
                         </div>
                     </div>
 
@@ -141,7 +139,7 @@
                 </ng-template>
                 <div style="margin-top: 2px;">
                     <div>
-                        <div style="width: 100%; float: left;">
+                        <div style="float: left;" class="full-width">
                             <div class="input-group">
                                 <input type="text" class="form-control outlined-input" [(ngModel)]="formData.ClassificationFilterCriteria" placeholder="Search classifications..." (ngModelChange)="filterClassifications()">
                                 <span class="tree-top-actions">

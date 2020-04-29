@@ -8,11 +8,10 @@
 .required, .danger, .warning {
   color: #a5122a;
 }
-.badge {
-  padding: 5px 9px;
-  font-size: 15px;
-  font-style: normal;
+.text-muted {
+  color: #4F575F!important;
 }
+
 button.custom {
   padding: 7px 16px;
   @include respond-to($mobile-xs) {
@@ -25,6 +24,10 @@ button.custom {
       border: 1px solid #fff;
     }
   }
+}
+.highlight {
+  background-color: #FCFCFC;
+  padding: 24px 0;
 }
 .block {
   display: block;

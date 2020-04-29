@@ -1,0 +1,25 @@
+table.mat-table .mat-header-cell {
+    font-size: $defaultFontSize;
+    font-weight: 500;
+}
+
+table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fcfcfd;
+}
+
+table td {
+    border: 0.07rem solid #ebedf2;
+}
+
+tr td,
+tr th,
+tr td.mat-cell,
+tr td.mat-footer-cell,
+tr th.mat-header-cell {
+    padding: 0.75em;
+    border-bottom: .07rem solid #ebedf2;
+}
+
+.detailsRowHeader {
+    background-color: #f9f9f9
+}

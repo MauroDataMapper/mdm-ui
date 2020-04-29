@@ -1,4 +1,4 @@
-<div style="width: 100%">
+<div class="full-width">
     <mdm-data-class-details [afterSave]="afterSave"></mdm-data-class-details>
 </div>
 <div *ngIf="showSearch">
@@ -38,7 +38,7 @@
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Content">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-content-table *ngIf="dataClass" [parentDataModel]="parentDataModel"
                         [parentDataClass]="dataClass" [grandParentDataClass]="parentDataClass">
                     </mdm-content-table>
@@ -47,7 +47,7 @@
         </mat-tab>
         <mat-tab label="Properties">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'">
                     </mdm-data-set-metadata>
                 </div>
@@ -55,21 +55,21 @@
         </mat-tab>
         <mat-tab label="Comments">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass"></mdm-annotation-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Links">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass"></mdm-element-link-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Summary">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass">
                     </mdm-summary-metadata-table>
                 </div>
@@ -77,7 +77,7 @@
         </mat-tab>
         <mat-tab label="Attachments">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"></mdm-attachment-list>
                 </div>
             </ng-template>

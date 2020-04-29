@@ -1,6 +1,6 @@
 <div *ngIf="model">
     <div *ngIf="model.createType == 'new'">
-        <form #myForm="ngForm" ngNativeValidate class="mdm--form" style="max-width: 100%;">
+        <form #myForm="ngForm" ngNativeValidate class="mdm--form full-width">
             <div>Parent Data Class:</div>
             <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
             <div class="mdm--form-input">
@@ -18,7 +18,7 @@
             </div>
 
             <div class="mdm--form-input">
-                <label>Multiplicity</label>
+                <span class="block">Multiplicity</span>
                 <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
                 <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
                     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
@@ -40,16 +40,14 @@
                 <span *ngIf="multiplicityError">{{multiplicityError}}</span>
             </div>
 
-            <label>Data Type *</label>
+            <span class="block">Data Type *</span>
             <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
                 <mdm-element-data-type [elementDataType]="model.dataType" [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
             </div>
 
             <div *ngIf="model.allDataTypesCount === 0">
-                <label>
-                    No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.
-                    <br>Please enter Data Type details:
-                </label>
+                No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.
+                <br>Please enter Data Type details:
             </div>
 
             <div *ngIf="model.allDataTypesCount != 0" class="mb-2">

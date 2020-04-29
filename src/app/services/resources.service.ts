@@ -645,15 +645,8 @@ class DataModel {
   export(dataModels, exporter, contentType) {
     if (dataModels && dataModels.length === 1) {
 
-      const url = '/dataModels/' +
-        dataModels[0].id +
-        '/export/' +
-        exporter.namespace +
-        '/' +
-        exporter.name +
-        '/' +
-        exporter.version;
-      return this.resourcesService.exportGet(dataModels, exporter, contentType, url);
+      const URL = `/dataModels/${dataModels[0].id}/export/${exporter.namespace}/${exporter.name}/${exporter.version}`;
+      return this.resourcesService.exportGet(dataModels, exporter, contentType, URL);
       //
       //  var deferred;
       // // deferred = $q.defer();
@@ -671,7 +664,7 @@ class DataModel {
       //  });
       //  return deferred.promise;
     }
-    const url = '/dataModels/export/' + exporter.namespace + '/' + exporter.name + '/' + exporter.version;
+    const url = `/dataModels/export/${exporter.namespace}/${exporter.name}/${exporter.version}`;
 
     return this.resourcesService.exportPost(dataModels, exporter, contentType, url);
     //  var deferred;

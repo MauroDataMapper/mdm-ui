@@ -1,11 +1,11 @@
-<div style="width: 100%">
+<div class="full-width">
     <mdm-code-set-details></mdm-code-set-details>
 </div>
 <div>
     <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Terms">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-code-set-terms-table *ngIf="codeSetModel" [codeSet]="codeSetModel" [type]="'dynamic'"></mdm-code-set-terms-table>
                 </div>
             </ng-template>
@@ -13,7 +13,7 @@
 
         <mat-tab label="Properties">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-data-set-metadata *ngIf="codeSetModel" [parent]="codeSetModel" [type]="'dynamic'"></mdm-data-set-metadata>
                 </div>
             </ng-template>
@@ -21,14 +21,14 @@
 
         <mat-tab label="Comments">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-annotation-list *ngIf="codeSetModel" [parent]="codeSetModel"></mdm-annotation-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="History">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></mdm-history>
                 </div>
             </ng-template>
@@ -36,14 +36,14 @@
 
         <mat-tab label="Links">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-element-link-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Attachments">
             <ng-template matTabContent>
-                <div style="width: 100%;">
+                <div class="full-width">
                     <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-attachment-list>
                 </div>
             </ng-template>

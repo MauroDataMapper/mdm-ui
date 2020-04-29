@@ -33,7 +33,7 @@
         <textarea *ngIf="editableForm.visible" 
                   [(ngModel)]="editableForm[property]" 
                   name="{{ property }}" 
-                  style="width: 100%;" 
+                  class="full-width" 
                   rows="{{ rows ? rows : '8' }}" 
                   class="form-control outlined-block"
                   #editableTextArea

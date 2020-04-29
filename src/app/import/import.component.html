@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="step-description">{{option.description}}</div>
+                <small class="block">{{option.description}}</small>
                 <div class="has-error">
                     <div *ngIf="userForm.form.get(option.name)?.errors?.number && option.type == 'Integer'">
                         <span class="control-label">This is not a valid number.</span>
@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-        <div style="width: 100%;">
+        <div class="full-width">
             <div *ngIf="importingInProgress">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>

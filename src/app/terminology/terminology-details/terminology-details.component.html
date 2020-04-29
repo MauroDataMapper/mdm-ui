@@ -20,12 +20,15 @@
                             <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
                         </div>
                     </div>
-                    <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                        <span class="help-block">{{errorMessage}}</span>
-                    </div>
                 </div>
 
                 <div class="detail-icons">
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-cube" matTooltip="Item type"></i>
+                            <span><strong>Item type: </strong><span class="item-type">Terminology</span></span>
+                        </small>
+                      </div>
                     <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
                         <small>
                             <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
@@ -43,8 +46,7 @@
                     <div class="text-muted" *ngIf="mcTerminology">
                         <small>
                             <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                            <span><strong>Last update: </strong>
-                                {{mcTerminology.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                            <span><strong>Last update: </strong>{{mcTerminology.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
                         </small>
                     </div>
 

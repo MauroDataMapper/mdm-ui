@@ -17,7 +17,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {ElementTypesService} from '../../services/element-types.service';
 import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {MdmPaginatorComponent} from "../mdm-paginator/mdm-paginator";
+import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
 
 
 @Component({

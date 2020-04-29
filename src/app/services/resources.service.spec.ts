@@ -30,7 +30,7 @@ describe('ResourcesService', () => {
     });
 
     function prepareService(statusCode?: number) {
-        const service = TestBed.get(ResourcesService);
+        const service = TestBed.inject(ResourcesService);
         service.API = testURL;
 
         if (statusCode) {

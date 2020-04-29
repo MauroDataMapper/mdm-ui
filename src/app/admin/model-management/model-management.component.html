@@ -8,17 +8,15 @@
             fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
             <h4>Please select one or more element(s):</h4>
             <div class="mb-1">
-                <label id="filterElement">Filter elements by type:</label>
-                <mat-radio-group aria-label="filterElement" class="marginless" name="filterElement"
-                    [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
+                <span class="block">Filter elements by type:</span>
+                <mat-radio-group aria-label="filterElement" class="marginless" name="filterElement" [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
                     <mat-radio-button value="dataModel">Data Model</mat-radio-button>
                     <mat-radio-button value="terminology">Terminology</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div class="mb-1">
-                <label for="filterStatus">Filter element by status:</label>
-                <mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus"
-                    [disabled]="filterElement === ''" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
+                <span>Filter element by status:</span>
+                <mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus" [disabled]="filterElement === ''" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
                     <mat-radio-button value="deleted">Mark as Deleted</mat-radio-button>
                     <mat-radio-button value="documentSuperseded">Document Superseded</mat-radio-button>
                     <mat-radio-button value="modelSuperseded">Model Superseded</mat-radio-button>
@@ -43,11 +41,9 @@
                 </div>
             </div>
             <div style="height: 100px" *ngIf="reloading">
-                <div style="width: 100%;height: 100%;" class="treeWaitingSpinner">
-                    <div style="position: absolute;top:70%;left:40%;">
-                        <a style="font-size: 75px;" class="themeColor">
-                            <i class="fas fa-sync-alt fa-spin"></i>
-                        </a>
+                <div class="loading-spinner">
+                    <div>
+                        <i class="fas fa-sync-alt fa-spin"></i>
                     </div>
                 </div>
             </div>

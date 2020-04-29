@@ -6,12 +6,12 @@ describe('ValidatorService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
     expect(service).toBeTruthy();
   });
 
   it('should captalise', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
 
     expect(service.capitalize('blobert')).toEqual('Blobert');
     expect(service.capitalize('1234')).toEqual('1234');
@@ -46,7 +46,7 @@ describe('ValidatorService', () => {
 
       'tracy@[101.220.34.127]'
     ];
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
 
     for (const email of validEmails) {
       expect(service.validateEmail(email)).toBe(true);
@@ -74,7 +74,7 @@ describe('ValidatorService', () => {
     }
   });
   it('should validate date instances', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
 
     const validDates = [
       new Date('2019-09-30'),
@@ -87,7 +87,7 @@ describe('ValidatorService', () => {
     for (const value of inValidDates) { expect(service.isDate(value)).toBe(false); }
   });
   it('should identify empty strings', () => {
-    const service: ValidatorService = TestBed.get(ValidatorService);
+    const service: ValidatorService = TestBed.inject(ValidatorService);
 
     expect(service.isEmpty(null)).toBe(true);
     expect(service.isEmpty(undefined)).toBe(true);

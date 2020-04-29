@@ -20,10 +20,10 @@ export class AppComponent implements OnInit {
     this.userIdle.startWatching();
     this.userIdle.onTimerStart().subscribe();
     // Start watch when time is up.
-    let lastDigestRun = new Date();
+    let lastDigestRun: any = new Date();
     this.userIdle.onTimeout().subscribe(() => {
       console.log('Time is up!');
-      let now = new Date();
+      const now: any = new Date();
       if (now - lastDigestRun > 300000) {// 5 min
         this.sharedService.handleExpiredSession(), this.userIdle.resetTimer();
 

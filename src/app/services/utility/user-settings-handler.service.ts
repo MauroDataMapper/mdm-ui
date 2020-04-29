@@ -37,7 +37,7 @@ export class UserSettingsHandlerService {
 
     const promise = new Promise((resolve, reject) => {
     this.resources.catalogueUser
-      .get(sessionStorage.getItem('userId'), 'userPreferences', null)
+      .get(localStorage.getItem('userId'), 'userPreferences', null)
       .subscribe(
         res => {
           const result = res.body;
@@ -92,7 +92,7 @@ export class UserSettingsHandlerService {
     const defaultSettings = this.getUserSettings();
     const settingsStr = JSON.stringify(defaultSettings);
     return this.resources.catalogueUser.put(
-      sessionStorage.getItem('userId'),
+      localStorage.getItem('userId'),
       'userPreferences',
       { resource: settingsStr, contentType: 'text/plain' }
     );

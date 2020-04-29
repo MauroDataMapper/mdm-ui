@@ -209,7 +209,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     if (this.rememberExpandedStates) {
       // Init extended paths
       if (!this.expandedPaths || this.expandedPaths.length === 0) {
-        const storePaths = JSON.parse(sessionStorage.getItem('expandedPaths'));
+        const storePaths = JSON.parse(localStorage.getItem('expandedPaths'));
         this.expandedPaths = storePaths ? storePaths : [];
       }
     }
@@ -297,7 +297,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     if (this.rememberExpandedStates) {
-      sessionStorage.setItem('expandedPaths', JSON.stringify(this.expandedPaths));
+      localStorage.setItem('expandedPaths', JSON.stringify(this.expandedPaths));
     }
 
     if (!this.inSearchMode && !flatNode.children) {

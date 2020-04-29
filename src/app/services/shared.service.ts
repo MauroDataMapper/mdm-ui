@@ -55,6 +55,7 @@ export class SharedService {
     if (this.securityHandler.in_AuthLoginRequiredCheck && !firstTime) {
       return;
     }
+
     this.securityHandler.isCurrentSessionExpired().then(result => {
       if (result === true) {
         this.securityHandler.saveLatestURL(window.location.href);

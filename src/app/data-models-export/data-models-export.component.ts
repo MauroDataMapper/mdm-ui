@@ -52,7 +52,7 @@ export class DataModelsExportComponent implements OnInit {
     this.exportersList = [];
 
     this.securityHandler.isValidSession().subscribe(result => {
-      if (result === false) {
+      if (result.body === false) {
         return;
       }
       this.resources.public.dataModelExporterPlugins().subscribe(

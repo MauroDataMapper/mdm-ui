@@ -16,57 +16,61 @@ export class SecurityHandlerService {
     private stateHandler: StateHandlerService
   ) {}
 
-  removeCookie() {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('firstName');
-    sessionStorage.removeItem('lastName');
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('role');
-    sessionStorage.removeItem('needsToResetPassword');
-    sessionStorage.removeItem('userId');
+  removeLocalStorage() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
+    localStorage.removeItem('needsToResetPassword');
+    localStorage.removeItem('userId');
   }
 
-  getUserFromCookie() {
+  getUserFromLocalStorage() {
+    // if (this.isValidSession()) {
+
     if (
-      sessionStorage.getItem('username') &&
-      sessionStorage.getItem('username').length > 0
+      localStorage.getItem('username') &&
+      localStorage.getItem('username').length > 0
     ) {
       return {
-        id: sessionStorage.getItem('userId'),
-        token: sessionStorage.getItem('token'),
-        username: sessionStorage.getItem('username'),
-        email: sessionStorage.getItem('username'),
-        firstName: sessionStorage.getItem('firstName'),
-        lastName: sessionStorage.getItem('lastName'),
-        role: sessionStorage.getItem('role'),
-        needsToResetPassword: sessionStorage.getItem('needsToResetPassword')
+        id: localStorage.getItem('userId'),
+        token: localStorage.getItem('token'),
+        username: localStorage.getItem('username'),
+        email: localStorage.getItem('username'),
+        firstName: localStorage.getItem('firstName'),
+        lastName: localStorage.getItem('lastName'),
+        role: localStorage.getItem('role'),
+        needsToResetPassword: localStorage.getItem('needsToResetPassword')
       };
     }
     return null;
+  // }
+  //   return null;
   }
 
-  getEmailFromStorage() {
-    return sessionStorage.getItem('email');
+getEmailFromStorage() {
+    return localStorage.getItem('email');
   }
 
-  addToCookie(user) {
-    sessionStorage.setItem('userId', user.id);
-    sessionStorage.setItem('token', user.token);
-    sessionStorage.setItem('firstName', user.firstName);
-    sessionStorage.setItem('lastName', user.lastName);
-    sessionStorage.setItem('username', user.username);
-    sessionStorage.setItem('userId', user.id);
+addToLocalStorage(user) {
+    localStorage.setItem('userId', user.id);
+    localStorage.setItem('token', user.token);
+    localStorage.setItem('firstName', user.firstName);
+    localStorage.setItem('lastName', user.lastName);
+    localStorage.setItem('username', user.username);
+    localStorage.setItem('userId', user.id);
 
     // Keep username for 100 days
     const expireDate = new Date();
     expireDate.setDate(expireDate.getDate() + 100);
-    sessionStorage.setItem('email', user.username); // , expireDate);
-    sessionStorage.setItem('role', user.role);
-    sessionStorage.setItem('needsToResetPassword', user.needsToResetPassword);
+    localStorage.setItem('email', user.username); // , expireDate);
+    localStorage.setItem('role', user.role);
+    localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-  login(username, password) {
+login(username, password) {
     // //ignoreAuthModule: true
     // //This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // //as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
@@ -92,7 +96,7 @@ export class SecurityHandlerService {
               role: result.userRole ? result.userRole.toLowerCase() : '',
               needsToResetPassword: result.needsToResetPassword ? true : false
             };
-            this.addToCookie(currentUser);
+            this.addToLocalStorage(currentUser);
             return resolve(currentUser);
           },
           error => {
@@ -116,30 +120,44 @@ export class SecurityHandlerService {
   // })
   //       }
 
-  logout() {
+logout() {
     return this.resources.authentication
       .post('logout', null, { responseType: 'text' })
       .subscribe(result => {
-        this.removeCookie();
+        this.removeLocalStorage();
         this.stateHandler.Go('appContainer.mainApp.home');
       });
   }
 
-  expireToken() {
-    sessionStorage.removeItem('token');
+expireToken() {
+    localStorage.removeItem('token');
   }
+
+// isValidSession() {
+//      this.resources.authentication.get('isValidSession').subscribe(result => {
+//        if (result.body === false) {
+//           this.removeLocalStorage();
+//           return false;
+//        }
+//        if (result.body === true) {
+//           return true;
+//        }
+//          });
+//      return false;
+//   }
 
   isValidSession() {
     return this.resources.authentication.get('isValidSession');
   }
 
-  isLoggedIn() {
-    return this.getUserFromCookie() != null;
+
+isLoggedIn() {
+    return this.getUserFromLocalStorage() != null;
   }
 
-  isAdmin() {
+isAdmin() {
     if (this.isLoggedIn()) {
-      const user = this.getUserFromCookie();
+      const user = this.getUserFromLocalStorage();
       if (user.role === 'administrator') {
         return true;
       }
@@ -147,11 +165,11 @@ export class SecurityHandlerService {
     return false;
   }
 
-  getCurrentUser() {
-    return this.getUserFromCookie();
+getCurrentUser() {
+    return this.getUserFromLocalStorage();
   }
 
-  showIfRoleIsWritable(element) {
+showIfRoleIsWritable(element) {
     // if this app is NOT 'editable', return false
     const isEditable = environment.appIsEditable;
     if (isEditable !== null && isEditable === false) {
@@ -192,12 +210,16 @@ export class SecurityHandlerService {
     return false;
   }
 
-  isCurrentSessionExpired() {
+isCurrentSessionExpired() {
     const promise = new Promise(resolve => {
       // var deferred = $q.defer();
-      if (this.getCurrentUser()) {
+      if (this.getCurrentUser()) { // Check for valid session when getting user from local storage
         // check session and see if it's still valid
+
         this.isValidSession().subscribe(response => {
+          if (response.body === false) {
+            this.removeLocalStorage();
+          }
           resolve(!response.body);
         });
       } else {
@@ -208,17 +230,19 @@ export class SecurityHandlerService {
     return promise;
   }
 
-  saveLatestURL(url) {
-    sessionStorage.setItem('latestURL', url);
+
+
+saveLatestURL(url) {
+    localStorage.setItem('latestURL', url);
   }
-  getLatestURL() {
-    return sessionStorage.getItem('latestURL');
+getLatestURL() {
+    return localStorage.getItem('latestURL');
   }
-  removeLatestURL() {
-    sessionStorage.removeItem('latestURL');
+removeLatestURL() {
+    localStorage.removeItem('latestURL');
   }
 
-  dataModelAccess(element) {
+dataModelAccess(element) {
     return {
       showEdit: element.editable && !element.finalised,
       showNewVersion: element.editable && element.finalised,
@@ -232,7 +256,7 @@ export class SecurityHandlerService {
     };
   }
 
-  termAccess(element) {
+termAccess(element) {
     return {
       showEdit: element.editable && !element.finalised,
       showNewVersion: element.editable && element.finalised,
@@ -246,7 +270,7 @@ export class SecurityHandlerService {
     };
   }
 
-  dataElementAccess(element) {
+dataElementAccess(element) {
     return {
       showEdit: element.editable,
       showDelete: this.isAdmin(),
@@ -257,7 +281,7 @@ export class SecurityHandlerService {
     };
   }
 
-  dataClassAccess(element) {
+dataClassAccess(element) {
     return {
       showEdit: element.editable,
       showDelete: this.isAdmin(),
@@ -268,7 +292,7 @@ export class SecurityHandlerService {
     };
   }
 
-  dataTypeAccess(element) {
+dataTypeAccess(element) {
     return {
       showEdit: element.editable,
       showDelete: this.isAdmin(),
@@ -279,7 +303,7 @@ export class SecurityHandlerService {
     };
   }
 
-  datFlowAccess(dataFlow) {
+datFlowAccess(dataFlow) {
     return {
       showEdit: dataFlow.editable,
       canAddAnnotation: dataFlow.editable,
@@ -287,7 +311,7 @@ export class SecurityHandlerService {
     };
   }
 
-  elementAccess(element) {
+elementAccess(element) {
     if (
       element.domainType === 'DataModel' ||
       element.domainType === 'Terminology' ||
@@ -318,7 +342,7 @@ export class SecurityHandlerService {
     }
   }
 
-  folderAccess(folder) {
+folderAccess(folder) {
     return {
       showEdit: folder.editable,
       showPermission: folder.editable || this.isAdmin(),

@@ -17,8 +17,8 @@ export class YoutrackService {
         private sharedService: SharedService,
         private securityHandlerService: SecurityHandlerService
     ) {
-        this.username = securityHandlerService.getUserFromCookie()?.firstName + ' ' +
-            securityHandlerService.getUserFromCookie()?.lastName;
+        this.username = securityHandlerService.getUserFromLocalStorage()?.firstName + ' ' +
+            securityHandlerService.getUserFromLocalStorage()?.lastName;
     }
 
     reportIssueToYouTrack(summary: string,
@@ -44,8 +44,8 @@ export class YoutrackService {
 
         const url = this.sharedService.youTrack.url + '/api/issues';
 
-        this.username = this.securityHandlerService.getUserFromCookie()?.firstName + ' ' +
-            this.securityHandlerService.getUserFromCookie()?.lastName;
+        this.username = this.securityHandlerService.getUserFromLocalStorage()?.firstName + ' ' +
+            this.securityHandlerService.getUserFromLocalStorage()?.lastName;
 
 
         const body = {

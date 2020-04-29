@@ -25,8 +25,8 @@ export class NavbarComponent implements OnInit {
   HDFLink: any;
   sideNav: any;
   pendingUsersCount = 0;
-  isAdmin = this.securityHandler.isAdmin();
   isLoggedIn = this.securityHandler.isLoggedIn();
+  isAdmin = this.securityHandler.isAdmin();
   subscription: Subscription;
 
   constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService, private messageService: MessageService) { }
@@ -53,7 +53,6 @@ export class NavbarComponent implements OnInit {
       this.pendingUsersCount = data.body.count;
     });
   }
-
 
   login = () => {
     this.dialog.open(LoginModalComponent, {

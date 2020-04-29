@@ -166,11 +166,10 @@ a {
 }
 
 .breadcrumb {
-  display: -ms-flexbox;
-  display: flex;
+  display: inline-flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: .5rem .75rem;
+  padding: 4px 8px;
   margin-bottom: 1rem;
   list-style: none;
   background-color: #e9ecef;
@@ -188,4 +187,8 @@ a {
   i {
     font-size: 75px;
   }
+}
+
+.badge {
+  font-size: 100%;
 }

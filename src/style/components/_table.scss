@@ -1,14 +1,14 @@
 table.mat-table .mat-header-cell {
-    font-size: $defaultFontSize;
-    font-weight: 500;
+  font-size: $defaultFontSize;
+  font-weight: 500;
 }
 
 table.table-striped tbody tr:nth-of-type(odd) {
-    background-color: #fcfcfd;
+  background-color: #fcfcfd;
 }
 
 table td {
-    border: 0.07rem solid #ebedf2;
+  border: 0.07rem solid #ebedf2;
 }
 
 tr td,
@@ -16,90 +16,90 @@ tr th,
 tr td.mat-cell,
 tr td.mat-footer-cell,
 tr th.mat-header-cell {
-    padding: 0.75em;
-    border-bottom: .07rem solid #ebedf2;
+  padding: 0.75em;
+  border-bottom: .07rem solid #ebedf2;
 }
 
 .detailsRowHeader {
-    background-color: #f9f9f9
+  background-color: #f9f9f9
 }
 
 table.mdm--table {
-    table-layout: fixed;
-    width: 100%;
-    margin-bottom: 0 !important;
+  table-layout: fixed;
+  width: 100%;
+  margin-bottom: 0 !important;
 
-    td {
-        min-height: 60px;
-        vertical-align: middle !important;
-    }
+  td {
+      min-height: 60px;
+      vertical-align: middle !important;
+  }
 
-    th {
-        vertical-align: middle !important;
-    }
+  th {
+      vertical-align: middle !important;
+  }
 }
 
 td.mat-cell:last-of-type {
-    padding-right: 16px !important;
+  padding-right: 16px !important;
 }
 
 
 table.mdm--table-responsive {
-    border: 1px solid #ccc;
+  border: 1px solid #ccc;
 
-    tr {
-        border: 1px solid #f3f3f3;
-        padding: .35em;
-    }
+  tr {
+      border: 1px solid #f3f3f3;
+      padding: .35em;
+  }
 
-    td,
-    th {
-        padding: .5em;
-    }
+  td,
+  th {
+      padding: .5em;
+  }
 
-    .mdm--td-cell {
-        display: none;
-    }
+  .mdm--td-cell {
+      display: none;
+  }
 
-    @include respond-to($desktop) {
-        border: 0;
+  @include respond-to($desktop) {
+      border: 0;
 
-        &.table-stripped tbody tr:nth-of-type(odd) {
-            background-color: #fff;
-        }
+      &.table-stripped tbody tr:nth-of-type(odd) {
+          background-color: #fff;
+      }
 
-        th.mat-header-cell:first-of-type,
-        td.mat-cell:first-of-type,
-        td.mat-footer-cell:first-of-type {
-            padding: 0.5rem 0.75rem
-        }
+      th.mat-header-cell:first-of-type,
+      td.mat-cell:first-of-type,
+      td.mat-footer-cell:first-of-type {
+          padding: 0.5rem 0.75rem
+      }
 
-        thead {
-            display: none
-        }
+      thead {
+          display: none
+      }
 
-        tr {
-            border-bottom: 8px solid #f3f3f3;
-            display: block;
-            height: auto;
-            min-height: 40px;
-            margin-bottom: 24px;
-            border-radius: 5px;
-        }
-        td {
-            border-bottom: 1px solid #f3f3f3;
-            display: block;
-            height: auto;
-            min-height: 40px;
-            text-align: right !important;
-        }
-        td:last-child {
-            border-bottom: 0;
-        }
-        .mdm--td-cell {
-            display: inline;
-            float: left;
-            font-weight: bold;
-        }
-    }
+      tr {
+          border-bottom: 8px solid #f3f3f3;
+          display: block;
+          height: auto;
+          min-height: 40px;
+          margin-bottom: 24px;
+          border-radius: 5px;
+      }
+      td {
+          border-bottom: 1px solid #f3f3f3;
+          display: block;
+          height: auto;
+          min-height: 40px;
+          text-align: right !important;
+      }
+      td:last-child {
+          border-bottom: 0;
+      }
+      .mdm--td-cell {
+          display: inline;
+          float: left;
+          font-weight: bold;
+      }
+  }
 }

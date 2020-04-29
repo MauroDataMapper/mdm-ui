@@ -3,11 +3,11 @@
         <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block">
             <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText" (click)="toggle();">
                 <span *ngIf="!isOpen">
-                    Show Model Tree 
+                    Show Model Tree
                     <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-right"></i>
                 </span>
                 <span *ngIf="isOpen">
-                    Hide Model Tree 
+                    Hide Model Tree
                     <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
                 </span>
             </button>
@@ -17,7 +17,7 @@
             <div id="mdm--tree-container" ui-view="left"></div>
         </div>
 
-        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-8':!expand }" class="">
+        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!isOpen, 'col-md-12 col-lg-8':!isOpen }" class="">
             <div ui-view="" class="mb-2"></div>
         </div>
     </div>

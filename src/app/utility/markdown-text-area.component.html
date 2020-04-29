@@ -30,11 +30,11 @@
 
 <div *ngIf="editableForm">
     <div class="xeditableTextArea">
-        <textarea *ngIf="editableForm.visible" 
-                  [(ngModel)]="editableForm[property]" 
-                  name="{{ property }}" 
-                  class="full-width" 
-                  rows="{{ rows ? rows : '6' }}" 
+        <textarea *ngIf="editableForm.visible"
+                  [(ngModel)]="editableForm[property]"
+                  name="{{ property }}"
+                  class="full-width"
+                  rows="{{ rows ? rows : '6' }}"
                   class="form-control outlined-block mb-1"
                   #editableTextArea
                   (keyup)="descriptionKeyUp($event)"></textarea>

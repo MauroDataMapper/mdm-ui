@@ -5,6 +5,7 @@ import {ResourcesService} from '@mdm/services/resources.service';
 import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import {ValidatorService} from '@mdm/services/validator.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 

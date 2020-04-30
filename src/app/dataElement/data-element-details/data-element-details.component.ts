@@ -12,13 +12,12 @@ import { from, Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
 import { ResourcesService } from '@mdm/services/resources.service';
-import { MatDialog } from '@angular/material/dialog';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementModel';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -73,11 +72,10 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   constructor(
     private messageService: MessageService,
     private resourcesService: ResourcesService,
-    private dialog: MatDialog,
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) {
     this.DataElementDetails();
   }
@@ -105,10 +103,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           focus: x._name === 'moduleName' ? true : false
         })
       );
-      // this.editForm.forEach(x => x.edit({ editing: true }));
-      // this.editForm.forEach(
-      //     x=>x.edit({focus: true, select: true});
-      // )
       this.editableForm.visible = true;
       if (this.min === '*') {
         this.min = '-1';
@@ -196,7 +190,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         if (this.result.aliases) {
           this.result.aliases.forEach(item => {
             this.aliases.push(item);
-            // this.editableForm.aliases.push(item);
           });
         }
 
@@ -221,6 +214,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         if (this.result != null) {
           this.hasResult = true;
         }
+        this.title.setTitle(`Data Element - ${this.result?.label}`);
       }
     );
   }

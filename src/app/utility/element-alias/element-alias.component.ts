@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {DataModelResult} from '../../model/dataModelModel';
-import {DataClassResult} from '../../model/dataClassModel';
+import {DataModelResult} from '@mdm/model/dataModelModel';
+import {DataClassResult} from '@mdm/model/dataClassModel';
 
 @Component({
   selector: 'mdm-element-alias',

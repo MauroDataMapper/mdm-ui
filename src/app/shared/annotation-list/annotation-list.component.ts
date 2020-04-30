@@ -1,10 +1,10 @@
 import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 

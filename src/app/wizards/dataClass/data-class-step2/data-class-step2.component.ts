@@ -8,12 +8,12 @@ import {
   AfterViewInit,
   OnDestroy, QueryList
 } from '@angular/core';
-import { ValidatorService } from '../../../services/validator.service';
+import { ValidatorService } from '@mdm/services/validator.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { BroadcastService } from '../../../services/broadcast.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';

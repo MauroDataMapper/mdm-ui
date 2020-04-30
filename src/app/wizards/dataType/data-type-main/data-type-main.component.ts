@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
-import { Step } from '../../../model/stepModel';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Step } from '@mdm/model/stepModel';
 import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
 

@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChildren, ViewChild, EventEmitter, ElementRef, AfterViewInit} from '@angular/core';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ResourcesService } from '../../services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { merge, Observable, from } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MatSort } from '@angular/material/sort';
-import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-users-table',

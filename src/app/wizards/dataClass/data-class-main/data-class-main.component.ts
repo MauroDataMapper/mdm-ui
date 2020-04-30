@@ -1,13 +1,13 @@
 import { Component, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { Step } from '../../../model/stepModel';
+import { Step } from '@mdm/model/stepModel';
 import { DataClassStep2Component } from '../data-class-step2/data-class-step2.component';
 import { DataClassStep1Component } from '../data-class-step1/data-class-step1.component';
-import { StateHandlerService } from '../../../services/handlers/state-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { BroadcastService } from '../../../services/broadcast.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-data-class-main',

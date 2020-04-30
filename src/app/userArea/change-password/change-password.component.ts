@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { UserDetailsResult } from '../../model/userDetailsModel';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { environment } from '../../../environments/environment';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { UserDetailsResult } from '@mdm/model/userDetailsModel';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'mdm-change-password',

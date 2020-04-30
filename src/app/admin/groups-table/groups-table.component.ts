@@ -1,12 +1,12 @@
 import {Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit} from '@angular/core';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MdmPaginatorComponent } from '../../shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-groups-table',

@@ -3,8 +3,8 @@ import * as joint from 'jointjs';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import dagre from 'dagre';
 import graphlib from 'graphlib';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { LayoutConfigOptions } from '@angular/flex-layout';
 import * as _ from 'lodash';
 

@@ -2,13 +2,13 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 // @ts-ignore
 import { MatTabGroup } from '@angular/material';
-import {CodeSetResult} from '../../model/codeSetModel';
-import {ResourcesService} from '../../services/resources.service';
-import {MessageService} from '../../services/message.service';
-import {SharedService} from '../../services/shared.service';
+import {CodeSetResult} from '@mdm/model/codeSetModel';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {MessageService} from '@mdm/services/message.service';
+import {SharedService} from '@mdm/services/shared.service';
 import {StateService} from '@uirouter/core';
-import {StateHandlerService} from '../../services/handlers/state-handler.service';
-import {DataModelResult} from '../../model/dataModelModel';
+import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import {DataModelResult} from '@mdm/model/dataModelModel';
 
 @Component({
   selector: 'mdm-code-set',

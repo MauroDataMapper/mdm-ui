@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from 'src/app/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'mdm-model-management',

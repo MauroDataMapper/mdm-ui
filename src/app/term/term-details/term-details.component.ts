@@ -10,21 +10,21 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { TermResult, EditableTerm } from '../../model/termModel';
+import { TermResult, EditableTerm } from '@mdm/model/termModel';
 import { from, Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageService } from '../../services/message.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { FolderHandlerService } from '../../services/handlers/folder-handler.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { SharedService } from '../../services/shared.service';
-import { ElementSelectorDialogueService } from '../../services/element-selector-dialogue.service';
-import { BroadcastService } from '../../services/broadcast.service';
-import { HelpDialogueHandlerService } from '../../services/helpDialogue.service';
-import { FavouriteHandlerService } from '../../services/handlers/favourite-handler.service';
-import { ExportHandlerService } from '../../services/handlers/export-handler.service';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageService } from '@mdm/services/message.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
+import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
 

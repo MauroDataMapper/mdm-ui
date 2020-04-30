@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
 import * as joint from 'jointjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +8,7 @@ import { BasicDiagramService } from '../services/basic-diagram.service';
 import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DataflowDataclassDiagramService } from '../services/dataflow-dataclass-diagram.service';
 import { DataflowDataelementDiagramService } from '../services/dataflow-dataelement-diagram.service';
-import { DownloadService } from '../../utility/download.service';
+import { DownloadService } from '@mdm/utility/download.service';
 import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
 
 @Component({

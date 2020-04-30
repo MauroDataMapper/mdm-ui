@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageService } from '../../services/message.service';
-import { SharedService } from '../../services/shared.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageService } from '@mdm/services/message.service';
+import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { DataElementResult } from '../../model/dataElementModel';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { DataElementResult } from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 

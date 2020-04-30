@@ -1,11 +1,11 @@
 import {Component, OnInit, Input, ViewChildren, QueryList, ChangeDetectorRef} from '@angular/core';
-import {ElementTypesService} from '../../services/element-types.service';
-import {ResourcesService} from '../../services/resources.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
-import {StateHandlerService} from '../../services/handlers/state-handler.service';
-import {SharedService} from '../../services/shared.service';
-import {ConfirmationModalComponent} from '../../modals/confirmation-modal/confirmation-modal.component';
-import {EditableDataModel, DataModelResult} from '../../model/dataModelModel';
+import {ElementTypesService} from '@mdm/services/element-types.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import {SharedService} from '@mdm/services/shared.service';
+import {ConfirmationModalComponent} from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import {EditableDataModel, DataModelResult} from '@mdm/model/dataModelModel';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({

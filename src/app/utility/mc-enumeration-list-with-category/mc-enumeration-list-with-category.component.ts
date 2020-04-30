@@ -1,12 +1,12 @@
 import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
-import {UserSettingsHandlerService} from '../../services/utility/user-settings-handler.service';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {ResourcesService} from '../../services/resources.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
-import {ValidatorService} from '../../services/validator.service';
+import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import {ValidatorService} from '@mdm/services/validator.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {MatTable} from '@angular/material/table';
-import {MdmPaginatorComponent} from '../../shared/mdm-paginator/mdm-paginator';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',

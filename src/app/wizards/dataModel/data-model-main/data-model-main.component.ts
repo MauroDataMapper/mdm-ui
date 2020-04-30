@@ -2,12 +2,12 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DataModelStep1Component } from '../data-model-step1/data-model-step1.component';
 import { DataModelStep2Component } from '../data-model-step2/data-model-step2.component';
-import { StateHandlerService } from '../../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
-import { Step } from '../../../model/stepModel';
-import { BroadcastService } from '../../../services/broadcast.service';
+import { Step } from '@mdm/model/stepModel';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-data-model-main',

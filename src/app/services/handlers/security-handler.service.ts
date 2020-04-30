@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ResourcesService } from '../resources.service';
 import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root'

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from '../../services/message.service';
+import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-share-with',

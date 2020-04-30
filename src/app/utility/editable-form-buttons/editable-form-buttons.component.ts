@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Editable } from '../../model/folderModel';
+import { Editable } from '@mdm/model/folderModel';
 
 @Component({
   selector: 'mdm-editable-form-buttons',

@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
-import { AdminAppContainerComponent } from '../../admin/app-container/app-container.component';
-import { DashboardComponent } from '../../admin/home/home.component';
-import { EmailsComponent } from '../../admin/emails/emails.component';
-import { ModelManagementComponent } from '../../admin/model-management/model-management.component';
-import { UsersComponent } from '../../admin/users/users.component';
-import { UserComponent } from '../../admin/user/user.component';
-import { GroupsComponent } from '../../admin/groups/groups.component';
-import { PendingUsersComponent } from '../../admin/pending-users/pending-users.component';
-import { ConfigurationComponent } from '../../admin/configuration/configuration.component';
+import { AdminAppContainerComponent } from '@mdm/admin/app-container/app-container.component';
+import { DashboardComponent } from '@mdm/admin/home/home.component';
+import { EmailsComponent } from '@mdm/admin/emails/emails.component';
+import { ModelManagementComponent } from '@mdm/admin/model-management/model-management.component';
+import { UsersComponent } from '@mdm/admin/users/users.component';
+import { UserComponent } from '@mdm/admin/user/user.component';
+import { GroupsComponent } from '@mdm/admin/groups/groups.component';
+import { PendingUsersComponent } from '@mdm/admin/pending-users/pending-users.component';
+import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
 import { UIRouterModule } from '@uirouter/angular';
-import { GroupComponent } from '../../admin/group/group.component';
+import { GroupComponent } from '@mdm/admin/group/group.component';
 
 export const PagesRoutes = {
   states: [

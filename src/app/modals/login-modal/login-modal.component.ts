@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 import { MatDialogRef} from '@angular/material/dialog';
-import { BroadcastService } from '../../services/broadcast.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-login-modal',

@@ -1,6 +1,6 @@
 <header id="mdm--header">
     <div class="container">
-        <mat-toolbar id="mdm--navbar" color="primary">
+        <mat-toolbar id="mdm--navbar" color="primary" class="mb-0">
             <div class="mdm--navbar-brand">
                 <a id="mdm-logo" uiSref="appContainer.mainApp.home">
                     <img src="assets/images/logo.png" alt="Mauro Data Mapper logo">
@@ -15,17 +15,15 @@
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.about" uiSrefActive="active">About</a>
                 </div>
                 <div class="mdm--navbar-user">
-                    <div *ngIf="!isLoggedIn()">
+                    <div *ngIf="!isLoggedIn">
                         <button (click)="register()" mat-button class="custom inverted-button" color="primary">Register</button>
                         <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary">Log in</button>
                     </div>
 
-                    <div *ngIf="isLoggedIn()">
+                    <div *ngIf="isLoggedIn">
                         <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign="center center" style="width: 185px;">
                             <div class="profile-img" fxFlex="30" fxFlex.sm="100" fxFlex.xs="100">
-                                <img class="img-rounded"
-                                    src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}"
-                                    alt="User profile">
+                                <img class="img-rounded" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}" alt="User profile">
                             </div>
                             <div fxFlex="60" fxFlex.sm="100" fxFlex.xs="100">
                                 <div class="profile-name">{{profile.firstName}}</div>
@@ -36,8 +34,8 @@
                             </div>
                         </div>
                         <mat-menu #menu="matMenu" yPosition="below" xPosition="before">
-                            <div *ngIf="isLoggedIn()">
-                                <h5 class="mat-h5 marginless text-muted section-title">Account settings</h5>
+                            <div *ngIf="isLoggedIn">
+                                <h5 class="marginless text-muted menu-label">Account settings</h5>
                                 <a mat-menu-item uiSref="appContainer.userArea.profile">
                                     <i class="fas fa-id-card"></i>
                                     <span>My profile</span>
@@ -51,8 +49,8 @@
                                     <span>Change password</span>
                                 </a>
                             </div>
-                            <div ng-show="isAdmin()">
-                                <h5 class="mat-h5 marginless text-muted section-title">Admin settings</h5>
+                            <div *ngIf="isAdmin">
+                                <h5 class="marginless text-muted menu-label">Admin settings</h5>
                                 <a mat-menu-item uiSref="appContainer.adminArea.home">
                                     <i class="fas fa-tachometer-alt"></i>
                                     <span>Dashboard</span>
@@ -78,7 +76,7 @@
                                     <span>Configuration</span>
                                 </a>
                             </div>
-                            <button *ngIf="isLoggedIn()" (click)="logout()" id="navbar-logout">
+                            <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Log out</span>
                             </button>
@@ -98,7 +96,7 @@
 <mat-sidenav-container id="mdm--navbar-mobile" class="aside-container">
     <mat-sidenav #sidenav mode="over" id="sidenav" fixedInViewport="fixed" fixedTopGap="0" fixedBottomGap="0" opened="false" position="end" [autoFocus]="false">
         <nav id="sidenav-content">
-            <div *ngIf="isLoggedIn()">
+            <div *ngIf="isLoggedIn">
                 <div *ngIf="profile" class="mdm--navbar-user">
                     <div class="profile-img">
                         <img class="img-rounded" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image?{{profilePictureReloadIndex}}" alt="User profile">
@@ -112,8 +110,8 @@
             </div>
 
             <div class="aside-main-navigation">
-                <div *ngIf="!isLoggedIn()" class="aside-separator"></div>
-                <h5 class="mat-h5 marginless text-muted section-title">Main navigation</h5>
+                <div *ngIf="!isLoggedIn" class="aside-separator"></div>
+                <h5 class="menu-label text-muted pt-0 marginless">Main navigation</h5>
                 <a mat-menu-item uiSref="appContainer.mainApp.home" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
@@ -132,8 +130,8 @@
                 </a>
             </div>
 
-            <div *ngIf="isLoggedIn()">
-                <h5 class="mat-h5 marginless text-muted section-title">Account settings</h5>
+            <div *ngIf="isLoggedIn">
+                <h5 class="menu-label text-muted pt-0 marginless">Account settings</h5>
                 <a mat-menu-item uiSref="appContainer.userArea.profile" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-id-card"></i>
                     <span>My profile</span>
@@ -147,8 +145,8 @@
                     <span>Change password</span>
                 </a>
             </div>
-            <div *ngIf="isLoggedIn()" ng-show="isAdmin()">
-                <h5 class="mat-h5 marginless text-muted section-title">Admin settings</h5>
+            <div *ngIf="isLoggedIn && isAdmin">
+                <h5 class="menu-label text-muted pt-0 marginless">Admin settings</h5>
                 <a mat-menu-item uiSref="appContainer.adminArea.home" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
@@ -179,12 +177,12 @@
                 </a>
             </div>
         </nav>
-        <div *ngIf="!isLoggedIn()" class="aside-user-actions">
-            <button (click)="login()" mat-stroked-button class="custom" color="primary">Log in</button>
+        <div *ngIf="!isLoggedIn" class="aside-user-actions mb-2">
+            <button (click)="login()" mat-flat-button class="custom" color="primary">Log in</button>
             <button (click)="register()" mat-button class="custom" color="primary">Register an account</button>
         </div>
 
-        <button *ngIf="isLoggedIn()" (click)="logout()" id="navbar-logout">
+        <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>Log out</span>
         </button>

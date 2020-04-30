@@ -9,12 +9,12 @@ import {
   ChangeDetectorRef,
   OnInit
 } from '@angular/core';
-import { ElementTypesService } from '../../services/element-types.service';
-import { ResourcesService } from '../../services/resources.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';

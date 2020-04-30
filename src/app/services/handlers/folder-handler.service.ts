@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResourcesService } from '../resources.service';
 import { MessageHandlerService } from '../utility/message-handler.service';
-import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { SecurityHandlerService } from './security-handler.service';
 import { BroadcastService } from '../broadcast.service';
 import { MatDialog } from '@angular/material/dialog';

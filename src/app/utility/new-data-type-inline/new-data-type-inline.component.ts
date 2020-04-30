@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { ElementTypesService } from '../../services/element-types.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 
 @Component({
   selector: 'mdm-data-type-inline',

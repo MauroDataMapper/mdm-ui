@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ElementTypesService } from '../../services/element-types.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 
 @
 Component({

@@ -2,22 +2,19 @@ import {
   Component,
   AfterViewInit,
   Input,
-  OnChanges,
   ViewChild,
   ViewChildren,
   QueryList,
-  ElementRef,
   EventEmitter,
   ChangeDetectorRef
 } from '@angular/core';
-import {ResourcesService} from '../../services/resources.service';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
-import {HelpDialogueHandlerService} from '../../services/helpDialogue.service';
-import {merge, Observable, BehaviorSubject} from 'rxjs';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import {HelpDialogueHandlerService} from '@mdm/services/helpDialogue.service';
+import {merge } from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
 import {MatInput} from '@angular/material/input';
 import {DialogPosition} from '@angular/material/dialog';
 import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';

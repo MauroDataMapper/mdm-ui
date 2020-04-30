@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Step } from '../../../model/stepModel';
+import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ClassifierStep1Component } from '../classifier-step1/classifier-step1.component';
-import { BroadcastService } from '../../../services/broadcast.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-classifier-main',

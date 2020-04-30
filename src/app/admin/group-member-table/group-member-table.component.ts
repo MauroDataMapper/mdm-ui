@@ -8,16 +8,15 @@ import {
   ChangeDetectorRef,
   AfterViewInit
 } from '@angular/core';
-import { ROLES } from '../../constants/roles';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { McSelectPagination } from '../../utility/mc-select/mc-select.component';
+import { ROLES } from '@mdm/constants/roles';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { merge } from 'rxjs';
-import { GridService } from '../../services/grid.service';
+import { GridService } from '@mdm/services/grid.service';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import {MdmPaginatorComponent} from '../../shared/mdm-paginator/mdm-paginator';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-group-member-table',
@@ -115,9 +114,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
       disabled: false,
       isNew: true
     };
-    this.mcDisplayRecords = []
-      .concat([newRecord])
-      .concat(this.mcDisplayRecords);
+    this.mcDisplayRecords = [].concat([newRecord]).concat(this.mcDisplayRecords);
   };
 
   fetchUser = (text, offset, limit) => {

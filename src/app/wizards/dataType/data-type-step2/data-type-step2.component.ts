@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Subscription, Observable, merge} from 'rxjs';
-import {ValidatorService} from '../../../services/validator.service';
-import {ResourcesService} from '../../../services/resources.service';
-import {MessageHandlerService} from '../../../services/utility/message-handler.service';
+import {ValidatorService} from '@mdm/services/validator.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {ElementTypesService} from '../../../services/element-types.service';
+import {ElementTypesService} from '@mdm/services/element-types.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';

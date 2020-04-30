@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FavouriteHandlerService } from '../../services/handlers/favourite-handler.service';
-import { ElementTypesService } from '../../services/element-types.service';
-import { ResourcesService } from '../../services/resources.service';
+import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { forkJoin } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 

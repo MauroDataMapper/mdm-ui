@@ -1,16 +1,16 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { UserDetailsResult } from '../../model/userDetailsModel';
-import { SharedService } from '../../services/shared.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { MessageService } from '../../services/message.service';
-import { HelpDialogueHandlerService } from '../../services/helpDialogue.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { UserDetailsResult } from '@mdm/model/userDetailsModel';
+import { SharedService } from '@mdm/services/shared.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageService } from '@mdm/services/message.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { from } from 'rxjs';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { DialogPosition } from '@angular/material/dialog';
 
 @Component({

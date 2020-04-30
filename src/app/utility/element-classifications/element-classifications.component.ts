@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { FolderResult } from '../../model/folderModel';
-import { DataModelResult } from '../../model/dataModelModel';
+import { FolderResult } from '@mdm/model/folderModel';
+import { DataModelResult } from '@mdm/model/dataModelModel';
 import { forEach } from '@uirouter/core';
-import { ElementTypesService } from '../../services/element-types.service';
-import { ResourcesService } from '../../services/resources.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor } from '@angular/forms';
 
 @Component({

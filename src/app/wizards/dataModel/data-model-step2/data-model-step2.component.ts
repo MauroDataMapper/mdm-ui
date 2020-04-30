@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-data-model-step2',

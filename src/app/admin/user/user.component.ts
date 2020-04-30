@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { Title } from '@angular/platform-browser';
-import { ROLES } from '../../constants/roles';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { ROLES } from '@mdm/constants/roles';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ValidatorService } from '../../services/validator.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ValidatorService } from '@mdm/services/validator.service';
 
 @Component({
   selector: 'mdm-user',

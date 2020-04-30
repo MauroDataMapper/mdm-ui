@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ConfigurationPropertiesResult } from '../../model/ConfigurationProperties';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationProperties';
 import { from } from 'rxjs';
-import { PropertyRenamingService } from '../../services/utility/property-renaming.service';
-import { ObjectEnhancerService } from '../../services/utility/object-enhancer.service';
+import { PropertyRenamingService } from '@mdm/services/utility/property-renaming.service';
+import { ObjectEnhancerService } from '@mdm/services/utility/object-enhancer.service';
 
 @Component({
   selector: 'mdm-configuration',

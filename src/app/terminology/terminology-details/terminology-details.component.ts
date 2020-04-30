@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject } from '@angular/core';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { ExportHandlerService } from '../../services/handlers/export-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { HelpDialogueHandlerService } from '../../services/helpDialogue.service';
-import { EditableDataModel } from '../../model/dataModelModel';
-import { BroadcastService } from '../../services/broadcast.service';
-import { SharedService } from '../../services/shared.service';
-import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import {FavouriteHandlerService} from '../../services/handlers/favourite-handler.service';
+import {FavouriteHandlerService} from '@mdm/services/handlers/favourite-handler.service';
 
 @Component({
   selector: 'mdm-terminology-details',

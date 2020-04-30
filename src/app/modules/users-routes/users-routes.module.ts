@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { ProfileComponent } from '../../userArea/profile/profile.component';
-import { SettingsComponent } from '../../userArea/settings/settings.component';
-import { UsersAppContainerComponent } from '../../users/users-app-container/users-app-container.component';
+import { ProfileComponent } from '@mdm/userArea/profile/profile.component';
+import { SettingsComponent } from '@mdm/userArea/settings/settings.component';
+import { UsersAppContainerComponent } from '@mdm/users/users-app-container/users-app-container.component';
 import { UIRouterModule } from '@uirouter/angular';
-import { ChangePasswordComponent } from '../../userArea/change-password/change-password.component';
+import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-password.component';
 
 export const PagesRoutes = {
   states: [

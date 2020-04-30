@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, Input} from '@angular/core';
-import {ResourcesService} from '../../services/resources.service';
-import {ContentSearchHandlerService} from '../../services/content-search.handler.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {ContentSearchHandlerService} from '@mdm/services/content-search.handler.service';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {MatTableDataSource} from '@angular/material/table';

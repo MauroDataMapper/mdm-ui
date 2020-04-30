@@ -9,13 +9,13 @@ import {
   ChangeDetectorRef,
   OnInit
 } from '@angular/core';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { ElementTypesService } from '../../services/element-types.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({

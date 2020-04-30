@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { StateService } from '@uirouter/core';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-group',

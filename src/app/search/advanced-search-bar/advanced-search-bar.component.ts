@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-import { HelpDialogueHandlerService } from '../../services/helpDialogue.service';
-import { ContentSearchHandlerService } from '../../services/content-search.handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { FolderResult } from '../../model/folderModel';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { FolderResult } from '@mdm/model/folderModel';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, Subject, fromEvent } from 'rxjs';
 import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators';

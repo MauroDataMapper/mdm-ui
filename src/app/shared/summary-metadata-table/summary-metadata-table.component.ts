@@ -8,8 +8,8 @@ import {
   AfterViewInit,
   ChangeDetectorRef, OnInit
 } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { merge, Observable, BehaviorSubject } from 'rxjs';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HelpDialogComponent } from '../search/help-dialog/help-dialog.component';
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
 

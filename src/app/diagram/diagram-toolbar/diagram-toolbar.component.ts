@@ -10,8 +10,8 @@ import {
   PipeTransform,
   ViewChild
 } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
 import * as _ from 'lodash';
 import * as joint from 'jointjs';

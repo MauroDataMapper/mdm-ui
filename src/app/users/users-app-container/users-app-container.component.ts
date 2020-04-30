@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../../services/shared.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-users-app-container',
@@ -10,14 +11,16 @@ export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;
   exporting: boolean; // TODO correct this
   pendingUsersCount = 0;
+  isAdmin = this.securityHandler.isAdmin();
 
-
-  constructor(private sharedService: SharedService) {}
+  constructor(private sharedService: SharedService, private securityHandler: SecurityHandlerService) {}
 
   ngOnInit() {
-    this.sharedService.pendingUsersCount().subscribe(data => {
-      this.pendingUsersCount = data.body.count;
-    });
+    if (this.isAdmin) {
+      this.sharedService.pendingUsersCount().subscribe(data => {
+        this.pendingUsersCount = data.body.count;
+      });
+    }
   }
 
   logout = () => {

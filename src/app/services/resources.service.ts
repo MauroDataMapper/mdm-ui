@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders, HttpRequest} from '@angular/common/http';
 import {ValidatorService} from './validator.service';
 import {RestHandlerService} from './utility/rest-handler.service';
 import {SharedService} from './shared.service';
-import {environment} from 'src/environments/environment';
+import {environment} from '@env/environment';
 
 @Injectable({
   providedIn: 'root'

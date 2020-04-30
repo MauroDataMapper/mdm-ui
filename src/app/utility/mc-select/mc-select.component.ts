@@ -14,9 +14,9 @@ import {
   EventEmitter,
   ChangeDetectorRef
 } from '@angular/core';
-import {ValidatorService} from '../../services/validator.service';
+import {ValidatorService} from '@mdm/services/validator.service';
 import {DOCUMENT} from '@angular/common';
-import {ResourcesService} from '../../services/resources.service';
+import {ResourcesService} from '@mdm/services/resources.service';
 import {Observable} from 'rxjs';
 
 @Component({

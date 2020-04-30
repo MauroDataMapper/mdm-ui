@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {ResourcesService} from '../../services/resources.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import {ResourcesService} from '@mdm/services/resources.service';
 import {MatDialogRef} from '@angular/material/dialog';
-import { BroadcastService } from '../../services/broadcast.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-forgot-password-modal',

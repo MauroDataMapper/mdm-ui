@@ -1,8 +1,8 @@
 import { BasicDiagramService } from './basic-diagram.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import * as joint from 'jointjs';
-import { ResourcesService } from '../../services/resources.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataflowDataclassDiagramService } from './dataflow-dataclass-diagram.service';
 
 

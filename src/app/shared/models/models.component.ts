@@ -1,14 +1,14 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {UserSettingsHandlerService} from '../../services/utility/user-settings-handler.service';
-import {ResourcesService} from '../../services/resources.service';
-import {StateHandlerService} from '../../services/handlers/state-handler.service';
-import {FolderHandlerService} from '../../services/handlers/folder-handler.service';
-import {ValidatorService} from '../../services/validator.service';
-import {BroadcastService} from '../../services/broadcast.service';
-import {SharedService} from '../../services/shared.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import {FolderHandlerService} from '@mdm/services/handlers/folder-handler.service';
+import {ValidatorService} from '@mdm/services/validator.service';
+import {BroadcastService} from '@mdm/services/broadcast.service';
+import {SharedService} from '@mdm/services/shared.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-models',

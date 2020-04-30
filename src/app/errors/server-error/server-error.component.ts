@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {MessageService} from '../../services/message.service';
+import {MessageService} from '@mdm/services/message.service';
 import {ClipboardService} from 'ngx-clipboard';
-import {YoutrackService} from '../../services/youtrack.service';
-import {SharedService} from '../../services/shared.service';
+import {YoutrackService} from '@mdm/services/youtrack.service';
+import {SharedService} from '@mdm/services/shared.service';
 import {ErrorComponent} from '../error.component';
 const columns: string[] = ['field', 'value'];
 @Component({

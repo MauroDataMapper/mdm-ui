@@ -10,8 +10,8 @@ import {
   ChangeDetectorRef,
   AfterViewInit
 } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { GridService } from '../../services/grid.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { GridService } from '@mdm/services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';

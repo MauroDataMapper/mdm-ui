@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HelpDialogueHandlerService } from '../../services/helpDialogue.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DialogPosition } from '@angular/material/dialog';
-import { UserSettingsHandlerService } from '../../services/utility/user-settings-handler.service';
+import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 
 @Component({
   selector: 'mdm-settings',

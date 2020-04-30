@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from '../../services/message.service';
+import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
-import { DataModelResult } from '../../model/dataModelModel';
+import { DataModelResult } from '@mdm/model/dataModelModel';
 
 @Component({
     selector: 'mdm-element-status',

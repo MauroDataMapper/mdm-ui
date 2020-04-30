@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
+import {environment} from '@env/environment';
 import {SecurityHandlerService} from './handlers/security-handler.service';
 import {Subject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
-import { ResourcesService } from 'src/app/services/resources.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +67,7 @@ export class SharedService {
   };
 
   pendingUsersCount = () => {
-    return this.resources.catalogueUser.get(null, 'pending', {});
+    return this.resources.catalogueUser.get(null, 'pending', { filters: 'disabled=false' });
   }
 
 }

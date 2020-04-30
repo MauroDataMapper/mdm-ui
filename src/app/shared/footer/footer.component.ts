@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../../services/shared.service';
+import { SharedService } from '@mdm/services/shared.service';
 
 @Component({
   selector: 'mdm-footer',

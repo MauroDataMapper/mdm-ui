@@ -8,16 +8,16 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { DataClassResult, EditableDataClass } from '../../model/dataClassModel';
+import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
-import { MessageService } from '../../services/message.service';
-import { MarkdownTextAreaComponent } from '../../utility/markdown-text-area.component';
-import { ResourcesService } from '../../services/resources.service';
+import { MessageService } from '@mdm/services/message.service';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ValidatorService } from '../../services/validator.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { BroadcastService } from '../../services/broadcast.service';
+import { ValidatorService } from '@mdm/services/validator.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-data-class-details',

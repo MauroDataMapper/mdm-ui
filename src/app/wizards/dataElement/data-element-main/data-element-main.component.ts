@@ -4,13 +4,13 @@ import {
   EventEmitter,
   OnInit
 } from '@angular/core';
-import { Step } from '../../../model/stepModel';
+import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../../services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { DataElementStep1Component } from '../data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '../data-element-step2/data-element-step2.component';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-data-element-main',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { SharedService } from '../../services/shared.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { SharedService } from '@mdm/services/shared.service';
 
 @Component({
   selector: 'mdm-home',

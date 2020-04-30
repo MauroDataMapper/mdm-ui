@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { HelpDialogueHandlerService } from '../../../services/helpDialogue.service';
-import { ResourcesService } from '../../../services/resources.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 

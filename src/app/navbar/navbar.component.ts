@@ -1,12 +1,12 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
-import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/forgot-password-modal.component';
-import { SharedService } from '../services/shared.service';
-import { BroadcastService } from '../services/broadcast.service';
+import { Component, OnInit } from '@angular/core';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { LoginModalComponent } from '@mdm/modals/login-modal/login-modal.component';
+import { ForgotPasswordModalComponent } from '@mdm/modals/forgot-password-modal/forgot-password-modal.component';
+import { SharedService } from '@mdm/services/shared.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
+import { RegisterModalComponent } from '@mdm/modals/register-modal/register-modal.component';
 
 @Component({
   selector: 'mdm-navbar',
@@ -24,26 +24,24 @@ export class NavbarComponent implements OnInit {
   sideNav: any;
   pendingUsersCount = 0;
   isAdmin = this.securityHandler.isAdmin();
+  isLoggedIn = this.securityHandler.isLoggedIn();
 
   constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService) { }
 
   ngOnInit() {
-      if (this.securityHandler.isLoggedIn()) {
+      if (this.isLoggedIn) {
           this.profile = this.securityHandler.getCurrentUser();
-
-          this.sharedService.pendingUsersCount().subscribe(data => {
-            this.pendingUsersCount = data.body.count;
-          });
+          if (this.isAdmin) {
+            this.sharedService.pendingUsersCount().subscribe(data => {
+              this.pendingUsersCount = data.body.count;
+            });
+          }
       }
-
       this.backendURL = this.sharedService.backendURL;
       this.HDFLink = this.sharedService.HDFLink;
       this.current = this.sharedService.current;
   }
 
-  isLoggedIn = () => {
-      return this.securityHandler.isLoggedIn();
-  };
 
   login = () => {
     this.dialog.open(LoginModalComponent, {

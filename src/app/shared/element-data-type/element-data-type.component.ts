@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { ElementTypesService } from '../../services/element-types.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 import { from } from 'rxjs';
 import { groupBy, mergeMap, toArray } from 'rxjs/operators';
-import { Categories } from '../../model/dataModelModel';
+import { Categories } from '@mdm/model/dataModelModel';
 
 @Component({
   selector: 'mdm-element-data-type',

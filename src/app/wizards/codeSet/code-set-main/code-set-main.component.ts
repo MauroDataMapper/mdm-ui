@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from '../../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { MessageHandlerService } from '../../../services/utility/message-handler.service';
-import { BroadcastService } from '../../../services/broadcast.service';
-import { Step } from '../../../model/stepModel';
-import { ClassifierStep1Component } from '../../classifier/classifier-step1/classifier-step1.component';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Step } from '@mdm/model/stepModel';
 import { CodeSetStep1Component } from '../code-set-step1/code-set-step1.component';
 
 @Component({

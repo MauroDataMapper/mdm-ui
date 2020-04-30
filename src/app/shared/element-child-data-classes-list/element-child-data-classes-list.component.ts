@@ -9,11 +9,11 @@ import {
   ChangeDetectorRef,
   OnInit
 } from '@angular/core';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
-import { ResourcesService } from '../../services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
 import { merge, Observable, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 

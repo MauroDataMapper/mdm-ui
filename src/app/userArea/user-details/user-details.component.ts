@@ -9,12 +9,12 @@ import {
   EventEmitter,
   OnDestroy
 } from '@angular/core';
-import { UserDetailsResult } from '../../model/userDetailsModel';
-import { ResourcesService } from '../../services/resources.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { MessageService } from '../../services/message.service';
+import { UserDetailsResult } from '@mdm/model/userDetailsModel';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-user-details',

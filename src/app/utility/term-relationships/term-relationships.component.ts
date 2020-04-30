@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { HelpDialogueHandlerService } from '../../services/helpDialogue.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
-import { TermResult } from '../../model/termModel';
+import { TermResult } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MessageService } from '../../services/message.service';
+import { MessageService } from '@mdm/services/message.service';
 
 @Component({
   selector: 'mdm-term-relationships',

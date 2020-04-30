@@ -1,0 +1,58 @@
+<h3 class='modal-title text-center'>{{data.name}}</h3>
+<p class="mb-2 text-center">{{data.description}}</p>
+<p class="mb-2 text-center" *ngIf='this.summary.summaryMetadataType==="map"'>
+  <button mat-button (click)="this.dateFirst()" [disabled]="this.reportIndex == 0">
+    <i class="fas fa-fast-backward" aria-hidden="true"></i>
+  </button>
+  <button mat-button (click)="this.datePrev()"  [disabled]="this.reportIndex == 0">
+    <i class="fas fa-step-backward" aria-hidden="true"></i>
+  </button>
+    Report Date: <b>{{this.reportDate}}</b>
+  <button mat-button (click)="this.dateNext()"  [disabled]="this.reportIndex == this.data.summaryMetadataReports.length-1">
+    <i class="fas fa-step-forward" aria-hidden="true"></i>
+  </button>
+  <button mat-button (click)="this.dateLast()"  [disabled]="this.reportIndex == this.data.summaryMetadataReports.length-1">
+    <i class="fas fa-fast-forward" aria-hidden="true"></i>
+  </button>
+</p>
+<div style="margin: 15px; height: 75%">
+  <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: 100%; height: 100%;">
+    <div style="display: flex; flex-direction: column; flex: 2; align-items: center; padding: 1em;">
+        <canvas style="display: flex; align-self: flex-end; width: 90%; height: 100%" baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [colors]="chartColors"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"><!-- [plugins]="barChartPlugins" -->
+        </canvas>
+    </div>
+    <div style="display: flex; flex-direction: column; flex: 1">
+      <div style="height: 100%; align-items: center; display: flex; width: 90%; padding: 1em;">
+        <mat-table [dataSource]="this.tableDataForTable" style="width: 100%;" class="mat-elevation-z8">
+          <ng-container matColumnDef="category">
+            <mat-header-cell *matHeaderCellDef> Category </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <i *ngIf="element.keyColor" style="width: 2em; margin-right: 1em; height: 2em;" [style.background-color]="element.keyColor">&nbsp;</i>
+              <b>{{element.category}}</b>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="value">
+            <mat-header-cell *matHeaderCellDef> Value </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.value}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="['category', 'value']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['category', 'value'];"></mat-row>
+
+        </mat-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button mat-flat-button color="primary" type="button" (click)="this.close()" style="margin-right: 1.5em; float: right;">
+  <i class="fas fa-window-close" aria-hidden="true"></i>
+  &nbsp;Close
+</button>

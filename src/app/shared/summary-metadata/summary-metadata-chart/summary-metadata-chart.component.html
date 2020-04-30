@@ -1,0 +1,13 @@
+<div style="display: block" *ngIf="displayChart">
+  <canvas height="80vh" baseChart
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [colors]="chartColors"
+          [legend]="barChartLegend"
+          [chartType]="barChartType"><!-- [plugins]="barChartPlugins" -->
+  </canvas>
+</div>
+<div style="display: block" *ngIf="!displayChart">
+  <p>No reports found!</p>
+</div>

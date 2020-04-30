@@ -141,25 +141,25 @@ export class DataClassComponent implements OnInit {
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'content' };
       case 1:
-        return { index: 1, name: 'types' };
+        return { index: 1, name: 'properties' };
       case 2:
-        return { index: 2, name: 'properties' };
+        return { index: 2, name: 'comments' };
       case 3:
-        return { index: 3, name: 'summaryMetadata' };
+        return { index: 3, name: 'links' };
       case 4:
-        return { index: 4, name: 'comments' };
+        return { index: 4, name: 'summaryMetadata' };
       case 5:
-        return { index: 5, name: 'history' };
-      case 6:
+        return { index: 5, name: 'attachments' };
+/*      case 6:
         return { index: 6, name: 'diagram' };
       case 7:
         return { index: 7, name: 'links' };
       case 8:
-        return { index: 8, name: 'attachments' };
+        return { index: 8, name: 'attachments' }; */
       default:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'content' };
     }
   }
   tabSelected(index) {

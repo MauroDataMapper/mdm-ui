@@ -7,19 +7,23 @@
 </div>
 
 <table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped">
-    <ng-container matColumnDef="namespace">
+    <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 40%;width: 40%;">
-            <span [hidden]="!hideFilters">Namespace</span>
+            <span [hidden]="!hideFilters">Name</span>
             <div [hidden]="hideFilters">
                 <mat-form-field class="filter" floatLabel="never">
-                    <mat-label>Namespace</mat-label>
-                    <input #filters matInput name="namespace" (keyup)="applyFilter()">
+                    <mat-label>Name</mat-label>
+                    <input #filters matInput name="name" (keyup)="applyFilter()">
                 </mat-form-field>
             </div>
         </th>
-        <td mat-cell *matCellDef="let record" style="max-width: 40%; width: 40%; text-align: left; word-wrap: break-word;">
-            <div>{{record.name}}</div>
+        <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word;">
+          <div style="font-size: 133%">{{record.name}}</div>
             <div>{{record.description}}</div>
+          <button *ngIf="record.summaryMetadataReports.length > 0" mat-flat-button color="primary" type="button" (click)="this.popup(record)" style="margin-top: 2.5em; font-size: 90%">
+            <i class="fas fa-window-maximize" aria-hidden="true"></i>
+            &nbsp;More details...
+          </button>
         </td>
     </ng-container>
     <ng-container matColumnDef="description">
@@ -27,13 +31,7 @@
             Description
         </th>
         <td  *matCellDef="let record" style="max-width: 65%;width: 65%;text-align: left;word-wrap: break-word;">
-            <div *ngIf="record.summaryMetadataType === 'map'">
-                <mdm-summary-metadata-map [summary]="record" [chartType]="'bar'"  [showMoreDetailsBtn]="true"></mdm-summary-metadata-map>
-            </div>
-
-            <div *ngIf="record.summaryMetadataType === 'number' ">
-                <mdm-summary-metadata-map [summary]="record" [chartType]="'line'"  [showMoreDetailsBtn]="true"></mdm-summary-metadata-map>
-            </div>
+          <mdm-summary-metadata-chart [summary]="record"></mdm-summary-metadata-chart>
         </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

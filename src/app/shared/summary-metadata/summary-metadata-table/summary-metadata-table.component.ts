@@ -13,8 +13,10 @@ import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
-import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
+import {MdmPaginatorComponent} from '../../mdm-paginator/mdm-paginator';
+import {SummaryMetadataPopupComponent} from "../summary-metadata-popup/summary-metadata-popup.component";
 
 @Component({
   selector: 'mdm-summary-metadata-table',
@@ -25,7 +27,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
 
   hideFilters = true;
-  displayedColumns: string[] = ['namespace', 'description'];
+  displayedColumns: string[] = ['name', 'description'];
   totalItemCount: number;
   isLoadingResults: boolean;
   filterEvent = new EventEmitter<string>();
@@ -40,7 +42,8 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
 
   constructor(
     private changeRef: ChangeDetectorRef,
-    private resources: ResourcesService
+    private resources: ResourcesService,
+    protected matDialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -142,5 +145,13 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
 
   filterClick() {
     this.hideFilters = !this.hideFilters;
+  }
+
+  popup(record: any) {
+    this.matDialog.open(SummaryMetadataPopupComponent, {
+      width: '90%',
+      height: '90%',
+      data: record
+    });
   }
 }

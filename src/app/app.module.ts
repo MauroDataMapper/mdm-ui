@@ -21,6 +21,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { DiagramComponent } from './diagram/diagram/diagram.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogRef } from '@angular/material/dialog';
 import { ModalModule } from './modals/modal.module';
+import { SummaryMetadataPopupComponent } from './shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
+import { ChartsModule } from "ng2-charts";
 
 @NgModule({
   declarations: [AppComponent],

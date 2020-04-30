@@ -35,8 +35,6 @@ import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-
 import { TableButtonsComponent } from '@mdm/shared/table-buttons/table-buttons.component';
 import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
 import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
-import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata-table/summary-metadata-table.component';
-import { SummaryMetadataMapComponent } from '@mdm/shared/summary-metadata-map/summary-metadata-map.component';
 import { ElementOwnedDataTypeListComponent } from '@mdm/shared/element-owned-data-type-list/element-owned-data-type-list.component';
 import { ElementChildDataClassesListComponent } from '@mdm/shared/element-child-data-classes-list/element-child-data-classes-list.component';
 import { ElementStatusComponent } from '@mdm/utility/element-status/element-status.component';
@@ -49,6 +47,8 @@ import { MultiplicityComponent } from '@mdm/shared/multiplicity/multiplicity.com
 import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
+import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 
 import { NewVersionDataModelComponent } from '@mdm/dataModel/new-version-data-model/new-version-data-model.component';
 import { DataClassComponent } from '@mdm/dataClass/data-class/data-class.component';
@@ -126,16 +126,18 @@ import { CodeSetStep1Component } from '@mdm/wizards/codeSet/code-set-step1/code-
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
+import { ChartsModule } from "ng2-charts";
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
 import { UserIdleModule } from 'angular-user-idle';
-import {CodeSetComponent} from '@mdm/code-set/code-set/code-set.component';
-import {CodeSetDetailsComponent} from '@mdm/code-set/code-set-details/code-set-details.component';
-import {CodeSetTermsTableComponent} from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
+import { CodeSetComponent } from '@mdm/code-set/code-set/code-set.component';
+import { CodeSetDetailsComponent } from '@mdm/code-set/code-set-details/code-set-details.component';
+import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
 import { DiagramTabComponent } from '@mdm/diagram/diagram-tab/diagram-tab.component';
 import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.component';
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
+import {SummaryMetadataPopupComponent} from "@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component";
 
 
 
@@ -174,7 +176,8 @@ import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-to
     AnnotationListComponent,
     ProfilePictureComponent,
     SummaryMetadataTableComponent,
-    SummaryMetadataMapComponent,
+    SummaryMetadataChartComponent,
+    SummaryMetadataPopupComponent,
     ElementOwnedDataTypeListComponent,
     ElementChildDataClassesListComponent,
     McDataSetMetadataComponent,
@@ -269,31 +272,32 @@ import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-to
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent],
   imports: [
-    CommonModule,
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    NoopAnimationsModule,
-    DragDropModule,
-    CommonModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
+    AdminModule,
     AngularSplitModule.forRoot(),
+    BrowserModule,
+    BrowserAnimationsModule,
+    ChartsModule,
+    CommonModule,
+    DragDropModule,
+    FoldersTreeModule,
+    FormsModule,
+    HttpClientModule,
+    ImageCropperModule,
+    NoopAnimationsModule,
+    ReactiveFormsModule,
+    SharedModule,
     ToastrModule.forRoot({
       timeOut: 30000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
-    ImageCropperModule,
-    FoldersTreeModule,
-    AdminModule,
-    SharedModule,
-    UsersModule,
-    UserIdleModule.forRoot({idle: 600, timeout: 300})
+    UserIdleModule.forRoot({idle: 600, timeout: 300}),
+    UsersModule
   ],
   exports: [FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
+    SummaryMetadataPopupComponent,
     ShareWithComponent,
     DataModelsExportComponent ,
     UserAccessNewComponent,
@@ -320,7 +324,7 @@ import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-to
     AnnotationListComponent,
     ProfilePictureComponent,
     SummaryMetadataTableComponent,
-    SummaryMetadataMapComponent,
+    SummaryMetadataChartComponent,
     ElementOwnedDataTypeListComponent,
     ElementChildDataClassesListComponent,
     McDataSetMetadataComponent,

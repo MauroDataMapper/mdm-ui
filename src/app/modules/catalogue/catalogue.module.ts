@@ -126,7 +126,7 @@ import { CodeSetStep1Component } from '@mdm/wizards/codeSet/code-set-step1/code-
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
-import { ChartsModule } from "ng2-charts";
+import { ChartsModule } from 'ng2-charts';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { AngularSplitModule } from 'angular-split';
 import { UserIdleModule } from 'angular-user-idle';
@@ -137,7 +137,7 @@ import { DiagramTabComponent } from '@mdm/diagram/diagram-tab/diagram-tab.compon
 import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.component';
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
-import {SummaryMetadataPopupComponent} from "@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component";
+import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
 
 
 

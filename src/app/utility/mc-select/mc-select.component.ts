@@ -107,10 +107,11 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   @ContentChild('lineContent', {static: true}) lineContentTmpl: TemplateRef<any>;
 
   constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: ResourcesService, private elementRef: ElementRef) {
-    this.setDefaultValue();
-  }
+  //  this.setDefaultValue(); ToDo check if it needs here , moved to on Init
+ }
 
   ngOnInit() {
+    this.setDefaultValue();
     this.pagination = {offset: undefined, count: undefined};
     this.showCaret = true;
 

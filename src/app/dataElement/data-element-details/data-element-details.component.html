@@ -4,7 +4,7 @@
             <div *ngIf="result">
                 <h4 class="inline-block marginless" [ngClass]="{ 'has-error': errorMessage != ''}">
                     <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
-                        [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target.value)"
+                        [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target)"
                         name="moduleName" size="20"></mdm-inline-text-edit>
                 </h4>
                                 <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
@@ -104,15 +104,20 @@
                                            [defaultValue]="result.dataType"
                                            [hasError]="dataTypeErrors"
                                            [loadDynamicValues]="fetchDataTypes"
+                                           [loadAllOnClick]="true"
                                            [record]="result"
                                            [minInputLength]="1"
                                            [idProperty]="'id'"
+                                            [pagination]="pagination"
                                            [displayProperty]="'label'"
                                            [searchProperty]="'label'"
-                                           (selectEvent)="onDataTypeSelect">
-                                    <ng-template #lineContent let-item>
-                                        <div>{{item.label}}</div>
-                                    </ng-template>
+                                           (selectEvent)="onDataTypeSelect($event[0])">
+                                  <ng-template #lineContent let-item='item' let-searchTerm="inputText">
+                                    <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
+                                    <div>
+                                      <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
+                                    </div>
+                                  </ng-template>
                                 </mdm-select>
                             </div>
                             <span class="help-block errorMessage" *ngIf="dataTypeErrors"><small>{{dataTypeErrors}}</small></span>

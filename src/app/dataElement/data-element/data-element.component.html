@@ -1,6 +1,7 @@
 <div style="width: 100%" *ngIf ="dataModel">
     <mdm-data-element-details [parentDataModel] = "dataModel"
-                              [parentDataClass] = "dataClass">
+                              [parentDataClass] = "dataClass"
+                              [afterSave]="afterSave">
     </mdm-data-element-details>
 </div>
 <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">

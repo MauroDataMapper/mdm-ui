@@ -1,14 +1,19 @@
 <ul [ngClass]="{'breadcrumbClassification':true, 'emptyBackground':showAsSimpleText}" [hidden]="!updatedPath && updatedPath.length > 0">
-    <li class="breadcrumbItem modelPathSimple" *ngFor="let p of updatedPath; let i = index">
-        <i class="fas fa-sitemap" aria-hidden="true" title="Parent Hierarchy" [hidden]="i === 0"></i>
-        <span *ngIf="!doNotDisplayStatus && i == 0 && !p.finalised" class="label label-warning" style="vertical-align: middle;">Draft</span>
-        <span *ngIf="!doNotDisplayStatus && i == 0 &&  p.finalised" class="label label-success" style="vertical-align: middle;">Finalised</span>
-        <a *ngIf="i >= 0" aria-hidden="false" href="{{p.link}}" target="{{targetWindow}}" style="margin-left: 7px;"><span [innerHtml]="p.label"></span></a>
-        <span [hidden]="!doNotShowParentDataModel && i == 0">
+  <li class="breadcrumbItem modelPathSimple" *ngFor="let p of updatedPath; let i = index">
+    <i class="fas fa-sitemap" aria-hidden="true" title="Parent Hierarchy" [hidden]="i === 0"></i>
+    <span *ngIf="!doNotDisplayStatus && i == 0 && !p.finalised" class="label label-warning" style="vertical-align: middle;">Draft</span>
+    <span *ngIf="!doNotDisplayStatus && i == 0 &&  p.finalised" class="label label-success" style="vertical-align: middle;">Finalised</span>
+   <a *ngIf="i >= 0 && showHref" aria-hidden="false" href="{{p.link}}" target="{{targetWindow}}" style="margin-left: 7px;"><span [innerHtml]="p.label"></span></a>
+    <a *ngIf="i >= 0 && !showHref" aria-hidden="false"  target="{{targetWindow}}" style="margin-left: 7px;"><span [innerHtml]="p.label"></span></a>
+    <span [hidden]="!doNotShowParentDataModel && i == 0">
             <a *ngIf="p.domainType=='DataModel' && showHref" href="{{p.link}}" target="{{targetWindow}}">{{p.label}}</a>
-<!--            <a *ngIf="i >= 0 && showHref" href="{{p.link}}" target="{{targetWindow}}">{{updatedPath[i]}}</a>-->
+<!--            <a *ngIf="i >= 0 && showHref" href="{{p.link}}" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>-->
             <a *ngIf="p.domainType=='DataModel' && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
-<!--            <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>-->
+           <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{targetWindow}}"><span [innerHtml]="p.label"></span></a>
         </span>
-    </li>
+  </li>
+
 </ul>
+
+
+

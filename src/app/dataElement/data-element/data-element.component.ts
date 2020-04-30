@@ -64,7 +64,7 @@ export class DataElementComponent implements OnInit {
     }
   }
 
-  async ngOnInit() {
+   ngOnInit() {
     this.activeTab = this.getTabDetailByName(
       this.stateService.params.tabView
     ).index;

@@ -21,6 +21,7 @@ import {
   EditableDataElement
 } from '../../model/dataElementModel';
 import { BroadcastService } from '../../services/broadcast.service';
+import {McSelectPagination} from '../../utility/mc-select/mc-select.component';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -38,6 +39,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
   @Input() parentDataModel;
   @Input() parentDataClass;
+  pagination: McSelectPagination;
   errorMessage = '';
   error = '';
   dataTypeErrors = '';
@@ -91,7 +93,9 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
   ngOnInit() {
     if (this.parentDataModel) {
-      this.fetchDataTypes(null, null, null, null);
+      this.fetchDataTypes(null, null, null, null).subscribe(result => {
+            this.dataTypes = result.body.items;
+           });
     }
     this.editableForm = new EditableDataElement();
     this.editableForm.visible = false;
@@ -224,27 +228,35 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     );
   }
 
-  fetchDataTypes(text, loadAll, offset, limit) {
+  fetchDataTypes = (text, loadAll, offset, limit) => {
     const options = {
       pageSize: limit ? limit : 30,
       pageIndex: offset ? offset : 0,
       sortBy: 'label',
-      sortType: 'asc'
-      // filters:"label=" + text
+      sortType: 'asc',
+      filters: 'label=' + text
+    };
+    this.pagination = {
+      limit: options.pageSize,
+      offset: options.pageIndex
+
     };
 
-    // if(loadAll){
+    return this.resourcesService.dataModel
+      .get(this.parentDataModel.id, 'dataTypes', options);
+
+    // if (loadAll) {
     //     delete options.filters;
     // }
-    this.resourcesService.dataModel
-      .get(this.parentDataModel.id, 'dataTypes', options)
-      .subscribe(result => {
-        this.dataTypes = result.body.items;
-
-        // count: result.count,
-        // limit: options.pageSize,
-        // offset: options.pageIndex
-      });
+    // return this.resourcesService.dataModel
+    //   .get(this.parentDataModel.id, 'dataTypes', options)
+    //   .subscribe(result => {
+    //     this.dataTypes = result.body.items;
+    //
+    //     // count: result.count,
+    //     // limit: options.pageSize,
+    //     // offset: options.pageIndex
+    //   });
   }
 
   ngOnDestroy() {
@@ -453,7 +465,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  onDataTypeSelect(dataType, model) {
+  onDataTypeSelect(dataType) {
     this.result.dataType = dataType;
   }
 }

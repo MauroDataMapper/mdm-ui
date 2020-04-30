@@ -59,7 +59,7 @@ button.custom {
   margin-bottom: 32px!important;
 }
 
-
+/* Margin-right block */
 .mr-0 {
   margin-right: 0!important;
 }
@@ -72,7 +72,9 @@ button.custom {
 .mr-3 {
   margin-right: 32px!important;
 }
+/* End of Margin-right */
 
+/* Padding-left block */
 .pl-0 {
   padding-left: 0px!important;
 }
@@ -85,6 +87,53 @@ button.custom {
 .pl-3 {
   padding-left: 32px!important;
 }
+/* End of padding-left */
+
+/* Padding-right block */
+.pr-0 {
+  padding-right: 0px!important;
+}
+.pr-1{
+  padding-right: 8px!important;
+}
+.pr-2 {
+  padding-right: 16px!important;
+}
+.pr-3 {
+  padding-right: 32px!important;
+}
+/* End of padding-right */
+
+/* Padding-top block */
+.pt-0 {
+  padding-top: 0px!important;
+}
+.pt-1{
+  padding-top: 8px!important;
+}
+.pt-2 {
+  padding-top: 16px!important;
+}
+.pt-3 {
+  padding-top: 32px!important;
+}
+/* End of padding-top */
+
+/* Padding-bottom block */
+.pb-0 {
+  padding-bottom: 0px!important;
+}
+.pb-1{
+  padding-bottom: 8px!important;
+}
+.pb-2 {
+  padding-bottom: 16px!important;
+}
+.pb-3 {
+  padding-bottom: 32px!important;
+}
+/* End of padding-bottom */
+
 
 .pxy-0 {
   padding: 0!important;

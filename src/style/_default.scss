@@ -147,20 +147,18 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 .mdm--element-count {
-  background-color: #777777 !important;
+  background-color: #777777;
+  color: #fff;
   margin: 0px 3px;
 }
 .mdm--badge {
   display: inline-block;
-  padding: 5px 9px;
-  font-size: 15px;
+  padding: 8px 9px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 0.9;
   text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: .25rem;
-  font-style: normal;
+  border-radius: 0.25rem;
 }
 
 a {

@@ -1,13 +1,13 @@
 <div class="mdm--shadow-block">
 	<div class="heading-container">
-    <h4 [ngPlural]="totalItemCount" class="marginless">
-      <ng-template ngPluralCase="=1">
-        There is <span class="mdm--badge mdm--element-count">1</span> user in this repository waiting for your approval.
-      </ng-template>
-      <ng-template ngPluralCase="other">
-        There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> users in this repository waiting for your approval.
-      </ng-template>
-    </h4>
+		<h4 [ngPlural]="totalItemCount" class="marginless">
+			<ng-template ngPluralCase="=1">
+				There is <span class="mdm--badge mdm--element-count">1</span> user in this repository waiting for your approval.
+			</ng-template>
+			<ng-template ngPluralCase="other">
+				There are <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span> users in this repository waiting for your approval.
+			</ng-template>
+		</h4>
 	</div>
 
 	<div *ngIf="totalItemCount > 0">
@@ -18,7 +18,7 @@
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 					<div class="mdm--td-cell">First name</div>
-					<span>{{record.firstName}}</span>
+					<span>{{ record.firstName }}</span>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="lastName">
@@ -27,13 +27,13 @@
 					<div [hidden]="hideFilters">
 						<mat-form-field class="filter" floatLabel="never">
 							<mat-label>Last Name</mat-label>
-							<input #filters matInput name="body" (keyup)="applyFilter()">
+							<input #filters matInput name="body" (keyup)="applyFilter()" />
 						</mat-form-field>
 					</div>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 					<div class="mdm--td-cell">Last name</div>
-					<span>{{record.lastName}}</span>
+					<span>{{ record.lastName }}</span>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="emailAddress">
@@ -42,42 +42,52 @@
 					<div [hidden]="hideFilters">
 						<mat-form-field class="filter" floatLabel="never">
 							<mat-label>To</mat-label>
-							<input #filters matInput name="emailAddress" (keyup)="applyFilter()">
+							<input #filters matInput name="emailAddress" (keyup)="applyFilter()" />
 						</mat-form-field>
 					</div>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 					<div class="mdm--td-cell">Email</div>
-					<span>{{record.emailAddress}}</span>
+					<span>{{ record.emailAddress }}</span>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="organisation">
 				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="organisation">
 					<span [hidden]="!hideFilters">Organisation</span>
 				</th>
-				<td mat-cell *matCellDef="let record" style=" text-align: left; word-wrap: break-word;">
+				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 					<div class="mdm--td-cell">Organisation</div>
-					<span>{{record.organisation}}</span>
+					<span>{{ record.organisation }}</span>
 				</td>
 			</ng-container>
-			<!-- TO DO -->
-			<!-- <ng-container matColumnDef="empty">
-				<th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="organisation">
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="actions">
 					<span [hidden]="!hideFilters"></span>
 				</th>
-				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;"></td>
-			</ng-container> -->
+				<td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
+
+
+					<button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">Actions <i class="fas fa-chevron-down fa-xs"></i></button>
+					<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
+						<button mat-menu-item color="accent" type="button" (click)="approveUser(i, record)">
+							<i class="fas fa-check"></i> Approve user
+						</button>
+						<button mat-menu-item color="warn" type="button" (click)="rejectUser(i, record)">
+							<i class="fa fa-ban"></i> Reject user
+						</button>
+					</mat-menu>
+				</td>
+			</ng-container>
 
 			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-			<tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
+			<tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
 		</table>
 
 		<div class="mdm--mat-pagination" *ngIf="totalItemCount > 5">
-			<mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+			<mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 		</div>
-  </div>
-  <div *ngIf="!totalItemCount" class="pxy-2 bordered">
-    <p class="mt-2">There are no pending users in this repository.</p>
-  </div>
-
+	</div>
+	<div *ngIf="!totalItemCount" class="pxy-2 bordered">
+		<p class="mt-2">There are no pending users in this repository.</p>
+	</div>
 </div>

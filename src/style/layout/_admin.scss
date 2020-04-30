@@ -20,7 +20,7 @@ table.table thead {
   border: 1px solid #f3f3f3;
 }
 
-.list-group-settings {
+.menu-list {
   position: relative;
   display: block;
   padding: 10px 0;
@@ -77,84 +77,9 @@ table.table thead {
   }
 }
 
-table.mdm--table {
-  table-layout: fixed;
-  width: 100%;
-  margin-bottom: 0 !important;
-  td {
-    min-height: 60px;
-    vertical-align: middle !important;
-  }
-  th {
-    vertical-align: middle !important;
-  }
-}
-td.mat-cell:last-of-type {
-  padding-right: 16px !important;
-}
 
 
-table.mdm--table-responsive {
-  border: 1px solid #ccc;
-}
 
-table.mdm--table-responsive tr {
-  border: 1px solid #f3f3f3;
-  padding: .35em;
-}
-
-table.mdm--table-responsive th, 
-table.mdm--table-responsive td {
-  padding: .5em;
-}
-.mdm--td-cell {
-  display: none;
-}
-
-@media screen and (max-width: $desktop) {
-  table.mdm--table-responsive {
-    border: 0;
-  }
-  table.mdm--table-responsive th.mat-header-cell:first-of-type, 
-  table.mdm--table-responsive td.mat-cell:first-of-type, 
-  table.mdm--table-responsive td.mat-footer-cell:first-of-type {
-    padding: 0.5rem 0.75rem
-  }
-  table.table-striped.mdm--table-responsive tbody tr:nth-of-type(odd) {
-    background-color: #fff;
-  }
-  
-  table.mdm--table-responsive thead {
-    display: none
-  }
-  
-  table.mdm--table-responsive tr {
-    border-bottom: 8px solid #f3f3f3;
-    display: block;
-    height: auto;
-    min-height: 40px;
-    margin-bottom: 24px;
-    border-radius: 5px;
-  }
-  
-  table.mdm--table-responsive td {
-    border-bottom: 1px solid #f3f3f3;
-    display: block;
-    height: auto;
-    min-height: 40px;
-    text-align: right!important;
-  }
-  
-  .mdm--td-cell {
-    display: inline;
-    float: left;
-    font-weight: bold;
-  }
-
-  table.mdm--table-responsive td:last-child {
-    border-bottom: 0;
-  }
-}
 
 
 
@@ -180,13 +105,6 @@ mdm-settings .mat-checkbox-layout {
   white-space: normal;
 }
 
-
-#settings-container--left {
-  @include respond-to($tablet) {
-    display: none;
-  }
-}
-
 #sidenav {
   #sidenav-content {
     .mat-menu-item.active {
@@ -197,8 +115,11 @@ mdm-settings .mat-checkbox-layout {
   }
 }
 
-#settings-container--left {
-  .list-group-settings a.active {
+aside.menu {
+  @include respond-to($tablet) {
+    display: none;
+  }
+  .menu-list a.active {
     background-color: rgba(77, 114, 156, 0.1);
     color: #1157a9; 
     font-weight: 600;

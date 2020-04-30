@@ -12,6 +12,7 @@ import { MessageHandlerService } from '../../services/utility/message-handler.se
 import { ResourcesService } from '../../services/resources.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
   selector: 'mdm-pending-users-table',
@@ -30,12 +31,15 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   filter: string;
 
   records: any[] = [];
-  // displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'empty']; TO DO -- add the action that allows admins to approve/reject new accounts
-  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation'];
+  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'actions'];
 
   dataSource = new MatTableDataSource<any>();
 
-  constructor(private messageHandler: MessageHandlerService, private resourcesService: ResourcesService ) {
+  constructor(
+    private messageHandler: MessageHandlerService,
+    private resourcesService: ResourcesService,
+    private broadcastSvc: BroadcastService
+  ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
@@ -70,7 +74,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     const options = {
       pageSize,
       pageIndex,
-      filters,
+      filters: 'disabled=false',
       sortBy,
       sortType
     };
@@ -105,5 +109,26 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
+
+  approveUser = ($index, row) => {
+    this.resourcesService.catalogueUser.put(row.id, 'approveRegistration', {}).subscribe(() => {
+          this.messageHandler.showSuccess('User approved successfully');
+          this.refreshDataSource();
+          this.broadcastSvc.broadcast('$pendingUserUpdated');
+        }, (error) => {
+          this.messageHandler.showError('There was a problem approving this user.', error);
+        });
+  };
+
+  rejectUser = ($index, row) => {
+    this.resourcesService.catalogueUser.put(row.id, 'rejectRegistration', {}).subscribe(() => {
+          this.messageHandler.showSuccess('User rejected successfully');
+          this.records.splice($index, 1);
+          this.broadcastSvc.broadcast('$pendingUserUpdated');
+        },
+        (error) => {
+          this.messageHandler.showError('There was a problem approving this user.', error);
+        });
+  };
 }

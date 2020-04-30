@@ -11,7 +11,6 @@ header#mdm--header {
 
   #mdm--navbar {
     height: 100px;
-    margin-bottom: 0;
     padding: 0;
     @include respond-to($mobile-xs) {
       height: 70px;
@@ -66,7 +65,7 @@ header#mdm--header {
   }
 }
 
-.section-title {
+.menu-label {
   padding: 16px 24px 0px 24px;
 }
 
@@ -217,23 +216,13 @@ a.mat-menu-item {
       text-align: left;
     }
   }
-  .aside-main-navigation {
-    h5 {
-      padding-top: 0;
-    }
-  }
-  .section-title {
+  .menu-label {
     padding: 10px 24px 0px 24px;
   }
   .aside-user-actions {
     text-align: center;
-    margin-bottom: 20px;
     button {
       width: 80%;
-    }
-    button:first-child {
-      background-color: #002147;
-      color: #fff;
     }
   }
 }

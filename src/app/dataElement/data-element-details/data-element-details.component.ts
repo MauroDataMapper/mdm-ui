@@ -16,12 +16,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import {
-  DataElementResult,
-  EditableDataElement
-} from '@mdm/model/dataElementModel';
+import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import {McSelectPagination} from '@mdm/utility/mc-select/mc-select.component';
+import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 
 @Component({
   selector: 'mdm-data-element-details',

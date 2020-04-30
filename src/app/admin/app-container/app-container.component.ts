@@ -10,16 +10,18 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 })
 export class AdminAppContainerComponent implements OnInit {
   pendingUsersCount = 0;
-  isAdmin = this.securityHandler.isAdmin();
   constructor(private sharedService: SharedService, private securityHandler: SecurityHandlerService, private broadcastSvc: BroadcastService) {}
 
   ngOnInit() {
-    if (this.isAdmin) {
+    if (this.isAdmin()) {
       this.getPendingUsers();
       this.broadcastSvc.subscribe('pendingUserUpdated', () => {
         this.getPendingUsers();
       });
     }
+  }
+  isAdmin = () => {
+    return this.securityHandler.isAdmin();
   }
 
   getPendingUsers = () => {

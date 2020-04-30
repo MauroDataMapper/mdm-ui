@@ -57,6 +57,9 @@ export class NavbarComponent implements OnInit {
     return this.securityHandler.isAdmin();
   }
 
+  isLoggedIn = () => {
+      return this.securityHandler.isLoggedIn();
+  };
 
   login = () => {
     this.dialog.open(LoginModalComponent, {}).afterClosed().subscribe((user) => {

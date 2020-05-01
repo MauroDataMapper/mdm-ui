@@ -404,7 +404,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!this.enableContextMenu) {
+    if (!this.enableContextMenu || fnode.domainType === DOMAIN_TYPE.Term) {
       return;
     }
 

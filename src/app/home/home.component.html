@@ -15,7 +15,7 @@
                     </button>
                 </div>
                 <div *ngIf="isLoggedIn()">
-                    <button mat-flat-button color="primary" class="custom">Browse our Models</button>
+                    <a mat-flat-button color="primary" class="custom" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
                 </div>
             </div>
             <div fxFlex="50" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>

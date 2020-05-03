@@ -8,7 +8,7 @@
         <i *ngIf="importerHelp" class="fas fa-info-circle helpIcon" (click)="loadImporterHelp()" matTooltip="Help"></i>
     </h4>
 
-    <mat-form-field appearance="outline" class="mb-2">
+    <mat-form-field appearance="outline" class="mb-2 full-width">
         <mat-label>Select importer</mat-label>
         <mat-select aria-label="selectedImporterStr" [(ngModel)]="selectedImporterStr" placeholder="Select..." (selectionChange)="importerChanged()">
           <mat-option *ngFor="let item of importers" [value]="item">{{item.displayName}}</mat-option>
@@ -72,11 +72,11 @@
                                 [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}"
                                 [required]="option.optional === false">
                         </div>
-
                         <div *ngIf="formOptionsMap[option.type] === 'file'">
                             <input type="{{formOptionsMap[option.type]}}"
                                    name="{{option.name}}"
                                    [(ngModel)]="option.value"
+                                   id="{{option.name}}"
                                    [ngClass]="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
                                    [required]="option.optional === false"
                                    [attr.valid-file]="formOptionsMap[option.type] == 'file'">
@@ -118,7 +118,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="importHasError && importErrors.length > 0">
+<div *ngIf="importHasError && importErrors?.length > 0">
     <div class="alert alert-danger">
         <strong>Import Errors ({{importErrors.length}})</strong>
         <div *ngFor="let error of importErrors">

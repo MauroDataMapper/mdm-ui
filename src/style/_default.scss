@@ -195,32 +195,3 @@ a {
 .badge {
   font-size: 100%;
 }
-
-a {
-  color: #337ab7;
-}
-
-.breadcrumb {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  padding: .5rem .75rem;
-  margin-bottom: 1rem;
-  list-style: none;
-  background-color: #e9ecef;
-  border-radius: .25rem;
-  margin-bottom: 0;
-}
-
-.loading-spinner {
-  @include size();
-  div {
-    position: absolute;
-    top:70%;
-    left:40%;
-  }
-  i {
-    font-size: 75px;
-  }
-}

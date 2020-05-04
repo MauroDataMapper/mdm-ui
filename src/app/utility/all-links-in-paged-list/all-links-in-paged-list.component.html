@@ -1,33 +1,26 @@
-<div>
-    <div style="width: 100%;height: 100%; text-align: center;" class="loading-spinner" *ngIf="loading && showLoadingSpinner">
-        <div>
-            <i class="fas fa-sync-alt fa-spin"></i>
-        </div>
+<div style="width: 100%; height: 100%; text-align: center;" class="loading-spinner" *ngIf="loading && showLoadingSpinner">
+    <div>
+        <i class="fas fa-sync-alt fa-spin"></i>
     </div>
-    <div *ngIf="total">
-        <div *ngFor="let linkType of linkTypes">
-            <mdm-paged-list [name]="linkType"
-                           [mcTitle]="linkType"
-                           [type]="'static'"
-                           [items]="allLinksMap[linkType].links"
-                           [pageSize]="3">
-
-                <ng-template #pageListTemplate let-item>
-                    <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
-                        <mdm-element-link [element]="item.target"
-                                      [showParentDataModelName]="true"
-                                      [showLink]="true"
-                                      [showTypeTitle]="true"></mdm-element-link>
-                        <div style="padding-left: 3px" *ngIf="showDescription && item.target.description && item.target.description.length>0">
-                            <mdm-more-description [description]="item.source.description"></mdm-more-description>
-                        </div>
+</div>
+<div *ngIf="total">
+    <div *ngFor="let linkType of linkTypes">
+        <mdm-paged-list [name]="linkType" [mcTitle]="linkType" [type]="'static'" [items]="allLinksMap[linkType].links" [pageSize]="3">
+            <ng-template #pageListTemplate let-item>
+                <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
+                    <mdm-element-link [element]="item.target"
+                                    [showParentDataModelName]="true"
+                                    [showLink]="true"
+                                    [showTypeTitle]="true">
+                    </mdm-element-link>
+                    <div style="padding-left: 3px;" *ngIf="showDescription && item.target.description && item.target.description.length > 0">
+                        <mdm-more-description [description]="item.source.description"></mdm-more-description>
                     </div>
-                </ng-template>
-
-            </mdm-paged-list>
-        </div>
+                </div>
+            </ng-template>
+        </mdm-paged-list>
     </div>
-    <div *ngIf="total == 0 && showNoLinksMessage" style="font-style: italic; font-size: 14px;padding-left: 2px;">
-        No Links
-    </div>
+</div>
+<div *ngIf="total == 0 && showNoLinksMessage" style="font-style: italic; font-size: 14px; padding-left: 2px;">
+    No Links
 </div>

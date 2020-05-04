@@ -3,7 +3,7 @@
     <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
     <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
 </div>
-<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped table-responsive">
+<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped">
     <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="type" [disabled]="!hideFilters" style="cursor:pointer;max-width: 15%;width: 15%;" columnName="type">
             <span [hidden]="!hideFilters">Type</span>
@@ -33,12 +33,12 @@
             </div>
         </th>
         <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-        <mdm-element-link
-                [parentDataModel]="{id:record.dataModel}"
-                [parentDataClass]="{id:record.dataClass}"
-                [element]="record"></mdm-element-link>
-        <br>
-        <mdm-model-path [path]="record.breadcrumbs"></mdm-model-path>
+            <mdm-element-link
+                    [parentDataModel]="{id:record.dataModel}"
+                    [parentDataClass]="{id:record.dataClass}"
+                    [element]="record"></mdm-element-link>
+            <br>
+            <mdm-model-path [path]="record.breadcrumbs"></mdm-model-path>
         </td>
     </ng-container>
     <ng-container matColumnDef="description">
@@ -61,16 +61,12 @@
             </div>
         </td>
     </ng-container>
-
-
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
 </table>
 
 <mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner color="primary"mode="indeterminate">
-    </mat-progress-spinner>
+    <mat-progress-spinner color="primary"mode="indeterminate"></mat-progress-spinner>
 </mat-card>
 
 <div class="mdm--mat-pagination">

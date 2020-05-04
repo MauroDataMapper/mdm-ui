@@ -69,10 +69,10 @@
 
 					<button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">Actions <i class="fas fa-chevron-down fa-xs"></i></button>
 					<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
-						<button mat-menu-item color="accent" type="button" (click)="approveUser(i, record)">
+						<button mat-menu-item color="accent" type="button" (click)="askForSoftApproval(record)">
 							<i class="fas fa-check"></i> Approve user
 						</button>
-						<button mat-menu-item color="warn" type="button" (click)="rejectUser(i, record)">
+						<button mat-menu-item color="warn" type="button" (click)="askForSoftRejection(record)">
 							<i class="fa fa-ban"></i> Reject user
 						</button>
 					</mat-menu>

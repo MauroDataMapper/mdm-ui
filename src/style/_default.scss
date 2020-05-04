@@ -197,4 +197,20 @@ a {
 }
 
 
+
+.loading-spinner {
+  @include size();
+  div {
+    position: absolute;
+    top:70%;
+    left:40%;
+  }
+  i {
+    font-size: 75px;
+  }
+}
 .mat-checkbox-layout { white-space: normal !important; }
+
+.badge {
+  font-size: 100%;
+}

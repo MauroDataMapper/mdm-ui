@@ -12,7 +12,7 @@
   color: #4F575F!important;
 }
 
-button.custom {
+button.custom, a.custom {
   padding: 7px 16px;
   @include respond-to($mobile-xs) {
     padding: 5px 16px;

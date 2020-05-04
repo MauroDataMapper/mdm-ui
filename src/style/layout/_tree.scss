@@ -231,13 +231,13 @@ ul.favourites li:focus {
       text-align: center;
     }
   }
-  .item-type {
-    background: rgba(187, 248, 222, 0.3);
-    color: #076528; 
-    border: 1px solid rgba(10, 133, 53, 0.5);
-    border-radius: 5px;
-    padding: 4px;
-  }
+}
+.item-type {
+  background: rgba(187, 248, 222, 0.3);
+  color: #076528;
+  border: 1px solid rgba(10, 133, 53, 0.5);
+  border-radius: 5px;
+  padding: 4px;
 }
 .detail-icons--cta {
   float: right;

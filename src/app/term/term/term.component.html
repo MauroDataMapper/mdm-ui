@@ -4,15 +4,16 @@
 </div>
 
 <div *ngIf="term && term.semanticLinks && term.semanticLinks.length > 0">
-    <div class="panel panel-default">
-        <div class="panel-heading"><strong>Links</strong></div>
-        <div class="panel-body" style="padding-top: 5px !important;">
-            <mdm-all-links-in-paged-list
-                    [showLoadingSpinner]="true"
-                    [parent]="term"
-                    [showDescription]="true"
-                    [showNoLinksMessage]="true"
-                    [type]="'static'">
+    <div class="mdm--shadow-block bordered">
+        <div class="heading-container">
+            <h4 class="marginless">Links</h4>
+        </div>
+        <div class="pxy-2">
+            <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
+                [parent]="term"
+                [showDescription]="true"
+                [showNoLinksMessage]="true"
+                [type]="'static'">
             </mdm-all-links-in-paged-list>
         </div>
     </div>

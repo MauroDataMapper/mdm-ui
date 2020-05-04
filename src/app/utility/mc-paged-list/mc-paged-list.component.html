@@ -1,7 +1,7 @@
 <div style="position: relative;width: 100%;">
-    <div *ngIf="!doNotDisplayTitle && displayItems && displayItems.length>0" style="vertical-align:baseline;width: 100%;background-color: #f5f5f5;-moz-border-radius: 2px;border-radius: 2px;margin: 1px 0px;">
-        <span style="display: inline-block;padding: 2px 5px;font-style: italic;font-size: 13px; font-weight: bold;">{{mcTitle}}</span>
-        <span class="mdm--badge mdm--element-count" *ngIf="displayItems && displayItems.length>0">{{total}}</span>
+    <div *ngIf="!doNotDisplayTitle && displayItems && displayItems.length>0">
+        <span>{{mcTitle}}</span>
+        <span class="mdm--badge mdm--element-count" *ngIf="displayItems && displayItems.length > 0">{{total}}</span>
     </div>
 
 
@@ -11,10 +11,10 @@
 
     <div style="clear:both;vertical-align:baseline;width: 100%;-moz-border-radius: 2px;border-radius: 2px;margin: 1px 0px 3px 0px;" *ngIf="displayItems && total > pageSize">
         <div>
-            <div [ngClass]="{'disabledPageListBtn':disablePrev, 'pageListBtn':true}" ng-click="prev()">
+            <div [ngClass]="{'disabledPageListBtn':disablePrev, 'pageListBtn':true}" (click)="prev()">
                 <i aria-hidden="true" class="fas fa-chevron-left"></i>
             </div>
-            <div [ngClass]="{'disabledPageListBtn':disableNext, 'pageListBtn':true}" ng-click="next()">
+            <div [ngClass]="{'disabledPageListBtn':disableNext, 'pageListBtn':true}" (click)="next()">
                 <i aria-hidden="true" class="fas fa-chevron-right pageListRightBtn"></i>
             </div>
         </div>

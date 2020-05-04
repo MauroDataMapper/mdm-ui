@@ -12,11 +12,10 @@ import { ResourcesService } from '@mdm/services/resources.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
-import {MdmPaginatorComponent} from '../../mdm-paginator/mdm-paginator';
-import {SummaryMetadataPopupComponent} from "../summary-metadata-popup/summary-metadata-popup.component";
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { SummaryMetadataPopupComponent } from '../summary-metadata-popup/summary-metadata-popup.component';
 
 @Component({
   selector: 'mdm-summary-metadata-table',
@@ -150,7 +149,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   popup(record: any) {
     this.matDialog.open(SummaryMetadataPopupComponent, {
       width: '90%',
-      height: '90%',
+      autoFocus: false,
       data: record
     });
   }

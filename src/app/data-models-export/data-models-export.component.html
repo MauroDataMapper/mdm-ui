@@ -1,10 +1,10 @@
 <div class="heading-container">
-    <h4>Data Model(s) Export </h4>
+    <h4 class="marginless">Data Model(s) Export </h4>
     <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
 </div>
 
-<div style="margin-bottom: 10px">
-    <span>Please select your Data Model(s):</span>
+<div class="mt-2 mb-2">
+    <h4 class="marginless">Select your Data Model(s):</h4>
         <mdm-model-selector-tree [(ngModel)]="selectedDataModels"
                                 [onSelect]="onSelect"
                                 [multiple]="true"
@@ -49,7 +49,7 @@
         </button>
     </div>
     <div style="clear: both;" *ngIf="processing">
-        <mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
     </div>
     <div style="margin-bottom: 3px;padding-left: 5px;">
         <div id="exportFileDownload" #aLink></div>

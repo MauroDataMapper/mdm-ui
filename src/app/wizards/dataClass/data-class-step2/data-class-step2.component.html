@@ -116,7 +116,7 @@
         </div>
     <div style="margin-top: 50px; width: 100%;">
         <div *ngIf="processing">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
         </div>
         <div *ngIf="!processing && isProcessComplete">
             <div class="alert alert-success" *ngIf="failCount === 0">
@@ -130,7 +130,7 @@
 </div>
 <div style="margin-top: 50px; width: 100%;">
     <div *ngIf="processing">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
     </div>
     <div *ngIf="!processing && isProcessComplete">
         <div class="alert alert-success" *ngIf="failCount === 0">

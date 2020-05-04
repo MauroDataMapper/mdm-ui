@@ -152,7 +152,7 @@
 	</div>
 	<div style="margin-top: 50px;">
 		<div *ngIf="processing">
-			<mat-progress-bar value="50" bufferValue="75" color="primary" mode="indeterminate"></mat-progress-bar>
+			<mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
 		</div>
 		<div *ngIf="!processing && isProcessComplete">
 			<div class="alert alert-success" *ngIf="failCount === 0">

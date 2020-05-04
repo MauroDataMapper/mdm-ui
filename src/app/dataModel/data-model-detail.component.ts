@@ -420,6 +420,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         data: {
           title: 'Are you sure you want to finalise the Data Model ?',
           okBtnTitle: 'Finalise model',
+          btnType: 'accent',
           message:
             'Once you finalise a Data Model, you can not edit it anymore!<br> \n' +
             'but you can create new version of it.'

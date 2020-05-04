@@ -6,10 +6,8 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ResourcesService } from '@mdm/services/resources.service';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -32,8 +30,6 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: ResourcesService,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService
   ) {}
 
   ngOnInit() {

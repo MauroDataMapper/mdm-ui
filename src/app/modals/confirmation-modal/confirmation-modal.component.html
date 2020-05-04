@@ -1,12 +1,12 @@
 <form role="form">
     <div class="modal-header">
-        <h3 class="modal-title marginless">{{title}}</h3>
+        <h4 class="modal-title marginless">{{title}}</h4>
     </div>
     <div class="modal-body">
         <span [innerHtml]="message"></span>
     </div>
     <div class="modal-footer" style="padding: 10px;">
-        <button mat-button color="warn" *ngIf="cancelShown" style="margin-right: 10px;" type="button" (click)="close()">{{cancelTitle}}</button>
-        <button mat-flat-button color="warn" type="button" class="custom" (click)="ok()">{{okTitle}}</button>
+        <button mat-button color="warn" *ngIf="cancelShown" class="mr-1" type="button" (click)="close()">{{cancelTitle}}</button>
+        <button mat-flat-button color="{{btnType}}" type="button" (click)="ok()">{{okTitle}}</button>
     </div>
 </form>

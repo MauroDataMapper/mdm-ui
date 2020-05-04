@@ -14,6 +14,7 @@ export class ConfirmationModalComponent implements OnInit {
   okTitle: string;
   cancelTitle: string;
   cancelShown: boolean;
+  btnType: string;
 
   constructor(
     private dialogRef: MatDialogRef<ConfirmationModalComponent>,
@@ -22,6 +23,7 @@ export class ConfirmationModalComponent implements OnInit {
 
   ngOnInit() {
     this.okTitle = this.data.okBtnTitle ? this.data.okBtnTitle : 'OK';
+    this.btnType = this.data.btnType ? this.data.btnType : 'primary';
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
     this.title = this.data.title;
     this.message = this.data.message;

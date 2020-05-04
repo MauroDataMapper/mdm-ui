@@ -6,10 +6,8 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ResourcesService } from '@mdm/services/resources.service';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -36,18 +34,14 @@ export class ModulesComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: ResourcesService,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
     private shared: SharedService
   ) {}
 
   ngOnInit() {
     this.appVersion = this.shared.appVersion;
-
     if (this.sort) {
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     }
-
     this.modulesFetch();
   }
 

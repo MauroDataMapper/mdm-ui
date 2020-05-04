@@ -172,36 +172,25 @@ export class ModelManagementComponent implements OnInit {
     }
 
     this.deleteInProgress = true;
-    this.resourcesService.dataModel
-      .delete(null, null, null, dataModelResources)
-      .subscribe(
-        () => {
+    this.resourcesService.dataModel.delete(null, null, null, dataModelResources).subscribe(() => {
           if (permanent) {
-            this.deleteSuccessMessage =
-              this.selectedElementsCount +
-              ' Data Model(s) deleted successfully.';
+            this.deleteSuccessMessage = this.selectedElementsCount + ' Data Model(s) deleted successfully.';
             this.deleteInProgress = false;
 
             setTimeout(() => {
               this.resetSettings();
             }, 2000);
           } else {
-            this.deleteSuccessMessage =
-              this.selectedElementsCount +
-              ' Data Model(s) marked as deleted successfully.';
+            this.deleteSuccessMessage = this.selectedElementsCount + ' Data Model(s) marked as deleted successfully.';
             this.deleteInProgress = false;
 
             setTimeout(() => {
               this.resetSettings();
             }, 2000);
           }
-        },
-        error => {
+        }, error => {
           this.deleteInProgress = false;
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Model(s).',
-            error
-          );
+          this.messageHandler.showError('There was a problem deleting the Data Model(s).', error);
         }
       );
   }
@@ -223,12 +212,13 @@ export class ModelManagementComponent implements OnInit {
         data: {
           title: 'Folder delete',
           okBtnTitle: 'Confirm folder deletion',
+          btnType: 'warn',
           message
         }
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           return promise;
         }
 
@@ -255,6 +245,7 @@ export class ModelManagementComponent implements OnInit {
         data: {
           title: 'Data Model deletion',
           okBtnTitle: 'Delete permanently',
+          btnType: 'warn',
           message,
         }
       });
@@ -275,12 +266,13 @@ export class ModelManagementComponent implements OnInit {
           data: {
             title: 'Permanent delete',
             okBtnTitle: 'Confirm permanent deletion',
+            btnType: 'warn',
             message
           }
         });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== 'ok') {
+        dialog2.afterClosed().subscribe(res => {
+          if (res?.status !== 'ok') {
             reject(null);
             return;
           }

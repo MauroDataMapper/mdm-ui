@@ -15,14 +15,14 @@ export class AdminAppContainerComponent implements OnInit {
 
   ngOnInit() {
     if (this.isAdmin) {
-      this.pendingUsers();
+      this.getPendingUsers();
       this.broadcastSvc.subscribe('pendingUserUpdated', () => {
-        this.pendingUsers();
+        this.getPendingUsers();
       });
     }
   }
 
-  pendingUsers = () => {
+  getPendingUsers = () => {
     this.sharedService.pendingUsersCount().subscribe(data => {
       this.pendingUsersCount = data.body.count;
     });

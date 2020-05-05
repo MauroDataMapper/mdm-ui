@@ -53,7 +53,7 @@
         <span>Summary of Selected Terms</span>
         <mdm-paged-list [name]="'linkType'" [mcTitle]="'linkType'" [type]="'static'" [items]="selectorSection.selectedTermsArray" [pageSize]="10">
             <ng-template #pageListTemplate let-item>
-                <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
+                <div class="pagedElement">
                     <div>
                         <i class="fas fa-times warning" style="margin-right: 8px;" (click)="removeTerm(item)"></i>
                         <mdm-element-link [element]="item"></mdm-element-link>

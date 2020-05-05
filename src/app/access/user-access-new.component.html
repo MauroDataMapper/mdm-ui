@@ -7,7 +7,7 @@
             </div>
             <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
                 <div *ngIf="folderResult['editable']" style="float: right;">
-                    <button mat-flat-button color="primary" type="button" (click)="add()" title="Add">
+                    <button mat-flat-button color="primary" type="button" (click)="add()">
                         <i class="fas fa-plus"></i>
                         Add User
                     </button>
@@ -48,7 +48,7 @@
                                 </ng-template>
 
                             </mdm-select>
-                            <small *ngIf="record.edit.errors && record.edit.errors['user']" class="errorMessage">{{record.edit.errors['user']}}</small>
+                            <small *ngIf="record.edit.errors && record.edit.errors['user']" class="warning">{{record.edit.errors['user']}}</small>
                         </div>
                     </div>
                 </td>
@@ -68,7 +68,7 @@
                         <div *ngIf="record.isNew">
                             <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['firstName']}">
                                 <input class="form-control" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
-                                <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="errorMessage">{{record.edit.errors['firstName']}}</small>
+                                <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="warning">{{record.edit.errors['firstName']}}</small>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                         <div *ngIf="record.isNew">
                             <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['lastName']}">
                                 <input class="form-control" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
-                                <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="errorMessage">{{record.edit.errors['lastName']}}</small>
+                                <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="warning">{{record.edit.errors['lastName']}}</small>
                             </div>
                         </div>
                     </div>

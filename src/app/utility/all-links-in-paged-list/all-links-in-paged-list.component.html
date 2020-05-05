@@ -7,7 +7,7 @@
     <div *ngFor="let linkType of linkTypes">
         <mdm-paged-list [name]="linkType" [mcTitle]="linkType" [type]="'static'" [items]="allLinksMap[linkType].links" [pageSize]="3">
             <ng-template #pageListTemplate let-item>
-                <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
+                <div class="pagedElement">
                     <mdm-element-link [element]="item.target"
                                     [showParentDataModelName]="true"
                                     [showLink]="true"

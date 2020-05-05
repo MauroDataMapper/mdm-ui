@@ -76,28 +76,6 @@
                                 </mdm-data-type-inline>
                             </div>
                             <div *ngIf="!showNewInlineDataType">
-<!--                                <mc-select-2-->
-<!--                                        width="'100%'"-->
-<!--                                        has-error="errors.dataType"-->
-<!--                                        accept-typed-input="false"-->
-<!--                                        value-type="'dynamic'"-->
-<!--                                        default-value="mcDataElement.dataType"-->
-<!--                                        load-dynamic-values="fetchDataTypes"-->
-<!--                                        min-input-length="1"-->
-<!--                                        record="model"-->
-<!--                                        id-property="'id'"-->
-<!--                                        display-property="'label'"-->
-<!--                                        search-property="'label'"-->
-<!--                                        load-all-on-click="true"-->
-<!--                                        on-select="onDataTypeSelect">-->
-<!--                                    <div>-->
-<!--                                        <div>{{$item.label}}</div>-->
-<!--                                        <div>-->
-<!--                                            <element-link mc-element="$item" show-type-title="true" show-link="false"></element-link>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </mc-select-2>-->
-
                                 <mdm-select [width]="'100%'"
                                            [acceptTypedInput]="true"
                                            [valueType]="'dynamic'"
@@ -182,7 +160,7 @@
                                                        (delete)="delete()"
                                                        [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
-                            <div [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                            <div [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
@@ -210,7 +188,6 @@
                         <div style="text-align: left" *ngIf="exportError">
                             <div style="padding-top: 25px;">
                                 <div class="alert alert-danger">
-                                    <a class="close" ng-click="resetExportError()" aria-label="close">&times;</a>
                                     <strong>Error!</strong> {{exportError}}
                                 </div>
                             </div>

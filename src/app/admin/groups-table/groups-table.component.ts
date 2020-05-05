@@ -7,6 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-groups-table',
@@ -33,13 +34,15 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandlerService: MessageHandlerService,
     private resourcesService: ResourcesService,
-    private stateHandlerService: StateHandlerService
+    private stateHandlerService: StateHandlerService,
+    private title: Title
   ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
   ngOnInit() {
     this.groupsFetch();
+    this.title.setTitle('Manage groups');
   }
 
   ngAfterViewInit() {
@@ -122,13 +125,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
 
   editUser(row) {
     if (row) {
-      this.stateHandlerService.Go(
-        'admin.group',
-        {
-          id: row.id
-        },
-        null
-      );
+      this.stateHandlerService.Go('admin.group', { id: row.id }, null);
     }
   }
 
@@ -136,21 +133,13 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     this.resourcesService.userGroup.delete(row.id, null).subscribe(resp => {
       this.messageHandlerService.showSuccess('Group deleted successfully.');
 
-      this.groupsFetch(
-        this.paginator.pageSize,
-        this.paginator.pageIndex,
-        this.sort.active,
-        this.sort.direction,
-        this.filter
-      ).subscribe(data => {
+      this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
         this.records = data.body.items;
         this.dataSource.data = this.records;
-      },
-        err => {
+      }, err => {
           this.messageHandlerService.showError('There was a problem loading the groups.', err);
         });
-    },
-      err => {
+    }, err => {
         this.messageHandlerService.showError('There was a problem deleting the group.', err);
       });
   }

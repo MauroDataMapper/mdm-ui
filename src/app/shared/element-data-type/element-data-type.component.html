@@ -55,7 +55,7 @@
     </span>
     <span *ngIf="elementDataType.domainType == 'ReferenceType'">
         <span *ngIf="!onlyShowRefDataClass">
-            <div><a href="{{link}}" title="DataType">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Reference)</span></div>
+            <div><a href="{{link}}">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Reference)</span></div>
             <div *ngIf="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span><mdm-element-link [element]="elementDataType.referenceClass" [newWindow]="newWindow"></mdm-element-link>]</span></div>
         </span>
         <span *ngIf="onlyShowRefDataClass">
@@ -65,7 +65,7 @@
 
     <span *ngIf="elementDataType.domainType == 'TerminologyType'">
         <span *ngIf="!onlyShowRefDataClass">
-            <div><a href="{{link}}" title="DataType">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Terminology)</span></div>
+            <div><a href="{{link}}">{{elementDataType.label}}</a><span class="dataTypeLabel dataTypeEnumeration">(Terminology)</span></div>
             <div *ngIf="referenceClass"><span style="font-size: 13px;">[<span style="font-style: italic">ref:&nbsp;</span><mdm-element-link [element]="elementDataType.terminology" [newWindow]="newWindow"></mdm-element-link>]</span></div>
         </span>
         <span *ngIf="onlyShowRefDataClass">

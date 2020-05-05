@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-search',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./search.component.sass']
 })
 export class SearchComponent implements OnInit {
-  constructor() {}
+  constructor(private title: Title) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.title.setTitle('Search');
+  }
 }

@@ -67,7 +67,7 @@
                         </div>
 
                         <div style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
@@ -89,7 +89,7 @@
                             </mdm-editable-form-buttons>
                         </div>
 
-                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     color="primary"
                                     type="button"

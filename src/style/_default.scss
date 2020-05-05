@@ -27,9 +27,12 @@ ol li, ul li {
     width: 100%;
   }
 }
-.mdm--container-hd {
-  max-width: 1800px;
-  margin: auto;
+.mdm--container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 label {
@@ -136,7 +139,7 @@ mat-progress-bar.mat-progress-bar.mat-primary {
   margin-bottom: 20px;
   border-radius: 4px;
   .panel-body {
-    padding: 20px;
+    padding: 14px 20px;
     border: 1px solid #f3f3f3;
   }
 }

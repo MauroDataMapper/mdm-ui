@@ -20,8 +20,7 @@ import { SharedService } from '../services/shared.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
-import { ResourcesService } from '../services/resources.service';
-import { MessageHandlerService } from '../services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -60,14 +59,11 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcastSvc: BroadcastService,
-    private resourcesService: ResourcesService,
-    private messageHandlerService: MessageHandlerService
+    private title: Title
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
-    this.resourcesService = resourcesService;
-    this.messageHandlerService = messageHandlerService;
     this.FolderDetails();
   }
 
@@ -104,10 +100,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       this.editableForm.validationError = false;
       this.editableForm.description = this.result.description;
     };
-
-    // this.subscription = this.messageService.editMode.subscribe((message: boolean) => {
-    //     this.showEditMode = message;
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -153,6 +145,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
           this.hasResult = true;
           this.watchFolderObject();
         }
+        this.title.setTitle(`Folder - ${this.result?.label}`);
       }
     );
   }

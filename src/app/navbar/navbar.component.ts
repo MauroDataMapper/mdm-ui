@@ -32,14 +32,20 @@ export class NavbarComponent implements OnInit {
       if (this.isLoggedIn) {
           this.profile = this.securityHandler.getCurrentUser();
           if (this.isAdmin) {
-            this.sharedService.pendingUsersCount().subscribe(data => {
-              this.pendingUsersCount = data.body.count;
-            });
+            this.getPendingUsers();
           }
       }
       this.backendURL = this.sharedService.backendURL;
       this.HDFLink = this.sharedService.HDFLink;
       this.current = this.sharedService.current;
+      this.broadcastSvc.subscribe('pendingUserUpdated', () => {
+        this.getPendingUsers();
+      });
+  }
+  getPendingUsers = () => {
+    this.sharedService.pendingUsersCount().subscribe(data => {
+      this.pendingUsersCount = data.body.count;
+    });
   }
 
 

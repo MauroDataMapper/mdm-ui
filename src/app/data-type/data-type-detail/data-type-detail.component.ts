@@ -1,12 +1,20 @@
-import {Component, OnInit, Input, ViewChildren, QueryList, ChangeDetectorRef} from '@angular/core';
-import {ElementTypesService} from '@mdm/services/element-types.service';
-import {ResourcesService} from '@mdm/services/resources.service';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
-import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
-import {SharedService} from '@mdm/services/shared.service';
-import {ConfirmationModalComponent} from '@mdm/modals/confirmation-modal/confirmation-modal.component';
-import {EditableDataModel, DataModelResult} from '@mdm/model/dataModelModel';
-import {MatDialog} from '@angular/material/dialog';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChildren,
+  QueryList,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -30,9 +38,9 @@ export class DataTypeDetailComponent implements OnInit {
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
-    private changeRef: ChangeDetectorRef
-  ) {
-  }
+    private changeRef: ChangeDetectorRef,
+    private title: Title
+  ) {}
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
@@ -40,23 +48,23 @@ export class DataTypeDetailComponent implements OnInit {
   errorMessage: any;
 
   ngOnInit() {
-
     this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
     this.editableForm.description = this.mcDataTypeObject.description;
     this.editableForm.label = this.mcDataTypeObject.label;
+    this.title.setTitle(`Data Type - ${this.mcDataTypeObject?.label}`);
 
     this.editableForm.show = () => {
       this.editForm.forEach(x => x.edit({
-        editing: true,
-        focus: x._name === 'moduleName' ? true : false
-      }));
+          editing: true,
+          focus: x._name === 'moduleName' ? true : false,
+        }));
       this.editableForm.visible = true;
     };
 
     this.editableForm.cancel = () => {
-      this.editForm.forEach(x => x.edit({editing: false}));
+      this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -72,11 +80,10 @@ export class DataTypeDetailComponent implements OnInit {
           this.editableForm.aliases.push(item);
         });
       }
-
     };
   }
 
-  validateLabel = data => {
+  validateLabel = (data) => {
     if (!data || (data && data.trim().length === 0)) {
       return 'Data Type name can not be empty';
     }
@@ -85,12 +92,12 @@ export class DataTypeDetailComponent implements OnInit {
   ngAfterViewInit(): void {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe(() => {
-        this.editForm.forEach(x =>
-          x.edit({
-            editing: true,
-            focus: x._name === 'moduleName' ? true : false
-          })
-        );
+      this.editForm.forEach(x =>
+        x.edit({
+          editing: true,
+          focus: x._name === 'moduleName' ? true : false,
+        })
+      );
     });
   }
 
@@ -108,21 +115,21 @@ export class DataTypeDetailComponent implements OnInit {
       domainType: this.mcDataTypeObject.domainType,
       classifiers: this.mcDataTypeObject.classifiers.map(cls => ({id: cls.id}))
     };
-    this.resources.dataType.put(this.mcParentDataModel.id, this.mcDataTypeObject.id, null, { resource }).subscribe((res) => {
-        const result = res.body;
-        if (this.afterSave) {
-          this.afterSave(resource);
+    this.resources.dataType.put(this.mcParentDataModel.id, this.mcDataTypeObject.id, null, {resource}).subscribe((res) => {
+          const result = res.body;
+          if (this.afterSave) {
+            this.afterSave(resource);
+          }
+          this.mcDataTypeObject.aliases = Object.assign([], result.aliases);
+          this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
+          this.mcDataTypeObject.label = result.label;
+          this.mcDataTypeObject.description = result.description;
+          this.messageHandler.showSuccess('Data Type updated successfully.');
+          this.editableForm.visible = false;
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Data Type.', error);
         }
-        this.mcDataTypeObject.aliases = Object.assign([], result.aliases);
-        this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
-        this.mcDataTypeObject.label = result.label;
-        this.mcDataTypeObject.description = result.description;
-        this.messageHandler.showSuccess('Data Type updated successfully.');
-        this.editableForm.visible = false;
-
-      }, (error) => {
-        this.messageHandler.showError('There was a problem updating the Data Type.', error);
-      });
+      );
 
     this.changeRef.detectChanges();
   };
@@ -134,19 +141,18 @@ export class DataTypeDetailComponent implements OnInit {
   };
 
   onCancelEdit = () => {
-    this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases );
+    this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
     this.changeRef.detectChanges();
   };
 
   delete = () => {
     this.resources.dataType.delete(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe(() => {
-        this.messageHandler.showSuccess('Data Type deleted successfully.');
-        this.stateHandler.Go('dataModel', {id: this.mcParentDataModel.id}, {reload: true, location: true});
-      },
-      error => {
-        this.messageHandler.showError('There was a problem deleting the Data Type.', error);
-      }
-    );
+          this.messageHandler.showSuccess('Data Type deleted successfully.');
+          this.stateHandler.Go('dataModel', { id: this.mcParentDataModel.id }, { reload: true, location: true });
+        }, error => {
+          this.messageHandler.showError('There was a problem deleting the Data Type.', error);
+        }
+      );
   };
 
   askToDelete = () => {
@@ -155,29 +161,29 @@ export class DataTypeDetailComponent implements OnInit {
     }
 
     // check if it has DataElements
-    this.resources.dataType.get(this.mcParentDataModel.id, this.mcDataTypeObject.id, 'dataElements', null).subscribe(res => {
-      const result = res.body;
-      const dataElementsCount = result.count;
+    this.resources.dataType.get(this.mcParentDataModel.id, this.mcDataTypeObject.id, 'dataElements', null).subscribe((res) => {
+        const result = res.body;
+        const dataElementsCount = result.count;
 
-      let message = `Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?`;
-      if (dataElementsCount > 0) {
-        message += `<br>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:<br>`;
+        let message = `Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?`;
+        if (dataElementsCount > 0) {
+          message += `<br>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:<br>`;
 
-        for (let i = 0; i < Math.min(5, result.items.length); i++) {
-          const link = this.elementTypes.getLinkUrl(result.items[i]);
-          message += `<a target='_blank' href='${link}'>${result.items[i].label}</a><br>`;
-        }
-        if (result.count > 5) {
-          message += ' ...';
-        }
-      }
-
-      this.dialog.open(ConfirmationModalComponent, {data: {message}}).afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            return;
+          for (let i = 0; i < Math.min(5, result.items.length); i++) {
+            const link = this.elementTypes.getLinkUrl(result.items[i]);
+            message += `<a target='_blank' href='${link}'>${result.items[i].label}</a><br>`;
           }
-          this.delete();
-        });
-    });
-  }
+          if (result.count > 5) {
+            message += ' ...';
+          }
+        }
+
+        this.dialog.open(ConfirmationModalComponent, { data: { message } }).afterClosed().subscribe((result2) => {
+            if (result2.status !== 'ok') {
+              return;
+            }
+            this.delete();
+          });
+      });
+  };
 }

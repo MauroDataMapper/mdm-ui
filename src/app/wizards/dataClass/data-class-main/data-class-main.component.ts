@@ -47,7 +47,7 @@ export class DataClassMainComponent implements AfterViewInit {
     // Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     // Add 'implements AfterViewInit' to the class.
 
-    this.title.setTitle('New DataClass');
+    this.title.setTitle('New Data Class');
 
     this.parentDataModelId = this.stateService.params.parentDataModelId;
     this.grandParentDataClassId = this.stateService.params.grandParentDataClassId;

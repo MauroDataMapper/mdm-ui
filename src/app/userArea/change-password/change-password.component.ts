@@ -4,6 +4,7 @@ import { UserDetailsResult } from '@mdm/model/userDetailsModel';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { environment } from '@env/environment';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-change-password',
@@ -25,7 +26,9 @@ export class ChangePasswordComponent implements OnInit {
   constructor(
     private resourcesService: ResourcesService,
     private securityHandler: SecurityHandlerService,
-    private messageHandler: MessageHandlerService  ) {
+    private messageHandler: MessageHandlerService,
+    private title: Title
+    ) {
     this.currentUser = this.securityHandler.getCurrentUser();
     this.newPassword = '';
     this.oldPassword = '';
@@ -33,7 +36,9 @@ export class ChangePasswordComponent implements OnInit {
     this.message = '';
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.title.setTitle('Change password');
+  }
 
   disabled = () => {
     return this.newPassword !== this.confirm || this.newPassword === this.oldPassword || this.newPassword === '' || this.oldPassword === '';

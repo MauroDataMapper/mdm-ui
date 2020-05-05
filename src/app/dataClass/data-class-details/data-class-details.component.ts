@@ -13,11 +13,11 @@ import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
 import { ResourcesService } from '@mdm/services/resources.service';
-import { MatDialog } from '@angular/material/dialog';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -54,11 +54,11 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   constructor(
     private messageService: MessageService,
     private resourcesService: ResourcesService,
-    private dialog: MatDialog,
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) {
     this.DataClassDetails();
   }
@@ -158,8 +158,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   DataClassDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.result = serverResult;
 
         this.editableForm.description = this.result.description;
@@ -193,6 +192,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         if (this.result != null) {
           this.hasResult = true;
         }
+        this.title.setTitle(`Data Class - ${this.result?.label}`);
       }
     );
   }

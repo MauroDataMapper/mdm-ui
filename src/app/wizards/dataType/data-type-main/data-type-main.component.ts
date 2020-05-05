@@ -6,19 +6,20 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { Step } from '@mdm/model/stepModel';
 import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-type-main',
   templateUrl: './data-type-main.component.html',
-  styleUrls: ['./data-type-main.component.sass']
+  styleUrls: ['./data-type-main.component.sass'],
 })
 export class DataTypeMainComponent implements OnInit {
-
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private resources: ResourcesService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private title: Title
   ) {}
   parentDataModelId: any;
   steps: Step[] = [];
@@ -31,7 +32,7 @@ export class DataTypeMainComponent implements OnInit {
     isValid: false,
 
     parent: {
-      id: ''
+      id: '',
     },
     parentDataModel: { id: '' },
 
@@ -46,7 +47,7 @@ export class DataTypeMainComponent implements OnInit {
     referencedDataType: { id: '' },
     referencedTerminology: { id: '' },
     referencedDataClass: { id: '' },
-    isProcessComplete : false
+    isProcessComplete: false,
   };
 
   ngOnInit() {
@@ -78,6 +79,8 @@ export class DataTypeMainComponent implements OnInit {
         this.steps.push(step1);
         this.steps.push(step2);
       });
+
+    this.title.setTitle(`New Data Type`);
   }
 
   cancelWizard() {
@@ -110,7 +113,7 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-      const resource = {
+    const resource = {
       label: this.model.label,
       description: this.model.description,
       organisation: this.model.organisation,
@@ -151,13 +154,13 @@ export class DataTypeMainComponent implements OnInit {
       })
     };
 
-      const deferred = this.resources.dataModel.post(
+    const deferred = this.resources.dataModel.post(
       this.model.parent.id,
       'dataTypes',
       { resource }
     );
 
-      deferred.subscribe(
+    deferred.subscribe(
       response => {
         this.messageHandler.showSuccess('Data Type saved successfully.');
 
@@ -166,8 +169,7 @@ export class DataTypeMainComponent implements OnInit {
           { dataModelId: response.body.dataModel, id: response.body.id },
           { reload: true, location: true }
         );
-      },
-      error => {
+      }, error => {
         this.messageHandler.showError(
           'There was a problem saving the Data Type.',
           error
@@ -178,5 +180,5 @@ export class DataTypeMainComponent implements OnInit {
 
   saveCopiedDataTypes = () => {
     this.steps[1].compRef.instance.saveCopiedDataTypes();
-  }
+  };
 }

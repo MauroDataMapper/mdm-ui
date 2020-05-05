@@ -11,22 +11,15 @@ import {
   ViewChildren
 } from '@angular/core';
 import { TermResult, EditableTerm } from '@mdm/model/termModel';
-import { from, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
-import { ResourcesService } from '@mdm/services/resources.service';
 import { MessageService } from '@mdm/services/message.service';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
-import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { DialogPosition } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-term-details',
@@ -72,27 +65,16 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<
-    any
-  >;
+  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   constructor(
-    private renderer: Renderer2,
-    private resourcesService: ResourcesService,
     private messageService: MessageService,
-    private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
-    private folderHandler: FolderHandlerService,
-    private stateHandler: StateHandlerService,
     private sharedService: SharedService,
-    private elementDialogueService: ElementSelectorDialogueService,
-    private broadcastSvc: BroadcastService,
     private helpDialogueService: HelpDialogueHandlerService,
-    private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
-    private exportHandler: ExportHandlerService,
-    private domSanitizer: DomSanitizer
+    private title: Title
   ) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
@@ -142,8 +124,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   }
 
   TermDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.mcTerm = serverResult;
 
         this.editableForm.url = this.mcTerm.url;
@@ -178,6 +159,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
           this.hasResult = true;
           this.watchDataModelObject();
         }
+        this.title.setTitle(`Term - ${this.mcTerm?.label}`);
       }
     );
   }

@@ -31,7 +31,7 @@
                       </div>
                     <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
                         <small>
-                            <i class="fas fa-globe-europe globe" aria-hidden="true" title="Publicly Readable"></i>
+                            <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
                             <span><strong>Availability: </strong>Publicly Readable</span>
                         </small>
                     </div>
@@ -78,49 +78,57 @@
                     <tr>
                         <td class="detailsRowHeader">Description</td>
                         <td class="elementDetailDescription">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcTerminology"
-                                [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm"
+                                                    [element]="mcTerminology"
+                                                    [property]="'description'">
+                            </mdm-markdown-text-area>
                         </td>
                     </tr>
                     <tr>
                         <td class="detailsRowHeader">Classifications</td>
                         <td>
                             <mdm-element-classifications [classifications]="mcTerminology.classifiers"
-                                [editableForm]="editableForm"></mdm-element-classifications>
+                                                          [editableForm]="editableForm">
+                            </mdm-element-classifications>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: right;">
 
-                            <div style="float: right; margin-bottom: 3px; margin-left: 5px;"
-                                [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                                <div style="float: right; margin-bottom: 3px; margin-left: 5px;">
-                                    <button mat-stroked-button color="warn" type="button" matTooltip="Delete"
-                                        aria-label="Delete" class="paddingless dropdown-toggle"
-                                        [disabled]="deleteInProgress || exporting" [matMenuTriggerFor]="menu">
+                            <div style="float: right; margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                                <div style="float: right; margin-left: 5px;">
+                                    <button mat-stroked-button 
+                                            color="warn"
+                                            type="button"
+                                            matTooltip="Delete"
+                                            aria-label="Delete"
+                                            class="paddingless dropdown-toggle"
+                                            [disabled]="deleteInProgress || exporting"
+                                            [matMenuTriggerFor]="menu">
                                         <i class="far fa-trash-alt warning"></i>
                                     </button>
 
                                     <mat-menu #menu="matMenu">
-                                        <button mat-menu-item (click)="askForSoftDelete()"
-                                            *ngIf="!mcTerminology?.deleted">
-                                            <a title="Just mark it as deleted">Mark as deleted</a>
+                                        <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!mcTerminology?.deleted">
+                                            Mark as deleted
                                         </button>
                                         <button mat-menu-item (click)="askForPermanentDelete()">
-                                            <a title="Permanently delete the Terminology">Delete <span
-                                                    class="errorMessage">permanently</span></a>
+                                            Delete <span class="warning">permanently</span>
                                         </button>
                                     </mat-menu>
                                 </div>
                             </div>
 
-                            <div *ngIf="showPermission"
-                                style="margin-bottom: 3px; position: relative; float: right; margin-right: 4px;"
-                                [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button mat-stroked-button color="primary" type="button" class="paddingless"
-                                    matTooltip="User & Group Access" aria-label="User & Group Access"
-                                    *ngIf="showPermission" [disabled]="deleteInProgress || processing"
-                                    (click)="toggleSecuritySection()">
+                            <div *ngIf="showPermission" style="position: relative; float: right; margin-right: 4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                                <button mat-stroked-button 
+                                        color="primary"
+                                        type="button"
+                                        class="paddingless"
+                                        matTooltip="User & Group Access"
+                                        aria-label="User & Group Access"
+                                        *ngIf="showPermission"
+                                        [disabled]="deleteInProgress || processing"
+                                        (click)="toggleSecuritySection()">
                                     <i class="fas fa-user userAccess"></i>
                                 </button>
                             </div>

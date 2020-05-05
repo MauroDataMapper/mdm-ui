@@ -1,33 +1,33 @@
-<form #myForm="ngForm" ngNativeValidate class="mdm--form full-width">
+<form #myForm="ngForm" ngNativeValidate class="full-width">
 
-    <div class="mb-2">
+    <div class="mb-2 mt-2">
         <strong>Selected folder: </strong>
         <mdm-element-link [showTypeTitle] = "true" [newWindow]="true" [element]="model.parentFolder"></mdm-element-link>
     </div>
 
     <span>Please enter the Code Set details:</span>
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
             <mat-label>Label</mat-label>
             <input matInput type="text" [(ngModel)]="model.label" name="label" required>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
             <mat-label>Author</mat-label>
             <input matInput type="text" [(ngModel)]="model.author" name="author" required>
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
             <mat-label>Organisation</mat-label>
             <input matInput type="text" [(ngModel)]="model.organisation" name="organisation" required>
         </mat-form-field>
     </div>
 
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
             <mat-label>Description</mat-label>
             <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
         </mat-form-field>

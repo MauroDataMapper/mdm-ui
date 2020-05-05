@@ -6,31 +6,26 @@ import {
   Input, OnDestroy,
   OnInit,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {DataModelResult, EditableDataModel} from '@mdm/model/dataModelModel';
+import {EditableDataModel} from '@mdm/model/dataModelModel';
 import {from, Subscription} from 'rxjs';
 import {MarkdownTextAreaComponent} from '@mdm/utility/markdown-text-area.component';
 import {ResourcesService} from '@mdm/services/resources.service';
 import {MessageService} from '@mdm/services/message.service';
 import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {FolderHandlerService} from '@mdm/services/handlers/folder-handler.service';
 import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
 import {SharedService} from '@mdm/services/shared.service';
 import {ElementSelectorDialogueService} from '@mdm/services/element-selector-dialogue.service';
 import {BroadcastService} from '@mdm/services/broadcast.service';
 import {HelpDialogueHandlerService} from '@mdm/services/helpDialogue.service';
 import {FavouriteHandlerService} from '@mdm/services/handlers/favourite-handler.service';
-import {ExportHandlerService} from '@mdm/services/handlers/export-handler.service';
-import {DomSanitizer} from '@angular/platform-browser';
-// import {InlineEditorComponent} from "@qontu/ngx-inline-editor";
 import {ConfirmationModalComponent} from '@mdm/modals/confirmation-modal/confirmation-modal.component';
-
 import {CodeSetResult} from '@mdm/model/codeSetModel';
 import {DialogPosition, MatDialog} from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -75,14 +70,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
-  // @ViewChildren("aliases") aliases: QueryList<any>;
-
-  constructor(private renderer: Renderer2,
-              private resourcesService: ResourcesService,
+  constructor(private resourcesService: ResourcesService,
               private messageService: MessageService,
               private messageHandler: MessageHandlerService,
               private securityHandler: SecurityHandlerService,
-              private folderHandler: FolderHandlerService,
               private stateHandler: StateHandlerService,
               private sharedService: SharedService,
               private elementDialogueService: ElementSelectorDialogueService,
@@ -90,14 +81,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
               private helpDialogueService: HelpDialogueHandlerService,
               private dialog: MatDialog,
               private favouriteHandler: FavouriteHandlerService,
-              private exportHandler: ExportHandlerService,
-              private domSanitizer: DomSanitizer) {
-    // securitySection = false;
+              private title: Title) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.CodeSetDetails();
-
-
   }
 
   public showAddElementToMarkdown() { // Remove from here & put in markdown
@@ -140,9 +127,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;
     });
-    // this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-    //   this.showSearch = message;
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -210,9 +194,8 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         this.hasResult = true;
         this.watchDataModelObject();
       }
+      this.title.setTitle(`Code Set - ${this.result?.label}`);
     });
-
-
   }
 
   watchDataModelObject() {
@@ -240,14 +223,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
-
-  // markDonw(text) {
-  //     if (text === null || text === undefined) {
-  //         return '';
-  //     }
-  //     /* tslint:disable:no-string-literal */
-  //     return window['marked'](text);
-  // }
 
   delete(permanent) {
     if (!this.securityHandler.isAdmin()) {
@@ -312,14 +287,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           hasBackdrop: true,
           data: {
             title: 'Code Set',
-            message:
-              'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
+            message: 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
           }
         });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
-          // reject(null); Commented by AS as it was throwing error
+        if (result?.status !== 'ok') {
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent,
@@ -327,14 +300,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             hasBackdrop: true,
             data: {
               title: 'Data Model',
-              message:
-                '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
+              message: '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
             }
           });
 
         dialog2.afterClosed().subscribe(result2 => {
           if (result2.status !== 'ok') {
-            // reject(null);
             return;
           }
           this.delete(true);

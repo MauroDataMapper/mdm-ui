@@ -12,18 +12,19 @@
                         type="button"
                         class="paddingless"
                         (click)="toggleShowSearch()"
-                        aria-hidden="false"
-                        aria-disabled="false" title="close">
+                        aria-disabled="false" 
+                        matTooltip="Close"
+                        aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
         <div class="panel-body panel-table">
             <mdm-advanced-search-bar [parent]="result"
-                                        [showRestrictTo]="false"
-                                        [doNotShowDataModelInModelPath]="false"
-                                        [doNotDisplayModelPathStatus]="false"
-                                        [showDomainTypes]="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
+                                     [showRestrictTo]="false"
+                                     [doNotShowDataModelInModelPath]="false"
+                                     [doNotDisplayModelPathStatus]="false"
+                                     [showDomainTypes]="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
             </mdm-advanced-search-bar>
         </div>
     </div>

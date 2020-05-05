@@ -11,6 +11,7 @@ import { ResourcesService } from '@mdm/services/resources.service';
 import { DataElementStep1Component } from '../data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '../data-element-step2/data-element-step2.component';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-element-main',
@@ -18,13 +19,13 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
   styleUrls: ['./data-element-main.component.sass']
 })
 export class DataElementMainComponent implements OnInit {
-  // constructor(private stateService: StateService, private stateHandler: StateHandlerService, private resources : ResourcesService) { }
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private title: Title
   ) {}
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
@@ -71,6 +72,7 @@ export class DataElementMainComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.title.setTitle(`New Data Element`);
     this.parentDataModelId = this.stateService.params.parentDataModelId;
     this.grandParentDataClassId = this.stateService.params.grandParentDataClassId;
     this.parentDataClassId = this.stateService.params.parentDataClassId;

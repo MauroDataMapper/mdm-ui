@@ -4,6 +4,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-model-management',
@@ -24,7 +25,8 @@ export class ModelManagementComponent implements OnInit {
     private resourcesService: ResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private title: Title
   ) {}
 
   ngOnInit() {
@@ -32,8 +34,8 @@ export class ModelManagementComponent implements OnInit {
     this.selectedElementsCount = 0;
     this.filterStatus = '';
     this.filterElement = '';
-
     this.loadFolders();
+    this.title.setTitle('Model management');
   }
 
   onFilterChange = function() {

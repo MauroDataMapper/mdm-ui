@@ -12,6 +12,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { ResourcesService } from '@mdm/services/resources.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-app-emails',
@@ -41,13 +42,15 @@ export class EmailsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private resourcesService: ResourcesService
+    private resourcesService: ResourcesService,
+    private title: Title
   ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
   ngOnInit() {
     this.mailsFetch();
+    this.title.setTitle('Emails');
   }
 
   ngAfterViewInit() {

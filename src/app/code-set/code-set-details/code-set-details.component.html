@@ -107,8 +107,8 @@
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: right;">
-                        <div style="float: right;margin-bottom: 3px;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                            <div style="float: right;margin-bottom: 3px;margin-left: 5px;">
+                        <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                            <div style="float: right;margin-left: 5px;">
                                 <button mat-stroked-button color="warn" type="button" matTooltip="Delete"
                                     aria-label="Delete" class="paddingless dropdown-toggle"
                                     [disabled]="deleteInProgress || exporting" [matMenuTriggerFor]="menu">
@@ -117,10 +117,10 @@
 
                                 <mat-menu #menu>
                                     <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
-                                        <a title="Just mark it as deleted">Mark as deleted</a>
+                                        Mark as deleted
                                     </button>
                                     <button mat-menu-item (click)="askForPermanentDelete()">
-                                        <a title="Permanently delete the Data Model">Delete <span class="errorMessage">permanently</span></a>
+                                        Delete <span class="errorMessage">permanently</span>
                                     </button>
                                 </mat-menu>
                             </div>
@@ -128,7 +128,7 @@
 
                         <div style="float: right;margin-bottom: 3px">
                             <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending"
-                                style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
@@ -144,7 +144,7 @@
                                 [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
                                 [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
-                        <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                        <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
                                     color="accent"
                                     type="button"
@@ -157,7 +157,7 @@
                             </button>
                         </div>
 
-                        <div *ngIf="showPermission" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;"
+                        <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;"
                             [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" class="paddingless"
                                 (click)="toggleSecuritySection()" type="button" *ngIf="showPermission"
@@ -175,7 +175,7 @@
 </div>
 
 <div *ngIf="showSecuritySection">
-    <div style="width:100%;" ng-if="activeTab.name === 'access' && folder">
+    <div class="full-width" ng-if="activeTab.name === 'access' && folder">
         <div class="userAccess" style="margin: 10px 0px 50px 0px">
             <mdm-share-with [mcElement]="'result'" [mcDomainType]="'CodeSet'"></mdm-share-with>
             <div colspan="2">

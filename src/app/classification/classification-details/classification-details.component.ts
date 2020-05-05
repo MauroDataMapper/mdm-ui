@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-classification-details',
@@ -61,7 +62,8 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
     private elementDialogueService: ElementSelectorDialogueService,
-    private broadcaseSvc: BroadcastService
+    private broadcaseSvc: BroadcastService,
+    private title: Title
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
@@ -157,6 +159,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
           this.hasResult = true;
           this.watchFolderObject();
         }
+        this.title.setTitle(`Classifier - ${this.result?.label}`);
       }
     );
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { LoginModalComponent } from '../modals/login-modal/login-modal.component';
@@ -20,13 +21,15 @@ export class HomeComponent implements OnInit {
     public dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private title: Title
   ) { }
 
   ngOnInit() {
     if (this.securityHandler.isLoggedIn()) {
       this.profile = this.securityHandler.getCurrentUser();
     }
+    this.title.setTitle('Mauro Data Mapper - Home');
   }
 
   isLoggedIn = () => {

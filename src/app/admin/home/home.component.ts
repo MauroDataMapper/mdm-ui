@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-home',
@@ -15,13 +16,14 @@ export class DashboardComponent implements OnInit {
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private shared: SharedService
+    private shared: SharedService,
+    private title: Title
   ) {}
 
   ngOnInit() {
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
-
     this.appVersion = this.shared.appVersion;
+    this.title.setTitle('Dashboard');
   }
 
   tabSelected(itemsName) {

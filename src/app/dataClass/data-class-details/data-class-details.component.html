@@ -120,7 +120,7 @@
                                     [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
                             <div [hidden]="editableForm.visible || editableForm.deletePending"
-                                style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                                style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button color="primary" type="button" [disabled]="deleteInProgress"
                                     matTooltip="Edit" aria-label="Edit" (click)="showForm();">
                                     <i class="fas fa-pencil-alt"></i>
@@ -132,7 +132,7 @@
                         </div>
 
 
-                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;"
+                        <div style="position: relative; float: right; margin-right:4px;"
                             [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" type="button" class="paddingless"
                                 matTooltipPosition="below" matTooltip="Search" aria-label="Search"
@@ -147,7 +147,6 @@
                         <div style="text-align: left" *ngIf="exportError">
                             <div style="padding-top: 25px;">
                                 <div class="alert alert-danger">
-                                    <a class="close" ng-click="resetExportError()" aria-label="close">&times;</a>
                                     <strong>Error!</strong> {{exportError}}
                                 </div>
                             </div>

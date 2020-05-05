@@ -74,7 +74,7 @@
                             </mdm-editable-form-buttons>
                         </div>
                         <div style="float: right">
-                            <div  [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; margin-right:4px;">
+                            <div  [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="warn"
                                         type="button"
@@ -89,7 +89,7 @@
                             </div>
                         </div>
                         <div style="float: right">
-                            <div *ngIf="!editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; margin-right:4px;">
+                            <div *ngIf="!editableForm.visible && !editableForm.deletePending" style="position: relative; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"

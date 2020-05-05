@@ -1,16 +1,16 @@
 <div *ngIf="model.createType == 'new'">
-    <form #myForm="ngForm" ngNativeValidate class="mdm--form full-width">
+    <form #myForm="ngForm" ngNativeValidate class="full-width">
         <div>Parent Data Class:</div>
         <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
 
         <div class="mdm--form-input">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Label</mat-label>
                 <input matInput [(ngModel)]="model.label" name="label" required>
             </mat-form-field>
         </div>
         <div class="mdm--form-input">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Description</mat-label>
                 <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
             </mat-form-field>
@@ -21,16 +21,16 @@
             <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
             <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
                 <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                <mat-form-field appearance="outline">
-                    <mat-label>Min</mat-label>
-                    <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Min</mat-label>
+                        <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
+                    </mat-form-field>
                 </div>
                 <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                <mat-form-field appearance="outline" class="paddingless">
-                    <mat-label>Max</mat-label>
-                    <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="paddingless" class="full-width">
+                        <mat-label>Max</mat-label>
+                        <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
+                    </mat-form-field>
                 </div>
             </div>
             <div style="font-size: 12px;clear: both;margin: 2px 0px" class="error text-danger">
@@ -114,19 +114,6 @@
         <div class="mdm--mat-pagination">
             <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [length]="totalSelectedItemsCount" [pageSize]="10" showFirstLastButtons></mat-paginator>
         </div>
-    <div style="margin-top: 50px; width: 100%;">
-        <div *ngIf="processing">
-            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
-        </div>
-        <div *ngIf="!processing && isProcessComplete">
-            <div class="alert alert-success" *ngIf="failCount === 0">
-                <strong>Success!</strong> All copied successfully!
-            </div>
-            <div class="alert alert-danger" *ngIf="failCount > 0">
-                <strong>Error!</strong> {{failCount}} Error(s) in copy process!
-            </div>
-        </div>
-    </div>
 </div>
 <div style="margin-top: 50px; width: 100%;">
     <div *ngIf="processing">

@@ -1,4 +1,4 @@
-<div class="mdm--container-hd">
+<div class="mdm--container-fluid">
     <div class="row marginless">
         <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block " (click)="hideShowLeftPane();">
             <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText">
@@ -17,7 +17,7 @@
         </div>
 
         <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-8':!expand }" class="">
-            <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" (click)="toggle()" *ngIf="expand" title="Minimize">
+            <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" (click)="toggle()" *ngIf="expand">
                 <i class="fas fa-bars"></i>
             </div>
             <div ui-view="" style="margin-bottom: 30px;"></div>

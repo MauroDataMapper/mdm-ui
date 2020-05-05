@@ -46,8 +46,8 @@
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: right;">
-                        <div style="float: right;margin-bottom: 3px;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                            <div style="float: right;margin-bottom: 3px;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                        <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                            <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
                                 <button mat-stroked-button
                                         color="warn"
                                         type="button"
@@ -61,17 +61,17 @@
 
                                 <mat-menu #menu="matMenu">
                                     <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
-                                        <a title="Just mark it as deleted">Mark as deleted</a>
+                                        Mark as deleted
                                     </button>
                                     <button mat-menu-item (click)="askForPermanentDelete()">
-                                        <a title="Permanently delete the Data Model">Delete <span class="errorMessage">permanently</span></a>
+                                        Delete <span class="errorMessage">permanently</span>
                                     </button>
                                 </mat-menu>
                             </div>
                         </div>
 
-                        <div style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+                        <div style="float: right;">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
@@ -87,7 +87,7 @@
                                 [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
 
-                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     color="primary"
                                     type="button"
@@ -100,7 +100,7 @@
                             </button>
                         </div>
 
-                        <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     color="primary"
                                     type="button"

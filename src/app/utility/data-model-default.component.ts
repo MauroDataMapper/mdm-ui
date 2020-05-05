@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-model-default',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DataModelDefaultComponent implements OnInit {
 
-  constructor() { }
+  constructor(private title: Title) { }
 
   ngOnInit() {
+    this.title.setTitle('Browse models');
   }
 
 }

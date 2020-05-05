@@ -28,14 +28,14 @@ export class GroupComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.title.setTitle('Admin - Group');
+    this.title.setTitle('Group - Add Group');
     const id = this.stateService.params.id;
     if (id) {
       this.resources.userGroup.get(id).subscribe(result => {
         const group = result.body;
         this.group = group;
         this.group.groupMembers = group.groupMembers || [];
-        this.title.setTitle('Admin - Edit Group');
+        this.title.setTitle('Group - Edit Group');
       });
     }
   }
@@ -60,36 +60,20 @@ export class GroupComponent implements OnInit {
     // it's in edit mode
     if (this.group.id) {
       // it's in edit mode (update)
-      this.resources.userGroup
-        .put(this.group.id, null, { resource: this.group })
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess('Group updated successfully.');
-            this.stateHandler.Go('admin.groups');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem updating the group.',
-              error
-            );
-          }
-        );
+      this.resources.userGroup.put(this.group.id, null, { resource: this.group }).subscribe(() => {
+          this.messageHandler.showSuccess('Group updated successfully.');
+          this.stateHandler.Go('admin.groups');
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the group.', error);
+        });
     } else {
       // it's in new mode (create)
-      this.resources.userGroup
-        .post(null, null, { resource: this.group })
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess('Group saved successfully.');
-            this.stateHandler.Go('admin.groups');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem saving the group.',
-              error
-            );
-          }
-        );
+      this.resources.userGroup.post(null, null, { resource: this.group }).subscribe(() => {
+          this.messageHandler.showSuccess('Group saved successfully.');
+          this.stateHandler.Go('admin.groups');
+        }, error => {
+          this.messageHandler.showError('There was a problem saving the group.', error);
+        });
     }
   };
 

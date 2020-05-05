@@ -1,17 +1,17 @@
 <div *ngIf="model">
     <div *ngIf="model.createType == 'new'">
-        <form #myForm="ngForm" ngNativeValidate class="mdm--form full-width">
+        <form #myForm="ngForm" ngNativeValidate class="full-width">
             <div>Parent Data Class:</div>
             <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
             <div class="mdm--form-input">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Label</mat-label>
                     <input matInput type="text" [(ngModel)]="model.label" name="label" required>
                 </mat-form-field>
             </div>
 
             <div class="mdm--form-input">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Description</mat-label>
                     <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
                 </mat-form-field>
@@ -19,16 +19,16 @@
 
             <div class="mdm--form-input">
                 <span class="block">Multiplicity</span>
-                <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
+                <small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
                 <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
                     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" class="full-width">
                             <mat-label>Min</mat-label>
                             <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
                         </mat-form-field>
                     </div>
                     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                        <mat-form-field appearance="outline" class="paddingless">
+                        <mat-form-field appearance="outline" class="full-width">
                             <mat-label>Max</mat-label>
                             <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
                         </mat-form-field>
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="error text-danger">
+            <div class="error warning">
                 <span *ngIf="multiplicityError">{{multiplicityError}}</span>
             </div>
 

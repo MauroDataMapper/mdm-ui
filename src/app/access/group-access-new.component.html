@@ -7,7 +7,7 @@
             </div>
             <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
                 <div *ngIf="folderResult['editable']">
-                    <button mat-flat-button color="primary" type="button" (click)="add()" title="Add">
+                    <button mat-flat-button color="primary" type="button" (click)="add()">
                         <i class="fas fa-plus"></i>
                         Add Group
                     </button>
@@ -46,7 +46,7 @@
                                     <div>{{item.label}}</div>
                                 </ng-template>
                             </mdm-select>
-                            <small *ngIf="record.edit.errors && record.edit.errors['group']" class="errorMessage">{{record.edit.errors['group']}}</small>
+                            <small *ngIf="record.edit.errors && record.edit.errors['group']" class="warning">{{record.edit.errors['group']}}</small>
                         </div>
                     </div>
                 </td>

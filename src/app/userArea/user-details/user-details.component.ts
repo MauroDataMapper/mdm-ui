@@ -3,18 +3,15 @@ import {
   OnInit,
   ViewEncapsulation,
   Input,
-  QueryList,
-  ViewChildren,
   Output,
   EventEmitter,
   OnDestroy
 } from '@angular/core';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
 import { ResourcesService } from '@mdm/services/resources.service';
-import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-user-details',
@@ -33,17 +30,23 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   @Output() refreshUserDetails: EventEmitter<any> = new EventEmitter();
 
-  constructor(private resourcesService: ResourcesService, private securityHandler: SecurityHandlerService, private messageService: MessageService, private messageHandler: MessageHandlerService) {
+  constructor(
+    private resourcesService: ResourcesService,
+    private messageService: MessageService,
+    private title: Title
+  ) {
     this.userDetails();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.title.setTitle('My profile');
+  }
 
   userDetails(): any {
     // subscribe to parent component userDetails messages;
-    this.subscription = this.messageService.getUserDetails().subscribe(message => {
-      this.user = message;
-    });
+    this.subscription = this.messageService.getUserDetails().subscribe((message) => {
+        this.user = message;
+      });
   }
 
   checkEmailExists(data: string) {
@@ -53,26 +56,23 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   formBeforeSave = function() {
     this.errorMessage = '';
     this.checkEmailExists(this.user.emailAddress).subscribe(() => {
-
       const userDetails = {
         id: this.user.id,
         firstName: this.user.firstName,
         lastName: this.user.lastName,
         organisation: this.user.organisation,
-        jobTitle: this.user.jobTitle || ''
+        jobTitle: this.user.jobTitle || '',
       };
       if (this.validateInput(this.user.firstName) && this.validateInput(this.user.lastName) && this.validateInput(this.user.organisation)) {
-        this.resourcesService.catalogueUser.put(userDetails.id, null, { resource: userDetails }).subscribe(
-          result => {
-            if (this.afterSave) {
-              this.afterSave(result);
+        this.resourcesService.catalogueUser.put(userDetails.id, null, { resource: userDetails }).subscribe(result => {
+              if (this.afterSave) {
+                this.afterSave(result);
+              }
+              this.messageHandler.showSuccess('User details updated successfully.');
+            }, error => {
+              this.messageHandler.showError('There was a problem updating the User Details.', error);
             }
-            this.messageHandler.showSuccess('User details updated successfully.');
-          },
-          error => {
-            this.messageHandler.showError('There was a problem updating the User Details.', error);
-          }
-        );
+          );
       }
     });
   };

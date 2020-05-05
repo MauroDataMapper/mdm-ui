@@ -102,7 +102,7 @@ span.tree-top-actions button, .import-folder-actions button {
 div.mat-tab-label {
   min-width: 25px;
   padding: 0 16px;
-  font-size: 18px;
+  font-size: $defaultFontSize;
 }
 div.mat-tab-label {
   height: 38px;
@@ -151,7 +151,7 @@ div.mat-tab-label {
 }
 
 table.mat-table .mat-header-cell {
-  font-size: 18px;
+  font-size: $defaultFontSize;
   font-weight: 500;
   vertical-align: middle;
   border-bottom: 2px solid #e9ecef;

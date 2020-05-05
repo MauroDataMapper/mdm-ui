@@ -8,6 +8,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateService } from '@uirouter/core';
 import { Step } from '@mdm/model/stepModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-model-main',
@@ -21,7 +22,8 @@ export class DataModelMainComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
-    private stateService: StateService
+    private stateService: StateService,
+    private title: Title
   ) {}
   isLinear = false;
   firstFormGroup: FormGroup;
@@ -38,12 +40,7 @@ export class DataModelMainComponent implements OnInit {
   };
 
   ngOnInit() {
-    // this.firstFormGroup = this._formBuilder.group({
-    //    firstCtrl: ['', Validators.required]
-    // });
-    // this.secondFormGroup = this._formBuilder.group({
-    //    secondCtrl: ['', Validators.required]
-    // });
+    this.title.setTitle(`New Data Model`);
 
     this.parentFolderId = this.stateService.params.parentFolderId;
     this.resources.folder.get(this.parentFolderId, null, null).toPromise().then(result => {

@@ -1,5 +1,4 @@
 import { ResourcesService } from '../services/resources.service';
-// @ts-ignore
 import { EditableDataModel } from '../model/dataModelModel';
 import {
   Component,
@@ -20,7 +19,6 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { MarkdownTextAreaComponent } from '../utility/markdown-text-area.component';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
 import { SharedService } from '../services/shared.service';
@@ -30,6 +28,7 @@ import { FavouriteHandlerService } from '../services/handlers/favourite-handler.
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -73,7 +72,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  // @ViewChildren("aliases") aliases: QueryList<any>;
+
 
   constructor(
     private renderer: Renderer2,
@@ -88,7 +87,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private helpDialogueService: HelpDialogueHandlerService,
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
-    private exportHandler: ExportHandlerService
+    private exportHandler: ExportHandlerService,
+    private title: Title
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
@@ -176,8 +176,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   // }
 
   DataModelDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.result = serverResult;
         this.setEditableFormData();
 
@@ -211,6 +210,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           this.hasResult = true;
           this.watchDataModelObject();
         }
+        this.title.setTitle(`${this.result?.type} - ${this.result?.label}`);
       }
     );
   }

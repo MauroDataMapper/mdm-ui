@@ -7,6 +7,7 @@ import { ResourcesService } from '@mdm/services/resources.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ClassifierStep1Component } from '../classifier-step1/classifier-step1.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-classifier-main',
@@ -32,7 +33,8 @@ export class ClassifierMainComponent implements OnInit {
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private title: Title
   ) {}
 
   ngOnInit() {
@@ -58,6 +60,7 @@ export class ClassifierMainComponent implements OnInit {
           error
         );
       });
+    this.title.setTitle(`New Classifier`);
   }
 
   saveClassifier = () => {

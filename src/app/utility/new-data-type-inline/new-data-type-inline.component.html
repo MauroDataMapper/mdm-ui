@@ -10,7 +10,7 @@
 			<tr>
 				<td class="detailsRowHeader">Label *</td>
 				<td>
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" class="full-width">
 						<input matInput name="label" [(ngModel)]="model.label" required>
 					</mat-form-field>
 				</td>
@@ -19,7 +19,7 @@
 			<tr>
 				<td class="detailsRowHeader">Description</td>
 				<td>
-					<mat-form-field appearance="outline">
+					<mat-form-field appearance="outline" class="full-width">
 						<textarea matInput name="description" [(ngModel)]="model.description"></textarea>
 					</mat-form-field>
 				</td>
@@ -35,7 +35,7 @@
 				<td class="detailsRowHeader">Type *</td>
 				<td>
 					<div class="mdm--form-input">
-						<mat-form-field appearance="outline">
+						<mat-form-field appearance="outline" class="full-width">
 							<mat-select name="dataModelType" [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
 								<mat-option [value]="dt.id" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
 							</mat-select>

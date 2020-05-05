@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-pending-users-table',
@@ -34,6 +35,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     private resourcesService: ResourcesService,
     private broadcastSvc: BroadcastService,
     private dialog: MatDialog,
+    private title: Title
   ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
@@ -43,6 +45,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     this.broadcastSvc.subscribe('pendingUserUpdated', () => {
       this.pendingUsersFetch();
     });
+    this.title.setTitle('Pending users');
   }
 
   ngAfterViewInit() {

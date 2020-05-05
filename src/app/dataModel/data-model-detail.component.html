@@ -124,8 +124,8 @@
       </tr>
       <tr>
         <td colspan="2" style="text-align: right;">
-          <div style="float: right;margin-bottom: 3px;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-            <div style="float: right;margin-bottom: 3px;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown is-open="false" *ngIf="showDelete">
+          <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+            <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown is-open="false" *ngIf="showDelete">
               <button mat-stroked-button
                       type="button"
                       color="warn"
@@ -149,7 +149,7 @@
           </div>
 
           <div style="float: right;margin-bottom: 3px">
-            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
               <button mat-stroked-button
                       color="primary"
                       type="button"
@@ -170,7 +170,7 @@
                                     [processing]="deleteInProgress"></mdm-editable-form-buttons>
           </div>
 
-          <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+          <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
             <button mat-stroked-button
                     type="button"
                     class="paddingless"
@@ -183,7 +183,7 @@
             </button>
           </div>
 
-          <div *ngIf="showPermission" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+          <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
             <button mat-stroked-button
                     type="button"
                     class="paddingless"
@@ -196,7 +196,7 @@
             </button>
           </div>
 
-          <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+          <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
             <button mat-stroked-button
                     type="button"
                     class="paddingless"
@@ -208,7 +208,7 @@
             </button>
           </div>
 
-          <div *ngIf="isAdminUser && !editableForm.visible && !editableForm.deletePending" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
+          <div *ngIf="isAdminUser && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
               <button mat-stroked-button
                       type="button"
                       matTooltip="Compare"
@@ -220,7 +220,7 @@
               </button>
               <mat-menu #compareMenu="matMenu">
                 <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
-                  <a title="Compare to another Data Model">Compare to another Data Model</a>
+                  Compare to another Data Model
                 </button>
                 <div *ngIf="compareToList && compareToList.length > 0" class="divider"></div>
                 <div *ngIf="compareToList && compareToList.length > 0">
@@ -233,7 +233,7 @@
               </mat-menu>
           </div>
 
-          <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
+          <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
             <button mat-stroked-button
                     color="primary"
                     type="button"
@@ -249,13 +249,13 @@
               <div *ngIf="exportList && exportList.length > 0">
                 <div *ngFor="let exporter of exportList">
                   <button type="button" mat-menu-item (click)="export(exporter)">
-                    <a title="{{exporter.displayName}}">{{exporter.displayName}}</a>
+                    {{exporter.displayName}}
                   </button>
                 </div>
               </div>
             </mat-menu>
           </div>
-          <div style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+          <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
             <button mat-stroked-button
                     color="primary"
                     type="button"
@@ -267,7 +267,7 @@
               <i class="fas fa-search"></i>
             </button>
           </div>
-          <div style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;">
+          <div style="position: relative; float: right; margin-right:8px;">
             <div id="exportFileDownload" #aLink></div>
           </div>
           <div style="clear: both;" *ngIf="processing">
@@ -276,7 +276,6 @@
           <div style="text-align: left" *ngIf="exportError">
             <div style="padding-top: 25px;">
               <div class="alert alert-danger">
-                <a class="close" ng-click="resetExportError()" aria-label="close">&times;</a>
                 <strong>Error!</strong> {{exportError}}
               </div>
             </div>

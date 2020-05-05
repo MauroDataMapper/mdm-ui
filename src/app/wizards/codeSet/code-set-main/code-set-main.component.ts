@@ -6,11 +6,12 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Step } from '@mdm/model/stepModel';
 import { CodeSetStep1Component } from '../code-set-step1/code-set-step1.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-code-set-main',
   templateUrl: './code-set-main.component.html',
-  styleUrls: ['./code-set-main.component.scss']
+  styleUrls: ['./code-set-main.component.scss'],
 })
 export class CodeSetMainComponent implements OnInit {
   savingInProgress = false;
@@ -26,27 +27,31 @@ export class CodeSetMainComponent implements OnInit {
 
     terms: [],
   };
-  constructor(private stateService: StateService, private stateHandler: StateHandlerService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
-
+  constructor(
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService,
+    private broadcastSvc: BroadcastService,
+    private title: Title
+  ) {
     this.model.parentFolderId = this.stateService.params.parentFolderId;
     if (!this.stateService.params.parentFolderId) {
-      this.stateHandler.NotFound({location: false});
+      this.stateHandler.NotFound({ location: false });
     }
-    this.resources.folder.get(this.model.parentFolderId, null, null).toPromise().then(result => {
-      result.domainType = 'Folder';
-      this.model.parentFolder = result.body;
-      const step1 = new Step();
-      step1.title = 'Code Set Details';
-      step1.component = CodeSetStep1Component;
-      step1.scope = this;
-      step1.hasForm = true;
+    this.resources.folder.get(this.model.parentFolderId, null, null).toPromise().then((result) => {
+        result.domainType = 'Folder';
+        this.model.parentFolder = result.body;
+        const step1 = new Step();
+        step1.title = 'Code Set Details';
+        step1.component = CodeSetStep1Component;
+        step1.scope = this;
+        step1.hasForm = true;
 
-
-      this.steps.push(step1);
-    }).catch((error) => {
-      this.messageHandler.showError('There was a problem loading the Folder.', error);
-    });
-
+        this.steps.push(step1);
+      }).catch((error) => {
+        this.messageHandler.showError('There was a problem loading the Folder.', error);
+      });
   }
 
   onSelectedTermsChange = (terms) => {
@@ -64,17 +69,22 @@ export class CodeSetMainComponent implements OnInit {
       classifiers: this.model.classifiers,
       folder: this.model.parentFolderId,
 
-      terms: this.model.terms
+      terms: this.model.terms,
     };
-    this.resources.codeSet.post(null, null, { resource }).subscribe( (result) => {
-      this.messageHandler.showSuccess('Code Set created successfully.');
-      this.stateHandler.Go('codeset', {id: result.body.id});
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }, error => {
-      this.messageHandler.showError('There was a problem creating the Code Set.', error);
-    });
+    this.resources.codeSet.post(null, null, { resource }).subscribe((result) => {
+        this.messageHandler.showSuccess('Code Set created successfully.');
+        this.stateHandler.Go('codeset', { id: result.body.id });
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem creating the Code Set.',
+          error
+        );
+      }
+    );
   };
   ngOnInit() {
+    this.title.setTitle(`New Code Set`);
   }
-
 }

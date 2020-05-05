@@ -5,8 +5,8 @@ import { ResourcesService } from '@mdm/services/resources.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationProperties';
 import { from } from 'rxjs';
-import { PropertyRenamingService } from '@mdm/services/utility/property-renaming.service';
 import { ObjectEnhancerService } from '@mdm/services/utility/object-enhancer.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-configuration',
@@ -27,14 +27,15 @@ export class ConfigurationComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private propertyRenamingService: PropertyRenamingService,
-    private objectEnhancer: ObjectEnhancerService
+    private objectEnhancer: ObjectEnhancerService,
+    private title: Title
   ) {}
 
   ngOnInit() {
     this.getConfig();
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
     this.indexingStatus = '';
+    this.title.setTitle('Configuration');
   }
 
   getConfig() {

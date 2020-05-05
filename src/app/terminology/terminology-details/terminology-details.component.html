@@ -106,6 +106,16 @@
                                             class="paddingless dropdown-toggle"
                                             [disabled]="deleteInProgress || exporting"
                                             [matMenuTriggerFor]="menu">
+                            <div style="float: right; margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                                <div style="float: right; margin-left: 5px;">
+                                    <button mat-stroked-button
+                                            color="warn"
+                                            type="button"
+                                            matTooltip="Delete"
+                                            aria-label="Delete"
+                                            class="paddingless dropdown-toggle"
+                                            [disabled]="deleteInProgress || exporting"
+                                            [matMenuTriggerFor]="menu">
                                         <i class="far fa-trash-alt warning"></i>
                                     </button>
 

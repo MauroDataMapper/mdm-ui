@@ -1,14 +1,14 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
-import {ResourcesService} from '@mdm/services/resources.service';
-import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
-import {FolderHandlerService} from '@mdm/services/handlers/folder-handler.service';
-import {ValidatorService} from '@mdm/services/validator.service';
-import {BroadcastService} from '@mdm/services/broadcast.service';
-import {SharedService} from '@mdm/services/shared.service';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
+import { ValidatorService } from '@mdm/services/validator.service';
 
 @Component({
   selector: 'mdm-models',
@@ -22,6 +22,7 @@ export class ModelsComponent implements OnInit {
   filteredModels = null;
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
+  searchboxFocused = false;
 
   // Hard
   includeSupersededDocModels = false;
@@ -401,7 +402,15 @@ export class ModelsComponent implements OnInit {
     this.stateHandler.Go(newState);
   };
 
-  onSearchInputKeyDown = event => {
+  onSearchInputKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'Backspace': return;
+      case 'Delete': return;
+      case 'Escape':
+        this.searchboxFocused = false;
+        return;
+    }
+
     if (event.keyCode && event.keyCode === 13) {
       this.search();
     }
@@ -410,10 +419,10 @@ export class ModelsComponent implements OnInit {
     }
     event.preventDefault();
     return false;
-  };
+  }
 
   search = () => {
-    if (this.formData.filterCriteria.trim().length > 2) {
+    if (this.formData.filterCriteria?.trim().length > 2) {
       this.formData.ClassificationFilterCriteria = '';
       this.sharedService.searchCriteria = this.formData.filterCriteria;
 

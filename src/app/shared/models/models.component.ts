@@ -11,17 +11,6 @@ import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-
 import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import {Component, OnInit, Inject} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
-import {ResourcesService} from '@mdm/services/resources.service';
-import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
-import {FolderHandlerService} from '@mdm/services/handlers/folder-handler.service';
-import {ValidatorService} from '@mdm/services/validator.service';
-import {BroadcastService} from '@mdm/services/broadcast.service';
-import {SharedService} from '@mdm/services/shared.service';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 
@@ -37,10 +26,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
   filteredModels = null;
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
+  folder = '';
   searchboxFocused = false;
   debounceInputEvent: Subject<KeyboardEvent>;
   subscriptions: Subscription;
-  folder = '';
 
   // Hard
   includeSupersededDocModels = false;
@@ -100,22 +89,22 @@ export class ModelsComponent implements OnInit, OnDestroy {
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
         this.resources.terminology.get(this.levels.currentFocusedElement.id, 'tree').subscribe(children => {
-              self.levels.currentFocusedElement.children = children.body;
-              self.levels.currentFocusedElement.open = true;
-              self.levels.currentFocusedElement.selected = true;
-              const curElement = {
-                children: [self.levels.currentFocusedElement],
-                isRoot: true
-              };
-              // $scope.filteredModels = $scope.filterDataModels(angular.copy(curElement));
-              this.filteredModels = Object.assign({}, curElement);
-              this.reloading = false;
-              self.levels.current = 1;
-            },
-            error => {
-              this.reloading = false;
-            }
-          );
+            self.levels.currentFocusedElement.children = children.body;
+            self.levels.currentFocusedElement.open = true;
+            self.levels.currentFocusedElement.selected = true;
+            const curElement = {
+              children: [self.levels.currentFocusedElement],
+              isRoot: true
+            };
+            // $scope.filteredModels = $scope.filterDataModels(angular.copy(curElement));
+            this.filteredModels = Object.assign({}, curElement);
+            this.reloading = false;
+            self.levels.current = 1;
+          },
+          error => {
+            this.reloading = false;
+          }
+        );
       }
     }
   };
@@ -155,12 +144,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     this.broadcastSvc.subscribe('$reloadClassifiers', () => {
       this.resources.classifier.get(null, null, {all: true}).subscribe(data => {
-          this.allClassifiers = data.items;
-          this.classifiers = {
-            children: data,
-            isRoot: true
-          };
-        });
+        this.allClassifiers = data.items;
+        this.classifiers = {
+          children: data,
+          isRoot: true
+        };
+      });
     });
 
     this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
@@ -277,14 +266,14 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   loadModelsToCompare = dataModel => {
     this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'}).subscribe(result => {
-        const compareToList = [];
-        const semanticLinks = result.body;
-        semanticLinks.items.forEach(link => {
-          if (['Superseded By', 'New Version Of'].indexOf(link.linkType) !== -1 && link.source.id === dataModel.id) {
-            compareToList.push(link.target);
-          }
-        });
+      const compareToList = [];
+      const semanticLinks = result.body;
+      semanticLinks.items.forEach(link => {
+        if (['Superseded By', 'New Version Of'].indexOf(link.linkType) !== -1 && link.source.id === dataModel.id) {
+          compareToList.push(link.target);
+        }
       });
+    });
   };
 
   onFolderAddModal = () => {
@@ -467,16 +456,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.allModels = [];
 
       this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria).subscribe(res => {
-          const result = res.body;
-          this.reloading = false;
-          this.allModels = {
-            children: result,
-            isRoot: true
-          };
+        const result = res.body;
+        this.reloading = false;
+        this.allModels = {
+          children: result,
+          isRoot: true
+        };
 
-          this.filteredModels = Object.assign({}, this.allModels); // $scope.filterDataModels();
-          this.searchText = this.formData.filterCriteria;
-        });
+        this.filteredModels = Object.assign({}, this.allModels); // $scope.filterDataModels();
+        this.searchText = this.formData.filterCriteria;
+      });
     } else {
       this.inSearchMode = false;
       this.sharedService.searchCriteria = '';

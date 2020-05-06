@@ -150,7 +150,8 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
     this.matDialog.open(SummaryMetadataPopupComponent, {
       width: '90%',
       autoFocus: false,
-      data: record
+      data: record,
+      panelClass: 'summary-metadata-modal'
     });
   }
 }

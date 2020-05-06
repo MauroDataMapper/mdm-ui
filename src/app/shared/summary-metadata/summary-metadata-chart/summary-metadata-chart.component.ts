@@ -47,7 +47,8 @@ export class SummaryMetadataChartComponent implements OnInit {
         anchor: 'end',
         align: 'end',
       }
-    }
+    },
+    maintainAspectRatio: false
   };
   public barChartLabels: Label[] = [];
   public barChartType: ChartType;

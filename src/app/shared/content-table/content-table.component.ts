@@ -32,7 +32,7 @@ export class ContentTableComponent implements AfterViewInit {
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   filterEvent = new EventEmitter<string>();
   filter: string;

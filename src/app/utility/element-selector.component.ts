@@ -83,7 +83,7 @@ export class ElementSelectorComponent implements OnInit {
   selectedTerm;
   noData = true;
   currentRecord: number;
-  totalItemCount: number;
+  totalItemCount = 0;
   isProcessing = false;
   expandedElement: any;
   rootNode: any;

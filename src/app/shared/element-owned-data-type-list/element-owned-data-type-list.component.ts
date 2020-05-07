@@ -49,7 +49,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   failCount: number;
   hideFilters = true;
   displayedColumns: string[];
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   filterEvent = new EventEmitter<string>();
   filter: string;

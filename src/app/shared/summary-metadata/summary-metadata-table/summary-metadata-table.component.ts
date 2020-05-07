@@ -27,7 +27,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
 
   hideFilters = true;
   displayedColumns: string[] = ['name', 'description'];
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   filterEvent = new EventEmitter<string>();
   filter: string;

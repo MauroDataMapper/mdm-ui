@@ -31,7 +31,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
   successCount: number;
   failCount = 0 ;
-  totalItemCount: number;
+  totalItemCount = 0;
   totalSelectedItemsCount: number;
   filter: string;
   step: any;

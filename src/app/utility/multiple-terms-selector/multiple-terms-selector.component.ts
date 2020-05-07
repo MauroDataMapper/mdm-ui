@@ -35,7 +35,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
   @Input() onAddButtonClick: any;
   dataSource = new MatTableDataSource();
   currentRecord: number;
-  totalItemCount: number;
+  totalItemCount = 0;
   isProcessing = false;
   private searchControlInput: ElementRef;
   selectedItems: any;

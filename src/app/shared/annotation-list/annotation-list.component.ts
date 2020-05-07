@@ -26,7 +26,7 @@ export class AnnotationListComponent implements AfterViewInit {
   access: any;
   currentUser: any;
   displayedColumns: string[] = ['lastUpdated'];
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   childEditor: MarkdownTextAreaComponent;
 

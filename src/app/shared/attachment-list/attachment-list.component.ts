@@ -31,7 +31,7 @@ export class AttachmentListComponent implements AfterViewInit {
   hideFilters = true;
   displayedColumns: string[] = ['fileName', 'fileSize', 'lastUpdated', 'other'];
   loading: boolean;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   filter: string;
 

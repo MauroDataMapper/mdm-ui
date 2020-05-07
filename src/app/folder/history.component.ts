@@ -22,7 +22,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     public result: SearchResult;
     public dataSetResult: any[];
     displayedColumns: string[] = ['createdBy', 'dateCreated', 'description'];
-    public totalItemCount: number;
+    totalItemCount = 0;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
    @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
     options;

@@ -42,7 +42,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   errors: any;
   displayedColumns = ['disabled', 'emailAddress', 'firstName', 'lastName', 'organisation', 'userRole', 'empty'];
   pagination: McSelectPagination;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
 
   records: any[] = [];

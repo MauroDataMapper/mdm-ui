@@ -46,7 +46,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   metadata: any;
   displayedColumns: string[] = ['namespace', 'key', 'value', 'btns'];
   hideFilters = true;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   filterEvent = new EventEmitter<string>();
   filter: string;

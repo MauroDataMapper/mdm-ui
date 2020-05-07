@@ -18,7 +18,7 @@ import { MatSort } from '@angular/material/sort';
 })
 export class GroupAccessNewComponent implements OnInit {
   displayedColumns: string[] = ['user', 'read', 'write', 'edit'];
-  public totalItemCount: number;
+  totalItemCount = 0;
   groups = [];
   allGroups = [];
   groupsMap = {};

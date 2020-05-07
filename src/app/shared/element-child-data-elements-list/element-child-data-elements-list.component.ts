@@ -49,7 +49,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
 
   isLoadingResults: boolean;
   records: any[];
-  totalItemCount: number;
+  totalItemCount = 0;
   hideFilters = true;
 
   displayedColumns = ['label', 'name', 'description'];

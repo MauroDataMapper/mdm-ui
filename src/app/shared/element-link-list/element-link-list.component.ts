@@ -46,7 +46,7 @@ export class ElementLinkListComponent implements AfterViewInit {
   hideFilters = true;
   displayedColumns: string[] = ['source', 'link', 'target', 'other'];
   loading: boolean;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults: boolean;
   filter: string;
   clientSide: boolean;

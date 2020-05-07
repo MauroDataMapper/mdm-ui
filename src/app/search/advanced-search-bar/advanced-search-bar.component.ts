@@ -38,7 +38,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   createdFrom: Date;
   createdTo: Date;
   placeHolderText: string;
-  totalItemCount: number;
+  totalItemCount = 0;
   context: any;
   classifications: any[];
   searchResults: any[];

@@ -32,7 +32,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
-  totalItemCount: number;
+  totalItemCount = 0;
   isLoadingResults = false;
   filterEvent = new EventEmitter<string>();
   filter: string;

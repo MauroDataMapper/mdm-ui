@@ -26,7 +26,6 @@ export class NavbarComponent implements OnInit {
   sideNav: any;
   pendingUsersCount = 0;
   isLoggedIn = this.securityHandler.isLoggedIn();
-  isAdmin = this.securityHandler.isAdmin();
   subscription: Subscription;
 
   constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService, private messageService: MessageService) { }
@@ -37,7 +36,7 @@ export class NavbarComponent implements OnInit {
     });
     if (this.isLoggedIn) {
           this.profile = this.securityHandler.getCurrentUser();
-          if (this.isAdmin) {
+          if (this.isAdmin()) {
             this.getPendingUsers();
           }
       }
@@ -53,6 +52,11 @@ export class NavbarComponent implements OnInit {
       this.pendingUsersCount = data.body.count;
     });
   }
+
+  isAdmin = () => {
+    return this.securityHandler.isAdmin();
+  }
+
 
   login = () => {
     this.dialog.open(LoginModalComponent, {

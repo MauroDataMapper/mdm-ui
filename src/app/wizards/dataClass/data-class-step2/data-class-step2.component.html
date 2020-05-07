@@ -1,7 +1,9 @@
 <div *ngIf="model.createType == 'new'">
     <form #myForm="ngForm" ngNativeValidate class="full-width">
-        <div>Parent Data Class:</div>
-        <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
+        <h4 class="marginless">Parent Data Class:</h4>
+        <div class="mb-2 block">
+            <mdm-model-path [path]="model.parent.breadcrumbs" ></mdm-model-path>
+        </div>
 
         <div class="mdm--form-input">
             <mat-form-field appearance="outline" class="full-width">
@@ -17,8 +19,8 @@
         </div>
 
         <div class="mdm--form-input">
-            <span>Multiplicity</span>
-            <br><small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
+            <h4 class="marginless">Multiplicity</h4>
+            <small>Use <strong>*</strong> for unbound multiplicity.</small>
             <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
                 <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
                     <mat-form-field appearance="outline" class="full-width">
@@ -33,15 +35,13 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div style="font-size: 12px;clear: both;margin: 2px 0px" class="error text-danger">
-                <span *ngIf="multiplicityError">
-                    {{multiplicityError}}
-                </span>
+            <div *ngIf="multiplicityError" class="warning">
+                {{multiplicityError}}
             </div>
         </div>
 
         <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
-            <span>Classifications</span>
+            <h4 class="marginless">Classifications</h4>
             <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
         </div>
     </form>
@@ -49,7 +49,7 @@
 </div>
 
 <div *ngIf="model.createType == 'copy' && step.active == true" class="mb-2">
-    <span>Please Select a Data Class:</span>
+    <h4 class="marginless">Please Select a Data Class:</h4>
     <mdm-model-selector-tree [defaultCheckedMap]="defaultCheckedMap"
                             [root]="model.copyFromDataModel[0]"
                             [showCheckboxFor]="['DataClass']"

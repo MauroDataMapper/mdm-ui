@@ -1,8 +1,10 @@
 <div *ngIf="model">
     <div *ngIf="model.createType == 'new'">
         <form #myForm="ngForm" ngNativeValidate class="full-width">
-            <div>Parent Data Class:</div>
-            <mdm-model-path [path]="model.parent.breadcrumbs" class="mb-2"></mdm-model-path>
+            <h4 class="marginless">Parent Data Class:</h4>
+            <div class="mb-2 block">
+                <mdm-model-path [path]="model.parent.breadcrumbs"></mdm-model-path>
+            </div>
             <div class="mdm--form-input">
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Label</mat-label>
@@ -17,30 +19,30 @@
                 </mat-form-field>
             </div>
 
-            <div class="mdm--form-input">
-                <span class="block">Multiplicity</span>
-                <small>Use <strong style="font-size: 14px">*</strong> for unbound multiplicity.</small>
+            <div class="mdm--form-input mb-2">
+                <h4 class="marginless">Multiplicity</h4>
+                <small>Use <strong>*</strong> for unbound multiplicity.</small>
                 <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
                     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                        <mat-form-field appearance="outline" class="full-width">
+                        <mat-form-field appearance="outline" class="full-width paddingless">
                             <mat-label>Min</mat-label>
                             <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
                         </mat-form-field>
                     </div>
                     <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                        <mat-form-field appearance="outline" class="full-width">
+                        <mat-form-field appearance="outline" class="full-width paddingless">
                             <mat-label>Max</mat-label>
                             <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
                         </mat-form-field>
                     </div>
                 </div>
+                <div class="error warning" *ngIf="multiplicityError">
+                    {{multiplicityError}}
+                </div>
             </div>
 
-            <div class="error warning">
-                <span *ngIf="multiplicityError">{{multiplicityError}}</span>
-            </div>
 
-            <span class="block">Data Type *</span>
+            <h4 class="marginless">Data Type *</h4>
             <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
                 <mdm-element-data-type [elementDataType]="model.dataType" [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
             </div>
@@ -95,7 +97,7 @@
         </form>
     </div>
     <div *ngIf="model.createType == 'copy'" class="mb-2">
-        <h4 style="margin-top: 16px;">Please Select Data Element(s):</h4>
+        <h4 class="mt-2">Please Select Data Element(s):</h4>
         <div class="heading-container">
             Data Elements
             <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>

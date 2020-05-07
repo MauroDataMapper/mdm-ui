@@ -75,10 +75,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           focus: x._name === 'moduleName' ? true : false
         })
       );
-      // this.editForm.forEach(x => x.edit({ editing: true }));
-      // this.editForm.forEach(
-      //     x=>x.edit({focus: true, select: true});
-      // )
       this.editableForm.visible = true;
       if (this.min === '*') {
         this.min = '-1';
@@ -203,30 +199,15 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   delete() {
-    this.resourcesService.dataClass
-      .delete(
-        this.result.parentDataModel,
-        this.result.parentDataClass,
-        this.result.id
-      )
-      .subscribe(
-        result => {
-          this.messageHandler.showSuccess('Data Class deleted successfully.');
-          this.stateHandler.Go(
-            'dataModel',
-            { id: this.result.parentDataModel, reload: true, location: true },
-            null
-          );
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-        },
-        error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Model.',
-            error
-          );
-        }
-      );
+    this.resourcesService.dataClass.delete(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
+      this.messageHandler.showSuccess('Data Class deleted successfully.');
+      this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    },
+    error => {
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+    });
   }
 
   formBeforeSave = function() {
@@ -242,17 +223,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-
-    if (
-      this.validateLabel(this.result.label) &&
-      this.validateMultiplicity(this.min, this.max)
-    ) {
-      if (
-        this.min != null &&
-        this.min !== '' &&
-        this.max != null &&
-        this.max !== ''
-      ) {
+    if (this.validateLabel(this.result.label) && this.validateMultiplicity(this.min, this.max)) {
+      if (this.min != null && this.min !== '' && this.max != null && this.max !== '' ) {
         if (this.newMinText === '*') {
           this.newMinText = -1;
         }
@@ -270,16 +242,13 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         minMultiplicity: parseInt(this.min, 10),
         maxMultiplicity: parseInt(this.max, 10)
       };
-      this.resourcesService.dataClass
-        .put(
+      this.resourcesService.dataClass.put(
           this.result.parentDataModel,
           this.result.parentDataClass,
           resource.id,
           null,
           { resource }
-        )
-        .subscribe(
-          result => {
+        ).subscribe(result => {
             if (this.afterSave) {
               this.afterSave(result);
             }
@@ -289,10 +258,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
             this.editForm.forEach(x => x.edit({ editing: false }));
           },
           error => {
-            this.messageHandler.showError(
-              'There was a problem updating the Data Class.',
-              error
-            );
+            this.messageHandler.showError('There was a problem updating the Data Class.', error);
           }
         );
     }

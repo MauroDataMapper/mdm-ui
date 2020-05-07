@@ -111,13 +111,8 @@
                 <tr>
                     <th class="detailsRowHeader">Multiplicity</th>
                     <td class="dataClassDetailsModelPath">
-
-                        <!--                        <div *ngIf="!editableForm.visible && result">-->
-                        <!--                            <multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity"></multiplicity>-->
-                        <!--                        </div>-->
                         <div *ngIf="result">
                             <div style="float: left;">
-
                                 <div *ngIf="editableForm.visible" style="padding-left: 8px">Min</div>
                                 <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" size="5" ></mdm-inline-text-edit>
                                 <span *ngIf="!editableForm.visible && (result.minMultiplicity || result.minMultiplicity == 0)">..</span>
@@ -129,11 +124,11 @@
                                 <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="max" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20" size="5" ></mdm-inline-text-edit>
                             </div>
                             <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
-                                <span class="help-block">{{error}}</span>
+                                <span class="help-block warning">{{error}}</span>
                             </div>
 
                             <div style="clear: both;font-size: 11px;font-style: italic;" *ngIf="editableForm.visible" >
-                                Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
+                                Please enter <strong>*</strong> for unbound multiplicity.
                             </div>
                         </div>
                     </td>

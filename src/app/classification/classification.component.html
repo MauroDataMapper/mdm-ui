@@ -31,21 +31,6 @@
 </div>
 
 
-<div *ngIf="showSecuritySection">
-    <div style="width:100%;" ng-if="activeTab.name === 'access' && folder">
-        <div class="userAccess" style="margin: 10px 0px 50px 0px">
-            <mdm-share-with [mcElement]="'mcClassification'" [mcDomainType]="'Classifier'"></mdm-share-with>
-            <div colspan="2">
-                <div style="margin-top: 10px">
-                    <mdm-user-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-user-access-new>
-                </div>
-                <div style="margin-top: 10px">
-                    <mdm-group-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-group-access-new>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
     <mat-tab label="Classified Elements">
         <ng-template matTabContent>

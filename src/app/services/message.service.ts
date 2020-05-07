@@ -42,9 +42,13 @@ export class MessageService implements OnDestroy {
 
   private dataChange = new Subject<any>();
 
+  private loggedInChange = new Subject<any>();
+
   private dataModelDataChange = new Subject<any>();
 
   dataChanged$ = this.dataChange.asObservable();
+
+  loggedInChanged$ = this.loggedInChange.asObservable();
 
   dataModelDataChange$ = this.dataModelDataChange.asObservable();
 
@@ -72,6 +76,10 @@ export class MessageService implements OnDestroy {
 
   dataChanged(data) {
     this.dataChange.next(data);
+  }
+
+  loggedInChanged(data) {
+    this.loggedInChange.next(data);
   }
 
   dataModelDataChanged(data) {

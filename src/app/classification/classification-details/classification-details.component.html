@@ -51,7 +51,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr mdmShowIfRolesWritable>
                     <td colspan="2" style="text-align: right;">
                         <div style="float: right">
                             <mdm-editable-form-buttons [hidden]="editableForm.visible"
@@ -108,4 +108,20 @@
             </tbody>
         </table>
     </form>
+</div>
+
+<div mdmShowIfRolesWritable *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
+  <div style="width:100%;">
+    <div class="userAccess" style="margin: 10px 0px 50px 0px">
+      <mdm-share-with [mcElement]="'mcClassification'" [mcDomainType]="'Classifier'"></mdm-share-with>
+      <div colspan="2">
+        <div style="margin-top: 10px">
+          <mdm-user-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-user-access-new>
+        </div>
+        <div style="margin-top: 10px">
+          <mdm-group-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-group-access-new>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

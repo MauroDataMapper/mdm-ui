@@ -12,7 +12,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  ChangeDetectorRef
+  ChangeDetectorRef, HostListener
 } from '@angular/core';
 import {ValidatorService} from '@mdm/services/validator.service';
 import {DOCUMENT} from '@angular/common';
@@ -29,7 +29,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   selectedValue: any[];
-
+  wasInside = false;
 
   inputText: any;
   defaultVal: any[];
@@ -117,10 +117,11 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.inputStyle = {width: this.width, padding: '6px 40px 6px 12px'};
     this.holderStyle = {width: this.width, 'background-color': '#FFF'};
+    this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
   }
 
   ngAfterViewInit() {
-
+    this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
   }
 
   ngOnDestroy(): void {
@@ -497,6 +498,18 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadingDynamicData = false;
   }
 
+  // @HostListener('click')
+  // clickInside() {
+  //   this.wasInside = true;
+  // }
+
+  @HostListener('document:click')
+  clickout() {
+    if (!this.wasInside) {
+    //  this.showTree = false;
+    }
+    this.show = false;
+  }
 
 }
 

@@ -32,7 +32,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
-
+  showSecuritySection: boolean;
   showUserGroupAccess: boolean;
   showEdit: boolean;
   showPermission: boolean;
@@ -105,9 +105,11 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
       this.editableForm.description = this.result.description;
     };
 
-    // this.subscription = this.messageService.editMode.subscribe((message: boolean) => {
-    //     this.showEditMode = message;
-    // });
+    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
+      (message: boolean) => {
+        this.showSecuritySection = message;
+      }
+    );
   }
 
   ngAfterViewInit(): void {

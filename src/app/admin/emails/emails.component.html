@@ -10,7 +10,7 @@
         </h4>
     </div>
     <div *ngIf="totalItemCount > 0">
-        <table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
+        <table mat-table [dataSource]="records" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
             <ng-container matColumnDef="sentToEmailAddress">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="sentToEmailAddress">
                     <span [hidden]="!hideFilters">To</span>
@@ -75,7 +75,7 @@
             <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
         </table>
         <div class="mdm--mat-pagination" *ngIf="totalItemCount > 5">
-            <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+            <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="5" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
         </div>
     </div>
 

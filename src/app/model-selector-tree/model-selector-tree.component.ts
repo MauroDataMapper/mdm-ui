@@ -335,6 +335,9 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     if (!this.wasInside) {
       this.showTree = false;
     }
+    if (this.alwaysShowTree) {
+      this.showTree = true;
+    }
     this.wasInside = false;
   }
 
@@ -377,7 +380,12 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
     if (!this.multiple) {
       this.searchCriteria = this.selectedElements[0].label;
-      this.showTree = false;
+
+      if (this.alwaysShowTree) {
+        this.showTree = true;
+      } else {
+        this.showTree = false;
+      }
       this.changeRef.detectChanges();
     }
 

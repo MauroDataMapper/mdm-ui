@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NoopAnimationsModule, BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { AdminModule } from '../admin/admin.module';
 import { SharedModule } from '../shared/shared.module';
@@ -283,7 +283,6 @@ import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summar
     FormsModule,
     HttpClientModule,
     ImageCropperModule,
-    NoopAnimationsModule,
     ReactiveFormsModule,
     SharedModule,
     ToastrModule.forRoot({

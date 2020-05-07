@@ -3,10 +3,10 @@
         <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block " (click)="hideShowLeftPane();">
             <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText">
                 <span *ngIf="state == 'inactive'">
-                    Hide Model Tree 
+                    Show Model Tree 
                 </span>
                 <span *ngIf="state == 'active'">
-                    Show Model Tree 
+                    Hide Model Tree 
                 </span>
                 <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
             </button>

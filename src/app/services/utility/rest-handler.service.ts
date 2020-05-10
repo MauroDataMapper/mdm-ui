@@ -44,18 +44,18 @@ export class RestHandlerService {
                 this.stateHandler.ApplicationOffline();
                 this.broadcastSvc.broadcast('applicationOffline', response);
             } else if (response.status === 401) {
+                this.messageService.lastError = response;
                 this.stateHandler.NotAuthorized(response);
-                this.messageService.lastError = response;
             } else if (response.status === 404) {
-                this.stateHandler.NotFound(response);
                 this.messageService.lastError = response;
+                this.stateHandler.NotFound(response);
             } else if (response.status === 501) {
+                this.messageService.lastError = response;
                 this.stateHandler.NotImplemented(response);
-                this.messageService.lastError = response;
             } else if (response.status >= 400 && response.status < 500 && options.method === 'GET') {
-                this.stateHandler.NotFound(response);
-                this.broadcastSvc.broadcast('resourceNotFound', response);
                 this.messageService.lastError = response;
+                this.stateHandler.NotFound(response);
+                //this.broadcastSvc.broadcast('resourceNotFound', response);
             } else if (response.status >= 500) {
                 this.messageService.lastError = response;
                 this.stateHandler.ServerError(response);

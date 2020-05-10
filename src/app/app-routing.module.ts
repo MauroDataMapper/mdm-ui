@@ -100,8 +100,8 @@ export const PagesRoutes = {
       component: ServerErrorComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.resourceNotFound',
-      url: '/resourceNotFound',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.notFound',
+      url: '/notFound',
       component: NotFoundComponent
     },
     {

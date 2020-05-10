@@ -51,6 +51,7 @@ export class StateRoleAccessService {
         this.add('appContainer.mainApp.twoSidePanel.catalogue.serverError', ['public']);
         this.add('appContainer.mainApp.twoSidePanel.catalogue.notImplemented', ['public']);
         this.add('appContainer.mainApp.twoSidePanel.catalogue.notAuthorized', ['public']);
+        this.add('appContainer.mainApp.twoSidePanel.catalogue.notFound', ['public']);
 
         this.add('appContainer.mainApp.twoSidePanel.catalogue.search', ['public']);
         this.add('appContainer.mainApp.twoSidePanel.catalogue.folder', ['public']);

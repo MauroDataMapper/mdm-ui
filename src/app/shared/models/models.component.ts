@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
@@ -9,13 +9,15 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-models',
   templateUrl: './models.component.html',
   styleUrls: ['./models.component.sass']
 })
-export class ModelsComponent implements OnInit {
+export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};
   activeTab = 0;
   allModels = null;
@@ -23,6 +25,8 @@ export class ModelsComponent implements OnInit {
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
   searchboxFocused = false;
+  debounceInputEvent: Subject<KeyboardEvent>;
+  subscriptions: Subscription;
 
   // Hard
   includeSupersededDocModels = false;
@@ -156,6 +160,12 @@ export class ModelsComponent implements OnInit {
 
     this.currentClassification = null;
     this.allClassifications = [];
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptions) {
+      this.subscriptions.unsubscribe();
+    }
   }
 
   isLoggedIn() {
@@ -403,21 +413,32 @@ export class ModelsComponent implements OnInit {
   };
 
   onSearchInputKeyDown(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'Backspace': return;
-      case 'Delete': return;
-      case 'Escape':
-        this.searchboxFocused = false;
-        return;
+    // Initialize debounce listener if neccessary
+    if (!this.debounceInputEvent) {
+      this.debounceInputEvent = new Subject<KeyboardEvent>();
+      this.subscriptions = this.debounceInputEvent.pipe(
+        debounceTime(300)
+      ).subscribe(e => {
+        switch (e.key) {
+          case 'Backspace': return;
+          case 'Delete': return;
+          case 'Escape':
+            this.searchboxFocused = false;
+            return;
+        }
+
+        if (e.keyCode && e.keyCode === 13) {
+          this.search();
+        }
+        if (this.validator.isEmpty(this.formData.filterCriteria)) {
+          this.search();
+        }
+      });
     }
 
-    if (event.keyCode && event.keyCode === 13) {
-      this.search();
-    }
-    if (this.validator.isEmpty(this.formData.filterCriteria)) {
-      this.search();
-    }
     event.preventDefault();
+    event.stopPropagation();
+    this.debounceInputEvent.next(event);
     return false;
   }
 

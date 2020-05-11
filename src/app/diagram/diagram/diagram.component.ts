@@ -109,11 +109,14 @@ export class DiagramComponent implements OnInit {
       gridSize: 1,
       attributes: {
         'font-family': '"Nunito Sans", sans-serif',
-      },
+      } /*,
+      This doesn't yet work with the typescript definition...
       interactive: {
         stopDelegation: false
-      }
+      }*/
     });
+
+    this.paper.setInteractivity({ stopDelegation: false })
 
     const svg: any = this.jointjsDiv.nativeElement.querySelector('svg');
     const options: any = {

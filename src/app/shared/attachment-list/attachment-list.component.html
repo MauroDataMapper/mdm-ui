@@ -1,13 +1,22 @@
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
+        <div fxFlex  fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" style="align-items: center;">
             <h4 class="marginless">
                 Attachments
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
+        <div fxFlex fxLayout="row"
+                    fxFlex="50"
+                    fxFlex.md="50"
+                    fxFlex.sm="50"
+                    fxFlex.xs="100"
+                    fxLayoutAlign="end"
+                    fxLayoutAlign.md="end"
+                    fxLayoutAlign.sm="end"
+                    fxLayoutAlign.xs="start"
+                    style="text-align: right; align-items: center;">
             <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.showEdit">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Add Attachment
@@ -15,62 +24,63 @@
         </div>
     </div>
 </div>
-<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped">
-    <ng-container matColumnDef="fileName">
-        <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
-            <span [hidden]="!hideFilters">File Name</span>
-            <div [hidden]="hideFilters">
-                <mat-form-field class="filter" floatLabel="never">
-                    <mat-label>File Name</mat-label>
-                    <input #filters matInput name="description" (keyup)="applyFilter()">
-                </mat-form-field>
-            </div>
-        </th>
-        <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
-            <div *ngIf="!record.inEdit">
-                <div>
-                    <a href="{{download(record)}}">{{record.fileName}}</a>
+<div class="table-responsive">
+    <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
+        <ng-container matColumnDef="fileName">
+            <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
+                <span [hidden]="!hideFilters">File Name</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>File Name</mat-label>
+                        <input #filters matInput name="description" (keyup)="applyFilter()">
+                    </mat-form-field>
                 </div>
-            </div>
-            <div *ngIf="record.isNew">
-                <div style="width:100%;">
-                    <form>
-                        <input type="file" name="pic" id="File{{i}}">
-                    </form>
+            </th>
+            <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 50%; width: 50%; text-align: left; ">
+                <div *ngIf="!record.inEdit">
+                    <div>
+                        <a href="{{download(record)}}">{{record.fileName}}</a>
+                    </div>
                 </div>
-            </div>
-        </td>
-    </ng-container>
-    <ng-container matColumnDef="fileSize">
-        <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 20%;width: 20%;" columnName="fileSize">Size</th>
-        <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
-            <div *ngIf="!record.inEdit">
-                {{record.fileSize | fileSize}}
-            </div>
-        </td>
-    </ng-container>
-    <ng-container matColumnDef="lastUpdated">
-        <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 20%;width: 20%;" columnName="lastUpdated">Uploaded</th>
-        <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
-            <div *ngIf="!record.inEdit">
-                {{record.lastUpdated  | date:"dd/MM/yyyy h:mm a" }}
-            </div>
-        </td>
-    </ng-container>
-    <ng-container matColumnDef="other">
-        <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 10%;width: 10%;" columnName="other"></th>
-        <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-            <div *ngIf="access && access.showEdit">
-                <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hideEdit]="true"></mdm-table-buttons>
-            </div>
-        </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+                <div *ngIf="record.isNew">
+                    <div style="width:100%;">
+                        <form>
+                            <input type="file" name="pic" id="File{{i}}">
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="fileSize">
+            <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 20%;width: 20%;" columnName="fileSize">Size</th>
+            <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 20%; width: 20%; text-align: left;">
+                <div *ngIf="!record.inEdit">
+                    {{record.fileSize | fileSize}}
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="lastUpdated">
+            <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 20%;width: 20%;" columnName="lastUpdated">Uploaded</th>
+            <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 20%; width: 20%; text-align: left;">
+                <div *ngIf="!record.inEdit">
+                    {{record.lastUpdated  | date:"dd/MM/yyyy h:mm a" }}
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="other">
+            <th *matHeaderCellDef style="cursor:pointer;width: 70px;" columnName="other"></th>
+            <td *matCellDef="let record;  let i = index " mat-cell style="width: 70px; text-align: left;">
+                <div *ngIf="access && access.showEdit">
+                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hideEdit]="true"></mdm-table-buttons>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
 <mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </mat-card>
 <div class="mdm--mat-pagination">
     <mdm-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>

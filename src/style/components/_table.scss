@@ -1,10 +1,14 @@
 table.mat-table .mat-header-cell {
-  font-size: $defaultFontSize;
-  font-weight: 500;
+    font-size: $defaultFontSize;
+    font-weight: 500;
 }
 
-table.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #fcfcfd;
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #fcfcfd;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+
 }
 
 table td {
@@ -47,10 +51,10 @@ td.mat-cell:last-of-type {
 table.mdm--table-responsive {
   border: 1px solid #ccc;
 
-  tr {
-      border: 1px solid #f3f3f3;
-      padding: .35em;
-  }
+    tr {
+        border: 1px solid #f3f3f3;
+       // padding: .35em;
+    }
 
   td,
   th {
@@ -102,4 +106,19 @@ table.mdm--table-responsive {
           font-weight: bold;
       }
   }
+}
+
+.mdm--mat-pagination,
+table.table thead {
+  border: 1px solid #f3f3f3;
+}
+
+
+.mdm--mat-table {
+    width: 100%;
+    border: 1px solid #f3f3f3;
+}
+
+.mdm--table-fixed {
+    table-layout: fixed;
 }

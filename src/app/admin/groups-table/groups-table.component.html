@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
+    <table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-striped">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="label">
                 <span [hidden]="!hideFilters">Name</span>

@@ -22,8 +22,7 @@
                         </mat-form-field>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let record" style=" text-align: left; word-wrap: break-word;">
-                    <div class="mdm--td-cell">To</div>
+                <td mat-cell *matCellDef="let record" style=" text-align: left;">
                     <span>{{record.sentToEmailAddress}}</span>
                 </td>
             </ng-container>
@@ -32,7 +31,6 @@
                     <span [hidden]="!hideFilters">Date/Time</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    <div class="mdm--td-cell">Date/Time</div>
                     <span> {{record.dateTimeSent | date: 'dd/MM/yyyy h:mm a'}}</span>
                 </td>
             </ng-container>
@@ -46,19 +44,17 @@
                         </mat-form-field>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    <div class="mdm--td-cell">Subject/Body</div>
+                <td mat-cell *matCellDef="let record" style="text-align: left;">
                     <span><strong>{{record.subject}}</strong></span>
                     <br>
-                    <mdm-more-description [description]="record.body" [length]="200" style="display: block; max-width: 80%; margin-left: auto;"></mdm-more-description>
+                    <mdm-more-description [description]="record.body" [length]="200"></mdm-more-description>
                 </td>
             </ng-container>
             <ng-container matColumnDef="successfullySent">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="successfullySent" [disabled]="!hideFilters" style="cursor: pointer; text-align: left;" columnName="successfullySent">
                     <span [hidden]="!hideFilters">Status</span>
                 </th>
-                <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    <div class="mdm--td-cell">Status</div>
+                <td mat-cell *matCellDef="let record" style="text-align: left;">
                     <div>
                         <a *ngIf="record.successfullySent">
                             Successful

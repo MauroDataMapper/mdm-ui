@@ -14,11 +14,13 @@
                                     [(ngModel)]="editableForm.label"
                                     [name]="'moduleName'"
                                     size="20"
-                                    [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
+                                    [styleCss]="'dataModelDetailsLabel'"
+                                    style="max-width: 70%; display: inline-block; vertical-align: middle;"
+                                    ></mdm-inline-text-edit>
+                <span class="inline-block" *ngIf="result?.deleted">
+                  <small class="warning"> | Deleted</small>
+                </span>
             </h4>
-            <span class="inline-block">
-              <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
-            </span>
             <div class="detail-icons--cta">
               <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
               <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
@@ -67,7 +69,7 @@
       </div>
     </div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered mdm--table-fixed">
       <tbody>
       <tr>
         <td class="detailsRowHeader">Aliases</td>

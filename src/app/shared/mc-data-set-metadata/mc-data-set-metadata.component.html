@@ -18,114 +18,113 @@
         </div>
     </div>
 </div>
-<table mat-table matSort [dataSource]="records" class="mdm--table table table-borderless table-striped">
-    <ng-container matColumnDef="namespace">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 40%;width: 40%;">
-            <span [hidden]="!hideFilters">Namespace</span>
-            <div [hidden]="hideFilters">
-                <mat-form-field class="filter" floatLabel="never">
-                    <mat-label>Namespace</mat-label>
-                    <input #filters matInput name="namespace" (keyup)="applyFilter()">
-                </mat-form-field>
-            </div>
-        </th>
-        <td mat-cell *matCellDef="let rec; let i = index" style="max-width: 40%;width: 40%;text-align: left;word-wrap: break-word;">
-            <div *ngIf="!rec.inEdit">
-                {{rec.namespace}}
-            </div>
-            <div *ngIf="rec.inEdit">
-                <mdm-select [width]="'100%'"
-                            [acceptTypedInput]="true"
-                            [valueType]="'static'"
-                            [staticValues]="namespaces"
-                            [defaultValue]="rec.namespace"
-                            [hasError]="rec.edit.errors && rec.edit.errors['namespace']"
-                            [record]="records[i]"
-                            [minInputLength]="0"
-                            [idProperty]="'id'"
-                            [displayProperty]="'namespace'"
-                            [searchProperty]="'namespace'"
-                            (selectEvent)="onNamespaceSelect($event[0],$event[1])"
-                            name="test">
-                    <ng-template #lineContent let-item>
-                        <div>{{item.namespace}}</div>
-                    </ng-template>
-                </mdm-select>
-                <small *ngIf="rec.edit.errors && rec.edit.errors['namespace']" class="errorMessage">{{rec.edit.errors['namespace']}}</small>
-            </div>
-        </td>
-    </ng-container>
-    <ng-container matColumnDef="key">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="!hideFilters" style="cursor:pointer;max-width: 20%;width: 20%;">
-            <span [hidden]="!hideFilters">Key</span>
-            <div [hidden]="hideFilters">
-                <mat-form-field class="filter" floatLabel="never">
-                    <mat-label>Key</mat-label>
-                    <input #filters matInput name="key" (keyup)="applyFilter()">
-                </mat-form-field>
-            </div>
-        </th>
-        <td mat-cell *matCellDef="let record ; let i = index" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
-            <div *ngIf="!record.inEdit">
-                {{record.key}}
-            </div>
-            <div *ngIf="record.inEdit">
-                <mdm-select [width]="'100%'"
-                            [acceptTypedInput]="true"
-                            [valueType]="'static'"
-                            [staticValues]="record.metadataKeys"
-                            [defaultValue]="record.key"
-                            [hasError]="record.edit.errors && record.edit.errors['key']"
-                            [record]="records[i]"
-                            [minInputLength]="0"
-                            [idProperty]="'id'"
-                            [displayProperty]="'key'"
-                            [searchProperty]="'key'"
-                            (selectEvent)="onKeySelect($event[0],$event[1])">
-                    <ng-template #lineContent let-item>
-                        <div>{{item.key}}</div>
-                    </ng-template>
-                </mdm-select>
-                <small *ngIf="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
-            </div>
-        </td>
-    </ng-container>
-    <ng-container matColumnDef="value">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 30%;width: 30%;">
-            <span [hidden]="!hideFilters">Value</span>
-            <div [hidden]="hideFilters">
-                <mat-form-field class="filter" floatLabel="never">
-                    <mat-label>Value</mat-label>
-                    <input #filters matInput name="value" (keyup)="applyFilter()">
-                </mat-form-field>
-            </div>
-        </th>
-        <td mat-cell *matCellDef="let record" style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;">
-            <div *ngIf="!record.inEdit">
-                <mdm-more-description [description]="record.value" [length]="100"></mdm-more-description>
-            </div>
-            <div *ngIf="record.inEdit">
-                <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
-
-
-                    <mdm-markdown-text-area rows="'4'" [(description)]="record.edit.value" [inEditMode]="true" [hideHelpText]="true"></mdm-markdown-text-area>
-
-                    <small *ngIf="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
+<div class="table-responsive">
+    <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
+        <ng-container matColumnDef="namespace">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="max-width: 40%;width: 40%;cursor:pointer;">
+                <span [hidden]="!hideFilters">Namespace</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Namespace</mat-label>
+                        <input #filters matInput name="namespace" (keyup)="applyFilter()">
+                    </mat-form-field>
                 </div>
-            </div>
-        </td>
-    </ng-container>
-    <ng-container matColumnDef="btns" style="max-width: 75px; width: 75px;">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
-            <div ng-if="access && access.canAddMetadata">
-                <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])" ></mdm-table-buttons>
-            </div>
-        </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+            </th>
+            <td mat-cell *matCellDef="let rec; let i = index" style="max-width: 40%;width: 40%;text-align: left;">
+                <div *ngIf="!rec.inEdit">
+                    {{rec.namespace}}
+                </div>
+                <div *ngIf="rec.inEdit" style="width:250px">
+                    <mdm-select [width]="'100%'"
+                                [acceptTypedInput]="true"
+                                [valueType]="'static'"
+                                [staticValues]="namespaces"
+                                [defaultValue]="rec.namespace"
+                                [hasError]="rec.edit.errors && rec.edit.errors['namespace']"
+                                [record]="records[i]"
+                                [minInputLength]="0"
+                                [idProperty]="'id'"
+                                [displayProperty]="'namespace'"
+                                [searchProperty]="'namespace'"
+                                (selectEvent)="onNamespaceSelect($event[0],$event[1])"
+                                name="test">
+                        <ng-template #lineContent let-item>
+                            <div>{{item.namespace}}</div>
+                        </ng-template>
+                    </mdm-select>
+                    <small *ngIf="rec.edit.errors && rec.edit.errors['namespace']" class="errorMessage">{{rec.edit.errors['namespace']}}</small>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="key">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef [disabled]="!hideFilters" style="cursor:pointer;max-width: 20%;width: 20%;">
+                <span [hidden]="!hideFilters">Key</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Key</mat-label>
+                        <input #filters matInput name="key" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record ; let i = index" style="max-width: 20%;width: 20%;text-align: left;">
+                <div *ngIf="!record.inEdit">
+                    {{record.key}}
+                </div>
+                <div *ngIf="record.inEdit" style="width: 200px;">
+                    <mdm-select [width]="'100%'"
+                                [acceptTypedInput]="true"
+                                [valueType]="'static'"
+                                [staticValues]="record.metadataKeys"
+                                [defaultValue]="record.key"
+                                [hasError]="record.edit.errors && record.edit.errors['key']"
+                                [record]="records[i]"
+                                [minInputLength]="0"
+                                [idProperty]="'id'"
+                                [displayProperty]="'key'"
+                                [searchProperty]="'key'"
+                                (selectEvent)="onKeySelect($event[0],$event[1])">
+                        <ng-template #lineContent let-item>
+                            <div>{{item.key}}</div>
+                        </ng-template>
+                    </mdm-select>
+                    <small *ngIf="record.edit.errors && record.edit.errors['key']" class="errorMessage">{{record.edit.errors['key']}}</small>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;width: 150px;">
+                <span [hidden]="!hideFilters">Value</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Value</mat-label>
+                        <input #filters matInput name="value" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="text-align: left;width: 150px;">
+                <div *ngIf="!record.inEdit">
+                    <mdm-more-description [description]="record.value" [length]="100"></mdm-more-description>
+                </div>
+                <div *ngIf="record.inEdit">
+                    <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
+                        <mdm-markdown-text-area rows="'2'" [(description)]="record.edit.value" [inEditMode]="true" [hideHelpText]="true"></mdm-markdown-text-area>
+                        <small *ngIf="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="btns">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let record;  let i = index" style="text-align: right;">
+                <div ng-if="access && access.canAddMetadata">
+                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])" ></mdm-table-buttons>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
 <mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </mat-card>

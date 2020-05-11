@@ -15,10 +15,6 @@
   }
 }
 
-.mdm--mat-pagination, 
-table.table thead {
-  border: 1px solid #f3f3f3;
-}
 
 .menu-list {
   position: relative;
@@ -65,9 +61,6 @@ table.table thead {
 .settings-container {
   .mdm-form--configuration > .form-group {
     margin-bottom: 48px;
-  }
-  .mat-tab-header {
-    margin-bottom: 24px;
   }
   button.save-email-config {
     display: block;

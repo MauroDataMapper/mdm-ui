@@ -1,18 +1,18 @@
 <div *ngIf="!editableForm">
-    <textarea class="markdownTextArea form-control outlined-block"
+    <textarea class="markdownTextArea form-control outlined-block mb-1"
               *ngIf="inEditMode"
               [(ngModel)]="formData.description"
               style="width:100%;"
               (keyup)="descriptionKeyUp($event)"
               (ngModelChange)="onDescriptionChange()"
               #editableTextArea
-              rows="{{ rows ? rows : '8' }}">
+              rows="{{ rows ? rows : '6' }}">
     </textarea>
     <div style="float: right; margin-bottom: 10px;" *ngIf="inEditMode">
         <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="top: 3px; position: relative;">
             Show Markdown Preview
         </mat-checkbox>
-        <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px; margin-left: 20px;">
+        <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px;">
             <i class="fas fa-plus"></i>
             Add Element
         </button>
@@ -34,16 +34,16 @@
                   [(ngModel)]="editableForm[property]" 
                   name="{{ property }}" 
                   class="full-width" 
-                  rows="{{ rows ? rows : '8' }}" 
-                  class="form-control outlined-block"
+                  rows="{{ rows ? rows : '6' }}" 
+                  class="form-control outlined-block mb-1"
                   #editableTextArea
                   (keyup)="descriptionKeyUp($event)"></textarea>
 
         <div style="float: right; margin-bottom: 10px;" *ngIf="editableForm.visible">
-            <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="top: 3px; position: relative;">
+            <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="position: relative;">
                 Show Markdown Preview
             </mat-checkbox>
-            <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px; margin-left: 20px;">
+            <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px;">
                 <i class="fas fa-plus"></i>
                 Add Element
             </button>

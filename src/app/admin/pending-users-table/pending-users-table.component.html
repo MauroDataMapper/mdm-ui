@@ -11,7 +11,7 @@
 	</div>
 
 	<div *ngIf="totalItemCount > 0">
-		<table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-borderless table-striped">
+		<table mat-table [dataSource]="dataSource" matSort class="table mdm--table mdm--table-responsive table-striped">
 			<ng-container matColumnDef="firstName">
 				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="firstName">
 					<span [hidden]="!hideFilters">First Name</span>

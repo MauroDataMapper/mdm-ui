@@ -2,7 +2,7 @@
     <mat-tab label="Email template">
         <form name="form" (ngSubmit)="f.form.valid && submitConfig()" #f="ngForm" class="mdm--form mdm--form-configuration">
             <div class="mb-1">
-                <h4>Site URL address</h4>
+                <h4 class="mb-1 mt-2">Site URL address</h4>
                 <mat-form-field appearance="outline">
                     <mat-label>Site URL</mat-label>
                     <input matInput name="siteUrl" #siteUrl="ngModel" [(ngModel)]="properties['site.url']" placeholder="e.g. https://example.com" required>

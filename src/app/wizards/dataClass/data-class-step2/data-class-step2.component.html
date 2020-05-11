@@ -70,7 +70,8 @@
             <h4 class="marginless">Summary of Selected Data Classes</h4>
             <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
         </div>
-            <table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-borderless table-striped">
+        <div class="table-responsive">
+            <table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-striped">
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label"
                         sortable="true" filterable="true">
@@ -111,6 +112,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
+        </div>
         <div class="mdm--mat-pagination">
             <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [length]="totalSelectedItemsCount" [pageSize]="10" showFirstLastButtons></mat-paginator>
         </div>

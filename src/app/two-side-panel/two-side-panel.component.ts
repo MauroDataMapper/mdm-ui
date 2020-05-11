@@ -29,7 +29,7 @@ export class TwoSidePanelComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const width = window.innerWidth;
-    this.windowSetup(width);
+    // this.windowSetup(width);
   }
 
   toggle = () => {
@@ -38,7 +38,7 @@ export class TwoSidePanelComponent implements AfterViewInit {
 
   hideShowLeftPane() {
     this.state = this.state === 'inactive' ? 'active' : 'inactive';
-
+    console.log(this.state);
     if (this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')) {
       this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
       this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
@@ -50,21 +50,22 @@ export class TwoSidePanelComponent implements AfterViewInit {
     }
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    const width = window.innerWidth;
-    this.windowSetup(width);
-  }
+  // @HostListener('window:resize', ['$event'])
+  // onResize() {
+  //   const width = window.innerWidth;
+  //   this.windowSetup(width);
+  //   console.log(width);
+  // }
 
-  windowSetup = width => {
-    if (width > 800) {
-      this.resizableLeft.nativeElement.hidden = false;
-      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
-      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up' );
-    } else {
-      this.resizableLeft.nativeElement.hidden = true;
-      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
-      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
-    }
-  }
+  // windowSetup = width => {
+  //   if (width > 800) {
+  //     this.resizableLeft.nativeElement.hidden = false;
+  //     this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+  //     this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up' );
+  //   } else {
+  //     this.resizableLeft.nativeElement.hidden = true;
+  //     this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
+  //     this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+  //   }
+  // }
 }

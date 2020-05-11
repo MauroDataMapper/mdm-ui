@@ -2,46 +2,47 @@
     <h4 class="marginless">History</h4>
     <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
 </div>
-<table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--table table table-borderless table-striped">
-    <ng-container matColumnDef="createdBy">
-        <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header>
-            User
-        </th>
-        <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-            <div style="float: left;margin: 3px;">
-                <mdm-profile-picture [user]="element.createdBy"></mdm-profile-picture>
-            </div>
-            <div style="float: left;margin: 4px 3px;">
-                <div title="{{element.createdBy.emailAddress}}">
-                    <span [innerHTML]="element.createdBy.firstName"></span>
-                    <span [innerHTML]="element.createdBy.lastName"></span>
+<div class="table-responsive">
+    <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--mat-table mat-elevation-z3 table-striped">
+        <ng-container matColumnDef="createdBy">
+            <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                User
+            </th>
+            <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
+                <div style="float: left;margin: 3px;">
+                    <mdm-profile-picture [user]="element.createdBy"></mdm-profile-picture>
                 </div>
-            </div>
-        </td>
-    </ng-container>
+                <div style="float: left;margin: 4px 3px;">
+                    <div title="{{element.createdBy.emailAddress}}">
+                        <span [innerHTML]="element.createdBy.firstName"></span>
+                        <span [innerHTML]="element.createdBy.lastName"></span>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
 
-    <ng-container matColumnDef="dateCreated">
-        <th style="cursor:pointer;max-width: 15%;width: 15%;" mat-header-cell *matHeaderCellDef mat-sort-header>
-            Date
-        </th>
-        <td style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-            {{element.dateCreated | date:"dd/MM/yyyy h:mm a"}}
-        </td>
-    </ng-container>
+        <ng-container matColumnDef="dateCreated">
+            <th style="cursor:pointer;max-width: 15%;width: 15%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                Date
+            </th>
+            <td style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
+                {{element.dateCreated | date:"dd/MM/yyyy h:mm a"}}
+            </td>
+        </ng-container>
 
-    <ng-container matColumnDef="description">
-        <th style="cursor:pointer;max-width: 60%;width: 60%;" mat-header-cell *matHeaderCellDef mat-sort-header>
-            Description
-        </th>
-        <td style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
-            {{element.description}}
-        </td>
-    </ng-container>
+        <ng-container matColumnDef="description">
+            <th style="cursor:pointer;max-width: 60%;width: 60%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+                Description
+            </th>
+            <td style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
+                {{element.description}}
+            </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
 <mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </mat-card>

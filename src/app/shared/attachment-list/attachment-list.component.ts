@@ -46,10 +46,7 @@ export class AttachmentListComponent implements AfterViewInit {
 
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
 
           return this.attachmentFetch(
@@ -69,8 +66,7 @@ export class AttachmentListComponent implements AfterViewInit {
           this.isLoadingResults = false;
           return [];
         })
-      )
-      .subscribe(data => {
+      ).subscribe(data => {
         this.records = data;
       });
 
@@ -125,20 +121,13 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
   delete = record => {
-    this.resources.facets
-      .delete(this.parent.id, 'referenceFiles/' + record.id, null)
-      .subscribe(
-        () => {
-          this.messageHandler.showSuccess('Attachment deleted successfully.');
-          this.reloadEvent.emit();
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem deleting the attachment.',
-            error
-          );
-        }
-      );
+    this.resources.facets.delete(this.parent.id, 'referenceFiles/' + record.id, null).subscribe(() => {
+        this.messageHandler.showSuccess('Attachment deleted successfully.');
+        this.reloadEvent.emit();
+      },
+      error => {
+        this.messageHandler.showError('There was a problem deleting the attachment.', error);
+      });
   };
 
   add = () => {
@@ -159,19 +148,12 @@ export class AttachmentListComponent implements AfterViewInit {
   save = (record, index) => {
     const fileName = 'File' + index;
     record.edit.formData.append('file', this.getFile(fileName));
-    this.resources.facets
-      .attachReferenceFile(this.parent.id, record.edit.formData)
-      .subscribe(
-        () => {
-          this.messageHandler.showSuccess('Attachment uploaded successfully.');
-          this.reloadEvent.emit();
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem saving the attachment.',
-            error
-          );
-        }
-      );
+    this.resources.facets.attachReferenceFile(this.parent.id, record.edit.formData).subscribe(() => {
+        this.messageHandler.showSuccess('Attachment uploaded successfully.');
+        this.reloadEvent.emit();
+      },
+      error => {
+        this.messageHandler.showError('There was a problem saving the attachment.', error);
+      });
   }
 }

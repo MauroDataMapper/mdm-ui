@@ -109,6 +109,9 @@ export class DiagramComponent implements OnInit {
       gridSize: 1,
       attributes: {
         'font-family': '"Nunito Sans", sans-serif',
+      },
+      interactive: {
+        stopDelegation: false
       }
     });
 

@@ -18,7 +18,7 @@ export class TermRelationshipsComponent implements OnInit {
 
   loading = true;
   relationshipTypes = [];
-  relations = [];
+  relations = {};
   constructor(
     private resources: ResourcesService,
     private helpDialogueService: HelpDialogueHandlerService,

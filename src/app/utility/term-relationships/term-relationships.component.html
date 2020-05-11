@@ -18,7 +18,7 @@
                 <mdm-paged-list [name]="relationshipType"
                                [mcTitle]="relationshipType"
                                [type]="'static'"
-                               [items]="relationshipTypes"
+                               [items]="relations[relationshipType]"
                                [pageSize]="10">
 
                     <ng-template #pageListTemplate let-item>

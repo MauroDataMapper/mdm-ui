@@ -6,32 +6,32 @@
                 What type of element are you looking for?
                 <div style="margin-top: 10px;">
                     <ul class="list-group" style="cursor: pointer;">
-                        <li class="list-group-item" ngHide="hideOptions['Folder']">
+                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('Folder')">
                             <div (click)="onElementTypeSelect('Folder')">
                                 <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
                             </div>
                         </li>
-                        <li class="list-group-item" ngHide="hideOptions['DataType']">
+                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataType')">
                             <div (click)="onElementTypeSelect('DataType')">
                                 <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataType'"> Data Type
                             </div>
                         </li>
-                        <li class="list-group-item" ngHide="hideOptions['DataModel']">
+                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataModel')">
                             <div (click)="onElementTypeSelect('DataModel')">
                                 <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataModel'"> Data Model
                             </div>
                         </li>
-                        <li class="list-group-item" ngHide="hideOptions['DataClass']">
+                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataClass')">
                             <div (click)="onElementTypeSelect('DataClass')">
                                 <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class
                             </div>
                         </li>
-                        <li class="list-group-item" ngHide="hideOptions['DataElement']">
+                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataElement')">
                             <div (click)="onElementTypeSelect('DataElement')">
                                 <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element
                             </div>
                         </li>
-                        <li class="list-group-item" ngHide="hideOptions['Term']">
+                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('Term')">
                             <div (click)="onElementTypeSelect('Term')">
                                 <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Term'"> Term
                             </div>

@@ -56,7 +56,7 @@ export class ElementSelectorComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {}
   pageSize = 40;
-  hideOptions = [];
+  validTypesToSelect = [];
   public searchInput: string;
   loading = true;
   formData = {
@@ -105,22 +105,17 @@ export class ElementSelectorComponent implements OnInit {
         this.currentRecord = 0;
         this.reLoad();
     }
-  validTypesToSelect = (validTypesToSelect: any[]) => {
-            if (validTypesToSelect.length === 1) {
-                this.showPrevBtn = false;
-                this.onElementTypeSelect(this.validTypesToSelect[0]);
-            } else {
+    configureValidTypes(validTypesToSelect: any[]) {
+      this.validTypesToSelect = validTypesToSelect;
+      if (validTypesToSelect.length === 1) {
+        this.showPrevBtn = false;
+        this.onElementTypeSelect(validTypesToSelect[0]);
+      } else {
 
-              this.hideOptions['Folder']    = validTypesToSelect.indexOf('Folder') === -1 ;
-              this.hideOptions['DataModel'] = validTypesToSelect.indexOf('DataModel') === -1 ;
-              this.hideOptions['DataClass'] = validTypesToSelect.indexOf('DataClass') === -1 ;
-              this.hideOptions['DataElement'] = validTypesToSelect.indexOf('DataElement') === -1 ;
-              this.hideOptions['DataType'] = validTypesToSelect.indexOf('DataType') === -1 ;
-              this.hideOptions['Term'] = validTypesToSelect.indexOf('Term') === -1 ;
-              this.showPrevBtn = true;
-            }
-
-    };
+        this.showPrevBtn = true;
+        //console.log(this.showOptions)
+      }
+    }
 
     reLoad() {
         if (['DataModel', 'DataClass'].indexOf(this.formData.selectedType) !== -1) {
@@ -542,6 +537,6 @@ export class ElementSelectorComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.validTypesToSelect(this.data.validTypesToSelect);
+    this.configureValidTypes(this.data.validTypesToSelect);
   }
 }

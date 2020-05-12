@@ -36,15 +36,15 @@
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Export DataModel(s)" (click)="changeState('datamodelsexport')" aria-label="Export data model(s)">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Export DataModel(s)" (click)="changeState('datamodelsexport')" aria-label="Export data model(s)">
                                         <i class="fas fa-download"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Import a DataModel from JSON, SQL,..." (click)="changeState('import')" aria-label="Import a data model">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Import a DataModel from JSON, SQL,..." (click)="changeState('import')" aria-label="Import a data model">
                                         <i class="fas fa-upload"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onAddFolder()">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onAddFolder()">
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>
@@ -151,7 +151,7 @@
                                     <button type="button" mat-stroked-button matTooltipPosition="below" matTooltip="Search"  (click)="filterClassifications()" aria-label="Search">
                                         <i class="fas fa-search"></i>
                                     </button>
-                                    <button type="button" mat-stroked-button mdmShowIfRolesWritable matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="addClassifier()" aria-label="Create a new classification">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" mdmShowIfRolesWritable matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="addClassifier()" aria-label="Create a new classification">
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>

@@ -56,15 +56,25 @@
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left;">
                     <div>
-                        <a *ngIf="record.successfullySent">
+                        <p class="pill-card--green" *ngIf="record.successfullySent">
                             Successful
-                        </a>
-                        <a *ngIf="!record.successfullySent" (click)="toggleMessage(record)" style="text-decoration: none; cursor: pointer;">
-                            Failed
-                        </a>
-                        <div *ngIf="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
+                        </p>
+                        <div *ngIf="!record.successfullySent">
+                          <p class="pill-card--red">Failed</p>
+                          <button mat-stroked-button color="warn" class="block" (click)="toggleMessage(record)" *ngIf="!record.showFailure">
+                              See details
+                              <i class="fas fa-chevron-right"></i>
+                          </button>
+                          <div *ngIf="!record.successfullySent && record.showFailure" style="margin-top: 5px;">
                             {{record.failureReason}}
+                          </div>
+                          <button mat-stroked-button color="warn" class="block" (click)="toggleMessage(record)" *ngIf="record.showFailure">
+                            Hide details
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                         </div>
+
+
                     </div>
                 </td>
             </ng-container>

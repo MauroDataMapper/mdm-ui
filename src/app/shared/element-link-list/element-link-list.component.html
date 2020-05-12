@@ -134,10 +134,8 @@
     </table>
 </div>
 
-<mat-card *ngIf="isLoadingResults"
-            style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
+<mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </mat-card>
 
 <div class="mdm--mat-pagination">

@@ -47,26 +47,26 @@
           matTooltip="Popup in full screen"
           (click)="this.click('popUp')"
           *ngIf="!isPopup">
-    <i class="fas fa-window-maximize"></i>
+          <i class="fas fa-expand"></i>
   </button>
   <button mat-stroked-button
           type="button"
-          color="primary"
+          color="warn"
           class="paddingless"
           style="float: right; margin-right: 4px;"
           matTooltip="Close full screen"
           (click)="this.click('popDown')"
           *ngIf="isPopup">
-    <i class="fas fa-window-close"></i>
+          <i class="fas fa-times"></i>
   </button>
   <button mat-stroked-button
           type="button"
           color="primary"
           class="paddingless"
-          style="float: right; margin-right: 40px;"
+          style="float: right; margin-right: 20px;"
           matTooltip="Download as image"
           (click)="this.click('download')">
-    <i class="fas fa-file-export"></i>
+          <i class="fas fa-file-download"></i>
   </button>
 
 </div>

@@ -54,13 +54,13 @@
 
             <div *ngIf="model.allDataTypesCount != 0" class="mb-2">
                 <div *ngIf="!model.showNewInlineDataType">
-                    Please select a Data Type or
-                    <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new one</button>
+                    Please select a Data Type below or
+                    <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new Data Type</button>
                 </div>
                 <div *ngIf="model.showNewInlineDataType">
                     Please
                     <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
-                    or Add a new one:</div>
+                    or Add a new Data Type by completing the form below:</div>
             </div>
 
             <div *ngIf="model.showNewInlineDataType" class="mb-2">

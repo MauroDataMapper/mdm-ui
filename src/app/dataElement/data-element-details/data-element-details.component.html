@@ -63,9 +63,15 @@
 
                         <div *ngIf="editableForm.visible">
 
-
-                            <span *ngIf="!showNewInlineDataType">Please select a Data Type or <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">Add a new one</a>:</span>
-                            <span *ngIf="showNewInlineDataType">Please <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">select a Data Type </a> or Add a new one:</span>
+                              <div *ngIf="!showNewInlineDataType">
+                                Please select a Data Type below or
+                                  <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new Data Type</button>
+                              </div>
+                              <div *ngIf="showNewInlineDataType">
+                                  Please
+                                  <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
+                                  or Add a new Data Type by completing the form below:
+                              </div>
 
                             <div *ngIf="showNewInlineDataType">
                                 <mdm-data-type-inline

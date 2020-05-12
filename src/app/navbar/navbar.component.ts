@@ -59,23 +59,23 @@ export class NavbarComponent implements OnInit {
 
 
   login = () => {
-    this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
+    this.dialog.open(LoginModalComponent, {}).afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
-            this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
-            return;
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
+          return;
         }
         this.profile = user;
 
         const latestURL = this.securityHandler.getLatestURL();
         if (latestURL) {
-            this.broadcastSvc.broadcast('userLoggedIn');
-            this.securityHandler.removeLatestURL();
-            this.stateHandler.CurrentWindow(latestURL);
-            return;
+          this.broadcastSvc.broadcast('userLoggedIn');
+          this.securityHandler.removeLatestURL();
+          this.stateHandler.CurrentWindow(latestURL);
+          return;
         } else {
-            this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-            return;
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+          return;
         }
       }
     });
@@ -89,25 +89,25 @@ export class NavbarComponent implements OnInit {
     this.dialog.open(ForgotPasswordModalComponent, { });
   };
   register = () => {
-    this.dialog.open(RegisterModalComponent, { }).afterClosed().subscribe(user => {
-        if (user) {
-          if (user.needsToResetPassword) {
-            this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.userArea.change-password'});
-            return;
-          }
-          this.profile = user;
-
-          const latestURL = this.securityHandler.getLatestURL();
-          if (latestURL) {
-            this.broadcastSvc.broadcast('userLoggedIn');
-            this.securityHandler.removeLatestURL();
-            this.stateHandler.CurrentWindow(latestURL);
-            return;
-          } else {
-            this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'});
-            return;
-          }
+    this.dialog.open(RegisterModalComponent, {}).afterClosed().subscribe(user => {
+      if (user) {
+        if (user.needsToResetPassword) {
+          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.userArea.change-password'});
+          return;
         }
-      });
+        this.profile = user;
+
+        const latestURL = this.securityHandler.getLatestURL();
+        if (latestURL) {
+          this.broadcastSvc.broadcast('userLoggedIn');
+          this.securityHandler.removeLatestURL();
+          this.stateHandler.CurrentWindow(latestURL);
+          return;
+        } else {
+          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'});
+          return;
+        }
+      }
+    });
   }
 }

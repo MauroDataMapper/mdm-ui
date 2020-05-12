@@ -97,7 +97,7 @@
 
                             <div style="float: right; margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
                                 <div style="float: right; margin-left: 5px;">
-                                    <button mat-stroked-button 
+                                    <button mat-stroked-button
                                             color="warn"
                                             type="button"
                                             matTooltip="Delete"
@@ -120,7 +120,7 @@
                             </div>
 
                             <div *ngIf="showPermission" style="position: relative; float: right; margin-right: 4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button mat-stroked-button 
+                                <button mat-stroked-button
                                         color="primary"
                                         type="button"
                                         class="paddingless"
@@ -129,7 +129,7 @@
                                         *ngIf="showPermission"
                                         [disabled]="deleteInProgress || processing"
                                         (click)="toggleSecuritySection()">
-                                    <i class="fas fa-user userAccess"></i>
+                                        <i class="fas fa-user-lock"></i>
                                 </button>
                             </div>
                         </td>

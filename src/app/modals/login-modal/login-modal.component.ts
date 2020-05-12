@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 import { MatDialogRef} from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import {MessageService} from '@mdm/services/message.service';
 
 @Component({
   selector: 'mdm-login-modal',
@@ -13,7 +14,7 @@ export class LoginModalComponent implements OnInit {
   password: string;
   message: string;
 
-  constructor(private broadcastService: BroadcastService, public dialogRef: MatDialogRef<LoginModalComponent>, private securityHandler: SecurityHandlerService) {}
+  constructor(private broadcastService: BroadcastService, public dialogRef: MatDialogRef<LoginModalComponent>, private securityHandler: SecurityHandlerService, private messageService: MessageService) {}
 
   ngOnInit() {
     const un = this.securityHandler.getEmailFromStorage();
@@ -27,6 +28,7 @@ export class LoginModalComponent implements OnInit {
     this.securityHandler.login(this.username, this.password).then(user => {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
+        this.messageService.loggedInChanged(true);
       },
       error => {
         this.securityHandler.loginModalDisplayed = true;

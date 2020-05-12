@@ -3,7 +3,7 @@ import { ResourcesService } from '../resources.service';
 import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
-import {MessageService} from "@mdm/services/message.service";
+import {MessageService} from '@mdm/services/message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class SecurityHandlerService {
     localStorage.removeItem('username');
     localStorage.removeItem('role');
     localStorage.removeItem('needsToResetPassword');
-    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
   }
 
   getUserFromLocalStorage() {

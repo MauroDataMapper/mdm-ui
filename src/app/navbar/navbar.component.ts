@@ -7,6 +7,8 @@ import { SharedService } from '@mdm/services/shared.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '@mdm/modals/register-modal/register-modal.component';
+import {Subscription} from 'rxjs';
+import {MessageService} from '@mdm/services/message.service';
 
 @Component({
   selector: 'mdm-navbar',
@@ -25,20 +27,24 @@ export class NavbarComponent implements OnInit {
   pendingUsersCount = 0;
   isAdmin = this.securityHandler.isAdmin();
   isLoggedIn = this.securityHandler.isLoggedIn();
+  subscription: Subscription;
 
-  constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService) { }
+  constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService, private messageService: MessageService) { }
 
   ngOnInit() {
-      if (this.isLoggedIn) {
+    this.subscription = this.messageService.loggedInChanged$.subscribe(result => {
+      this.isLoggedIn = result;
+    });
+    if (this.isLoggedIn) {
           this.profile = this.securityHandler.getCurrentUser();
           if (this.isAdmin) {
             this.getPendingUsers();
           }
       }
-      this.backendURL = this.sharedService.backendURL;
-      this.HDFLink = this.sharedService.HDFLink;
-      this.current = this.sharedService.current;
-      this.broadcastSvc.subscribe('pendingUserUpdated', () => {
+    this.backendURL = this.sharedService.backendURL;
+    this.HDFLink = this.sharedService.HDFLink;
+    this.current = this.sharedService.current;
+    this.broadcastSvc.subscribe('pendingUserUpdated', () => {
         this.getPendingUsers();
       });
   }

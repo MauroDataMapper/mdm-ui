@@ -174,7 +174,7 @@
     </form>
 </div>
 
-<div *ngIf="showSecuritySection">
+<div *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
     <div class="full-width" ng-if="activeTab.name === 'access' && folder">
         <div class="userAccess" style="margin: 10px 0px 50px 0px">
             <mdm-share-with [mcElement]="'result'" [mcDomainType]="'CodeSet'"></mdm-share-with>

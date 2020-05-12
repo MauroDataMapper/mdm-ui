@@ -117,7 +117,9 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.inputStyle = {width: this.width, padding: '6px 40px 6px 12px'};
     this.holderStyle = {width: this.width, 'background-color': '#FFF'};
-    this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
+    if (this.input !== undefined) {
+      this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
+    }
   }
 
   ngAfterViewInit() {
@@ -509,6 +511,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
     //  this.showTree = false;
     }
     this.show = false;
+    this.setDefaultValue();
   }
 
 }

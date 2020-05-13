@@ -373,6 +373,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
             this.messageHandler.showSuccess('Data Model updated successfully.');
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
+            this.broadcastSvc.broadcast('$reloadFoldersTree');
           },
           error => {
             this.messageHandler.showError(

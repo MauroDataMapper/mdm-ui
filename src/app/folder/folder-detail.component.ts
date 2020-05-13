@@ -214,6 +214,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
             this.messageHandlerService.showSuccess('Folder updated successfully.');
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
+            this.broadcastSvc.broadcast('$reloadFoldersTree');
           },
           error => {
             this.messageHandler.showError(

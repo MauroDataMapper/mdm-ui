@@ -226,6 +226,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
           this.messageHandler.showSuccess('Term updated successfully.');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
         },
         error => {
           this.messageHandler.showError(

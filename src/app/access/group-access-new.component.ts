@@ -10,6 +10,7 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 
+
 @Component({
   selector: 'mdm-group-access-new',
   templateUrl: './group-access-new.component.html',
@@ -45,7 +46,9 @@ export class GroupAccessNewComponent implements OnInit {
     private resourceService: ResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService
-  ) {}
+  ) {
+    this.dataSource = new MatTableDataSource(this.groups);
+  }
 
   ngOnInit() {
     this.buildGroups();
@@ -56,13 +59,7 @@ export class GroupAccessNewComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (item, property) => {
       if (property === 'user') {
-        return item.user.emailAddress;
-      }
-      if (property === 'firstName') {
-        return item.user.firstName;
-      }
-      if (property === 'lastName') {
-        return item.user.lastName;
+        return item.group.label;
       }
       if (property === 'read') {
         return item.edit.readAccess;

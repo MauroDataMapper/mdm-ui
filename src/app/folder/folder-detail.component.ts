@@ -21,6 +21,8 @@ import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
 import { Title } from '@angular/platform-browser';
+import { ResourcesService } from '../services/resources.service';
+import { MessageHandlerService } from '../services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -52,8 +54,10 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
   constructor(
+    private resourcesService: ResourcesService,
     private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
+    private messageHandlerService: MessageHandlerService ,
     private folderHandler: FolderHandlerService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,

@@ -15,7 +15,7 @@ export class GroupComponent implements OnInit {
   group = {
     label: '',
     description: '',
-    groupMembers: {},
+    groupMembers: [],
     id: ''
   };
 

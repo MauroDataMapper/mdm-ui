@@ -14,6 +14,7 @@ import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { FolderService } from './folder.service';
 
 @Component({
   selector: 'mdm-folders-tree',

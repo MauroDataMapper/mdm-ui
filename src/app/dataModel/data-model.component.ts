@@ -72,10 +72,13 @@ export class DataModelComponent implements OnInit, OnDestroy {
 
         this.parentId = this.dataModel.id;
         this.showExtraTabs =
-          !this.sharedService.isLoggedIn ||
+          !this.sharedService.isLoggedIn() ||
           !this.dataModel.editable || this.dataModel.finalised;
-        if (this.sharedService.isLoggedIn) {
+        if (this.sharedService.isLoggedIn()) {
           this.DataModelPermissions(id);
+        } else {
+          this.messageService.FolderSendMessage(this.dataModel);
+          this.messageService.dataChanged(this.dataModel);
         }
 
         this.tabGroup.realignInkBar();

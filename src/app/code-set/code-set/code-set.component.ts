@@ -70,9 +70,12 @@ export class CodeSetComponent implements OnInit, OnDestroy {
       this.codeSetModel = result.body;
 
       this.parentId = this.codeSetModel.id;
-      this.showExtraTabs = !this.sharedService.isLoggedIn || (!this.codeSetModel.editable || this.codeSetModel.finalised);
-      if (this.sharedService.isLoggedIn) {
+      this.showExtraTabs = !this.sharedService.isLoggedIn() || (!this.codeSetModel.editable || this.codeSetModel.finalised);
+      if (this.sharedService.isLoggedIn()) {
         this.CodeSetPermissions(id);
+      } else {
+        this.messageService.FolderSendMessage(this.codeSetModel);
+        this.messageService.dataChanged(this.codeSetModel);
       }
 
       this.tabGroup.realignInkBar();

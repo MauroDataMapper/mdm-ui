@@ -62,8 +62,11 @@ export class FolderComponent implements OnInit, OnDestroy {
       this.result = result.body;
 
       this.parentId = this.result.id;
-      if (this.sharedService.isLoggedIn) {
+      if (this.sharedService.isLoggedIn()) {
         this.folderPermissions(id);
+      } else {
+        this.messageService.FolderSendMessage(this.result);
+        this.messageService.dataChanged(this.result);
       }
     });
   }

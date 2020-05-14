@@ -256,7 +256,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
-          hasBackdrop: true,
           data: {
             title: 'Code Set',
             message:
@@ -284,7 +283,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const promise = new Promise((resolve, reject) => {
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
-          hasBackdrop: true,
           data: {
             title: 'Code Set',
             message: 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
@@ -297,7 +295,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent,
           {
-            hasBackdrop: true,
             data: {
               title: 'Data Model',
               message: '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
@@ -412,8 +409,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
-          hasBackdrop: true,
-          autoFocus: false,
           data: {
             title: 'Are you sure you want to finalise the Code Set ?',
             message:

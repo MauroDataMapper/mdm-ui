@@ -60,8 +60,6 @@ export class RegisterModalComponent implements OnInit {
 
   registerSuccess() {
     const dialog = this.dialog.open(ConfirmationModalComponent, {
-      hasBackdrop: true,
-      autoFocus: false,
       data: {
         title: 'Registration successful',
         message: `You have successfully requested access to the Metadata Catalogue. <br>

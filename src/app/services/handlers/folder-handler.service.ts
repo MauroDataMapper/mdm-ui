@@ -25,7 +25,6 @@ export class FolderHandlerService {
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
         data: {
           title: 'Folder',
           message:
@@ -54,7 +53,6 @@ export class FolderHandlerService {
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
         data: {
           title: 'Folder',
           message:
@@ -68,7 +66,6 @@ export class FolderHandlerService {
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          hasBackdrop: true,
           data: {
             title: 'Folder',
             message:

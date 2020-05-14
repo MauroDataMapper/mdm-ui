@@ -18,7 +18,7 @@ import { StateHandlerService } from './services/handlers/state-handler.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { AppRoutingModule } from './app-routing.module';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ModalModule } from './modals/modal.module';
 
 @NgModule({
@@ -39,7 +39,8 @@ import { ModalModule } from './modals/modal.module';
     { provide: LOCALE_ID, useValue: 'en-GB' },
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    { provide: MatDialogRef, useValue: {} }
+    { provide: MatDialogRef, useValue: {} },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, autoFocus: false} }
 ],
   bootstrap: [UiViewComponent]
 })

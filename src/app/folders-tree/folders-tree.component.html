@@ -37,7 +37,7 @@
 <mat-menu #treeMenu="matMenu">
     <ng-template matMenuContent let-node="node">
         <ng-container *ngIf="node.domainType === 'Folder'">
-            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolder(node)">Add Folder</button>
+            <button mat-menu-item class="tree-context-menu-item" (click)="handleAddFolderModal(node)">Add Folder</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataModel(node)">Add Data Model</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Add Code Set</button>
             <ng-container *ngIf="isUserAdmin">

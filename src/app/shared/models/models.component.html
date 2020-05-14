@@ -44,7 +44,7 @@
                                         <i class="fas fa-upload"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onAddFolder()">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()">
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>

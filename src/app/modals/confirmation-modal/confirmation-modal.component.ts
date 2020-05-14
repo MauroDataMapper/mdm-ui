@@ -29,8 +29,7 @@ export class ConfirmationModalComponent implements OnInit {
     this.message = this.data.message;
     // this.username = securityHandler.getEmailFromStorage();
     this.password = '';
-    this.cancelShown =
-      this.data.cancelShown != null ? this.data.cancelShown : true;
+    this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
   }
 
   ok() {

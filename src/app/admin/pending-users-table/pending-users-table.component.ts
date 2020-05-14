@@ -115,8 +115,6 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     const promise = new Promise((resolve, reject) => {
       const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
-        autoFocus: false,
         data: {
           title: 'Approve user',
           okBtnTitle: 'Approve',
@@ -140,8 +138,6 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
                       <br> <strong>Note:</strong> Rejected users will not be removed;
                       <br> Instead they will be <span class='warning'>disabled</span>`;
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
-        autoFocus: false,
         data: {
           title: 'Reject user',
           okBtnTitle: 'Reject',

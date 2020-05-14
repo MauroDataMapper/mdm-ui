@@ -27,7 +27,6 @@ export class ElementSelectorDialogueService {
     }
 
     const dg = this.dialog.open(ElementSelectorComponent, {
-      hasBackdrop: true,
       minWidth: '600px',
       data: { validTypesToSelect, notAllowedToSelectIds }
     });

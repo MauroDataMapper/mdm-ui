@@ -12,6 +12,7 @@ import { LoginModalComponent } from './login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-password-modal.component';
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
 import { ModalService } from './modal.service';
+import { InputModalComponent } from './input-modal/input-modal.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { ModalService } from './modal.service';
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
-    ConfirmationModalComponent
+    ConfirmationModalComponent,
+    InputModalComponent
   ],
   providers: [
     ModalService

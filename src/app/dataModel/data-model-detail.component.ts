@@ -276,7 +276,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     }
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
         data: {
           title: 'Data Model',
           message:
@@ -303,7 +302,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     }
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
         data: {
           title: 'Data Model',
           message:
@@ -317,7 +315,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          hasBackdrop: true,
           data: {
             title: 'Data Model',
             message:
@@ -416,8 +413,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   finalise() {
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
-        autoFocus: false,
         data: {
           title: 'Are you sure you want to finalise the Data Model ?',
           okBtnTitle: 'Finalise model',

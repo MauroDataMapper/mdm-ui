@@ -11,7 +11,9 @@ import { MessageService } from '../services/message.service';
 import { ResourcesService } from '../services/resources.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
-import { FolderService } from './folder.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-folders-tree',
@@ -78,6 +80,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
   dataSource: MatTreeFlatDataSource<Node, FlatNode>;
 
+  folder = '';
   /**
    * Get the children for the given node from source data.
    *
@@ -107,7 +110,9 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     protected favouriteHandler: FavouriteHandlerService,
     protected folderService: FolderService,
     protected stateHandler: StateHandlerService,
-    protected messageHandler: MessageHandlerService
+    protected messageHandler: MessageHandlerService,
+    private broadcastSvc: BroadcastService,
+    public dialog: MatDialog
   ) {
     this.loadFavourites();
     this.subscriptions.add(this.messages.on('favoutires', () => {
@@ -423,17 +428,47 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     this.loadFavourites();
   }
 
-  async handleAddFolder(fnode: FlatNode) {
+  handleAddFolderModal = (fnode: FlatNode) => {
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(InputModalComponent, {
+        data: {
+          inputValue: this.folder,
+          modalTitle: 'Create a new Folder',
+          okBtn: 'Add folder',
+          btnType: 'primary',
+          inputLabel: 'Folder name',
+          message: 'Please enter the name of your Folder.'
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result) {
+          if (this.validateLabel(result)) {
+            this.folder = result;
+            this.handleAddFolder(fnode, this.folder);
+          } else {
+            const error = 'err';
+            this.messageHandler.showError('DataModel name can not be empty', error);
+            return promise;
+          }
+        } else {
+          return promise;
+        }
+      });
+    });
+    return promise;
+  }
+
+  async handleAddFolder(fnode: FlatNode, label?) {
     if (this.selectedNode) {
       this.selectedNode.selected = false;
     }
-
     try {
       let result: HttpResponse<Node>;
       let newNode: FlatNode;
       if (!fnode) {
         // Create new top level folder
-        result = await this.resources.folder.post(null, null, { resource: {} }).toPromise();
+        result = await this.resources.folder.post(null, null, { resource: {label} }).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         this.node.children.push(result.body);
 
@@ -441,7 +476,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         this.treeControl.dataNodes.push(newNode);
       } else {
         // Add new folder to existing folder
-        result = await this.resources.folder.post(fnode.id, 'folders', { resource: {} }).toPromise();
+        result = await this.resources.folder.post(fnode.id, 'folders', { resource: {label} }).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         if (!fnode.children) {
           fnode.children = [];
@@ -456,12 +491,13 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
       this.selectedNode = this.treeControl.dataNodes.find(dn => dn.id === newNode.id && this.treeControl.getLevel(dn) === newNode.level);
 
-      this.stateHandler.Go('Folder', { id: result.body.id, edit: true });
+      this.stateHandler.Go('Folder', { id: result.body.id, edit: false });
 
       this.messageHandler.showSuccess('Folder created successfully.');
+      this.folder = '';
+      this.refreshTree();
 
     } catch (error) {
-      console.log(error);
       this.messageHandler.showError('There was a problem creating the Folder.', error);
     }
   }
@@ -564,6 +600,13 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     // file node as children.
     this.node.children = filteredTreeData;
     this.refreshTree();
+  }
+  validateLabel = (data) => {
+    if (!data || (data && data.trim().length === 0)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
 

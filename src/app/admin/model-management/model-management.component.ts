@@ -209,8 +209,6 @@ export class ModelManagementComponent implements OnInit {
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
-        autoFocus: false,
         data: {
           title: 'Folder delete',
           okBtnTitle: 'Confirm folder deletion',
@@ -242,8 +240,6 @@ export class ModelManagementComponent implements OnInit {
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: true,
-        autoFocus: false,
         data: {
           title: 'Data Model deletion',
           okBtnTitle: 'Delete permanently',
@@ -263,8 +259,6 @@ export class ModelManagementComponent implements OnInit {
         }
 
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          hasBackdrop: true,
-          autoFocus: false,
           data: {
             title: 'Permanent delete',
             okBtnTitle: 'Confirm permanent deletion',

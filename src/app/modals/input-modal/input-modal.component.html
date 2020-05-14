@@ -1,0 +1,16 @@
+<div class="modal-header pxy-2">
+    <h4 class='modal-title marginless'>{{modalTitle}}</h4>
+</div>
+<div class="modal-body pxy-2">
+    <p [innerHtml]="message"></p>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width paddingless">
+            <mat-label>{{inputLabel}}</mat-label>
+            <input matInput [(ngModel)]="data.inputValue">
+        </mat-form-field>
+    </div>
+</div>
+<div class="modal-footer pxy-2">
+    <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>{{cancelBtn}}</button>
+    <button mat-flat-button color="{{btnType}}" type="button" [mat-dialog-close]="data.inputValue">{{okBtn}}</button>
+</div>

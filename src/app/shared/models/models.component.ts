@@ -11,6 +11,19 @@ import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-
 import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import {Component, OnInit, Inject} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import {FolderHandlerService} from '@mdm/services/handlers/folder-handler.service';
+import {ValidatorService} from '@mdm/services/validator.service';
+import {BroadcastService} from '@mdm/services/broadcast.service';
+import {SharedService} from '@mdm/services/shared.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 
 @Component({
   selector: 'mdm-models',
@@ -27,6 +40,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   searchboxFocused = false;
   debounceInputEvent: Subject<KeyboardEvent>;
   subscriptions: Subscription;
+  folder = '';
 
   // Hard
   includeSupersededDocModels = false;
@@ -66,8 +80,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloading = true;
 
       if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
-        this.resources.tree.get(this.levels.currentFocusedElement.id).subscribe(
-          result => {
+        this.resources.tree.get(this.levels.currentFocusedElement.id).subscribe(result => {
             const children = result.body;
             self.levels.currentFocusedElement.children = children;
             self.levels.currentFocusedElement.open = true;
@@ -86,10 +99,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           }
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
-        this.resources.terminology
-          .get(this.levels.currentFocusedElement.id, 'tree')
-          .subscribe(
-            children => {
+        this.resources.terminology.get(this.levels.currentFocusedElement.id, 'tree').subscribe(children => {
               self.levels.currentFocusedElement.children = children.body;
               self.levels.currentFocusedElement.open = true;
               self.levels.currentFocusedElement.selected = true;
@@ -120,7 +130,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
     private userSettingsHandler: UserSettingsHandlerService,
-    protected messageHandler: MessageHandlerService
+    protected messageHandler: MessageHandlerService,
+    public dialog: MatDialog
   ) {
   }
 
@@ -143,9 +154,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.initializeModelsTree();
 
     this.broadcastSvc.subscribe('$reloadClassifiers', () => {
-      this.resources.classifier
-        .get(null, null, {all: true})
-        .subscribe(data => {
+      this.resources.classifier.get(null, null, {all: true}).subscribe(data => {
           this.allClassifiers = data.items;
           this.classifiers = {
             children: data,
@@ -192,8 +201,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   loadClassifiers = () => {
     this.classifierLoading = true;
-    this.resources.classifier.get(null, null, {all: true}).subscribe(
-      result => {
+    this.resources.classifier.get(null, null, {all: true}).subscribe(result => {
         const data = result.body;
         this.allClassifiers = data.items;
         data.items.forEach(x => {
@@ -219,20 +227,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
     if (this.sharedService.isLoggedIn()) {
       options = {
         queryStringParams: {
-          includeDocumentSuperseded:
-            this.userSettingsHandler.get('includeSupersededDocModels') || false,
-          includeModelSuperseded:
-            this.userSettingsHandler.get('showSupersededModels') || false,
-          includeDeleted:
-            this.userSettingsHandler.get('showDeletedModels') || false
+          includeDocumentSuperseded: this.userSettingsHandler.get('includeSupersededDocModels') || false,
+          includeModelSuperseded: this.userSettingsHandler.get('showSupersededModels') || false,
+          includeDeleted: this.userSettingsHandler.get('showDeletedModels') || false
         }
       };
     }
     if (noCache) {
       options.queryStringParams.noCache = true;
     }
-    this.resources.tree.get(null, null, options).subscribe(
-      result => {
+    this.resources.tree.get(null, null, options).subscribe(result => {
         const data = result.body;
         this.allModels = {
           children: data,
@@ -240,8 +244,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         };
         this.filteredModels = Object.assign({}, this.allModels);
         this.reloading = false;
-      },
-      () => {
+      }, () => {
         this.reloading = false;
       }
     );
@@ -273,35 +276,59 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   loadModelsToCompare = dataModel => {
-    this.resources.dataModel
-      .get(dataModel.id, 'semanticLinks', {filters: 'all=true'})
-      .subscribe(result => {
+    this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'}).subscribe(result => {
         const compareToList = [];
         const semanticLinks = result.body;
         semanticLinks.items.forEach(link => {
-          if (
-            ['Superseded By', 'New Version Of'].indexOf(link.linkType) !== -1 &&
-            link.source.id === dataModel.id
-          ) {
+          if (['Superseded By', 'New Version Of'].indexOf(link.linkType) !== -1 && link.source.id === dataModel.id) {
             compareToList.push(link.target);
           }
         });
       });
   };
 
-  onAddFolder = function(event?, folder?) {
+  onFolderAddModal = () => {
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(InputModalComponent, {
+        data: {
+          inputValue: this.folder,
+          modalTitle: 'Create a new Folder',
+          okBtn: 'Add folder',
+          btnType: 'primary',
+          inputLabel: 'Folder name',
+          message: 'Please enter the name of your Folder. <br> <strong>Note:</strong> This folder will be added at the top of the Tree'
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result) {
+          if (this.validateLabel(result)) {
+            this.folder = result;
+            this.onAddFolder(null, null, this.folder);
+          } else {
+            const error = 'err';
+            this.messageHandler.showError('DataModel name can not be empty', error);
+            return promise;
+          }
+        } else {
+          return promise;
+        }
+      });
+    });
+    return promise;
+  }
+  onAddFolder = function(event?, folder?, label?) {
     let parentId;
     if (folder) {
       parentId = folder.id;
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.folder.post(parentId, 'folders', {resource: {}});
+      endpoint = this.folder.post(parentId, 'folders', {resource: {label}});
     } else {
-      endpoint = this.resources.folder.post(null, null, {resource: {}});
+      endpoint = this.resources.folder.post(null, null, {resource: {label}});
     }
-    endpoint.subscribe(
-      res => {
+    endpoint.subscribe(res => {
         const result = res.body;
         if (folder) {
           result.domainType = 'Folder';
@@ -314,17 +341,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
         }
 
         // go to folder
-        this.stateHandler.Go('Folder', {id: result.id, edit: true});
+        this.stateHandler.Go('Folder', {id: result.id, edit: false});
 
-        this.messageHandler.showSuccess('Folder created successfully.');
+        this.messageHandler.showSuccess(`Folder ${label} created successfully.`);
+        this.folder = '';
+        this.loadFolders();
       },
       error => {
-        this.messageHandler.showError(
-          'There was a problem creating the Folder.',
-          error
-        );
-      }
-    );
+        this.messageHandler.showError('There was a problem creating the Folder.', error);
+      });
   };
 
   onAddDataModel = (event, folder) => {
@@ -337,19 +362,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onAddChildDataClass = (event, element) => {
     this.stateHandler.Go('NewDataClassNew', {
-      grandParentDataClassId:
-        element.domainType === 'DataClass' ? element.parentDataClass : null,
-      parentDataModelId:
-        element.domainType === 'DataModel' ? element.id : element.dataModel,
+      grandParentDataClassId: element.domainType === 'DataClass' ? element.parentDataClass : null,
+      parentDataModelId: element.domainType === 'DataModel' ? element.id : element.dataModel,
       parentDataClassId: element.domainType === 'DataModel' ? null : element.id
     });
   };
 
   onAddChildDataElement = (event, element) => {
     this.stateHandler.Go('NewDataElement', {
-      grandParentDataClassId: element.parentDataClass
-        ? element.parentDataClass
-        : null,
+      grandParentDataClassId: element.parentDataClass ? element.parentDataClass : null,
       parentDataModelId: element.dataModel,
       parentDataClassId: element.id
     });
@@ -368,14 +389,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.reloading = true;
 
     if (this.sharedService.isLoggedIn()) {
-      this.userSettingsHandler.update(
-        'showSupersededModels',
-        this.showSupersededModels
-      );
-      this.userSettingsHandler.update(
-        'showDeletedModels',
-        this.showDeletedModels
-      );
+      this.userSettingsHandler.update('showSupersededModels', this.showSupersededModels);
+      this.userSettingsHandler.update('showDeletedModels', this.showDeletedModels);
       this.userSettingsHandler.saveOnServer();
     }
 
@@ -451,9 +466,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = [];
 
-      this.resources.tree
-        .get(null, 'search/' + this.sharedService.searchCriteria)
-        .subscribe(res => {
+      this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria).subscribe(res => {
           const result = res.body;
           this.reloading = false;
           this.allModels = {
@@ -515,5 +528,13 @@ export class ModelsComponent implements OnInit, OnDestroy {
       dataModelId: node.dataModel,
       dataClassId: node.parentDataClass
     });
+  }
+
+  validateLabel = (data) => {
+    if (!data || (data && data.trim().length === 0)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

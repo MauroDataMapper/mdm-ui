@@ -60,7 +60,6 @@ export class HelpDialogueHandlerService {
     const safeWikiLink: any = this.sanitizer.bypassSecurityTrustResourceUrl(contentWikiLink);
 
     this.dialog.open(HelpDialogComponent, {
-      hasBackdrop: true,
       minHeight: '500px',
       minWidth: '600px',
       data: { wikiLink, contentWikiLink: safeWikiLink },

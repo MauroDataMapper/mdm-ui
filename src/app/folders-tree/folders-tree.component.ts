@@ -1,17 +1,17 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { of, Subscription } from 'rxjs';
-import { ResourcesService } from '../services/resources.service';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { MessageService } from '../services/message.service';
-import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
-import { FolderService } from './folder.service';
-import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { HttpResponse } from '@angular/common/http';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { of, Subscription } from 'rxjs';
+import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
+import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { MessageService } from '../services/message.service';
+import { ResourcesService } from '../services/resources.service';
+import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
+import { FolderService } from './folder.service';
 
 @Component({
   selector: 'mdm-folders-tree',
@@ -522,6 +522,17 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   get isUserAdmin() {
     return this.securityHandler.isAdmin();
+  }
+
+  isNodeFinalised(node: FlatNode) {
+    if (node.finalised) {
+      return node.finalised;
+    } else if (node.dataModel) {
+      const dm = this.treeControl.dataNodes.find(fnode => fnode.id === node.dataModel);
+      return dm?.finalised;
+    } else {
+      return false;
+    }
   }
 
   ngOnDestroy() {

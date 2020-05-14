@@ -49,7 +49,7 @@
         <ng-container *ngIf="node.domainType === 'DataModel'">
             <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
             <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
-            <ng-container *ngIf="!node.deleted && !node.finalised">
+            <ng-container *ngIf="!node.deleted && !isNodeFinalised(node)">
                 <mat-divider></mat-divider>
                 <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataClass(node)">Add Data Class</button>
                 <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataType(node)">Add Data Type</button>
@@ -59,7 +59,7 @@
         </ng-container>
         <ng-container *ngIf="node.domainType === 'DataClass'">
             <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
-            <ng-container *ngIf="!node.deleted && !node.finalised">
+            <ng-container *ngIf="!node.deleted && !isNodeFinalised(node)">
                 <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataClass(node)">Add Data Class</button>
                 <button mat-menu-item class="tree-context-menu-item" (click)="handleAddDataElement(node)">Add Data Element</button>
             </ng-container>

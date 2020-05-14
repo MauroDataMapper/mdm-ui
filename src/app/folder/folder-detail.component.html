@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <table class="table table-bordered">
+        <table class="table table-bordered mdm--table-fixed">
             <tbody>
                 <tr>
                     <td class="detailsRowHeader">Description</td>
@@ -47,27 +47,25 @@
                 <tr>
                     <td colspan="2" style="text-align: right;">
                         <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                            <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                                <button mat-stroked-button
-                                        color="warn"
-                                        type="button"
-                                        matTooltip="Delete"
-                                        aria-label="Delete"
-                                        class="paddingless dropdown-toggle"
-                                        [disabled]="deleteInProgress || exporting"
-                                        [matMenuTriggerFor]="menu">
-                                        <i class="far fa-trash-alt warning"></i>
-                                </button>
+                            <button mat-stroked-button
+                                    color="warn"
+                                    type="button"
+                                    matTooltip="Delete"
+                                    aria-label="Delete"
+                                    class="paddingless dropdown-toggle"
+                                    [disabled]="deleteInProgress || exporting"
+                                    [matMenuTriggerFor]="menu">
+                                    <i class="far fa-trash-alt warning"></i>
+                            </button>
 
-                                <mat-menu #menu="matMenu">
-                                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
-                                        Mark as deleted
-                                    </button>
-                                    <button mat-menu-item (click)="askForPermanentDelete()">
-                                        Delete <span class="errorMessage">permanently</span>
-                                    </button>
-                                </mat-menu>
-                            </div>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                    Mark as deleted
+                                </button>
+                                <button mat-menu-item (click)="askForPermanentDelete()">
+                                    Delete <span class="errorMessage">permanently</span>
+                                </button>
+                            </mat-menu>
                         </div>
 
                         <div style="float: right;">
@@ -98,9 +96,6 @@
                                     (click)="toggleShowSearch()" >
                                 <i class="fas fa-search"></i>
                             </button>
-                        </div>
-
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     color="primary"
                                     type="button"
@@ -113,7 +108,6 @@
                                     <i class="fas fa-user-lock"></i>
                             </button>
                         </div>
-
                     </td>
                 </tr>
             </tbody>

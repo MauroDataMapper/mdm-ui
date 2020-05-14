@@ -4,6 +4,10 @@
             <div class="panel-body">
                 <div *ngIf="mcTerminology">
                     <div [ngClass]="{ 'has-error': errorMessage != ''}">
+                        <div class="detail-icons--cta">
+                            <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
+                            <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
+                        </div>
                         <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': mcTerminology?.deleted}">
                             <span class="dataModelTypeIcon">
                                 <i matTooltip="Terminology" class="fas fa-book"></i>
@@ -12,13 +16,10 @@
                                 <!-- TODO ADD SEARCH CRITERA PIPE -->
                             </span>
                         </h4>
+                        <mdm-element-status [result]="mcTerminology"></mdm-element-status>
                         <span class="inline-block">
                             <small *ngIf="mcTerminology?.deleted" class="warning"> | Deleted</small>
                         </span>
-                        <div class="detail-icons--cta">
-                            <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-                            <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
-                        </div>
                     </div>
                 </div>
 
@@ -53,12 +54,12 @@
                     <div class="text-muted" *ngIf="mcTerminology && mcTerminology.finalised && mcTerminology.dateFinalised">
                         <small>
                             <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                            <span><strong><mdm-element-status [result]="mcTerminology"></mdm-element-status> on:</strong> {{mcTerminology.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                            <span><strong>Finalised on:</strong> {{mcTerminology.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
                         </small>
                     </div>
                 </div>
             </div>
-            <table class="mdm--mat-table table-striped">
+            <table class="mdm--mat-table table-striped mdm--table-fixed">
                 <tbody>
                     <tr>
                         <td class="detailsRowHeader">Aliases</td>

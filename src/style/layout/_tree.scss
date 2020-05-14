@@ -148,6 +148,10 @@ div.mat-tab-label {
 .detailsRowHeader {
   max-width: 180px;
   width: 180px;
+  @include respond-to($mobile-xs) {
+    max-width: 140px;
+    width: 140px;
+  };
 }
 
 table.mat-table .mat-header-cell {

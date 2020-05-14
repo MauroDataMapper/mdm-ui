@@ -1,72 +1,72 @@
 <div class="panel panel-default mdm--shadow-block">
   <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
     <div class="panel-body">
-      <div *ngIf="result">
-          <div [ngClass]="{ 'has-error': errorMessage != ''}">
-            <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
-              <span class="dataModelTypeIcon" *ngIf="result?.type === 'Data Standard'">
-                <i matTooltip="Data Standard" class="fas fa-file-alt"></i>
-              </span>
-              <span class="dataModelTypeIcon" *ngIf="result?.type === 'Data Asset'">
-                <i matTooltip="Data Asset" class="fas fa-database"></i>
-              </span>
-              <mdm-inline-text-edit [inEditMode]="editableForm.visible"
-                                    [(ngModel)]="editableForm.label"
-                                    [name]="'moduleName'"
-                                    size="20"
-                                    [styleCss]="'dataModelDetailsLabel'"
-                                    style="max-width: 70%; display: inline-block; vertical-align: middle;"
-                                    ></mdm-inline-text-edit>
-                <span class="inline-block" *ngIf="result?.deleted">
-                  <small class="warning"> | Deleted</small>
-                </span>
-            </h4>
+    <div *ngIf="result">
+        <div [ngClass]="{ 'has-error': errorMessage != ''}" class="data-model-header">
             <div class="detail-icons--cta">
-              <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-              <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
+                <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
+                <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
             </div>
+            <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                <span class="dataModelTypeIcon" *ngIf="result?.type === 'Data Standard'">
+                    <i matTooltip="Data Standard" class="fas fa-file-alt"></i>
+                </span>
+                <span class="dataModelTypeIcon" *ngIf="result?.type === 'Data Asset'">
+                    <i matTooltip="Data Asset" class="fas fa-database"></i>
+                </span>
+                <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                        [(ngModel)]="editableForm.label"
+                                        [name]="'moduleName'"
+                                        size="20"
+                                        [styleCss]="'dataModelDetailsLabel'">
+                </mdm-inline-text-edit>
+            </h4>
+            <span class="inline-block" *ngIf="result?.deleted">
+                <small class="warning"> | Deleted</small>
+            </span>
+            <mdm-element-status [result]="result"></mdm-element-status>
         </div>
         <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-          <span class="help-block">{{errorMessage}}</span>
+            <span class="help-block">{{errorMessage}}</span>
         </div>
-      </div>
-
-      <div class="detail-icons">
-                <div class="text-muted" *ngIf="result?.type === 'Data Asset' || result?.type === 'Data Standard'">
-                  <small>
-                      <i class="fas fa-cube" matTooltip="Item type"></i>
-                      <span>
-                        <strong>Item type: </strong>
-                        <span class="item-type" *ngIf="result?.type === 'Data Asset'">Data Asset</span>
-                        <span class="item-type" *ngIf="result?.type === 'Data Standard'">Data Standard</span>
-                      </span>
-                  </small>
+    </div>
+    
+    <div class="detail-icons">
+        <div class="text-muted" *ngIf="result?.type === 'Data Asset' || result?.type === 'Data Standard'">
+            <small class="block">
+                <div>
+                    <i class="fas fa-cube" matTooltip="Item type"></i>
+                    <strong>Item type: </strong>
+                    <span class="item-type" *ngIf="result?.type === 'Data Asset'">Data Asset</span>
+                    <span class="item-type" *ngIf="result?.type === 'Data Standard'">Data Standard</span>
                 </div>
+            </small>
+        </div>
         <div class="text-muted" *ngIf="result?.readableByEveryone">
-          <small>
-                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
+            <small>
+                <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
+                <span><strong>Availability: </strong>Publicly Readable</span>
+            </small>
         </div>
         <div class="text-muted" *ngIf="result">
-          <small>
-            <i class="fas fa-code-branch" matTooltip="Version"></i>
-            <span><strong>Version: </strong>{{result.documentationVersion}}</span>
-          </small>
+            <small>
+                <i class="fas fa-code-branch" matTooltip="Version"></i>
+                <span><strong>Version: </strong>{{result.documentationVersion}}</span>
+            </small>
         </div>
-                <div class="text-muted" *ngIf="result">
-                    <small>
-                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                        <span><strong>Last update: </strong>{{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </small>
-                </div>
+        <div class="text-muted" *ngIf="result">
+            <small>
+                <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                <span><strong>Last update: </strong>{{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+            </small>
+        </div>
         <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
-          <small>
-            <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-            <span><strong><mdm-element-status [result]="result"></mdm-element-status> on: </strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-          </small>
+            <small>
+                <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
+                <span><strong>Finalised on: </strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+            </small>
         </div>
-      </div>
+    </div>
     </div>
 
     <table class="table table-bordered mdm--table-fixed">
@@ -112,8 +112,6 @@
       <tr>
         <td class="detailsRowHeader">Type</td>
         <td *ngIf="result">
-          <!-- <span ng-bind-html="result.type  | mchighlighter:$root.searchCriteria">-->
-          <!-- </span> TODO search Highlighter-->
           <span [innerHTML]="result.type"></span>
         </td>
       </tr>

@@ -3,22 +3,24 @@
         <div class="panel-body">
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                    <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
-                        <span class="dataModelTypeIcon" *ngIf="result?.domainType == 'CodeSet'">
-                            <i matTooltip="Code Set" class="fas fa-list"></i>
-                        </span>
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="result.label"
-                            [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)"
-                            [styleCss]="'dataModelDetailsLabel'">
-                        </mdm-inline-text-edit>
-                    </h4>
-                    <span class="inline-block">
-                        <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
-                    </span>
                     <div class="detail-icons--cta">
                         <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
                             (click)="toggleFavourite()" matTooltip="Favourite"></i>
                     </div>
+                    <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                        <span class="dataModelTypeIcon" *ngIf="result?.domainType == 'CodeSet'">
+                            <i matTooltip="Code Set" class="fas fa-list"></i>
+                        </span>
+                        <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                              [(ngModel)]="result.label"
+                                              [name]="'moduleName'"
+                                              size="20"
+                                              (input)="onLabelChange($event.target.value)"
+                                              [styleCss]="'dataModelDetailsLabel'">
+                        </mdm-inline-text-edit>
+                    </h4>
+                    <mdm-element-status [result]="result"></mdm-element-status>
+                    <span class="inline-block"><small *ngIf="result?.deleted" class="warning"> | Deleted</small></span>
                 </div>
                 <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
                     <span class="help-block">{{errorMessage}}</span>
@@ -54,13 +56,13 @@
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
                     <small>
                         <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                        <span><strong><mdm-element-status [result]="result"></mdm-element-status> on:</strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        <span><strong>Finalised on:</strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
                     </small>
                 </div>
             </div>
         </div>
 
-        <table class="table table-bordered">
+        <table class="table table-bordered mdm--table-fixed">
             <tbody>
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>

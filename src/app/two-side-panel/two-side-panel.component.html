@@ -1,26 +1,24 @@
 <div class="mdm--container-fluid">
     <div class="row marginless">
-        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block " (click)="hideShowLeftPane();">
-            <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText">
-                <span *ngIf="state == 'inactive'">
+        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block">
+            <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText" (click)="toggle();">
+                <span *ngIf="!isOpen">
                     Show Model Tree 
+                    <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-right"></i>
                 </span>
-                <span *ngIf="state == 'active'">
+                <span *ngIf="isOpen">
                     Hide Model Tree 
+                    <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
                 </span>
-                <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
             </button>
         </div>
 
-        <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4 mb-2">
+        <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4 mb-2" [@openClose]="isOpen ? 'open' : 'closed'">
             <div id="mdm--tree-container" ui-view="left"></div>
         </div>
 
         <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-8':!expand }" class="">
-            <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" (click)="toggle()" *ngIf="expand">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div ui-view="" style="margin-bottom: 30px;"></div>
+            <div ui-view="" class="mb-2"></div>
         </div>
     </div>
 </div>

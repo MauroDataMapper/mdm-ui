@@ -6,13 +6,11 @@ import { trigger, state, transition, animate, style } from '@angular/animations'
   templateUrl: './two-side-panel.component.html',
   styleUrls: ['./two-side-panel.component.sass'],
   animations: [
-    trigger('toggleHeight', [
-      state( 'inactive', style({ height: '0', opacity: '0' })
-      ),
-      state( 'active', style({ height: '*', opacity: '1' })
-      ),
-      transition('inactive => active', animate('200ms ease-in')),
-      transition('active => inactive', animate('200ms ease-out'))
+    trigger('openClose', [
+      state( 'closed', style({ height: '0', opacity: '0', display: 'none' })),
+      state( 'open', style({ height: '*', opacity: '1', display: 'block' })),
+      transition('closed => open', animate('30ms ease-in')),
+      transition('open => closed', animate('30ms ease-out'))
     ])
   ]
 })
@@ -24,17 +22,17 @@ export class TwoSidePanelComponent implements AfterViewInit {
   @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
 
   showLeftPane: boolean;
-  expand = false;
   state = 'inactive';
+  isOpen = true;
 
   ngAfterViewInit() {
     const width = window.innerWidth;
     // this.windowSetup(width);
   }
 
-  toggle = () => {
-    this.expand = !this.expand;
-  };
+  toggle() {
+    this.isOpen = !this.isOpen;
+  }
 
   hideShowLeftPane() {
     this.state = this.state === 'inactive' ? 'active' : 'inactive';

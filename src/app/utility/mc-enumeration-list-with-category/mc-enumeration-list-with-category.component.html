@@ -21,7 +21,7 @@
 	</div>
 </div>
 
-<table mat-table #table [dataSource]="displayItems" cdkDropList [cdkDropListData]="dataSource" cdkDropListDropped)="dropTable($event)" matSort class="table table-bordered">
+<table mat-table #table [dataSource]="displayItems" cdkDropList [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)" matSort class="table table-bordered">
 	<ng-container matColumnDef="group">
 		<th mdmShowIfRoleIsWritable mat-header-cell *matHeaderCellDef mat-sort-header (click)="groupSortClicked()" columnName="group" style="cursor: pointer; max-width: 23%; width: 23%;">
 			Group

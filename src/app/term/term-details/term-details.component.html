@@ -56,8 +56,9 @@
                     <td class="detailsRowHeader">Terminology</td>
                     <td *ngIf="mcTerm?.terminology">
                         <span *ngIf="mcTerm.terminology">
-                            <span *ngIf="!mcTerm.terminology.finalised" class="label label-warning" style="vertical-align: middle;font-size: 9px;">Draft</span>
-                            <span *ngIf="mcTerm.terminology.finalised" class="label label-success" style="vertical-align: middle;font-size: 9px;">Finalised</span>
+                            <small><span *ngIf="!mcTerm.terminology.finalised" class="badge badge-warning ml-1">Draft</span></small>
+                            <small><span *ngIf="mcTerm.terminology.finalised" class="badge badge-success ml-1">Finalised</span> </small>
+                            
                         </span>
                         <mdm-element-link [element]="mcTerm.terminology" [showLink]="true" [newWindow]="false"></mdm-element-link>
                     </td>

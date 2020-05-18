@@ -1,4 +1,4 @@
-<div class="mdm--container-fluid">
+<div class="mdm--container-fluid pxy-0">
     <div class="row marginless">
         <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block">
             <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText" (click)="toggle();">
@@ -16,8 +16,7 @@
         <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4 mb-2" [@openClose]="isOpen ? 'isOpen' : 'closed'">
             <div id="mdm--tree-container" ui-view="left"></div>
         </div>
-
-        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!isOpen, 'col-md-12 col-lg-8':!isOpen }" class="">
+        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':isOpen, 'col-md-12 col-lg-8':!isOpen }" class="">
             <div ui-view="" class="mb-2"></div>
         </div>
     </div>

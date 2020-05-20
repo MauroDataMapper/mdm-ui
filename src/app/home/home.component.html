@@ -5,7 +5,7 @@
                 <h3>Explore BDI’s Matadata Catalogue toolkit to create, share and update medical data models.</h3>
                 <p>Automatically import data models from XML Schema or relational databases such as PostgreSQL, MS SQL Server and OracleDB.</p>
 
-                <div *ngIf="!isLoggedIn()">
+                <div *ngIf="!isLoggedIn">
                     <button mat-flat-button color="primary" (click)="login()" class="custom">
                         Log in
                     </button>
@@ -14,7 +14,7 @@
                         Register an account
                     </button>
                 </div>
-                <div *ngIf="isLoggedIn()">
+                <div *ngIf="isLoggedIn">
                     <a mat-flat-button color="primary" class="custom" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
 import {MessageService} from '@mdm/services/message.service';
+import {BroadcastService} from "@mdm/services/broadcast.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class SecurityHandlerService {
     private elementTypes: ElementTypesService,
     private resources: ResourcesService,
     private stateHandler: StateHandlerService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private broadcastService: BroadcastService
   ) {}
 
   removeLocalStorage() {
@@ -128,6 +130,7 @@ logout() {
     return this.resources.authentication
       .post('logout', null, { responseType: 'text' })
       .subscribe(result => {
+        this.broadcastService.broadcast("userLoggedOut")
         this.removeLocalStorage();
         this.messageService.loggedInChanged(false);
         this.stateHandler.Go('appContainer.mainApp.home');

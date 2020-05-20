@@ -19,6 +19,8 @@ export class ElementLinkComponent implements OnInit {
   elementVal: any;
   @Output() selectedElementsChange = new EventEmitter<any[]>();
 
+  linkUrl: string;
+
   @Input()
   get element() {
     return this.elementVal;
@@ -44,6 +46,8 @@ export class ElementLinkComponent implements OnInit {
   ngOnInit() {
     this.label = '';
     this.versionNumber = '';
+
+    this.linkUrl = this.elementTypes.getLinkUrl(this.element);
 
     if (!this.hideVersionNumber) {
       this.versionNumber = this.element?.documentationVersion
@@ -112,7 +116,4 @@ export class ElementLinkComponent implements OnInit {
     }
   }
 
-  public getLinkUrl() {
-    return this.elementTypes.getLinkUrl(this.element);
-  }
 }

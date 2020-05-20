@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class HomeComponent implements OnInit {
   profilePictureReloadIndex = 0;
   profile: any;
+  isLoggedIn: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -23,18 +24,22 @@ export class HomeComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
     private title: Title
-  ) { }
+  ) {
+    this.broadcastSvc.subscribe('userLoggedOut', args => {
+      this.isLoggedIn = false;
+    });
+
+  }
 
   ngOnInit() {
     if (this.securityHandler.isLoggedIn()) {
+      this.isLoggedIn = true;
       this.profile = this.securityHandler.getCurrentUser();
     }
     this.title.setTitle('Mauro Data Mapper - Home');
   }
 
-  isLoggedIn = () => {
-    return this.securityHandler.isLoggedIn();
-  };
+
 
   login = () => {
     this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {

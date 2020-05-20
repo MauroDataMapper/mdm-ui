@@ -37,10 +37,7 @@ export class HomeComponent implements OnInit {
   };
 
   login = () => {
-    this.dialog.open(LoginModalComponent, {
-      hasBackdrop: false,
-      autoFocus: false}
-      ).afterClosed().subscribe((user) => {
+    this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
           this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });

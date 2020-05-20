@@ -1,9 +1,10 @@
 <form class="mdm--form mdm--form-modal" (keyup)="$event.keyCode != 13;" role="form" autocomplete="on">
+    <button mat-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
     <h3 class='modal-title text-center'>Login</h3>
-  <div *ngIf='message' class='alert alert-danger'>
-    <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-    {{message}}
-  </div>
+    <div *ngIf='message' class='alert alert-danger'>
+        <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+        {{message}}
+    </div>
     <p class="mb-2 text-center">Please log in to continue using our Catalogue</p>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
@@ -20,9 +21,6 @@
     <div class="mb-2 text-center">
         <button (click)="login()" mat-flat-button class="custom mdm--form-button" color="primary"> Log in </button>
     </div>
-  <div class="mb-2 text-center">
-    <button (click)="close()" mat-flat-button class="custom mdm--form-button" color="primary"> Cancel </button>
-  </div>
     <div class="text-center marginless">
         <button (click)="forgotPassword()" mat-button color="primary"> Forgot Password </button>
     </div>

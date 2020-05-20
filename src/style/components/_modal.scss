@@ -10,3 +10,12 @@
 .summary-metadata-modal {
   overflow: auto;
 }
+
+.mdm--form-modal {
+  position: relative;
+  .close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}

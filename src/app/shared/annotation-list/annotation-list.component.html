@@ -1,15 +1,13 @@
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" style="align-items: center;">
             <h4 class="marginless">Comments</h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
-            <div style="margin-top: -2px; margin-left: 9px;">
-                <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.canAddAnnotation">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
-                    Add Comment
-                </button>
-            </div>
+        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end" fxLayoutAlign.xs="flex-start">
+            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.canAddAnnotation" class="mt-1">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+                Add Comment
+            </button>
         </div>
     </div>
 </div>

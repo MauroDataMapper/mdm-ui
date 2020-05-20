@@ -13,10 +13,17 @@
             </button>
         </div>
 
-        <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4 mb-2" [@openClose]="isOpen ? 'isOpen' : 'closed'">
+        <!-- <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4" [@openClose]="isOpen ? 'isOpen' : 'closed'">
             <div id="mdm--tree-container" ui-view="left"></div>
         </div>
         <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':isOpen, 'col-md-12 col-lg-8':!isOpen }" class="">
+            <div ui-view="" class="mb-2"></div>
+        </div> -->
+
+        <div #resizableLeft class="resizableLeft col-lg-4 col-md-12 col-sm-12 col-xs-12 mb-2" [@openClose]="isOpen ? 'isOpen' : 'closed'">
+            <div id="mdm--tree-container" ui-view="left"></div>
+        </div>
+        <div class="resizableRight col-lg-8 col-md-12 col-xs-12 col-sm-12">
             <div ui-view="" class="mb-2"></div>
         </div>
     </div>

@@ -1,13 +1,13 @@
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
-            <h4 class="marginless">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="16px">
+        <div fxFlex  fxLayout="row" fxFlex="70" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-start" style="align-items: center;">
+        <h4 class="marginless">
                 Properties
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
+        <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-end" fxLayoutAlign.xs="flex-start">
             <div *ngIf="access && access.canAddMetadata">
                 <i class="fas fa-info-circle helpIcon" (click)="loadHelp($event)" matTooltip="Help" style="margin-right: 12px;"></i>
                 <button mat-flat-button color="primary" type="button" (click)="add()">

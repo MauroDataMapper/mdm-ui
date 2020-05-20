@@ -1,7 +1,7 @@
 <div class="mdm--shadow-block">
     <div class="heading-container">
-        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-            <div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="80" style="align-items: center;">
+        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
+            <div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="100" fxLayoutAlign="flex-start" style="align-items: center;">
                 <h4 [ngPlural]="totalItemCount" class="marginless">
                   <ng-template ngPluralCase="=1">
                     There is <span class="mdm--badge mdm--element-count">1</span> group in this repository.
@@ -12,7 +12,7 @@
                 </h4>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </div>
-            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25%" fxFlex.xs="25%" style="text-align: right; justify-content: flex-end; align-items: center;">
+            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end" fxLayoutAlign.xs="flex-start">
                 <mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
             </div>
         </div>

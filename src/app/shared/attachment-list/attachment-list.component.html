@@ -1,23 +1,14 @@
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
-        <div fxFlex  fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" style="align-items: center;">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex  fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="start" style="align-items: center;">
             <h4 class="marginless">
                 Attachments
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row"
-                    fxFlex="50"
-                    fxFlex.md="50"
-                    fxFlex.sm="50"
-                    fxFlex.xs="100"
-                    fxLayoutAlign="end"
-                    fxLayoutAlign.md="end"
-                    fxLayoutAlign.sm="end"
-                    fxLayoutAlign.xs="start"
-                    style="text-align: right; align-items: center;">
-            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.showEdit">
+        <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end" fxLayoutAlign.xs="start">
+            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.showEdit" class="mt-1">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Add Attachment
             </button>

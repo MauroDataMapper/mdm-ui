@@ -1,15 +1,15 @@
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-        <div fxFlex  fxLayout="row" fxFlex="55" fxFlex.md="55" fxFlex.sm="55" fxFlex.xs="55" style="align-items: center;">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="16px">
+        <div fxFlex  fxLayout="row" fxFlex="55" fxFlex.md="55" fxFlex.sm="55" fxFlex.xs="100" style="align-items: center;">
             <h4 class="marginless">
                 Links
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="45" style="text-align: right; justify-content: flex-end; align-items: center;">
-            <div style="margin-top: -2px; margin-left: 9px;" *ngIf="access && access.canAddLink">
-                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" style="margin-right: 8px;">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
+        <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end" fxLayoutAlign.xs="flex-start">
+            <div *ngIf="access && access.canAddLink">
+                <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
                 <button mat-flat-button color="primary" (click)="add()">
                     <i class="fas fa-plus" aria-hidden="true"></i>
                     Add Link

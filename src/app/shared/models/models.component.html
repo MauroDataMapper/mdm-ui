@@ -10,10 +10,10 @@
                         <div style="float: left;" class="full-width">
                             <div class="input-group">
                                 <!-- <input type="search" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" [disabled]="levels.current === 1" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)" (focus)="searchboxFocused = true"> -->
-
+                                <input #searchbox type="search" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)">
                                 <span class="tree-top-actions">
 
-                                    <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Toggle Search Box" (click)="searchboxFocused = !searchboxFocused" aria-label="Toggle Search Box">
+                                    <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Search" (click)="search()" aria-label="Search">
                                         <i class="fas fa-search"></i>
                                     </button>
                                     <button type="button" mat-stroked-button [matMenuTriggerFor]="filterMenu" *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Filters" [disabled]="levels.current === 1" (click)="toggleFilterMenu()" aria-label="Filter">
@@ -48,12 +48,6 @@
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>
-                                <div class="input-group" style="width: 100%; transition: height .2s ease-out; overflow: hidden;" [style.height]="searchboxFocused ? '38px':0">
-                                  <input #searchbox type="search" class="form-control" [(ngModel)]="formData.filterCriteria" [disabled]="levels.current === 1 || !searchboxFocused" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)" (input)="onSearchInputKeyDown($event)">
-                                  <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" (click)="search()" [disabled]="levels.current === 1 || !searchboxFocused"><i class="fas fa-search"></i></button>
-                                  </div>
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -18,7 +18,7 @@
 </div>
 
 <div style="float: left;" *ngIf="showDeleteButton" [hidden]="deletePending">
-    <button mat-button color="warn" class="paddingless" type="button" (click)="onAskDelete()" [disabled]="deleteInProgress">
+    <button mat-stroked-button color="warn" class="paddingless" type="button" (click)="onAskDelete()" [disabled]="deleteInProgress">
         <i class="far fa-trash-alt"></i>
     </button>
 </div>

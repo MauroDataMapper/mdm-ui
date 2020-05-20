@@ -52,4 +52,8 @@ export class LoginModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcastService.broadcast('openRegisterModalDialog');
   }
+  close = () => {
+    this.securityHandler.loginModalDisplayed = false;
+    this.dialogRef.close();
+  }
 }

@@ -159,6 +159,18 @@
                             </button>
                         </div>
 
+                      <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                        <button mat-stroked-button
+                                type="button"
+                                class="paddingless"
+                                matTooltip="Create a New Version"
+                                aria-label="Create a New Version"
+                                [disabled]="deleteInProgress || processing"
+                                (click)="newVersion()">
+                          <i class="fas fa-copy"></i>
+                        </button>
+                      </div>
+
                         <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;"
                             [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" class="paddingless"

@@ -449,5 +449,11 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
   }
-
+  newVersion() {
+    this.stateHandler.Go(
+      'newVersionCodeSet',
+      { codeSetId: this.result.id },
+      { location: true }
+    );
+  }
 }

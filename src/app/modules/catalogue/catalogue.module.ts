@@ -138,6 +138,7 @@ import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
 import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
+import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 
 
 
@@ -270,7 +271,8 @@ import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summar
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
-    CodeSetTermsTableComponent],
+    CodeSetTermsTableComponent,
+    NewVersionCodeSetComponent],
   imports: [
     AdminModule,
     AngularSplitModule.forRoot(),
@@ -416,6 +418,7 @@ import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summar
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
-    CodeSetTermsTableComponent]
+    CodeSetTermsTableComponent,
+    NewVersionCodeSetComponent]
 })
 export class CatalogueModule { }

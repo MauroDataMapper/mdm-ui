@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ModalModule } from './modals/modal.module';
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [

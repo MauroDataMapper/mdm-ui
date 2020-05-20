@@ -94,6 +94,7 @@ export class StateRoleAccessService {
         this.add('appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport', ['administrator', 'editor']);
         this.add('appContainer.mainApp.modelsComparison', ['administrator', 'editor']);
         this.add('appContainer.mainApp.linkSuggestion', ['administrator', 'editor']);
+        this.add('appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet', ['administrator', 'editor']);
     }
 
     allRoles = {

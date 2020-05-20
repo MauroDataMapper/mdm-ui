@@ -37,6 +37,7 @@ export class StateHandlerService {
                 newclassification: 'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
                 newversiondatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
                 newversionterminology: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
+                newversioncodeset: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
 
                 'admin.user': 'appContainer.adminArea.user',
                 'admin.users': 'appContainer.adminArea.users',

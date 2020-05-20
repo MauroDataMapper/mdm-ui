@@ -39,6 +39,7 @@ import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.compo
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import {CodeSetMainComponent} from './wizards/codeSet/code-set-main/code-set-main.component';
 import {CodeSetComponent} from './code-set/code-set/code-set.component';
+import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 
 export const PagesRoutes = {
   states: [
@@ -232,7 +233,12 @@ export const PagesRoutes = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
 
-    }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
+      url: '/newVersion/codeSet/:codeSetId',
+      component: NewVersionCodeSetComponent
+    },
 
 
   ]

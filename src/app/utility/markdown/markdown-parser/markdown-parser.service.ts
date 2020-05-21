@@ -24,7 +24,7 @@ export class MarkdownParserService {
       renderer = this.customTextRendererService;
     }
 
-    marked.use({tokenizer: this.tokenizer});
+    marked.use({tokenizer: this.tokenizer as any});
     marked.setOptions({
       renderer,
       gfm: true,

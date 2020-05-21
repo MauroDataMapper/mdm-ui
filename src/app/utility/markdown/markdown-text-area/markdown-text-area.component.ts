@@ -1,8 +1,8 @@
 import { Component, OnInit, Input,   ViewChild, Output, ElementRef, EventEmitter } from '@angular/core';
-import { FolderResult } from '../model/folderModel';
-import { MarkdownParserService } from './markdown-parser.service';
-import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
-import { MessageService } from '../services/message.service';
+import { FolderResult } from '@mdm/model/folderModel';
+import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
+import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
+import { MessageService } from '@mdm/services/message.service';
 
 @Component({
   selector: 'mdm-markdown-text-area',

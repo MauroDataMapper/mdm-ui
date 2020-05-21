@@ -16,7 +16,7 @@ import { DataModelsExportComponent } from '@mdm/data-models-export/data-models-e
 import { UserAccessNewComponent } from '@mdm/access/user-access-new.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { HistoryComponent } from '@mdm/folder/history.component';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';

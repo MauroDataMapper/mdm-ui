@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {EditableDataModel} from '@mdm/model/dataModelModel';
 import {from, Subscription} from 'rxjs';
-import {MarkdownTextAreaComponent} from '@mdm/utility/markdown-text-area.component';
+import {MarkdownTextAreaComponent} from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import {ResourcesService} from '@mdm/services/resources.service';
 import {MessageService} from '@mdm/services/message.service';
 import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';

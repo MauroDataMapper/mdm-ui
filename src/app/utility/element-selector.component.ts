@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ResourcesService } from '../services/resources.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MarkdownParserService } from './markdown-parser.service';
+import { MarkdownParserService } from './markdown/markdown-parser/markdown-parser.service';
 import { MessageService } from '../services/message.service';
 import { ContentSearchHandlerService } from '../services/content-search.handler.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { TermResult, EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { SharedService } from '@mdm/services/shared.service';

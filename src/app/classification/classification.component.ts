@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren, OnDestroy} from '@angular/core';
-import { MarkdownTextAreaComponent } from '../utility/markdown-text-area.component';
+import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
 import { FolderResult } from '../model/folderModel';
 import { Subscription, forkJoin } from 'rxjs';
 import { ResourcesService } from '../services/resources.service';

@@ -18,7 +18,7 @@ import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { Editable, FolderResult } from '@mdm/model/folderModel';
 import { Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';

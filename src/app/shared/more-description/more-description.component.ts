@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
-import { MarkdownParserService } from '@mdm/utility/markdown-parser.service';
+import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 
 @Component({
   selector: 'mdm-more-description',

@@ -1,5 +1,5 @@
 import { Directive, Input, ElementRef, Renderer2, OnInit } from '@angular/core';
-import { MarkdownParserService } from '../utility/markdown-parser.service';
+import { MarkdownParserService } from '../utility/markdown/markdown-parser/markdown-parser.service';
 
 @Directive({
   selector: '[mdmMarkdown]'

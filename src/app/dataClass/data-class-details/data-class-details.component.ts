@@ -11,7 +11,7 @@ import {
 import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown-text-area.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { ResourcesService } from '@mdm/services/resources.service';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';

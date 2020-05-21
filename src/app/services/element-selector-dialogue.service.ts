@@ -28,7 +28,8 @@ export class ElementSelectorDialogueService {
 
     const dg = this.dialog.open(ElementSelectorComponent, {
       minWidth: '600px',
-      data: { validTypesToSelect, notAllowedToSelectIds }
+      data: { validTypesToSelect, notAllowedToSelectIds },
+      panelClass: 'element-selector-modal'
     });
     // close: function (event, ui) {
     //   var selectedElement = jQuery(this).data("selectedElement");

@@ -10,7 +10,9 @@
 .summary-metadata-modal {
   overflow: auto;
 }
-
+.element-selector-modal .mat-dialog-content {
+  margin: 0;
+}
 .mdm--form-modal {
   position: relative;
   .close-modal {

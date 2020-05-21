@@ -1,11 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
 
 @Pipe({name: 'mchighlighter'})
 export class HighlighterPipe implements PipeTransform {
-
-  constructor(private sanitizer: DomSanitizer) {
-  }
 
   transform(value: string, phrase: string, wildcardMatch?: boolean) {
     let text = value;
@@ -14,13 +10,13 @@ export class HighlighterPipe implements PipeTransform {
       if (wildcardMatch) {
         const sections: string[] = phrase.split(' ');
         sections.forEach(section => {
-          text = value.replace(new RegExp('(' + escape(section) + ')', 'gi'), '<span class="mcHighlighter">$1</span>');
+          text = value.replace(new RegExp('(' + escape(section) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
         });
       } else {
-        text = value.replace(new RegExp('(' + escape(phrase) + ')', 'gi'), '<span class="mcHighlighter">$1</span>');
+        text = value.replace(new RegExp('(' + escape(phrase) + ')', 'gi'), '<span class="mchighlighter">$1</span>');
       }
     }
-    return this.sanitizer.bypassSecurityTrustHtml(text);
+    return text;
   }
 
 }

@@ -344,7 +344,7 @@ class DataClass {
     if (parentDataClassId) {
       return this.resourcesService.put(`dataModels/${dataModelId}/dataClasses/${parentDataClassId}/dataClasses/`, id, action, options);
     } else {
-      return this.resourcesService.put(`dataModels/{$}dataModelId}/dataClasses/`, id, action, options);
+      return this.resourcesService.put(`dataModels/${dataModelId}/dataClasses/`, id, action, options);
     }
   }
 

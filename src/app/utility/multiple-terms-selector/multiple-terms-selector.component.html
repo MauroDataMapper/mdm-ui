@@ -15,13 +15,10 @@
 </div>
 <div class="mb-2">
     <strong>Select a Term</strong>
-    <input type="text"
-            class="form-control outlined-input"
-            [(ngModel)]="selectorSection.termSearchText"
-            [disabled]="!selectorSection.selectedTerminology"
-            (change)="runTermSearch()"
-            [ngModelOptions]="{ debounce: 500 }"
-            placeholder="Search for Terms...">
+  <input #searchInputControl id="searchTreeInput" type="text"  class="form-control outlined-input"
+         [(ngModel)]="selectorSection.termSearchText" [disabled]="!selectorSection.selectedTerminology" [ngModelOptions]='{ debounce: 500 }' focus="inputClick()"
+         placeholder="Search for Terms..." >
+
     <div style="margin-top: 5px;">
         <div style="max-height: 400px; overflow: auto;">
             <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">

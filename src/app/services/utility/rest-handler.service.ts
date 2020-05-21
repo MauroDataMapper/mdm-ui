@@ -45,7 +45,8 @@ export class RestHandlerService {
                 this.broadcastSvc.broadcast('applicationOffline', response);
             } else if (response.status === 401) {
                 this.messageService.lastError = response;
-              //  this.stateHandler.NotAuthorized(response);
+                if (options.login === undefined) {
+                this.stateHandler.NotAuthorized(response); }
             } else if (response.status === 404) {
                 this.messageService.lastError = response;
                 this.stateHandler.NotFound(response);

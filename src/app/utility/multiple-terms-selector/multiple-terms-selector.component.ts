@@ -1,4 +1,14 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, Output, EventEmitter, Input} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter,
+  Input,
+  SimpleChanges
+} from '@angular/core';
 import {ResourcesService} from '@mdm/services/resources.service';
 import {ContentSearchHandlerService} from '@mdm/services/content-search.handler.service';
 import {fromEvent} from 'rxjs';
@@ -34,6 +44,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
   @Output() selectedTermsChange = new EventEmitter<any[]>();
   @Input() onAddButtonClick: any;
   dataSource = new MatTableDataSource();
+  @ViewChild('searchInputTerms', { static: true })
+  searchInputTerms: ElementRef;
   currentRecord: number;
   totalItemCount = 0;
   isProcessing = false;
@@ -92,8 +104,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
   };
   onTerminologySelect = (terminology: any, record: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
+    this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
-      this.selectorSection.selectedTerminology = terminology;
       this.fetch(40, 0);
     } else {
       this.totalItemCount = 0;
@@ -179,9 +191,9 @@ export class MultipleTermsSelectorComponent implements OnInit {
     //  const position = offset * this.selectorSection.searchResultPageSize;
       const position = offset;
       this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ['Term'], null, null, null, null, null, null, null, null).subscribe(result => {
-        this.selectorSection.searchResult = result.items;
+        this.selectorSection.searchResult = result.body.items;
         // make check=true if element is already selected
-        result.items.forEach( (item) => {
+        result.body.items.forEach( (item) => {
           item.terminology = this.selectorSection.selectedTerminology;
           if (this.selectorSection.selectedTerms[item.id]) {
             item.checked = true;
@@ -191,12 +203,22 @@ export class MultipleTermsSelectorComponent implements OnInit {
         this.calculateDisplayedSoFar(result);
         this.loading = false;
         this.isProcessing = false;
-        // deferred.resolve({
-        //   items: result.items,
-        //   count: result.count,
-        //   offset: offset + 1,
-        //   pageSize: $scope.selectorSection.searchResultPageSize
-        // });
+        this.selectorSection.loading = false;
+
+        this.totalItemCount = result.body.count;
+        if (this.dataSource.data) {
+          this.dataSource.data = this.dataSource.data.concat(
+            this.selectorSection.searchResult
+          );
+          this.currentRecord = this.dataSource.data.length;
+          this.loading = false;
+          this.isProcessing = false;
+        } else {
+          this.dataSource.data = this.selectorSection.searchResult;
+          this.currentRecord = this.dataSource.data.length;
+          this.isProcessing = false;
+          this.loading = false;
+        }
 
       }, error => {
         this.loading = false;
@@ -223,18 +245,18 @@ export class MultipleTermsSelectorComponent implements OnInit {
     }
   }
   calculateDisplayedSoFar = result => {
-    this.selectorSection.searchResultTotal = result.count;
-    if (result.count >= this.selectorSection.searchResultPageSize) {
+    this.selectorSection.searchResultTotal = result.body.count;
+    if (result.body.count >= this.selectorSection.searchResultPageSize) {
       const total =
         (this.selectorSection.searchResultOffset + 1) *
         this.selectorSection.searchResultPageSize;
-      if (total >= result.count) {
-        this.selectorSection.searchResultDisplayedSoFar = result.count;
+      if (total >= result.body.count) {
+        this.selectorSection.searchResultDisplayedSoFar = result.body.count;
       } else {
         this.selectorSection.searchResultDisplayedSoFar = total;
       }
     } else {
-      this.selectorSection.searchResultDisplayedSoFar = result.count;
+      this.selectorSection.searchResultDisplayedSoFar = result.body.count;
     }
   };
   termToggle = $item => {
@@ -303,5 +325,10 @@ export class MultipleTermsSelectorComponent implements OnInit {
     }
   };
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
+
+
+
 }

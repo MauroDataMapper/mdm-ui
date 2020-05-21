@@ -139,11 +139,13 @@ import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
 import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
 import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 
 
 
 @NgModule({
   declarations: [
+    MarkedPipe,
     FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
@@ -295,7 +297,9 @@ import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new
     UserIdleModule.forRoot({idle: 600, timeout: 300}),
     UsersModule
   ],
-  exports: [FolderComponent,
+  exports: [
+    MarkedPipe,
+    FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,

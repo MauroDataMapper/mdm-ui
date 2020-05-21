@@ -49,7 +49,7 @@
                                     </button>
                                 </span>
                                 <div class="input-group" style="width: 100%; transition: height .2s ease-out; overflow: hidden;" [style.height]="searchboxFocused ? '38px':0">
-                                  <input #searchbox type="search" class="form-control" [(ngModel)]="formData.filterCriteria" [disabled]="levels.current === 1 || !searchboxFocused" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)">
+                                  <input #searchbox type="search" class="form-control" [(ngModel)]="formData.filterCriteria" [disabled]="levels.current === 1 || !searchboxFocused" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)" (input)="onSearchInputKeyDown($event)">
                                   <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" (click)="search()" [disabled]="levels.current === 1 || !searchboxFocused"><i class="fas fa-search"></i></button>
                                   </div>

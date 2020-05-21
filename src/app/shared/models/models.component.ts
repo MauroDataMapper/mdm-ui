@@ -28,7 +28,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   inSearchMode = false;
   folder = '';
   searchboxFocused = false;
-  debounceInputEvent: Subject<KeyboardEvent>;
+  debounceInputEvent: Subject<KeyboardEvent|InputEvent>;
   subscriptions: Subscription;
 
   // Hard
@@ -416,24 +416,28 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.stateHandler.Go(newState);
   };
 
-  onSearchInputKeyDown(event: KeyboardEvent) {
+  onSearchInputKeyDown(event: KeyboardEvent|InputEvent) {
     // Initialize debounce listener if neccessary
     if (!this.debounceInputEvent) {
-      this.debounceInputEvent = new Subject<KeyboardEvent>();
+      this.debounceInputEvent = new Subject<KeyboardEvent|InputEvent>();
       this.subscriptions = this.debounceInputEvent.pipe(
         debounceTime(300)
       ).subscribe(e => {
-        switch (e.key) {
-          case 'Backspace': return;
-          case 'Delete': return;
-          case 'Escape':
-            this.searchboxFocused = false;
-            return;
+        if (e instanceof KeyboardEvent) {
+          switch (e.key) {
+            case 'Enter': this.search(); return;
+            case 'Escape':
+              this.formData.filterCriteria = '';
+              this.search();
+              this.searchboxFocused = false;
+              return;
+          }
         }
 
-        if (e.keyCode && e.keyCode === 13) {
+        if (this.formData.filterCriteria?.length > 2) {
           this.search();
         }
+
         if (this.validator.isEmpty(this.formData.filterCriteria)) {
           this.search();
         }

@@ -69,6 +69,8 @@ export class DataElementComponent implements OnInit {
       this.stateService.params.tabView
     ).index;
 
+    this.showExtraTabs =
+       this.sharedService.isLoggedIn() ;
     /// this.parentId = this.stateService.params.id;
     // this.resourcesService.dataModel.get(this.stateService.params.id).subscribe(x => { this.dataModel = x.body });
 

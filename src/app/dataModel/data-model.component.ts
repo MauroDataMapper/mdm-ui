@@ -46,7 +46,10 @@ export class DataModelComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-
+    this.showExtraTabs =
+      this.sharedService.isLoggedIn() ;
+    // ||!this.dataModel.editable ;
+    // || this.dataModel.finalised;
     // this.fetch();
 
     this.parentId = this.stateService.params.id;
@@ -71,9 +74,6 @@ export class DataModelComponent implements OnInit, OnDestroy {
         this.dataModel = result.body;
 
         this.parentId = this.dataModel.id;
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() ||
-          !this.dataModel.editable || this.dataModel.finalised;
         if (this.sharedService.isLoggedIn()) {
           this.DataModelPermissions(id);
         } else {

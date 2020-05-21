@@ -324,6 +324,10 @@ export class ElementLinkListComponent implements AfterViewInit {
       notAllowedToSelectIds.push(this.parent.terminology);
     }
 
+    if (this.parent.domainType === 'CodeSet') {
+      domainTypes = ['DataModel', 'DataClass', 'DataElement', 'DataType', 'Term'];
+    }
+
     const dataTypes = this.elementTypes.getAllDataTypesMap();
     if (dataTypes[this.parent.domainType]) {
       domainTypes = ['Term', 'DataType'];

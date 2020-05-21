@@ -20,7 +20,8 @@
          placeholder="Search for Terms..." >
 
     <div style="margin-top: 5px;">
-        <div style="max-height: 400px; overflow: auto;">
+<!--        <div style="max-height: 400px; overflow: auto;">-->
+          <div style="height: 400px; ">
             <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
                 <ng-container matColumnDef="label">
                     <mat-header-row *matHeaderCellDef> Term </mat-header-row>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResourcesService } from '../resources.service';
 import { Observable } from 'rxjs';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,12 @@ export class UserSettingsHandlerService {
     dataFlowDiagramsSetting: {}
   };
   constructor(
-    private resources: ResourcesService
+    private resources: ResourcesService,
+    private securityHandler: SecurityHandlerService
   ) {}
 
   getUserSettings() {
-    let settings = JSON.parse(localStorage.getItem('userSettings'));
+    let settings = JSON.parse(sessionStorage.getItem('userSettings'));
     if (!settings) {
       this.updateUserSettings(this.defaultSettings);
       settings = this.defaultSettings;
@@ -30,14 +32,14 @@ export class UserSettingsHandlerService {
   }
 
   updateUserSettings(setting) {
-    localStorage.setItem('userSettings', JSON.stringify(setting));
+    sessionStorage.setItem('userSettings', JSON.stringify(setting));
   }
 
   initUserSettings() {
 
     const promise = new Promise((resolve, reject) => {
     this.resources.catalogueUser
-      .get(localStorage.getItem('userId'), 'userPreferences', null)
+      .get(sessionStorage.getItem('userId'), 'userPreferences', null)
       .subscribe(
         res => {
           const result = res.body;
@@ -54,7 +56,7 @@ export class UserSettingsHandlerService {
                 result[property] = this.defaultSettings[property];
               }
             }
-            // save them into the localStorage
+            // save them into the sessionStorage
             settings = result;
           }
           // save it locally
@@ -70,7 +72,9 @@ export class UserSettingsHandlerService {
   }
 
   init() {
-     return this.initUserSettings();
+    if (this.securityHandler.isLoggedIn()) {
+      return this.initUserSettings();
+    }
   }
 
   update(setting, value) {
@@ -85,7 +89,7 @@ export class UserSettingsHandlerService {
   }
 
   removeAll() {
-    localStorage.removeItem('userSettings');
+    sessionStorage.removeItem('userSettings');
   }
 
   saveOnServer(): Observable<any> {

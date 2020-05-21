@@ -234,7 +234,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     const scrollLocation = e.target.scrollTop; // how far user scrolled
 
     // If the user has scrolled within 200px of the bottom, add more data
-    const buffer = 200;
+    const buffer = 340; // 200 old value
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit && limit > 0) {
       const requiredNum = this.dataSource.data.length + this.pageSize;

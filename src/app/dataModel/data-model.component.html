@@ -92,7 +92,7 @@
             </div>
         </ng-template>
     </mat-tab>
-    <mat-tab label="Summary">
+    <mat-tab label="Summary" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-summary-metadata-table *ngIf="dataModel" [parent]="dataModel"></mdm-summary-metadata-table>
@@ -127,7 +127,7 @@
             </div>
         </ng-template>
     </mat-tab>
-    <mat-tab label="Attachments">
+    <mat-tab label="Attachments" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel"></mdm-attachment-list>

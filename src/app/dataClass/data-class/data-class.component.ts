@@ -53,6 +53,9 @@ export class DataClassComponent implements OnInit {
     this.activeTab = this.getTabDetailByName(
       this.stateService.params.tabView
     ).index;
+
+    this.showExtraTabs =
+      this.sharedService.isLoggedIn() ;
     // this.fetch();
 
     this.parentId = this.stateService.params.id;

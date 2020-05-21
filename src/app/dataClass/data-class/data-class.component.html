@@ -28,10 +28,10 @@
                 <h4 class="marginless">Links</h4>
             </div>
             <div class="pxy-2">
-                <mdm-all-links-in-paged-list [showLoadingSpinner]="true" 
-                                             [parent]="dataClass" 
-                                             [showDescription]="true" 
-                                             [showNoLinksMessage]="true" 
+                <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
+                                             [parent]="dataClass"
+                                             [showDescription]="true"
+                                             [showNoLinksMessage]="true"
                                              [type]="'static'">
                 </mdm-all-links-in-paged-list>
             </div>
@@ -69,7 +69,7 @@
                 </div>
             </ng-template>
         </mat-tab>
-        <mat-tab label="Summary">
+        <mat-tab label="Summary" *ngIf="showExtraTabs">
             <ng-template matTabContent>
                 <div class="full-width">
                     <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass">
@@ -77,7 +77,7 @@
                 </div>
             </ng-template>
         </mat-tab>
-        <mat-tab label="Attachments">
+        <mat-tab label="Attachments" *ngIf="showExtraTabs">
             <ng-template matTabContent>
                 <div class="full-width">
                     <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"></mdm-attachment-list>

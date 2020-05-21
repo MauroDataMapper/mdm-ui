@@ -1,13 +1,13 @@
 <div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="row" fxLayoutAlign="space-around" fxLayoutGap="24px">
-        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="75" style="align-items: center;">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="start center">
             <h4 class="marginless">
                 Terms
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="25" style="text-align: right; justify-content: flex-end; align-items: center;">
+        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
             <div *ngIf="(access && access.showEdit) || clientSide">
                 <button mat-flat-button color="primary" (click)="toggleAddTermsSection()" *ngIf="!showAddTerm">
                     <i class="fas fa-plus"></i>

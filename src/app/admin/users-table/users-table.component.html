@@ -1,7 +1,7 @@
 <div class="mdm--shadow-block">
 	<div class="heading-container">
 		<div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-			<div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="flex-start" style="align-items: center;">
+			<div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="flex-start center">
 				<h4 [ngPlural]="totalItemCount" class="marginless">
 					<ng-template ngPluralCase="=1">
 						There is <span class="mdm--badge mdm--element-count">1</span> user in this repository.
@@ -12,7 +12,7 @@
 				</h4>
 				<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer; margin-left: 2px;"></i>
 			</div>
-			<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end" fxLayoutAlign.xs="flex-start" class="mt-1">
+			<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center" class="mt-1">
 				<mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
 			</div>
 		</div>

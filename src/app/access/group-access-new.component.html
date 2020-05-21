@@ -1,10 +1,10 @@
 <div class="mdm--shadow-block">
     <div class="heading-container">
         <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-            <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="flex-start" style="align-items: center;">
+            <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="flex-start center">
                 <h4 class="marginless">Restrict user access based on group(s) <span class="mdm--badge mdm--element-count">{{dataSource.data.length}}</span></h4>
             </div>
-            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end" fxLayoutAlign.xs="flex-start">
+            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
                 <div *ngIf="folderResult['editable']" class="mt-1">
                     <button mat-flat-button color="primary" type="button" (click)="add()">
                         <i class="fas fa-plus"></i>

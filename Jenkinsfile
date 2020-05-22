@@ -6,9 +6,7 @@ pipeline {
     skipStagesAfterUnstable()
     buildDiscarder(logRotator(numToKeepStr: '30'))
   }
-  node {
-    nvm('v12.16.1')
-  }
+
   stages {
 
     stage('NVM version check') {

@@ -10,7 +10,7 @@
         </h4>
     </div>
     <div class="table-responsive">
-        <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped">
+        <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped marginless">
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="name" [disabled]="!hideFilters" style="cursor: pointer; max-width: 78%; width: 78%;" columnName="name">
                     <span [hidden]="!hideFilters">Name</span>

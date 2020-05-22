@@ -21,8 +21,14 @@ pipeline {
       steps {
         sh 'node --version'
         sh 'npm --version'
+      }
+    }
+
+    stage('Install'){
+      steps{
         sh 'npm install -g npm-check'
         sh 'npm install -g @angular/cli'
+        sh 'npm install'
       }
     }
 

@@ -7,33 +7,37 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '30'))
   }
 
+  /*
+  nvm wrapper has to wrap all steps, interestingly its not supposed to work with the .nvmrc file however if you exclude the version as a blank string
+  then it passes the blank string as the version and therefore nvm just does its job and uses the .nvmrc file.
+  */
   stages {
-
-    stage('NVM version check') {
-      steps {
-        sh 'nvm use'
-      }
-    }
 
     stage('Tool Versions') {
       steps {
-        sh 'node --version'
-        sh 'npm --version'
+        nvm('') {
+          sh 'node --version'
+          sh 'npm --version'
+        }
       }
     }
 
     stage('Install') {
       steps {
-        sh 'npm install -g npm-check'
-        sh 'npm install -g @angular/cli'
-        sh 'npm install'
+        nvm('') {
+          sh 'npm install -g npm-check'
+          sh 'npm install -g @angular/cli'
+          sh 'npm ci'
+        }
       }
     }
 
     stage('Build & Test') {
       steps {
-        sh 'ng lint'
-        sh 'ng test --coverage'
+        nvm('') {
+          sh 'ng lint'
+          sh 'ng test --coverage'
+        }
       }
       post {
         always {

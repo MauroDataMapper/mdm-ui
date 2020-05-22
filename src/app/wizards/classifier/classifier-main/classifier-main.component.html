@@ -1,26 +1,19 @@
-<mat-horizontal-stepper #stepper>
+<div class="heading-container">
+  <h4 class="marginless">New Classifier</h4>
+</div>
+<mat-vertical-stepper #stepper>
     <mat-step *ngFor="let step of steps; let i = index">
         <ng-template matStepLabel>{{step.title}}</ng-template>
         <mdm-dcl-wrapper [type]="step.component" [step]="steps[i]"></mdm-dcl-wrapper>
-        <div class="row">
+        <div fxFlex fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
+          <div fxFlex  fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100"></div>
             <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
 
-                <button mat-button color="warn" (click)="cancelWizard()">
-                    Cancel
-                </button>
             </div>
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
-                <strong>{{(i+1)}} / {{steps.length}}</strong>
-            </div>
-
-            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
-                <button mat-stroked-button *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="step.invalid">
-                    <i class="fas fa-chevron-right"></i>
-                    Next step
-                </button>
-                <button mat-flat-button color="primary" *ngIf="(i+1) === steps.length" [disabled]="step.invalid" (click)="saveClassifier()">Submit</button>
-                <button mat-button color="warn" (click)="closeWizard()" *ngIf="step.isProcessComplete">Close</button>
+            <div fxFlex fxLayout="row-reverse" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
+                <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid" (click)="saveClassifier()">Submit Classifier</button>
+                <button mat-button color="warn" (click)="cancelWizard()">Cancel</button>
             </div>
         </div>
     </mat-step>
-</mat-horizontal-stepper>
+</mat-vertical-stepper>

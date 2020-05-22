@@ -1,23 +1,13 @@
-<div class="form-group">
-    <span>Please enter Classifier details:</span>
-    <form ngNativeValidate #myForm="ngForm">
-        <table class="table table-bordered dataModelDetailTable" ngModelGroup="model">
-            <tbody>
-                <tr>
-                    <th class="detailsRowHeader">Label *</th>
-                    <td>
-                        <input type="text" class="form-control outlined-input" name="label" [(ngModel)]="model.label"
-                            required="required" />
-                    </td>
-                </tr>
+<form ngNativeValidate #myForm="ngForm" class="full-width">
+  <div class="mdm--form-input">
+      <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Label</mat-label>
+          <input matInput type="text" name="label" [(ngModel)]="model.label" required="required" />
+      </mat-form-field>
+  </div>
 
-                <tr>
-                    <th class="detailsRowHeader">Description</th>
-                    <td>
-                        <textarea type="text" class="form-control outlined-input" name="description" [(ngModel)]="model.description"></textarea>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
+  </mat-form-field>
+</form>

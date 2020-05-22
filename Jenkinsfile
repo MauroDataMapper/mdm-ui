@@ -1,54 +1,62 @@
 pipeline {
   agent any
 
-  environment {
-    JENKINS = 'true'
+  options {
+    timestamps()
+    skipStagesAfterUnstable()
+    buildDiscarder(logRotator(numToKeepStr: '30'))
   }
 
-  tools {
-    nodejs 'NodeJS 12.16.1'
-  }
+  nvm('v12.16.1')
 
-  stage('Checkout') {
-      //disable to recycle workspace data to save time/bandwidth
-      deleteDir()
-      checkout scm
+  stages {
 
-      //enable for commit id in build number
-      //env.git_commit_id = sh returnStdout: true, script: 'git rev-parse HEAD'
-      //env.git_commit_id_short = env.git_commit_id.take(7)
-      //currentBuild.displayName = "#${currentBuild.number}-${env.git_commit_id_short}"
-  }
-
-  stage('NPM Install') {
-      withEnv(["NPM_CONFIG_LOGLEVEL=warn"]) {
-          sh 'npm install'
+    stage('NVM version check') {
+      steps {
+        sh 'nvm use'
       }
-  }
+    }
 
-  stage('Test') {
-      withEnv(["CHROME_BIN=/usr/bin/chromium-browser"]) {
-        sh 'ng test --progress=false --watch false'
+    stage('Tool Versions') {
+      steps {
+        sh 'node --version'
+        sh 'npm --version'
+        sh 'npm install -g npm-check'
+        sh 'npm install -g @angular/cli'
       }
-      junit '**/test-results.xml'
+    }
+
+    stage('Build & Test') {
+      steps {
+        sh 'ng lint'
+        sh 'ng test --coverage'
+      }
+      post {
+        always {
+          junit allowEmptyResults: true, testResults: 'test_results/*.xml'
+        }
+      }
+    }
+
+    //    stage('Archive Build') {
+    //      when {
+    //        allOf {
+    //          branch 'master'
+    //          expression {
+    //            currentBuild.currentResult == 'SUCCESS'
+    //          }
+    //        }
+    //
+    //      }
+    //      steps {
+    //        archiveArtifacts artifacts: '**/build/**/*.tgz'
+    //      }
+    //    }
   }
 
-  stage('Lint') {
-      sh 'ng lint'
-  }
-
-  stage('Build') {
-      milestone()
-      sh 'ng build --prod --aot --sm --progress=false'
-  }
-
-  stage('Archive') {
-      sh 'tar -cvzf dist.tar.gz --strip-components=1 dist'
-      archive 'dist.tar.gz'
-  }
-
-  stage('Deploy') {
-      milestone()
-      echo "Deploying..."
+  post {
+    always {
+      slackNotification()
+    }
   }
 }

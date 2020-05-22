@@ -12,6 +12,7 @@ import { ResourcesService } from '@mdm/services/resources.service';
 import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
   selector: 'mdm-user-details',
@@ -33,7 +34,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private resourcesService: ResourcesService,
     private messageService: MessageService,
-    private title: Title
+    private title: Title,
+    private messageHandler: MessageHandlerService
   ) {
     this.userDetails();
   }

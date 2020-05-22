@@ -1,13 +1,13 @@
 <div class="heading-container">
     <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="start" style="align-items: center;">
+        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="start center">
             <h4 class="marginless">
                 <span>Content</span>
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 6px;"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="end" fxLayoutAlign.xs="start">
+        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
             <div *ngIf="parentDataModel.editable && !parentDataModel.finalised" class="mt-1">
                 <mdm-data-type-list-buttons [displayRecords]="records"
                                             (deleteRows)="deleteRows()"

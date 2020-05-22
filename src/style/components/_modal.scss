@@ -10,8 +10,18 @@
 .summary-metadata-modal {
   overflow: auto;
 }
-.element-selector-modal .mat-dialog-content {
-  margin: 0;
+.element-selector-modal {
+  min-width: 600px;
+  @include respond-to($mobile-xs) {
+    min-width: 90%;
+    max-width: 90%;
+  }
+  .mat-dialog-content {
+    margin: 0;
+    @include respond-to($mobile-xs) {
+      padding: 0;
+    }
+  }
 }
 .mdm--form-modal {
   position: relative;
@@ -19,5 +29,11 @@
     position: absolute;
     top: 0;
     right: 0;
+  }
+}
+
+.mat-step .mat-vertical-content-container {
+  @include respond-to($mobile-xs) {
+    margin-left: 0;
   }
 }

@@ -32,10 +32,17 @@ pipeline {
       }
     }
 
-    stage('Build & Test') {
+    stage('Lint') {
       steps {
         nvm('') {
           sh 'ng lint'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        nvm('') {
           sh 'ng test --coverage'
         }
       }

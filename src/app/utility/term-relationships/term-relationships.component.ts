@@ -15,6 +15,7 @@ export class TermRelationshipsComponent implements OnInit {
   @Input() term: TermResult;
   @Input() type: any;
   subscription: Subscription;
+  totalItems = 0;
 
   loading = true;
   relationshipTypes = [];
@@ -32,14 +33,12 @@ export class TermRelationshipsComponent implements OnInit {
 
   ngOnInit() {
     if (this.term) {
-      this.resources.term
-        .get(this.term.terminology.id, this.term.id, 'termRelationships', {
+      this.resources.term.get(this.term.terminology.id, this.term.id, 'termRelationships', {
           queryStringParams: {
             type: 'source'
           }
-        })
-        .subscribe(
-          data => {
+        }).subscribe(data => {
+            this.totalItems = data.body.count;
             data.body.items.forEach(item => {
               if (!this.relations[item.relationshipType.displayLabel]) {
                 this.relationshipTypes.push(item.relationshipType.displayLabel);
@@ -48,11 +47,9 @@ export class TermRelationshipsComponent implements OnInit {
               this.relations[item.relationshipType.displayLabel].push(item);
             });
             this.loading = false;
-          },
-          error => {
-            this.loading = false;
-          }
-        );
+        }, () => {
+          this.loading = false;
+        });
     }
   }
 

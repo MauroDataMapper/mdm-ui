@@ -1,42 +1,40 @@
-<div class="panel panel-default">
-    <div class="panel-heading"><strong>Relationships</strong></div>
-    <div class="panel-body" style="padding-top: 5px !important;">
-
-        <div class="loading-spinner" *ngIf="loading">
-            <div>
-                <i class="fas fa-sync-alt fa-spin"></i>
-            </div>
+<div class="mdm--shadow-block">
+    <div class="panel panel-default">
+        <div class="heading-container">
+            <h4 class="marginless">Relationships</h4>
         </div>
-
-        <div *ngIf="!loading">
-        <div *ngFor="let relationshipType of relationshipTypes" class="row"  ng-style="{'border-top': ($index !== 0 ? '1px solid #DDDDDD' : none) }" >
-            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2" style="font-weight: bold;">
-                {{relationshipType}}
-            </div>
-            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10" style="border-left: 1px solid #DDDDDD;padding:5px;">
-
-                <mdm-paged-list [name]="relationshipType"
-                               [mcTitle]="relationshipType"
-                               [type]="'static'"
-                               [items]="relations[relationshipType]"
-                               [pageSize]="10">
-
-                    <ng-template #pageListTemplate let-item>
-                        <div class="pagedElement">
-                            <mdm-element-link [element]="item.targetTerm"
-                                          [showParentDataModelName]="true"
-                                          [showLink]="true"
-                                          [showTypeTitle]="true"
-                                          [newWindow]="false"></mdm-element-link>
-
+        <div class="panel-body">
+            <div *ngIf="totalItems > 0">
+                <div class="loading-spinner" *ngIf="loading">
+                    <div>
+                        <i class="fas fa-sync-alt fa-spin"></i>
+                    </div>
+                </div>
+                <div *ngIf="!loading">
+                    <div *ngFor="let relationshipType of relationshipTypes" class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2" style="font-weight: bold;">
+                            {{relationshipType}}
                         </div>
-                    </ng-template>
+                        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10"
+                            style="border-left: 1px solid #DDDDDD;padding:5px;">
+                            <mdm-paged-list [name]="relationshipType" [mcTitle]="relationshipType" [type]="'static'"
+                                [items]="relations[relationshipType]" [pageSize]="10">
 
-                </mdm-paged-list>
-
+                                <ng-template #pageListTemplate let-item>
+                                    <div class="pagedElement">
+                                        <mdm-element-link [element]="item.targetTerm" [showParentDataModelName]="true"
+                                            [showLink]="true" [showTypeTitle]="true" [newWindow]="false">
+                                        </mdm-element-link>
+                                    </div>
+                                </ng-template>
+                            </mdm-paged-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!loading && !totalItems">
+                <p>This Term does not have any relationships</p>
             </div>
         </div>
-        </div>
-
     </div>
 </div>

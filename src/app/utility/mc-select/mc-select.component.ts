@@ -12,7 +12,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  ChangeDetectorRef, HostListener
+  ChangeDetectorRef, HostListener, OnChanges
 } from '@angular/core';
 import {ValidatorService} from '@mdm/services/validator.service';
 import {DOCUMENT} from '@angular/common';
@@ -25,14 +25,14 @@ import {Observable} from 'rxjs';
   styleUrls: ['./mc-select.component.sass'],
   host: {'(click)': 'onClick($event)'} // TODO - check if this is needed
 })
-export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
+export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
 
   selectedValue: any[];
   wasInside = false;
 
   inputText: any;
-  defaultVal: any[];
+  defaultVal: any;
   paginationVal: McSelectPagination;
 
   @Input() get pagination() {
@@ -49,10 +49,21 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   set defaultValue(val) {
-    this.defaultVal = val;
-    this.setDefaultValue();
-    this.defaultValueChanged.emit(val);
+    //if(this.displayProperty) {
+      this.defaultVal = val;
+      //this.setDefaultValue();
+      //this.defaultValueChanged.emit(val);
+    //}
   }
+
+  ngOnChanges() {
+    if(this.displayProperty && this.defaultVal) {
+      this.setDefaultValue();
+      this.defaultValueChanged.emit(this.defaultVal);
+
+    }
+  }
+
 
   @Output() paginationChanged = new EventEmitter<any>();
   @Output() defaultValueChanged = new EventEmitter<any>();
@@ -138,7 +149,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   setDefaultValue() {
-
     if (this.defaultValue) {
 
       if (this.multiSelect === true) {

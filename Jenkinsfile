@@ -6,9 +6,9 @@ pipeline {
     skipStagesAfterUnstable()
     buildDiscarder(logRotator(numToKeepStr: '30'))
   }
-
-  nvm('v12.16.1')
-
+  node {
+    nvm('v12.16.1')
+  }
   stages {
 
     stage('NVM version check') {
@@ -24,8 +24,8 @@ pipeline {
       }
     }
 
-    stage('Install'){
-      steps{
+    stage('Install') {
+      steps {
         sh 'npm install -g npm-check'
         sh 'npm install -g @angular/cli'
         sh 'npm install'

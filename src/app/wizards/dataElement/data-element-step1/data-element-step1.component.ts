@@ -5,9 +5,10 @@ import {Component, DoCheck, OnInit} from '@angular/core';
   templateUrl: './data-element-step1.component.html',
   styleUrls: ['./data-element-step1.component.sass']
 })
-export class DataElementStep1Component implements OnInit, DoCheck {
+export class DataElementStep1Component implements OnInit {
   step: any;
   modelVal: any;
+
   get model() {
     return this.modelVal;
   }
@@ -17,20 +18,16 @@ export class DataElementStep1Component implements OnInit, DoCheck {
     this.validate();
   }
 
-  constructor() {}
-
-  ngDoCheck() {
-    this.validate();
+  constructor() {
   }
 
   validate = () => {
-
-if (!this.model.createType) {
+    if (!this.model.createType) {
       this.step.invalid = true;
       return;
     }
 
-if (
+    if (
       this.model.createType === 'copy' &&
       this.model.copyFromDataClass.length === 0
     ) {
@@ -38,17 +35,22 @@ if (
       return;
     }
 
-this.step.invalid = false;
+    this.step.invalid = false;
   };
 
   ngOnInit() {
     this.model = this.step.scope.model;
   }
+
   onSelect = dataClass => {
+    // TODO: Work out why [(ngModel)] is not working here!
+    this.model.copyFromDataClass = dataClass;
     this.model.selectedDataElements = [];
+    this.validate();
   };
 
   selectCreateType = createType => {
     this.model.createType = createType;
+    this.validate()
   }
 }

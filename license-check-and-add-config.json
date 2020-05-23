@@ -1,0 +1,28 @@
+{
+  "ignore": [
+    "*.csv",
+    "*.yml",
+    ".git",
+    "coverage",
+    ".idea",
+    "test-report.xml",
+    "browserslist",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    ".nvmrc",
+    "NOTICE",
+    "Jenkinsfile",
+    "*.md"],
+  "license": "NOTICE",
+
+  "licenseFormats": {
+    "sass": {
+      "prepend": "// ",
+      "eachLine": {
+        "prepend": "  "
+      }
+    }
+  },
+  "trailingWhitespace": "TRIM"
+}

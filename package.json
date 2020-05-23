@@ -71,6 +71,7 @@
     "jasmine-spec-reporter": "~4.2.1",
     "jest": "^25.5.4",
     "jest-preset-angular": "^8.2.0",
+    "license-check-and-add": "^3.0.4",
     "protractor": "^5.4.4",
     "save-svg-as-png": "^1.4.17",
     "ts-node": "^8.10.1",

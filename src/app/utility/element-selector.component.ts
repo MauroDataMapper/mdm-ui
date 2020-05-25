@@ -130,7 +130,7 @@ export class ElementSelectorComponent implements OnInit {
       } else {
 
         this.showPrevBtn = true;
-        //console.log(this.showOptions)
+        // console.log(this.showOptions)
       }
     }
 

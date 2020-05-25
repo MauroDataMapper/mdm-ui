@@ -32,13 +32,6 @@ pipeline {
       }
     }
 
-    stage('Lint') {
-      steps {
-        nvm('') {
-          sh 'ng lint'
-        }
-      }
-    }
 
     stage('Test') {
       steps {
@@ -49,6 +42,14 @@ pipeline {
       post {
         always {
           junit allowEmptyResults: true, testResults: 'test-report.xml'
+        }
+      }
+    }
+
+    stage('Lint') {
+      steps {
+        nvm('') {
+          sh 'ng lint --format=checkstyle > checkstyle-result.xml'
         }
       }
     }
@@ -71,6 +72,8 @@ pipeline {
 
   post {
     always {
+      recordIssues tool: tsLint(pattern: 'checkstyle-result.xml'),
+                     enableForFailure: true
       slackNotification()
     }
   }

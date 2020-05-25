@@ -18,9 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import {Injectable} from '@angular/core';
 import {ElementTypesService} from '@mdm/services/element-types.service';
 import marked from 'marked/lib/marked';
-import {CustomTokenizerService} from "@mdm/utility/markdown/markdown-parser/custom-tokenizer.service";
-import {CustomHtmlRendererService} from "@mdm/utility/markdown/markdown-parser/custom-html-renderer.service";
-import {CustomTextRendererService} from "@mdm/utility/markdown/markdown-parser/custom-text-renderer.service";
+import {CustomTokenizerService} from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
+import {CustomHtmlRendererService} from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
+import {CustomTextRendererService} from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
 
 @Injectable({
   providedIn: 'root'

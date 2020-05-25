@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright 2020 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-﻿export class ConfigurationPropertiesResult {
+
+export class ConfigurationPropertiesResult {
   emailAdminConfirmRegistrationSubject: string;
   emailForgottenPasswordSubject: string;
   emailPasswordResetSubject: string;

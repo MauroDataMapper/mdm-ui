@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Injectable} from '@angular/core';
 import marked from 'marked/lib/marked';
-import {LinkCreatorService} from "@mdm/utility/markdown/markdown-parser/link-creator.service";
-import {Renderer} from "marked";
+import {LinkCreatorService} from '@mdm/utility/markdown/markdown-parser/link-creator.service';
+import {Renderer} from 'marked';
 
 @Injectable({
   providedIn: 'root'

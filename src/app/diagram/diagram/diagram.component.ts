@@ -133,7 +133,7 @@ export class DiagramComponent implements OnInit {
       }*/
     });
 
-    this.paper.setInteractivity({ stopDelegation: false })
+    this.paper.setInteractivity({ stopDelegation: false });
 
     const svg: any = this.jointjsDiv.nativeElement.querySelector('svg');
     const options: any = {

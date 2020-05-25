@@ -24,7 +24,7 @@ import { stringify } from 'querystring';
 import { ValidatorService } from './validator.service';
 
 describe('ResourcesService', () => {
-    let spyClient: HttpClient;
+    const spyClient: HttpClient;
     let errorCode = 200;
     const testURL = 'https://expected.com/api';
 

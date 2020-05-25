@@ -33,7 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class HomeComponent implements OnInit {
   profilePictureReloadIndex = 0;
   profile: any;
-  isLoggedIn: boolean = false;
+  isLoggedIn = false;
 
   constructor(
     public dialog: MatDialog,

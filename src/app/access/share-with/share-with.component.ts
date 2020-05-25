@@ -76,7 +76,7 @@ export class ShareWithComponent implements OnInit {
         this.endPoint.put(this.folderResult.id, 'readByEveryone', null).subscribe(result => {
             this.folderResult = result.body;
             this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of Object.keys(permissions.body)) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });
@@ -87,7 +87,7 @@ export class ShareWithComponent implements OnInit {
         this.endPoint.delete(this.folderResult.id, 'readByEveryone', null, null).subscribe(result => {
             this.folderResult = result.body;
             this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of Object.keys(permissions.body)) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });
@@ -112,7 +112,7 @@ export class ShareWithComponent implements OnInit {
         this.endPoint.put(this.folderResult.id, 'readByAuthenticated', null).subscribe(serverResult => {
             this.folderResult = serverResult.body;
             this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of Object.keys(permissions.body)) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });
@@ -123,7 +123,7 @@ export class ShareWithComponent implements OnInit {
         this.endPoint.delete(this.folderResult.id, 'readByAuthenticated').subscribe(serverResult => {
             this.folderResult = serverResult.body;
             this.endPoint.get(this.folderResult.id, 'permissions', null).subscribe(permissions => {
-                for (const attrname in permissions.body) {
+                for (const attrname of Object.keys(permissions.body)) {
                   this.folderResult[attrname] = permissions.body[attrname];
                 }
               });

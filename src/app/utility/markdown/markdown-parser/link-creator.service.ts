@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import {ElementTypesService} from "@mdm/services/element-types.service";
+import {ElementTypesService} from '@mdm/services/element-types.service';
 
 @Injectable({
   providedIn: 'root'

@@ -68,6 +68,6 @@ export class DataElementStep1Component implements OnInit {
 
   selectCreateType = createType => {
     this.model.createType = createType;
-    this.validate()
+    this.validate();
   }
 }

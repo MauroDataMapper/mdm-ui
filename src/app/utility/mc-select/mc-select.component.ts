@@ -52,36 +52,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   defaultVal: any;
   paginationVal: McSelectPagination;
 
-  @Input() get pagination() {
-    return this.paginationVal;
-  }
-
-  set pagination(val) {
-    this.paginationVal = val;
-    this.paginationChanged.emit(val);
-  }
-
-  @Input() get defaultValue() {
-    return this.defaultVal;
-  }
-
-  set defaultValue(val) {
-    //if(this.displayProperty) {
-      this.defaultVal = val;
-      //this.setDefaultValue();
-      //this.defaultValueChanged.emit(val);
-    //}
-  }
-
-  ngOnChanges() {
-    if(this.displayProperty && this.defaultVal) {
-      this.setDefaultValue();
-      this.defaultValueChanged.emit(this.defaultVal);
-
-    }
-  }
-
-
   @Output() paginationChanged = new EventEmitter<any>();
   @Output() defaultValueChanged = new EventEmitter<any>();
 
@@ -93,21 +63,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
 
   inputStyle: any;
   holderStyle: any;
-
-  @Output() selectEvent = new EventEmitter<any>();
-  recordVal: any;
-  @Output() recordChanged = new EventEmitter<any>();
-
-  @Input()
-  get record() {
-    return this.recordVal;
-  }
-
-  set record(val) {
-    this.recordVal = val;
-    this.recordChanged.emit(val);
-  }
-
   @Input() loadAllOnClick: boolean;
   @Input() acceptTypedInput: boolean;
   // @Input() defaultValue: any;
@@ -133,6 +88,54 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   @ViewChild('mcSelectHolder', {static: false}) mcSelectHolder;
 
   @ContentChild('lineContent', {static: true}) lineContentTmpl: TemplateRef<any>;
+
+
+  @Output() selectEvent = new EventEmitter<any>();
+  recordVal: any;
+  @Output() recordChanged = new EventEmitter<any>();
+
+
+  @Input() get pagination() {
+    return this.paginationVal;
+  }
+
+  set pagination(val) {
+    this.paginationVal = val;
+    this.paginationChanged.emit(val);
+  }
+
+  @Input() get defaultValue() {
+    return this.defaultVal;
+  }
+
+  set defaultValue(val) {
+    // if(this.displayProperty) {
+      this.defaultVal = val;
+      // this.setDefaultValue();
+      // this.defaultValueChanged.emit(val);
+    // }
+  }
+
+  ngOnChanges() {
+    if (this.displayProperty && this.defaultVal) {
+      this.setDefaultValue();
+      this.defaultValueChanged.emit(this.defaultVal);
+
+    }
+  }
+
+
+
+  @Input()
+  get record() {
+    return this.recordVal;
+  }
+
+  set record(val) {
+    this.recordVal = val;
+    this.recordChanged.emit(val);
+  }
+
 
   constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: ResourcesService, private elementRef: ElementRef) {
   //  this.setDefaultValue(); ToDo check if it needs here , moved to on Init

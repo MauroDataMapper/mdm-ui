@@ -56,7 +56,7 @@ export class UserSettingsHandlerService {
 
     const promise = new Promise((resolve, reject) => {
     this.resources.catalogueUser
-      .get(sessionStorage.getItem('userId'), 'userPreferences', null)
+      .get(localStorage.getItem('userId'), 'userPreferences', null)
       .subscribe(
         res => {
           const result = res.body;

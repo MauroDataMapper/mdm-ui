@@ -111,15 +111,14 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </div>
         </div>
-        <div class="full-width">
+        <div class="full-width mt-2">
             <div *ngIf="importingInProgress">
                 <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
             </div>
         </div>
         <div>
             <button mat-button color="warn" type="reset" [disabled]="importingInProgress" style="margin-right: 8px;">Reset</button>
-            <button mat-flat-button color="primary" type="submit" class="custom"
-                [disabled]="userForm.invalid || importingInProgress">
+            <button mat-flat-button color="primary" type="submit" class="custom" [disabled]="userForm.invalid || importingInProgress">
                 Import Model(s)
             </button>
         </div>

@@ -101,9 +101,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   ngOnInit() {
     this.advancedSearch = false;
 
-    this.resouces.classifier
-      .get(null, null, { all: true })
-      .subscribe(result => {
+    this.resouces.classifier.get(null, null, { all: true }).subscribe(result => {
         this.classifications = result.body.items;
       });
 
@@ -117,32 +115,27 @@ export class AdvancedSearchBarComponent implements OnInit {
       this.hideEV = this.showDomainTypes.indexOf('EnumerationValue') === -1;
     }
 
-    this.placeHolderText = this.placeholder
-      ? this.placeholder
-      : 'Search for...';
+    this.placeHolderText = this.placeholder ? this.placeholder : 'Search for...';
 
-    fromEvent(this.searchInputControl.nativeElement, 'keyup')
-      .pipe(map((event: any) => {
+    fromEvent(this.searchInputControl.nativeElement, 'keyup').pipe(map((event: any) => {
           return event.target.value;
         }),
         filter((res: any) => res.length >= 0),
         debounceTime(500),
         distinctUntilChanged()
-      )
-      .subscribe((text: string) => {
+      ).subscribe((text: string) => {
         if (text.length === 0) {
           this.formData.showSearchResult = false;
           this.searchResults = [];
           this.isLoading = false;
         } else {
           this.formData.showSearchResult = true;
-          this.fetch(10, 0).subscribe(
-            res => {
+          this.fetch(10, 0).subscribe(res => {
               this.searchResults = res.body.items;
-              this.totalItemCount = res.body.count;
               this.isLoading = false;
-            },
-            () => {
+
+              this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
+            }, () => {
               this.isLoading = false;
             }
           );
@@ -159,16 +152,13 @@ export class AdvancedSearchBarComponent implements OnInit {
   }
 
   getServerData($event) {
-    this.fetch($event.pageSize, $event.pageIndex).subscribe(
-      res => {
+    this.fetch($event.pageSize, $event.pageIndex).subscribe(res => {
         this.searchResults = res.body.items;
         this.totalItemCount = res.body.count;
         this.isLoading = false;
-      },
-      () => {
+      }, () => {
         this.isLoading = false;
-      }
-    );
+      });
   }
 
   fetch(pageSize: number, offset: number): Observable<any> {
@@ -232,13 +222,11 @@ export class AdvancedSearchBarComponent implements OnInit {
         if (resetPageIndex) {
           this.pageIndex = 0;
         }
-        this.fetch(10, this.pageIndex).subscribe(
-          res => {
+        this.fetch(10, this.pageIndex).subscribe(res => {
             this.isLoading = false;
             this.searchResults = res.body.items;
-            this.totalItemCount = res.body.count;
-          },
-          () => {
+            this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
+          }, () => {
             this.isLoading = false;
           }
         );

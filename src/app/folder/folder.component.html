@@ -20,28 +20,26 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <div *ngIf="showSearch">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <span>Search</span>
-            <div style="float:right;">
-                <button mat-button
-                        color="warn"
-                        type="button"
-                        class="paddingless"
-                        (click)="toggleShowSearch()"
-                        matTooltip="Close"
-                        aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+    <div class="mdm--shadow-block">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="heading-container">
+                    <h4 class="marginless">Search</h4>
+                </div>
+                <div style="float:right;">
+                    <button mat-button color="warn" type="button" class="paddingless" (click)="toggleShowSearch()" matTooltip="Close" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="panel-body panel-table">
-            <mdm-advanced-search-bar [parent]="result"
-                                     [showRestrictTo]="false"
-                                     [doNotShowDataModelInModelPath]="false"
-                                     [doNotDisplayModelPathStatus]="false"
-                                     [showDomainTypes]="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
-            </mdm-advanced-search-bar>
+            <div class="panel-body panel-table">
+                <mdm-advanced-search-bar [parent]="result"
+                                         [showRestrictTo]="false"
+                                         [doNotShowDataModelInModelPath]="false"
+                                         [doNotDisplayModelPathStatus]="false"
+                                         [showDomainTypes]="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
+                </mdm-advanced-search-bar>
+            </div>
         </div>
     </div>
 </div>

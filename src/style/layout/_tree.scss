@@ -115,6 +115,11 @@ span.tree-top-actions button, .import-folder-actions button {
     height: 44px;
     color: $defaultThemeColour;
 }
+.date-from-actions .input-group-btn button {
+  padding: 0;
+  min-width: 44px;
+  height: 44px;
+}
 
 div.mat-tab-label {
   min-width: 25px;
@@ -228,13 +233,13 @@ ul.favourites li:focus {
 }
 /*****************************************************************/
 .detail-icons--cta {
-  .favouritesIcon {	
-    color: #aaa;	
-    cursor: pointer;	
-  }	
-  
-  .favouritesIcon.addedToFavourite {	
-    color: #ff9933;	
+  .favouritesIcon {
+    color: #aaa;
+    cursor: pointer;
+  }
+
+  .favouritesIcon.addedToFavourite {
+    color: #ff9933;
   }
 }
 .detail-icons {

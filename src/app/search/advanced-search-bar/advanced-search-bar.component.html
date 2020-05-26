@@ -17,173 +17,183 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="input-group">
   <input #searchInputControl type="text" id="searchInput"
-    class="form-control outlined-input ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput"
-    [ngModelOptions]="{ debounce: 500 }" placeholder="{{placeHolderText}}" aria-invalid="false">
+      class="form-control outlined-input ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput"
+      [ngModelOptions]="{ debounce: 500 }" placeholder="{{placeHolderText}}" aria-invalid="false">
   <span class="tree-top-actions">
-    <button mat-stroked-button class="paddingless" (click)="search(true)" aria-label="Search">
-      <i class="fas fa-search"></i>
-    </button>
-    <button mat-stroked-button class="paddingless" matTooltip="Help" (click)="loadHelp()" aria-label="Help">
-      <i class="fas fa-info-circle helpIcon"></i>
-    </button>
-    <button mat-button color="primary" (click)="toggleAdvancedSearch()">
-      Advanced
-    </button>
+      <button mat-stroked-button class="paddingless" (click)="search(true)" aria-label="Search">
+          <i class="fas fa-search"></i>
+      </button>
+      <button mat-stroked-button class="paddingless" matTooltip="Help" (click)="loadHelp()" aria-label="Help">
+          <i class="fas fa-info-circle helpIcon"></i>
+      </button>
+      <button mat-button color="primary" (click)="toggleAdvancedSearch()" class="ml-1 px-1">
+          Advanced
+      </button>
   </span>
 </div>
-<br>
 <ng-template [ngIf]="advancedSearch">
-  <div style="margin: 0px 1px 5px 1px;border-radius: 4px;">
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="showRestrictTo">
-        <div style="padding: 10px;">
-          <span style="font-weight: bold;">Restrict your search to:</span>
-          <br>
-          <div style="margin-right: 10px; width:60%;">
-            <mdm-model-selector-tree [ngModel]="context" [onSelect]="onContextSelected"
-              [placeholder]="'Choose a Folder, Data Model or Data Class'"
-              [accepts]="['Folder', 'DataModel', 'DataClass']">
-            </mdm-model-selector-tree>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-        <div style="padding: 10px;">
-          <span style="font-weight: bold;">Domain Types</span>
-          <br>
-          <div style="margin-right: 10px;" *ngIf="!hideDM">
-            <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataModel" ng-true-value="true"
-              ng-false-value="false" name="DataModel" (change)="search(true)">Data Model</mat-checkbox>
-          </div>
-          <div style="margin-right: 10px;" *ngIf="!hideDC">
-            <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataClass" name="DataClass" (change)="search(true)">
-              Data Class</mat-checkbox>
-          </div>
-          <div style="margin-right: 10px;" *ngIf="!hideDE">
-            <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataElement" name="DataElement" (change)="search()">
-              Data Element</mat-checkbox>
-          </div>
-          <div style="margin-right: 10px;" *ngIf="!hideDT">
-            <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataType" name="DataType" (change)="search(true)">
-              Data Type</mat-checkbox>
+  <div class="ml-1">
+      <div class="row">
+          <div *ngIf="showRestrictTo" class="full-width">
+              <div style="padding: 10px;">
+                  <h4 class="marginless">Restrict your search to:</h4>
+                  <div style="margin-right: 10px; width:60%;">
+                      <mdm-model-selector-tree [ngModel]="context"
+                                               [onSelect]="onContextSelected"
+                                               ngDefaultControl
+                                               [placeholder]="'Choose a Folder, Data Model or Data Class'"
+                                               [accepts]="['Folder', 'DataModel', 'DataClass']">
+                      </mdm-model-selector-tree>
+                  </div>
+              </div>
           </div>
 
-          <div style="margin-right: 10px;" *ngIf="!hideEV">
-            <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.EnumerationValue" name="DataType"
-              (change)="search(true)">Enumeration Value</mat-checkbox>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-        <div style="padding: 10px;">
-          <span style="font-weight: bold;">Search Type</span>
-          <br>
-          <div style="margin-right: 10px;">
-            <mat-checkbox [(ngModel)]="formData.labelOnly" name="labelOnly" (change)="search(true)">Title only
-            </mat-checkbox> <i class="fas fa-info-circle helpIcon" matTooltipPosition="right"
-            matTooltip="Just search in title of the elements. Not in descriptions, metadata and aliases."></i>
-          </div>
-          <div style="margin-right: 10px;">
-            <mat-checkbox [(ngModel)]="formData.exactMatch" name="matchCase" (change)="search(true)">Exact match
-            </mat-checkbox>
-          </div>
-        </div>
-      </div>
-    </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+              <h5 class="marginless">Domain Types</h5>
+              <div style="margin-right: 10px;" *ngIf="!hideDM">
+                  <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataModel" name="DataModel" (change)="search(true)">
+                      Data Model
+                  </mat-checkbox>
+              </div>
+              <div style="margin-right: 10px;" *ngIf="!hideDC">
+                  <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataClass" name="DataClass" (change)="search(true)">
+                      Data Class
+                  </mat-checkbox>
+              </div>
+              <div style="margin-right: 10px;" *ngIf="!hideDE">
+                  <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataElement" name="DataElement"(change)="search()">
+                      Data Element
+                  </mat-checkbox>
+              </div>
+              <div style="margin-right: 10px;" *ngIf="!hideDT">
+                  <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.DataType" name="DataType" (change)="search(true)">
+                      Data Type
+                  </mat-checkbox>
+              </div>
 
-    <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div style="padding: 0px 10px;">
-          <span style="font-weight: bold;">Last Updated</span>
-          <div>
-            <mdm-date-from-to (selectEvent)="onLastUpdatedSelect($event)"></mdm-date-from-to>
+              <div style="margin-right: 10px;" *ngIf="!hideEV">
+                  <mat-checkbox [(ngModel)]="formData.selectedDomainTypes.EnumerationValue" name="DataType" (change)="search(true)">
+                      Enumeration Value
+                  </mat-checkbox>
+              </div>
           </div>
-        </div>
+          <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+              <h5 class="marginless">Search Type</h5>
+              <div style="margin-right: 10px;">
+                  <mat-checkbox [(ngModel)]="formData.labelOnly" name="labelOnly" (change)="search(true)">
+                      Title only
+                  </mat-checkbox>
+                  <i class="fas fa-info-circle helpIcon" matTooltipPosition="right" matTooltip="Just search in title of the elements. Not in descriptions, metadata and aliases."></i>
+              </div>
+              <div style="margin-right: 10px;">
+                  <mat-checkbox [(ngModel)]="formData.exactMatch" name="matchCase" (change)="search(true)">
+                      Exact match
+                  </mat-checkbox>
+              </div>
+          </div>
       </div>
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div style="padding: 0px 10px;">
-          <span style="font-weight: bold;">Created</span>
-          <mdm-date-from-to (selectEvent)="onCreatedSelect($event)"></mdm-date-from-to>
-        </div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="context && context.domainType === 'Folder'">
-        <div style="padding: 10px;">
-          <span style="font-weight: bold;">Classifiers</span>
-          <br>
-          <span style="font-size: 12px; font-style: italic;">Filter result based on the following classifier(s):</span>
-          <div>
-            <mat-select (selectionChange)="search(true)" multiple placeholder="Classifications" class="form-control"
-              [(ngModel)]="formData.classifiers">
-              <mat-option *ngFor="let classification of classifications" [value]="classification">
-                {{classification.label}}</mat-option>
-            </mat-select>
+      <div class="row mt-2">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
+              <h5 class="marginless">Last Updated</h5>
+              <div>
+                  <mdm-date-from-to (selectEvent)="onLastUpdatedSelect($event)"></mdm-date-from-to>
+              </div>
           </div>
-        </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <h5 class="marginless">Created</h5>
+              <mdm-date-from-to (selectEvent)="onCreatedSelect($event)"></mdm-date-from-to>
+          </div>
       </div>
-    </div>
+
+      <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="context && context.domainType === 'Folder'">
+              <div style="padding: 10px;">
+                  <h4>Classifiers</h4>
+                  <span style="font-size: 12px; font-style: italic;">Filter result based on the following classifier(s):</span>
+                  <div>
+                      <mat-select (selectionChange)="search(true)" multiple placeholder="Classifications" class="form-control" [(ngModel)]="formData.classifiers">
+                          <mat-option *ngFor="let classification of classifications" [value]="classification">
+                              {{classification.label}}</mat-option>
+                      </mat-select>
+                  </div>
+              </div>
+          </div>
+      </div>
 
   </div>
 </ng-template>
-<div class="row">
-  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    <div>
-      <div class="mb-2" *ngIf="formData.showSearchResult === true">
-        <span class="title">Search result(s) <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> </span>
-      </div>
-      <div>
-        <div>
-          <table mat-table [dataSource]="searchResults" class="table table-bordered">
-            <ng-container matColumnDef="label">
-              <th mat-header-cell *matHeaderCellDef> </th>
-              <td mat-cell *matCellDef="let record"
-                style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding: 12px 24px;">
-                <div style="padding: 2px 0px">
-                  <div>
-                    <div>
-                      <mdm-element-link [showTypeTitle]="true" [newWindow]="!doNotOpenLinkInNewWindow"
-                        [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClass}"
-                        [element]="record"></mdm-element-link>
-                    </div>
-                    <div *ngIf="record.aliases">
-                      <ul class="aliasSearchResult">
-                        <li style="font-size: 12px;display: inline-block;font-style: italic;">Aliases:</li>
-                        <li ng-repeat="alias in record.aliases" class="aliasSearchResult">
-                          <span ng-bind-html="alias"></span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <mdm-model-path [path]="record.breadcrumbs" [newWindow]="!doNotOpenLinkInNewWindow"
-                      [doNotDisplayStatus]="doNotDisplayModelPathStatus"></mdm-model-path>
-
-                  </div>
-                  <mdm-markdown-text-area rows="'4'" [description]="record.description" [inEditMode]="false"
-                    [hideHelpText]="true"></mdm-markdown-text-area>
-                </div>
-
-              </td>
-            </ng-container>
-
-
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-          </table>
-
-          <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
-            <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-          </mat-card>
-
-          <div class="mdm--mat-pagination">
-            <mat-paginator *ngIf="formData.showSearchResult" [pageSizeOptions]="[5, 10, 20, 50]"
-              [length]="totalItemCount" [pageSize]="10" (page)="getServerData($event)" showFirstLastButtons>
-            </mat-paginator>
+<div class="mt-3">
+      <div *ngIf="totalItemCount > 0">
+          <div *ngIf="formData.showSearchResult === true">
+            <div class="heading-container">
+              <h4 class="marginless">Search result(s) <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> </h4>
+            </div>
           </div>
+          <div>
+              <div class="table-responsive">
+                  <table mat-table [dataSource]="searchResults" class="mdm--mat-table table-striped">
+                      <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef> </th>
+                          <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding: 12px 24px;">
+                              <div style="padding: 2px 0px">
+                                  <div>
+                                      <div class="mb-2">
+                                          <mdm-element-link [showTypeTitle]="true"
+                                              [newWindow]="!doNotOpenLinkInNewWindow"
+                                              [parentDataModel]="{id:record.dataModel}"
+                                              [parentDataClass]="{id:record.dataClass}" [element]="record">
+                                          </mdm-element-link>
+                                      </div>
+                                      <div *ngIf="record.aliases" class="mb-1">
+                                          Aliases: <span class="ml-1">{{record.aliases}}</span>
+                                      </div>
+
+                                      <mdm-model-path [path]="record.breadcrumbs"
+                                                      [newWindow]="!doNotOpenLinkInNewWindow"
+                                                      [doNotDisplayStatus]="doNotDisplayModelPathStatus"></mdm-model-path>
+
+                                  </div>
+                                  <mdm-markdown-text-area rows="'4'" [description]="record.description"
+                                      [inEditMode]="false" [hideHelpText]="true"></mdm-markdown-text-area>
+                              </div>
+
+                          </td>
+                      </ng-container>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+
+                  <mat-card *ngIf="isLoading" style="display: flex; justify-content: center; align-items: center">
+                      <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+                  </mat-card>
+
+                  <div class="mdm--mat-pagination">
+                      <mat-paginator *ngIf="formData.showSearchResult"
+                                      [pageSizeOptions]="[5, 10, 20, 50]"
+                                      [length]="totalItemCount"
+                                      [pageSize]="10"
+                                      (page)="getServerData($event)"
+                                      showFirstLastButtons>
+                      </mat-paginator>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <div *ngIf="totalItemCount == -1" class="full-width">
+      <div class="heading-container">
+        <h4 class="marginless">Search result(s) <span class="mdm--badge mdm--element-count">0</span> </h4>
+      </div>
+      <div class="">
+        <div class="pxy-2 bordered">
+          <h4>We are sorry, but we couldn't find any results for <em>'{{searchInput}}'</em></h4>
+
+          <p class="marginless">Here are some tips that may help with your query: </p>
+          <ul>
+            <li>Check for typos and misspellings</li>
+            <li>Try more general terms</li>
+            <li>Try different keywords</li>
+          </ul>
         </div>
       </div>
     </div>
-  </div>
 </div>

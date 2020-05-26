@@ -96,4 +96,7 @@ export class RegisterModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcastService.broadcast('openLoginModalDialog');
   }
+  close = () => {
+    this.dialogRef.close();
+  }
 }

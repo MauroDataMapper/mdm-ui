@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <form class="mdm--form mdm--form-modal" role='form' (keyup)="$event.keyCode != 13;">
+  <button mat-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
     <h3 class='modal-title text-center'>Request an account</h3>
     <p class="mb-2 text-center">Please request an account in order to continue using our Catalogue</p>
     <div *ngIf="message" class="alert alert-danger">
@@ -58,8 +59,8 @@ SPDX-License-Identifier: Apache-2.0
             <input matInput id="roleInOrganisation" name="roleInOrganisation" [(ngModel)]="roleInOrganisation">
         </mat-form-field>
     </div>
-    <div class="mdm--form-input">
-        <mat-form-field class="paddingless" appearance="outline">
+    <div class="mdm--form-input mb-1">
+        <mat-form-field class="paddingless mb-1" appearance="outline">
             <mat-label>Password</mat-label>
             <mat-pass-toggle-visibility #togglePassword matSuffix></mat-pass-toggle-visibility>
             <input required matInput [type]="togglePassword.type" id="password" name="password" [(ngModel)]="password">

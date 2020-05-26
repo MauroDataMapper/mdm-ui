@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
             </ng-container>
             <ng-container matColumnDef="dateTimeSent">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="dateTimeSent" [disabled]="!hideFilters" style="cursor: pointer;" columnName="dateTimeSent">
-                    <span [hidden]="!hideFilters">Date/Time</span>
+                    <span>Date/Time</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
                     <span> {{record.dateTimeSent | date: 'dd/MM/yyyy h:mm a'}}</span>
@@ -54,20 +54,28 @@ SPDX-License-Identifier: Apache-2.0
             </ng-container>
             <ng-container matColumnDef="subject">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="subject" [disabled]="!hideFilters" style="cursor: pointer;" columnName="subject">
-                    <span [hidden]="!hideFilters">Subject/Body</span>
+                    <span [hidden]="!hideFilters">Subject</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Subject/Body</mat-label>
-                            <input #filters matInput name="body" (keyup)="applyFilter()">
+                            <mat-label>Subject</mat-label>
+                            <input #filters matInput name="subject" (keyup)="applyFilter()">
                         </mat-form-field>
                     </div>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
                     <span><strong>{{record.subject}}</strong></span>
-                    <br>
-                    <mdm-more-description [description]="record.body" [length]="200"></mdm-more-description>
+
                 </td>
             </ng-container>
+          <ng-container matColumnDef="body">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="body" [disabled]="!hideFilters" style="cursor: pointer;" columnName="body">
+              <span>Body</span>
+
+            </th>
+            <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+              <mdm-more-description [description]="record.body" [length]="200"></mdm-more-description>
+            </td>
+          </ng-container>
             <ng-container matColumnDef="successfullySent">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="successfullySent" [disabled]="!hideFilters" style="cursor: pointer; text-align: left;" columnName="successfullySent">
                     <span [hidden]="!hideFilters">Status</span>

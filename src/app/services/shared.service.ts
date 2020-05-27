@@ -58,7 +58,10 @@ export class SharedService {
     this.securityHandler.logout();
   };
 
-  isLoggedIn = () => {
+  isLoggedIn = (checkServerSession?) => {
+    if (checkServerSession !== undefined) {
+      this.handleExpiredSession();
+    }
     return this.securityHandler.isLoggedIn();
   };
 

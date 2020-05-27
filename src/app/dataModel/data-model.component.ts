@@ -91,7 +91,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
         this.dataModel = result.body;
 
         this.parentId = this.dataModel.id;
-        if (this.sharedService.isLoggedIn()) {
+        if (this.sharedService.isLoggedIn(true)) {
           this.DataModelPermissions(id);
         } else {
           this.messageService.FolderSendMessage(this.dataModel);

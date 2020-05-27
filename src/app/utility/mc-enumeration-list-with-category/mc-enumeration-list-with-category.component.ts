@@ -24,7 +24,7 @@ import {ValidatorService} from '@mdm/services/validator.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -40,18 +40,11 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   @Output() afterSave = new EventEmitter<any>();
 
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   @ViewChild(MatTable, {static: false}) table: MatTable<any>;
 
   dataSource: any;
-
-  // Old code
-  // parent: "=", //the parent dataType
-  // clientSide: "@", //if true, it should NOT pass values to the serve in save/update/delete/reOrder
-  // enumerationValues: "=",
-  // onUpdate: "="
-
   enumsCount: number;
   total: number;
   displayItems: any[];
@@ -127,29 +120,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
     this.updateOrder(event.item.data.id, newPostion, newCategory);
 
-    // this.displayItems.forEach(x => {
-    // 	if(x.isCategoryRow){
-    // 		newCat = x.category;
-    // 		currentIndex++
-    // 		return;
-    // 	}
-
-    // 	if(this.displayItems.indexOf(x) == event.currentIndex){
-    // 		if(event.previousIndex > event.currentIndex)
-    // 		{
-    // 			currentIndex++;
-    // 		}
-    // 		this.updateOrder(event.item.data.id,currentIndex,newCat)
-    // 	}
-
-    // 	if(x.index){
-    // 		currentIndex = x.index;
-    // 	}
-    // })
-
     this.table.renderRows();
 
-    // this.stopMoving(event, )
   }
 
   updateOrder = (enumId, newPosition, newCategory) => {
@@ -448,19 +420,19 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     } else {
       this.resourcesService.enumerationValues
         .delete(this.parent.dataModel, this.parent.id, record.id)
-        .then(function() {
+        .subscribe(() => {
           this.messageHandler.showSuccess('Enumeration deleted successfully.');
           // reload all enums
-          this.reloadRecordsFromServer().then(function(data) {
-            this.showRecords(data);
+          this.reloadRecordsFromServer().subscribe((data) => {
+            this.showRecords(data.body.enumerationValues);
           });
-        })
-        .catch(function(error) {
-          this.messageHandler.showError(
-            'There was a problem deleting the enumeration.',
-            error
-          );
-        });
+        }, error => {
+              this.messageHandler.showError(
+                'There was a problem deleting the enumeration.',
+                error
+              );
+            });
+
     }
   }
 
@@ -486,7 +458,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     if (!this.validate(record)) {
       return;
     }
-
+    record.edit.errors = [];
     const resource = {
       key: record.edit.key,
       value: record.edit.value,
@@ -547,13 +519,12 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
           record.category = resource.category;
           record.inEdit = false;
 
-          this.reloadRecordsFromServer().then(function(data) {
-            this.showRecords(data);
+          this.reloadRecordsFromServer().subscribe((data) => {
+            this.showRecords(data.body.enumerationValues);
           });
 
           this.messageHandler.showSuccess('Enumeration updated successfully.');
-        })
-        .catch(function(error) {
+        }, error => {
           this.messageHandler.showError(
             'There was a problem updating the enumeration.',
             error
@@ -614,7 +585,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   pageSizeClicked(paginator) {
     this.pageSize = paginator.pageSize;
-    this.currentPage = paginator.pageOffset();
+    this.currentPage = paginator.pageIndex;
     this.showRecords(this.allRecords);
   }
 }

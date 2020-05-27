@@ -25,13 +25,20 @@ SPDX-License-Identifier: Apache-2.0
 				There are <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span> users in this repository waiting for your approval.
 			</ng-template>
 		</h4>
+    <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
 	</div>
 
-	<div *ngIf="totalItemCount > 0">
-		<table mat-table [dataSource]="dataSource" matSort class="table mdm--table mdm--table-responsive table-striped">
+	<div class="table-responsive">
+		<table mat-table [dataSource]="records" matSort class="table mdm--table mdm--table-responsive table-striped">
 			<ng-container matColumnDef="firstName">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="firstName">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer;" columnName="firstName">
 					<span [hidden]="!hideFilters">First Name</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>First Name</mat-label>
+              <input #filters matInput name="firstName" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 					<div class="mdm--td-cell">First name</div>
@@ -39,12 +46,12 @@ SPDX-License-Identifier: Apache-2.0
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="lastName">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="lastName">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" [disabled]="!hideFilters" style="cursor: pointer;" columnName="lastName">
 					<span [hidden]="!hideFilters">Last Name</span>
 					<div [hidden]="hideFilters">
 						<mat-form-field class="filter" floatLabel="never">
 							<mat-label>Last Name</mat-label>
-							<input #filters matInput name="body" (keyup)="applyFilter()" />
+							<input #filters matInput name="lastName" (keyup)="applyFilter()" />
 						</mat-form-field>
 					</div>
 				</th>
@@ -54,7 +61,7 @@ SPDX-License-Identifier: Apache-2.0
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="emailAddress">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="emailAddress">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer;" columnName="emailAddress">
 					<span [hidden]="!hideFilters">Email</span>
 					<div [hidden]="hideFilters">
 						<mat-form-field class="filter" floatLabel="never">
@@ -69,8 +76,14 @@ SPDX-License-Identifier: Apache-2.0
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="organisation">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="organisation">
+				<th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer;" columnName="organisation">
 					<span [hidden]="!hideFilters">Organisation</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Organisation</mat-label>
+              <input #filters matInput name="organisation" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
 				</th>
 				<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 					<div class="mdm--td-cell">Organisation</div>
@@ -100,8 +113,8 @@ SPDX-License-Identifier: Apache-2.0
 			<tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
 		</table>
 
-		<div class="mdm--mat-pagination" *ngIf="totalItemCount > 5">
-			<mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+		<div class="mdm--mat-pagination" >
+			<mdm-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 		</div>
 	</div>
 	<div *ngIf="!totalItemCount" class="pxy-2 bordered">

@@ -6,6 +6,7 @@
       "@mdm/*": ["./app/*"],
       "@env/*": ["./environments/*"]
     },
+    "emitDecoratorMetadata" : true,
     "outDir": "./dist/",
     "sourceMap": true,
     "declaration": false,

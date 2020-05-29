@@ -16,9 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {Injectable} from '@angular/core';
-import marked from 'marked/lib/marked';
+// import marked from 'marked/lib/marked';
 import {LinkCreatorService} from '@mdm/utility/markdown/markdown-parser/link-creator.service';
-import {Renderer} from 'marked';
+import * as marked from 'marked';
 
 @Injectable({
   providedIn: 'root'

@@ -23,7 +23,7 @@ import {SecurityHandlerService} from './handlers/security-handler.service';
 import { mergeMap } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class YoutrackService {
 

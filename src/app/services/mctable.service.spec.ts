@@ -15,15 +15,23 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// import { TestBed } from '@angular/core/testing';
-//
-// import { MctableService } from './mctable.service';
-//
-// describe('MctableService', () => {
-//   beforeEach(() => TestBed.configureTestingModule({}));
-//
-//   it('should be created', () => {
-//     const service: MctableService = TestBed.get(MctableService);
-//     expect(service).toBeTruthy();
-//   });
-// });
+import { TestBed } from '@angular/core/testing';
+
+import { MctableService } from './mctable.service';
+import { HttpClientModule } from '@angular/common/http';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+
+describe('MctableService', () => {
+  beforeEach(() => TestBed.configureTestingModule({
+    imports: [HttpClientModule,
+      UIRouterModule.forRoot({ useHash: true }),
+      ToastrModule.forRoot()],
+    providers: [ElementTypesService]}));
+
+  it('should be created', () => {
+    const service: MctableService = TestBed.get(MctableService);
+    expect(service).toBeTruthy();
+  });
+});

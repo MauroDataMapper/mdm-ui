@@ -15,11 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// import { MarkdownDirective } from './markdown.directive';
 
-// describe('MarkdownDirective', () => {
-//  it('should create an instance', () => {
-//    const directive = new MarkdownDirective();
-//    expect(directive).toBeTruthy();
-//  });
-// });
+import {MarkdownDirective} from '@mdm/directives/markdown.directive';
+
+xdescribe('MarkdownDirective', () => {
+  it('should create an instance', () => {
+    // const directive = new MarkdownDirective();
+    // expect(directive).toBeTruthy();
+    expect(true);
+  });
+ });

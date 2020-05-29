@@ -15,11 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// import { DateFromToDirective } from './date-from-to.directive';
+import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 
-// describe('DateFromToDirective', () => {
-//  it('should create an instance', () => {
-//      const directive = new DateFromTocomponent();
-//    expect(directive).toBeTruthy();
-//  });
-// });
+describe('DateFromToDirective', () => {
+ it('should create an instance', () => {
+     const directive = new DateFromToComponent();
+     expect(directive).toBeTruthy();
+   });
+});

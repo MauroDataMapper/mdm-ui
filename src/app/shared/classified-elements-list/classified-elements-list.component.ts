@@ -33,7 +33,7 @@ import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-classified-elements-list',

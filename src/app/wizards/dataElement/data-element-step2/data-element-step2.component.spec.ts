@@ -18,13 +18,18 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataElementStep2Component } from './data-element-step2.component';
+import { HttpClientModule } from '@angular/common/http';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('DataElementStep2Component', () => {
   let component: DataElementStep2Component;
   let fixture: ComponentFixture<DataElementStep2Component>;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
+    TestBed.configureTestingModule({ imports: [HttpClientModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()],
       declarations: [ DataElementStep2Component ]
     })
     .compileComponents();

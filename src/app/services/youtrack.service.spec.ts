@@ -15,15 +15,32 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import { YoutrackService } from './youtrack.service';
+import { HttpClientModule } from '@angular/common/http';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {SharedService} from '@mdm/services/shared.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('YoutrackService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: YoutrackService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule,
+                UIRouterModule.forRoot({ useHash: true }),
+                ToastrModule.forRoot()],
+      providers: [ElementTypesService]});
+    service = TestBed.inject(YoutrackService);
+  });
+
 
   it('should be created', () => {
-    const service: YoutrackService = TestBed.inject(YoutrackService);
     expect(service).toBeTruthy();
   });
+
 });

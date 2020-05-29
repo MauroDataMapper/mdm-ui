@@ -15,28 +15,36 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-//
-// import { HistoryComponent } from './history.component';
-//
-// describe('HistoryComponent', () => {
-//   let component: HistoryComponent;
-//   let fixture: ComponentFixture<HistoryComponent>;
-//
-//   beforeEach(async(() => {
-//     TestBed.configureTestingModule({
-//       declarations: [ HistoryComponent ]
-//     })
-//     .compileComponents();
-//   }));
-//
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(HistoryComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-//
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { HistoryComponent } from './history.component';
+import { HttpClientModule } from '@angular/common/http';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+
+describe('HistoryComponent', () => {
+  let component: HistoryComponent;
+  let fixture: ComponentFixture<HistoryComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()],
+      providers: [ElementTypesService]
+    })
+      .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(HistoryComponent);
+    component = fixture.componentInstance;
+    component.parent = { id: '12345'};
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

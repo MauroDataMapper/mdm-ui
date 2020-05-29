@@ -41,7 +41,7 @@ pipeline {
       }
       post {
         always {
-          junit allowEmptyResults: true, testResults: 'test-report.xml'
+          junit allowEmptyResults: true, testResults: '/test-report.xml'
         }
       }
     }
@@ -50,6 +50,12 @@ pipeline {
       steps {
         nvm('') {
           sh 'ng lint --format=checkstyle > checkstyle-result.xml'
+        }
+        post {
+          always {
+            recordIssues tool: tsLint(pattern: 'checkstyle-result.xml'),
+                           enabledForFailure: true
+          }
         }
       }
     }
@@ -72,8 +78,6 @@ pipeline {
 
   post {
     always {
-      recordIssues tool: tsLint(pattern: 'checkstyle-result.xml'),
-                     enabledForFailure: true
       slackNotification()
     }
   }

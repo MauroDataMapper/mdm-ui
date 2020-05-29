@@ -18,9 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { StateHandlerService } from './handlers/state-handler.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class ElementTypesService {
 
     constructor(private stateHandler: StateHandlerService) { }

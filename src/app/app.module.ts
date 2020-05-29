@@ -37,6 +37,7 @@ import { UserSettingsHandlerService } from './services/utility/user-settings-han
 import { AppRoutingModule } from './app-routing.module';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ModalModule } from './modals/modal.module';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ModalModule } from './modals/modal.module';
     SharedModule,
     AppRoutingModule,
     ModalModule,
-    UIRouterModule.forRoot({ useHash: true })
+    UIRouterModule.forRoot({ useHash: true }),
+    HttpClientModule
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },

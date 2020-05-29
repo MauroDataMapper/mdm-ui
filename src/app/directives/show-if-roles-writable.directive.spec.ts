@@ -15,11 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// import { ShowIfRolesWritableDirective } from './show-if-roles-writable.directive';
-//
-// describe('ShowIfRolesWritableDirective', () => {
-//   it('should create an instance', () => {
-//     const directive = new ShowIfRolesWritableDirective();
-//     expect(directive).toBeTruthy();
-//   });
-// });
+
+import { ShowIfRolesWritableDirective } from './show-if-roles-writable.directive';
+
+describe('ShowIfRolesWritableDirective', () => {
+  it('should create an instance', () => {
+    const directive = new ShowIfRolesWritableDirective();
+    expect(directive).toBeTruthy();
+  });
+});

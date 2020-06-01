@@ -119,7 +119,7 @@ header#mdm--header {
   }
 }
 #mdm--navbar-desktop {
-  .mdm--navbar-user { 
+  .mdm--navbar-user {
     @include respond-to($tablet) {
       display: none !important;
     }
@@ -132,17 +132,13 @@ header#mdm--header {
   }
 }
 
-.mat-menu-content:not(:empty) {
-  padding: 0 !important;
-}
-
 a.mat-menu-item {
   height: auto;
   height: unset;
   line-height: 1;
   padding: 12px 24px;
   outline: none;
-  color: #777777;
+  color: #575757;
   text-decoration: none;
   outline: 0;
   border: none;

@@ -54,3 +54,18 @@ SPDX-License-Identifier: Apache-2.0
     margin-left: 0;
   }
 }
+.mat-menu-content:not(:empty) {
+  padding: 0 !important;
+}
+
+button.mat-menu-item {
+  color: #575757;
+}
+
+button.mat-menu-item i {
+  width: 24px;
+}
+button:focus {
+  outline: none;
+  outline: unset;
+}

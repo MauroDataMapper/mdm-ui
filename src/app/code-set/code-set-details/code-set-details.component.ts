@@ -281,7 +281,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }

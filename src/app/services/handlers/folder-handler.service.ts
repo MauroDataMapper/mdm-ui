@@ -50,12 +50,12 @@ export class FolderHandlerService {
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           return promise;
         }
-        this.delete(id, false).then(result2 => { resolve(result2);
-          })
-          .catch((error) => {
+        this.delete(id, false).then(result2 => {
+            resolve(result2);
+          }).catch((error) => {
             reject(error);
           });
       });
@@ -78,7 +78,7 @@ export class FolderHandlerService {
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject(null); Commented by AS as it was throwing error
           return;
         }
@@ -95,11 +95,9 @@ export class FolderHandlerService {
             reject(null);
             return;
           }
-          this.delete(id, true)
-            .then((result3) => {
+          this.delete(id, true).then((result3) => {
               resolve(result3);
-            })
-            .catch((error) => {
+            }).catch((error) => {
               reject(error);
             });
         });
@@ -115,8 +113,7 @@ export class FolderHandlerService {
         reject({ message: 'You should be an Admin!' });
       } else {
         const queryString = permanent ? 'permanent=true' : null;
-        this.resoucesService.folder.delete(id, null, queryString).subscribe(
-          result => {
+        this.resoucesService.folder.delete(id, null, queryString).subscribe(result => {
             if (permanent) {
               this.broadcastSvc.broadcast('$updateFoldersTree', {
                 type: 'permanentDelete',
@@ -131,10 +128,7 @@ export class FolderHandlerService {
             resolve(result);
           },
           error => {
-            this.messageHandler.showError(
-              'There was a problem deleting the Folder.',
-              error
-            );
+            this.messageHandler.showError('There was a problem deleting the Folder.', error);
             reject(error);
           }
         );

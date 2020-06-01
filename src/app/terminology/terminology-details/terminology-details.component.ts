@@ -240,7 +240,7 @@ export class TerminologyDetailsComponent implements OnInit {
             'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Terminology?'
         }
       }).afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           return;
         }
         this.dialog.open(ConfirmationModalComponent, {
@@ -277,7 +277,7 @@ export class TerminologyDetailsComponent implements OnInit {
             'but you can create new version of it.'
         }
       }).afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           return;
         }
         this.processing = true;

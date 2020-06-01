@@ -301,7 +301,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }
@@ -327,7 +327,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject(null); Commented by AS as it was throwing error
           return;
         }
@@ -441,7 +441,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }

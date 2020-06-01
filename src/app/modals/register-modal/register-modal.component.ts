@@ -86,7 +86,7 @@ export class RegisterModalComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe(result => {
-      if (result.status !== 'ok') {
+      if (result?.status !== 'ok') {
         // reject("cancelled");
       }
     });

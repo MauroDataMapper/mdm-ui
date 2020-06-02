@@ -102,7 +102,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.model = this.step.scope.model;
     this.scope = this.step.scope;
     this.model.selectedDataTypes = [];
-    this.step.invalid = true;
+   // this.step.invalid = true;
 
     this.dataSourceSelectedDataTypes = new MatTableDataSource<any>(
       this.model.selectedDataTypes

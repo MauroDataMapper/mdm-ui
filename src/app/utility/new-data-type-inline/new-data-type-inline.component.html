@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mb-2">
   <div class="table-responsive"></div>
+  <form #myFormNewDataType="ngForm" ngNativeValidate class="full-width" name="newDataType">
 	<table class="table table-bordered mdm--table-fixed">
 		<tbody>
 			<tr class="parent" *ngIf="showParentDataModel">
@@ -38,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
 				<td class="detailsRowHeader">Description</td>
 				<td>
 					<mat-form-field appearance="outline" class="full-width">
-						<textarea matInput name="description" [(ngModel)]="model.description"></textarea>
+						<textarea matInput name="description"  [(ngModel)]="model.description"></textarea>
 					</mat-form-field>
 				</td>
 			</tr>
@@ -54,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
 				<td>
 					<div class="mdm--form-input">
 						<mat-form-field appearance="outline" class="full-width">
-							<mat-select name="dataModelType" [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
+							<mat-select name="dataModelType"  [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
 								<mat-option [value]="dt.id" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
 							</mat-select>
 						</mat-form-field>
@@ -87,6 +88,7 @@ SPDX-License-Identifier: Apache-2.0
 				<td>
 					<div *ngIf="model.domainType === 'TerminologyType' && terminologies">
 						<mdm-select [width]="'100%'"
+                        name="newDataTypeSelect"
 									[acceptTypedInput]="false"
 									[valueType]="'static'"
 									[staticValues]="terminologies"
@@ -102,7 +104,7 @@ SPDX-License-Identifier: Apache-2.0
 						</mdm-select>
 					</div>
 					<div *ngIf="model.domainType === 'ReferenceType'">
-						<mdm-model-selector-tree
+						<mdm-model-selector-tree name="newDataTypeClassSelect"
 										(ngModelChange)="onDataClassSelect($event)"
 						[defaultElements]="model.referencedDataClass"
 												[root]="parentDataModel"
@@ -112,7 +114,7 @@ SPDX-License-Identifier: Apache-2.0
 						</mdm-model-selector-tree>
 					</div>
 					<div *ngIf="model.domainType === 'EnumerationType'" style="margin-top: 5px;">
-						<mdm-mc-enumeration-list-with-category [onUpdate]="onEnumListUpdated"
+						<mdm-mc-enumeration-list-with-category name="newDataTypeEnumType" [onUpdate]="onEnumListUpdated"
 																[clientSide]="true"
 																[enumerationValues]="model.enumerationValues"></mdm-mc-enumeration-list-with-category>
 					</div>
@@ -120,4 +122,5 @@ SPDX-License-Identifier: Apache-2.0
 			</tr>
 		</tbody>
 	</table>
+  </form>
 </div>

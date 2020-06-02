@@ -15,14 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, ChangeDetectorRef, DoCheck} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 
 @Component({
   selector: 'mdm-data-class-step1',
   templateUrl: './data-class-step1.component.html',
   styleUrls: ['./data-class-step1.component.sass']
 })
-export class DataClassStep1Component implements OnInit, DoCheck {
+export class DataClassStep1Component implements OnInit {
   step: any;
 
   modelVal: any;
@@ -39,14 +39,11 @@ export class DataClassStep1Component implements OnInit, DoCheck {
   ngOnInit() {
     this.model = this.step.scope.model;
   }
-
-  ngDoCheck() {
-    this.validate();
-  }
-
   onSelect = dataModel => {
+    this.model.copyFromDataModel = dataModel;
     this.model.selectedDataTypes = [];
     this.model.selectedDataClassesMap = [];
+    this.validate();
   };
 
   onLoad() {}
@@ -71,5 +68,6 @@ export class DataClassStep1Component implements OnInit, DoCheck {
 
   selectCreateType = createType => {
     this.model.createType = createType;
+    this.validate();
   }
 }

@@ -311,7 +311,7 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
       positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
-    UserIdleModule.forRoot({idle: 600, timeout: 300}),
+    UserIdleModule.forRoot({idle: 600, timeout: 300}), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule
   ],
   exports: [

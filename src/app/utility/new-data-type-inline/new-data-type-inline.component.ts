@@ -15,21 +15,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, Input, Output, EventEmitter, DoCheck} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter,  ViewChild, AfterViewInit} from '@angular/core';
 import { ResourcesService } from '@mdm/services/resources.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
+import {NgForm} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'mdm-data-type-inline',
   templateUrl: './new-data-type-inline.component.html',
   styleUrls: ['./new-data-type-inline.component.sass']
 })
-export class NewDataTypeInlineComponent implements OnInit, DoCheck {
+export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
   @Output() validationStatusEvent = new EventEmitter<string>();
 
   @Input() parentDataModel;
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
+  formDataTypeChangesSubscription: Subscription;
+  @ViewChild('myFormNewDataType', {static: false}) myFormNewDataType: NgForm;
   @Input() model: any = {
     label: '',
     description: '',
@@ -69,9 +73,12 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
     }
   }
 
-  ngDoCheck() {
-    this.validate();
-    this.sendValidationStatus();
+  ngAfterViewInit() {
+    this.formDataTypeChangesSubscription = this.myFormNewDataType.form.valueChanges.subscribe(
+      x => {
+        this.validate(x);
+      }
+    );
   }
 
   onTypeSelect() {
@@ -81,10 +88,12 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
 
     this.validate();
   }
-
   validate(newValue?) {
     let isValid = true;
-
+    if (newValue !== undefined) {
+      this.model.label = newValue.label;
+      this.model.domainType = newValue.dataModelType;
+      }
     if (!this.model.label || this.model.label.trim().length === 0) {
       isValid = false;
     }
@@ -103,6 +112,11 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
       isValid = false;
     }
 
+    if (
+      this.model.domainType === 'Primitive' ) {
+      isValid = true;
+    }
+
     // Check if for TerminologyType, the terminology is selected
     if (
       this.model.domainType === 'TerminologyType' &&
@@ -113,6 +127,8 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
     }
 
     this.isValid = isValid;
+
+    this.sendValidationStatus();
   }
 
   onDataClassSelect = dataClasses => {
@@ -121,6 +137,9 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
     } else {
       this.model.referencedDataClass = null;
     }
+
+    this.validate();
+    this.sendValidationStatus();
   };
 
   loadTerminologies() {
@@ -139,9 +158,13 @@ export class NewDataTypeInlineComponent implements OnInit, DoCheck {
   onTerminologySelect(terminology: any, record: any) {
     this.model.referencedTerminology = terminology;
     this.model.terminology = terminology;
+    this.validate();
+    this.sendValidationStatus();
   }
 
   onEnumListUpdated = newEnumList => {
     this.model.enumerationValues = newEnumList;
+    this.validate();
+    this.sendValidationStatus();
   }
 }

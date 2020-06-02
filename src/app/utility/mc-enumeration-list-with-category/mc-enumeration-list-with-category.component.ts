@@ -434,6 +434,9 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
             });
 
     }
+    if (this.onUpdate) {
+      this.onUpdate(this.allRecords);
+    }
   }
 
   cancelDeleteClicked(record) {

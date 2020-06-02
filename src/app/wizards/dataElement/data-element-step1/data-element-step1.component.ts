@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, DoCheck, OnInit} from '@angular/core';
+import {Component,  OnInit} from '@angular/core';
 
 @Component({
   selector: 'mdm-data-element-step1',

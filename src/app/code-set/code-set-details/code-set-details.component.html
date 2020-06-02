@@ -118,7 +118,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <mdm-element-classifications [classifications]="result.classifiers"
+                        <mdm-element-classifications [classifications]="result.classifiers" name="classifiers"
                             [editableForm]="editableForm" [element]="result" [property]="'classifiers'">
                         </mdm-element-classifications>
 
@@ -160,7 +160,7 @@ SPDX-License-Identifier: Apache-2.0
                                 </button>
                             </div>
                             <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
-                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
+                                    name="formButtons"                   mdm-element-classifications  [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
                                 [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
                         <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">

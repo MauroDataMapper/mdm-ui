@@ -375,22 +375,24 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     if (this.minInputLength && this.inputText.trim().length < this.minInputLength) {
       searchText = '';
     }
+    // Don't search on the empty string
+    if (searchText !== '') {
+      this.filterValues(searchText).then((result) => {
+        this.show = true;
+        this.displayValues = Object.assign([], result);
 
-    this.filterValues(searchText).then((result) => {
-      this.show = true;
-      this.displayValues = Object.assign([], result);
-
-      if (this.acceptTypedInput) {
-        const selected = {};
-        selected[this.searchProperty] = this.inputText;
-        this.recordChanged.emit(this.inputText);
-        if (this.idProperty) {
-          selected[this.idProperty] = -1;
+        if (this.acceptTypedInput) {
+          const selected = {};
+          selected[this.searchProperty] = this.inputText;
+          this.recordChanged.emit(this.inputText);
+          if (this.idProperty) {
+            selected[this.idProperty] = -1;
+          }
+          this.onElementSelect(selected);
         }
-        this.onElementSelect(selected);
-      }
-    });
+      });
     }
+  }
 
   filterValues(inputValue) {
 

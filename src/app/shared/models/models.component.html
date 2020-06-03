@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
                     </div>
                 </div>
-                <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: scroll">
+                <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: auto">
 
                     <div style="margin:3px 0px 0px 0px" *ngIf="levels.currentFocusedElement && filteredModels.children && filteredModels.children.length!=0">
                         <button mat-button
@@ -170,7 +170,7 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
                     </div>
                 </div>
-                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 50px);overflow-y: scroll">
+                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 50px);overflow-y: auto">
                     <mdm-folders-tree *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></mdm-folders-tree>
                     <div *ngIf="allClassifiers && allClassifiers.length==0">
                         <div *ngIf="!isLoggedIn()">
@@ -201,7 +201,7 @@ SPDX-License-Identifier: Apache-2.0
                 <ng-template mat-tab-label>
                     <i class="fas fa-star"></i> &nbsp; Favourite
                 </ng-template>
-                <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: scroll" *ngIf="currentTab === 'favourites'">
+                <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: auto" *ngIf="currentTab === 'favourites'">
                     <mdm-favourites (favouriteDbClick)="onFavouriteDbClick($event)" (favouriteClick)="onFavouriteClick($event)"></mdm-favourites>
                 </div>
             </mat-tab>

@@ -152,5 +152,5 @@ SPDX-License-Identifier: Apache-2.0
 </table>
 
 <div class="mdm--mat-pagination">
-	<mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="enumsCount" (page)="pageSizeClicked($event)" showFirstLastButtons></mat-paginator>
+	<mdm-paginator [length]="enumsCount" (page)="pageSizeClicked($event)" showFirstLastButtons></mdm-paginator>
 </div>

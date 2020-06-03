@@ -56,6 +56,8 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   finalResult = {};
   successCount = 0;
   failCount = 0;
+  pageSize = 20;
+  pageSizeOptions = [5, 10, 20, 50];
 
   formChangesSubscription: Subscription;
 
@@ -77,7 +79,12 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
-  ) {}
+  ) {
+    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    if (settings) {
+      this.pageSize = settings.countPerTable;
+      this.pageSizeOptions =  settings.counts;
+    }}
 
   ngOnInit() {
     this.model = this.step.scope.model;

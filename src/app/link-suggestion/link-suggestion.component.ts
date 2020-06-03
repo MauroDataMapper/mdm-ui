@@ -33,6 +33,7 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-link-suggestion',
@@ -47,7 +48,7 @@ export class LinkSuggestionComponent implements OnInit {
 
   datasource = new MatTableDataSource();
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;

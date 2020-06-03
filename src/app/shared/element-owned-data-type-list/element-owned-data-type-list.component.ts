@@ -36,6 +36,7 @@ import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import {MdmPaginatorComponent} from "@mdm/shared/mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',
@@ -53,7 +54,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+ // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
 
   allDataTypes: any;
@@ -88,14 +90,21 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
-    this.dataSource = new MatTableDataSource(this.records);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+    if (this.type === 'static') {
+      this.dataSource = new MatTableDataSource(this.records);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    }
     if (this.parent.editable && !this.parent.finalised) {
       this.displayedColumns = [ 'checkbox', 'name', 'description', 'type', 'buttons' ];
     } else {
       this.displayedColumns = ['name', 'description', 'type', 'buttons'];
     }
+    // const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    // if (settings) {
+    //   this.pageSize = settings.countPerTable;
+    //   this.pageSizeOptions =  settings.counts;
+    // }
   }
 
   ngAfterViewInit() {
@@ -115,7 +124,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
             return this.dataTypesFetch(
               this.paginator.pageSize,
-              this.paginator.pageIndex * this.paginator.pageSize,
+              this.paginator.pageOffset,
               this.sort.active,
               this.sort.direction,
               this.filter
@@ -123,7 +132,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
           }),
           map((data: any) => {
             this.totalItemCount = data.body.count;
-
+            this.isLoadingResults = false;
             return data.body.items;
           }),
           catchError(() => {
@@ -134,7 +143,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         )
         .subscribe(data => {
           this.records = data;
-          this.refreshDataSource();
+         // this.refreshDataSource();
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
         });

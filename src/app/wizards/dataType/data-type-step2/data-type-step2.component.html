@@ -94,7 +94,7 @@ SPDX-License-Identifier: Apache-2.0
 		</table>
 	</div>
 	<div class="mdm--mat-pagination">
-		<mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="10" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+		<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
 	</div>
 </div>
 
@@ -170,7 +170,7 @@ SPDX-License-Identifier: Apache-2.0
 	</div>
 
 	<div class="mdm--mat-pagination">
-		<mat-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="10" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
+		<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
 	</div>
 	<div style="margin-top: 50px;">
 		<div *ngIf="processing">

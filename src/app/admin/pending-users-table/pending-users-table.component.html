@@ -111,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0
         </table>
 
         <div class="mdm--mat-pagination">
-            <mdm-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+            <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
         </div>
     </div>
     <div *ngIf="!totalItemCount" class="pxy-2 bordered">

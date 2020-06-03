@@ -85,6 +85,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+  pageSize = 20;
+  pageSizeOptions = [5, 10, 20, 50]
 
   constructor(
     private validator: ValidatorService,
@@ -96,6 +98,11 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
+    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    if (settings) {
+      this.pageSize = settings.countPerTable;
+      this.pageSizeOptions =  settings.counts;
+    }
   }
 
   ngOnInit() {

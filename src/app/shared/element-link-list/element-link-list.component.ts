@@ -28,6 +28,7 @@ import { ElementSelectorDialogueService } from '@mdm/services/element-selector-d
 import { MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from "@mdm/shared/mdm-paginator/mdm-paginator";
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -56,8 +57,9 @@ export class ElementLinkListComponent implements AfterViewInit {
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
-  @ViewChild(MatPaginator, { static: false })
-  paginator: MatPaginator;
+  // @ViewChild(MatPaginator, { static: false })
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  // paginator: MatPaginator;
 
   filterEvent = new EventEmitter<string>();
   hideFilters = true;
@@ -93,7 +95,7 @@ export class ElementLinkListComponent implements AfterViewInit {
 
           return this.semanticLinkFetch(
             this.paginator.pageSize,
-            this.paginator.pageIndex,
+            this.paginator.pageOffset,
             this.sort.active,
             this.sort.direction,
             this.filter

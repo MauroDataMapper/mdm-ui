@@ -87,10 +87,17 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   isAllChecked = true;
   checkAllCheckbox = false;
   totalSelectedItemsCount = 0;
+  pageSize = 20;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
 
     this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
+    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    if (settings) {
+      this.pageSize = settings.countPerTable;
+      this.pageSizeOptions =  settings.counts;
+    }
   }
 
   ngOnInit() {

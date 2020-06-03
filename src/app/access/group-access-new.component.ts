@@ -26,6 +26,7 @@ import { forkJoin } from 'rxjs';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class GroupAccessNewComponent implements OnInit {
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   // MatPaginator Output
   pageEvent: PageEvent;
 

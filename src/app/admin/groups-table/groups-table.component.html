@@ -84,6 +84,6 @@ SPDX-License-Identifier: Apache-2.0
         <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
     </table>
     <div class="mdm--mat-pagination">
-        <mdm-paginator [pageSizeOptions]="[ 5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+        <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
     </div>
 </div>

@@ -28,6 +28,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-user-access-new',
@@ -50,9 +51,10 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
   @Input() parentType: '=';
   dataSource: MatTableDataSource<any>;
   pagination: McSelectPagination;
+  totalItemCount = 0;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   supportedDomainTypes = {
     DataModel: { name: 'dataModel', message: 'Data Model' },
@@ -148,6 +150,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
         // console.log(this.users);
       }
     }
+    this.totalItemCount = this.users.length;
   }
 
   save(row, index) {

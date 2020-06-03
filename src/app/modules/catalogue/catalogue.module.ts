@@ -157,6 +157,7 @@ import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-to
 import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
 import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -312,7 +313,9 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
       preventDuplicates: false
     }),
     UserIdleModule.forRoot({idle: 600, timeout: 300}), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
-    UsersModule
+    UsersModule,
+    MatTabsModule,
+    MatTabsModule
   ],
   exports: [
     MarkedPipe,

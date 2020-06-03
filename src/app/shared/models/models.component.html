@@ -199,7 +199,7 @@ SPDX-License-Identifier: Apache-2.0
 
             <mat-tab *ngIf="isLoggedIn()">
                 <ng-template mat-tab-label>
-                    <i class="fas fa-star"></i> &nbsp; Favourite
+                    <i class="fas fa-star"></i> &nbsp; Favourites
                 </ng-template>
                 <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: auto" *ngIf="currentTab === 'favourites'">
                     <mdm-favourites (favouriteDbClick)="onFavouriteDbClick($event)" (favouriteClick)="onFavouriteClick($event)"></mdm-favourites>

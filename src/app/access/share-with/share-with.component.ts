@@ -46,8 +46,8 @@ export class ShareWithComponent implements OnInit {
   };
   readableByEveryone: false;
   readableByAuthenticated: false;
-  @Input() mcElement: '=';
-  @Input() mcDomainType: '=';
+  @Input() mcElement: string;
+  @Input() mcDomainType: string;
   endPoint;
   type;
   message = '';

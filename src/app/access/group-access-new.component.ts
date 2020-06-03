@@ -42,8 +42,8 @@ export class GroupAccessNewComponent implements OnInit {
   groupsMap = {};
 
   folderResult: FolderResult;
-  @Input() parent: '=';
-  @Input() parentType: '=';
+  @Input() parent: any;
+  @Input() parentType: any;
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

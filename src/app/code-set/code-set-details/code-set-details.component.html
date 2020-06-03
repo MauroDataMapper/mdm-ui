@@ -206,10 +206,10 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <div *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
-    <div class="full-width" ng-if="activeTab.name === 'access' && folder">
+    <div class="full-width">
         <div class="userAccess" style="margin: 10px 0px 50px 0px">
             <mdm-share-with [mcElement]="'result'" [mcDomainType]="'CodeSet'"></mdm-share-with>
-            <div colspan="2">
+            <div>
                 <div style="margin-top: 10px">
                     <mdm-user-access-new [parent]="'result'" [parentType]="'CodeSet'"></mdm-user-access-new>
                 </div>

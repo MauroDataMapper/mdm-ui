@@ -48,11 +48,11 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="showSecuritySection">
     <mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="User & Group Access">
-            <div class="full-width" ng-if="activeTab.name === 'access' && folder">
+            <div class="full-width">
                 <div class="userAccess"
                         style="margin: 10px 0px 50px 0px">
                     <mdm-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></mdm-share-with>
-                    <div colspan="2">
+                    <div>
                         <div style="margin-top: 10px">
                             <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
                         </div>
@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </mat-tab>
         <mat-tab label="History">
-            <div class="full-width" ng-if="activeTab.name === 'history' && folder">
+            <div class="full-width">
                 <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></mdm-history>
             </div>
         </mat-tab>

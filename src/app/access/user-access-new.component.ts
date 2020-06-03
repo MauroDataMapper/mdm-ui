@@ -47,8 +47,8 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
   users = [];
   usersMap = {};
   folderResult: FolderResult;
-  @Input() parent: '=';
-  @Input() parentType: '=';
+  @Input() parent: any;
+  @Input() parentType: any;
   dataSource: MatTableDataSource<any>;
   pagination: McSelectPagination;
   totalItemCount = 0;

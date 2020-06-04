@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 export const environment = {
   production: true,
-  version: '3.0.0-SNAPSHOT',
-  apiEndpoint: 'http://localhost:8080/api',
+  version: '4.0.0-SNAPSHOT',
+  apiEndpoint: 'api',
   HDFLink: '',
   appTitle: 'Metadata Catalogue',
   appDescription: 'Data models and terminologies',
@@ -29,6 +29,6 @@ export const environment = {
   },
   wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
   simpleViewSupport: false,
-  name: 'development',
-  appIsEditable: true
+  name: 'production',
+  appIsEditable: false
 };

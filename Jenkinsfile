@@ -36,7 +36,9 @@ pipeline {
     stage('Test') {
       steps {
         nvm('') {
-          sh 'ng test --coverage'
+          catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+            sh 'ng test --coverage --silent'
+          }
         }
       }
       post {
@@ -54,7 +56,7 @@ pipeline {
         post {
           always {
             recordIssues tool: tsLint(pattern: 'checkstyle-result.xml'),
-                           enabledForFailure: true
+                         enabledForFailure: true
           }
         }
       }

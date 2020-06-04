@@ -105,10 +105,10 @@ SPDX-License-Identifier: Apache-2.0
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
+        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+    </mat-card>
 </div>
-<mat-card *ngIf="isLoadingResults" style="display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-</mat-card>
 <div class="mdm--mat-pagination">
     <mdm-paginator  [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

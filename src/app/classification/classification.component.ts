@@ -112,10 +112,10 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     );
 
     forkJoin(promises).subscribe((results: any) => {
-      this.catalogueItemsCount = results[0].count;
-      this.terminologiesCount = results[1].count;
-      this.termsCount = results[2].count;
-      this.codeSetsCount = results[3].count;
+      this.catalogueItemsCount = results[0].body.count;
+      this.terminologiesCount = results[1].body.count;
+      this.termsCount = results[2].body.count;
+      this.codeSetsCount = results[3].body.count;
 
       this.loading = false;
       this.activeTab = this.getTabDetail('classifiedElements');

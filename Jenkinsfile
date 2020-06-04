@@ -78,6 +78,16 @@ pipeline {
 
   post {
     always {
+      publishHTML([
+        allowMissing         : true,
+        alwaysLinkToLastBuild: true,
+        keepAll              : true,
+        reportDir            : 'test-report',
+        reportFiles          : 'index.html',
+        reportName           : 'Test Report',
+        reportTitles         : 'Test'
+      ])
+      outputTestResults()
       slackNotification()
     }
   }

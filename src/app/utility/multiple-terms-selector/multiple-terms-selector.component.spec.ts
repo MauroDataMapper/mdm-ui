@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MultipleTermsSelectorComponent } from './multiple-terms-selector.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('MultipleTermsSelectorComponent', () => {
   let component: MultipleTermsSelectorComponent;
@@ -25,6 +26,7 @@ describe('MultipleTermsSelectorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ MultipleTermsSelectorComponent ]
     })
     .compileComponents();

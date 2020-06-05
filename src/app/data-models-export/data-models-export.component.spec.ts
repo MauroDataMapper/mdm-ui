@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataModelsExportComponent } from './data-models-export.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('DataModelsExportComponent', () => {
   let component: DataModelsExportComponent;
@@ -25,6 +26,7 @@ describe('DataModelsExportComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ DataModelsExportComponent ]
     })
     .compileComponents();

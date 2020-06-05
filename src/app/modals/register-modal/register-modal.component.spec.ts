@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterModalComponent } from './register-modal.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('RegisterModalComponent', () => {
   let component: RegisterModalComponent;
@@ -25,6 +26,7 @@ describe('RegisterModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ RegisterModalComponent ]
     })
     .compileComponents();

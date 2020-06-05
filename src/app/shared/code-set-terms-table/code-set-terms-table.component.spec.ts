@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeSetTermsTableComponent } from './code-set-terms-table.component';
+import { TestModule } from '@mdm/modules/test/test.module';
+import { MatSort } from '@angular/material/sort';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 describe('CodeSetTermsTableComponent', () => {
   let component: CodeSetTermsTableComponent;
@@ -25,7 +28,8 @@ describe('CodeSetTermsTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CodeSetTermsTableComponent ]
+      imports: [TestModule],
+      declarations: [ CodeSetTermsTableComponent , MatSort, MdmPaginatorComponent]
     })
     .compileComponents();
   }));

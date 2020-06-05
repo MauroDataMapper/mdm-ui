@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClassifierStep1Component } from './classifier-step1.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('ClassifierStep1Component', () => {
   let component: ClassifierStep1Component;
@@ -25,6 +26,7 @@ describe('ClassifierStep1Component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ ClassifierStep1Component ]
     })
     .compileComponents();

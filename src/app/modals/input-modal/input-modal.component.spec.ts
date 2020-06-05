@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InputModalComponent } from './input-modal.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('InputModalComponent', () => {
   let component: InputModalComponent;
@@ -25,6 +26,7 @@ describe('InputModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ InputModalComponent ]
     })
     .compileComponents();

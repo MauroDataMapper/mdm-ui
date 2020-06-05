@@ -21,23 +21,30 @@ import { DataElementStep2Component } from './data-element-step2.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { TestModule } from '@mdm/modules/test/test.module';
+import { NgForm, FormsModule } from '@angular/forms';
 
 describe('DataElementStep2Component', () => {
   let component: DataElementStep2Component;
   let fixture: ComponentFixture<DataElementStep2Component>;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({ imports: [HttpClientModule,
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientModule,
         UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()],
-      declarations: [ DataElementStep2Component ]
-    })
-    .compileComponents();
+        ToastrModule.forRoot(),
+        TestModule,        
+      ],
+      declarations: [DataElementStep2Component, NgForm],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DataElementStep2Component);
     component = fixture.componentInstance;
+    component.step = { scope: { model: {} } };
+
     fixture.detectChanges();
   });
 

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren, ChangeDetectorRef} from '@angular/core';
 import { ResourcesService } from '../services/resources.service';
 import { SearchResult } from '../model/folderModel';
 import { ElementTypesService } from '../services/element-types.service';
@@ -60,7 +60,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   filter: any = '';
   applyFilter = this.gridService.applyFilter(this.filters);
 
-  constructor(public resourcesService: ResourcesService,  private gridService: GridService, private elementTypeService: ElementTypesService) {
+  constructor(public resourcesService: ResourcesService,  private gridService: GridService, private elementTypeService: ElementTypesService, private changeRef: ChangeDetectorRef) {
 
     }
 
@@ -109,7 +109,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.records = data;
       });
-
+      this.changeRef.detectChanges();
   }
     public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
         // this.isLoading = true;

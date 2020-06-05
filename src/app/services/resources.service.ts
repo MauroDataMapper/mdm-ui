@@ -398,7 +398,7 @@ class DataElement {
   }
 }
 
-class Folder {
+export class Folder {
   constructor(private resourcesService: ResourcesService) {
   }
 
@@ -423,7 +423,7 @@ class Folder {
   }
 }
 
-class Terminology {
+export class Terminology {
   constructor(private resourcesService: ResourcesService) {
   }
 

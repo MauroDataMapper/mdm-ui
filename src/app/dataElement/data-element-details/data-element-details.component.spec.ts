@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataElementDetailsComponent } from './data-element-details.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('DataElementDetailsComponent', () => {
   let component: DataElementDetailsComponent;
@@ -25,6 +26,7 @@ describe('DataElementDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ DataElementDetailsComponent ]
     })
     .compileComponents();

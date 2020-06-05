@@ -22,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('ModelSelectorTreeComponent', () => {
   let component: ModelSelectorTreeComponent;
@@ -29,9 +30,7 @@ describe('ModelSelectorTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()],
+      imports: [TestModule],
       providers: [ElementTypesService]})
     .compileComponents();
   }));

@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 
 export const environment = {
   production: false,
-  version: '4.0.0-SNAPSHOT',
+  version: '4.0.0',
   apiEndpoint: 'http://localhost:8080/api',
   HDFLink: '',
   appTitle: 'Metadata Catalogue',

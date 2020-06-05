@@ -1,328 +1,223 @@
-<div class="row" style="padding: 5px">
-	<div class="row" style="padding-top:5px">
-		<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="margin-top:5px">
-			<div style="text-align: left;margin-left: 10px;">
+<!--
+Copyright 2020 University of Oxford
 
-				<mat-tab-group [selectedIndex]="activeTab.index"
-							   (selectedIndexChange)="tabSelected($event)"
-							   dynamicHeight dynamicWidth
-							   *ngIf="properties">
-					<mat-tab label="Email">
-						<form name="form"
-							  (ngSubmit)="f.form.valid && Submit()"
-							  #f="ngForm">
-							<h4>Site Url</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Site Url
-									</th>
-									<td style="padding: 5px">
-										<input name="siteUrl" id="siteUrl" type="text" class="form-control" required #siteUrl="ngModel" [(ngModel)]="properties['site.url']">
-										<div *ngIf="siteUrl.invalid && (siteUrl.dirty || siteUrl.touched)" [ngClass]="{'has-error': true }">
-											<div *ngIf="siteUrl.errors.required">
-												<span class="help-block">Site url required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>From Address</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Email Address<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="fromAddress" type="email" class="form-control" [(ngModel)]="properties['email.from.address']" required email #fromAddress="ngModel">
-										<div *ngIf="f.submitted && fromAddress.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="fromAddress.errors.required">
-												<span class="help-block">"From address" can not be empty.</span>
-											</div>
-											<div *ngIf="fromAddress.errors.email">
-												<span class="help-block">Email must be a valid email address</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Name<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="fromName" type="text" class="form-control" #fromName="ngModel" [(ngModel)]="properties['email.from.name']" required>
-										<div *ngIf="f.submitted && fromName.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="fromName.errors.required">
-												<span class="help-block">Name of sender required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>Admin Confirm User Registration Email</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="adminConfirmSubject" type="text" class="form-control" [(ngModel)]="properties['email.admin_confirm_registration.subject']" required #subject="ngModel">
-										<div *ngIf="f.submitted && subject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="subject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="adminConfirmBody" rows="9" class="form-control" [(ngModel)]="properties['email.admin_confirm_registration.body']" required #adminConfirmBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && adminConfirmBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="adminConfirmBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>Admin Registered User</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="adminRegisterSubject" type="text" class="form-control" [(ngModel)]="properties['email.admin_register.subject']" required #adminRegisterSubject="ngModel">
-										<div *ngIf="f.submitted && adminRegisterSubject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="adminRegisterSubject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="adminRegisterBody" rows="9" class="form-control" [(ngModel)]="properties['email.admin_register.body']" required #adminRegisterBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && adminRegisterBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="adminRegisterBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>User Invited to Edit</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="inviteEditSubject" type="text" class="form-control" [(ngModel)]="properties['email.invite_edit.subject']" required #inviteEditSubject="ngModel">
-										<div *ngIf="f.submitted && inviteEditSubject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="inviteEditSubject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="inviteEditBody" rows="9" class="form-control" [(ngModel)]="properties['email.invite_edit.body']" required #inviteEditBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && inviteEditBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="inviteEditBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>User Invited to View</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="inviteViewSubject" type="text" class="form-control" [(ngModel)]="properties['email.invite_view.subject']" required #inviteViewSubject="ngModel">
-										<div *ngIf="f.submitted && inviteViewSubject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="inviteViewSubject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="inviteViewBody" rows="9" class="form-control" [(ngModel)]="properties['email.invite_view.body']" required #inviteViewBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && inviteViewBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="inviteViewBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>User Self Registered</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="selfRegisterSubject" type="text" class="form-control" [(ngModel)]="properties['email.self_register.subject']" required #selfRegisterSubject="ngModel">
-										<div *ngIf="f.submitted && selfRegisterSubject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="selfRegisterSubject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="selfRegisterBody" rows="9" class="form-control" [(ngModel)]="properties['email.self_register.body']" required #selfRegisterBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && selfRegisterBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="selfRegisterBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>Forgotten Password</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="forgottenPasswordSubject" type="text" class="form-control"
-											   [(ngModel)]="properties['email.forgotten_password.subject']" required #forgottenPasswordSubject="ngModel">
-										<div *ngIf="f.submitted && forgottenPasswordSubject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="forgottenPasswordSubject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="forgottenPasswordBody" rows="9" class="form-control"
-												  [(ngModel)]="properties['email.forgotten_password.body']" required #forgottenPasswordBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && forgottenPasswordBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="forgottenPasswordBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<h4>Reset Password</h4>
-							<table class="table table-bordered table-condensed dataModelDetailTable" style="border: 1px solid #ddd">
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Subject<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<input name="resetPasswordSubject" type="text" class="form-control"
-											   [(ngModel)]="properties['email.password_reset.subject']" required #resetPasswordSubject="ngModel">
-										<div *ngIf="f.submitted && resetPasswordSubject.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="resetPasswordSubject.errors.required">
-												<span class="help-block">Subject content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">
-										Body<sup>*</sup>
-									</th>
-									<td style="padding: 5px">
-										<textarea name="resetPasswordBody" rows="9" class="form-control"
-												  [(ngModel)]="properties['email.password_reset.body']" required #resetPasswordBody="ngModel"></textarea>
-										<div *ngIf="f.submitted && resetPasswordBody.invalid" [ngClass]="{'has-error': true }">
-											<div *ngIf="resetPasswordBody.errors.required">
-												<span class="help-block">Body content required</span>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<p class="text-right" style="margin-top: 15px;">
-								<button class="btn btn-primary mr-1">Save</button>
-							</p>
-						</form>
-					</mat-tab>
-					<mat-tab label="Lucene">
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<h4>Lucene Index</h4>
-								<p>Please press the following button to rebuild Lucene Search Index.</p>
-								<p>
-									While reindexing in in progress, some functionalities such as search might not work as expected.
-									<br>Once it is complete, you will be notified in this page.
-									<br>Please be patient and don't leave this page while reindexing is in progress.
-								</p>
-								<input ng-disabled="indexingStatus == 'start'" type="button" class="btn btn-primary" (click)="rebuildIndex()" value="Rebuild Index" />
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="text-align: center;">
-								<div *ngIf="indexingStatus == 'start'" style="text-align: center;">
-									<div style="margin-left: 40%">
-										<mat-progress-spinner color="primary"
-										                      mode="indeterminate">
-										</mat-progress-spinner>
-									</div>
-									<div>
-										<p>
-											MetadataCatalogue is rebuilding indices.<br>Please wait...
-										</p>
-									</div>
-								</div>
-								<div *ngIf="indexingStatus == 'success'">
-									<div style="margin-left: 30%">
-										<p class="rebuildingIndexSuccess">
-											<i class="fa fa-check"></i>
-										</p>
-									</div>
-									<div style="margin-left: 35%; font-weight: bold;">
-										<p>Successfully ReIndexed {{indexingTime}}</p>
-									</div>
-								</div>
-								<div *ngIf="indexingStatus == 'error'">
-									<div style="margin-left: 30%">
-										<p class="rebuildingIndexError">
-											<i class="fa fa-times"></i>
-										</p>
-									</div>
-									<div style="margin-left: 35%">
-										<p>Error in indexing process!</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</mat-tab>
-				</mat-tab-group>
-			</div>
-		</div>
-	</div>
-</div>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth *ngIf="properties">
+    <mat-tab label="Email template">
+        <form name="form" (ngSubmit)="f.form.valid && submitConfig()" #f="ngForm" class="mdm--form mdm--form-configuration">
+            <div class="mb-1">
+                <h4 class="mb-1 mt-2">Site URL address</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Site URL</mat-label>
+                    <input matInput name="siteUrl" #siteUrl="ngModel" [(ngModel)]="properties['site.url']" placeholder="e.g. https://example.com" required>
+                    <mat-error *ngIf="siteUrl.invalid">
+                        Site URL is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>From address</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Email address</mat-label>
+                    <input matInput type="email" name="fromAddress" [(ngModel)]="properties['email.from.address']" #fromAddress="ngModel" required>
+                    <mat-error *ngIf="fromAddress.invalid">
+                        Invalid email address
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Name of sender</mat-label>
+                    <input matInput type="email" name="fromName" [(ngModel)]="properties['email.from.name']" #fromName="ngModel" required>
+                    <mat-error *ngIf="fromName.invalid">
+                        Invalid name of sender
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>Admin confirm user registration email</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="adminConfirmSubject" [(ngModel)]="properties['email.admin_confirm_registration.subject']" #subject="ngModel" required>
+                    <mat-error *ngIf="subject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="adminConfirmBody" rows="9" [(ngModel)]="properties['email.admin_confirm_registration.body']" #adminConfirmBody="ngModel" required></textarea>
+                    <mat-error *ngIf="adminConfirmBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>Admin registered user</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="adminRegisterSubject" [(ngModel)]="properties['email.admin_register.subject']" #adminRegisterSubject="ngModel" required>
+                    <mat-error *ngIf="adminRegisterSubject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="adminRegisterBody" rows="9" [(ngModel)]="properties['email.admin_register.body']" #adminRegisterBody="ngModel" required></textarea>
+                    <mat-error *ngIf="adminRegisterBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>User invited to edit</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="inviteEditSubject" [(ngModel)]="properties['email.invite_edit.subject']" #inviteEditSubject="ngModel" required>
+                    <mat-error *ngIf="inviteEditSubject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="inviteEditBody" rows="9" [(ngModel)]="properties['email.invite_edit.body']" #inviteEditBody="ngModel" required></textarea>
+                    <mat-error *ngIf="inviteEditBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>User invited to view</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="inviteViewSubject" [(ngModel)]="properties['email.invite_view.subject']" #inviteViewSubject="ngModel" required>
+                    <mat-error *ngIf="inviteViewSubject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="inviteViewBody" rows="9" [(ngModel)]="properties['email.invite_view.body']" #inviteViewBody="ngModel" required></textarea>
+                    <mat-error *ngIf="inviteViewBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>User self registered</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="selfRegisterSubject" [(ngModel)]="properties['email.self_register.subject']" #selfRegisterSubject="ngModel" required>
+                    <mat-error *ngIf="selfRegisterSubject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="selfRegisterBody" rows="9" [(ngModel)]="properties['email.self_register.body']" #selfRegisterBody="ngModel" required></textarea>
+                    <mat-error *ngIf="selfRegisterBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>Forgotten password</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="forgottenPasswordSubject" [(ngModel)]="properties['email.forgotten_password.subject']" #forgottenPasswordSubject="ngModel" required>
+                    <mat-error *ngIf="forgottenPasswordSubject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="forgottenPasswordBody" rows="9" [(ngModel)]="properties['email.forgotten_password.body']" #forgottenPasswordBody="ngModel" required></textarea>
+                    <mat-error *ngIf="forgottenPasswordBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="mb-1">
+                <h4>Reset password</h4>
+                <mat-form-field appearance="outline">
+                    <mat-label>Subject</mat-label>
+                    <input matInput name="resetPasswordSubject" [(ngModel)]="properties['email.password_reset.subject']" #resetPasswordSubject="ngModel" required>
+                    <mat-error *ngIf="resetPasswordSubject.invalid">
+                        Subject content is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Body</mat-label>
+                    <textarea matInput name="resetPasswordBody" rows="9" [(ngModel)]="properties['email.password_reset.body']" #resetPasswordBody="ngModel"required></textarea>
+                    <mat-error *ngIf="resetPasswordBody.invalid">
+                        Body content is required
+                    </mat-error>
+                </mat-form-field>
+                <button mat-flat-button class="custom save-email-config" color="primary">
+                    Save email configuration
+                </button>
+            </div>
+        </form>
+    </mat-tab>
+
+    <mat-tab label="Lucene">
+        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="24px">
+            <div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
+                <h4 class="mt-2">Lucene Index</h4>
+                <p>Please press the following button to rebuild Lucene Search Index.</p>
+                <p>
+                    While reindexing in in progress, some functionalities such as search might not work as expected.
+                    <br>Once it is complete, you will be notified in this page.
+                    <br>Please be patient and don't leave this page while reindexing is in progress.
+                </p>
+                <div>
+                    <button mat-flat-button class="custom" color="primary" [disabled]="indexingStatus == 'start'" (click)="rebuildIndex()">Rebuild index</button>
+                </div>
+            </div>
+        </div>
+        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="24px">
+            <div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
+                <div *ngIf="indexingStatus == 'start'" style="text-align: center;">
+                    <div style="margin-left: 40%">
+                        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+                    </div>
+                    <div>
+                        <p>
+                            MetadataCatalogue is rebuilding indices.<br>Please wait...
+                        </p>
+                    </div>
+                </div>
+                <div *ngIf="indexingStatus == 'success'">
+                    <div style="margin-left: 30%">
+                        <p>
+                            <i class="fas fa-check"></i>
+                        </p>
+                    </div>
+                    <div style="margin-left: 35%; font-weight: bold;">
+                        <p>Successfully ReIndexed {{indexingTime}}</p>
+                    </div>
+                </div>
+                <div *ngIf="indexingStatus == 'error'">
+                    <div style="margin-left: 30%">
+                        <p class="rebuildingIndexError">
+                            <i class="fas fa-times"></i>
+                        </p>
+                    </div>
+                    <div style="margin-left: 35%">
+                        <p>Error in indexing process!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>

@@ -1,14 +1,30 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../../services/shared.service';
+import { SharedService } from '@mdm/services/shared.service';
 
 @Component({
-  selector: 'app-footer',
+  selector: 'mdm-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-
-  constructor(private sharedService: SharedService) { }
+  constructor(private sharedService: SharedService) {}
 
   year = new Date().getFullYear();
   showWikiLink = true;
@@ -17,15 +33,18 @@ export class FooterComponent implements OnInit {
   youTrack = this.sharedService.youTrack;
 
   ngOnInit() {
-    if(this.sharedService.simpleViewSupport && !this.sharedService.isLoggedIn())
-    {
+    if (
+      this.sharedService.simpleViewSupport &&
+      !this.sharedService.isLoggedIn()
+    ) {
       this.showWikiLink = false;
     }
 
-    if(this.sharedService.simpleViewSupport && !this.sharedService.isLoggedIn())
-    {
+    if (
+      this.sharedService.simpleViewSupport &&
+      !this.sharedService.isLoggedIn()
+    ) {
       this.showYouTrackLink = false;
     }
   }
-
 }

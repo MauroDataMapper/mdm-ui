@@ -1,56 +1,60 @@
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+<!--
+Copyright 2020 University of Oxford
 
-        <div style="width: 100%" *ngIf ="dataModel">
-            <data-element-details
-            [parent-data-model] = "dataModel"
-            [parent-data-class] = "dataClass">
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-            </data-element-details>
-        </div>
+    http://www.apache.org/licenses/LICENSE-2.0
 
-        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-            <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-                <mat-tab label="Properties">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mc-data-set-metadata *ngIf="dataElement" [parent]="dataElement" [type]="'dynamic'"></mc-data-set-metadata>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Comments">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <annotation-list *ngIf="dataElement" [parent]="dataElement"></annotation-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Links">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <element-link-list *ngIf="dataElement" [parent]="dataElement"></element-link-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Summary">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <summary-metadata-table *ngIf="dataElement" [parent]="dataElement"></summary-metadata-table>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-
-
-                <mat-tab label="Attachments">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <attachment-list *ngIf="dataElement" [parent]="dataElement"></attachment-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-
-            </mat-tab-group>
-        </div>
-    </div>
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="full-width" *ngIf ="dataModel">
+    <mdm-data-element-details [parentDataModel] = "dataModel"
+                              [parentDataClass] = "dataClass"
+                              [afterSave]="afterSave">
+    </mdm-data-element-details>
 </div>
+<mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+    <mat-tab label="Properties">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-data-set-metadata *ngIf="dataElement" [parent]="dataElement" [type]="'dynamic'"></mdm-data-set-metadata>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Comments">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-annotation-list *ngIf="dataElement" [parent]="dataElement"></mdm-annotation-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Links">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-element-link-list *ngIf="dataElement" [parent]="dataElement"></mdm-element-link-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Summary" *ngIf="showExtraTabs">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-summary-metadata-table *ngIf="dataElement" [parent]="dataElement"></mdm-summary-metadata-table>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Attachments" *ngIf="showExtraTabs">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-attachment-list *ngIf="dataElement" [parent]="dataElement"></mdm-attachment-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

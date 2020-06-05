@@ -1,171 +1,167 @@
-import { Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter } from '@angular/core';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { StateHandlerService } from '../../services/handlers/state-handler.service';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit} from '@angular/core';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-	selector: 'app-groups-table',
-	templateUrl: './groups-table.component.html',
-	styleUrls: ['./groups-table.component.sass']
+  selector: 'mdm-groups-table',
+  templateUrl: './groups-table.component.html',
+  styleUrls: ['./groups-table.component.sass']
 })
-export class GroupsTableComponent implements OnInit {
+export class GroupsTableComponent implements OnInit, AfterViewInit {
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-	@ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-	@ViewChild(MatSort, { static: true }) sort: MatSort;
-	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-	filterEvent = new EventEmitter<string>();
-	isLoadingResults: boolean;
-	filter: string;
-	totalItemCount: number;
-	hideFilters = true;
+  filterEvent = new EventEmitter<string>();
+  isLoadingResults: boolean;
+  filter: string;
+  totalItemCount = 0;
+  hideFilters = true;
 
-	dataSource = new MatTableDataSource<any>();
+  dataSource = new MatTableDataSource<any>();
 
-	displayedColumns = ['name', 'description', 'icons'];
-	records: any[] = [];
+  displayedColumns = ['name', 'description', 'icons'];
+  records: any[] = [];
 
-	constructor(
-		private messageHandlerService: MessageHandlerService,
-		private resourcesService: ResourcesService,
-		private stateHandlerService: StateHandlerService) {
+  constructor(
+    private messageHandlerService: MessageHandlerService,
+    private resourcesService: ResourcesService,
+    private stateHandlerService: StateHandlerService,
+    private title: Title
+  ) {
+    this.dataSource = new MatTableDataSource(this.records);
+  }
 
-		this.dataSource = new MatTableDataSource(this.records);
-	}
+  ngOnInit() {
+    this.groupsFetch();
+    this.title.setTitle('Manage groups');
+  }
 
-	ngOnInit() {
+  ngAfterViewInit() {
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-		this.groupsFetch();
-	}
+    this.dataSource.sort = this.sort;
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+      this.isLoadingResults = true;
+      return this.groupsFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter
+        );
+      }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.items;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })
+      ).subscribe(data => {
+        this.records = data;
+        this.dataSource.data = this.records;
+      });
+  }
 
-	ngAfterViewInit() {
+  // TODO: sorting, paging and filtering without backend call
+  groupsFetch2() {
+    this.resourcesService.userGroup.get(null, null, null).subscribe(resp => {
+      this.records = resp.body.items;
+      this.totalItemCount = this.records.length;
+      this.dataSource.data = this.records;
+    },
+      err => {
+        this.messageHandlerService.showError('There was a problem loading groups.', err);
+      });
+  }
 
-		this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-		this.filterEvent.subscribe(() => this.paginator.pageIndex = 0);
+  groupsFetch(
+    pageSize?,
+    pageIndex?,
+    sortBy?,
+    sortType?,
+    filters?
+  ): Observable<any> {
+    const options = {
+      pageSize,
+      pageIndex,
+      filters,
+      sortBy,
+      sortType
+    };
 
-		this.dataSource.sort = this.sort;
+    return this.resourcesService.userGroup.get(null, null, options);
+  }
 
-		merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-			.pipe(
-				startWith({}),
-				switchMap(() => {
+  applyFilter = () => {
+    let filter: any = '';
+    this.filters.forEach((x: any) => {
+      const name = x.nativeElement.name;
+      const value = x.nativeElement.value;
 
-					this.isLoadingResults = true;
+      if (value !== '') {
+        filter += name + '=' + value + '&';
+      }
+    });
+    this.filter = filter;
+    this.filterEvent.emit(filter);
+  };
 
-					return this.groupsFetch(this.paginator.pageSize,
-						this.paginator.pageIndex,
-						this.sort.active,
-						this.sort.direction,
-						this.filter);
-				}
-				),
-				map((data: any) => {
+  filterClick = () => {
+    this.hideFilters = !this.hideFilters;
+  };
 
-					this.totalItemCount = data.body.count;
-					this.isLoadingResults = false;
-					return data.body['items'];
-				}),
-				catchError(() => {
+  editUser(row) {
+    if (row) {
+      this.stateHandlerService.Go('admin.group', { id: row.id }, null);
+    }
+  }
 
-					this.isLoadingResults = false;
-					return [];
-				})
-			).subscribe(data => {
+  deleteUser(row) {
+    this.resourcesService.userGroup.delete(row.id, null).subscribe(resp => {
+      this.messageHandlerService.showSuccess('Group deleted successfully.');
 
-				this.records = data;
-				this.dataSource.data = this.records;
-			});
-	}
+      this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
+        this.records = data.body.items;
+        this.dataSource.data = this.records;
+      }, err => {
+          this.messageHandlerService.showError('There was a problem loading the groups.', err);
+        });
+    }, err => {
+        this.messageHandlerService.showError('There was a problem deleting the group.', err);
+      });
+  }
 
-	// TODO: sorting, paging and filtering without backend call
-	groupsFetch2() {
-
-		this.resourcesService.userGroup.get(null, null, null).subscribe(resp => {
-
-			this.records = resp.body.items;
-			this.totalItemCount = this.records.length;
-			this.dataSource.data = this.records;
-		}),
-			(err) => {
-				this.messageHandlerService.showError('There was a problem loading groups.', err);
-			};
-	}
-
-	groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-
-		let options = {
-			pageSize,
-			pageIndex,
-			filters,
-			sortBy,
-			sortType
-		};
-
-		return this.resourcesService.userGroup.get(null, null, options);
-	}
-
-	applyFilter = () => {
-		let filter: any = '';
-		this.filters.forEach((x: any) => {
-			let name = x.nativeElement.name;
-			let value = x.nativeElement.value;
-
-			if (value !== '') {
-				filter += name + '=' + value + '&';
-			}
-		});
-		this.filter = filter;
-		this.filterEvent.emit(filter);
-	}
-
-	filterClick = () => {
-
-		this.hideFilters = !this.hideFilters;
-	}
-
-	editUser(row) {
-
-		if (row) {
-			this.stateHandlerService.Go('admin.group',
-				{
-					id: row.id,
-				},
-				null
-			);
-		}
-	}
-
-	deleteUser(row) {
-
-		this.resourcesService.userGroup.delete(row.id, null).subscribe(resp => {
-
-			this.messageHandlerService.showSuccess('Group deleted successfully.');
-
-			this.groupsFetch(this.paginator.pageSize,
-				this.paginator.pageIndex,
-				this.sort.active,
-				this.sort.direction,
-				this.filter).subscribe(data => {
-
-					this.records = data.body.items;
-					this.dataSource.data = this.records;
-				}),
-				(err) => {
-					this.messageHandlerService.showError('There was a problem loading the groups.', err);
-				};
-		}),
-			(err) => {
-				this.messageHandlerService.showError('There was a problem deleting the group.', err);
-			};
-	}
-
-	add = () => {
-
-		this.stateHandlerService.Go('admin.group', { id: null }, null);
-	}
+  add = () => {
+    this.stateHandlerService.Go('admin.group', { id: null }, null);
+  }
 }

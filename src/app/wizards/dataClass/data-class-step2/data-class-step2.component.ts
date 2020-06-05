@@ -1,64 +1,90 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import {
   Component,
   OnInit,
   ViewChild,
-  Input,
   ViewChildren,
   ElementRef,
   EventEmitter,
-  Inject
-} from "@angular/core";
-import { ValidatorService } from "../../../services/validator.service";
-import { NgForm } from "@angular/forms";
-import { Subscription, Observable, ObservableInput, of } from "rxjs";
-import { MessageHandlerService } from "../../../services/utility/message-handler.service";
-import { ResourcesService } from "../../../services/resources.service";
-import { BroadcastService } from "../../../services/broadcast.service";
+  AfterViewInit,
+  OnDestroy, QueryList
+} from '@angular/core';
+import { ValidatorService } from '@mdm/services/validator.service';
+import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
+
 @Component({
-  selector: "app-data-class-step2",
-  templateUrl: "./data-class-step2.component.html",
-  styleUrls: ["./data-class-step2.component.sass"]
+  selector: 'mdm-data-class-step2',
+  templateUrl: './data-class-step2.component.html',
+  styleUrls: ['./data-class-step2.component.sass']
 })
-export class DataClassStep2Component implements OnInit {
+export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy {
   step: any;
   model: any;
   scope: any;
   multiplicityError: any;
-  selectedDataClassesStr = "";
+  selectedDataClassesStr = '';
   defaultCheckedMap: any;
   loaded = false;
   totalItemCount = 0;
-
+  totalSelectedItemsCount: number;
   processing: any;
   isProcessComplete: any;
   finalResult = {};
   successCount = 0;
   failCount = 0;
+  pageSize = 20;
+  pageSizeOptions = [5, 10, 20, 50];
 
   formChangesSubscription: Subscription;
 
-  @ViewChild("myForm", { static: false }) myForm: NgForm;
-  @ViewChildren("filters", { read: ElementRef }) filters: ElementRef[];
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+
 
   filterEvent = new EventEmitter<string>();
   filter: string;
-  hideFilters: boolean = true;
-  displayedColumns = ["name", "description", "status"];
+  hideFilters = true;
+  displayedColumns = ['name', 'description', 'status'];
 
-  dataSource: any;
+  dataSource = new MatTableDataSource<any>();
 
   constructor(
     private validator: ValidatorService,
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
-  ) {}
+  ) {
+    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    if (settings) {
+      this.pageSize = settings.countPerTable;
+      this.pageSizeOptions =  settings.counts;
+    }}
 
   ngOnInit() {
     this.model = this.step.scope.model;
@@ -70,36 +96,62 @@ export class DataClassStep2Component implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      x => {
-        //  this.validate(x);
-      }
-    );
+
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
+      this.validate(x);
+     });
+
+
   }
 
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
+    if (
+      this.sort !== null &&
+      this.sort !== undefined &&
+      this.sort.toArray().length > 0 &&
+      this.paginator !== null &&
+      this.paginator !== undefined &&
+      this.paginator.toArray().length > 0
+    ) {
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
+      this.filterEvent.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
 
+
+      // Selected Data Class table
+      this.dataSource.sort = this.sort.toArray()[0];
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
+      this.dataSource.paginator = this.paginator.toArray()[0];
+    }
     if (this.model.selectedDataClassesMap) {
       this.createSelectedArray();
       this.validate();
     }
-
     this.loaded = true;
   }
 
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
-    for (var id in this.model.selectedDataClassesMap) {
+    for (const id in this.model.selectedDataClassesMap) {
       if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
-        var element = this.model.selectedDataClassesMap[id];
+        const element = this.model.selectedDataClassesMap[id];
         this.model.selectedDataClasses.push(element.node);
       }
     }
     this.totalItemCount = this.model.selectedDataClasses.length;
-  }
+  };
 
   onCheck = (node, parent, checkedMap) => {
     this.model.selectedDataClassesMap = checkedMap;
@@ -107,19 +159,20 @@ export class DataClassStep2Component implements OnInit {
     this.dataSource.data = this.model.selectedDataClasses;
     this.dataSource._updateChangeSubscription();
     this.validate();
+    this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
   };
 
   validate = (newValue?) => {
-    var invalid = false;
-    if (this.model.createType === "new") {
+    let invalid = false;
+    if (this.model.createType === 'new') {
       if (newValue) {
-        //check Min/Max
+        // check Min/Max
         this.multiplicityError = this.validator.validateMultiplicities(
           newValue.minMultiplicity,
           newValue.maxMultiplicity
         );
 
-        //Check Mandatory fields
+        // Check Mandatory fields
         if (
           !newValue.label ||
           newValue.label.trim().length === 0 ||
@@ -132,7 +185,7 @@ export class DataClassStep2Component implements OnInit {
 
       invalid = this.myForm.invalid;
     }
-    if (this.model.createType === "copy") {
+    if (this.model.createType === 'copy') {
       if (this.model.selectedDataClasses.length === 0) {
         this.step.invalid = true;
         return;
@@ -155,10 +208,10 @@ export class DataClassStep2Component implements OnInit {
     this.model.selectedDataClasses.forEach((dc: any) => {
       promise = promise
         .then((result: any) => {
-          var link = "dataClasses/" + dc.dataModel + "/" + dc.id;
+          const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
           this.successCount++;
-          this.finalResult[dc.id] = { result: result, hasError: false };
-          if (this.model.parent.domainType === "DataClass") {
+          this.finalResult[dc.id] = { result, hasError: false };
+          if (this.model.parent.domainType === 'DataClass') {
             return this.resources.dataClass
               .post(
                 this.model.parent.dataModel,
@@ -175,20 +228,20 @@ export class DataClassStep2Component implements OnInit {
         })
         .catch(error => {
           this.failCount++;
-          var errorText = this.messageHandler.getErrorText(error);
+          const errorText = this.messageHandler.getErrorText(error);
           this.finalResult[dc.id] = { result: errorText, hasError: true };
         });
     });
 
     promise
-      .then(result => {
+      .then(() => {
         this.processing = false;
         this.step.isProcessComplete = true;
-        this.broadcastSvc.broadcast("$reloadFoldersTree");
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
       })
-      .catch(error => {
+      .catch(() => {
         this.processing = false;
         this.step.isProcessComplete = true;
       });
-  };
+  }
 }

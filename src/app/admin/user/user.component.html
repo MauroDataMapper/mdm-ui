@@ -1,111 +1,103 @@
-<div>
-    <div class="row" style="padding-top:5px">
-        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12" style="margin-top:5px">
-            <div style="text-align: left;margin-left: 10px;">
-                <form name="editableForm">
-                    <table class="table table-bordered table-condensed dataModelDetailTable">
-                        <tbody>
-                            <tr>
-                                <td class="col-sx-2 col-sm-2 col-md-2 mcTableTitle" colspan="2">
-                                    <span *ngIf="user.id">Edit User</span>
-                                    <span *ngIf="!user.id">Create User</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Email*</td>
-                                <td>
-                                    <div class="form-group" ng-class="{'has-error':errors && errors['emailAddress']}">
-                                        <input name="emailAddress" type="text" class="form-control wizardInput" [(ngModel)]="user.emailAddress">
-                                        <small  *ngIf="errors && errors['emailAddress']" class="errorMessage">{{errors['emailAddress']}}</small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">First Name*</td>
-                                <td>
-                                    <div class="form-group" (ngClass)="{'has-error':errors && errors['firstName']}">
-                                        <input  name="firstName" type="text" class="form-control wizardInput" [(ngModel)]="user.firstName">
-                                        <small  *ngIf="errors && errors['firstName']" class="errorMessage">{{errors['firstName']}}</small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Last Name*</td>
-                                <td>
-                                    <div class="form-group" (ngClass)="{'has-error':errors && errors['lastName']}">
-                                        <input name="lastName" type="text" class="form-control wizardInput" [(ngModel)]="user.lastName">
-                                        <small  *ngIf="errors && errors['lastName']" class="errorMessage">{{errors['lastName']}}</small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Organisation</td>
-                                <td>
-                                    <div class="form-group" ng-class="{'has-error':errors && errors['organisation']}">
-                                        <input name="organisation" type="text" class="form-control wizardInput" [(ngModel)]="user.organisation">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Role <br>in Organisation</td>
-                                <td>
-                                    <div class="form-group" ng-class="{'has-error':errors && errors['jobTitle']}">
-                                        <input name="jobTitle" type="text" class="form-control wizardInput" [(ngModel)]="user.jobTitle">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Role*</td>
-                                <td>
-                                    <div class="form-group" (ngClass)="{'has-error':errors && errors['userRole']}">
-                                        <select name="userRole" class="form-control wizardInput mcSelect" [(ngModel)]="user.userRole">
-                                            <option *ngFor="let role of roles" (value)="role.value">{{role.text}}</option>
-                                        </select>
-                                        <small  *ngIf="errors && errors['userRole']" class="errorMessage">{{errors['userRole']}}</small>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Groups</td>
-                                <td>
-                                    <mc-select
-                                        [width]="'100%'"
-                                        [multi-select]="true"
-                                        [accept-typed-input]="false"
-                                        [value-type]="'static'"
-                                        [static-values]="allGroups"
-                                        [default-value]="user.groups"
-                                        [id-property]="'id'"
-                                        [display-property]="'label'"
-                                        [search-property]="'label'"
-                                        (on-select)="onGroupSelect">
-                                        <ng-template #lineContent let-item>
-                                            <div>{{item.label}}</div>
-                                        </ng-template>
-                                    </mc-select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="text-align: right;">
-                                    <div style="float: right;margin-bottom: 3px">
-                                        <button type="button"
-                                                class="btn btn-default btn-xs"
-                                                (click)="cancel()">
-                                            <i class="fa fa-times cancelEditButton"></i>
-                                        </button>
-                                        <button type="submit"
-                                                class="btn btn-default btn-xs"
-                                                (click)="save()">
-                                            <i class="fa fa-check saveButton"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container mb-2">
+    <h4>
+        <span *ngIf="user.id">Edit User</span>
+        <span *ngIf="!user.id">Add User</span>
+    </h4>
 </div>
 
+<form name="editableForm" class="mdm--form">
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>First name*</mat-label>
+            <input matInput name="firstName" [(ngModel)]="user.firstName">
+            <mat-error *ngIf="errors && errors['firstName']"> -->
+                {{errors['firstName']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Last name*</mat-label>
+            <input matInput name="lastName" [(ngModel)]="user.lastName">
+            <mat-error *ngIf="errors && errors['lastName']">
+                {{errors['lastName']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Email*</mat-label>
+            <input matInput name="emailAddress" [(ngModel)]="user.emailAddress">
+            <mat-error *ngIf="errors && errors['emailAddress']">
+                {{errors['emailAddress']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Organisation</mat-label>
+            <input matInput name="organisation" [(ngModel)]="user.organisation">
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Role in organisation</mat-label>
+            <input matInput name="jobTitle" [(ngModel)]="user.jobTitle">
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
+            <mat-label>Role*</mat-label>
+            <mat-select name="userRole" [(ngModel)]="user.userRole">
+                <mat-option *ngFor="let role of roles" [value]="role.value">{{role.text}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="errors && errors['userRole']">
+                {{errors['userRole']}}
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="mdm--form-input mb-2">
+        <mat-label>Groups*</mat-label>
+        <mdm-select
+                [width]="'100%'"
+                [multiSelect]="true"
+                [acceptTypedInput]="false"
+                [valueType]="'static'"
+                [staticValues]="allGroups"
+                [defaultValue]="user.groups"
+                [idProperty]="'id'"
+                [displayProperty]="'label'"
+                [searchProperty]="'label'"
+                (selectEvent)="onGroupSelect">
+                <ng-template #lineContent let-item>
+                    <div>{{item.label}}</div>
+                </ng-template>
+        </mdm-select>
+    </div>
+
+    <button mat-button type="button" (click)="cancel()">
+        Cancel
+    </button>
+    <button mat-flat-button color="primary" type="submit" class="custom" (click)="save()">
+        <span *ngIf="user.id">Update user details</span>
+        <span *ngIf="!user.id">Add user</span>
+    </button>
+
+</form>

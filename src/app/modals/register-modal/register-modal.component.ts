@@ -1,122 +1,102 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, OnInit } from '@angular/core';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { ForgotPasswordModalComponent } from '../forgot-password-modal/forgot-password-modal.component';
-import {ResourcesService} from '../../services/resources.service';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
-import {ConfirmationModalComponent} from '../confirmation-modal/confirmation-modal.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
-    selector: 'app-register-modal',
-    templateUrl: './register-modal.component.html',
-    styleUrls: ['./register-modal.component.sass']
+  selector: 'mdm-register-modal',
+  templateUrl: './register-modal.component.html',
+  styleUrls: ['./register-modal.component.sass']
 })
 export class RegisterModalComponent implements OnInit {
+  email: any;
+  firstName: any;
+  lastName: any;
+  organisation: any;
+  roleInOrganisation: any;
+  password: any;
+  confirmPassword: any;
+  message: any;
 
-    email: any;
-    firstName: any;
-    lastName: any;
-    organisation: any;
-    roleInOrganisation: any;
-    password: any;
-    confirmPassword: any;
-    message: any;
+  constructor(public broadcastService: BroadcastService, public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
 
-    constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) { }
+  ngOnInit() {
+    this.email = '';
+    this.firstName = '';
+    this.lastName = '';
+    this.organisation = '';
+    this.roleInOrganisation = '';
+    this.password = '';
+    this.confirmPassword = '';
+  }
 
-    ngOnInit() {
-        this.email = '';
-        this.firstName = '';
-        this.lastName = '';
-        this.organisation = '';
-        this.roleInOrganisation = '';
-        this.password = '';
-        this.confirmPassword = '';
-
-    }
-
-    disabled = () => {
-        return (this.email == ''
-            || this.firstName == ''
-            || this.lastName == ''
-            || this.password == ''
-            || this.password != this.confirmPassword);
-    }
-
-    register = () => {
-
-        let resource = {
-            emailAddress: this.email,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            organisation: this.organisation,
-            roleInOrganisation: this.roleInOrganisation,
-            password: this.password,
-            confirmPassword: this.confirmPassword
-        };
-        this.resources.catalogueUser.post(null, null,  { resource}).
-        subscribe((result) => {
-            this.dialogRef.close();
-            this.registerSuccess();
-        }, (error) => {
-            let firstError: String = error.error.errors[0].message;
-
-            if (firstError.indexOf('Property [emailAddress] of class [class ox.softeng.metadatacatalogue.core.user.CatalogueUser] with value') >= 0 &&
-                firstError.indexOf('must be unique') >= 0) {
-                firstError = 'The email address \'' + this.email + '\' has already been registered.'
-            }
-
-            this.message = 'Error in registration: ' + firstError;
-        });
-    }
-
-    registerSuccess = () => {
-        const dialog = this.dialog.open(ConfirmationModalComponent,
-            {
-                hasBackdrop: false,
-                data: {
-                    title: 'Registration successful',
-                    message:
-                        'You have successfully requested access to the Metadata Catalogue.  \n' +
-                        'You will receive an email (to ' + this.email + ') containing login details once an administrator has approved your request.',
-                    cancelShown: false
-                }
-            });
-
-        dialog.afterClosed().subscribe(result => {
-            if (result.status !== 'ok') {
-                // reject("cancelled");
-
-            }
-        });
-
-    }
-
-    cancel = () => {
-        // this.securityHandler.registerModalDisplayed = false;
+  register() {
+    const resource = {
+      emailAddress: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      organisation: this.organisation,
+      roleInOrganisation: this.roleInOrganisation,
+      password: this.password,
+      confirmPassword: this.confirmPassword
+    };
+    this.resources.catalogueUser.post(null, null, { resource }).subscribe(() => {
         this.dialogRef.close();
-    }
+        this.registerSuccess();
+      },
+      error => {
+        let firstError: string = error.error.errors[0].message;
 
-
-    keyEntered = (event) => {
-        if (event.which === 13) {
-            this.register();
+        if (firstError.indexOf('Property [emailAddress] of class [class ox.softeng.metadatacatalogue.core.user.CatalogueUser] with value') >= 0 && firstError.indexOf('must be unique') >= 0) {
+          firstError = `The email address ${this.email} has already been registered.`;
         }
-    }
+        console.log(firstError);
+        this.message = 'Error in registration: ' + firstError;
+      }
+    );
+  }
 
-    close = () => {
-        // this.securityHandler.loginModalDisplayed = false;
-        this.dialogRef.close();
-    }
+  registerSuccess() {
+    const dialog = this.dialog.open(ConfirmationModalComponent, {
+      data: {
+        title: 'Registration successful',
+        message: `You have successfully requested access to the Metadata Catalogue. <br>
+                  You will receive an email (to ${this.email}) containing login details <br> once an administrator has approved your request.`,
+        cancelShown: false
+      }
+    });
 
-    reset = () => {
-        this.dialogRef.close();
+    dialog.afterClosed().subscribe(result => {
+      if (result?.status !== 'ok') {
+        // reject("cancelled");
+      }
+    });
+  }
 
-        this.dialog.open(RegisterModalComponent,
-            {
-                minWidth: 400,
-                hasBackdrop: false
-            });
-    }
-
+  login() {
+    this.dialogRef.close();
+    this.broadcastService.broadcast('openLoginModalDialog');
+  }
+  close = () => {
+    this.dialogRef.close();
+  }
 }

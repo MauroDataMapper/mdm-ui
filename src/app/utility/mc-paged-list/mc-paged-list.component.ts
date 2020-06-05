@@ -1,157 +1,154 @@
-import {
-    Component,
-    OnInit,
-    Input,
-    ViewChild,
-    ElementRef,
-    ContentChild,
-    TemplateRef,
-    Output,
-    EventEmitter
-} from '@angular/core';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, Input, ViewChild, ElementRef, ContentChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'mc-paged-list',
-    templateUrl: './mc-paged-list.component.html',
-    styleUrls: ['./mc-paged-list.component.sass']
+  selector: 'mdm-paged-list',
+  templateUrl: './mc-paged-list.component.html',
+  styleUrls: ['./mc-paged-list.component.sass']
 })
 export class McPagedListComponent implements OnInit {
+  @ViewChild('displayItemsDiv', { static: false }) displayItemsDiv: ElementRef;
 
-    @ViewChild("displayItemsDiv", { static: false }) displayItemsDiv: ElementRef;
+  @ContentChild('pageListTemplate', { static: true })
+  pageListTemplateTmpl: TemplateRef<any>;
 
-    @ContentChild('pageListTemplate', { static: true }) pageListTemplateTmpl: TemplateRef<any>;
-
-    @Input() type: any;//static,dynamic
-    @Input() name: any;
-    @Input('mc-title') mcTitle: any;
-    @Output() onItemsChange = new EventEmitter();
-    itemValues : any;
-    // @Input() items: any;//when it's 'type=static'
-    @Input()
-    get items(){
-       return this.itemValues;
+  @Input() type: any; // static,dynamic
+  @Input() name: any;
+  @Input() mcTitle: any;
+  @Output() itemsChange = new EventEmitter();
+  itemValues: any;
+  // @Input() items: any;//when it's 'type=static'
+  @Input()
+  get items() {
+    return this.itemValues;
+  }
+  set items(val) {
+    this.itemValues = val;
+    if (val === null || val === undefined) {
+      this.itemValues = null;
+    } else {
+      this.itemValues = val;
     }
-    set items(val)
-    {
+    this.itemsChange.emit(this.itemValues);
+    this.ngOnInit();
+  }
+  fetchMethod: any; // when it's 'type=dynamic'
+  @Input() pageSize: any;
+  editBtnTooltip: any;
+  editBtnText: any;
 
-     this.itemValues =  val;
-        if (val === null || val === undefined) {
-            this.itemValues = null;
-        } else {
-            this.itemValues = val;
-        }
-        this.onItemsChange.emit(this.itemValues);
-        this.ngOnInit();
-    }
-    fetchMethod: any;//when it's 'type=dynamic'
-    @Input('page-size') pageSize: any;
-    editBtnTooltip: any;
-    editBtnText: any;
+  doNotDisplayTitle: any;
+  currentPage = 0;
+  disablePrev = false;
+  disableNext = false;
+  total = 0;
+  displayItems: any[];
+  displayValues: any[];
 
-    doNotDisplayTitle: any;
-    currentPage = 0;
-    disablePrev = false;
-    disableNext = false;
-    total = 0;
-    displayItems: any[];
-    displayValues: any[];
+  constructor() {}
 
-    constructor() { }
+  ngOnInit() {
+    if (this.type === 'static') {
+      this.total = this.items.length;
+      this.displayItems = Object.assign([], this.items);
 
-    ngOnInit() {
-
-        if (this.type === 'static') {
-            
-
-            this.total = this.items.length;
-            this.displayItems = Object.assign([], this.items);
-
-            if (this.total < this.pageSize) {
-                this.disablePrev = true;
-                this.disableNext = true;
-                this.currentPage = 0;
-            }
-            this.addToUI();
-        }
-
-        if (this.type === 'dynamic') {
-            this.fetchData();
-        }
-
-
+      if (this.total < this.pageSize) {
+        this.disablePrev = true;
+        this.disableNext = true;
+        this.currentPage = 0;
+      }
+      this.addToUI();
     }
 
-    addToUI = () => {
-        
-        if (this.type === 'static') {
-            var tempValues = [];
-            var start = this.pageSize * this.currentPage;
-            for (var i = start; i < start + this.pageSize && i < this.total; i++) {
-                tempValues.push(this.displayItems[i]);
-            }
-            this.displayValues = tempValues;
-        } else {
-            var tempValues = [];
-            for (var i = 0; this.displayItems && i < this.displayItems.length; i++) {
-                tempValues.push(this.displayItems[i]);
-            }
-            this.displayValues = tempValues;
-        }
+    if (this.type === 'dynamic') {
+      this.fetchData();
+    }
+  }
 
-
-        this.disableNext = false;
-        var pageCount = Math.floor(this.total / this.pageSize);
-        var lastPage = Math.floor(this.total % this.pageSize) > 0 ? 1 : 0;
-        if (this.currentPage + 1 >= pageCount + lastPage) {
-            this.disableNext = true;
-        }
-
-        this.disablePrev = false;
-        if (this.currentPage === 0) {
-            this.disablePrev = true;
-        }
-    };
-
-    fetchData = () => {
-        var offset = this.currentPage * this.pageSize;
-        this.fetchMethod(offset, this.pageSize).subscribe((result) => {
-            this.total = result.count;
-            this.displayItems = Object.assign([], result.items);
-            if (this.total < this.pageSize) {
-                this.disablePrev = true;
-                this.disableNext = true;
-                this.currentPage = 0;
-            }
-            this.addToUI();
-        });
+  addToUI = () => {
+    if (this.type === 'static') {
+      const tempValues = [];
+      const start = this.pageSize * this.currentPage;
+      for (let i = start; i < start + this.pageSize && i < this.total; i++) {
+        tempValues.push(this.displayItems[i]);
+      }
+      this.displayValues = tempValues;
+    } else {
+      const tempValues = [];
+      for (let i = 0; this.displayItems && i < this.displayItems.length; i++) {
+        tempValues.push(this.displayItems[i]);
+      }
+      this.displayValues = tempValues;
     }
 
-    next = () => {
-        var pageCount = Math.floor(this.total / this.pageSize);
-        var lastPage = Math.floor(this.total % this.pageSize) > 0 ? 1 : 0;
-        if (this.currentPage + 1 >= pageCount + lastPage) {
-            return;
-        }
-        this.currentPage = this.currentPage + 1;
+    this.disableNext = false;
+    const pageCount = Math.floor(this.total / this.pageSize);
+    const lastPage = Math.floor(this.total % this.pageSize) > 0 ? 1 : 0;
+    if (this.currentPage + 1 >= pageCount + lastPage) {
+      this.disableNext = true;
+    }
 
-        if (this.type === 'static') {
-            this.addToUI();
-        } else {
-            this.fetchData();
-        }
-    };
+    this.disablePrev = false;
+    if (this.currentPage === 0) {
+      this.disablePrev = true;
+    }
+  };
 
-    prev = () => {
-        if (this.currentPage === 0) {
-            return;
-        }
-        this.currentPage = this.currentPage - 1;
+  fetchData = () => {
+    const offset = this.currentPage * this.pageSize;
+    this.fetchMethod(offset, this.pageSize).subscribe(result => {
+      this.total = result.count;
+      this.displayItems = Object.assign([], result.items);
+      if (this.total < this.pageSize) {
+        this.disablePrev = true;
+        this.disableNext = true;
+        this.currentPage = 0;
+      }
+      this.addToUI();
+    });
+  };
 
-        if (this.type === 'static') {
-            this.addToUI();
-        } else {
-            this.fetchData();
-        }
-    };
+  next = () => {
+    const pageCount = Math.floor(this.total / this.pageSize);
+    const lastPage = Math.floor(this.total % this.pageSize) > 0 ? 1 : 0;
+    if (this.currentPage + 1 >= pageCount + lastPage) {
+      return;
+    }
+    this.currentPage = this.currentPage + 1;
 
+    if (this.type === 'static') {
+      this.addToUI();
+    } else {
+      this.fetchData();
+    }
+  };
+
+  prev = () => {
+    if (this.currentPage === 0) {
+      return;
+    }
+    this.currentPage = this.currentPage - 1;
+
+    if (this.type === 'static') {
+      this.addToUI();
+    } else {
+      this.fetchData();
+    }
+  }
 }

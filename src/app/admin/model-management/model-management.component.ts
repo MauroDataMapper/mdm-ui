@@ -1,14 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { SharedService } from '../../services/shared.service';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { SecurityHandlerService } from '../../services/handlers/security-handler.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from 'src/app/modals/confirmation-modal/confirmation-modal.component';
+/*
+Copyright 2020 University of Oxford
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit } from '@angular/core';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-model-management',
+  selector: 'mdm-model-management',
   templateUrl: './model-management.component.html',
   styleUrls: ['./model-management.component.sass']
 })
@@ -26,7 +42,8 @@ export class ModelManagementComponent implements OnInit {
     private resourcesService: ResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private title: Title
   ) {}
 
   ngOnInit() {
@@ -34,8 +51,8 @@ export class ModelManagementComponent implements OnInit {
     this.selectedElementsCount = 0;
     this.filterStatus = '';
     this.filterElement = '';
-
     this.loadFolders();
+    this.title.setTitle('Model management');
   }
 
   onFilterChange = function() {
@@ -61,53 +78,53 @@ export class ModelManagementComponent implements OnInit {
     if (this.filterStatus === null) {
       // no op
     } else if (this.filterStatus === 'deleted') {
-    //   if (this.filterElement === "dataModel") {
-    //     method = this.resourcesService.admin.get("dataModels/deleted");
-    //   } else if (this.filterElement === "terminology") {
-    //     method = this.resourcesService.admin.get("terminologies/deleted");
-	//   }
-	options = {
-		queryStringParams: {
-		  includeDocumentSuperseded: false,
-		  includeModelSuperseded: false,
-		  includeDeleted: true
-		}
-	  };
-	method = this.resourcesService.tree.get(null, null, options);
+      //   if (this.filterElement === "dataModel") {
+      //     method = this.resourcesService.admin.get("dataModels/deleted");
+      //   } else if (this.filterElement === "terminology") {
+      //     method = this.resourcesService.admin.get("terminologies/deleted");
+      //   }
+      options = {
+        queryStringParams: {
+          includeDocumentSuperseded: false,
+          includeModelSuperseded: false,
+          includeDeleted: true
+        }
+      };
+      method = this.resourcesService.tree.get(null, null, options);
     } else if (this.filterStatus === 'documentSuperseded') {
-    //   if (this.filterElement === "dataModel") {
-    //     method = this.resourcesService.admin.get(
-    //       "dataModels/documentSuperseded"
-    //     );
-    //   } else if (this.filterElement === "terminology") {
-    //     method = this.resourcesService.admin.get(
-    //       "terminologies/documentSuperseded"
-    //     );
-	//   }
-	options = {
-		queryStringParams: {
-		  includeDocumentSuperseded: true,
-		  includeModelSuperseded: false,
-		  includeDeleted: false
-		}
-	  };
-	method = this.resourcesService.tree.get(null, null, options);
+      //   if (this.filterElement === "dataModel") {
+      //     method = this.resourcesService.admin.get(
+      //       "dataModels/documentSuperseded"
+      //     );
+      //   } else if (this.filterElement === "terminology") {
+      //     method = this.resourcesService.admin.get(
+      //       "terminologies/documentSuperseded"
+      //     );
+      //   }
+      options = {
+        queryStringParams: {
+          includeDocumentSuperseded: true,
+          includeModelSuperseded: false,
+          includeDeleted: false
+        }
+      };
+      method = this.resourcesService.tree.get(null, null, options);
     } else if (this.filterStatus === 'modelSuperseded') {
-    //   if (this.filterElement === "dataModel") {
-    //     method = this.resourcesService.admin.get("dataModels/modelSuperseded");
-    //   } else if (this.filterElement === "terminology") {
-    //     method = this.resourcesService.admin.get(
-    //       "terminologies/modelSuperseded"
-    //     );
-	//   }
-	options = {
-		queryStringParams: {
-		  includeDocumentSuperseded: false,
-		  includeModelSuperseded: true,
-		  includeDeleted: false
-		}
-	  };
-	method = this.resourcesService.tree.get(null, null, options);
+      //   if (this.filterElement === "dataModel") {
+      //     method = this.resourcesService.admin.get("dataModels/modelSuperseded");
+      //   } else if (this.filterElement === "terminology") {
+      //     method = this.resourcesService.admin.get(
+      //       "terminologies/modelSuperseded"
+      //     );
+      //   }
+      options = {
+        queryStringParams: {
+          includeDocumentSuperseded: false,
+          includeModelSuperseded: true,
+          includeDeleted: false
+        }
+      };
+      method = this.resourcesService.tree.get(null, null, options);
     }
 
     method.subscribe(resp => {
@@ -122,22 +139,21 @@ export class ModelManagementComponent implements OnInit {
       }
 
       this.reloading = false;
-    }),
+    },
       err => {
         this.reloading = false;
         this.messageHandler.showError('There was a problem loading tree.', err);
-      };
+      });
   };
 
   markChildren = function(node) {
-
-	if (this.selectedElements) {
+    if (this.selectedElements) {
       if (this.selectedElements[node.id]) {
         node.checked = true;
       }
     }
 
- if (node.children) {
+    if (node.children) {
       for (const entry of node.children) {
         this.markChildren(entry);
       }
@@ -145,8 +161,8 @@ export class ModelManagementComponent implements OnInit {
   };
 
   onNodeChecked = function(node) {
-	const currentIdx = this.selectedElements.findIndex(x => x.id == [node.id]);
-	if ( currentIdx === -1) {
+    const currentIdx = this.selectedElements.findIndex(x => x.id === [node.id]);
+    if (currentIdx === -1) {
       this.selectedElements.push(node);
       this.selectedElementsCount++;
     } else {
@@ -163,7 +179,7 @@ export class ModelManagementComponent implements OnInit {
   };
 
   delete(permanent?) {
-    let dataModelResources = {
+    const dataModelResources = {
       permanent,
       ids: []
     };
@@ -175,34 +191,27 @@ export class ModelManagementComponent implements OnInit {
     }
 
     this.deleteInProgress = true;
-    this.resourcesService.dataModel
-      .delete(null, null, null, dataModelResources)
-      .subscribe(() => {
-        if (permanent) {
-          this.deleteSuccessMessage =
-            this.selectedElementsCount + ' Data Model(s) deleted successfully.';
-          this.deleteInProgress = false;
+    this.resourcesService.dataModel.delete(null, null, null, dataModelResources).subscribe(() => {
+          if (permanent) {
+            this.deleteSuccessMessage = this.selectedElementsCount + ' Data Model(s) deleted successfully.';
+            this.deleteInProgress = false;
 
-          setTimeout(() => {
-            this.resetSettings();
-          }, 2000);
-        } else {
-          this.deleteSuccessMessage =
-            this.selectedElementsCount +
-            ' Data Model(s) marked as deleted successfully.';
-          this.deleteInProgress = false;
+            setTimeout(() => {
+              this.resetSettings();
+            }, 2000);
+          } else {
+            this.deleteSuccessMessage = this.selectedElementsCount + ' Data Model(s) marked as deleted successfully.';
+            this.deleteInProgress = false;
 
-          setTimeout(() => {
-            this.resetSettings();
-          }, 2000);
+            setTimeout(() => {
+              this.resetSettings();
+            }, 2000);
+          }
+        }, error => {
+          this.deleteInProgress = false;
+          this.messageHandler.showError('There was a problem deleting the Data Model(s).', error);
         }
-      }, (error) => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError(
-          'There was a problem deleting the Data Model(s).',
-          error
-        );
-      });
+      );
   }
 
   askForSoftDelete() {
@@ -211,23 +220,22 @@ export class ModelManagementComponent implements OnInit {
         reject({ message: 'You should be an Admin!' });
       }
 
-      let message =
-        'Are you sure you want to delete these Elements?<br>They will be marked as deleted and will not be viewable by users except Administrators.';
+      let message = 'Are you sure you want to delete these Elements?<br>They will be marked as deleted and will not be viewable by users except Administrators.';
       if (this.selectedElementsCount === 1) {
-        message =
-          'Are you sure you want to delete this Element?<br>It will be marked as deleted and will not be viewable by users except Administrators.';
+        message = 'Are you sure you want to delete this Element?<br>It will be marked as deleted and will not be viewable by users except Administrators.';
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
         data: {
-          title: 'Folder',
+          title: 'Folder delete',
+          okBtnTitle: 'Confirm folder deletion',
+          btnType: 'warn',
           message
         }
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           return promise;
         }
 
@@ -243,43 +251,41 @@ export class ModelManagementComponent implements OnInit {
         reject({ message: 'You should be an Admin!' });
       }
 
-      let message =
-        'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete these Elements?';
+      let message = 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete these Elements?';
       if (this.selectedElementsCount === 1) {
-        message =
-          'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Element?';
+        message = 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Element?';
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
         data: {
-          title: 'Data Model',
-          message
+          title: 'Data Model deletion',
+          okBtnTitle: 'Delete permanently',
+          btnType: 'warn',
+          message,
         }
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           return;
         }
 
-        message =
-          '<strong>Are you sure?</strong><br>All their child elements such as \'Data Classes\', \'Data Elements\', \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'errorMessage\'>permanently</span>.';
+        message = '<strong>Are you sure?</strong><br>All their child elements such as \'Data Classes\', \'Data Elements\', <br> \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'warning\'>permanently</span>.';
         if (this.selectedElementsCount === 1) {
-          message =
-            '<strong>Are you sure?</strong><br>All its child elements such as \'Data Classes\', \'Data Elements\', \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'errorMessage\'>permanently</span>.';
+          message = '<strong>Are you sure?</strong><br>All its child elements such as \'Data Classes\', \'Data Elements\', <br> \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'warning\'>permanently</span>.';
         }
 
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          hasBackdrop: false,
           data: {
-            title: 'Folder',
+            title: 'Permanent delete',
+            okBtnTitle: 'Confirm permanent deletion',
+            btnType: 'warn',
             message
           }
         });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== 'ok') {
+        dialog2.afterClosed().subscribe(res => {
+          if (res?.status !== 'ok') {
             reject(null);
             return;
           }

@@ -1,131 +1,135 @@
+<!--
+Copyright 2020 University of Oxford
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-<div>
-    <div class="panel panel-default">
-        <form editable-form name="form"
-              onaftersave="onAfterSave()"
-              (ngSubmit)="formBeforeSave()"
-              disable-submit-on-enter>
-            <div class="panel-body panel-table">
-                <h4>
-                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
-                        <span [ngClass]="{'deletedDataModelTitle': result?.deleted, 'xeditableInput':true}">
-                            <div [ngClass]="{'form-group':true, 'has-error': errorMessage != ''}">
-                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"  ></app-inline-text-edit>
-                                <span class="publiclyReadable" [hidden]="!result.readableByEveryone">
-                                    <i class="fa fa-globe themeColor" aria-hidden="true" title="Publicly Readable"></i>
-                                </span>
-                            </div>
-                            <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                                <span class="help-block">{{errorMessage}}</span>
-                            </div>
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="panel panel-default mdm--shadow-block">
+    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body">
+            <div *ngIf="result">
+                <div [ngClass]="{ 'has-error': errorMessage != ''}">
+                    <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                        <span class="dataModelTypeIcon">
+                            <i matTooltip="Folder" class="fas fa-folder"></i>
                         </span>
-
-                    </div>
-                    <div class="dataModelTypeIcon">
-                        <i matTooltip="Data Standard" style="font-size: 30px;" class="fa fa-folder themeColor"></i>
-                    </div>
-                </h4>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px !important;">
-                    <small class="elementDetailMCType">Folder</small>
-                    <span *ngIf="result?.deleted" class="label label-danger"
-                          style="vertical-align: middle;font-size: 9px;">Deleted</span>
+                        <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
+                    </h4>
+                    <span class="inline-block">
+                        <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
+                    </span>
+                </div>
+                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                    <span class="help-block">{{errorMessage}}</span>
                 </div>
             </div>
 
-            <table class="table table-condensed dataModelDetailTable">
-                <tbody>
-                    <tr>
-                        <td class="detailsRowHeader col-md-2">Description</td>
-                        <td class="elementDetailDescription">
-                            <div *ngIf="hasResult">
-                                <markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></markdown-text-area>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: right;">
-                            <div style="float: right;margin-bottom: 3px;margin-left: 5px;"
-                                 [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                                <div style="float: right;margin-bottom: 3px;margin-left: 5px;"
-                                     [hidden]="editableForm.visible || editableForm.deletePending" uib-dropdown
-                                     is-open="false" *ngIf="showDelete">
-                                    <button type="button"
-                                            matTooltip="Delete"
-                                            class="btn btn-default btn-xs dropdown-toggle"
-                                            [disabled]="deleteInProgress || exporting"
-                                            [matMenuTriggerFor]="menu">
-                                        <i class="fa fa-trash-o deleteButton" aria-hidden="true"></i>
-                                        <span class="caret" style="margin-right: 2px;"></span>
-                                    </button>
+            <div class="detail-icons">
+                <div class="text-muted">
+                  <small>
+                      <i class="fas fa-cube" matTooltip="Item type"></i>
+                      <span><strong>Item type: </strong><span class="item-type">Folder</span></span>
+                  </small>
+                </div>
+                <div class="text-muted" *ngIf="result?.readableByEveryone">
+                    <small>
+                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
+                        <span><strong>Availability: </strong>Publicly Readable</span>
+                    </small>
+                </div>
+            </div>
+        </div>
 
-                                    <mat-menu #menu="matMenu">
-                                        <button mat-menu-item class="modelFilterItem" (click)="askForSoftDelete()"
-                                                *ngIf="!result?.deleted">
-                                            <a title="Just mark it as deleted">Mark as deleted</a>
-                                        </button>
-                                        <button mat-menu-item class="modelFilterItem" (click)="askForPermanentDelete()">
-                                            <a title="Permanently delete the Data Model">Delete <span class="errorMessage">permanently</span></a>
-                                        </button>
-                                    </mat-menu>
-                                </div>
-                            </div>
+        <div class="table-responsive-md">
+        <table class="table table-bordered mdm--table-fixed">
+            <tbody>
+                <tr>
+                    <th class="detailsRowHeader">Description</th>
+                    <td class="elementDetailDescription">
+                        <div *ngIf="hasResult">
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+                        <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                            <button mat-stroked-button
+                                    color="warn"
+                                    type="button"
+                                    matTooltip="Delete"
+                                    aria-label="Delete"
+                                    class="paddingless dropdown-toggle"
+                                    [disabled]="deleteInProgress || exporting"
+                                    [matMenuTriggerFor]="menu">
+                                    <i class="far fa-trash-alt warning"></i>
+                            </button>
 
-                            <div style="float: right;margin-bottom: 3px">
-                                <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending"
-                                     class="btn-group-xs" uib-dropdown is-open="false"
-                                     style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                    <button id="singleX-button" type="button"
-                                            class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
-                                            [hidden]="editableForm.visible || editableForm.deletePending"
-                                            [disabled]="deleteInProgress || exporting || result.finalised"
-                                            matTooltip="Edit"
-                                            (click)="showForm();"
-                                            uib-dropdown-toggle>
-                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                                <editable-form-buttons [hidden]="!editableForm.visible"
-                                                       [on-cancel-edit]="onCancelEdit"
-                                                       [editable]="editableForm"
-                                                       [text-location]="'left'"
-                                                       [hide-delete]="true"
-                                                       [hide-cancel]="false"
-                                                       [processing]="deleteInProgress"></editable-form-buttons>
-                            </div>
-                            <!--                        <div class="deleteInProgressSpinner"-->
-                            <!--                             style="margin-bottom: 3px;position: relative; float: right; margin-right:8px;"-->
-                            <!--                             ng-show="deleteInProgress">-->
-                            <!--                            <a style="font-size: 14px; text-decoration: none;">-->
-                            <!--                                <i class="fa fa-refresh fa-spin"></i> Deleting...-->
-                            <!--                            </a>-->
-                            <!--                        </div>-->
-
-
-                            <div matTooltip="Search" class="btn-group-xs" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button class="btn btn-xs btn-default addNewModelButton themeColor" type="button" (click)="toggleShowSearch()" ng-disabled="processing">
-                                    <i class="fa fa-search themeColor"></i>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                    Mark as deleted
                                 </button>
-                            </div>
+                                <button mat-menu-item (click)="askForPermanentDelete()">
+                                    Delete <span class="errorMessage">permanently</span>
+                                </button>
+                            </mat-menu>
+                        </div>
 
-                            <div matTooltip="User & Group Access" class="btn-group-xs" style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button class="btn btn-xs btn-default addNewModelButton themeColor"
-                                        (click)="toggleSecuritySection()"
+                        <div style="float: right;">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; margin-right:4px;">
+                                <button mat-stroked-button
+                                        color="primary"
                                         type="button"
-                                        *ngIf="showPermission"
-                                        [disabled]="deleteInProgress || processing"
-                                        [hidden]="editableForm.visible || editableForm.deletePending">
-                                    <i class="fa fa-user userAccess"></i>
+                                        [disabled]="deleteInProgress || exporting || result.finalised"
+                                        matTooltip="Edit"
+                                        aria-label="Edit"
+                                        (click)="showForm();">
+                                        <i class="fas fa-pencil-alt"></i>
                                 </button>
-
                             </div>
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
+                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
+                                [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                        </div>
 
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button mat-stroked-button
+                                    color="primary"
+                                    type="button"
+                                    class="paddingless"
+                                    matTooltip="Search"
+                                    aria-label="Search"
+                                    [disabled]="processing"
+                                    (click)="toggleShowSearch()" >
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button mat-stroked-button
+                                    color="primary"
+                                    type="button"
+                                    class="paddingless"
+                                    matTooltip="User & Group Access"
+                                    aria-label="User & Group Access"
+                                    *ngIf="showPermission"
+                                    [disabled]="deleteInProgress || processing"
+                                    (click)="toggleSecuritySection()">
+                                    <i class="fas fa-user-lock"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
+    </form>
 </div>

@@ -1,32 +1,44 @@
-<div class="row" >
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <mat-horizontal-stepper #stepper>
-            <mat-step *ngFor="let step of steps; let i = index">
-                <ng-template matStepLabel>{{step.title}}</ng-template>
-                <dcl-wrapper  [type]="step.component" [(step)]="steps[i]"></dcl-wrapper>
-                <div class="row">
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        <button class="btn btn-default btn-sm" style="margin-right: 5px" matStepperPrevious>
-                            <span class="fa fa-chevron-left"></span>
-                            Previous
-                        </button>
-                        <button class="btn btn-default btn-sm" (click)="cancelWizard()">
-                            Cancel
-                        </button>
-                    </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="text-align: center">
-                        <strong>{{(i+1)}} / {{steps.length}}</strong>
-                    </div>
+<!--
+Copyright 2020 University of Oxford
 
-                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="text-align: right">
-                        <button class="btn btn-default btn-sm" *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="step.invalid">
-                            Next
-                            <span class="fa fa-chevron-right"></span>
-                        </button>
-                        <button class="btn btn-success btn-sm" *ngIf="(i+1) === steps.length" [disabled]="step.invalid"  (click)="save()">Submit</button>
-                    </div>
-                </div>
-            </mat-step>
-        </mat-horizontal-stepper>
-    </div>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container">
+    <h4 class="marginless">New Data Element</h4>
 </div>
+<mat-vertical-stepper #stepper (selectionChange)="fireChanged($event)" linear>
+    <mat-step *ngFor="let step of steps; let i = index" [completed]="!step.invalid">
+        <ng-template matStepLabel>{{step.title}}</ng-template>
+        <mdm-dcl-wrapper [type]="step.component" [step]="steps[i]"></mdm-dcl-wrapper>
+        <div fxFlex fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
+            <div fxFlex  fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
+                <button mat-stroked-button color="primary" class="custom" *ngIf="i !== 0" matStepperPrevious>
+                    <i class="fas fa-chevron-left"></i>
+                    Previous step
+                </button>
+            </div>
+            <div fxFlex fxLayout="row-reverse" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
+                <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid || isProcessComplete" (click)="save()">Submit Data Element</button>
+                <button mat-stroked-button type="button" color="primary" class="custom" *ngIf="(i+1) !== steps.length" matStepperNext [disabled]="step.invalid">
+                    Next step
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button mat-button color="warn" (click)="cancelWizard()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </mat-step>
+</mat-vertical-stepper>

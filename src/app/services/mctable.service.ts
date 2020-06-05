@@ -1,10 +1,27 @@
-import { Injectable, PipeTransform } from '@angular/core';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Injectable, PipeTransform} from '@angular/core';
 import {BehaviorSubject, Observable, of, pipe, Subject} from 'rxjs';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
-import {SortDirection} from '../directives/sortable.directive';
-import {ResourcesService} from '../services/resources.service';
+import {ResourcesService} from './resources.service';
 
+export type SortDirection = 'asc' | 'desc' | '';
 
 interface SearchResult {
   countries: [];
@@ -44,10 +61,10 @@ function compare(v1, v2) {
 })
 export class MctableService {
   private resultSubject = new Subject<any>();
-  private _loading$ = new BehaviorSubject<boolean>(true);
-  private _search$ = new Subject<void>();
+  private loadingBehaviorSubject = new BehaviorSubject<boolean>(true);
+  private searchSubject = new Subject<void>();
   // private  result :any;
-  result : any;
+  result: any;
   // private _countries$ = new BehaviorSubject<[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
 
@@ -59,13 +76,13 @@ export class MctableService {
     sortDirection: ''
   };
 
-  constructor(private resourcesService : ResourcesService) {
-    // this._search$.pipe(
-    //     tap(() => this._loading$.next(true)),
+  constructor(private resourcesService: ResourcesService) {
+    // this.searchSubject.pipe(
+    //     tap(() => this.loadingBehaviorSubject.next(true)),
     //     debounceTime(200),
     //     switchMap(() => this._search()),
     //     delay(200),
-    //     tap(() => this._loading$.next(false))
+    //     tap(() => this.loadingBehaviorSubject.next(false))
     // ).subscribe(result => {
     //   this._countries$.next(result.countries);
     //   this._total$.next(result.total);
@@ -74,27 +91,56 @@ export class MctableService {
     this.resourcesService.HistoryGet('a61e88e7-c951-4624-baaf-ec03cd09357b', '').subscribe(serverResult => {
       this.result = serverResult;
     });
-    console.log(this.result);
-        if(this.result != null && this.result != undefined)
-    this._total$.next(this.result.count);
-    this._search$.next();
+    if (this.result !== null && this.result !== undefined) {
+      this._total$.next(this.result.count);
+    }
+    this.searchSubject.next();
   }
-    // get countries$() { return this._countries$.asObservable(); }
-  get total$() { return this._total$.asObservable(); }
-  get loading$() { return this._loading$.asObservable(); }
-  get page() { return this._state.page; }
-  get pageSize() { return this._state.pageSize; }
-  get searchTerm() { return this._state.searchTerm; }
 
-  set page(page: number) { this._set({page}); }
-  set pageSize(pageSize: number) { this._set({pageSize}); }
-  set searchTerm(searchTerm: string) { this._set({searchTerm}); }
-  set sortColumn(sortColumn: string) { this._set({sortColumn}); }
-  set sortDirection(sortDirection: SortDirection) { this._set({sortDirection}); }
+  // get countries$() { return this._countries$.asObservable(); }
+  get total$() {
+    return this._total$.asObservable();
+  }
+
+  get loading() {
+    return this.loadingBehaviorSubject.asObservable();
+  }
+
+  get page() {
+    return this._state.page;
+  }
+
+  set page(page: number) {
+    this._set({page});
+  }
+
+  get pageSize() {
+    return this._state.pageSize;
+  }
+
+  set pageSize(pageSize: number) {
+    this._set({pageSize});
+  }
+
+  get searchTerm() {
+    return this._state.searchTerm;
+  }
+
+  set searchTerm(searchTerm: string) {
+    this._set({searchTerm});
+  }
+
+  set sortColumn(sortColumn: string) {
+    this._set({sortColumn});
+  }
+
+  set sortDirection(sortDirection: SortDirection) {
+    this._set({sortDirection});
+  }
 
   private _set(patch: Partial<State>) {
     Object.assign(this._state, patch);
-    this._search$.next();
+    this.searchSubject.next();
   }
 
   // private _search(): Observable<SearchResult> {
@@ -113,7 +159,7 @@ export class MctableService {
   // }
 
   ResultSendMessage(message: any) {
-    this.resultSubject.next( message );
+    this.resultSubject.next(message);
     this.result = message;
   }
 

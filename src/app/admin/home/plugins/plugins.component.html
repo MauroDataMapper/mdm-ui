@@ -1,64 +1,79 @@
+<!--
+Copyright 2020 University of Oxford
 
-<div class="mcTableTitle">
-	<span class="title">
-		Plugins
-		<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span>
-		<!--<i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>-->
-	</span>
-</div>
-<div class="mcTableContainer">
-	<table mat-table matSort [dataSource]="dataSource" class="table table-condensed table-bordered mcTable">
-		<ng-container matColumnDef="displayName">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="displayName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 65%; width: 65%;" columnName="displayName">
-				<span [hidden]="!hideFilters">Name</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-						<mat-label>Name</mat-label>
-						<input #filters matInput name="displayName" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 65%; width: 65%; text-align: left; word-wrap: break-word;">
-				<div>
-					{{record.displayName}}
-				</div>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="version">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="version" [disabled]="!hideFilters" style="cursor: pointer; max-width: 28%; width: 28%;" columnName="version">
-				<span [hidden]="!hideFilters">Version</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-						<mat-label>Version</mat-label>
-						<input #filters matInput name="version" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 28%; width: 28%; text-align: left; word-wrap: break-word;">
-				<div>
-					<span ng-class="{'label label-primary':!record.isUI, 'label label-success': record.isUI == true}">{{ record.version }}</span>
-				</div>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="pluginType">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="pluginType" [disabled]="!hideFilters" style="cursor: pointer; max-width: 7%; width: 7%;" columnName="pluginType">
-				<span [hidden]="!hideFilters">Type</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" [style.width.px]="10" floatLabel="never">
-						<mat-label>Type</mat-label>
-						<input #filters matInput name="pluginType" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="max-width: 7%; width: 7%; text-align: left; word-wrap: break-word;">
-				<div>
-					{{record.pluginType}}
-				</div>
-			</td>
-		</ng-container>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-		<tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-		<tr mat-row *matRowDef="let record; columns: displayedColumns;" style="height: auto"></tr>
+    http://www.apache.org/licenses/LICENSE-2.0
 
-	</table>
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm--shadow-block">
+    <div class="heading-container">
+        <h4 [ngPlural]="totalItemCount" class="marginless">
+          <ng-template ngPluralCase="=1">
+            There is <span class="mdm--badge mdm--element-count">1</span> plugin in this repository.
+          </ng-template>
+          <ng-template ngPluralCase="other">
+            There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> plugins in this repository.
+          </ng-template>
+        </h4>
+    </div>
+    <div class="table-responsive">
+        <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped marginless">
+            <ng-container matColumnDef="displayName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="displayName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 65%; width: 65%;" columnName="displayName">
+                    <span [hidden]="!hideFilters">Name</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+                            <mat-label>Name</mat-label>
+                            <input #filters matInput name="displayName" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 65%; width: 65%; text-align: left; word-wrap: break-word;">
+                    <div>{{record.displayName}}</div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="pluginType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="pluginType" [disabled]="!hideFilters" style="cursor: pointer; max-width: 20%; width: 20%;" columnName="pluginType">
+                    <span [hidden]="!hideFilters">Type</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" [style.width.px]="10" floatLabel="never">
+                            <mat-label>Type</mat-label>
+                            <input #filters matInput name="pluginType" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
+                    <div>{{record.pluginType}}</div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="version">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="version" [disabled]="!hideFilters" style="cursor: pointer; max-width: 7%; width: 7%;" columnName="version">
+                    <span [hidden]="!hideFilters">Version</span>
+                    <div [hidden]="hideFilters">
+                        <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+                            <mat-label>Version</mat-label>
+                            <input #filters matInput name="version" (keyup)="applyFilter()">
+                        </mat-form-field>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+                <div>
+                    <span [ngClass]="{'label label-primary':!record.isUI, 'label label-success': record.isUI == true}">{{ record.version }}</span>
+                </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
+        </table>
+    </div>
 </div>

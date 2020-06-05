@@ -1,8 +1,24 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
 <div style="position: relative;width: 100%;">
-    <div *ngIf="!doNotDisplayTitle && displayItems && displayItems.length>0" style="vertical-align:baseline;width: 100%;background-color: #f5f5f5;-moz-border-radius: 2px;border-radius: 2px;margin: 1px 0px;">
-        <span style="display: inline-block;padding: 2px 5px;font-style: italic;font-size: 13px; font-weight: bold;">{{mcTitle}}</span>
-        <span class="badge element-count" *ngIf="displayItems && displayItems.length>0">{{total}}</span>
-        <!--<span style="font-style:italic;font-size:11px;"  ng-show="displayItems && displayItems.length==0">(No Link)</span>-->
+    <div *ngIf="!doNotDisplayTitle && displayItems && displayItems.length>0">
+        <span>{{mcTitle}}</span>
+        <span class="mdm--badge mdm--element-count" *ngIf="displayItems && displayItems.length > 0">{{total}}</span>
     </div>
 
 
@@ -12,11 +28,11 @@
 
     <div style="clear:both;vertical-align:baseline;width: 100%;-moz-border-radius: 2px;border-radius: 2px;margin: 1px 0px 3px 0px;" *ngIf="displayItems && total > pageSize">
         <div>
-            <div [ngClass]="{'disabledPageListBtn':disablePrev, 'pageListBtn':true}" ng-click="prev()">
-                <i aria-hidden="true" class="fa fa-chevron-left pageListLeftBtn"></i>
+            <div [ngClass]="{'disabledPageListBtn':disablePrev, 'pageListBtn':true}" (click)="prev()">
+                <i aria-hidden="true" class="fas fa-chevron-left"></i>
             </div>
-            <div [ngClass]="{'disabledPageListBtn':disableNext, 'pageListBtn':true}" ng-click="next()">
-                <i aria-hidden="true" class="fa fa-chevron-right pageListRightBtn"></i>
+            <div [ngClass]="{'disabledPageListBtn':disableNext, 'pageListBtn':true}" (click)="next()">
+                <i aria-hidden="true" class="fas fa-chevron-right pageListRightBtn"></i>
             </div>
         </div>
     </div>

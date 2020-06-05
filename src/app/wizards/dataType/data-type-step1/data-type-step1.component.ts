@@ -1,63 +1,73 @@
-import { Component, OnInit } from '@angular/core';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Component,  OnInit} from '@angular/core';
 
 @Component({
-	selector: 'app-data-type-step1',
-	templateUrl: './data-type-step1.component.html',
-	styleUrls: ['./data-type-step1.component.sass']
+  selector: 'mdm-data-type-step1',
+  templateUrl: './data-type-step1.component.html',
+  styleUrls: ['./data-type-step1.component.sass']
 })
 export class DataTypeStep1Component implements OnInit {
+  step: any;
+  modelVal: any;
 
-	step: any;
-	modelVal: any;
+  get model() {
+    return this.modelVal;
+  }
 
-	get model() {
+  set model(val) {
+    this.modelVal = val;
+    this.validate();
+  }
 
-		return this.modelVal;
-	}
+  constructor() {
+  }
 
-	set model(val) {
+  ngOnInit() {
+    this.model = this.step.scope.model;
+  }
 
-		this.modelVal = val;
-		this.validate();
-	}
+ validate = () => {
+    if (!this.model.createType) {
+      this.step.invalid = true;
+      return;
+    }
 
-	constructor() { }
+    if (this.model.createType === 'copy' && !this.model.copyFromDataModel.length) {
+      this.step.invalid = true;
+      return;
+    }
 
-	ngOnInit() {
-		
-		this.model = this.step.scope.model;
-	}
+    this.step.invalid = false;
+  };
 
-	ngDoCheck() {
-		this.validate();
-	}
-	
-	validate = () => {
-		
-		if (!this.model.createType) {
-			this.step.invalid = true;
-			return;
-		}
+  selectCreateType = createType => {
+    this.model.createType = createType;
+    this.validate();
+  };
 
-		if (this.model.createType === 'copy' && this.model.copyFromDataModel.length === 0) {
-			this.step.invalid = true;
-			return;
-		}
+  // TODO CORRECT
+  onSelect = (dataType) => {
+    this.model.copyFromDataModel = dataType;
+    this.validate();
+  };
 
-		this.step.invalid = false;
-	};
-
-	selectCreateType = (createType) => {
-		
-		this.model.createType = createType;
-	};
-
-	//TODO CORRECT
-	onSelect = () =>{
-
-	}
-
-	loadHelp = () =>{
-		//TODO
-	}
+  loadHelp = () => {
+    // TODO
+  };
 }

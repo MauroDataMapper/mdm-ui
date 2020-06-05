@@ -1,100 +1,113 @@
-<div class="mcTableMain">
-    <div class="mcTableTitle">
-        <span class="title">Terms <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span><i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
-        <div *ngIf="(access && access.showEdit) || clientSide" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
-            <button type="button"   class="btn btn-xs btn-default addNewModelButton themeColor" (click)="toggleAddTermsSection()">
-                <i class="fa fa-plus"  uib-tooltip="Add Term" aria-hidden="true" *ngIf="!showAddTerm"></i>
-                <i class="fa fa-times" uib-tooltip="Close" aria-hidden="true" *ngIf="showAddTerm"></i>
-            </button>
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="start center">
+            <h4 class="marginless">
+                Terms
+                <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+                <i class="fas fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+            </h4>
+        </div>
+        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
+            <div *ngIf="(access && access.showEdit) || clientSide">
+                <button mat-flat-button color="primary" (click)="toggleAddTermsSection()" *ngIf="!showAddTerm">
+                    <i class="fas fa-plus"></i>
+                    Add Term
+                </button>
+                <button mat-button color="warn" (click)="toggleAddTermsSection()" *ngIf="showAddTerm">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
     </div>
-
-    <div style="padding: 10px; border: 1px solid #DDD;margin-right: 0px !important;  margin-left: 0px !important; " class="row" *ngIf="showAddTerm">
-        <multiple-terms-selector [on-add-button-click]="addTerms" [hideAddButton] = false></multiple-terms-selector>
-    </div>
-
-    <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
-
-            <ng-container matColumnDef="terminology">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="terminologyLabel" [disabled]="!hideFilters" style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="terminology">
-                    <span [hidden]="!hideFilters">Terminology</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Terminology</mat-label>
-                            <input #filters matInput name="terminologyLabel" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-                    <element-link
-                       [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}"></element-link>
-                                    </td>
-            </ng-container>
-            <ng-container matColumnDef="term">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="code" [disabled]="!hideFilters" style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="term">
-                    <span [hidden]="!hideFilters">Term</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Term</mat-label>
-                            <input #filters matInput name="code" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;" >
-                    <element-link
-                            [parent-data-model]="{id:record.dataModel}"
-                            [parent-data-class]="{id:record.dataClass}"
-                            [element]="record"></element-link>
-
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="definition">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="definition" [disabled]="!hideFilters" style="cursor:pointer;min-width:80px;max-width: 15%;width: 15%;" columnName="definition">
-                    <span [hidden]="!hideFilters">Definition</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Definition</mat-label>
-                            <input #filters matInput name="definition" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
-                    <div *ngIf="record.definition && record.definition.length>0" style="margin-bottom: 10px;" >
-                        <span [innerHTML]="record.definition"></span>
-                    </div>
-
-                    <div title="Aliases">
-                        <app-element-alias [aliases]="record.aliases"></app-element-alias>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="btns" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let record;  let i = index" style="max-width: 8%;width: 8%;text-align: center;word-wrap: break-word;">
-                    <div *ngIf="access && access.showEdit">
-
-                        <table-buttons [record]="record" [index]="i"  (delete)="delete($event[0],$event[1])"  [hide-edit]="true" ></table-buttons>
-                    </div>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
-
-        </table>
-
-        <mat-card *ngIf="isLoadingResults"
-                  style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
-            <mat-progress-spinner color="primary"
-                                  mode="indeterminate">
-            </mat-progress-spinner>
-        </mat-card>
-
-    </div>
-
-    <div class="d-flex justify-content-between p-2">
-        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
-    </div>
 </div>
+<div *ngIf="showAddTerm">
+    <mdm-multiple-terms-selector [onAddButtonClick]="addTerms" [hideAddButton]=false></mdm-multiple-terms-selector>
+</div>
+<div class="table-responsive">
+    <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
+        <ng-container matColumnDef="terminology">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="terminologyLabel" [disabled]="!hideFilters" style="cursor:pointer;width: 30%;" columnName="terminology">
+                <span [hidden]="!hideFilters">Terminology</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Terminology</mat-label>
+                        <input #filters matInput name="terminologyLabel" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="width: 30%;text-align: left;word-wrap: break-word;">
+                <mdm-element-link
+                    [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}">
+                </mdm-element-link>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="term">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="code" [disabled]="!hideFilters" style="cursor:pointer;width: 25%;" columnName="term">
+                <span [hidden]="!hideFilters">Term</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Term</mat-label>
+                        <input #filters matInput name="code" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="width: 25%;text-align: left;word-wrap: break-word;">
+                <mdm-element-link [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClass}" [element]="record"></mdm-element-link>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="definition">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="definition" [disabled]="!hideFilters" style="cursor:pointer;width: 35%;" columnName="definition">
+                <span [hidden]="!hideFilters">Definition</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Definition</mat-label>
+                        <input #filters matInput name="definition" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="width: 35%;text-align: left;word-wrap: break-word;">
+                <div *ngIf="record.definition && record.definition.length>0" style="margin-bottom: 10px;">
+                    <span [innerHTML]="record.definition"></span>
+                </div>
 
+                <div>
+                    <mdm-element-alias [aliases]="record.aliases"></mdm-element-alias>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="btns" style="width: 10%;text-align: center;word-wrap: break-word;">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let record;  let i = index" style="width: 10%;text-align: center;word-wrap: break-word;">
+                <div *ngIf="access && access.showEdit">
+                    <mdm-table-buttons [record]="record" [index]="i" (delete)="delete($event[0],$event[1])" [hideEdit]="true"></mdm-table-buttons>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+<mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
+    <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
+</mat-card>
+
+<div class="mdm--mat-pagination">
+    <mdm-paginator  [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+</div>

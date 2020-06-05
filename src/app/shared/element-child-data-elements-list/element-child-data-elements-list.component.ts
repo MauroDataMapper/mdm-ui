@@ -1,3 +1,20 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import {
   Component,
   OnInit,
@@ -7,21 +24,22 @@ import {
   ViewChildren,
   ElementRef,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewInit
 } from '@angular/core';
-import { ResourcesService } from '../../services/resources.service';
-import { GridService } from '../../services/grid.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { GridService } from '@mdm/services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
 
 @Component({
-  selector: 'app-element-child-data-elements-list',
+  selector: 'mdm-element-child-data-elements-list',
   templateUrl: './element-child-data-elements-list.component.html',
   styleUrls: ['./element-child-data-elements-list.component.scss']
 })
-export class ElementChildDataElementsListComponent implements OnInit {
+export class ElementChildDataElementsListComponent implements OnInit, AfterViewInit {
   constructor(
     private gridSvc: GridService,
     private changeRef: ChangeDetectorRef,
@@ -41,14 +59,14 @@ export class ElementChildDataElementsListComponent implements OnInit {
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
   filterEvent = new EventEmitter<string>();
   filter: string;
 
   isLoadingResults: boolean;
   records: any[];
-  totalItemCount: number;
+  totalItemCount = 0;
   hideFilters = true;
 
   displayedColumns = ['label', 'name', 'description'];
@@ -56,13 +74,17 @@ export class ElementChildDataElementsListComponent implements OnInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-
     if (this.type === 'dynamic') {
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-      this.gridSvc.reloadEvent.subscribe((fitler) => this.filter = fitler);
+      this.gridSvc.reloadEvent.subscribe(fitler => (this.filter = fitler));
 
-      merge(this.sort.sortChange, this.paginator.page, this.filterEvent, this.gridSvc.reloadEvent)
+      merge(
+        this.sort.sortChange,
+        this.paginator.page,
+        this.filterEvent,
+        this.gridSvc.reloadEvent
+      )
         .pipe(
           startWith({}),
           switchMap(() => {
@@ -70,7 +92,7 @@ export class ElementChildDataElementsListComponent implements OnInit {
 
             return this.dataElementsFetch(
               this.paginator.pageSize,
-              this.paginator.pageIndex,
+              this.paginator.pageOffset,
               this.sort.active,
               this.sort.direction,
               this.filter
@@ -80,7 +102,7 @@ export class ElementChildDataElementsListComponent implements OnInit {
             this.totalItemCount = data.body.count;
             this.isLoadingResults = false;
             this.changeRef.detectChanges();
-            return data.body['items'];
+            return data.body.items;
           }),
           catchError(() => {
             this.isLoadingResults = false;
@@ -101,7 +123,7 @@ export class ElementChildDataElementsListComponent implements OnInit {
   }
 
   dataElementsFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    let options = {
+    const options = {
       pageSize,
       pageIndex,
       sortBy,
@@ -126,19 +148,19 @@ export class ElementChildDataElementsListComponent implements OnInit {
         options
       );
     }
-  }
+  };
 
   showStaticRecords = () => {
     if (this.childDataElements && this.type === 'static') {
       this.records = [].concat(this.childDataElements.items);
     }
-  }
+  };
 
   applyFilter = () => {
     this.gridSvc.applyFilter(this.filters);
-  }
+  };
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-}
+  }
 }

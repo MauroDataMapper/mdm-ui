@@ -1,3 +1,20 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import {
   Component,
   OnInit,
@@ -16,9 +33,10 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
-  selector: 'app-link-suggestion',
+  selector: 'mdm-link-suggestion',
   templateUrl: './link-suggestion.component.html',
   styleUrls: ['./link-suggestion.component.scss']
 })
@@ -30,9 +48,8 @@ export class LinkSuggestionComponent implements OnInit {
 
   datasource = new MatTableDataSource();
   @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
@@ -87,11 +104,7 @@ export class LinkSuggestionComponent implements OnInit {
       : this.state.params.targetDMId;
 
     if (this.sourceDataElementId) {
-      this.setSourceDataElement(
-        this.sourceDataModelId,
-        this.sourceDataClassId,
-        this.sourceDataElementId
-      );
+      this.setSourceDataElement(this.sourceDataModelId, this.sourceDataClassId, this.sourceDataElementId);
     } else if (this.sourceDataModelId) {
       this.setSourceDataModel([{ id: this.sourceDataModelId }]);
     }
@@ -99,14 +112,12 @@ export class LinkSuggestionComponent implements OnInit {
     if (this.targetDataModelId) {
       this.setTargetDataModel([{ id: this.targetDataModelId }]);
     }
-
-
   }
 
   onSourceSelect = dataModels => {
     this.model.suggestions = [];
     this.setSourceDataModel(dataModels);
-  }
+  };
 
   setSourceDataModel = dataModels => {
     if (dataModels && dataModels.length > 0) {
@@ -115,7 +126,7 @@ export class LinkSuggestionComponent implements OnInit {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        let access = this.securityHandler.dataModelAccess(this.model.source);
+        const access = this.securityHandler.dataModelAccess(this.model.source);
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
@@ -124,7 +135,7 @@ export class LinkSuggestionComponent implements OnInit {
       this.model.source = null;
       this.model.sourceEditable = true;
     }
-  }
+  };
 
   setSourceDataElement = (sourceDMId, sourceDCId, sourceDEId) => {
     this.model.loadingSource = true;
@@ -134,16 +145,16 @@ export class LinkSuggestionComponent implements OnInit {
         const data = result.body;
         this.model.source = data;
         this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        let access = this.securityHandler.dataModelAccess(this.model.source);
+        const access = this.securityHandler.dataModelAccess(this.model.source);
         this.model.sourceEditable = access.showEdit;
         this.model.loadingSource = false;
       });
-  }
+  };
 
   onTargetSelect = dataModels => {
     this.model.suggestions = [];
     this.setTargetDataModel(dataModels);
-  }
+  };
 
   setTargetDataModel = dataModels => {
     if (dataModels && dataModels.length > 0) {
@@ -158,28 +169,27 @@ export class LinkSuggestionComponent implements OnInit {
       this.model.targetLink = null;
       this.model.target = null;
     }
-  }
+  };
 
   onTargetDateElementSelect = (suggestion, record) => {
     record.selectedTarget = suggestion;
     record.showMore = null;
-  }
+  };
 
   approveSuggestion = suggest => {
-    let resource = {
+    const resource = {
       target: { id: suggest.selectedTarget.dataElement.id },
       linkType: 'Refines'
     };
 
-    let i = this.model.suggestions.indexOf(suggest);
+    const i = this.model.suggestions.indexOf(suggest);
 
     if (i >= 0) {
       this.model.suggestions[i].processing = true;
       // create the link and then remove it
       this.resources.catalogueItem
         .post(this.model.source.id, 'semanticLinks', { resource })
-        .subscribe(
-          response => {
+        .subscribe(() => {
             this.model.suggestions[i].processing = false;
             this.model.suggestions[i].success = true;
             this.model.successfullyAdded++;
@@ -200,7 +210,7 @@ export class LinkSuggestionComponent implements OnInit {
           }
         );
     }
-  }
+  };
 
   ignoreSuggestion = record => {
     this.model.totalIgnoredLinks++;
@@ -213,11 +223,11 @@ export class LinkSuggestionComponent implements OnInit {
         this.table.renderRows();
       }, 300);
     }
-  }
+  };
 
   toggleShowMore = suggestion => {
     suggestion.showMore = !suggestion.showMore;
-  }
+  };
 
   suggest = function() {
     this.model.processing = true;
@@ -238,12 +248,11 @@ export class LinkSuggestionComponent implements OnInit {
               suggestion.selectedTarget = suggestion.results[0];
             });
             this.datasource.data = data.links;
-
             this.datasource.paginator = this.paginator;
             this.datasource.sort = this.sort;
             this.model.processing = false;
           },
-          error => {
+          () => {
             this.model.processing = false;
           }
         );
@@ -264,12 +273,11 @@ export class LinkSuggestionComponent implements OnInit {
               suggestion.selectedTarget = suggestion.results[0];
             });
             this.datasource.data = [data];
-
             this.datasource.paginator = this.paginator;
             this.datasource.sort = this.sort;
             this.model.processing = false;
           },
-          error => {
+          () => {
             this.model.processing = false;
           }
         );
@@ -278,6 +286,5 @@ export class LinkSuggestionComponent implements OnInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-}
-
+  }
 }

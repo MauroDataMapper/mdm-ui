@@ -1,3 +1,20 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { NgModule } from '@angular/core';
 import { AboutComponent } from './about/about.component';
 
@@ -26,7 +43,6 @@ import { DataClassComponent } from './dataClass/data-class/data-class.component'
 import { DataElementComponent } from './dataElement/data-element/data-element.component';
 import { ClassificationComponent } from './classification/classification.component';
 import { ClassifierMainComponent } from './wizards/classifier/classifier-main/classifier-main.component';
-import { DiagramComponent } from './diagram/diagram.component';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { AppComponent } from './app.component';
 
@@ -39,7 +55,8 @@ import {TermComponent} from './term/term/term.component';
 import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import {CodeSetMainComponent} from './wizards/codeSet/code-set-main/code-set-main.component';
-import {CodeSetComponent} from "./code-set/code-set/code-set.component";
+import {CodeSetComponent} from './code-set/code-set/code-set.component';
+import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 
 export const PagesRoutes = {
   states: [
@@ -56,11 +73,6 @@ export const PagesRoutes = {
       name: 'appContainer.mainApp.about',
       url: '/about',
       component: AboutComponent
-    },
-    {
-      name: 'appContainer.mainApp.diagram',
-      url: '/diagram/:id',
-      component: DiagramComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel',
@@ -106,8 +118,8 @@ export const PagesRoutes = {
       component: ServerErrorComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.resourceNotFound',
-      url: '/resourceNotFound',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.notFound',
+      url: '/notFound',
       component: NotFoundComponent
     },
     {
@@ -159,7 +171,7 @@ export const PagesRoutes = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
-      url: '/terminologyNew/:id/{tabView:string}',
+      url: '/terminology/:id/{tabView:string}',
       component: TerminologyComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
     },
@@ -195,24 +207,24 @@ export const PagesRoutes = {
       component: DataModelsExportComponent
     },
     {
-        name:'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
+        name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
         url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
         component: DataElementMainComponent
     },
     {
-      name :'appContainer.mainApp.twoSidePanel.catalogue.dataType',
+      name : 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
       url: '/dataType/:dataModelId/:id/{tabView:string}',
       component : DataTypeComponent,
       params: {
         tabView: { dynamic: true, value: null, squash: true }
     }},
     {
-      name:'appContainer.mainApp.resetPassword',
+      name: 'appContainer.mainApp.resetPassword',
       url: '/resetpassword?uid&token',
       component: ResetPasswordComponent
     },
     {
-      name:'appContainer.mainApp.twoSidePanel.catalogue.term',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.term',
       url: '/term/:terminologyId/:id/{tabView:string}',
       component: TermComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
@@ -238,7 +250,12 @@ export const PagesRoutes = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
 
-    }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
+      url: '/newVersion/codeSet/:codeSetId',
+      component: NewVersionCodeSetComponent
+    },
 
 
   ]
@@ -254,76 +271,5 @@ export const PagesRoutes = {
   ]
 })
 export class AppRoutingModule {
-  constructor() {
-    // this.stateRoleAccessService.add("appContainer", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.about", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.home", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.default", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.register", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.resetPassword", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.about", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.allDataModel", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.home", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.result", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.filter", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.submission", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.element", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.notImplemented", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.serverError", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.resourceNotFound", ['public']);
-    // this.stateRoleAccessService.add("appContainer.simpleApp.notAuthorized", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataType", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataModel", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.codeSet", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.terminology", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.term", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataElement", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataClass", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.selection", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.classification", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.resourceNotFound", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.serverError", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.notImplemented", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.notAuthorized", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.search", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.folder", ['public']);
-    // this.stateRoleAccessService.add("otherwise", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea.profile", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea.changePassword", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.userArea.settings", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.diagram", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.dataFlowTransformation", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.dataFlowDM2DM", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.dataFlowChain", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.topicView", ['public']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataModel", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataElement", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataClass", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewDataType", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewClassifier", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.adminArea", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.users", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.user", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.groups", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.group", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.pendingUsers", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.configuration", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.home", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.resourceNotFound", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.emails", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.adminArea.modelManagement", ['Administrator']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.import", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.modelsComparison", ['Administrator', 'Editor']);
-    // this.stateRoleAccessService.add("appContainer.mainApp.linkSuggestion", ['Administrator', 'Editor']);
-  }
+  constructor() { }
 }

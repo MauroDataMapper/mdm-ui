@@ -1,30 +1,47 @@
-<div class="row" style="padding: 10px 10px 0 10px;">
+<!--
+Copyright 2020 University of Oxford
 
-    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 themeBackgroundColor hideShowLeftPaneBtn visible-xs visible-sm"  (click)="hideShowLeftPane();">
-        <i #showHideLeftPane id="showHideLeftPane" class="fa fa-chevron-down"></i>
-        <small #showHidePaneText id="showHidePaneText" style="font-style: italic;padding-left: 5px;">Show Models Tree</small>
-    </div>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    <div #resizableLeft [hidden]="expand" class="col-xs-12 col-sm-12 col-md-4 col-lg-4 resizableLeft"  style="height: calc(100vh - 75px); padding-top: 0px !important;">
-        <div style="text-align: right; padding: 0px 2px;cursor: pointer;" (click)="toggle()" [hidden]="expand" title="Minimize">
-            <!--<i class="fa fa-window-close themeColor" style="font-size: 16px;"></i>-->
-            <i class="fa fa-bars themeColor" style="font-size: 17px; padding: 2px;"></i>
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm--container-fluid pxy-0">
+    <div class="row marginless">
+        <div class="hideShowLeftPaneBtn col-xs-12 col-sm-12 d-lg-none d-md-block d-sm-block">
+            <button mat-flat-button color="primary" #showHidePaneText id="showHidePaneText" (click)="toggle();">
+                <span *ngIf="!isOpen">
+                    Show Model Tree
+                    <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-right"></i>
+                </span>
+                <span *ngIf="isOpen">
+                    Hide Model Tree
+                    <i #showHideLeftPane id="showHideLeftPane" class="fas fa-chevron-down"></i>
+                </span>
+            </button>
         </div>
-        <div  ui-view="left"></div>
-    </div>
 
-    <div  [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':!expand, 'col-md-12 col-lg-12':!expand }" class="" style="min-height: calc(100vh - 75px);">
-        <!--<div style="padding: 0px 5px;">-->
-        <!--<i class="fa fa-bars themeColor" style="font-size: 16px;"></i>-->
-        <!--</div>-->
-        <div style="padding: 0px 5px; cursor: pointer;" id="toggleRightPanel" (click)="toggle()" *ngIf="expand" title="Minimize">
-            <!--<i class="fa fa-window-maximize themeColor" style="font-size: 16px;"></i>-->
-            <i class="fa fa-bars themeColor" style="font-size: 17px;"></i>
+        <!-- <div #resizableLeft class="resizableLeft col-xs-12 col-sm-12 col-md-12 col-lg-4" [@openClose]="isOpen ? 'isOpen' : 'closed'">
+            <div id="mdm--tree-container" ui-view="left"></div>
         </div>
+        <div [ngClass]="{'col-xs-12 col-sm-12 resizableRight':true,'col-md-8 col-lg-8':isOpen, 'col-md-12 col-lg-8':!isOpen }" class="">
+            <div ui-view="" class="mb-2"></div>
+        </div> -->
 
-        <div ui-view="" style="margin-bottom: 30px;"></div>
-        <div style="position: absolute;bottom:0;">
-            <app-footer></app-footer>
+        <div #resizableLeft class="resizableLeft col-lg-4 col-md-12 col-sm-12 col-xs-12 mb-2" [@openClose]="isOpen ? 'isOpen' : 'closed'">
+            <div id="mdm--tree-container" ui-view="left"></div>
+        </div>
+        <div class="resizableRight col-lg-8 col-md-12 col-xs-12 col-sm-12">
+            <div ui-view="" class="mb-2"></div>
         </div>
     </div>
 </div>

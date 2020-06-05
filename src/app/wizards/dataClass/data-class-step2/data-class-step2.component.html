@@ -1,174 +1,149 @@
-<div>
-    <div *ngIf="model.createType == 'new'">
-        <div class="form-group">
-            <form #myForm="ngForm" ngNativeValidate>
+<!--
+Copyright 2020 University of Oxford
 
-                <label>Please enter Data Class details:</label>
-                <b></b>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-                <table class="table table-bordered table-condensed dataModelDetailTable">
-                    <tbody>
+    http://www.apache.org/licenses/LICENSE-2.0
 
-                        <tr class="parent">
-                            <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Parent *</th>
-                            <td>
-                                <model-path [path]="model.parent.breadcrumbs"></model-path>
-                            </td>
-                        </tr>
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-
-                        <tr>
-                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
-                            <td>
-                                <input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label"
-                                       required="Name can not be Empty">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="detailsRowHeader col-md-2">Description</th>
-                            <td>
-                                <textarea type="text" class="form-control" id="description" name="description" [(ngModel)]="model.description"></textarea>
-                            </td>
-                        </tr>
-
-                        <tr class="parent">
-                            <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Multiplicity</th>
-                            <td>
-                                <div>
-                                    <div style="width: 10%; padding-left: 0px !important; float: left">
-                                        <span for="minMultiplicity">Min</span>
-                                        <input type="text"
-                                               class="form-control wizardInput"
-                                               [ngStyle]="multiplicityError? {'border': '1px solid #a94442'} :''"
-                                               name="minMultiplicity"
-                                               [(ngModel)]="model.minMultiplicity">
-                                    </div>
-                                    <div style="width: 10%; margin-left: 10px !important;float: left">
-                                        <span for="minMultiplicity">Max</span>
-                                        <input type="text"
-                                               class="form-control wizardInput"
-                                               [ngStyle]="multiplicityError? {'border': '1px solid #a94442'} :''"
-                                               name="maxMultiplicity"
-                                               [(ngModel)]="model.maxMultiplicity">
-                                    </div>
-                                </div>
-                                <div style="font-size: 12px;clear: both;margin: 2px 0px" class="error text-danger">
-                                    <span *ngIf="multiplicityError">
-                                        {{multiplicityError}}
-                                    </span>
-                                </div>
-                                <div style="clear: both;font-size: 11px;font-style: italic;">
-                                    Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
-                            <td>
-                                <app-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></app-element-classifications>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
+SPDX-License-Identifier: Apache-2.0
+-->
+<div *ngIf="model.createType == 'new'">
+    <form #myForm="ngForm" ngNativeValidate class="full-width">
+        <h4 class="marginless">Parent Data Class:</h4>
+        <div class="mb-2 block">
+            <mdm-model-path [path]="model.parent.breadcrumbs" ></mdm-model-path>
         </div>
-    </div>
-    <div *ngIf="model.createType == 'copy' && step.active == true" class="row" style="margin-bottom:20px;">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label>Please Select Data Class(s):</label>
-            <model-selector-tree [default-checked-map]="defaultCheckedMap"
-                                 [root]="model.copyFromDataModel[0]"
-                                 [show-checkbox-for]="['DataClass']"
-                                 [propagate-checkbox]="true"
-                                 [always-show-tree]="true"
-                                 [hide-selected-elements]="true"
-                                 [multiple]="true"
-                                 [processing]="processing"
-                                 [on-check]="onCheck"
-                                 [placeholder]="'Select Data Class(s)'"
-                                 [accepts]="['DataClass']">
-            </model-selector-tree>
+
+        <div class="mdm--form-input">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Label</mat-label>
+                <input matInput [(ngModel)]="model.label" name="label" required>
+            </mat-form-field>
         </div>
-    </div>
+        <div class="mdm--form-input">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
+            </mat-form-field>
+        </div>
 
-
-    <div *ngIf="model.createType == 'copy'" class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div>
-                <div class="mcTableMain">
-                    <div class="mcTableTitle">
-                        <span class="title">Summary of Selected Data Classes <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span></span>
-
-                    </div>
-                    <div class="mcTableContainer">
-                        <table mat-table matSort [dataSource]="dataSource" class="table table-condensed table-bordered mcTable">
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;" columnName="label"
-                                    sortable="true" filterable="true">
-                                    Name
-                                </th>
-                                <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
-                                    <div>
-                                        <element-link [element]="record"
-                                                      [new-window]="true"
-                                                      [parent-data-model]="{id:record.dataModel}"></element-link>
-                                    </div>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="description">
-
-                                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 20%; width: 20%;" columnName="description"
-                                    sortable="true" filterable="true">
-                                    Description
-                                </th>
-                                <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
-                                    <div *ngIf="record.description && record.description.length>0"
-                                         style="margin-bottom: 10px;">
-                                        <more-description [description]="record.description"></more-description>
-                                    </div>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="status">
-
-                                <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;">
-                                    Status
-                                </th>
-                                <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
-                                    <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
-                                        <div><i class="fa fa-times copyElementError"></i></div>
-                                        <div class="errorMessage">{{finalResult[record.id].result}}</div>
-                                    </span>
-                                    <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
-                                        <div><i class="fa fa-check copyElementSuccess"></i>&nbsp;Success</div>
-                                    </span>
-                                </td>
-                            </ng-container>
-
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-between p-2">
-                        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" showFirstLastButtons></mat-paginator>
-                    </div>
+        <div class="mdm--form-input">
+            <h4 class="marginless">Multiplicity</h4>
+            <small>Use <strong>*</strong> for unbound multiplicity.</small>
+            <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
+                <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Min</mat-label>
+                        <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
+                    </mat-form-field>
                 </div>
-
-            </div>
-            <div style="margin-top: 50px; width: 100%;">
-                <div *ngIf="processing">
-                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                </div>
-                <div *ngIf="!processing && isProcessComplete">
-                    <div class="alert alert-success" *ngIf="failCount === 0">
-                        <strong>Success!</strong> All copied successfully!
-                    </div>
-                    <div class="alert alert-danger" *ngIf="failCount > 0">
-                        <strong>Error!</strong> {{failCount}} Error(s) in copy process!
-                    </div>
+                <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+                    <mat-form-field appearance="outline" class="paddingless" class="full-width">
+                        <mat-label>Max</mat-label>
+                        <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
+                    </mat-form-field>
                 </div>
             </div>
+            <div *ngIf="multiplicityError" class="warning">
+                {{multiplicityError}}
+            </div>
+        </div>
+
+        <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
+            <h4 class="marginless">Classifications</h4>
+            <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
+        </div>
+    </form>
+
+</div>
+
+<div *ngIf="model.createType == 'copy' && step.active == true" class="mb-2">
+    <h4 class="marginless">Please Select a Data Class:</h4>
+    <mdm-model-selector-tree [defaultCheckedMap]="defaultCheckedMap"
+                            [root]="model.copyFromDataModel[0]"
+                            [showCheckboxFor]="['DataClass']"
+                            [propagateCheckbox]="true"
+                            [alwaysShowTree]="true"
+                            [hideSelectedElements]="true"
+                            [multiple]="true"
+                            [processing]="processing"
+                            [onCheck]="onCheck"
+                            [placeholder]="'Select Data Class(s)'"
+                            [accepts]="['DataClass']">
+    </mdm-model-selector-tree>
+</div>
+
+
+<div *ngIf="model.createType == 'copy'">
+        <div class="heading-container">
+            <h4 class="marginless">Summary of Selected Data Classes</h4>
+            <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+        </div>
+        <div class="table-responsive">
+            <table mat-table matSort [dataSource]="dataSource" class="mdm--table table table-striped">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label"
+                        sortable="true" filterable="true">
+                        Name
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                        <div>
+                            <mdm-element-link [element]="record" [newWindow]="true" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 50%; width: 50%;" columnName="description" sortable="true" filterable="true">
+                        Description
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word;">
+                        <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
+                            <mdm-more-description [description]="record.description"></mdm-more-description>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 25%; width: 25%;">
+                        Status
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                        <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
+                            <div><i class="fas fa-times"></i></div>
+                            <div class="errorMessage">{{finalResult[record.id].result}}</div>
+                        </span>
+                        <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
+                            <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
+                        </span>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <div class="mdm--mat-pagination">
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [length]="totalSelectedItemsCount" [pageSize]="pageSize" showFirstLastButtons></mat-paginator>
+        </div>
+</div>
+<div style="margin-top: 50px; width: 100%;">
+    <div *ngIf="processing">
+        <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+    </div>
+    <div *ngIf="!processing && isProcessComplete">
+        <div class="alert alert-success" *ngIf="failCount === 0">
+            <strong>Success!</strong> All copied successfully!
+        </div>
+        <div class="alert alert-danger" *ngIf="failCount > 0">
+            <strong>Error!</strong> {{failCount}} Error(s) in copy process!
         </div>
     </div>
 </div>
-

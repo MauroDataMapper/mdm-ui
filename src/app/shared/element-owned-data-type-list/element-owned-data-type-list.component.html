@@ -1,106 +1,123 @@
-<div class="mcTableMain">
-    <div class="mcTableTitle">
-        <span class="title">Data Types<span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{totalItemCount}}</span> <i class="fa fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i> </span>
+<!--
+Copyright 2020 University of Oxford
 
-        <div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="parent.editable && !parent.finalised">
-            <data-type-list-buttons
-                [display-records]="records"
-                (delete-rows)="deleteRows()"
-                [delete-in-progress] ="deleteInProgress"
-                [add]="add"></data-type-list-buttons>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex  fxLayout="row" fxFlex="70" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-start center">
+            <h4 class="marginless">
+                Data Types
+                <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+                <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+            </h4>
+        </div>
+        <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+            <div *ngIf="parent.editable && !parent.finalised" class="mt-1">
+                <mdm-data-type-list-buttons [displayRecords]="records" (deleteRows)="deleteRows()" [deleteInProgress]="deleteInProgress" [add]="add"></mdm-data-type-list-buttons>
+            </div>
         </div>
     </div>
-
-    <div class="mcTableContainer">
-        <table mat-table matSort [dataSource]="records" class="table table-condensed table-bordered mcTable">
-            <ng-container matColumnDef="checkbox">
-                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;cursor:pointer;" class="mcTableCheckbox">
-                    <input type="checkbox" (change)="onChecked()" [(ngModel)]="checkAllCheckbox" class="checkboxAll" style="cursor:pointer;">
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;" class="mcTableCheckbox">
-                    <input style="cursor:pointer;" type="checkbox" [(ngModel)]="record.checked">
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 15%;width: 15%;" columnName="label">
-                    <span [hidden]="!hideFilters">Name</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Name</mat-label>
-                            <input #filters matInput name="label" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
-                    <div>
-                        <element-link [element]="record" [parent-data-model]="{id:record.dataModel}"></element-link>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters"  style="cursor:pointer;max-width: 20%;width: 20%;" columnName="description">
-
-                    <span [hidden]="!hideFilters">Description</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Description</mat-label>
-                            <input #filters matInput name="description" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
-                    <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
-                        <more-description [description]="record.description"></more-description>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef  mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType" sortable="true" filterable="true">
-                    <span [hidden]="!hideFilters">Type</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Type</mat-label>
-                            <input #filters matInput name="type" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left;word-wrap: break-word;">
-                    <div style="font-weight: bold;">
-                        {{allDataTypesMap[record.domainType]["displayLabel"]}}
-                    </div>
-                    <div style="width: 100%;">
-                        <element-data-type [element-data-type]="record" [hide-name]="true" [show-ref-data-class]="true" [hide-enum-list]="false"></element-data-type>
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="buttons">
-                <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 4%;width: 4%"></th>
-                <td mat-cell *matCellDef="let record" style="max-width: 4%;width: 4%;text-align: center;">
-                    <button class="btn btn-xs btn-default addNewModelButton  themeColor ng-click-active"
-                            *ngIf="parentDataModel?.editable"
-                            (click)="openEdit(record)"
-                            type="button" aria-disabled="false">
-                        <i class="fa fa-edit"></i>
-                    </button>
-                </td>
-            </ng-container>
-
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
-
-        </table>
-        
-        <mat-card *ngIf="isLoadingResults"
-                  style="height:100%; width:100%; background-color:rgba(0, 0, 0, 0.286); z-index:10; position: fixed; display: flex; justify-content: center; align-items: center">
-            <mat-progress-spinner color="primary"
-                                  mode="indeterminate">
-            </mat-progress-spinner>
-        </mat-card>
-
-    </div>
-
-    <div class="d-flex justify-content-between p-2">
-        <mat-paginator [pageSizeOptions]="[5, 10, 20,50]" [pageSize]="20" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
-    </div>
+</div>
+<div class="table-responsive">
+    <table mat-table matSort [dataSource]="type === 'static'? dataSource : records" class="mdm--mat-table mat-elevation-z3 table-striped">
+        <ng-container matColumnDef="checkbox">
+            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;width: 50px;text-align: center;cursor:pointer;">
+                <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox"></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let record" style="width: 50px; text-align: center;">
+                <mat-checkbox [(ngModel)]="record.checked"></mat-checkbox>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="label">
+                <span [hidden]="!hideFilters">Name</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Name</mat-label>
+                        <input #filters matInput name="label" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
+                <div>
+                    <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters"  style="cursor:pointer;max-width: 40%;width: 40%;" columnName="description">
+                <span [hidden]="!hideFilters">Description</span>
+                <div [hidden]="hideFilters">
+                    <mat-form-field class="filter" floatLabel="never">
+                        <mat-label>Description</mat-label>
+                        <input #filters matInput name="description" (keyup)="applyFilter()">
+                    </mat-form-field>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="max-width: 40%;width: 40%;text-align: left;">
+                <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
+                    <mdm-more-description [description]="record.description"></mdm-more-description>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef  mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType" sortable="true" filterable="true">
+                <span [hidden]="!hideFilters">Type</span>
+                <div [hidden]="hideFilters">
+                    <mat-label>Type</mat-label>
+                    <mat-select [(value)]="domainType"
+                                name="domainType"
+                                [(ngModel)]="domainType"
+                                (ngModelChange)="applyMatSelectFilter($event, 'domainType')">
+                        <mat-option [value]="dt" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
+                    </mat-select>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left;">
+                <div>
+                    {{allDataTypesMap[record.domainType]["displayLabel"]}}
+                </div>
+                <div class="full-width">
+                    <mdm-element-data-type [elementDataType]="record" [hideName]="true" [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
+                </div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="buttons">
+            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 4%;width: 4%"></th>
+            <td mat-cell *matCellDef="let record" style="max-width: 4%;width: 4%;text-align: center;">
+                <button mat-button
+                        color="primary"
+                        type="button"
+                        class="paddingless"
+                        *ngIf="parentDataModel?.editable"
+                        (click)="openEdit(record)"
+                        matTooltip="Edit"
+                        aria-label="Edit"
+                        aria-disabled="false">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+<mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</mat-card>
+<div class="mdm--mat-pagination">
+    <mdm-paginator  [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

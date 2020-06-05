@@ -1,0 +1,9 @@
+language: node_js
+before_install:
+  - npm install -g @angular/cli
+script:
+  - ng lint
+  - ng test --coverage
+notifications:
+  slack:
+    secure: YTSOhkTQgoQt/0Tq7LLGZZmBv54ZiGsF+L0Ee9lNZtyKMmE0v+5hzNRTKz9THfo+as7/8o9KHlJMmw79QKX6hWn5gnbJfmmhkKTexg3270rdQd5gseXTtQOhcVQdgLXOn/B3c9PtsjIMVK0+wIrVOCl/wI+Q49+hV/mhcGe3Qau8ZWQnVO/6gtvLt1LQXRoo8w6TMCDywyUQhFll4kTPnDKlce4vtjEDBu4A12mkKnFYNliadVyxKaUm0BSqg7ujEIfCTaiF+o2R1m/cjTk+Oo55iQjEZPZrdMKg7Tn98s74r8lKBnSSRN2BnfJgwVGtZ3QhFXaccJ2oCJ5Q+X4IBMRrdUdd2IhRGYWkyW6xKNkMDbsvQI6Rhyic2cvtzV5xt76kguVBnwb6BM895V52dfiQ2RTLCE50XfFoI7fI0nLnyzBalfodV/Wz9TXpEXsNSF28jWvmsWGDJ1mzhCN/Us4zdfCeaVPNtlwk3reKNwlH66wnFa2lv1/sn12jqG+THKteobeJt7LOszlxEYCDqhVdhZLHqypw0rPlT4WXPxFIz9VdtRQIyzns6EXU95WNPoNgIOZBW3NdCWzAAWOvXsYqNL9dy18NpxqQdQTzxWWyB/RdrclasVUZ4RYfKl6ZUaf5tAi6tTlCDLx9L93SjMVo1SzJbgrRuBxbbhAQkCU=

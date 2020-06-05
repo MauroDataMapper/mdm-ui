@@ -1,8 +1,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
+    "baseUrl": "./src",
+    "paths": {
+      "@mdm/*": ["./app/*"],
+      "@env/*": ["./environments/*"]
+    },
+    "emitDecoratorMetadata" : true,
+    "outDir": "./dist/",
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -10,7 +15,10 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ES5",
+    "types": [
+      "jest"
+    ],
     "typeRoots": [
       "node_modules/@types"
     ],

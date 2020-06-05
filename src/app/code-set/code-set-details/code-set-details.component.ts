@@ -1,42 +1,55 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import {
+  AfterViewInit,
   Component,
   ContentChildren,
   ElementRef,
-  Input,
+  Input, OnDestroy,
   OnInit,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {DataModelResult, EditableDataModel} from '../../model/dataModelModel';
+import {EditableDataModel} from '@mdm/model/dataModelModel';
 import {from, Subscription} from 'rxjs';
-import {MarkdownTextAreaComponent} from '../../utility/markdown-text-area.component';
-import {ResourcesService} from '../../services/resources.service';
-import {MessageService} from '../../services/message.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {FolderHandlerService} from '../../services/handlers/folder-handler.service';
-import {StateHandlerService} from '../../services/handlers/state-handler.service';
-import {SharedService} from '../../services/shared.service';
-import {ElementSelectorDialogueService} from '../../services/element-selector-dialogue.service';
-import {BroadcastService} from '../../services/broadcast.service';
-import {HelpDialogueHandlerService} from '../../services/helpDialogue.service';
-import {FavouriteHandlerService} from '../../services/handlers/favourite-handler.service';
-import {ExportHandlerService} from '../../services/handlers/export-handler.service';
-import {DomSanitizer} from '@angular/platform-browser';
-// import {InlineEditorComponent} from "@qontu/ngx-inline-editor";
-import {ConfirmationModalComponent} from '../../modals/confirmation-modal/confirmation-modal.component';
-
-import {CodeSetResult} from '../../model/codeSetModel';
+import {MarkdownTextAreaComponent} from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {MessageService} from '@mdm/services/message.service';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import {SharedService} from '@mdm/services/shared.service';
+import {ElementSelectorDialogueService} from '@mdm/services/element-selector-dialogue.service';
+import {BroadcastService} from '@mdm/services/broadcast.service';
+import {HelpDialogueHandlerService} from '@mdm/services/helpDialogue.service';
+import {FavouriteHandlerService} from '@mdm/services/handlers/favourite-handler.service';
+import {ConfirmationModalComponent} from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import {CodeSetResult} from '@mdm/model/codeSetModel';
 import {DialogPosition, MatDialog} from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'code-set-details',
+  selector: 'mdm-code-set-details',
   templateUrl: './code-set-details.component.html',
   styleUrls: ['./code-set-details.component.scss']
 })
-export class CodeSetDetailsComponent implements OnInit {
+export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   result: CodeSetResult;
   hasResult = false;
@@ -61,11 +74,11 @@ export class CodeSetDetailsComponent implements OnInit {
   exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+  @ViewChild('aLink', {static: false}) aLink: ElementRef;
   download: any;
   downloadLink: any;
   urlText: any;
- @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
@@ -73,17 +86,24 @@ export class CodeSetDetailsComponent implements OnInit {
   @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  // @ViewChildren("aliases") aliases: QueryList<any>;
 
-  constructor(private renderer: Renderer2, private resourcesService: ResourcesService, private messageService: MessageService, private messageHandler: MessageHandlerService, private securityHandler: SecurityHandlerService, private folderHandler: FolderHandlerService, private stateHandler: StateHandlerService, private sharedService: SharedService, private elementDialogueService: ElementSelectorDialogueService, private broadcastSvc: BroadcastService, private helpDialogueService: HelpDialogueHandlerService, private dialog: MatDialog,
-              private favouriteHandler: FavouriteHandlerService, private exportHandler: ExportHandlerService, private domSanitizer: DomSanitizer) {
-    // securitySection = false;
+  constructor(private resourcesService: ResourcesService,
+              private messageService: MessageService,
+              private messageHandler: MessageHandlerService,
+              private securityHandler: SecurityHandlerService,
+              private stateHandler: StateHandlerService,
+              private sharedService: SharedService,
+              private elementDialogueService: ElementSelectorDialogueService,
+              private broadcastSvc: BroadcastService,
+              private helpDialogueService: HelpDialogueHandlerService,
+              private dialog: MatDialog,
+              private favouriteHandler: FavouriteHandlerService,
+              private title: Title) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.CodeSetDetails();
-
-
   }
+
   public showAddElementToMarkdown() { // Remove from here & put in markdown
     this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
   }
@@ -95,14 +115,15 @@ export class CodeSetDetailsComponent implements OnInit {
 
 
     this.editableForm.show = () => {
-      this.editForm.forEach(x => x.edit({ editing: true,
+      this.editForm.forEach(x => x.edit({
+        editing: true,
         focus: x._name === 'moduleName' ? true : false
       }));
       this.editableForm.visible = true;
     };
 
     this.editableForm.cancel = () => {
-      this.editForm.forEach(x => x.edit({ editing: false }));
+      this.editForm.forEach(x => x.edit({editing: false}));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -123,9 +144,6 @@ export class CodeSetDetailsComponent implements OnInit {
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;
     });
-    // this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-    //   this.showSearch = message;
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -193,14 +211,13 @@ export class CodeSetDetailsComponent implements OnInit {
         this.hasResult = true;
         this.watchDataModelObject();
       }
+      this.title.setTitle(`Code Set - ${this.result?.label}`);
     });
-
-
   }
 
   watchDataModelObject() {
     const access: any = this.securityHandler.elementAccess(this.result);
-    if (access != undefined) {
+    if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
       this.showDelete = access.showDelete;
@@ -214,6 +231,7 @@ export class CodeSetDetailsComponent implements OnInit {
   toggleSecuritySection() {
     this.messageService.toggleUserGroupAccess();
   }
+
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
@@ -223,14 +241,6 @@ export class CodeSetDetailsComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  // markDonw(text) {
-  //     if (text === null || text === undefined) {
-  //         return '';
-  //     }
-  //     /* tslint:disable:no-string-literal */
-  //     return window['marked'](text);
-  // }
-
   delete(permanent) {
     if (!this.securityHandler.isAdmin()) {
       return;
@@ -239,19 +249,19 @@ export class CodeSetDetailsComponent implements OnInit {
     this.deleteInProgress = true;
 
     this.resourcesService.codeSet.delete(this.result.id, null, queryString, null).subscribe(result => {
-          if (permanent) {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
-          } else {
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.stateHandler.reload();
-          }
+        if (permanent) {
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
+        } else {
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.reload();
+        }
 
-        },
-        error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError('There was a problem deleting the Code Set.', error);
-        });
+      },
+      error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Code Set.', error);
+      });
 
   }
 
@@ -262,17 +272,16 @@ export class CodeSetDetailsComponent implements OnInit {
     const promise = new Promise((resolve, reject) => {
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
-          {
-            hasBackdrop: false,
-            data: {
-              title: 'Code Set',
-              message:
-                  'Are you sure you want to delete this Code Set?<br>The Code Set will be marked as deleted and will not be viewable by users except Administrators.'
-            }
-          });
+        {
+          data: {
+            title: 'Code Set',
+            message:
+              'Are you sure you want to delete this Code Set?<br>The Code Set will be marked as deleted and will not be viewable by users except Administrators.'
+          }
+        });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }
@@ -290,33 +299,27 @@ export class CodeSetDetailsComponent implements OnInit {
     }
     const promise = new Promise((resolve, reject) => {
       const dialog = this.dialog.open(ConfirmationModalComponent,
-          {
-            hasBackdrop: false,
-            data: {
-              title: 'Code Set',
-              message:
-                  'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
-            }
-          });
+        {
+          data: {
+            title: 'Code Set',
+            message: 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
+          }
+        });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
-          // reject(null); Commented by AS as it was throwing error
+        if (result?.status !== 'ok') {
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent,
-            {
-              hasBackdrop: false,
-              data: {
-                title: 'Data Model',
-                message:
-                    '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
-              }
-            });
+          {
+            data: {
+              title: 'Data Model',
+              message: '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
+            }
+          });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== 'ok') {
-            // reject(null);
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
             return;
           }
           this.delete(true);
@@ -329,14 +332,20 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
 
-  formBeforeSave =  () => {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
     // this.editForm.forEach(x => this.result["label"] = x.getHotState().value);
     this.editForm.forEach((modules) => {
-      if (modules.config.name == 'moduleName') { this.result.label = modules.getHotState().value; }
-      if (modules.config.name == 'moduleNameAuthor') { this.result.author = modules.getHotState().value; }
-      if (modules.config.name == 'moduleNameOrganisation') { this.result.organisation = modules.getHotState().value; }
+      if (modules.config.name === 'moduleName') {
+        this.result.label = modules.getHotState().value;
+      }
+      if (modules.config.name === 'moduleNameAuthor') {
+        this.result.author = modules.getHotState().value;
+      }
+      if (modules.config.name === 'moduleNameOrganisation') {
+        this.result.organisation = modules.getHotState().value;
+      }
 
     });
 
@@ -362,22 +371,22 @@ export class CodeSetDetailsComponent implements OnInit {
     if (this.validateLabel(this.result.label)) {
 
 
-      const call = from(this.resourcesService.codeSet.put(resource.id, null, { resource })).subscribe(result => {
-            if (this.afterSave) {
-              this.afterSave(result);
-            }
-            this.messageHandler.showSuccess('Code Set updated successfully.');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
+      const call = from(this.resourcesService.codeSet.put(resource.id, null, {resource})).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
+          }
+          this.messageHandler.showSuccess('Code Set updated successfully.');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({editing: false}));
 
-          },
-          error => {
-            this.messageHandler.showError('There was a problem updating the Code Set.', error);
-          });
+        },
+        error => {
+          this.messageHandler.showError('There was a problem updating the Code Set.', error);
+        });
     }
 
 
-  }
+  };
 
   validateLabel(data): any {
     if (!data || (data && data.trim().length === 0)) {
@@ -400,11 +409,13 @@ export class CodeSetDetailsComponent implements OnInit {
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Edit_model_details', { my: 'right top', at: 'bottom'} as DialogPosition);
+    this.helpDialogueService.open('Edit_model_details', {my: 'right top', at: 'bottom'} as DialogPosition);
   }
 
   toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.result)) { this.addedToFavourite = this.favouriteHandler.isAdded(this.result); }
+    if (this.favouriteHandler.toggle(this.result)) {
+      this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
+    }
 
   }
 
@@ -414,32 +425,31 @@ export class CodeSetDetailsComponent implements OnInit {
     const promise = new Promise((resolve, reject) => {
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
-          {
-            hasBackdrop: false,
-            data: {
-              title: 'Are you sure you want to finalise the Code Set ?',
-              message:
-                  'Once you finalise a CodeSet, you can not edit it anymore!<br>\ \n' +
-                  'but you can create new version of it.'
-            }
-          });
+        {
+          data: {
+            title: 'Are you sure you want to finalise the Code Set ?',
+            message:
+              'Once you finalise a CodeSet, you can not edit it anymore!<br>\ \n' +
+              'but you can create new version of it.'
+          }
+        });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== 'ok') {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result => {
-              this.processing = false;
-              this.messageHandler.showSuccess('Code Set finalised successfully.');
-              this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
+        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result2 => {
+            this.processing = false;
+            this.messageHandler.showSuccess('Code Set finalised successfully.');
+            this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
 
-            },
-            error => {
-              this.processing = false;
-              this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
-            });
+          },
+          error => {
+            this.processing = false;
+            this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
+          });
 
       });
     });
@@ -456,5 +466,11 @@ export class CodeSetDetailsComponent implements OnInit {
     }
 
   }
-
+  newVersion() {
+    this.stateHandler.Go(
+      'newVersionCodeSet',
+      { codeSetId: this.result.id },
+      { location: true }
+    );
+  }
 }

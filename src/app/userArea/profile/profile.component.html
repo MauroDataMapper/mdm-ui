@@ -1,30 +1,41 @@
-<div class="row" style="padding: 5px">
-	<div class="col-lg-6 col-md-6">
-		<div class="panel panel-default">
-			<div class="panel-heading clearfix">
-				<div class="pull-left" style="width: 48px; position: relative; margin-right: 10px;">
-					<div class="btn-group btn-group-xs" style="position: absolute; z-index: 1; overflow: hidden; color: white; text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);">
-						<label class="btn btn-xs btn-file" aria-label="Choose Profile Image" style="color: white;">
-							<span class="glyphicon glyphicon-camera"></span>
-							<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*">
-						</label>
-						<a class="btn btn-xs" (click)="removeProfileImage()" style="color: white" aria-label="Remove profile image">
-							<span class="glyphicon glyphicon-remove"></span>
-						</a>
-					</div>
-					<img class="img-rounded" *ngIf="trustedUrl" style="width: 48px; height: auto;" [src]="trustedUrl">
-				</div>
-				<div>
-					<h2 class="panel-title">Profile</h2> <i id="helpIcon" class="fa fa-info-circle themeColor" style="font-size: 14px;" (click)="loadHelp()" tooltip-placement="left" uib-tooltip="Help"></i>
-				</div>
-			</div>
-			<app-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></app-img-croppie>
-			<div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px;">
-				<button (click)="clear()" type="button" class="btn btn-default btn-xs">Cancel</button>
-				<button (click)="savePicture()" type="button" class="btn btn-primary btn-xs">Save</button>
-			</div>
-			<app-user-details [after-save]="afterSave" (refreshUserDetails)='userDetails()'></app-user-details>
-		</div>
-	</div>
+<!--
+Copyright 2020 University of Oxford
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mb-2 mdm--profile-block">
+	<img class="img-rounded" *ngIf="trustedUrl" style="width: 64px; height: auto; border-radius: 100%; margin-right: 10px;" [src]="trustedUrl" alt="User profile">
+	<i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
+	<button mat-button color="primary" class="paddingless" [matMenuTriggerFor]="menuProfile">
+		<i class="fas fa-pencil-alt"></i>
+	</button>
+	<mat-menu #menuProfile>
+		<label mat-menu-item>
+			<i class="fas fa-camera"></i>
+			Change image
+			<input type="file" style="display: none;" (change)="fileChangeEvent($event)" accept="image/*">
+		</label>
+		<button mat-menu-item (click)="removeProfileImage()">
+			<i class="fas fa-times"></i>
+			Remove image
+		</button>
+	</mat-menu>
 </div>
+<mdm-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></mdm-img-croppie>
+<div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px 0;">
+	<button mat-button color="warn" type="button" (click)="clear()">Cancel</button>
+	<button mat-flat-button color="primary" type="button" (click)="savePicture()">Update profile image</button>
+</div>
+<mdm-user-details [afterSave]="afterSave" (refreshUserDetails)='userDetails()'></mdm-user-details>

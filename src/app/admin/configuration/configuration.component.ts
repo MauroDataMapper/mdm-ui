@@ -1,126 +1,131 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
-import { StateHandlerService } from "../../services/handlers/state-handler.service";
-import { ResourcesService } from "../../services/resources.service";
-import { MessageHandlerService } from "../../services/utility/message-handler.service";
-import { ConfigurationPropertiesResult } from "../../model/ConfigurationProperties";
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationProperties';
 import { from } from 'rxjs';
-import { PropertyRenamingService } from "../../services/utility/property-renaming.service";
-import { ObjectEnhancerService } from "../../services/utility/object-enhancer.service";
-
+import { ObjectEnhancerService } from '@mdm/services/utility/object-enhancer.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-	selector: 'app-configuration',
-	templateUrl: './configuration.component.html',
-	styleUrls: ['./configuration.component.sass']
+  selector: 'mdm-configuration',
+  templateUrl: './configuration.component.html',
+  styleUrls: ['./configuration.component.sass']
 })
 export class ConfigurationComponent implements OnInit {
-	propertiesTemp: any;
-	properties: ConfigurationPropertiesResult;
-	oldConfiguration: ConfigurationPropertiesResult;
-	activeTab: any;
-	resource: any;
-	indexingStatus: string;
-	indexingTime: string;
+  propertiesTemp: any;
+  properties: ConfigurationPropertiesResult;
+  oldConfiguration: ConfigurationPropertiesResult;
+  activeTab: any;
+  resource: any;
+  indexingStatus: string;
+  indexingTime: string;
 
-	constructor(
-		private resourcesService: ResourcesService,
-		private messageHandler: MessageHandlerService,
-		private stateService: StateService,
-		private stateHandler: StateHandlerService,
-		private propertyRenamingService: PropertyRenamingService,
-		private objectEnhancer: ObjectEnhancerService,
-		) {
-	}
+  constructor(
+    private resourcesService: ResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private objectEnhancer: ObjectEnhancerService,
+    private title: Title
+  ) {}
 
-	ngOnInit() {
-		this.getConfig();
-		this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+  ngOnInit() {
+    this.getConfig();
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+    this.indexingStatus = '';
+    this.title.setTitle('Configuration');
+  }
 
-		this.indexingStatus = '';
-	}
+  getConfig() {
+    this.resourcesService.admin.get('properties', null).subscribe((result: { body: any }) => {
+        this.properties = result.body;
+        // this.propertiesTemp = this.propertyRenamingService.renameKeys(result.body);
+        // this.properties = this.propertiesTemp;
 
-	getConfig() {
+        this.oldConfiguration = Object.assign({}, this.properties);
+      },
+      err => {
+        this.messageHandler.showError('There was a problem getting the configuration properties.', err);
+      });
+  }
 
-		this.resourcesService.admin.get('properties', null).subscribe((result: { body: any; }) => {
-			this.properties = result.body;
-			//this.propertiesTemp = this.propertyRenamingService.renameKeys(result.body);
-			//this.properties = this.propertiesTemp;
+  // Create or edit a configuration property
+  submitConfig() {
+    this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
 
-			this.oldConfiguration = Object.assign({}, this.properties);
-		}),
-			(err) => {
-				this.messageHandler.showError('There was a problem getting the configuration properties.', err);
-			};
-	}
+    from(this.resourcesService.admin.post('editProperties', {resource: this.resource})).subscribe(() => {
+        this.messageHandler.showSuccess('Configuration properties updated successfully.');
+        // refresh the page
+        this.getConfig();
+      },
+      error => {
+        this.messageHandler.showError('There was a problem updating the configuration properties.', error);
+      }
+    );
+  }
 
-	// Create or edit a configuration property
-	Submit() {
-		
-		this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
+  tabSelected(itemsName) {
+    const tab = this.getTabDetail(itemsName);
+    this.stateHandler.Go('configuration', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+  }
 
-		var call = from(this.resourcesService.admin.post('editProperties', { resource: this.resource })).subscribe(result => {
+  getTabDetail(tabIndex) {
+    switch (tabIndex) {
+      case 0:
+        return { index: 0, name: 'email' };
+      case 1:
+        return { index: 1, name: 'lucene' };
+      default:
+        return { index: 0, name: 'email' };
+    }
+  }
 
-			this.messageHandler.showSuccess('Configuration properties updated successfully.');
-			
-			//refresh the page
-			this.getConfig();
-		},
-			error => {
-				this.messageHandler.showError('There was a problem updating the configuration properties.', error);
-			});
-	};
+  getTabDetailByName(tabName) {
+    switch (tabName) {
+      case 'email':
+        return { index: 0, name: 'email' };
+      case 'lucene':
+        return { index: 1, name: 'lucene' };
+      default:
+        return { index: 0, name: 'email' };
+    }
+  }
 
-	tabSelected(itemsName) {
+  rebuildIndex() {
+    this.indexingStatus = 'start';
 
-		var tab = this.getTabDetail(itemsName);
-		this.stateHandler.Go("configuration", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
-	};
-
-	getTabDetail(tabIndex) {
-
-		switch (tabIndex) {
-			case 0: return { index: 0, name: 'email' };
-			case 1: return { index: 1, name: 'lucene' };
-			default: return { index: 0, name: 'email' };
-		}
-	}
-
-	getTabDetailByName(tabName) {
-
-		switch (tabName) {
-			case 'email': return { index: 0, name: 'email' };
-			case 'lucene': return { index: 1, name: 'lucene' };
-			default: return { index: 0, name: 'email' };
-		}
-	}
-
-	rebuildIndex() {
-		this.indexingStatus = 'start';
-
-
-		this.resourcesService.admin.post('rebuildLuceneIndexes', null).subscribe(result => {
-			
-			debugger;
-			this.indexingStatus = 'success';
-
-
-		},
-			error => {
-				debugger;
-				if (error.status === 418) {
-					
-					this.indexingStatus = 'success';
-					//console.log("error.timeTaken");
-
-					if (error.error && error.error.timeTaken) {
-						console.log(error.timeTaken);
-						this.indexingTime = "in " + error.error.timeTaken;
-					}
-				} else {
-					
-					this.indexingStatus = 'error';
-				}
-			});
-	}
+    this.resourcesService.admin.post('rebuildLuceneIndexes', null).subscribe(() => {
+        this.indexingStatus = 'success';
+      },
+      error => {
+        if (error.status === 418) {
+          this.indexingStatus = 'success';
+          if (error.error && error.error.timeTaken) {
+            this.indexingTime = 'in ' + error.error.timeTaken;
+          }
+        } else {
+          this.indexingStatus = 'error';
+        }
+      }
+    );
+  }
 }

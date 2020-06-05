@@ -1,15 +1,29 @@
-import { Injectable } from '@angular/core';
-import { environment } from "../../environments/environment";
-import { SecurityHandlerService } from "./handlers/security-handler.service";
-import { StateRoleAccessService } from "./utility/state-role-access.service";
-import { AppSettingService } from "./utility/app-setting.service";
-import { Subject, Subscription } from "rxjs";
-import { RestHandlerService } from "./utility/rest-handler.service";
-import { ToastrService } from 'ngx-toastr';
-import { BroadcastService } from './broadcast.service';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Injectable} from '@angular/core';
+import {environment} from '@env/environment';
+import {SecurityHandlerService} from './handlers/security-handler.service';
+import {Subject} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
+import { ResourcesService } from '@mdm/services/resources.service';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class SharedService {
 
@@ -25,49 +39,55 @@ export class SharedService {
     applicationOffline = new Subject<any>();
     current;
 
-    public searchCriteria: string;
+  public searchCriteria: string;
 
+  lastDigestRun = new Date();
 
-    private subscription: Subscription;
-    lastDigestRun = new Date();
-  
-    constructor(private securityHandler: SecurityHandlerService, private stateRoleAccess: StateRoleAccessService,
-        private appSetting: AppSettingService, private restHandler: RestHandlerService, private toaster: ToastrService, private broadcastSvc: BroadcastService) { 
-        this.isAdmin = this.securityHandler.isAdmin();
-        this.applicationOffline.subscribe(
-            (data) => {
-                this.toaster.warning('Application is offline!');
-            });
+  constructor(
+    private securityHandler: SecurityHandlerService,
+    private toaster: ToastrService,
+    private resources: ResourcesService
+  ) {
+    this.isAdmin = this.securityHandler.isAdmin();
+    this.applicationOffline.subscribe(() => {
+      this.toaster.warning('Application is offline!');
+    });
+  }
+
+  logout = () => {
+    this.securityHandler.logout();
+  };
+
+  isLoggedIn = (checkServerSession?) => {
+    if (checkServerSession !== undefined) {
+      this.handleExpiredSession();
+    }
+    return this.securityHandler.isLoggedIn();
+  };
+
+  isAdminUser = () => {
+    return this.securityHandler.isAdmin();
+  };
+
+  handleExpiredSession = (firstTime?) => {
+    // if 'event:auth-loginRequired' event is fired, then do not check as
+    // the event handler will check the status
+    if (this.securityHandler.in_AuthLoginRequiredCheck && !firstTime) {
+      return;
     }
 
+    this.securityHandler.isCurrentSessionExpired().then(result => {
+      if (result === true) {
+        this.securityHandler.saveLatestURL(window.location.href);
+        this.toaster.error('Your session has expired! Please log in.');
 
-    logout = () => {
         this.securityHandler.logout();
-    }
+      }
+    });
+  };
 
-    isLoggedIn = () =>{
-        return this.securityHandler.isLoggedIn();
-    }
+  pendingUsersCount = () => {
+    return this.resources.catalogueUser.get(null, 'pending', { filters: 'disabled=false' });
+  }
 
-    isAdminUser = () => {
-        return this.securityHandler.isAdmin();
-    }
-
-    handleExpiredSession = (firstTime?) => {
-
-        
-        //if 'event:auth-loginRequired' event is fired, then do not check as
-        //the event handler will check the status
-        if (this.securityHandler.in_AuthLoginRequiredCheck && !firstTime) {
-            return;
-        }
-        this.securityHandler.isCurrentSessionExpired().then((result) => {
-            if (result === true) {
-                this.securityHandler.saveLatestURL(window.location.href);
-                this.toaster.error("Your session has expired! Please log in.");
-                
-                this.securityHandler.logout();
-            }
-        });
-    }
 }

@@ -1,89 +1,82 @@
-import {
-	Component,
-	OnInit, ViewChild
-} from '@angular/core';
-import { ResourcesService } from "../../services/resources.service";
-import { StateService } from "@uirouter/core";
-import { StateHandlerService } from "../../services/handlers/state-handler.service";
-import { UserDetailsResult } from "../../model/userDetailsModel";
-import { SharedService } from "../../services/shared.service";
-import { SecurityHandlerService } from "../../services/handlers/security-handler.service";
-import { MessageService } from "../../services/message.service";
-import { HelpDialogueHandlerService } from "../../services/helpDialogue.service";
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { environment } from "../../../environments/environment";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { UserDetailsResult } from '@mdm/model/userDetailsModel';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { environment } from '@env/environment';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-	selector: 'app-change-password',
-	templateUrl: './change-password.component.html',
-	styleUrls: ['./change-password.component.sass']
+  selector: 'mdm-change-password',
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.sass']
 })
 export class ChangePasswordComponent implements OnInit {
-	user: UserDetailsResult;
-	currentUser: any;
-	oldPassword: String;
-	newPassword: String;
-	confirm: String;
-	message: String;
-	afterSave: (result: { body: { id: any; }; }) => void;
+  user: UserDetailsResult;
+  currentUser: any;
+  oldPassword: string;
+  newPassword: string;
+  confirm: string;
+  message: string;
+  afterSave: (result: { body: { id: any } }) => void;
 
-	@ViewChild('changePasswordForm', {static:false}) changePasswordForm;
-	backendUrl: string = environment.apiEndpoint;
+  @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
+  backendUrl: string = environment.apiEndpoint;
 
-	constructor(
-		private resourcesService: ResourcesService,
-		private stateService: StateService,
-		private stateHandler: StateHandlerService,
-		private sharedService: SharedService,
-		private securityHandler: SecurityHandlerService,
-		private messageService: MessageService,
-		private messageHandler: MessageHandlerService,
-		private helpDialogueService: HelpDialogueHandlerService,
-		private sanitizer: DomSanitizer) {
-		this.currentUser = this.securityHandler.getCurrentUser();
-		this.newPassword = "";
-		this.oldPassword = "";
-		this.confirm = "";
-		this.message = "";
-	}
+  constructor(
+    private resourcesService: ResourcesService,
+    private securityHandler: SecurityHandlerService,
+    private messageHandler: MessageHandlerService,
+    private title: Title
+    ) {
+    this.currentUser = this.securityHandler.getCurrentUser();
+    this.newPassword = '';
+    this.oldPassword = '';
+    this.confirm = '';
+    this.message = '';
+  }
 
-	ngOnInit() {
-	}
+  ngOnInit() {
+    this.title.setTitle('Change password');
+  }
 
-	ngAfterViewInit() {
+  disabled = () => {
+    return this.newPassword !== this.confirm || this.newPassword === this.oldPassword || this.newPassword === '' || this.oldPassword === '';
+  };
 
-	}
-
-	disabled = () => {
-		return (this.newPassword != this.confirm ||
-				this.newPassword == this.oldPassword ||
-				this.newPassword == "" ||
-				this.oldPassword == "");
-	}
-
-	changePassword = () => {
-
-		var body = {
-			oldPassword: this.oldPassword,
-			newPassword: this.newPassword
-		}
-		this.resourcesService.catalogueUser.put(this.currentUser.id, 'changePassword',  { resource: body}).
-			subscribe((result) => {
-					this.messageHandler.showSuccess('Password updated successfully.');
-					this.newPassword = "";
-					this.oldPassword = "";
-					this.confirm = "";
-					this.message = "";
-					this.changePasswordForm.reset();
-				},(error) => {
-				this.message = 'Error : ' + error.error.errors[0].message;
-			});
-
-	}
-
-
-
+  changePassword = () => {
+    const body = {
+      oldPassword: this.oldPassword,
+      newPassword: this.newPassword
+    };
+    this.resourcesService.catalogueUser.put(this.currentUser.id, 'changePassword', { resource: body }).subscribe(() => {
+        this.messageHandler.showSuccess('Password updated successfully.');
+        this.newPassword = '';
+        this.oldPassword = '';
+        this.confirm = '';
+        this.message = '';
+        this.changePasswordForm.reset();
+      },
+      error => {
+        this.message = 'Error : ' + error.error.errors[0].message;
+      }
+    );
+  };
 }
-
-

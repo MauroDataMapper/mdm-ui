@@ -1,25 +1,42 @@
-import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren} from '@angular/core';
-import {MarkdownTextAreaComponent} from "../utility/markdown-text-area.component";
-import {FolderResult} from "../model/folderModel";
-import {Observable, Subscription} from "rxjs";
-import {ResourcesService} from "../services/resources.service";
-import {MessageService} from "../services/message.service";
-import {SharedService} from "../services/shared.service";
-import {StateService} from "@uirouter/core";
-import {StateHandlerService} from "../services/handlers/state-handler.service";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren, OnDestroy} from '@angular/core';
+import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
+import { FolderResult } from '../model/folderModel';
+import { Subscription, forkJoin } from 'rxjs';
+import { ResourcesService } from '../services/resources.service';
+import { MessageService } from '../services/message.service';
+import { SharedService } from '../services/shared.service';
+import { StateService } from '@uirouter/core';
+import { StateHandlerService } from '../services/handlers/state-handler.service';
 
 @Component({
-  selector: 'app-classification',
+  selector: 'mdm-classification',
   templateUrl: './classification.component.html',
   styleUrls: ['./classification.component.sass']
 })
-export class ClassificationComponent implements OnInit {
-  @Input("after-save") afterSave: any;
+export class ClassificationComponent implements OnInit, OnDestroy {
+  @Input() afterSave: any;
   @Input() editMode = false;
 
-  @ViewChildren("editableText") editForm: QueryList<any>;
+  @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  @Input()  mcClassification;
+  @Input() mcClassification;
   classifier = null;
 
   result: FolderResult;
@@ -28,26 +45,30 @@ export class ClassificationComponent implements OnInit {
   showSearch = false;
   parentId: string;
   activeTab: any;
-  catalogueItemsCount :any;
-  terminologiesCount  :any;
-  termsCount  :any;
-  codeSetsCount :any;
+  catalogueItemsCount: any;
+  terminologiesCount: any;
+  termsCount: any;
+  codeSetsCount: any;
   loading = false;
-  catalogueItems :any;
+  catalogueItems: any;
 
-
-  constructor(private resourcesService: ResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
+  constructor(
+    private resourcesService: ResourcesService,
+    private messageService: MessageService,
+    private sharedService: SharedService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService
+  ) {
     // this.toaster.success('toast test');
   }
 
   ngOnInit() {
-
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    if (this.stateService.params.edit === "true") {
+    if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
 
@@ -57,63 +78,97 @@ export class ClassificationComponent implements OnInit {
     // }
     // else
     //     this.messageService.showEditMode(false);
-    window.document.title = "Classifier";
+    window.document.title = 'Classifier';
     this.classifierDetails(this.stateService.params.id);
 
-    var promises = [];
-    promises.push(this.resourcesService.classifier.get(this.stateService.params.id, "catalogueItems", null));
-    promises.push(this.resourcesService.classifier.get(this.stateService.params.id, "terminologies", null));
-    promises.push(this.resourcesService.classifier.get(this.stateService.params.id, "terms", null));
-    promises.push(this.resourcesService.classifier.get(this.stateService.params.id, "codeSets", null));
+    const promises = [];
+    promises.push(
+      this.resourcesService.classifier.get(
+        this.stateService.params.id,
+        'catalogueItems',
+        null
+      )
+    );
+    promises.push(
+      this.resourcesService.classifier.get(
+        this.stateService.params.id,
+        'terminologies',
+        null
+      )
+    );
+    promises.push(
+      this.resourcesService.classifier.get(
+        this.stateService.params.id,
+        'terms',
+        null
+      )
+    );
+    promises.push(
+      this.resourcesService.classifier.get(
+        this.stateService.params.id,
+        'codeSets',
+        null
+      )
+    );
 
-   Observable.forkJoin(promises).subscribe((results:any) => {
-      this.catalogueItemsCount = results[0].count;
-      this.terminologiesCount  = results[1].count;
-      this.termsCount  = results[2].count;
-      this.codeSetsCount = results[3].count;
+    forkJoin(promises).subscribe((results: any) => {
+      this.catalogueItemsCount = results[0].body.count;
+      this.terminologiesCount = results[1].body.count;
+      this.termsCount = results[2].body.count;
+      this.codeSetsCount = results[3].body.count;
 
       this.loading = false;
-      this.activeTab = this.getTabDetail("classifiedElements");
+      this.activeTab = this.getTabDetail('classifiedElements');
     });
 
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-      this.showSecuritySection = message;
-    });
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
-    this.afterSave = (result: { body: { id: any; }; }) => this.classifierDetails(result.body.id);
+    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
+      (message: boolean) => {
+        this.showSecuritySection = message;
+      }
+    );
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
+    this.afterSave = (result: { body: { id: any } }) =>
+      this.classifierDetails(result.body.id);
 
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
   }
 
   classifierDetails(id: any) {
-    this.resourcesService.classifier.get(id, null, null).subscribe((result: { body: FolderResult; }) => {
-      this.result = result.body;
+    this.resourcesService.classifier
+      .get(id, null, null)
+      .subscribe((result: { body: FolderResult }) => {
+        this.result = result.body;
 
-      this.parentId = this.result.id;
-      if (this.sharedService.isLoggedIn) {
-        this.classifierPermissions(id);
-      }
-    });
+        this.parentId = this.result.id;
+        if (this.sharedService.isLoggedIn(true)) {
+          this.classifierPermissions(id);
+        } else {
+          this.messageService.FolderSendMessage(this.result);
+          this.messageService.dataChanged(this.result);
+        }
+      });
   }
   classifierPermissions(id: any) {
-    this.resourcesService.classifier.get(id, 'permissions', null).subscribe((permissions: { body: { [x: string]: any; }; }) => {
-      for (var attrname in permissions.body) {
-        this.result[attrname] = permissions.body[attrname];
-
-      }
-      //Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.result);
-      this.messageService.dataChanged(this.result);
-    });
+    this.resourcesService.classifier
+      .get(id, 'permissions', null)
+      .subscribe((permissions: { body: { [x: string]: any } }) => {
+        Object.keys(permissions.body).forEach(attrname => {
+          this.result[attrname] = permissions.body[attrname];
+        });
+        // Send it to message service to receive in child components
+        this.messageService.FolderSendMessage(this.result);
+        this.messageService.dataChanged(this.result);
+      });
   }
 
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
 
- 
   ngOnDestroy() {
     if (this.subscription) {
       // unsubscribe to ensure no memory leaks
@@ -122,32 +177,33 @@ export class ClassificationComponent implements OnInit {
   }
 
   tabSelected(itemsName) {
-    var tab = this.getTabDetail(itemsName);
-   // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
-  };
-
-  getTabDetail(tabIndex) {
-
-    switch (tabIndex) {
-      case 0: return { index: 0, name: 'access' };
-      case 1: return { index: 1, name: 'history' };
-      default: return { index: 0, name: 'access' };
-    }
+    const tab = this.getTabDetail(itemsName);
+    // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
   }
 
+  getTabDetail(tabIndex) {
+    switch (tabIndex) {
+      case 0:
+        return { index: 0, name: 'access' };
+      case 1:
+        return { index: 1, name: 'history' };
+      default:
+        return { index: 0, name: 'access' };
+    }
+  }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'classifiedElements':
-        return {index: 0, name: 'classifiedElements'};
+        return { index: 0, name: 'classifiedElements' };
       case 'classifiedTerminologies':
-        return {index: 1, name: 'classifiedTerminologies'};
+        return { index: 1, name: 'classifiedTerminologies' };
       case 'classifiedTerms':
-        return {index: 2, name: 'classifiedTerms'};
+        return { index: 2, name: 'classifiedTerms' };
       case 'classifiedCodeSets':
-        return {index: 3, name: 'classifiedCodeSets'};
+        return { index: 3, name: 'classifiedCodeSets' };
       case 'history': {
-        var index = 4;
+        let index = 4;
         if (this.terminologiesCount === 0) {
           index--;
         }
@@ -157,20 +213,25 @@ export class ClassificationComponent implements OnInit {
         if (this.codeSetsCount === 0) {
           index--;
         }
-        return {index: index, name: 'history'};
+        return { index, name: 'history' };
       }
     }
   }
 
   getTabDetailByIndex(index) {
     switch (index) {
-      case 0: return { index: 0, name: 'classifiedElements' };
-      case 1: return { index: 1, name: 'classifiedTerminologies' };
-      case 2: return { index: 2, name: 'classifiedTerms' };
-      case 3: return { index: 3, name: 'classifiedCodeSets' };
-      case 4: return { index: 4, name: 'history' };
-      default: return { index: 0, name: 'classifiedElements' };
+      case 0:
+        return { index: 0, name: 'classifiedElements' };
+      case 1:
+        return { index: 1, name: 'classifiedTerminologies' };
+      case 2:
+        return { index: 2, name: 'classifiedTerms' };
+      case 3:
+        return { index: 3, name: 'classifiedCodeSets' };
+      case 4:
+        return { index: 4, name: 'history' };
+      default:
+        return { index: 0, name: 'classifiedElements' };
     }
   }
-
 }

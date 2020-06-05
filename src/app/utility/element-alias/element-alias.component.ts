@@ -1,64 +1,82 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {DataModelResult} from "../../model/dataModelModel";
-import {DataClassResult} from "../../model/dataClassModel";
+import {DataModelResult} from '@mdm/model/dataModelModel';
+import {DataClassResult} from '@mdm/model/dataClassModel';
 
 @Component({
-  selector: 'app-element-alias',
+  selector: 'mdm-element-alias',
   templateUrl: './element-alias.component.html',
-  //styleUrls: ['./element-alias.component.sass']
+  // styleUrls: ['./element-alias.component.sass']
 })
 export class ElementAliasComponent implements OnInit {
- @Input() aliases: any[] = [];
-  @Input("editable-form") editableForm: any;
-  @Input("property") property: string;
-  @Input("element") element: DataClassResult;
-  typedAlias:string;
- @Input() inEditMode:false;
-  @ViewChild('typedAliasId', {static:false}) alias: ElementRef;
-  constructor() { }
+  @Input() aliases: any[] = [];
+  @Input() editableForm: any;
+  @Input() property: string;
+  @Input() element: DataClassResult;
+  typedAlias: string;
+  @Input() inEditMode: false;
+  @ViewChild('typedAliasId', {static: false}) alias: ElementRef;
+
+  constructor() {
+  }
 
   ngOnInit() {
 
   }
 
-  remove (element) {
-    const index = this.aliases.findIndex(alias => alias == element)
-    if(index !==-1) {
-     this.aliases.splice(index, 1);
-      this.editableForm["aliases"] = this.aliases;
+  remove(element) {
+    const index = this.aliases.findIndex(alias => alias === element);
+    if (index !== -1) {
+      this.aliases.splice(index, 1);
+      this.editableForm.aliases = this.aliases;
     }
 
-  };
+  }
 
 
-  add  () {
-    if(this.typedAlias.trim() === ""){
+  add() {
+    if (this.typedAlias.trim() === '') {
       return;
     }
-    if(this.aliases) {
-        for (var i = 0; i < this.aliases.length; i++) {
-            if (this.aliases[i] === this.typedAlias) {
-                return;
-            }
+    if (this.aliases) {
+      for (const element of this.aliases) {
+        if (element === this.typedAlias) {
+          return;
         }
-    }
-    else{
-        this.aliases =[];
+      }
+    } else {
+      this.aliases = [];
     }
     this.aliases.push(this.typedAlias);
     // this.editableForm["aliases"] = this.aliases;
-      this.editableForm["aliases"] = this.aliases;
+    this.editableForm.aliases = this.aliases;
 
-    this.typedAlias = "";
+    this.typedAlias = '';
     this.alias.nativeElement.focus();
-  };
+  }
 
-  keyup = function (event) {
+  keyup = function(event) {
     if (event.keyCode && event.keyCode === 13) {
       this.add();
     }
     event.preventDefault();
-    return false
+    return false;
   };
 
 

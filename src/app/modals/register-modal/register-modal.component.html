@@ -1,61 +1,89 @@
-<form role='form' (keyup)='$event.keyCode != 13;'>
-    <div class='modal-header'> 
-        <h3 class='modal-title'>Request an account</h3>
-    </div> 
-    <div class='modal-body'> 
-        <div *ngIf='message' class='alert alert-danger'>
-            <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-            {{message}}
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<form class="mdm--form mdm--form-modal" role='form' (keyup)="$event.keyCode != 13;">
+  <button mat-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
+    <h3 class='modal-title text-center'>Request an account</h3>
+    <p class="mb-2 text-center">Please request an account in order to continue using our Catalogue</p>
+    <div *ngIf="message" class="alert alert-danger">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{message}}
+    </div>
+    <div class="form-row">
+        <div class="col-md-6">
+            <div class="mdm--form-input">
+                <mat-form-field appearance="outline">
+                    <mat-label>First name</mat-label>
+                    <input required matInput id="firstName" name="firstName" [(ngModel)]="firstName">
+                </mat-form-field>
+            </div>
         </div>
-        <mat-form-field appearance="outline" style="width: 100%">
+        <div class="col-md-6">
+            <div class="mdm--form-input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Last name</mat-label>
+                    <input required matInput id="lastName" name="lastName" [(ngModel)]="lastName">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
             <mat-label>Email address</mat-label>
-            <input required matInput id='email' name='email' [(ngModel)]='email'/>
+            <input required matInput id="email" name="email" [(ngModel)]="email">
         </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>First name</mat-label>
-            <input required matInput id='firstName' name='firstName' [(ngModel)]='firstName'/>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>Last name</mat-label>
-            <input required matInput id='lastName' name='lastName' [(ngModel)]='lastName'/>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 100%">
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
             <mat-label>Organisation</mat-label>
-            <input matInput id='organisation' name='organisation' [(ngModel)]='organisation'/>
+            <input matInput id="organisation" name="organisation" [(ngModel)]="organisation">
         </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 100%">
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
             <mat-label>Role in organisation</mat-label>
-            <input matInput id='roleInOrganisation' name='roleInOrganisation' [(ngModel)]='roleInOrganisation'/>
+            <input matInput id="roleInOrganisation" name="roleInOrganisation" [(ngModel)]="roleInOrganisation">
         </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 100%">
+    </div>
+    <div class="mdm--form-input mb-1">
+        <mat-form-field class="paddingless mb-1" appearance="outline">
             <mat-label>Password</mat-label>
-            <mat-pass-toggle-visibility #togglePassword matSuffix ></mat-pass-toggle-visibility>
-            <input autocomplete="new-password" required matInput [type]='togglePassword.type' id='password' name='password' [(ngModel)]='password'/>
+            <mat-pass-toggle-visibility #togglePassword matSuffix></mat-pass-toggle-visibility>
+            <input required matInput [type]="togglePassword.type" id="password" name="password" [(ngModel)]="password">
         </mat-form-field>
-        <mat-password-strength
-                [password]='password'
-                class="green"
-                [enableDigitRule]="true"
-                [enableLengthRule]="true"
-                [enableLowerCaseLetterRule]="true"
-                [enableSpecialCharRule]="false"
-                [enableUpperCaseLetterRule]="true"
-        ></mat-password-strength>
-
-        <mat-form-field appearance="outline" style="width: 100%">
+        <mat-password-strength [password]="password" class="green mb-2" [enableDigitRule]="true"
+            [enableLengthRule]="true" [enableLowerCaseLetterRule]="true" [enableSpecialCharRule]="false"
+            [enableUpperCaseLetterRule]="true">
+        </mat-password-strength>
+    </div>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline">
             <mat-label>Confirm password</mat-label>
             <mat-pass-toggle-visibility #toggleConfirmPassword matSuffix></mat-pass-toggle-visibility>
-            <input required matInput [type]='toggleConfirmPassword.type' id='confirmPassword' name='confirmPassword' [(ngModel)]='confirmPassword'/>
+            <input matInput [type]="toggleConfirmPassword.type" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
         </mat-form-field>
-
     </div>
-    <div class='modal-footer'> 
-        <button type='button' class='btn btn-success' (click)='register()' [disabled]='disabled()'><span class='glyphicon glyphicon-ok'></span> Register</button>
-        <button class='btn btn-default' (click)='close()'>Cancel</button>
+    <div class="mb-2 text-center">
+        <button (click)="register()" mat-flat-button class="custom mdm--form-button" color="primary">
+            Request account
+        </button>
+    </div>
+    <div class="text-center">
+        Already have an account?
+        <button mat-button color="primary" (click)="login()">Log in</button>
     </div>
 </form>

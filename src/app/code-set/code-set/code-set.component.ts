@@ -1,21 +1,38 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Subscription} from 'rxjs';
 // @ts-ignore
 import { MatTabGroup } from '@angular/material';
-import {CodeSetResult} from "../../model/codeSetModel";
-import {ResourcesService} from "../../services/resources.service";
-import {MessageService} from "../../services/message.service";
-import {SharedService} from "../../services/shared.service";
-import {StateService} from "@uirouter/core";
-import {StateHandlerService} from "../../services/handlers/state-handler.service";
-import {DataModelResult} from "../../model/dataModelModel";
+import {CodeSetResult} from '@mdm/model/codeSetModel';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {MessageService} from '@mdm/services/message.service';
+import {SharedService} from '@mdm/services/shared.service';
+import {StateService} from '@uirouter/core';
+import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import {DataModelResult} from '@mdm/model/dataModelModel';
 
 @Component({
-  selector: 'app-code-set',
+  selector: 'mdm-code-set',
   templateUrl: './code-set.component.html',
   styleUrls: ['./code-set.component.scss']
 })
-export class CodeSetComponent implements OnInit {
+export class CodeSetComponent implements OnInit, OnDestroy {
   codeSetModel: CodeSetResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -29,7 +46,7 @@ export class CodeSetComponent implements OnInit {
   cells: any;
   rootCell: any;
 
-  @ViewChild("tab", {static:false}) tabGroup: MatTabGroup;
+  @ViewChild('tab', {static: false}) tabGroup: MatTabGroup;
   constructor(private resourcesService: ResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
 
   }
@@ -41,7 +58,7 @@ export class CodeSetComponent implements OnInit {
       return;
     }
 
-    if (this.stateService.params.edit === "true") {
+    if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
 
@@ -53,7 +70,7 @@ export class CodeSetComponent implements OnInit {
     this.parentId = this.stateService.params.id;
     // this.resourcesService.dataModel.get(this.stateService.params.id).subscribe(x => { this.dataModel = x.body });
 
-    window.document.title = "Code Set";
+    window.document.title = 'Code Set';
     this.codeSetDetails(this.stateService.params.id);
 
 
@@ -62,7 +79,7 @@ export class CodeSetComponent implements OnInit {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: {body: {id: any;};}) => this.codeSetDetails(result.body.id);
+    this.afterSave = (result: {body: {id: any; }; }) => this.codeSetDetails(result.body.id);
   }
 
   codeSetDetails(id: any) {
@@ -70,9 +87,12 @@ export class CodeSetComponent implements OnInit {
       this.codeSetModel = result.body;
 
       this.parentId = this.codeSetModel.id;
-      this.showExtraTabs = !this.sharedService.isLoggedIn || (!this.codeSetModel.editable || this.codeSetModel.finalised);
-      if (this.sharedService.isLoggedIn) {
+      this.showExtraTabs = !this.sharedService.isLoggedIn() || (!this.codeSetModel.editable || this.codeSetModel.finalised);
+      if (this.sharedService.isLoggedIn(true)) {
         this.CodeSetPermissions(id);
+      } else {
+        this.messageService.FolderSendMessage(this.codeSetModel);
+        this.messageService.dataChanged(this.codeSetModel);
       }
 
       this.tabGroup.realignInkBar();
@@ -82,11 +102,11 @@ export class CodeSetComponent implements OnInit {
   }
 
   CodeSetPermissions(id: any) {
-    this.resourcesService.codeSet.get(id, 'permissions', null).subscribe((permissions: {body: {[x: string]: any;};}) => {
-      for (var attrname in permissions.body) {
+    this.resourcesService.codeSet.get(id, 'permissions', null).subscribe((permissions: {body: {[x: string]: any; }; }) => {
+      Object.keys(permissions.body).forEach( attrname => {
         this.codeSetModel[attrname] = permissions.body[attrname];
-      }
-      //Send it to message service to receive in child components
+      });
+      // Send it to message service to receive in child components
       this.messageService.FolderSendMessage(this.codeSetModel);
       this.messageService.dataChanged(this.codeSetModel);
     });
@@ -131,8 +151,8 @@ export class CodeSetComponent implements OnInit {
   }
 
   tabSelected(index) {
-    var tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go("codeSet", { tabView: tab.name }, { notify: false, location: tab.index != 0 });
+    const tab = this.getTabDetailByIndex(index);
+    this.stateHandler.Go('codeSet', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
     this.activeTab = tab.index;
 
   }

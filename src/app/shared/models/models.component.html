@@ -1,120 +1,104 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
 <div class="leftTab">
     <div class="container-inner">
         <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <i class="fa fa-sitemap"></i>&nbsp; Models
+                    <i class="fas fa-sitemap"></i>&nbsp; Models
                 </ng-template>
                 <div style="margin-top: 2px;">
                     <div style="position: relative;">
-                        <div style="width: 100%;float: left;">
+                        <div style="float: left;" class="full-width">
                             <div class="input-group">
-                                <input type="text"
-                                       class="form-control input-sm"
-                                       [(ngModel)]="formData.filterCriteria"
-                                       [disabled]="levels.current === 1"
-                                       placeholder="Search for..."
-                                       (keyup)="onSearchInputKeyDown($event)">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default btn-sm themeColor"
-                                            type="button"
-                                            [disabled]="levels.current === 1"
-                                            (click)="search()"
-                                            matTooltip="Search">
-                                        <i class="glyphicon glyphicon-search"></i>
+                                <label for="search-models-input" class="sr-only">Search models</label>
+                                <input #searchbox type="search" id="search-models-input" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)">
+                                <span class="tree-top-actions">
+
+                                    <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Search" (click)="search()" aria-label="Search">
+                                        <i class="fas fa-search"></i>
                                     </button>
-                                    <button *ngIf="isLoggedIn()"
-                                            class="btn btn-default btn-sm"
-                                            type="button"
-                                            [disabled]="levels.current === 1"
-                                            (click)="toggleFilterMenu()"
-                                            matTooltip="Filters">
-                                        <i class="fa fa-filter" [ngClass]="{'themeColor':!showFilters, 'filterIcon':showFilters}"></i>
+                                    <button type="button" mat-stroked-button [matMenuTriggerFor]="filterMenu" *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Filters" [disabled]="levels.current === 1" (click)="toggleFilterMenu()" aria-label="Filter">
+                                        <i class="fas fa-filter" [ngClass]="{'':!showFilters, 'filterIcon':showFilters}"></i>
+                                    </button>
+                                    <mat-menu #filterMenu="matMenu" class="filterMenu">
+                                        <div mat-menu-item>
+                                            <mat-checkbox name="showSupersededModels" (ngModelChange)="toggleFilters('showSupersededModels')" [(ngModel)]="showSupersededModels">
+                                                Show Superseded Data Models
+                                            </mat-checkbox>
+                                        </div>
+                                        <div *ngIf="isAdmin" mat-menu-item>
+                                            <mat-checkbox name="showDeletedModels" (ngModelChange)="toggleFilters('showDeletedModels')" [(ngModel)]="showDeletedModels">
+                                                Show Deleted Data Models
+                                            </mat-checkbox>
+                                        </div>
+                                    </mat-menu>
+
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Reload Data Models Tree" [disabled]="levels.current === 1" (click)="reloadTree()" aria-label="Reload data models tree">
+                                        <i class="fas fa-sync-alt"></i>
                                     </button>
 
-                                    <button *ngIf="isLoggedIn()"
-                                            class="btn btn-default btn-sm"
-                                            type="button"
-                                            matTooltip="Refresh"
-                                            [disabled]="levels.current === 1"
-                                            (click)="reloadTree()">
-                                        <i class="fa fa-refresh themeColor" uib-tooltip="Reload Data Models Tree" tooltip-placement="bottom-left"></i>
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Export DataModel(s)" (click)="changeState('datamodelsexport')" aria-label="Export data model(s)">
+                                        <i class="fas fa-download"></i>
                                     </button>
 
-
-                                    <button [appShowIfRoleIsWritable]
-                                            matTooltipPosition="above"
-                                            matTooltip="Export DataModel(s)"
-                                            tooltip-class="mcTooltip"
-                                            class="btn btn-default btn-sm"
-                                            type="button"
-                                            (click)="changeState('datamodelsexport')">
-                                        <i class="fa fa-download addNewModelButton themeColor"></i>
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Import a DataModel from JSON, SQL,..." (click)="changeState('import')" aria-label="Import a data model">
+                                        <i class="fas fa-upload"></i>
                                     </button>
 
-                                    <button [appShowIfRoleIsWritable]
-                                            matTooltipPosition="above"
-                                            matTooltip="Import a DataModel from JSON, SQL,..."
-                                            tooltip-class="mcTooltip"
-                                            class="btn btn-default btn-sm"
-                                            type="button"
-                                            (click)="changeState('import')">
-                                        <i class="fa fa-upload addNewModelButton themeColor"></i>
-                                    </button>
-                                    <button [appShowIfRoleIsWritable]
-                                            matTooltipPosition="above"
-                                            matTooltip="Create a new Folder"
-                                            tooltip-class="mcTooltip"
-                                            class="btn btn-default btn-sm"
-                                            type="button"
-                                            [disabled]="levels.current === 1"
-                                            (click)="onAddFolder()">
-                                        <i class="fa fa-plus addNewModelButton themeColor"></i>
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()">
+                                        <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>
                             </div>
                         </div>
-                        <div *ngIf="isLoggedIn() && showFilters"
-                             style="z-index: 100;background-color: #f9f9f9;clear: both; padding: 2px; border: 1px solid #DDD;font-size: 12px; cursor: pointer;position: absolute;top: 28px;width: 100%;">
-                            <div style="padding: 3px;">
-                                <input type="checkbox"
-                                       style="cursor:pointer;"
-                                       name="showSupersededModels"
-                                       (ngModelChange)="toggleFilters('showSupersededModels')"
-                                       [(ngModel)]="showSupersededModels"> Show <strong>Superseded</strong> Data Models
-                            </div>
-                            <div *ngIf="isAdmin" style="padding: 3px;">
-                                <input type="checkbox"
-                                       style="cursor:pointer;"
-                                       name="showDeletedModels"
-                                       (ngModelChange)="toggleFilters('showDeletedModels')"
-                                       [(ngModel)]="showDeletedModels"> Show <strong>Deleted</strong> Data Models
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: scroll">
+                <div style="width:100%; clear:left;height: calc(100vh - 168px);overflow-y: auto">
 
-                    <div style="margin:3px 0px 0px 0px" *ngIf="filteredModels && filteredModels.children && filteredModels.children.length!=0">
-                        <button class="btn btn-default btn-xs"
+                    <div style="margin:3px 0px 0px 0px" *ngIf="levels.currentFocusedElement && filteredModels.children && filteredModels.children.length!=0">
+                        <button mat-button
+                                color="primary"
                                 type="button"
+                                class="paddingless"
+                                matTooltip="Previous level"
+                                aria-label="Previous level"
                                 [disabled]="levels.current === 0"
                                 (click)="levels.folders()">
-                            <i class="fa fa-arrow-left themeColor"></i>
+                            <i class="fas fa-arrow-left"></i>
                         </button>
 
-                        <button class="btn btn-default btn-xs"
+                        <button mat-button
+                                color="primary"
                                 type="button"
+                                class="paddingless"
+                                matTooltip="Next level"
+                                aria-label="Next level"
                                 [disabled]="(levels.current === 0 && !levels.currentFocusedElement) || levels.current === 1"
                                 (click)="levels.focusedElement()">
-                            <i class="fa fa-arrow-right themeColor"></i>
+                            <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
 
 
 
                     <div *ngIf="filteredModels && !reloading">
-                        <folders-tree-3 [inSearchMode]="inSearchMode"
+                        <mdm-folders-tree [inSearchMode]="inSearchMode"
                                         [rememberExpandedStates]="true"
                                         [node]="filteredModels"
                                         [searchCriteria]="searchText"
@@ -131,13 +115,11 @@
                                         (addChildDataElementEvent)="onAddChildDataElement"
                                         (addChildDataTypeEvent)="onAddChildDataType"
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeClickEvent)="onNodeClick($event)"></folders-tree-3>
+                                        (nodeClickEvent)="onNodeClick($event)"></mdm-folders-tree>
                     </div>
-                    <div style="width: 100%;height: 100%;" class="treeWaitingSpinner" *ngIf="reloading">
-                        <div style="position: absolute;top:30%;left:40%;">
-                            <a style="font-size: 75px;" class="themeColor">
-                                <i class="fa fa-refresh fa-spin"></i>
-                            </a>
+                    <div class="loading-spinner" *ngIf="reloading">
+                        <div>
+                            <i class="fas fa-sync-alt fa-spin"></i>
                         </div>
                     </div>
 
@@ -169,27 +151,27 @@
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <i class="fa fa-tags"></i>&nbsp; Classifications
+                    <i class="fas fa-tags"></i>&nbsp; Classifications
                 </ng-template>
                 <div style="margin-top: 2px;">
                     <div>
-                        <div style="width: 100%; float: left;">
+                        <div style="float: left;" class="full-width">
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm" [(ngModel)]="formData.ClassificationFilterCriteria" placeholder="Search for..." (ngModelChange)="filterClassifications()">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default btn-sm themeColor" type="button" (click)="filterClassifications()">
-                                        <i class="glyphicon glyphicon-search"></i>
+                                <input type="text" class="form-control outlined-input" [(ngModel)]="formData.ClassificationFilterCriteria" placeholder="Search classifications..." (ngModelChange)="filterClassifications()">
+                                <span class="tree-top-actions">
+                                    <button type="button" mat-stroked-button matTooltipPosition="below" matTooltip="Search"  (click)="filterClassifications()" aria-label="Search">
+                                        <i class="fas fa-search"></i>
                                     </button>
-                                    <button show-if-role-is-writable class="btn btn-default btn-sm" type="button" mattooltip="Create a new Classification" tooltip-class="mcTooltip" (click)="addClassifier()">
-                                        <i class="fa fa-plus addNewModelButton themeColor"></i>
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" mdmShowIfRolesWritable matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="addClassifier()" aria-label="Create a new classification">
+                                        <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 0px);overflow-y: scroll">
-                    <folders-tree-3 *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></folders-tree-3>
+                <div class="treeHolder" style="width:100%; clear:left;height: calc(80vh - 50px);overflow-y: auto">
+                    <mdm-folders-tree *ngIf="classifiers" [treeName]="'Classifiers'" [searchCriteria]="formData.ClassificationFilterCriteria" [rememberExpandedStates]="true" [node]="classifiers" (nodeClickEvent)="classifierTreeOnSelect($event)"></mdm-folders-tree>
                     <div *ngIf="allClassifiers && allClassifiers.length==0">
                         <div *ngIf="!isLoggedIn()">
                             <div class="noClassification">
@@ -214,16 +196,16 @@
                     </div>
                 </div>
             </mat-tab>
+
             <mat-tab *ngIf="isLoggedIn()">
                 <ng-template mat-tab-label>
-                    <i class="fa fa-star"></i> &nbsp; Favourite
+                    <i class="fas fa-star"></i> &nbsp; Favourites
                 </ng-template>
-                <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: scroll" *ngIf="currentTab === 'favourites'">
-                    <favourites (on-favourite-db-click)="onFavouriteDbClick($event)"
-                                (on-favourite-click)="onFavouriteClick($event)">
-                    </favourites>
+                <div class="treeHolder" style="width: 100%; clear: left; height: calc(80vh - 0px); overflow-y: auto" *ngIf="currentTab === 'favourites'">
+                    <mdm-favourites (favouriteDbClick)="onFavouriteDbClick($event)" (favouriteClick)="onFavouriteClick($event)"></mdm-favourites>
                 </div>
             </mat-tab>
+
         </mat-tab-group>
     </div>
 </div>

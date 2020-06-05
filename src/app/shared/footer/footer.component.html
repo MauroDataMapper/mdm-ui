@@ -1,20 +1,29 @@
-<div style="font-size: 12px;background-color: #FFF;">
-    <div class="hidden-xs visible-sm visible-md visible-lg">
-        <span style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">Copyright &copy; {{year}} Clinical Informatics, NIHR Oxford Biomedical Research Centre</p></span>
-        <span style="display: inline-block;padding-right: 5px;"><a uiSref="appContainer.mainApp.about">About</a></span>
-        <div  *ngIf="wiki && wiki.length>0 && showWikiLink"  style="display: inline-block;padding-right: 5px;"><a href="{{wiki}}" target="_blank">Wiki&nbsp;</a>
-            <span *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" style="display: inline-block;padding-right: 5px;"><a href="{{youTrack.url}}/newIssue" target="_blank">Report Issue</a></span>
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<footer>
+    <div class="container text-center">
+        <hr>
+        <div class="mb-2 footer--links">
+            <a *ngIf="wiki && wiki.length>0 && showWikiLink" href="{{wiki}}" target="_blank" rel="noopener">Wiki</a>
+            <a *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" href="{{youTrack.url}}/newIssue" target="_blank" rel="noopener">Report Issue</a>
+        </div>
+        <div class="mb-2">
+            <p class="text-muted">Copyright &copy; {{year}} Clinical Informatics, NIHR Oxford Biomedical Research Centre</p>
         </div>
     </div>
-    <div class="visible-xs">
-        <div style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">Copyright &copy; {{year}}</p></div>
-        <div style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">Clinical Informatics,</p></div>
-        <div style="display: inline-block;padding-right: 5px;"><p class="text-muted" style="margin: 0 0 5px !important;">NIHR Oxford Biomedical Research Centre</p></div>
-        <br>
-        <div style="display: inline-block;padding-right: 5px;"><a ui-sref="appContainer.mainApp.about">About</a></div>
-        <br>
-        <div *ngIf="wiki && wiki.length>0 && showWikiLink"   style="display: inline-block;padding-right: 5px;"><a href="{{wiki}}" target="_blank">Wiki</a></div>
-        <br>
-        <div *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" style="display: inline-block;padding-right: 5px;"><a href="{{youTrack.url}}/newIssue" target="_blank">Report Issue</a></div>
-    </div>
-</div>
+</footer>

@@ -1,65 +1,17 @@
-$min-height: 24px;
-$font-size: 12px;
-$icon-height: 16px;
+/*
+Copyright 2020 University of Oxford
 
-.mat-tree {
-    .mat-tree-node {
-        min-height: $min-height;
-        height: $min-height;
-        font-size: $font-size;
-  
-        .mat-icon-button {
-            height: $min-height;
-            width: $min-height;
-            line-height: $min-height - 2;
-        }
-  
-        .mat-tree-node-content {
-            display: flex;
-            align-items: center;
-            padding-top: 2.5px;
-    
-            .mat-icon {
-                height: $icon-height;
-                width: $icon-height + 4;
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-                &.deleted-folder {
-                    color: #aaaaaa;
-                }
-            }
+    http://www.apache.org/licenses/LICENSE-2.0
 
-            .mat-checkbox {
-                margin-right: 5px;
-            }
-    
-            span {
-                cursor: pointer;
-                user-select: none;
-                padding: 0 5px;
-                white-space: nowrap;
-        
-                &:hover {
-                    background-color: #85b2ec;
-                    border-radius: 5px;
-                    color: #000000;
-                }
-        
-                &.mat-tree-node-active {
-                    background-color: #85b2ec;
-                    color: #ffffff;
-                    border-radius: 4px;
-                }
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-                &.deleted {
-                    text-decoration: line-through;
-                    opacity: .6;
-                }
-            }
-        }
-    }
-}
-  
-.tree-context-menu-item.mat-menu-item {
-    height: 28px;
-    line-height: 28px; 
-}
+SPDX-License-Identifier: Apache-2.0
+*/

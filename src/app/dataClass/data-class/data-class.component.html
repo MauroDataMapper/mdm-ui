@@ -1,99 +1,109 @@
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-        <div style="width: 100%">
-            <app-data-class-details [after-save]="afterSave"></app-data-class-details>
-        </div>
-        <div *ngIf="showSearch">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <label>Search</label>
-                    <div style="float:right;">
-                        <button type="button"
-                                class="btn btn-default btn-xs"
-                                (click)="toggleShowSearch()"
-                                aria-hidden="false"
-                                aria-disabled="false" title="close">
-                            <i class="fa fa-times themeColor"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="panel-body panel-table">
-                    <app-advanced-search-bar [parent]="dataClass"
-                                             [show-restrict-to]="false"
-                                             [do-not-show-data-model-in-model-path]="false"
-                                             [do-not-display-model-path-status]="false"
-                                             show-domain-types="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
-                    </app-advanced-search-bar>
-                </div>
-            </div>
-        </div>
-        <div *ngIf="!showSearch">
-            <div *ngIf="dataClass && dataClass.semanticLinks && dataClass.semanticLinks.length > 0">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><strong>Links</strong></div>
-                    <div class="panel-body" style="padding-top: 5px !important;">
-                        <all-links-in-paged-list
-                                [show-loading-spinner]="true"
-                                [parent]="dataClass"
-                                [show-description]="true"
-                                [show-no-links-message]="true"
-                                [type]="'static'"></all-links-in-paged-list>
-                    </div>
-                </div>
-            </div>
+<!--
+Copyright 2020 University of Oxford
 
-        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-            <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-                <mat-tab label="Content">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <app-content-table *ngIf="dataClass" [parent-data-model]="parentDataModel" [parent-data-class]="dataClass" [grand-parent-data-class]="parentDataClass" ></app-content-table>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-                        </div>
-                    </ng-template>
-                </mat-tab>
+    http://www.apache.org/licenses/LICENSE-2.0
 
-                <mat-tab label="Properties">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <mc-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'"></mc-data-set-metadata>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Comments">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <annotation-list *ngIf="dataClass" [parent]="dataClass"></annotation-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Links">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <element-link-list *ngIf="dataClass" [parent]="dataClass"></element-link-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab label="Summary">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <summary-metadata-table *ngIf="dataClass" [parent]="dataClass"></summary-metadata-table>
-                        </div>
-                    </ng-template>
-                </mat-tab>
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
-
-                <mat-tab label="Attachments">
-                    <ng-template matTabContent>
-                        <div style="width: 100%;">
-                            <attachment-list *ngIf="dataClass" [parent]="dataClass"></attachment-list>
-                        </div>
-                    </ng-template>
-                </mat-tab>
-
-            </mat-tab-group>
-        </div>
-
-   </div>
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="full-width">
+    <mdm-data-class-details [afterSave]="afterSave"></mdm-data-class-details>
 </div>
-
+<div *ngIf="showSearch">
+    <div class="mdm--shadow-block">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="heading-container">
+                    <h4 class="marginless">Search</h4>
+                </div>
+                <div style="float:right;">
+                    <button mat-button color="warn" type="button" class="paddingless" (click)="toggleShowSearch()" matTooltip="Close" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body panel-table">
+                <mdm-advanced-search-bar [parent]="dataClass"
+                                         [showRestrictTo]="false"
+                                         [doNotShowDataModelInModelPath]="false"
+                                         [doNotDisplayModelPathStatus]="false"
+                                         [showDomainTypes]="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
+                </mdm-advanced-search-bar>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!showSearch">
+    <div *ngIf="dataClass && dataClass.semanticLinks && dataClass.semanticLinks.length > 0">
+        <div class="mdm--shadow-block bordered">
+            <div class="heading-container">
+                <h4 class="marginless">Links</h4>
+            </div>
+            <div class="pxy-2">
+                <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
+                                             [parent]="dataClass"
+                                             [showDescription]="true"
+                                             [showNoLinksMessage]="true"
+                                             [type]="'static'">
+                </mdm-all-links-in-paged-list>
+            </div>
+        </div>
+    </div>
+    <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+        <mat-tab label="Content">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-content-table *ngIf="dataClass" [parentDataModel]="parentDataModel"
+                        [parentDataClass]="dataClass" [grandParentDataClass]="parentDataClass">
+                    </mdm-content-table>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Properties">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'">
+                    </mdm-data-set-metadata>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Comments">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass"></mdm-annotation-list>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Links">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass"></mdm-element-link-list>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Summary" *ngIf="showExtraTabs">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass">
+                    </mdm-summary-metadata-table>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Attachments" *ngIf="showExtraTabs">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"></mdm-attachment-list>
+                </div>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>

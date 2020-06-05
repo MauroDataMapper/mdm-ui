@@ -1,77 +1,94 @@
-<div>
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="container">
     <div class="row">
         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Left</strong>
-                <model-selector-tree
-                        [tree-search-domain-type]="'DataModel'"
-                        [(ng-model)]="sourceModel"
-                        [processing]="processing"
-                        [default-elements]="[sourceModel]"
-                        [(on-select)]="onLeftModelSelect"
-                        [accepts]="['DataModel']" ></model-selector-tree>
+                <mdm-model-selector-tree
+                    treeSearchDomainType="DataModel"
+                    [ngModel]="sourceModel"
+                    [processing]="processing"
+                    [defaultElements]="[sourceModel]"
+                    (selectChange)="onModelSelect($event, 'left')"
+                    [accepts]="['DataModel']"
+                    doNotShowDataClasses = "true"
+                    ngDefaultControl></mdm-model-selector-tree>
             </div>
-            <div class="leftTree" *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
-                <app-comparison-tree
-                        [val]="sourceModel"
-                        [diffMap]="diffMapLeft"
-                        [type]="'dynamic'"
-                        [nodeExpand]="onNodeExpand"
-                        [treeName]="'left'"
-                        [nodeClick]="onNodeClick"
-                        child-element-name="'children'">
-                </app-comparison-tree>
+            <div class="leftTree" *ngIf="sourceModel" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
+                <mdm-folders-tree
+                    [node]="{children: [sourceModel]}"
+                    treeName="left"
+                    [initialExpandedPaths] = "[sourceModel?.id]"
+                    isComparisonTree = true
+                    (nodeClickEvent)="onNodeClick($event)">
+                </mdm-folders-tree>
             </div>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center;">
-            <button class="btn btn-xs btn-default" type="button" style="margin: 25px auto;width:80px;height:30px;"  matToolTip="Swap" (click)="swap()">
-                <i class="fa fa-exchange themeColor" style="font-size: 18px;"></i>
+            <button mat-flat-button color="primary" class="paddingless" type="button" style="margin: 25px auto;"  matToolTip="Swap" aria-label="Swap" (click)="swap()">
+                <i class="fas fa-exchange-alt"></i>
             </button>
         </div>
         <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12" style="float: right;">
             <div style="width:100%; margin: 5px 0px;">
                 <strong>Right</strong>
-                <model-selector-tree
-                        [tree-search-domain-type]="'DataModel'"
-                        [(ng-model)]="targetModel"
-                        [processing]="processing"
-                        [default-elements]="[targetModel]"
-                        [(on-select)]="onRightModelSelect"
-                        [accepts]="['DataModel']" ></model-selector-tree>
+                <mdm-model-selector-tree
+                    treeSearchDomainType="DataModel"
+                    [ngModel]="targetModel"
+                    [processing]="processing"
+                    [defaultElements]="[targetModel]"
+                    (selectChange)="onModelSelect($event, 'right')"
+                    doNotShowDataClasses = "true"
+                    [accepts]="['DataModel']"
+                    ngDefaultControl></mdm-model-selector-tree>
             </div>
-            <div *ngIf="ready" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
-                <app-comparison-tree
-                        [val]="targetModel"
-                        [diffMap]="diffMapRight"
-                        [type]="'dynamic'"
-                        [nodeExpand]="onNodeExpand"
-                        [treeName]="'right'"
-                        [nodeClick]="onNodeClick"
-                        [childElementName]="'children'">
-                    </app-comparison-tree>
+            <div *ngIf="targetModel" style="height: calc(40vh - 0px);border: 1px solid #DDD;overflow: scroll;">
+                <mdm-folders-tree
+                    [node]="{children: [targetModel]}"
+                    treeName="right"
+                    [initialExpandedPaths] = "[targetModel?.id]"
+                    isComparisonTree = true
+                    (nodeClickEvent)="onNodeClick($event)">
+                </mdm-folders-tree>
             </div>
         </div>
     </div>
     <div class="row" style="margin: 10px 0px" *ngIf="processing">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px">
             <div>
-                <mat-progress-bar color="primary"   mode="indeterminate"> </mat-progress-bar>
+                <mat-progress-bar color="accent" mode="indeterminate"> </mat-progress-bar>
             </div>
         </div>
     </div>
 
     <div class="row" style="margin-top:10px;">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <mat-tab-group  animationDuration="0ms" #tab [selectedIndex]="activeTab">
+                <mat-tab-group #tab [selectedIndex]="activeTab">
                     <mat-tab *ngIf= "diffs?.properties && diffs?.properties.length > 0">
                         <ng-template mat-tab-label>
-                            Details <span class="badge element-count">{{diffs.properties.length}}</span>
+                            Details <span class="mdm--badge mdm--element-count">{{diffs.properties.length}}</span>
                         </ng-template>
-                        <ng-template matTabContent>  
+                        <ng-template matTabContent>
                     <div *ngIf="diffs.properties && diffs.properties.length>0" style="width:100%;">
-                        <table class="table table-condensed table-bordered mcTable">
+                        <table class="table table-bordered">
                             <thead>
-                                <tr class="mcTableHeader">
+                                <tr>
                                     <th style="min-width: 18px;width: 18px;">
                                         &nbsp;&nbsp;
                                     </th>
@@ -99,22 +116,22 @@
                     </mat-tab>
                 <mat-tab *ngIf="diffs?.metadata && diffs?.metadata.length > 0">
                     <ng-template mat-tab-label>
-                        Properties <span class="badge element-count">{{diffs.metadata.length}}</span>
+                        Properties <span class="mdm--badge mdm--element-count">{{diffs.metadata.length}}</span>
                    </ng-template>
                     <div style="width:100%;">
                         <div *ngIf="diffs?.metadata && diffs?.metadata?.length>0">
-                            <app-metadata-compare [diffColumnWidth]="35" [diffs]="diffs.metadata"></app-metadata-compare>
+                            <mdm-metadata-compare [diffColumnWidth]="35" [diffs]="diffs.metadata"></mdm-metadata-compare>
                         </div>
                     </div>
                 </mat-tab>
                 <mat-tab *ngIf="diffs?.dataTypes && diffs?.dataTypes.length > 0">
                     <ng-template mat-tab-label>
-                        Data Types <span class="badge element-count">{{diffs.filteredDataTypes.length}}</span>
+                        Data Types <span class="mdm--badge mdm--element-count">{{diffs.filteredDataTypes.length}}</span>
                   </ng-template>
                     <div *ngIf="diffs?.dataTypes?.length > 0" style="width:100%;position: relative">
-                        <table class="table table-condensed table-bordered mcTable">
+                        <table class="table table-bordered">
                                 <thead>
-                                    <tr class="mcTableHeader">
+                                    <tr>
                                         <th style="min-width: 18px;width: 18px;">
                                             &nbsp;
                                         </th>
@@ -162,11 +179,11 @@
                                         <td style="text-align:left;">
                                             <div>
                                                 <div *ngIf="diff.deleted || diff.created">
-                                                    <element-link [new-window]="'true'" [element]="diff"></element-link>
+                                                    <mdm-element-link [newWindow]="'true'" [element]="diff"></mdm-element-link>
                                                 </div>
                                                 <div *ngIf="diff.modified">
-                                                    <element-link  [new-window]="'true'"
-                                                                   [element]="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataType'}"></element-link>
+                                                    <mdm-element-link  [newWindow]="'true'"
+                                                                   [element]="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataType'}"></mdm-element-link>
                                                 </div>
                                                 <div *ngIf="diff.modified" style="padding-top: 5px;">
 
@@ -180,7 +197,7 @@
                                                         <div style="margin-top: 10px;">
                                                             <strong style="font-style: italic;">Enumerations:</strong>
                                                         </div>
-                                                        <app-enumeration-compare [diffs]="diffMap[diff.leftId].diffs.enumerationValues"></app-enumeration-compare>
+                                                        <mdm-enumeration-compare [diffs]="diffMap[diff.leftId].diffs.enumerationValues"></mdm-enumeration-compare>
                                                     </div>
                                                     <div style="width:80%"
                                                          *ngIf="diffMap[diff.leftId].diffs.metadata && diffMap[diff.leftId].diffs.metadata.length>0">
@@ -188,8 +205,8 @@
                                                             <strong style="font-style: italic;">Properties:</strong>
                                                         </div>
                                                         <div>
-                                                            <app-metadata-compare [diffs]="diffMap[diff.leftId].diffs.metadata"
-                                                                              [diffColumnWidth]="20"></app-metadata-compare>
+                                                            <mdm-metadata-compare [diffs]="diffMap[diff.leftId].diffs.metadata"
+                                                                              [diffColumnWidth]="20"></mdm-metadata-compare>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -202,17 +219,18 @@
                 </mat-tab>
                 <mat-tab *ngIf="diffs?.dataElements && diffs?.dataElements.length > 0">
                     <ng-template mat-tab-label>
-                        Data Elements <span class="badge element-count">{{diffs.filteredDataElements.length}}</span>
+                        Data Elements <span class="mdm--badge mdm--element-count">{{diffs.filteredDataElements.length}}</span>
                     </ng-template>
                     <div *ngIf="diffs?.dataElements.length > 0" style="width:100%;">
-                        <table class="table table-condensed table-bordered mcTable">
+                        <table class="table table-bordered">
                             <thead>
-                            <tr class="mcTableHeader">
-                                <th style="width: 2px;">
+                            <tr>
+                                <th style="min-width: 18px;width: 18px;">
                                     &nbsp;
                                 </th>
-                                <th style="cursor:pointer;max-width: 30%;width: 30%;">
-                                    <div style="float: left; font-weight: normal !important;">
+                                <th style="cursor:pointer;">
+                                  <div style="display: flex; justify-content: flex-end;">
+                                    <div style="font-weight: normal !important;">
                                         Filter:
                                         <select  [(ngModel)]="form.dataElementFilter" style="width:150px !important;"
                                                 class="mcSelect"
@@ -224,42 +242,42 @@
                                         </select>
                                     </div>
 
-                                    <div style="float:left" *ngIf="diffs.dataElementsStatus.deleted > 0" matToolTip="Deleted">
+                                    <div style="" *ngIf="diffs.dataElementsStatus.deleted > 0" matToolTip="Deleted">
                                         <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
                                              class="diffStatusCount comparisonRow deleted">
                                             &nbsp;{{diffs.dataElementsStatus.deleted}}&nbsp;
                                         </div>
                                     </div>
-                                    <div style="float:left" *ngIf="diffs.dataElementsStatus.created > 0" matToolTip="Created">
+                                    <div style="" *ngIf="diffs.dataElementsStatus.created > 0" matToolTip="Created">
                                         <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
                                              class="diffStatusCount comparisonRow created">
                                             &nbsp;{{diffs.dataElementsStatus.created}}&nbsp;
                                         </div>
                                     </div>
-                                    <div style="float:left" *ngIf="diffs.dataElementsStatus.modified > 0"  matToolTip="Modified">
+                                    <div style="" *ngIf="diffs.dataElementsStatus.modified > 0"  matToolTip="Modified">
                                         <div style="text-align: center;font-weight: normal;margin: 0px 3px;padding:0px 3px;"
                                              class="diffStatusCount comparisonRow modified">
                                             &nbsp;{{diffs.dataElementsStatus.modified}}&nbsp;
                                         </div>
                                     </div>
-
+                                  </div>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let diff of diffs.filteredDataElements">
-                                    <td style="width: 2px;"
+                                    <td style="min-width: 18px;width: 18px;"
                                         [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}">
                                         &nbsp;
                                     </td>
                                     <td style="text-align:left;">
                                         <div>
                                             <div *ngIf="diff.deleted || diff.created">
-                                                <element-link  [new-window]="'true'"  [element]="diff"></element-link>
+                                                <mdm-element-link  [newWindow]="'true'"  [element]="diff"></mdm-element-link>
                                             </div>
                                             <div *ngIf="diff.modified">
-                                                <element-link  [new-window]="'true'"
-                                                               [element]="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataElement'}"></element-link>
+                                                <mdm-element-link  [newWindow]="'true'"
+                                                               [element]="{id:diff.rightId, breadcrumbs:diff.rightBreadcrumbs, label:diff.label, domainType:'DataElement'}"></mdm-element-link>
                                             </div>
                                             <div *ngIf="diff.modified">
 
@@ -275,9 +293,9 @@
                                                         <strong style="font-style: italic">Properties:</strong>
                                                     </div>
                                                     <div>
-                                                        <app-metadata-compare
+                                                        <mdm-metadata-compare
                                                                 [diffs]="diffMap[diff.leftId].diffs.metadata"
-                                                                [diffColumnWidth]="10"></app-metadata-compare>
+                                                                [diffColumnWidth]="10"></mdm-metadata-compare>
                                                     </div>
                                                 </div>
                                             </div>

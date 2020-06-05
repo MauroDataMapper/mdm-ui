@@ -1,25 +1,48 @@
-import {Component, ElementRef, EventEmitter, OnInit, ViewChild, ViewChildren, ChangeDetectorRef} from '@angular/core';
-import {Subscription} from 'rxjs';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  ChangeDetectorRef,
+  QueryList, AfterViewInit, OnDestroy
+} from '@angular/core';
+import {merge, Subscription} from 'rxjs';
 import {NgForm} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
-import {ValidatorService} from '../../../services/validator.service';
-import { ResourcesService } from '../../../services/resources.service';
-import { McSelectPagination } from '../../../utility/mc-select/mc-select.component';
+import {ValidatorService} from '@mdm/services/validator.service';
+import {ResourcesService} from '@mdm/services/resources.service';
+import {McSelectPagination} from '@mdm/utility/mc-select/mc-select.component';
+import {MatTableDataSource} from '@angular/material/table';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import {BroadcastService} from '@mdm/services/broadcast.service';
 
 @Component({
-  selector: 'app-data-element-step2',
+  selector: 'mdm-data-element-step2',
   templateUrl: './data-element-step2.component.html',
   styleUrls: ['./data-element-step2.component.sass']
 })
-export class DataElementStep2Component implements OnInit {
-
- // constructor() { }
-
-  // ngOnInit() {
-  //
-  //   this.model = this.step.scope.model;
-  // }
+export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestroy {
 
   step: any;
   model: any;
@@ -27,45 +50,88 @@ export class DataElementStep2Component implements OnInit {
   selectedDataClassesStr = '';
   defaultCheckedMap: any;
   loaded = false;
- // showNewInlineDataType = false;
+  // showNewInlineDataType = false;
   error = '';
   dataTypeErrors = '';
   record: any; // TODO
   processing = false;
   failCount: any; // TODO
-  // parentScopeHandler: any;
+  parentScopeHandler: any;
+  hideFiltersSelectedDataTypes = true;
+  totalItemCount = 0;
+  isLoadingResults: boolean;
+  isProcessComplete = false;
+  finalResult = {};
+  successCount: number;
+
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
 
   formChangesSubscription: Subscription;
 
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-
+  @ViewChild('myForm', {static: false}) myForm: NgForm;
+  @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
+  // @ViewChild(MatSort, { static: false }) sort: MatSort;
+  // @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  dataSourceSelectedDataElements = new MatTableDataSource<any>();
+  dataSourceDataElements = new MatTableDataSource<any>();
   filterEvent = new EventEmitter<string>();
   filter: string;
   hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
   pagination: McSelectPagination;
+  dataSource: any;
+  displayedColumnsDataTypes: string[];
+  displayedColumnsSelectedDataTypes: string[];
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+  recordsDataElements: any[] = [];
+  isAllChecked = true;
+  checkAllCheckbox = false;
+  totalSelectedItemsCount = 0;
+  pageSize = 20;
+  pageSizeOptions = [5, 10, 20, 50];
 
-  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService) { }
+  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
+
+    this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
+    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    if (settings) {
+      this.pageSize = settings.countPerTable;
+      this.pageSizeOptions =  settings.counts;
+    }
+  }
 
   ngOnInit() {
 
     this.model = this.step.scope.model;
-      }
+    this.dataSourceSelectedDataElements = new MatTableDataSource<any>(
+      this.model.selectedDataTypes
+    );
+  }
 
   ngAfterViewInit() {
 
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
       this.validate(x);
-      this.step.invalid = this.myForm.invalid;
-     // this.validateDataType();
+      // this.step.invalid = this.myForm.invalid;
+      // this.validateDataType();
     });
 
 
   }
 
+  dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
+
+    const options = {
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters
+    };
+
+    const dataClass = this.model.copyFromDataClass[0];
+    return this.resources.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
+  }
 
   onLoad() {
 
@@ -77,13 +143,179 @@ export class DataElementStep2Component implements OnInit {
     }
 
     this.loaded = true;
+    this.displayedColumnsDataTypes = [
+      'checkbox',
+      'label',
+      'description',
+      'domainType'
+    ];
+    this.displayedColumnsSelectedDataTypes = [
+      'label',
+      'description',
+      'domainType',
+      'status'
+    ];
+
+    if (
+      this.sort !== null &&
+      this.sort !== undefined &&
+      this.sort.toArray().length > 0 &&
+      this.paginator !== null &&
+      this.paginator !== undefined &&
+      this.paginator.toArray().length > 0
+    ) {
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
+      this.filterEvent.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
+
+      this.dataSourceDataElements.sort = this.sort.toArray()[0];
+
+      // Selected Data Elements table
+      // this.dataSourceSelectedDataTypes.sort = this.sort.toArray()[1];
+      // this.sort
+      //   .toArray()[1]
+      //   .sortChange.subscribe(
+      //   () => (this.paginator.toArray()[1].pageIndex = 0)
+      // );
+      this.dataSourceSelectedDataElements.paginator = this.paginator.toArray()[1];
+
+      if (
+        this.sort != null &&
+        this.sort !== undefined &&
+        this.sort.length > 0 &&
+        this.paginator != null &&
+        this.paginator !== undefined &&
+        this.paginator.length > 0
+      ) {
+        merge(
+          this.sort.toArray()[0].sortChange,
+          this.paginator.toArray()[0].page,
+          this.filterEvent
+        )
+          .pipe(
+            startWith({}),
+            switchMap(() => {
+              this.isLoadingResults = true;
+
+              return this.dataElementsFetch(
+                this.paginator.toArray()[0].pageSize,
+                this.paginator.toArray()[0].pageIndex * this.paginator.toArray()[0].pageSize,
+                this.sort.toArray()[0].active,
+                this.sort.toArray()[0].direction,
+                this.filter
+              );
+            }),
+            map((data: any) => {
+              this.totalItemCount = data.body.count;
+              this.isLoadingResults = false;
+              return data.body.items;
+            }),
+            catchError(() => {
+              this.isLoadingResults = false;
+              return [];
+            })
+          )
+          .subscribe(data => {
+            this.recordsDataElements = data;
+            this.dataSourceDataElements.data = this.recordsDataElements;
+
+            // Sorting/paging is making a backend call and looses the checked checkboxes
+            if (
+              this.model.selectedDataElements != null &&
+              this.model.selectedDataElements.length > 0
+            ) {
+              this.reCheckSelectedDataElements();
+            }
+          });
+      }
+
+      this.validate();
+
+      this.loaded = true;
+    }
+  }
+
+  reCheckSelectedDataElements() {
+
+    let currentPageSelectedItemsNum = 0;
+
+    this.model.selectedDataElements.forEach((sdt: any) => {
+
+      const currentId = sdt.id;
+      const item = this.recordsDataElements.find(r => r.id === currentId);
+      if (item !== null && item !== undefined) {
+        item.checked = true;
+      }
+
+      // Count how many records are selected in the CURRENT page
+      if (item && item.checked) {
+        currentPageSelectedItemsNum++;
+      }
+    });
+
+    // If all the records on the current page are selected, check the "Check All" checkbox
+    if (currentPageSelectedItemsNum === this.paginator.toArray()[0].pageSize) {
+      this.isAllChecked = true;
+    } else {
+      this.isAllChecked = false;
+    }
+  }
+
+  onCheckAll = () => {
+
+    this.recordsDataElements.forEach(element => {
+      element.checked = this.checkAllCheckbox;
+
+      if (this.checkAllCheckbox) {
+
+        this.model.selectedDataElements.push(element);
+
+      } else {
+
+        const currentId = element.id;
+        const index = this.model.selectedDataElements.findIndex(r => r.id === currentId);
+
+        if (index !== -1) {
+          this.model.selectedDataElements.splice(index, 1);
+        }
+      }
+    });
+
+    this.validate();
+
+    this.dataSourceSelectedDataElements.data = this.model.selectedDataElements;
+    this.totalSelectedItemsCount = this.model.selectedDataElements.length;
+  };
+
+  onCheck(record) {
+    if (record.checked) {
+
+      this.model.selectedDataElements.push(record);
+    } else {
+
+      const index = this.model.selectedDataElements.findIndex(r => r.id === record.id);
+
+      if (index !== -1) {
+        this.model.selectedDataElements.splice(index, 1);
+      }
+    }
+
+    this.validate();
+
+    this.dataSourceSelectedDataElements.data = this.model.selectedDataElements;
+    this.totalSelectedItemsCount = this.model.selectedDataElements.length;
   }
 
   toggleShowNewInlineDataType() {
     this.model.showNewInlineDataType = !this.model.showNewInlineDataType;
     this.error = '';
     this.dataTypeErrors = '';
-  //  this.validateDataType();
+    //  this.validateDataType();
   }
 
 
@@ -95,17 +327,13 @@ export class DataElementStep2Component implements OnInit {
         this.model.selectedDataClasses.push(element.node);
       }
     }
-  }
-
-  onCheck = (node, parent, checkedMap) => {
-    this.model.selectedDataClassesMap = checkedMap;
-    this.createSelectedArray();
-    this.validate();
-  }
+ };
 
 
   validate = (newValue?) => {
-    const invalid = false;
+
+    let invalid = false;
+    this.step.invalid = false;
     if (newValue && this.model.createType === 'new') {
       // check Min/Max
       this.multiplicityError = this.validator.validateMultiplicities(newValue.minMultiplicity, newValue.maxMultiplicity);
@@ -115,18 +343,18 @@ export class DataElementStep2Component implements OnInit {
         this.step.invalid = true;
         return;
       }
-      if (!this.model.showNewInlineDataType && !newValue.dataType) {
+      if (!this.model.showNewInlineDataType && !this.model.dataType) {
         this.step.invalid = true;
         return;
       }
-
+      invalid = this.myForm.invalid;
       // if(this.model.showNewInlineDataType ){
       //   this.step.invalid = true;
       //   return;
       // }
     }
     if (this.model.createType === 'copy') {
-      if (this.model.selectedDataClasses.length === 0) {
+      if (this.model.selectedDataElements.length === 0) {
         this.step.invalid = true;
         return;
       }
@@ -134,11 +362,11 @@ export class DataElementStep2Component implements OnInit {
 
     this.step.invalid = invalid;
 
-  }
+  };
 
-  parentScopeHandler = () => {
-    // TODO
-  }
+  // parentScopeHandler = () => {
+  //   // TODO
+  // }
 
 
   ngOnDestroy() {
@@ -148,36 +376,113 @@ export class DataElementStep2Component implements OnInit {
   fetchDataTypes = (text, loadAll, offset, limit) => {
 
     const options = {
-        pageSize: limit ? limit : 30,
-        pageIndex: offset ? offset : 0,
-        sortBy: 'label',
-        sortType: 'asc',
-        filters: 'label=' + text
+      pageSize: limit ? limit : 30,
+      pageIndex: offset ? offset : 0,
+      sortBy: 'label',
+      sortType: 'asc',
+      filters: 'label=' + text
     };
 
     this.pagination = {
-      limit : options.pageSize,
-      offset : options.pageIndex
+      limit: options.pageSize,
+      offset: options.pageIndex
 
     };
 
     this.changeRef.detectChanges();
 
     if (loadAll) {
-        delete options.filters;
+      delete options.filters;
     }
     return this.resources.dataModel.get(this.model.parent.dataModel, 'dataTypes', options);
 
-}
+  };
 
-onTargetSelect =  (selectedValue) => {
-  this.model.dataType = selectedValue;
-  this.validate(this.model);
-}
+  onTargetSelect = (selectedValue) => {
+    this.model.dataType = selectedValue;
+    this.validate(this.model);
+  };
+
+  applyFilter = (filterValue?: any, filterName?) => {
+    let filter: any = '';
+    this.filters.forEach((x: any) => {
+      const name = x.nativeElement.name;
+      const value = x.nativeElement.value;
+
+      if (value !== '' && value !== undefined) {
+        filter += name + '=' + value + '&';
+      }
+    });
+
+    if (
+      filterValue !== null &&
+      filterValue !== undefined &&
+      filterName !== null &&
+      filterName !== undefined
+    ) {
+      filter += filterName + '=' + filterValue.id + '&';
+    }
+
+    this.filter = filter;
+    this.filterEvent.emit(filter);
+  };
+
 
   validationStatusEmitter($event) {
 
     this.step.invalid = JSON.parse($event);
   }
+
+  filterClick = () => {
+
+    this.hideFilters = !this.hideFilters;
+  };
+
+  filterClickSelectedDataTypes = () => {
+
+    this.hideFiltersSelectedDataTypes = !this.hideFiltersSelectedDataTypes;
+  };
+
+  saveCopiedDataClasses = () => {
+    this.processing = true;
+    this.isProcessComplete = false;
+
+    let promise = Promise.resolve();
+
+    this.model.selectedDataElements.forEach((dc: any) => {
+      promise = promise
+        .then((result: any) => {
+          const link = 'dataElements/' + dc.dataModel + '/' + dc.dataClass + '/' + dc.id;
+          this.successCount++;
+          this.finalResult[dc.id] = { result, hasError: false };
+          return this.resources.dataClass
+              .post(
+                this.model.parent.dataModel,
+                this.model.parent.id,
+                link,
+                null
+              )
+              .toPromise();
+
+        })
+        .catch(error => {
+          this.failCount++;
+          const errorText = this.messageHandler.getErrorText(error);
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
+        });
+    });
+
+    promise
+      .then(() => {
+        this.processing = false;
+        this.step.isProcessComplete = true;
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      })
+      .catch(() => {
+        this.processing = false;
+        this.step.isProcessComplete = true;
+      });
+  }
+
 
 }

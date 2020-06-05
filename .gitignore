@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -234,3 +235,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/test-report.xml
+/test-report

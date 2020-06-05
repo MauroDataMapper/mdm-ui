@@ -1,35 +1,43 @@
-<div>
-    <div style="width: 100%;height: 100%; text-align: center;" class="treeWaitingSpinner" *ngIf="loading && showLoadingSpinner">
-        <div style="">
-            <a style="font-size: 75px;" class="themeColor">
-                <i class="fa fa-refresh fa-spin"></i>
-            </a>
-        </div>
-    </div>
-    <div *ngIf="total">
-        <div *ngFor="let linkType of linkTypes">
-            <mc-paged-list [name]="linkType"
-                           [mc-title]="linkType"
-                           [type]="'static'"
-                           [items]="allLinksMap[linkType].links"
-                           [page-size]="3">
+<!--
+Copyright 2020 University of Oxford
 
-                <ng-template #pageListTemplate let-item>
-                    <div class="pagedElement" style="word-break: break-all; word-wrap: break-word;">
-                        <element-link [element]="item.target"
-                                      [show-parent-data-model-name]="true"
-                                      [show-link]="true"
-                                      [show-type-title]="true"></element-link>
-                        <div style="padding-left: 3px" *ngIf="showDescription && item.target.description && item.target.description.length>0">
-                            <more-description [description]="item.source.description"></more-description>
-                        </div>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div style="width: 100%; height: 100%; text-align: center;" class="loading-spinner" *ngIf="loading && showLoadingSpinner">
+    <div>
+        <i class="fas fa-sync-alt fa-spin"></i>
+    </div>
+</div>
+<div *ngIf="total">
+    <div *ngFor="let linkType of linkTypes">
+        <mdm-paged-list [name]="linkType" [mcTitle]="linkType" [type]="'static'" [items]="allLinksMap[linkType].links" [pageSize]="3">
+            <ng-template #pageListTemplate let-item>
+                <div class="pagedElement">
+                    <mdm-element-link [element]="item.target"
+                                    [showParentDataModelName]="true"
+                                    [showLink]="true"
+                                    [showTypeTitle]="true">
+                    </mdm-element-link>
+                    <div style="padding-left: 3px;" *ngIf="showDescription && item.target.description && item.target.description.length > 0">
+                        <mdm-more-description [description]="item.source.description"></mdm-more-description>
                     </div>
-                </ng-template>
-
-            </mc-paged-list>
-        </div>
+                </div>
+            </ng-template>
+        </mdm-paged-list>
     </div>
-    <div *ngIf="total == 0 && showNoLinksMessage" style="font-style: italic; font-size: 14px;padding-left: 2px;">
-        No Links
-    </div>
+</div>
+<div *ngIf="total == 0 && showNoLinksMessage" style="font-style: italic; font-size: 14px; padding-left: 2px;">
+    No Links
 </div>

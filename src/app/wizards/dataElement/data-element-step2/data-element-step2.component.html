@@ -1,244 +1,268 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
 <div *ngIf="model">
     <div *ngIf="model.createType == 'new'">
-        <div class="form-group">
-            <form #myForm="ngForm" ngNativeValidate>
-
-                <label>Please enter Data Element details:</label>
-                <b></b>
-
-                <table class="table table-bordered table-condensed dataModelDetailTable">
-                    <tbody>
-
-                    <tr class="parent">
-                        <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Parent Data Class</th>
-                        <td>
-                            <model-path [path]="model.parent.breadcrumbs"></model-path>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Label *</th>
-                        <td>
-                            <input type="text" class="form-control wizardInput" id="label" name="label" [(ngModel)]="model.label"
-                                   required="Name can not be Empty">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="detailsRowHeader col-md-2">Description</th>
-                        <td>
-                            <textarea type="text" class="form-control" id="description" name="description" [(ngModel)]="model.description"></textarea>
-                        </td>
-                    </tr>
-
-                    <tr class="parent">
-                        <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Multiplicity</th>
-                        <td>
-                            <div>
-                                <div style="width: 10%; padding-left: 0px !important; float: left">
-                                    <span for="minMultiplicity">Min</span>
-                                    <input type="text"
-                                           class="form-control wizardInput"
-                                           [ngStyle]="multiplicityError? {'border': '1px solid #a94442'} :''"
-                                           id="minMultiplicity"
-                                           name="minMultiplicity"
-                                           [(ngModel)]="model.minMultiplicity">
-                                </div>
-                                <div style="width: 10%; margin-left: 10px !important;float: left">
-                                    <span for="minMultiplicity">Max</span>
-                                    <input type="text"
-                                           class="form-control wizardInput"
-                                           [ngStyle]="multiplicityError? {'border': '1px solid #a94442'} :''"
-                                           id="maxMultiplicity"
-                                           name="maxMultiplicity"
-                                           [(ngModel)]="model.maxMultiplicity">
-                                </div>
-                            </div>
-                            <div style="font-size: 12px;clear: both;margin: 2px 0px" class="error text-danger">
-                                    <span *ngIf="multiplicityError">
-                                        {{multiplicityError}}
-                                    </span>
-                            </div>
-                            <div style="clear: both;font-size: 11px;font-style: italic;">
-                                Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="detailsRowHeader col-sx-2 col-sm-2 col-md-2">Data Type *</th>
-                        <td>
-
-                            <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
-                                <element-data-type
-                                        [element-data-type]="model.dataType"
-                                        [mc-parent-data-model]="model.parentDataModel"></element-data-type>
-                            </div>
-
-                            <div *ngIf="model.allDataTypesCount === 0">
-                                <label>No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.<br>Please enter Data Type details:</label>
-                            </div>
-
-                            <div *ngIf="model.allDataTypesCount != 0">
-                                <label *ngIf="!model.showNewInlineDataType">Please select a Data Type or <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">Add a new one</a>:</label>
-                                <label *ngIf="model.showNewInlineDataType">Please <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">select a Data Type </a> or Add a new one:</label>
-                            </div>
-
-                            <div *ngIf="model.showNewInlineDataType">
-                                <new-data-type-inline
-                                        [parent-scope-handler]="parentScopeHandler"
-                                        [model]="model.newlyAddedDataType"
-                                        [parent-data-model]="model.parentDataModel"
-                                        [show-parent-data-model]="false"
-                                        (validationStatusEvent)="validationStatusEmitter($event)">
-                                </new-data-type-inline>
-                            </div>
-                            <div *ngIf="!model.showNewInlineDataType">
-                                <div class="col-sx-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px;">
-                                    <mc-select
-                                            [width]="'100%'"
-                                            [accept-typed-input]="false"
-                                            [value-type]="'dynamic'"
-                                            [default-value]="model.dataType"
-                                            [load-dynamic-values]="fetchDataTypes"
-                                            [min-input-length]="1"
-                                            [id-property]="'id'"
-                                            [display-property]="'label'"
-                                            [search-property]="'label'"
-                                            [load-all-on-click]="true"
-                                            [(pagination)]="pagination"
-                                            (on-select)="onTargetSelect($event[0])">
-                                        <ng-template #lineContent let-item = 'item', let-searchTerm = "inputText" >
-                                            <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
-                                            <div>
-                                                <element-link [element]="item" [show-type-title]="true" [show-link]="false"></element-link>
-                                            </div>
-                                        </ng-template>
-                                    </mc-select>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</th>
-                        <td>
-                            <app-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editable-form]="{visible :true}"></app-element-classifications>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
-    </div>
-    <div *ngIf="model.createType == 'copy'" class="row" style="margin-bottom:20px;">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label>Please Select Data Class(s):</label>
-            <!--<model-selector-tree default-checked-map="defaultCheckedMap"
-                                 root="model.copyFromDataModel[0]"
-                                 show-checkbox-for="['DataClass']"
-                                 propagate-checkbox="true"
-                                 always-show-tree="true"
-                                 hide-selected-elements="true"
-                                 multiple="true"
-                                 processing="processing"
-                                 on-check="onCheck"
-                                 placeholder="'Select Data Class(s)'"
-                                 accepts="['DataClass']">
-            </model-selector-tree>-->
-        </div>
-    </div>
-
-    <!--    Put Submit button in this page -AS-->
-    <div *ngIf="model.createType == 'copy'" class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div>
-                <!--<mc-table mc-record-type="'static'"
-                          mc-records="model.selectedDataClasses"
-                          mc-static-loading-in-progress="loading"
-                          mc-table-handler="mcTableHandler"
-                          mc-display-records="mcDisplayRecords"
-                          mc-page-number="1">
-                    <div class="mcTableMain">
-                        <div class="mcTableTitle">
-                            <span class="title">Summary of Selected Data Classes</span>
-                        </div>
-                        <div class="mcTableContainer">
-                            <table class="table table-condensed table-bordered mcTable">
-                                <thead>
-                                    <tr class="mcTableHeader">
-                                        <th style="cursor:pointer;max-width: 15%;width: 15%;" columnName="label"
-                                            sortable="true" filterable="true">
-                                            Name
-                                        </th>
-                                        <th style="cursor:pointer;max-width: 20%;width: 20%;" columnName="description"
-                                            sortable="true" filterable="true">
-                                            Description
-                                        </th>
-                                        <th style="cursor:pointer;max-width: 15%;width: 15%;">
-                                            Status
-                                        </th>
-                                    </tr>
-                                    <tr class="mcTableFilter">
-                                        <td style="cursor:pointer;max-width: 15%;width: 15%;">
-                                            <input class="form-control input-sm" type="text" autocomplete="off">
-                                        </td>
-                                        <td style="cursor:pointer;max-width: 20%;width: 20%;">
-                                            <input class="form-control input-sm" type="text" autocomplete="off">
-                                        </td>
-                                        <td style="cursor:pointer;max-width: 15%;width: 15%;">
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="record in mcDisplayRecords">
-                                        <td style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
-                                            <div>
-                                                <element-link mc-element="record"
-                                                              new-window="true"
-                                                              mc-data-model-parent="{id:record.dataModel}"></element-link>
-                                            </div>
-                                        </td>
-                                        <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;">
-                                            <div ng-if="record.description && record.description.length>0"
-                                                 style="margin-bottom: 10px;">
-                                                <more-description description="{{::record.description}}"></more-description>
-                                            </div>
-                                        </td>
-                                        <td style="max-width: 15%;width: 15%;text-align: left;word-wrap: break-word;">
-                                            <span ng-if="finalResult[record.id] && finalResult[record.id].hasError">
-                                                <div><i class="fa fa-times copyElementError"></i></div>
-                                                <div class="errorMessage">{{finalResult[record.id].result}}</div>
-                                            </span>
-                                            <span ng-if="finalResult[record.id] && !finalResult[record.id].hasError">
-                                                <div><i class="fa fa-check copyElementSuccess"></i>&nbsp;Success</div>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="paginationContainer">
-                            <mc-table-pagination display-records="mcDisplayRecords"></mc-table-pagination>
-                        </div>
-                    </div>
-                </mc-table>-->
+        <form #myForm="ngForm" ngNativeValidate class="full-width">
+            <h4 class="marginless">Parent Data Class:</h4>
+            <div class="mb-2 block">
+                <mdm-model-path [path]="model.parent.breadcrumbs"></mdm-model-path>
             </div>
-            <div style="margin-top: 50px;">
-                <div *ngIf="processing">
-                    <mat-progress-bar
-                            value="50"
-                            bufferValue="75"
-                            color="primary"
-                            mode="indeterminate">
-                    </mat-progress-bar>
+            <div class="mdm--form-input">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Label</mat-label>
+                    <input matInput type="text" [(ngModel)]="model.label" name="label" required>
+                </mat-form-field>
+            </div>
+
+            <div class="mdm--form-input">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="mdm--form-input mb-2">
+                <h4 class="marginless">Multiplicity</h4>
+                <small>Use <strong>*</strong> for unbound multiplicity.</small>
+                <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px">
+                    <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+                        <mat-form-field appearance="outline" class="full-width paddingless">
+                            <mat-label>Min</mat-label>
+                            <input matInput name="minMultiplicity" [(ngModel)]="model.minMultiplicity">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
+                        <mat-form-field appearance="outline" class="full-width paddingless">
+                            <mat-label>Max</mat-label>
+                            <input matInput name="maxMultiplicity" [(ngModel)]="model.maxMultiplicity">
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div ng-show="!processing && isProcessComplete">
-                    <div class="alert alert-success" ng-if="failCount === 0">
-                        <strong>Success!</strong> All copied successfully!
-                    </div>
-                    <div class="alert alert-danger" ng-if="failCount > 0">
-                        <strong>Error!</strong> {{failCount}} Error(s) in copy process!
-                    </div>
+                <div class="error warning" *ngIf="multiplicityError">
+                    {{multiplicityError}}
+                </div>
+            </div>
+
+
+            <h4 class="marginless">Data Type *</h4>
+            <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
+                <mdm-element-data-type [elementDataType]="model.dataType" [mcParentDataModel]="model.parentDataModel"></mdm-element-data-type>
+            </div>
+
+            <div *ngIf="model.allDataTypesCount === 0">
+                No Data Type defined for '{{model.parent.breadcrumbs[0].label}}' Data Model.
+                <br>Please enter Data Type details:
+            </div>
+
+            <div *ngIf="model.allDataTypesCount != 0" class="mb-2">
+                <div *ngIf="!model.showNewInlineDataType">
+                    Please select a Data Type below or
+                    <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new Data Type</button>
+                </div>
+                <div *ngIf="model.showNewInlineDataType">
+                    Please
+                    <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
+                    or Add a new Data Type by completing the form below:</div>
+            </div>
+
+            <div *ngIf="model.showNewInlineDataType" class="mb-2">
+                <mdm-data-type-inline [parentScopeHandler]="parentScopeHandler"
+                                      [model]="model.newlyAddedDataType"
+                                      [parentDataModel]="model.parentDataModel"
+                                      [showParentDataModel]="false"
+                                      (validationStatusEvent)="validationStatusEmitter($event)">
+                </mdm-data-type-inline>
+            </div>
+            <div *ngIf="!model.showNewInlineDataType" class="mb-2">
+                <mdm-select [width]="'100%'"
+                            [acceptTypedInput]="false"
+                            [valueType]="'dynamic'"
+                            [defaultValue]="model.dataType"
+                            [loadDynamicValues]="fetchDataTypes"
+                            [minInputLength]="1"
+                            [idProperty]="'id'"
+                            [displayProperty]="'label'"
+                            [searchProperty]="'label'"
+                            [loadAllOnClick]="true"
+                            [pagination]="pagination"
+                            (selectEvent)="onTargetSelect($event[0])">
+                    <ng-template #lineContent let-item='item' let-searchTerm="inputText">
+                        <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
+                        <div>
+                            <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
+                        </div>
+                    </ng-template>
+                </mdm-select>
+            </div>
+
+            <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
+        </form>
+    </div>
+    <div *ngIf="model.createType == 'copy'" class="mb-2">
+        <h4 class="mt-2">Please Select Data Element(s):</h4>
+        <div class="heading-container">
+            Data Elements
+            <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+            <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+        </div>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSourceDataElements" matSort class="mdm--table table table-striped">
+                <ng-container matColumnDef="checkbox">
+                    <th mat-header-cell *matHeaderCellDef columnName="checkbox" style="cursor: pointer; max-width: 3%; width: 3%;">
+                        <mat-checkbox [checked]="isAllChecked" (change)="onCheckAll()" [(ngModel)]="checkAllCheckbox"></mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: center;">
+                        <mat-checkbox (change)="onCheck(record)" [(ngModel)]="record.checked"></mat-checkbox>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="label">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" columnName="label" style="cursor: pointer; max-width: 23%; width: 23%;">
+                        <span [hidden]="!hideFilters">Name</span>
+                        <div [hidden]="hideFilters">
+                            <mat-form-field class="filter" floatLabel="never">
+                                <mat-label>Name</mat-label>
+                                <input #filters matInput name="label" (keyup)="applyFilter()">
+                            </mat-form-field>
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 23%; width: 23%; text-align: left;">
+                        {{record.label}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="description">
+                        <span [hidden]="!hideFilters">Description</span>
+                        <div [hidden]="hideFilters">
+                            <mat-form-field class="filter" floatLabel="never">
+                                <mat-label>Description</mat-label>
+                                <input #filters matInput name="description" (keyup)="applyFilter()">
+                            </mat-form-field>
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+                        <mdm-more-description description="{{record.description}}"></mdm-more-description>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="domainType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="domainType">
+                        <span [hidden]="!hideFilters">Type</span>
+                        <div [hidden]="hideFilters">
+                            <mat-label>Type</mat-label>
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 26%; width: 26%; text-align: left; word-wrap: break-word;">
+                        <mdm-element-data-type [newWindow]="true" [hideEnumList]="true"
+                            [elementDataType]="record.dataType"
+                            [mcParentDataModel]="{id:model.copyFromDataClass[0].dataModel}"></mdm-element-data-type>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsDataTypes"></tr>
+                <tr mat-row *matRowDef="let record; columns: displayedColumnsDataTypes;"></tr>
+            </table>
+        </div>
+        <div class="mdm--mat-pagination">
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalItemCount" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+
+    <div *ngIf="model.createType == 'copy'">
+        <div class="heading-container">
+            <span>Summary of Selected Data Elements</span>
+            <span class="mdm--badge mdm--element-count">{{totalSelectedItemsCount}}</span>
+        </div>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--table table table-striped">
+                <ng-container matColumnDef="label">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="label">
+                        <span [hidden]="!hideFiltersSelectedDataTypes">Name</span>
+                        <div [hidden]="hideFiltersSelectedDataTypes">
+                            <mat-form-field class="filter" floatLabel="never">
+                                <mat-label>Name</mat-label>
+                                <input #filters matInput name="label" (keyup)="applyFilter()">
+                            </mat-form-field>
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                        <span>
+                            {{record.label}}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="description">
+                        <span [hidden]="!hideFiltersSelectedDataTypes">Description</span>
+                        <div [hidden]="hideFiltersSelectedDataTypes">
+                            <mat-form-field class="filter" floatLabel="never">
+                                <mat-label>Description</mat-label>
+                                <input #filters matInput name="description" (keyup)="applyFilter()">
+                            </mat-form-field>
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 35%; width: 35%; text-align: left; word-wrap: break-word;">
+                        <span>{{record.description}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="domainType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFiltersSelectedDataTypes" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="domainType">
+                        <span [hidden]="!hideFiltersSelectedDataTypes">Type</span>
+                        <div [hidden]="hideFiltersSelectedDataTypes">
+                            <mat-form-field class="filter" floatLabel="never">
+                                <mat-label>Type</mat-label>
+                                <input #filters matInput name="domainType" (keyup)="applyFilter()">
+                            </mat-form-field>
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                        <span>{{record.domainType}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef style="cursor: pointer; max-width: 15%; width: 15%;">
+                        Status
+                    </th>
+                    <td mat-cell *matCellDef="let record" style="max-width: 15%; width: 15%; text-align: left; word-wrap: break-word;">
+                        <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
+                            <div><i class="fas fa-times copyElementError"></i></div>
+                            <div class="errorMessage">{{finalResult[record.id].result}}</div>
+                        </span>
+                        <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
+                            <div><i class="fas fa-check copyElementSuccess"></i>&nbsp;Success</div>
+                        </span>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsSelectedDataTypes"></tr>
+                <tr mat-row *matRowDef="let record; columns: displayedColumnsSelectedDataTypes;"></tr>
+            </table>
+        </div>
+        <div class="mdm--mat-pagination">
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
+        </div>
+        <div style="margin-top: 50px;">
+            <div *ngIf="processing">
+                <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
+            </div>
+            <div *ngIf="!processing && isProcessComplete">
+                <div class="alert alert-success" *ngIf="failCount === 0">
+                    <strong>Success!</strong> All copied successfully!
+                </div>
+                <div class="alert alert-danger" *ngIf="failCount > 0">
+                    <strong>Error!</strong> {{failCount}} Error(s) in copy process!
                 </div>
             </div>
         </div>

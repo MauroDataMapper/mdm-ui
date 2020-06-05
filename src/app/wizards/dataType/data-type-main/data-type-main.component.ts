@@ -1,161 +1,201 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { StateService } from "@uirouter/core";
-import { StateHandlerService } from "../../../services/handlers/state-handler.service";
-import { ResourcesService } from "../../../services/resources.service";
-import { MessageHandlerService } from "../../../services/utility/message-handler.service";
-import { Step } from "../../../model/stepModel";
-import { DataTypeStep1Component } from "../data-type-step1/data-type-step1.component";
-import { DataTypeStep2Component } from "../data-type-step2/data-type-step2.component";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit } from '@angular/core';
+import { StateService } from '@uirouter/core';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Step } from '@mdm/model/stepModel';
+import { DataTypeStep1Component } from '../data-type-step1/data-type-step1.component';
+import { DataTypeStep2Component } from '../data-type-step2/data-type-step2.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-	selector: 'app-data-type-main',
-	templateUrl: './data-type-main.component.html',
-	styleUrls: ['./data-type-main.component.sass']
+  selector: 'mdm-data-type-main',
+  templateUrl: './data-type-main.component.html',
+  styleUrls: ['./data-type-main.component.sass'],
 })
 export class DataTypeMainComponent implements OnInit {
+  constructor(
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService,
+    private title: Title
+  ) {}
+  parentDataModelId: any;
+  steps: Step[] = [];
+  processing: any;
+  isProcessComplete: any;
 
-	parentDataModelId: any;
-	steps: Step[] = [];
-	processing: any;
-	isProcessComplete: any;
+  model = {
+    createType: 'new',
+    copyFromDataModel: [],
+    isValid: false,
 
-	constructor(private stateService: StateService,
-		private stateHandler: StateHandlerService,
-		private resources: ResourcesService,
-		private messageHandler: MessageHandlerService,
-		) { }
+    parent: {
+      id: '',
+    },
+    parentDataModel: { id: '' },
 
-	ngOnInit() {
+    label: '',
+    description: '',
+    organisation: '',
+    domainType: 'PrimitiveType',
 
-		this.parentDataModelId = this.stateService.params.parentDataModelId;
+    metadata: [],
+    enumerationValues: [],
+    classifiers: [],
+    referencedDataType: { id: '' },
+    referencedTerminology: { id: '' },
+    referencedDataClass: { id: '' },
+    isProcessComplete: false,
+  };
 
-		if (!this.parentDataModelId) {
-			this.stateHandler.NotFound({ location: false });
-			return;
-		}
+  ngOnInit() {
+    this.parentDataModelId = this.stateService.params.parentDataModelId;
 
-		const step1 = new Step();
-		step1.title = "Add Data Type";
-		step1.component = DataTypeStep1Component;
-		step1.scope = this;
-		step1.hasForm = true;
+    if (!this.parentDataModelId) {
+      this.stateHandler.NotFound({ location: false });
+      return;
+    }
 
-		const step2 = new Step();
-		step2.title = "Data Type Details";
-		step2.component = DataTypeStep2Component;
-		step2.scope = this;
+    const step1 = new Step();
+    step1.title = 'Add Data Type';
+    step1.component = DataTypeStep1Component;
+    step1.scope = this;
+    step1.hasForm = true;
+    step1.invalid = false;
 
-		this.resources.dataModel
-			.get(this.parentDataModelId).toPromise().then((result) => {
+    const step2 = new Step();
+    step2.title = 'Data Type Details';
+    step2.component = DataTypeStep2Component;
+    step2.scope = this;
+    step2.invalid = true;
 
-				result.body.breadcrumbs = [];
-				result.body.breadcrumbs.push(Object.assign({}, result.body));
-				this.model.parent = result.body;
+    this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
+        result.body.breadcrumbs = [];
+        result.body.breadcrumbs.push(Object.assign({}, result.body));
+        this.model.parent = result.body;
 
-				this.steps.push(step1);
-				this.steps.push(step2);
-			});
-	}
+        this.steps.push(step1);
+        this.steps.push(step2);
+      });
 
-	model = {
-		createType: "new",
-		copyFromDataModel: [],
-		isValid: false,
+    this.title.setTitle(`New Data Type`);
+  }
 
-		parent: {
-			id: ""
-		},
-		parentDataModel: { id: "" },
+  cancelWizard() {
+    this.stateHandler.GoPrevious();
+  }
 
-		label: "",
-		description: "",
-		organisation: "",
-		domainType: "PrimitiveType",
+  save = () => {
+    if (this.model.createType === 'new') {
+      this.saveNewDataType();
+    } else {
+      this.saveCopiedDataTypes();
+    }
+  };
 
-		metadata: [],
-		enumerationValues: [],
-		classifiers: [],
-		referencedDataType: { id: "" },
-		referencedTerminology: { id: "" },
-		referencedDataClass: { id: "" }
-	};
+  fireChanged = (tab: any) => {
+    for (let i = 0; i < this.steps.length; i++) {
+      const step: Step = this.steps[i];
 
-	cancelWizard() {
-		this.stateHandler.GoPrevious();
-	};
+      if (i === tab.selectedIndex) {
+        if (step.compRef) {
+          if (step.compRef.instance.onLoad !== undefined) {
+            step.compRef.instance.onLoad();
+          }
+          step.active = true;
+        }
+      } else {
+        step.active = false;
+      }
+    }
+  };
 
-	save = () => {
+  saveNewDataType() {
+    const resource = {
+      label: this.model.label,
+      description: this.model.description,
+      organisation: this.model.organisation,
+      domainType: this.model.domainType,
 
-		if (this.model.createType === 'new') {
-			this.saveNewDataType();
-		} else {
-			this.saveCopiedDataTypes();
-		}
-	};
+      referenceDataType: {
+        id: this.model.referencedDataType
+          ? this.model.referencedDataType.id
+          : null
+      },
+      referenceClass: {
+        id: this.model.referencedDataClass
+          ? this.model.referencedDataClass.id
+          : null
+      },
+      terminology: {
+        id: this.model.referencedTerminology
+          ? this.model.referencedTerminology.id
+          : null
+      },
 
-	fireChanged = (tab: any) => {
+      classifiers: this.model.classifiers.map((cls) => {
+        return { id: cls.id };
+      }),
+      enumerationValues: this.model.enumerationValues.map((m) => {
+        return {
+          key: m.key,
+          value: m.value,
+          category: m.category
+        };
+      }),
+      metadata: this.model.metadata.map((m) => {
+        return {
+          key: m.key,
+          value: m.value,
+          namespace: m.namespace
+        };
+      })
+    };
 
-		for (var i = 0; i < this.steps.length; i++) {
+    const deferred = this.resources.dataModel.post(
+      this.model.parent.id,
+      'dataTypes',
+      { resource }
+    );
 
-			var step: Step = this.steps[i];
+    deferred.subscribe(
+      response => {
+        this.messageHandler.showSuccess('Data Type saved successfully.');
 
-			if (i === tab.selectedIndex) {
+        this.stateHandler.Go(
+          'DataType',
+          { dataModelId: response.body.dataModel, id: response.body.id },
+          { reload: true, location: true }
+        );
+      }, error => {
+        this.messageHandler.showError(
+          'There was a problem saving the Data Type.',
+          error
+        );
+      }
+    );
+  }
 
-				if (step.compRef) {
-					step.compRef.instance.onLoad();
-					step.active = true;
-				}
-			} else {
-				step.active = false;
-			}
-		}
-	}
-
-	saveNewDataType() {
-		var resource = {
-			label: this.model.label,
-			description: this.model.description,
-			organisation: this.model.organisation,
-			domainType: this.model.domainType,
-			
-			referenceDataType: { id: this.model.referencedDataType ? this.model.referencedDataType.id : null },
-			referenceClass: { id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null },
-			terminology: { id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null },
-
-			classifiers: this.model.classifiers.map(function (cls) {
-				return { id: cls.id };
-			}),
-			enumerationValues: this.model.enumerationValues.map(function (m) {
-				return {
-					key: m.key,
-					value: m.value,
-					category: m.category
-				};
-			}),
-			metadata: this.model.metadata.map(function (m) {
-				return {
-					key: m.key,
-					value: m.value,
-					namespace: m.namespace
-				};
-			})
-		};
-
-		var deferred = this.resources.dataModel.post(this.model.parent.id, 'dataTypes', { resource: resource });
-
-		deferred.subscribe((response) => {
-
-			this.messageHandler.showSuccess('Data Type saved successfully.');
-			
-			this.stateHandler.Go("DataType",
-				{ dataModelId: response.dataModel, id: response.id },
-				{ reload: true, location: true });
-		}, (error) => {
-			this.messageHandler.showError('There was a problem saving the Data Type.', error);
-		});
-	};
-
-	saveCopiedDataTypes = () => {
-		this.steps[1].compRef.instance.saveCopiedDataTypes();
-	}
+  saveCopiedDataTypes = () => {
+    this.steps[1].compRef.instance.saveCopiedDataTypes();
+  };
 }

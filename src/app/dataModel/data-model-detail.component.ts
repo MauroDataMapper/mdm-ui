@@ -1,6 +1,22 @@
-import { ResourcesService } from "../services/resources.service";
-// @ts-ignore
-import { EditableDataModel } from "../model/dataModelModel";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { ResourcesService } from '../services/resources.service';
+import { EditableDataModel } from '../model/dataModelModel';
 import {
   Component,
   OnInit,
@@ -11,35 +27,33 @@ import {
   ContentChildren,
   ElementRef,
   Renderer2,
-  ViewEncapsulation
-} from "@angular/core";
-import { Subscription, from } from "rxjs";
-
-import { MessageService } from "../services/message.service";
-import { SecurityHandlerService } from "../services/handlers/security-handler.service";
-import { MarkdownTextAreaComponent } from "../utility/markdown-text-area.component";
-import { MessageHandlerService } from "../services/utility/message-handler.service";
-import { FolderHandlerService } from "../services/handlers/folder-handler.service";
-import { StateHandlerService } from "../services/handlers/state-handler.service";
-
-import { HelpDialogueHandlerService } from "../services/helpDialogue.service";
-import { ElementSelectorDialogueService } from "../services/element-selector-dialogue.service";
-import { SharedService } from "../services/shared.service";
-import { DataModelResult } from "../model/dataModelModel";
-import { ConfirmationModalComponent } from "../modals/confirmation-modal/confirmation-modal.component";
-import { FavouriteHandlerService } from "../services/handlers/favourite-handler.service";
-import { ExportHandlerService } from "../services/handlers/export-handler.service";
-import { DomSanitizer } from "@angular/platform-browser";
-import { BroadcastService } from "../services/broadcast.service";
-import { DialogPosition, MatDialog } from "@angular/material/dialog";
+  ViewEncapsulation,
+  AfterViewInit, OnDestroy
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { MessageService } from '../services/message.service';
+import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MessageHandlerService } from '../services/utility/message-handler.service';
+import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
+import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
+import { SharedService } from '../services/shared.service';
+import { DataModelResult } from '../model/dataModelModel';
+import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
+import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
+import { ExportHandlerService } from '../services/handlers/export-handler.service';
+import { BroadcastService } from '../services/broadcast.service';
+import { DialogPosition, MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: "app-data-model-detail",
-  templateUrl: "./data-model-detail.component.html",
-  styleUrls: ["./data-model-detail.component.sass"],
+  selector: 'mdm-data-model-detail',
+  templateUrl: './data-model-detail.component.html',
+  styleUrls: ['./data-model-detail.component.sass'],
   encapsulation: ViewEncapsulation.None
 })
-export class DataModelDetailComponent implements OnInit {
+export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   result: DataModelResult;
   hasResult = false;
   subscription: Subscription;
@@ -54,7 +68,7 @@ export class DataModelDetailComponent implements OnInit {
   deleteInProgress: boolean;
   exporting: boolean;
   editableForm: EditableDataModel;
-  errorMessage = "";
+  errorMessage = '';
   showEditMode = false;
   processing = false;
   showNewVersion = false;
@@ -63,21 +77,19 @@ export class DataModelDetailComponent implements OnInit {
   exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  @ViewChild("aLink", { static: false }) aLink: ElementRef;
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input("after-save") afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
 
-  @ViewChildren("editableText") editForm: QueryList<any>;
-  @ViewChildren("editableTextAuthor") editFormAuthor: QueryList<any>;
-  @ViewChildren("editableTextOrganisation") editFormOrganisation: QueryList<
-    any
-  >;
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
+  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  // @ViewChildren("aliases") aliases: QueryList<any>;
+
 
   constructor(
     private renderer: Renderer2,
@@ -92,7 +104,8 @@ export class DataModelDetailComponent implements OnInit {
     private helpDialogueService: HelpDialogueHandlerService,
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
-    private exportHandler: ExportHandlerService
+    private exportHandler: ExportHandlerService,
+    private title: Title
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
@@ -102,12 +115,7 @@ export class DataModelDetailComponent implements OnInit {
   }
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open(
-      "Search_Help",
-      "left" as DialogPosition,
-      null,
-      null
-    );
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
   }
 
   ngOnInit() {
@@ -119,7 +127,7 @@ export class DataModelDetailComponent implements OnInit {
       this.editForm.forEach(x =>
         x.edit({
           editing: true,
-          focus: x._name === "moduleName" ? true : false
+          focus: x._name === 'moduleName' ? true : false
         })
       );
       this.editableForm.visible = true;
@@ -129,7 +137,7 @@ export class DataModelDetailComponent implements OnInit {
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
-      this.errorMessage = "";
+      this.errorMessage = '';
       this.setEditableFormData();
       if (this.result.classifiers) {
         this.result.classifiers.forEach(item => {
@@ -137,7 +145,7 @@ export class DataModelDetailComponent implements OnInit {
         });
       }
       if (this.result.aliases) {
-        this.result["aliases"].forEach(item => {
+        this.result.aliases.forEach(item => {
           this.editableForm.aliases.push(item);
         });
       }
@@ -170,7 +178,7 @@ export class DataModelDetailComponent implements OnInit {
         this.editForm.forEach(x =>
           x.edit({
             editing: true,
-            focus: x._name === "moduleName" ? true : false
+            focus: x._name === 'moduleName' ? true : false
           })
         );
         this.showForm();
@@ -185,8 +193,7 @@ export class DataModelDetailComponent implements OnInit {
   // }
 
   DataModelDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.result = serverResult;
         this.setEditableFormData();
 
@@ -202,7 +209,7 @@ export class DataModelDetailComponent implements OnInit {
         }
         if (this.result.semanticLinks) {
           this.result.semanticLinks.forEach(link => {
-            if (link.linkType === "New Version Of") {
+            if (link.linkType === 'New Version Of') {
               this.compareToList.push(link.target);
             }
           });
@@ -210,7 +217,7 @@ export class DataModelDetailComponent implements OnInit {
 
         if (this.result.semanticLinks) {
           this.result.semanticLinks.forEach(link => {
-            if (link.linkType === "Superseded By") {
+            if (link.linkType === 'Superseded By') {
               this.compareToList.push(link.target);
             }
           });
@@ -220,13 +227,14 @@ export class DataModelDetailComponent implements OnInit {
           this.hasResult = true;
           this.watchDataModelObject();
         }
+        this.title.setTitle(`${this.result?.type} - ${this.result?.label}`);
       }
     );
   }
 
   watchDataModelObject() {
     const access: any = this.securityHandler.elementAccess(this.result);
-    if (access != undefined) {
+    if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
       this.showDelete = access.showDelete;
@@ -260,31 +268,21 @@ export class DataModelDetailComponent implements OnInit {
     if (!this.securityHandler.isAdmin()) {
       return;
     }
-    const queryString = permanent ? "permanent=true" : null;
+    const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
 
-    this.resourcesService.dataModel
-      .delete(this.result.id, null, queryString, null)
-      .subscribe(
-        () => {
+    this.resourcesService.dataModel.delete(this.result.id, null, queryString, null).subscribe(() => {
           if (permanent) {
-            this.broadcastSvc.broadcast("$reloadFoldersTree");
-            this.stateHandler.Go(
-              "allDataModel",
-              { reload: true, location: true },
-              null
-            );
+            this.broadcastSvc.broadcast('$reloadFoldersTree');
+            this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
           } else {
-            this.broadcastSvc.broadcast("$reloadFoldersTree");
+            this.broadcastSvc.broadcast('$reloadFoldersTree');
             this.stateHandler.reload();
           }
         },
         error => {
           this.deleteInProgress = false;
-          this.messageHandler.showError(
-            "There was a problem deleting the Data Model.",
-            error
-          );
+          this.messageHandler.showError('There was a problem deleting the Data Model.', error);
         }
       );
   }
@@ -295,16 +293,15 @@ export class DataModelDetailComponent implements OnInit {
     }
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
         data: {
-          title: "Data Model",
+          title: 'Data Model',
           message:
-            "Are you sure you want to delete this Data Model?<br>The Data Model will be marked as deleted and will not be viewable by users except Administrators."
+            'Are you sure you want to delete this Data Model?<br>The Data Model will be marked as deleted and will not be viewable by users except Administrators.'
         }
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== "ok") {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }
@@ -322,30 +319,28 @@ export class DataModelDetailComponent implements OnInit {
     }
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
         data: {
-          title: "Data Model",
+          title: 'Data Model',
           message:
-            "Are you sure you want to <span class='errorMessage'>permanently</span> delete this Data Model?"
+            'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Data Model?'
         }
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== "ok") {
+        if (result?.status !== 'ok') {
           // reject(null); Commented by AS as it was throwing error
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          hasBackdrop: false,
           data: {
-            title: "Data Model",
+            title: 'Data Model',
             message:
-              "<strong>Are you sure?</strong><br>All its 'Data Classes', 'Data Elements' and 'Data Types' will be deleted <span class='errorMessage'>permanently</span>."
+              '<strong>Are you sure?</strong><br>All its \'Data Classes\', \'Data Elements\' and \'Data Types\' will be deleted <span class=\'errorMessage\'>permanently</span>.'
           }
         });
 
-        dialog2.afterClosed().subscribe(result => {
-          if (result.status !== "ok") {
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
             // reject(null);
             return;
           }
@@ -359,9 +354,9 @@ export class DataModelDetailComponent implements OnInit {
 
   formBeforeSave = function() {
     this.editMode = false;
-    this.errorMessage = "";
+    this.errorMessage = '';
 
-    let classifiers = [];
+    const classifiers = [];
     this.editableForm.classifiers.forEach(cls => {
       classifiers.push(cls);
     });
@@ -389,13 +384,14 @@ export class DataModelDetailComponent implements OnInit {
             if (this.afterSave) {
               this.afterSave(result);
             }
-            this.messageHandler.showSuccess("Data Model updated successfully.");
+            this.messageHandler.showSuccess('Data Model updated successfully.');
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
+            this.broadcastSvc.broadcast('$reloadFoldersTree');
           },
           error => {
             this.messageHandler.showError(
-              "There was a problem updating the Data Model.",
+              'There was a problem updating the Data Model.',
               error
             );
           }
@@ -405,7 +401,7 @@ export class DataModelDetailComponent implements OnInit {
 
   validateLabel(data): any {
     if (!data || (data && data.trim().length === 0)) {
-      this.errorMessage = "DataModel name can not be empty";
+      this.errorMessage = 'DataModel name can not be empty';
       return false;
     } else {
       return true;
@@ -417,15 +413,12 @@ export class DataModelDetailComponent implements OnInit {
   }
 
   onCancelEdit() {
-    this.errorMessage = "";
+    this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
-  public loadHelp() {
-    this.helpDialogueService.open("Edit_model_details", {
-      my: "right top",
-      at: "bottom"
-    } as DialogPosition);
+  loadHelp() {
+    this.helpDialogueService.open('Edit_model_details', { my: 'right top', at: 'bottom' } as DialogPosition);
   }
 
   toggleFavourite() {
@@ -437,31 +430,32 @@ export class DataModelDetailComponent implements OnInit {
   finalise() {
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
-        hasBackdrop: false,
         data: {
-          title: "Are you sure you want to finalise the Data Model ?",
+          title: 'Are you sure you want to finalise the Data Model ?',
+          okBtnTitle: 'Finalise model',
+          btnType: 'accent',
           message:
-            "Once you finalise a Data Model, you can not edit it anymore!<br> \n" +
-            "but you can create new version of it."
+            'Once you finalise a Data Model, you can not edit it anymore!<br> \n' +
+            'but you can create new version of it.'
         }
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result.status !== "ok") {
+        if (result?.status !== 'ok') {
           // reject("cancelled");
           return promise;
         }
         this.processing = true;
         this.resourcesService.dataModel
-          .put(this.result.id, "finalise", null)
+          .put(this.result.id, 'finalise', null)
           .subscribe(
             () => {
               this.processing = false;
               this.messageHandler.showSuccess(
-                "Data Model finalised successfully."
+                'Data Model finalised successfully.'
               );
               this.stateHandler.Go(
-                "datamodel",
+                'datamodel',
                 { id: this.result.id },
                 { reload: true }
               );
@@ -469,7 +463,7 @@ export class DataModelDetailComponent implements OnInit {
             error => {
               this.processing = false;
               this.messageHandler.showError(
-                "There was a problem finalising the Data Model.",
+                'There was a problem finalising the Data Model.',
                 error
               );
             }
@@ -481,7 +475,7 @@ export class DataModelDetailComponent implements OnInit {
 
   newVersion() {
     this.stateHandler.Go(
-      "newVersionDataModel",
+      'newVersionDataModel',
       { dataModelId: this.result.id },
       { location: true }
     );
@@ -489,7 +483,7 @@ export class DataModelDetailComponent implements OnInit {
 
   compare(dataModel = null) {
     this.stateHandler.NewWindow(
-      "modelscomparison",
+      'modelscomparison',
       {
         sourceId: this.result.id,
         targetId: dataModel ? dataModel.id : null
@@ -507,7 +501,7 @@ export class DataModelDetailComponent implements OnInit {
         if (result != null) {
           this.exportedFileIsReady = true;
           const label =
-            [this.result].length === 1 ? [this.result][0].label : "data_models";
+            [this.result].length === 1 ? [this.result][0].label : 'data_models';
           const fileName = this.exportHandler.createFileName(label, exporter);
           const file = new Blob([result.body], { type: exporter.fileType });
           const link = this.exportHandler.createBlobLink(file, fileName);
@@ -520,15 +514,15 @@ export class DataModelDetailComponent implements OnInit {
         } else {
           this.processing = false;
           this.messageHandler.showError(
-            "There was a problem exporting the Data Model.",
-            ""
+            'There was a problem exporting the Data Model.',
+            ''
           );
         }
       },
       error => {
         this.processing = false;
         this.messageHandler.showError(
-          "There was a problem exporting the Data Model.",
+          'There was a problem exporting the Data Model.',
           error
         );
       }
@@ -554,7 +548,7 @@ export class DataModelDetailComponent implements OnInit {
   loadExporterList() {
     this.exportList = [];
     this.securityHandler.isValidSession().subscribe(result => {
-      if (result === false) {
+      if (result.body === false) {
         return;
       }
       this.resourcesService.public.dataModelExporterPlugins().subscribe(
@@ -563,7 +557,7 @@ export class DataModelDetailComponent implements OnInit {
         },
         error => {
           this.messageHandler.showError(
-            "There was a problem loading exporters list.",
+            'There was a problem loading exporters list.',
             error
           );
         }
@@ -576,7 +570,7 @@ export class DataModelDetailComponent implements OnInit {
       this.editableForm.validationError = true;
     } else {
       this.editableForm.validationError = false;
-      this.errorMessage = "";
+      this.errorMessage = '';
     }
   }
 }

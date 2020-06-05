@@ -1,76 +1,84 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'table-buttons',
-    templateUrl: './table-buttons.component.html',
-    styleUrls: ['./table-buttons.component.sass']
+  selector: 'mdm-table-buttons',
+  templateUrl: './table-buttons.component.html',
+  styleUrls: ['./table-buttons.component.sass']
 })
 export class TableButtonsComponent implements OnInit {
+  @Input() record: any;
+  @Input() index: any;
+  @Input() hideDelete: boolean;
+  @Input() hideEdit: any;
 
-    @Input("record") record : any;
-    @Input("index") index: any;
-    @Input("hide-delete") hideDelete: boolean;
-    @Input("hide-edit") hideEdit: any;
-    
-   
+  @Input() validate: (record: any, index: any) => boolean;
+  @Input() records: any;
 
+  @Output() cancelEdit = new EventEmitter<any>();
+  @Output() edit = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
+  @Output() save = new EventEmitter<any>();
 
-    @Input("validate") validate: Function;
-    @Input("records") records: any;
+  constructor() {}
 
-    @Output("cancel-edit") cancelEdit = new EventEmitter<any>();
-    @Output("on-edit") onEdit = new EventEmitter<any>();
-    @Output("delete") delete = new EventEmitter<any>();
-    @Output("save") save = new EventEmitter<any>();
-   
+  ngOnInit() {}
 
-
-    constructor() {
+  saveClicked(record, index) {
+    if (!this.validate) {
+      this.save.emit([record, index]);
+      return;
     }
-
-    ngOnInit() {
+    if (this.validate(record, index)) {
+      this.save.emit([record, index]);
+      return;
     }
+  }
 
-    saveClicked(record, index) {
-        if (!this.validate) {
-            this.save.emit([record, index]);
-            return;
-        }
-        if (this.validate(record, index)) {
-            this.save.emit([record, index]);
-            return;
-        }
+  editClicked(record, index) {
+    record.inEdit = true;
+    record.edit = Object.assign({}, record);
+    if (this.edit) {
+      this.edit.emit([record, index]);
     }
+  }
 
-    editClicked(record, index) {
-        record.inEdit = true;
-        record.edit = Object.assign({}, record);
-        if (this.onEdit) {
-            this.onEdit.emit([record, index]);
-        }
-     }
+  editCancelled(record, index) {
+    record.inEdit = undefined;
+    record.edit = undefined;
 
-    editCancelled(record, index) {
-        record.inEdit = undefined;
-        record.edit = undefined;
-
-        if (this.cancelEdit) {
-            this.cancelEdit.emit([record, index]);
-        }
+    if (this.cancelEdit) {
+      this.cancelEdit.emit([record, index]);
     }
+  }
 
-    deleteClicked(record, index) {
-        record.inDelete = true;
+  deleteClicked(record, index) {
+    record.inDelete = true;
+  }
+
+  deleteCancelled(record, index) {
+    record.inDelete = undefined;
+  }
+
+  deleteApproved(record, index) {
+    if (this.delete) {
+      this.delete.emit([record, index]);
     }
-
-    deleteCancelled(record, index) {
-        record.inDelete = undefined;
-    };
-
-    deleteApproved(record, index) {
-        if (this.delete) {
-            this.delete.emit([record, index]);
-        }
-    };
-
+  }
 }

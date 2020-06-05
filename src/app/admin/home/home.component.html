@@ -1,56 +1,40 @@
-<div>
-	<div class="row" style="padding: 5px">
-		<div class="col-lg-5 col-md-5 col-xs-12 col-sm-12">
-			<div style="text-align: left;margin-left: 10px;">
-				<h2>Metadata Catalogue <b>Core</b></h2>
-				<p class="lead">Data models and terminologies</p>
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth>
+	<mat-tab>
+		<ng-template mat-tab-label>
+			<i class="fas fa-users"></i>&nbsp;
+			<span>Active Sessions</span>
+		</ng-template>
+		<mdm-active-sessions></mdm-active-sessions>
+	</mat-tab>
+	<mat-tab>
+		<ng-template mat-tab-label>
+			<i class="fas fa-plug"></i>&nbsp;
+			<span>Plugins & Modules</span>
+		</ng-template>
+		<div class="full-width">
+			<div class="mb-1">
+				<mdm-plugins></mdm-plugins>
+			</div>
+			<div>
+				<mdm-modules></mdm-modules>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-			<mat-tab-group [selectedIndex]="activeTab.index"
-						   (selectedIndexChange)="tabSelected($event)"
-						   dynamicHeight dynamicWidth>
-				<mat-tab>
-					<ng-template mat-tab-label>
-						<i class="fa fa-users"></i>&nbsp;
-						<span class="title">Active Sessions</span>
-					</ng-template>
-					<app-active-sessions></app-active-sessions>
-				</mat-tab>
-				<mat-tab>
-					<ng-template mat-tab-label>
-						<i class="fa fa-plug"></i>&nbsp;
-						<span class="title">Plugins & Modules</span>
-					</ng-template>
-					<div style="width: 100%; margin-top: 20px;">
-						<div style="width: 30%;">
-							<app-modules></app-modules>							
-						</div>
-						<div style="width: 80%;">
-							<app-plugins></app-plugins>
-						</div>
-					</div>
-				</mat-tab>
-			</mat-tab-group>
-		</div>
-	</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	</mat-tab>
+</mat-tab-group>

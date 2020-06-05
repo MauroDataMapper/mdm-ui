@@ -1,248 +1,261 @@
-import { Component, OnInit, Input, ViewChild, Inject, ViewContainerRef, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { HelpDialogueHandlerService } from "../../services/helpDialogue.service";
-import { ContentSearchHandlerService } from "../../services/content-search.handler.service";
-import { ResourcesService } from "../../services/resources.service";
-import { FolderResult } from "../../model/folderModel";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { FolderResult } from '@mdm/model/folderModel';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { Observable, Subject, of, fromEvent } from 'rxjs';
+import { Observable, Subject, fromEvent } from 'rxjs';
 import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators';
 
-
 @Component({
-    selector: 'app-advanced-search-bar',
-    inputs: ['parent', 'placeholder', 'showDomainTypes: show-domain-types'],
-    templateUrl: './advanced-search-bar.component.html',
-    // styleUrls: ['./advanced-search-bar.component.sass']
+  selector: 'mdm-advanced-search-bar',
+  // inputs: ['parent', 'placeholder', 'showDomainTypes: show-domain-types'],
+  templateUrl: './advanced-search-bar.component.html',
+  styleUrls: ['./advanced-search-bar.component.sass']
 })
 export class AdvancedSearchBarComponent implements OnInit {
+  displayedColumns: string[] = ['label'];
 
-    displayedColumns: string[] = ['label'];
+  @Input() placeholder: string;
+  @Input() doNotDisplayModelPathStatus: boolean;
+  @Input() doNotShowDataModelInModelPath: boolean;
+  @Input() showRestrictTo: boolean;
+  @Input() parent: FolderResult;
+  @Input() showDomainTypes: string[];
+  @Input() doNotOpenLinkInNewWindow: boolean;
 
-    @Input() placeholder: string;
-    @Input("do-not-display-model-path-status") doNotDisplayModelPathStatus: boolean;
-    @Input("do-not-show-data-model-in-model-path") doNotShowDataModelInModelPath: boolean;
-    @Input("show-restrict-to") showRestrictTo: boolean;
-    @Input() parent: FolderResult;
-    @Input("do-not-open-link-in-new-window") doNotOpenLinkInNewWindow: boolean;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild('searchInputControl', { static: true })
+  searchInputControl: ElementRef;
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-    @ViewChild("searchInputControl", { static: true }) searchInputControl: ElementRef;
+  searchTerm = new Subject<string>();
 
-    searchTerm = new Subject<string>();
+  pageIndex: any;
+  advancedSearch: boolean;
+  searchInput: string;
+  lastDateUpdatedFrom: Date;
+  lastDateUpdatedTo: Date;
+  createdFrom: Date;
+  createdTo: Date;
+  placeHolderText: string;
+  totalItemCount = 0;
+  context: any;
+  classifications: any[];
+  searchResults: any[];
 
-    pageIndex: any;
-    advancedSearch: Boolean;
-    searchInput: string;
-    lastDateUpdatedFrom: Date;
-    lastDateUpdatedTo: Date;
-    createdFrom: Date;
-    createdTo: Date;
-    placeHolderText: string;
-    totalItemCount: number;
-    context: any;
-    classifications: any[];
-    searchResults: any[];
+  hideDM: boolean;
+  hideDC: boolean;
+  hideDE: boolean;
+  hideDT: boolean;
+  hideEV: boolean;
 
-    hideDM: Boolean;
-    hideDC: Boolean;
-    hideDE: Boolean;
-    hideDT: Boolean;
-    hideEV: Boolean;
+  isLoading: boolean;
 
+  pageEvent: PageEvent;
 
-    isLoading: boolean;
+  // showDomainTypes: string[];
 
-    pageEvent: PageEvent;
+  formData: any = {
+    showSearchResult: false,
+    labelOnly: false,
+    exactMatch: false,
+    selectedDomainTypes: {
+      DataModel: false,
+      DataClass: false,
+      DataElement: false,
+      DataType: false,
+      EnumerationValue: false
+    },
+    classifiers: [],
 
-    showDomainTypes: string[];
+    lastDateUpdatedFrom: null,
+    lastDateUpdatedTo: null,
 
+    createdFrom: null,
+    createdTo: null
+  };
 
-    formData: any = {
-        showSearchResult: false,
-        labelOnly: false,
-        exactMatch: false,
-        selectedDomainTypes: {
-            DataModel: false,
-            DataClass: false,
-            DataElement: false,
-            DataType: false,
-            EnumerationValue: false
-        },
-        classifiers: [],
+  constructor(
+    private helpDialogueService: HelpDialogueHandlerService,
+    private contextSearchHandler: ContentSearchHandlerService,
+    private resouces: ResourcesService
+  ) {}
 
-        lastDateUpdatedFrom: null,
-        lastDateUpdatedTo: null,
+  ngOnInit() {
+    this.advancedSearch = false;
 
-        createdFrom: null,
-        createdTo: null,
-    };
+    this.resouces.classifier.get(null, null, { all: true }).subscribe(result => {
+        this.classifications = result.body.items;
+      });
 
-    constructor(private helpDialogueService: HelpDialogueHandlerService, private contextSearchHandler: ContentSearchHandlerService, private resouces: ResourcesService) {
+    this.context = this.parent;
 
+    if (this.showDomainTypes) {
+      this.hideDM = this.showDomainTypes.indexOf('DataModel') === -1;
+      this.hideDC = this.showDomainTypes.indexOf('DataClass') === -1;
+      this.hideDE = this.showDomainTypes.indexOf('DataElement') === -1;
+      this.hideDT = this.showDomainTypes.indexOf('DataType') === -1;
+      this.hideEV = this.showDomainTypes.indexOf('EnumerationValue') === -1;
     }
 
-    ngOnInit() {
-        this.advancedSearch = false;
+    this.placeHolderText = this.placeholder ? this.placeholder : 'Search for...';
 
-        this.resouces.classifier.get(null, null, { all: true }).subscribe(result => {
-            this.classifications = result.body.items;
-        });
+    fromEvent(this.searchInputControl.nativeElement, 'keyup').pipe(map((event: any) => {
+          return event.target.value;
+        }),
+        filter((res: any) => res.length >= 0),
+        debounceTime(500),
+        distinctUntilChanged()
+      ).subscribe((text: string) => {
+        if (text.length === 0) {
+          this.formData.showSearchResult = false;
+          this.searchResults = [];
+          this.isLoading = false;
+        } else {
+          this.formData.showSearchResult = true;
+          this.fetch(10, 0).subscribe(res => {
+              this.searchResults = res.body.items;
+              this.isLoading = false;
 
-        this.context = this.parent;
-
-
-        if (this.showDomainTypes) {
-            this.hideDM = (this.showDomainTypes.indexOf("DataModel") === -1);
-            this.hideDC = (this.showDomainTypes.indexOf("DataClass") === -1);
-            this.hideDE = (this.showDomainTypes.indexOf("DataElement") === -1);
-            this.hideDT = (this.showDomainTypes.indexOf("DataType") === -1);
-            this.hideEV = (this.showDomainTypes.indexOf("EnumerationValue") === -1);
+              this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
+            }, () => {
+              this.isLoading = false;
+            }
+          );
         }
+      });
+  }
 
-        this.placeHolderText = this.placeholder ? this.placeholder : "Search for...";
+  loadHelp = () => {
+    this.helpDialogueService.open('Search_Help', { right: '150' });
+  };
 
-        fromEvent(this.searchInputControl.nativeElement, "keyup").pipe(
-            map((event: any) => {
-                return event.target.value;
-            }),
-            filter((res:any) => res.length >= 0),
-            debounceTime(500),
-            distinctUntilChanged()).subscribe((text: string) => {
-                if (text.length === 0) {
-                    this.formData.showSearchResult = false;
-                    this.searchResults = [];
-                    this.isLoading = false;
-                }
-                else {
-                    this.formData.showSearchResult = true;
-                    this.fetch(10, 0).subscribe(res => {
-                        this.searchResults = res.body.items;
-                        this.totalItemCount = res.body.count;
-                        this.isLoading = false;
+  toggleAdvancedSearch() {
+    this.advancedSearch = !this.advancedSearch;
+  }
 
-                    },
-                        err => {
-                            this.isLoading = false;
-                        });
-                }
-            });
+  getServerData($event) {
+    this.fetch($event.pageSize, $event.pageIndex).subscribe(res => {
+        this.searchResults = res.body.items;
+        this.totalItemCount = res.body.count;
+        this.isLoading = false;
+      }, () => {
+        this.isLoading = false;
+      });
+  }
+
+  fetch(pageSize: number, offset: number): Observable<any> {
+    this.isLoading = true;
+
+    if (!this.formData.showSearchResult) {
+      return new Observable();
+    }
+    const filterDataTypes = [];
+    if (this.formData.selectedDomainTypes.DataModel) {
+      filterDataTypes.push('DataModel');
+    }
+    if (this.formData.selectedDomainTypes.DataClass) {
+      filterDataTypes.push('DataClass');
+    }
+    if (this.formData.selectedDomainTypes.DataElement) {
+      filterDataTypes.push('DataElement');
+    }
+    if (this.formData.selectedDomainTypes.DataType) {
+      filterDataTypes.push('DataType');
+    }
+    if (this.formData.selectedDomainTypes.EnumerationValue) {
+      filterDataTypes.push('EnumerationValue');
     }
 
-
-    loadHelp = () => {
-        this.helpDialogueService.open("Search_Help", {right:"150"});
+    let searchText = this.searchInput;
+    if (this.formData.exactMatch) {
+      if (searchText[0] !== '"') {
+        searchText = '"' + searchText;
+      }
+      if (searchText[searchText.length - 1] !== '"') {
+        searchText = searchText + '"';
+      }
     }
 
-    toggleAdvancedSearch() {
-        this.advancedSearch = !this.advancedSearch;
-    }
+    const classifiersNames = [];
+    this.formData.classifiers.forEach(classifier => {
+      classifiersNames.push(classifier.label);
+    });
 
-    getServerData($event) {
-        this.fetch($event.pageSize, $event.pageIndex).subscribe(res => {
+    return this.contextSearchHandler.search(
+      this.context,
+      searchText,
+      pageSize,
+      offset,
+      filterDataTypes,
+      this.formData.labelOnly,
+      null,
+      classifiersNames,
+      null,
+      this.lastDateUpdatedFrom,
+      this.lastDateUpdatedTo,
+      this.createdFrom,
+      this.createdTo
+    );
+  }
+
+  search(resetPageIndex?: boolean) {
+    if (this.searchInput !== undefined) {
+      if (this.searchInput.trim().length !== 0) {
+        if (resetPageIndex) {
+          this.pageIndex = 0;
+        }
+        this.fetch(10, this.pageIndex).subscribe(res => {
+            this.isLoading = false;
             this.searchResults = res.body.items;
-            this.totalItemCount = res.body.count;
+            this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
+          }, () => {
             this.isLoading = false;
-        }, error => {
-            this.isLoading = false;
-        });
-    }
-
-    fetch(pageSize: number, offset: number): Observable<any> {
-        this.isLoading = true;
-
-        if (!this.formData.showSearchResult) {
-            return new Observable();
-        }
-        var filterDataTypes = [];
-        if (this.formData.selectedDomainTypes.DataModel) {
-            filterDataTypes.push("DataModel");
-        }
-        if (this.formData.selectedDomainTypes.DataClass) {
-            filterDataTypes.push("DataClass");
-        }
-        if (this.formData.selectedDomainTypes.DataElement) {
-            filterDataTypes.push("DataElement");
-        }
-        if (this.formData.selectedDomainTypes.DataType) {
-            filterDataTypes.push("DataType");
-        }
-        if (this.formData.selectedDomainTypes.EnumerationValue) {
-            filterDataTypes.push("EnumerationValue");
-        }
-
-        var searchText = this.searchInput;
-        if (this.formData.exactMatch) {
-            if (searchText[0] !== "\"") {
-                searchText = "\"" + searchText;
-            }
-            if (searchText[searchText.length - 1] !== "\"") {
-                searchText = searchText + "\"";
-            }
-        }
-
-        var classifiersNames = [];
-        this.formData.classifiers.forEach((classifier) => {
-            classifiersNames.push(classifier.label);
-        });
-
-        return this.contextSearchHandler.search(
-            this.context,
-            searchText,
-            pageSize,
-            offset,
-            filterDataTypes,
-            this.formData.labelOnly,
-            null,
-            classifiersNames,
-            null,
-            this.lastDateUpdatedFrom,
-            this.lastDateUpdatedTo,
-            this.createdFrom,
-            this.createdTo
+          }
         );
+      }
+    }
+  }
+
+  onClassifierChange(): void {
+    this.search(true);
+  }
+
+  onLastUpdatedSelect($event): void {
+    this.lastDateUpdatedFrom = $event.from;
+    this.lastDateUpdatedTo = $event.to;
+    this.search(true);
+  }
+
+  onCreatedSelect($event): void {
+    this.createdFrom = $event.from;
+    this.createdTo = $event.to;
+    this.search(true);
+  }
+
+  onContextSelected = selected => {
+    this.context = null;
+    if (selected && selected.length > 0) {
+      this.context = selected[0];
     }
 
-    search(resetPageIndex?: boolean) {
-        if (this.searchInput !== undefined) {
-            if (this.searchInput.trim().length !== 0) {
-
-                if (resetPageIndex) {
-                    this.pageIndex = 0;
-                }
-                this.fetch(10, this.pageIndex).subscribe(res => {
-                    this.isLoading = false;
-                    this.searchResults = res.body.items;
-                    this.totalItemCount = res.body.count;
-                }, error => {
-                    this.isLoading = false;
-                });
-            }
-        }
-    }
-
-    onClassifierChange(): void {
-        this.search(true);
-    };
-
-    onLastUpdatedSelect($event): void {
-        this.lastDateUpdatedFrom = $event.from;
-        this.lastDateUpdatedTo = $event.to;
-        this.search(true);
-    };
-
-    onCreatedSelect($event): void {
-        this.createdFrom = $event.from;
-        this.createdTo = $event.to;
-        this.search(true);
-    }
-
-    onContextSelected = (selected) => {
-        this.context = null;
-        if (selected && selected.length > 0) {
-            this.context = selected[0];
-        }
-
-        this.search(true);
-    }
-
+    this.search(true);
+  }
 }

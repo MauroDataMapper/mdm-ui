@@ -1,22 +1,42 @@
-<form>
-    <div class="form-group form-inline">
-        <!--        Search: <input class="form-control ml-2" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>-->
-        <!--        <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>-->
-    </div>
+<!--
+Copyright 2020 University of Oxford
 
-    <div class="mcTableMain">
-        <div class="mcTableTitle">
-            <span class="title">User Access</span>
-            <span class="badge element-count ng-binding" style="margin: 0px 3px; display: inline;" aria-hidden="false">{{dataSource.data.length}}</span>
-            <div *ngIf="folderResult['editable']" class="btn-group-xs" style="float: right; margin-top: -2px; margin-left: 9px;">
-            <button type="button" class="btn btn-default btn-sm" style="float: right;  padding: 0px; margin-right: 10px;" (click)="add()" title="Add"> <i style="width: 20px;" class="fa fa-plus addNewModelButton themeColor"></i></button>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm--shadow-block">
+    <div class="heading-container">
+        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+            <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="flex-start center">
+                <h4 class="marginless">Restrict user access based on user(s) <span class="mdm--badge mdm--element-count">{{dataSource.data.length}}</span></h4>
+            </div>
+            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+                <div *ngIf="folderResult['editable']" class="mt-1">
+                    <button mat-flat-button color="primary" type="button" (click)="add()">
+                        <i class="fas fa-plus"></i>
+                        Add User
+                    </button>
+                </div>
+            </div>
         </div>
-        </div>
-        <div class="mcTableContainer">
-            <table mat-table [dataSource]="dataSource" matSort class="table table-condensed table-bordered mcTable">
+    </div>
+    <form>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
                 <ng-container matColumnDef="user">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 30%; width: 30%; font-weight: bold">User</th>
-                    <td mat-cell *matCellDef="let record" style="max-width: 30%; width: 30%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+                    <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
 
                         <div *ngIf="!record.inEdit">
                             {{record.user.emailAddress}}
@@ -27,33 +47,33 @@
                                 {{record.user.emailAddress}}
                             </div>
                             <div *ngIf="record.isNew">
-                                <mc-select [width]="'100%'"
-                                           [accept-typed-input]="true"
-                                           [value-type]="'dynamic'"
-                                           [default-value]="record.user"
-                                           [load-dynamic-values]="fetchUser"
-                                           [min-input-length]="1"
-                                           [has-error]="record.edit.errors && record.edit.errors['user']"
-                                           [record]="record"
-                                           [id-property]="'id'"
-                                           [display-property]="'emailAddress'"
-                                           [search-property]="'emailAddress'"
-                                           [(pagination)]="pagination"
-                                           (on-select)="onUserSelect($event[0],$event[1])">
+                                <mdm-select [width]="'100%'"
+                                            [acceptTypedInput]="true"
+                                            [valueType]="'dynamic'"
+                                            [defaultValue]="record.user"
+                                            [loadDynamicValues]="fetchUser"
+                                            [minInputLength]="1"
+                                            [hasError]="record.edit.errors && record.edit.errors['user']"
+                                            [record]="record"
+                                            [idProperty]="'id'"
+                                            [displayProperty]="'emailAddress'"
+                                            [searchProperty]="'emailAddress'"
+                                            [pagination]="pagination"
+                                            (selectEvent)="onUserSelect($event[0],$event[1])">
                                     <ng-template #lineContent let-item>
-                                       <div>{{item.emailAddress}}</div>
+                                        <div>{{item.emailAddress}}</div>
                                     </ng-template>
 
-                                </mc-select>
-                                <small *ngIf="record.edit.errors && record.edit.errors['user']" class="errorMessage">{{record.edit.errors['user']}}</small>
+                                </mdm-select>
+                                <small *ngIf="record.edit.errors && record.edit.errors['user']" class="warning">{{record.edit.errors['user']}}</small>
                             </div>
                         </div>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="firstName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 20%; width: 20%;"><b>First Name</b></th>
-                    <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+                    <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
                         <div [hidden]="record.inEdit">
                             {{record.user.firstName}}
                         </div>
@@ -64,18 +84,17 @@
                             </div>
                             <div *ngIf="record.isNew">
                                 <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['firstName']}">
-                                    <input type="text" class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
-                                    <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="errorMessage">{{record.edit.errors['firstName']}}</small>
+                                    <input class="form-control" type="text" [(ngModel)]="record.edit.user.firstName" [ngModelOptions]="{standalone: true}" />
+                                    <small *ngIf="record.edit.errors && record.edit.errors['firstName']" class="warning">{{record.edit.errors['firstName']}}</small>
                                 </div>
                             </div>
                         </div>
-
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="lastName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 20%; width: 20%; height: 15px">Last Name</th>
-                    <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+                    <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
                         <div [hidden]="record.inEdit">
                             {{record.user.lastName}}
                         </div>
@@ -86,8 +105,8 @@
                             </div>
                             <div *ngIf="record.isNew">
                                 <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['lastName']}">
-                                    <input type="text" class="form-control input-sm" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
-                                    <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="errorMessage">{{record.edit.errors['lastName']}}</small>
+                                    <input class="form-control" type="text" [(ngModel)]="record.edit.user.lastName" [ngModelOptions]="{standalone: true}" />
+                                    <small *ngIf="record.edit.errors && record.edit.errors['lastName']" class="warning">{{record.edit.errors['lastName']}}</small>
                                 </div>
                             </div>
                         </div>
@@ -95,41 +114,41 @@
                 </ng-container>
 
                 <ng-container matColumnDef="read">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%; ">Read</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align:  center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align:  left; word-wrap: break-word;">
                         <span *ngIf="record.readAccess && record.user.userRole == 'ADMINISTRATOR'">
-                            <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                            <i class="fas fa-check" aria-hidden="true"></i>
                         </span>
                         <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
-                            <input type="checkbox" [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
+                            <mat-checkbox [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
+                            </mat-checkbox>
                         </span>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="write">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%;">Write</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
                         <span *ngIf="record.writeAccess && record.user.userRole == 'ADMINISTRATOR'">
-                            <i class="fa fa-check userAccessCheckBox themeColor" aria-hidden="true"></i>
+                            <i class="fas fa-check" aria-hidden="true"></i>
                         </span>
                         <span *ngIf="record.inEdit && record.user.userRole != 'ADMINISTRATOR'">
-                            <input type="checkbox" [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
+                            <mat-checkbox [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
+                            </mat-checkbox>
                         </span>
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="edit">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="max-width: 8%; width: 8%; "></th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="max-width: 8%; width: 8%; text-align: center; word-wrap: break-word; padding-right: 5px; padding-left: 5px">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
                         <div *ngIf="record.isNew">
-                            <div>
-                                <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
-                                    <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
-                                </button>
-                                <button class="btn btn-default btn-xs" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
-                                    <i class="fa fa-times editButton themeColor"></i>
-                                </button>
-                            </div>
+                            <button mat-stroked-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button mat-stroked-button color="primary" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
+                                <i class="fas fa-check"></i>
+                            </button>
                         </div>
 
                         <div *ngIf="!record.isNew && record.inEdit">
@@ -139,17 +158,12 @@
                         </div>
                     </td>
                 </ng-container>
-
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: auto;" class="mcTableHeader"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height: auto"></tr>
-
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
         </div>
-
-        <div class="d-flex justify-content-between p-2">
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
-        </div>
+    </form>
+    <div class="mdm--mat-pagination">
+        <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
     </div>
-
-</form>
+</div>

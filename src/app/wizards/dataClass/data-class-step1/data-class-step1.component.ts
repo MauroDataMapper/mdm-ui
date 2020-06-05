@@ -1,61 +1,73 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 
 @Component({
-    selector: 'app-data-class-step1',
-    templateUrl: './data-class-step1.component.html',
-    styleUrls: ['./data-class-step1.component.sass']
+  selector: 'mdm-data-class-step1',
+  templateUrl: './data-class-step1.component.html',
+  styleUrls: ['./data-class-step1.component.sass']
 })
 export class DataClassStep1Component implements OnInit {
+  step: any;
 
-    step: any;
+  modelVal: any;
+  get model() {
+    return this.modelVal;
+  }
+  set model(val) {
+    this.modelVal = val;
+    this.validate();
+  }
 
+  constructor(private changeRef: ChangeDetectorRef) {}
 
-    modelVal: any;
-    get model() {
-        return this.modelVal;
+  ngOnInit() {
+    this.model = this.step.scope.model;
+  }
+  onSelect = dataModel => {
+    this.model.copyFromDataModel = dataModel;
+    this.model.selectedDataTypes = [];
+    this.model.selectedDataClassesMap = [];
+    this.validate();
+  };
+
+  onLoad() {}
+
+  validate = () => {
+
+    if (!this.model.createType) {
+      this.step.invalid = true;
+      return;
     }
-    set model(val) {
-        this.modelVal = val;
-        this.validate();
+
+    if (
+      this.model.createType === 'copy' &&
+      this.model.copyFromDataModel.length === 0
+    ) {
+      this.step.invalid = true;
+      return;
     }
 
-    constructor(private changeRef: ChangeDetectorRef) { }
+    this.step.invalid = false;
+  };
 
-    ngOnInit() {
-        this.model = this.step.scope.model;
-    }
-
-    ngDoCheck() {
-       this.validate();
-    }
-
-    onSelect = (dataModel) => {
-        this.model.selectedDataTypes = [];
-        this.model.selectedDataClassesMap = [];
-    };
-
-    onLoad() {
-        
-    }
-
-    validate = () => {
-
-        if (!this.model.createType) {
-            this.step.invalid = true;
-            return;
-        }
-
-        if (this.model.createType === 'copy' && this.model.copyFromDataModel.length === 0) {
-            this.step.invalid = true;
-            return;
-        }
-
-
-        this.step.invalid = false;
-    };
-
-
-    selectCreateType = (createType) => {
-        this.model.createType = createType;
-    };
+  selectCreateType = createType => {
+    this.model.createType = createType;
+    this.validate();
+  }
 }

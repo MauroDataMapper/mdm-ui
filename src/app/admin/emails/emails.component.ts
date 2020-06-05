@@ -1,122 +1,132 @@
-import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, Query, ElementRef } from '@angular/core';
+/*
+Copyright 2020 University of Oxford
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  EventEmitter,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { MessageHandlerService } from '../../services/utility/message-handler.service';
-import { ResourcesService } from '../../services/resources.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import {merge, Observable} from 'rxjs';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { Title } from '@angular/platform-browser';
+
 
 
 @Component({
-	selector: 'app-emails',
-	templateUrl: './emails.component.html',
-	styleUrls: ['./emails.component.sass']
+  selector: 'mdm-app-emails',
+  templateUrl: './emails.component.html',
+  styleUrls: ['./emails.component.sass']
 })
-export class EmailsComponent implements OnInit {
-
-	@ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-	@ViewChild(MatSort, { static: true }) sort: MatSort;
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-
-	filterEvent = new EventEmitter<string>();
-	hideFilters = true;
-	isLoadingResults: boolean;
-	totalItemCount: number;
-	filter: string;
-
-	records: any[] = [];
-	displayedColumns = ['sentToEmailAddress', 'dateTimeSent', 'subject', 'successfullySent'];
+export class EmailsComponent implements OnInit, AfterViewInit {
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  filterEvent = new EventEmitter<string>();
+  hideFilters = true;
+  isLoadingResults: boolean;
+  totalItemCount = 0;
+  filter: string;
 
 
-	dataSource = new MatTableDataSource<any>();
+  records: any[] = [];
+  displayedColumns = [
+    'sentToEmailAddress',
+    'dateTimeSent',
+    'subject',
+    'body',
+    'successfullySent'
+  ];
 
-	constructor(
-		private messageHandler: MessageHandlerService,
-		private resourcesService: ResourcesService) {
+  // dataSource = new MatTableDataSource<any>();
 
-		this.dataSource = new MatTableDataSource(this.records);
-	}
+  constructor(
+    private messageHandler: MessageHandlerService,
+    private resourcesService: ResourcesService,
+    private title: Title
 
-	ngOnInit() {
+  ) {
 
-		this.mailsFetch();
-	}
+  }
 
-	ngAfterViewInit() {
+  ngOnInit() {
+    this.title.setTitle('Emails');
+  }
 
-		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
+  ngAfterViewInit() {
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-		this.dataSource.sortingDataAccessor = (item, property) => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+        this.isLoadingResults = true;
 
-			if (property === 'sentToEmailAddress') {
-				return item.sentToEmailAddress;
-			}
+        return this.mailsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+      }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.items;
 
-			if (property === 'dateTimeSent') {
-				return item.dateTimeSent;
-			}
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })).subscribe(data => {
+        this.records = data;
 
-			if (property === 'subject') {
-				return item.subject;
-			}
+      });
+  }
 
-			if (property === 'successfullySent') {
-				return item.successfullySent;
-			}
-		};
-	}
+  mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+    const options = { pageSize, pageIndex, sortBy, sortType, filters };
 
-	mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+    return this.resourcesService.admin.get('emails', options);
+  }
 
-		let options = {
-			pageSize,
-			pageIndex,
-			filters,
-			sortBy: 'sentToEmailAddress',
-			sortType: 'asc'
-		};
 
-		this.resourcesService.admin.get('emails', options).subscribe(resp => {
 
-			this.records = resp.body.items;
-			this.records.forEach((row) => {
-				row.dateTimeSentString = row.dateTimeSent.year +'/'+ row.dateTimeSent.monthValue +'/'+ row.dateTimeSent.dayOfMonth + ' '+ row.dateTimeSent.hour +':'+ row.dateTimeSent.minute +':'+ row.dateTimeSent.second;
-            });
-			this.totalItemCount = this.records.length;
-			this.refreshDataSource();
-		}),
-			(err) => {
-				this.messageHandler.showError('There was a problem loading user emails.', err);
-			};
-	}
+  applyFilter = () => {
+    let filter: any = '';
+    this.filters.forEach((x: any) => {
+      const name = x.nativeElement.name;
+      const value = x.nativeElement.value;
 
-	applyFilter = () => {
+      if (value !== '') {
+        filter += name + '=' + value + '&';
+      }
+    });
+    this.filter = filter;
+    this.filterEvent.emit(filter);
+  };
 
-		let filter: any = '';
-		this.filters.forEach((x: any) => {
-			let name = x.nativeElement.name;
-			let value = x.nativeElement.value;
+  filterClick = () => {
+    this.hideFilters = !this.hideFilters;
+  };
 
-			if (value !== '') {
-				filter += name + '=' + value + '&';
-			}
-		});
-		this.filter = filter;
-		this.filterEvent.emit(filter);
-	}
+  toggleMessage(record) {
+    record.showFailure = !record.showFailure;
+  }
 
-	filterClick = () => {
 
-		this.hideFilters = !this.hideFilters;
-	}
-
-	toggleMessage(record) {
-
-		record.showFailure = !record.showFailure;
-	}
-
-	refreshDataSource() {
-		this.dataSource.data = this.records;
-	}
 }

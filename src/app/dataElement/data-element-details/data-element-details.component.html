@@ -1,220 +1,218 @@
-<div>
-    <div class="panel panel-default">
-        <form editable-form name="form"
-              onaftersave="onAfterSave()"
-              (ngSubmit)="formBeforeSave()"
-              disable-submit-on-enter>
-            <div class="panel-body panel-table">
+<!--
+Copyright 2020 University of Oxford
 
-                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="padding: 0px !important;" *ngIf="result">
-                    <h4> <span class="xeditableInput">
-                                <div [ngClass]="{ 'has-error': errorMessage != ''}">                             
-                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target.value)"  name="moduleName" size="20" style="width: 45%"  ></app-inline-text-edit>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="panel panel-default mdm--shadow-block">
+    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+        <div class="panel-body">
+            <div *ngIf="result">
+                <h4 class="inline-block marginless" [ngClass]="{ 'has-error': errorMessage != ''}">
+                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
+                        [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target)"
+                        name="moduleName" size="20"></mdm-inline-text-edit>
+                </h4>
                                 <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
                               <span class="help-block">{{errorMessage}}</span>
                             </div>
+
+                <div class="detail-icons">
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-cube" matTooltip="Item type"></i>
+                            <span><strong>Item type: </strong><span class="item-type">Data Element</span></span>
+                        </small>
                             </div>
-                        </span></h4>
-                    <small class="elementDetailMCType">Data Element</small>
-                    <div>
-                        <span *ngIf="result" style="font-size: 11px;font-style: italic" class="dataClassDetailsLastUpdate">Last Update: {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                        <span *ngIf="result && result.finalised && result.dateFinalised" style="font-size: 11px;font-style: italic; margin-left: 10px" class="dataModelDetailsLastUpdate">Finalised On: {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    <div class="text-muted" *ngIf="result">
+                        <small>
+                            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                            <span><strong>Last update: </strong>{{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </small>
                     </div>
+                    <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
+                        <small>
+                            <i class="far fa-calendar-alt" matTooltip="Finalised on"></i>
+                            <span><strong>Finalised on: </strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        </small>
                 </div>
             </div>
-            <table class="table table-condensed dataModelDetailTable">
+            </div>
+        </div>
+        <table class="table table-bordered mdm--table-fixed">
                 <tbody>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Aliases</td>
+                    <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <div style="width:50%">
-                            <app-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result" [editable-form]="editableForm" [property]="'aliases'"></app-element-alias>
+                        <div>
+                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases"
+                                [element]="result" [editableForm]="editableForm" [property]="'aliases'">
+                            </mdm-element-alias>
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader col-md-2">Description</td>
+                    <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="result">
-                            <markdown-text-area [editable-form]="editableForm" [element]="result" [property]="'description'"></markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
+                                [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader col-md-2">Data Type</th>
+                    <th class="detailsRowHeader">Data Type</th>
                     <td>
                         <div *ngIf="!editableForm.visible && result">
-                            <element-data-type [element-data-type]="result.dataType" [mc-parent-data-model]="parentDataModel"></element-data-type>
+                            <mdm-element-data-type [elementDataType]="result.dataType" [mcParentDataModel]="parentDataModel"></mdm-element-data-type>
                         </div>
 
                         <div *ngIf="editableForm.visible">
 
-
-                            <label *ngIf="!showNewInlineDataType">Please select a Data Type or <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">Add a new one</a>:</label>
-                            <label *ngIf="showNewInlineDataType">Please <a style="cursor: pointer;" (click)="toggleShowNewInlineDataType()">select a Data Type </a> or Add a new one:</label>
+                              <div *ngIf="!showNewInlineDataType">
+                                Please select a Data Type below or
+                                  <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a new Data Type</button>
+                              </div>
+                              <div *ngIf="showNewInlineDataType">
+                                  Please
+                                  <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">select a Data Type</button>
+                                  or Add a new Data Type by completing the form below:
+                              </div>
 
                             <div *ngIf="showNewInlineDataType">
-                                <new-data-type-inline
+                                <mdm-data-type-inline
                                         [model]="newlyAddedDataType"
-                                        [parent-data-model]="parentDataModel"
-                                        [show-classification]="false"
-                                        [show-parent-data-model]="false">
-                                </new-data-type-inline>
+                                        [parentDataModel]="parentDataModel"
+                                        [showClassification]="false"
+                                        [showParentDataModel]="false">
+                                </mdm-data-type-inline>
                             </div>
-
-
                             <div *ngIf="!showNewInlineDataType">
-<!--                                <mc-select-2-->
-<!--                                        width="'100%'"-->
-<!--                                        has-error="errors.dataType"-->
-<!--                                        accept-typed-input="false"-->
-<!--                                        value-type="'dynamic'"-->
-<!--                                        default-value="mcDataElement.dataType"-->
-<!--                                        load-dynamic-values="fetchDataTypes"-->
-<!--                                        min-input-length="1"-->
-<!--                                        record="model"-->
-<!--                                        id-property="'id'"-->
-<!--                                        display-property="'label'"-->
-<!--                                        search-property="'label'"-->
-<!--                                        load-all-on-click="true"-->
-<!--                                        on-select="onDataTypeSelect">-->
-<!--                                    <div>-->
-<!--                                        <div>{{$item.label}}</div>-->
-<!--                                        <div>-->
-<!--                                            <element-link mc-element="$item" show-type-title="true" show-link="false"></element-link>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </mc-select-2>-->
-
-                                <mc-select [width]="'100%'"
-                                           [accept-typed-input]="true"
-                                           [value-type]="'dynamic'"
-                                           [default-value]="result.dataType"
-                                           [has-error]="dataTypeErrors"
-                                           [load-dynamic-values]="fetchDataTypes"
-                                           [(record)]="result"
-                                           [min-input-length]="1"
-                                           [id-property]="'id'"
-                                           [display-property]="'label'"
-                                           [search-property]="'label'"
-                                           (on-select)="onDataTypeSelect">
-                                    <ng-template #lineContent let-item>
-                                        <div>{{item.label}}</div>
-                                    </ng-template>
-                                </mc-select>
+                                <mdm-select [width]="'100%'"
+                                           [acceptTypedInput]="true"
+                                           [valueType]="'dynamic'"
+                                           [defaultValue]="result.dataType"
+                                           [hasError]="dataTypeErrors"
+                                           [loadDynamicValues]="fetchDataTypes"
+                                           [loadAllOnClick]="true"
+                                           [record]="result"
+                                           [minInputLength]="1"
+                                           [idProperty]="'id'"
+                                            [pagination]="pagination"
+                                           [displayProperty]="'label'"
+                                           [searchProperty]="'label'"
+                                           (selectEvent)="onDataTypeSelect($event[0])">
+                                  <ng-template #lineContent let-item='item' let-searchTerm="inputText">
+                                    <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
+                                    <div>
+                                      <mdm-element-link [element]="item" [showTypeTitle]="true" [showLink]="false"></mdm-element-link>
+                                    </div>
+                                  </ng-template>
+                                </mdm-select>
                             </div>
                             <span class="help-block errorMessage" *ngIf="dataTypeErrors"><small>{{dataTypeErrors}}</small></span>
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Parent Hierarchy</td>
+                    <td class="detailsRowHeader">Parent Hierarchy</td>
                     <td *ngIf="result">
-                        <model-path [path]="result.breadcrumbs"></model-path>
+                        <mdm-model-path [path]="result.breadcrumbs"></mdm-model-path>
                     </td>
                 </tr>
                 <tr>
-                    <th class="detailsRowHeader  col-md-2">Multiplicity</th>
+                    <th class="detailsRowHeader">Multiplicity</th>
                     <td class="dataClassDetailsModelPath">
-
                         <div *ngIf="result">
                             <div style="float: left;">
-
                                 <div *ngIf="editableForm.visible" style="padding-left: 8px">Min</div>
-                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" style="width: 45%" size="5" ></app-inline-text-edit>
+                                <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" size="5" ></mdm-inline-text-edit>
                                 <span *ngIf="!editableForm.visible && (result.minMultiplicity || result.minMultiplicity == 0)">..</span>
                                 <span *ngIf="editableForm.visible" style="padding-right: 10px"></span>
                             </div>
 
                             <div style="float: left;margin-right: 13px;">
                                 <div *ngIf="editableForm.visible" style="padding-left: 6px">Max</div>
-                                <app-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="max" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20" style="width: 45%" size="5" ></app-inline-text-edit>
+                                <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="max" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText" size="20" size="5" ></mdm-inline-text-edit>
                             </div>
                             <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
-                                <span class="help-block">{{error}}</span>
+                                <span class="help-block warning">{{error}}</span>
                             </div>
 
                             <div style="clear: both;font-size: 11px;font-style: italic;" *ngIf="editableForm.visible" >
-                                Please enter <strong style="font-size: 14px">*</strong> for unbound multiplicity.
+                                Please enter <strong>*</strong> for unbound multiplicity.
                             </div>
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td class="detailsRowHeader  col-sx-2 col-sm-2 col-md-2">Classifications</td>
+                    <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <app-element-classifications [classifications]="result.classifiers" [editable-form]="editableForm" [element]="result" [property]="'classifiers'"></app-element-classifications>
+                        <mdm-element-classifications [classifications]="result.classifiers" [editableForm]="editableForm" [element]="result" [property]="'classifiers'"></mdm-element-classifications>
 
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: right;">
 
-                        <div *ngIf="result" appShowIfRolesWritable [result]="result" style="float: right;margin-bottom: 3px">
+                        <div *ngIf="result" mdmShowIfRolesWritable [result]="result" style="float: right;margin-bottom: 3px">
                             <div style="float: right">
-                                <editable-form-buttons [hidden]="editableForm.visible"
-                                                       [on-cancel-edit]="onCancelEdit"
+                                <mdm-editable-form-buttons [hidden]="editableForm.visible"
+                                                       [onCancelEdit]="onCancelEdit"
                                                        [editable]="editableForm"
-                                                       [text-location]="'left'"
-                                                       [hide-delete]="false"
-                                                       [hide-cancel]="false"
-                                                       [hide-edit] = "true"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="false"
+                                                       [hideCancel]="false"
+                                                       [hideEdit]="true"
                                                        (delete)="delete()"
-                                                       [processing]="deleteInProgress"></editable-form-buttons>
+                                                       [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
-                            <div [hidden]="editableForm.visible || editableForm.deletePending"
-                                 class="btn-group-xs" uib-dropdown is-open="false"
-                                 style="margin-bottom: 3px;position: relative; float: right; margin-right:4px;">
-                                <button id="singleX-button" type="button"
-                                        class="btn btn-xs dropdown-toggle btn-default addNewModelButton themeColor"
-                                        [hidden]="editableForm.visible || editableForm.deletePending"
+                            <div [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                                <button mat-stroked-button
+                                        color="primary"
+                                        type="button"
+                                        class="paddingless"
                                         [disabled]="deleteInProgress"
                                         matTooltip="Edit"
-                                        (click)="showForm();"
-                                        uib-dropdown-toggle>
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        aria-label="Edit"
+                                        (click)="showForm();">
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>
-                            <editable-form-buttons [hidden]="!editableForm.visible"
-                                                   [on-cancel-edit]="onCancelEdit"
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
+                                                   [onCancelEdit]="onCancelEdit"
                                                    [editable]="editableForm"
-                                                   [text-location]="'left'"
-                                                   [hide-delete]="true"
-                                                   [hide-cancel]="false"
-                                                   [processing]="deleteInProgress"></editable-form-buttons>
+                                                   [textLocation]="'left'"
+                                                   [hideDelete]="true"
+                                                   [hideCancel]="false"
+                                                   [processing]="deleteInProgress"></mdm-editable-form-buttons>
                         </div>
 
 
-
-
                         <div style="clear: both;" *ngIf="processing">
-                            <mat-progress-bar
-                                    value="50"
-                                    bufferValue="75"
-                                    color="primary"
-                                    mode="indeterminate">
-                            </mat-progress-bar>
+                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
                         </div>
                         <div style="text-align: left" *ngIf="exportError">
                             <div style="padding-top: 25px;">
                                 <div class="alert alert-danger">
-                                    <a class="close" ng-click="resetExportError()" aria-label="close">&times;</a>
                                     <strong>Error!</strong> {{exportError}}
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </td>
                 </tr>
                 </tbody>
             </table>
-
         </form>
     </div>
-
-
-
-</div>

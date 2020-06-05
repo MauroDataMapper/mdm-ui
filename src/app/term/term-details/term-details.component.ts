@@ -1,4 +1,22 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import {
+  AfterViewInit,
   Component,
   ContentChildren,
   ElementRef,
@@ -9,31 +27,23 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {TermResult, EditableTerm} from '../../model/termModel';
-import {from, Subscription} from 'rxjs';
-import {MarkdownTextAreaComponent} from '../../utility/markdown-text-area.component';
-import {ResourcesService} from '../../services/resources.service';
-import {MessageService} from '../../services/message.service';
-import {MessageHandlerService} from '../../services/utility/message-handler.service';
-import {SecurityHandlerService} from '../../services/handlers/security-handler.service';
-import {FolderHandlerService} from '../../services/handlers/folder-handler.service';
-import {StateHandlerService} from '../../services/handlers/state-handler.service';
-import {SharedService} from '../../services/shared.service';
-import {ElementSelectorDialogueService} from '../../services/element-selector-dialogue.service';
-import {BroadcastService} from '../../services/broadcast.service';
-import {HelpDialogueHandlerService} from '../../services/helpDialogue.service';
-import {FavouriteHandlerService} from '../../services/handlers/favourite-handler.service';
-import {ExportHandlerService} from '../../services/handlers/export-handler.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { TermResult, EditableTerm } from '@mdm/model/termModel';
+import { Subscription } from 'rxjs';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { MessageService } from '@mdm/services/message.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
+import { DialogPosition } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'term-details',
+  selector: 'mdm-term-details',
   templateUrl: './term-details.component.html',
   styleUrls: ['./term-details.component.scss']
 })
-export class TermDetailsComponent implements OnInit {
-
+export class TermDetailsComponent implements OnInit, AfterViewInit {
   securitySection = false;
   processing = false;
   exportError = null;
@@ -63,25 +73,29 @@ export class TermDetailsComponent implements OnInit {
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input('after-save') afterSave: any;
+  @Input() afterSave: any;
   @Input() editMode = false;
   mcTerm: TermResult;
-  @Input('mc-terminology') mcTerminology: any;
-@Input('hide-edit-button') hideEditButton: any;
-  @Input('open-edit-form') openEditForm: any;
+  @Input() mcTerminology: any;
+  @Input() hideEditButton: any;
+  @Input() openEditForm: any;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
   @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
 
-
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  constructor(private renderer: Renderer2, private resourcesService: ResourcesService, private messageService: MessageService, private messageHandler: MessageHandlerService, private securityHandler: SecurityHandlerService, private folderHandler: FolderHandlerService, private stateHandler: StateHandlerService, private sharedService: SharedService, private elementDialogueService: ElementSelectorDialogueService, private broadcastSvc: BroadcastService, private helpDialogueService: HelpDialogueHandlerService, private dialog: MatDialog,
-              private favouriteHandler: FavouriteHandlerService, private exportHandler: ExportHandlerService, private domSanitizer: DomSanitizer) {
+  constructor(
+    private messageService: MessageService,
+    private securityHandler: SecurityHandlerService,
+    private sharedService: SharedService,
+    private helpDialogueService: HelpDialogueHandlerService,
+    private favouriteHandler: FavouriteHandlerService,
+    private title: Title
+  ) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.TermDetails();
-
   }
 
   ngOnInit() {
@@ -89,11 +103,13 @@ export class TermDetailsComponent implements OnInit {
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
 
-
     this.editableForm.show = () => {
-      this.editForm.forEach(x => x.edit({ editing: true,
-        focus: x._name === 'moduleName' ? true : false
-      }));
+      this.editForm.forEach(x =>
+        x.edit({
+          editing: true,
+          focus: x._name === 'moduleName' ? true : false
+        })
+      );
       this.editableForm.visible = true;
     };
 
@@ -102,19 +118,18 @@ export class TermDetailsComponent implements OnInit {
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
-      this.editableForm.description = this.mcTerm['description'];
-      this.editableForm.url = this.mcTerm['url'];
-      if (this.mcTerm['classifiers']) {
-        this.mcTerm['classifiers'].forEach(item => {
+      this.editableForm.description = this.mcTerm.description;
+      this.editableForm.url = this.mcTerm.url;
+      if (this.mcTerm.classifiers) {
+        this.mcTerm.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
         });
       }
-      if (this.mcTerm['aliases']) {
-        this.mcTerm["aliases"].forEach(item => {
+      if (this.mcTerm.aliases) {
+        this.mcTerm.aliases.forEach(item => {
           this.editableForm.aliases.push(item);
         });
       }
-
     };
 
     // this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
@@ -126,51 +141,49 @@ export class TermDetailsComponent implements OnInit {
   }
 
   TermDetails(): any {
-
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-      this.mcTerm = serverResult;
+        this.mcTerm = serverResult;
 
-      this.editableForm.url = this.mcTerm['url'];
-      this.editableForm.description = this.mcTerm['description'];
-      if (this.mcTerm['classifiers']) {
-        this.mcTerm['classifiers'].forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
+        this.editableForm.url = this.mcTerm.url;
+        this.editableForm.description = this.mcTerm.description;
+        if (this.mcTerm.classifiers) {
+          this.mcTerm.classifiers.forEach(item => {
+            this.editableForm.classifiers.push(item);
+          });
+        }
+        if (this.mcTerm.aliases) {
+          this.mcTerm.aliases.forEach(item => {
+            this.editableForm.aliases.push(item);
+          });
+        }
+        if (this.mcTerm.semanticLinks) {
+          this.mcTerm.semanticLinks.forEach(link => {
+            if (link.linkType === 'New Version Of') {
+              this.compareToList.push(link.target);
+            }
+          });
+        }
+
+        if (this.mcTerm.semanticLinks) {
+          this.mcTerm.semanticLinks.forEach(link => {
+            if (link.linkType === 'Superseded By') {
+              this.compareToList.push(link.target);
+            }
+          });
+        }
+
+        if (this.mcTerm != null) {
+          this.hasResult = true;
+          this.watchDataModelObject();
+        }
+        this.title.setTitle(`Term - ${this.mcTerm?.label}`);
       }
-      if (this.mcTerm['aliases']) {
-        this.mcTerm['aliases'].forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-      if (this.mcTerm['semanticLinks']) {
-        this.mcTerm['semanticLinks'].forEach(link => {
-          if (link.linkType === 'New Version Of') {
-            this.compareToList.push(link.target);
-          }
-        });
-      }
-
-      if (this.mcTerm['semanticLinks']) {
-        this.mcTerm['semanticLinks'].forEach(link => {
-          if (link.linkType === 'Superseded By') {
-            this.compareToList.push(link.target);
-          }
-        });
-      }
-
-
-      if (this.mcTerm != null) {
-        this.hasResult = true;
-        this.watchDataModelObject();
-      }
-    });
-
-
+    );
   }
 
   watchDataModelObject() {
-    let access: any = this.securityHandler.elementAccess(this.mcTerm);
-    if (access != undefined) {
+    const access: any = this.securityHandler.elementAccess(this.mcTerm);
+    if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
       this.showDelete = access.showDelete;
@@ -178,91 +191,91 @@ export class TermDetailsComponent implements OnInit {
       this.showNewVersion = access.showNewVersion;
     }
     this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
-
   }
 
   ngAfterViewInit(): void {
-
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes
-        .subscribe((queryList: QueryList<any>) => {
-          this.invokeInlineEditor();
-          // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
+    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+      this.invokeInlineEditor();
+      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
 
-          if (this.editMode) {
-            this.editForm.forEach(x => x.edit({ editing: true,
-              focus: x._name === 'moduleName' ? true : false
-            }));
-            this.showForm();
-          }
-        });
+      if (this.editMode) {
+        this.editForm.forEach(x =>
+          x.edit({
+            editing: true,
+            focus: x._name === 'moduleName' ? true : false
+          })
+        );
+        this.showForm();
+      }
+    });
   }
-
 
   formBeforeSave = function() {
     this.editMode = false;
     this.errorMessage = '';
 
-    let classifiers = [];
+    const classifiers = [];
     this.editableForm.classifiers.forEach(cls => {
       classifiers.push(cls);
     });
-    let aliases = [];
+    const aliases = [];
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-    let resource = {
-      id: this.mcTerm['id'],
-      code: this.mcTerm['code'],
-      definition: this.mcTerm['definition'],
+    const resource = {
+      id: this.mcTerm.id,
+      code: this.mcTerm.code,
+      definition: this.mcTerm.definition,
       description: this.editableForm.description,
-      terminology: this.mcTerm['terminology'],
+      terminology: this.mcTerm.terminology,
       aliases,
       classifiers
-
     };
 
-
-    this.resourcesService.term.put(this.mcTerm.terminology.id, resource.id, null, { resource }).subscribe(result => {
-            if (this.afterSave) {
-              this.afterSave(this.mcTerm);
-            }
-            this.messageHandler.showSuccess('Term updated successfully.');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
-
-          },
-          error => {
-            this.messageHandler.showError('There was a problem updating the Term.', error);
-          });
-
-
-
+    this.resourcesService.term
+      .put(this.mcTerm.terminology.id, resource.id, null, { resource })
+      .subscribe(
+        result => {
+          if (this.afterSave) {
+            this.afterSave(this.mcTerm);
+          }
+          this.messageHandler.showSuccess('Term updated successfully.');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+        },
+        error => {
+          this.messageHandler.showError(
+            'There was a problem updating the Term.',
+            error
+          );
+        }
+      );
   };
 
   private invokeInlineEditor(): void {
     const inlineEditorToInvoke = this.editForm.find(
-        (inlineEditorComponent: any) => {
-          return inlineEditorComponent.name === 'editableText';
-        });
-
+      (inlineEditorComponent: any) => {
+        return inlineEditorComponent.name === 'editableText';
+      }
+    );
   }
 
   showForm() {
-
     this.editableForm.show();
-
   }
 
   toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.mcTerm)) { this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm); }
-
+    if (this.favouriteHandler.toggle(this.mcTerm)) {
+      this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
+    }
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Term_details', { my: 'right top', at: 'bottom'} as DialogPosition);
+    this.helpDialogueService.open('Term_details', {
+      my: 'right top',
+      at: 'bottom'
+    } as DialogPosition);
   }
-
-
-
 }

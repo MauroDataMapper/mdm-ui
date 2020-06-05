@@ -1,58 +1,72 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-    selector: 'data-type-list-buttons',
-    templateUrl: './data-type-list-buttons.component.html',
-    styleUrls: ['./data-type-list-buttons.component.sass']
+  selector: 'mdm-data-type-list-buttons',
+  templateUrl: './data-type-list-buttons.component.html',
+  styleUrls: ['./data-type-list-buttons.component.sass']
 })
 export class DataTypeListButtonsComponent implements OnInit {
+  constructor() {}
 
-    constructor() { }
+  @Output() deleteRows = new EventEmitter<any>();
+  @Input() add: any;
+  @Input() displayRecords: any[];
+  @Input() deleteInProgress = false;
+  @Input() showContentDropdown = false;
+  @Input() addDataClass: any;
+  @Input() addDataElement: any;
+  @Input() showDeleteButton = true;
 
-    @Output("delete-rows") deleteRows = new EventEmitter<any>();
-    @Input("add") add: any;
-    @Input("display-records") mcDisplayRecords: any[];
-    @Input("delete-in-progress") deleteInProgress = false;
-    @Input("show-content-dropdown") showContentDropdown =  false;
-    @Input("addDataClass") addDataClass : any;
-    @Input("addDataElement") addDataElement : any;
-	@Input("show-delete-button") showDeleteButton = true;
+  deletePending: boolean;
+  textLocation: string;
+  deleteWarning: string;
 
-    deletePending: boolean;
-    textLocation: string;
-    deleteWarning: string;
+  ngOnInit() {
+    this.textLocation = 'left';
+    this.deletePending = false;
+  }
 
-    ngOnInit() {
-        this.textLocation = "left";
-        this.deletePending = false;
+  confirmDeleteClicked = () => {
+    if (this.deleteRows) {
+      this.deletePending = false;
+      this.deleteInProgress = true;
+
+      this.deleteRows.emit();
     }
+  };
 
-    confirmDeleteClicked = () => {
-        if (this.deleteRows) {
-            this.deletePending = false;
-            this.deleteInProgress = true;
+  onAskDelete = () => {
+    let showDelete = false;
+    this.displayRecords.forEach(record => {
+      if (record.checked === true) {
+        showDelete = true;
+      }
+    });
+    if (showDelete) {
+      this.deletePending = true;
+    } else {
+      this.deleteWarning = 'Please select one or more elements.';
+    }
+  };
 
-            this.deleteRows.emit();
-           
-        }
-    };
-
-    onAskDelete = () => {
-        var showDelete = false;
-        this.mcDisplayRecords.forEach((record) => {
-            if (record.checked === true) {
-                showDelete = true;
-            }
-        });
-        if (showDelete) {
-            this.deletePending = true;
-        } else {
-            this.deleteWarning = "Please select one or more elements.";
-        }
-    };
-
-    cancelDeleteClicked =  () => {
-        this.deletePending = false;
-    };
-
+  cancelDeleteClicked = () => {
+    this.deletePending = false;
+  }
 }

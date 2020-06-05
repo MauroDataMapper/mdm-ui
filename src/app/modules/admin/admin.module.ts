@@ -1,15 +1,42 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { AdminAppContainerComponent } from "../../admin/app-container/app-container.component";
-import { AdminRoutesModule } from "../admin-routes/admin-routes.module";
-import { SharedModule } from "../shared/shared.module";
-import { EmailsComponent } from "../../admin/emails/emails.component";
-import { GroupMemberTableComponent } from "../../admin/group-member-table/group-member-table.component";
-import { UserComponent } from "../../admin/user/user.component";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AdminAppContainerComponent } from '@mdm/admin/app-container/app-container.component';
+import { AdminRoutesModule } from '../admin-routes/admin-routes.module';
+import { SharedModule } from '../shared/shared.module';
+import { EmailsComponent } from '@mdm/admin/emails/emails.component';
+import { GroupMemberTableComponent } from '@mdm/admin/group-member-table/group-member-table.component';
+import { UserComponent } from '@mdm/admin/user/user.component';
 
 @NgModule({
-  declarations: [AdminAppContainerComponent, EmailsComponent, GroupMemberTableComponent, UserComponent],
+  declarations: [
+    AdminAppContainerComponent,
+    EmailsComponent,
+    GroupMemberTableComponent,
+    UserComponent
+  ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
-  exports: [AdminAppContainerComponent, EmailsComponent, GroupMemberTableComponent, UserComponent]
+  exports: [
+    AdminAppContainerComponent,
+    EmailsComponent,
+    GroupMemberTableComponent,
+    UserComponent
+  ]
 })
 export class AdminModule {}

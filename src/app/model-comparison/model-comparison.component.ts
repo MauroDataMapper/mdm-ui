@@ -1,13 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ResourcesService } from '../services/resources.service';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
-import { _ } from 'underscore';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-model-comparison',
+  selector: 'mdm-model-comparison',
   templateUrl: './model-comparison.component.html',
   styleUrls: ['./model-comparison.component.scss']
 })
@@ -18,7 +34,6 @@ export class ModelComparisonComponent implements OnInit {
   max = 100;
   dynamic = 100;
   diffs: any;
-  ready: boolean;
   processing: boolean;
   activeTab: any;
 
@@ -37,62 +52,29 @@ export class ModelComparisonComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
     private resources: ResourcesService,
-    private stateService: StateService
-  ) {}
+    private stateService: StateService,
+    private changeDetector: ChangeDetectorRef
+  ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     const sourceId = this.stateService.params.sourceId;
     const targetId = this.stateService.params.targetId;
 
-    if (sourceId && targetId) {
-      this.loadDataModelDetail(sourceId).subscribe(result => {
-        const data = result.body;
-        this.sourceModel = Object.assign({}, data);
-        this.loadModelTree(data).subscribe(result => {
-          const tree = result.body;
-          this.sourceModel.children = Object.assign([], tree);
-          this.sourceModel.close = false;
+    if (sourceId) {
+      this.sourceModel = await this.loadDataModelDetail(sourceId);
+    }
 
-          this.loadDataModelDetail(targetId).subscribe(res => {
-            const data = res.body;
-            this.targetModel = Object.assign([], data);
+    if (targetId) {
+      this.targetModel = await this.loadDataModelDetail(targetId);
+    }
 
-            this.loadModelTree(data).subscribe(res => {
-              const tree = res.body;
-              this.targetModel.children = Object.assign([], tree);
-              this.targetModel.close = false;
+    if (this.sourceModel && this.targetModel) {
+      // check if source and target need to be swapped
+      if (this.checkIfSwapNeeded()) {
+        this.swap();
+      }
 
-              // check if source and target need to be swapped
-              if (this.checkIfSwapNeeded()) {
-                this.swap();
-              }
-
-              this.runDiff();
-            });
-          });
-        });
-      });
-    } else if (targetId) {
-      this.loadDataModelDetail(targetId).subscribe(res => {
-        const data = res.body;
-        this.targetModel = Object.assign([], data);
-
-        this.loadModelTree(data).subscribe(res => {
-          const tree = res.body;
-          this.targetModel.children = Object.assign([], tree);
-          this.targetModel.close = false;
-        });
-      });
-    } else if (sourceId) {
-      this.loadDataModelDetail(sourceId).subscribe(res => {
-        const data = res.body;
-        this.sourceModel = Object.assign([], data);
-        this.loadModelTree(data).subscribe(res => {
-          const tree = res.body;
-          this.sourceModel.children = Object.assign([], tree);
-          this.sourceModel.close = false;
-        });
-      });
+      this.runDiff();
     }
   }
 
@@ -104,7 +86,7 @@ export class ModelComparisonComponent implements OnInit {
       i < this.sourceModel.semanticLinks.length;
       i++
     ) {
-      let link = this.sourceModel.semanticLinks[i];
+      const link = this.sourceModel.semanticLinks[i];
       if (
         link.linkType === 'New Version Of' &&
         link.target.id === this.targetModel.id
@@ -118,7 +100,7 @@ export class ModelComparisonComponent implements OnInit {
       i < this.targetModel.semanticLinks.length;
       i++
     ) {
-      let link = this.targetModel.semanticLinks[i];
+      const link = this.targetModel.semanticLinks[i];
       if (
         link.linkType === 'Superseded By' &&
         link.target.id === this.sourceModel.id
@@ -127,93 +109,54 @@ export class ModelComparisonComponent implements OnInit {
       }
     }
     return swapNeeded;
-  }
-
-  loadDataModelDetail = id => {
-    return this.resources.dataModel.get(id);
-  }
-
-  loadModelTree = model => {
-    return this.resources.tree.get(model.id);
-  }
-
-  onLeftModelSelect = select => {
-    if (!select || (select && select.length === 0)) {
-      this.sourceModel = null;
-      this.diffs = [];
-      return;
-    }
-    this.loadDataModelDetail(select[0].id).subscribe(result => {
-      const data = result.body;
-      this.sourceModel = Object.assign([], data);
-      this.loadModelTree(data).subscribe(result => {
-        const data = result.body;
-        this.sourceModel.children = Object.assign([], data);
-        this.sourceModel.close = false;
-        if (this.targetModel) {
-          this.runDiff();
-        }
-      });
-    });
-  }
-
-  onRightModelSelect = select => {
-    if (!select || (select && select.length === 0)) {
-      this.targetModel = null;
-      this.diffs = [];
-      return;
-    }
-    this.loadDataModelDetail(select[0].id).subscribe(result => {
-      const data = result.body;
-      this.targetModel = Object.assign([], data);
-
-      this.loadModelTree(data).subscribe(result => {
-        const data = result.body;
-        this.targetModel.children = Object.assign([], data);
-        this.targetModel.close = false;
-        if (this.sourceModel) {
-          this.runDiff();
-        }
-      });
-    });
-  }
-
-  swap = () => {
-    let srcCopy;
-    if (this.sourceModel) {
-      srcCopy = Object.assign({}, this.sourceModel); // left
-    } else {
-      srcCopy = null;
-    }
-    let trgCopy;
-    if (this.targetModel) {
-      trgCopy = Object.assign({}, this.targetModel); // right
-    } else {
-      trgCopy = null;
-    }
-    this.sourceModel = trgCopy;
-    this.targetModel = srcCopy;
-
-    // Load all children of source & target dataModels
-    // to rest deleted, created, modified properties
-    let obvs = [];
-    obvs.push(this.loadModelTree(this.sourceModel));
-    obvs.push(this.loadModelTree(this.targetModel));
-    forkJoin(obvs).subscribe((results: any) => {
-      this.sourceModel.children = Object.assign([], results[0].body);
-      this.sourceModel.close = false;
-
-      this.targetModel.children = Object.assign([], results[1].body);
-      this.targetModel.close = false;
-
-      this.runDiff();
-    });
-  }
-
-  cleanDiff = function() {
-    this.diffMap = {};
-    this.diffs = [];
   };
+
+  async loadDataModelDetail(modelId) {
+    if (!modelId) {
+      return null;
+    }
+
+    const response = await this.resources.dataModel.get(modelId).toPromise();
+    const model = response.body;
+    const children = await this.resources.tree.get(model.id).toPromise();
+    model.children = children.body;
+    if (model.children?.length > 0) {
+      model.hasChildren = true;
+    }
+    return model;
+  }
+
+  async onModelSelect(selected, side) {
+    const selectedId = Array.isArray(selected) ? selected[0]?.id : selected?.id;
+    if (!selectedId) {
+      if (side === 'left') {
+        this.sourceModel = null;
+      } else if (side === 'right') {
+        this.targetModel = null;
+      }
+      this.diffs = [];
+      return;
+    }
+
+    if (side === 'left') {
+      this.sourceModel = await this.loadDataModelDetail(selectedId);
+      this.targetModel = await this.loadDataModelDetail(this.targetModel?.id);
+    } else if (side === 'right') {
+      this.sourceModel = await this.loadDataModelDetail(this.sourceModel?.id);
+      this.targetModel = await this.loadDataModelDetail(selectedId);
+    }
+
+    if (this.sourceModel && this.targetModel) {
+      this.runDiff();
+    }
+  }
+
+  swap() {
+    const tmp = this.sourceModel;
+    this.sourceModel = this.targetModel;
+    this.targetModel = tmp;
+    this.runDiff();
+  }
 
   modifiedParents = (breadcrumbs, diffMap) => {
     if (!breadcrumbs) {
@@ -229,7 +172,7 @@ export class ModelComparisonComponent implements OnInit {
         diffMap[element.id].created = false;
       }
     });
-  }
+  };
   initDiff = (id, diffMap) => {
     if (diffMap[id]) {
       return;
@@ -246,7 +189,7 @@ export class ModelComparisonComponent implements OnInit {
         dataElements: []
       }
     };
-  }
+  };
 
   findDiffDataTypeChanges = (leftId, rightId, dataTypeDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
@@ -254,7 +197,7 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[leftId].modified = true;
     diffMap[rightId].modified = true;
 
-    let update = {
+    const update = {
       property: 'dataType',
       title: 'DataType',
       left: dataTypeDiff.left,
@@ -262,7 +205,7 @@ export class ModelComparisonComponent implements OnInit {
     };
     diffMap[leftId].diffs.properties.push(update);
     diffMap[rightId].diffs.properties.push(update);
-  }
+  };
 
   findDiffProps = (propName, leftId, rightId, labelDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
@@ -270,7 +213,7 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[leftId].modified = true;
     diffMap[rightId].modified = true;
 
-    let update = {
+    const update = {
       property: propName,
       title: this.validator.capitalize(propName),
       left:
@@ -281,7 +224,7 @@ export class ModelComparisonComponent implements OnInit {
 
     diffMap[leftId].diffs.properties.push(update);
     diffMap[rightId].diffs.properties.push(update);
-  }
+  };
 
   findDiffMetadata = (leftId, rightId, metadataDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
@@ -305,7 +248,7 @@ export class ModelComparisonComponent implements OnInit {
     }
     if (metadataDiff.modified) {
       metadataDiff.modified.forEach(modified => {
-        let update = {
+        const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
           key: modified.key,
@@ -319,7 +262,7 @@ export class ModelComparisonComponent implements OnInit {
         diffMap[rightId].diffs.metadata.push(update);
       });
     }
-  }
+  };
 
   findDiffEnumerationValues = (
     leftId,
@@ -349,7 +292,7 @@ export class ModelComparisonComponent implements OnInit {
 
     if (enumerationValuesDiff.modified) {
       enumerationValuesDiff.modified.forEach(modified => {
-        let update = {
+        const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
           label: modified.label,
@@ -362,15 +305,15 @@ export class ModelComparisonComponent implements OnInit {
         diffMap[rightId].diffs.enumerationValues.push(update);
       });
     }
-  }
+  };
 
   runDiff = () => {
-    this.ready = false;
     if (!this.sourceModel || !this.targetModel) {
       return;
     }
 
-    this.cleanDiff();
+    this.diffMap = {};
+    this.diffs = [];
     this.processing = true;
 
     this.resources.dataModel
@@ -380,7 +323,7 @@ export class ModelComparisonComponent implements OnInit {
           this.processing = false;
           const result = res.body;
 
-          let diffMap = {};
+          const diffMap = {};
 
           // Run for DataModel
           result.diffs.forEach(diff => {
@@ -451,7 +394,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.breadcrumbs) {
                   this.modifiedParents(el.breadcrumbs, diffMap);
 
-                  let parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
+                  const parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.created = true;
                   el.modified = false;
@@ -477,7 +420,7 @@ export class ModelComparisonComponent implements OnInit {
                 }
               });
 
-              diff[diffElement].deleted.forEach(el => {
+              diff[diffElement].deleted?.forEach(el => {
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
                 diffMap[el.id].deleted = true;
@@ -495,7 +438,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.breadcrumbs) {
                   this.modifiedParents(el.breadcrumbs, diffMap);
 
-                  let parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
+                  const parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.deleted = true;
                   el.created = false;
@@ -552,7 +495,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.leftBreadcrumbs) {
                   this.modifiedParents(el.leftBreadcrumbs, diffMap);
 
-                  let parentDC =
+                  const parentDC =
                     el.leftBreadcrumbs[el.leftBreadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.modified = true;
@@ -565,7 +508,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataElements' && el.rightBreadcrumbs) {
                   this.modifiedParents(el.rightBreadcrumbs, diffMap);
 
-                  let parentDC =
+                  const parentDC =
                     el.rightBreadcrumbs[el.rightBreadcrumbs.length - 1];
                   this.initDiff(parentDC.id, diffMap);
                   el.modified = true;
@@ -578,7 +521,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataTypes' && el.leftBreadcrumbs) {
                   this.modifiedParents(el.leftBreadcrumbs, diffMap);
 
-                  let parentDM = el.leftBreadcrumbs[0];
+                  const parentDM = el.leftBreadcrumbs[0];
                   this.initDiff(parentDM.id, diffMap);
                   el.modified = true;
                   el.deleted = false;
@@ -590,7 +533,7 @@ export class ModelComparisonComponent implements OnInit {
                 if (diffElement === 'dataTypes' && el.rightBreadcrumbs) {
                   this.modifiedParents(el.rightBreadcrumbs, diffMap);
 
-                  let parentDM = el.rightBreadcrumbs[0];
+                  const parentDM = el.rightBreadcrumbs[0];
                   this.initDiff(parentDM.id, diffMap);
                   el.modified = true;
                   el.deleted = false;
@@ -719,7 +662,6 @@ export class ModelComparisonComponent implements OnInit {
             }
           });
 
-          this.ready = true;
           this.onNodeClick(this.sourceModel);
         },
         error => {
@@ -730,11 +672,11 @@ export class ModelComparisonComponent implements OnInit {
           this.processing = false;
         }
       );
-  }
+  };
 
   onNodeExpand = node => {
     const obs = new Observable(sub => {
-      this.loadModelTree(node).subscribe(
+      this.resources.tree.get(node.id).subscribe(
         res => {
           const result = res.body;
           result.forEach(dc => {
@@ -746,11 +688,11 @@ export class ModelComparisonComponent implements OnInit {
           });
           sub.next(result);
         },
-        error => {}
+        error => { }
       );
     });
     return obs;
-  }
+  };
 
   onNodeClick = node => {
     this.diffs = [];
@@ -814,7 +756,7 @@ export class ModelComparisonComponent implements OnInit {
     } else if (this.diffs.dataElements.length > 0) {
       this.activeTab.index = 3;
     }
-  }
+  };
 
   dataElementFilterChange = () => {
     if (this.diffs.dataElements && this.diffs.dataElements.length > 0) {
@@ -825,22 +767,14 @@ export class ModelComparisonComponent implements OnInit {
         );
         return;
       }
-      this.diffs.filteredDataElements = _.filter(
-        this.diffs.dataElements,
-        function(dataType) {
-          if (this.form.dataElementFilter === 'deleted' && dataType.deleted) {
-            return dataType;
-          }
-          if (this.form.dataElementFilter === 'created' && dataType.created) {
-            return dataType;
-          }
-          if (this.form.dataElementFilter === 'modified' && dataType.modified) {
-            return dataType;
-          }
-        }
-      );
+
+      this.diffs.filteredDataElements = this.diffs.dataElements.filter(dataType => {
+        return (this.form.dataElementFilter === 'deleted' && dataType.deleted) ||
+          (this.form.dataElementFilter === 'created' && dataType.created) ||
+          (this.form.dataElementFilter === 'modified' && dataType.modified);
+      });
     }
-  }
+  };
 
   dataTypeFilterChange = () => {
     if (this.diffs.dataTypes && this.diffs.dataTypes.length > 0) {
@@ -848,19 +782,12 @@ export class ModelComparisonComponent implements OnInit {
         this.diffs.filteredDataTypes = Object.assign([], this.diffs.dataTypes);
         return;
       }
-      this.diffs.filteredDataTypes = _.filter(
-        this.diffs.dataTypes,
-        dataType => {
-          if (this.form.dataTypeFilter === 'deleted' && dataType.deleted) {
-            return dataType;
-          }
-          if (this.form.dataTypeFilter === 'created' && dataType.created) {
-            return dataType;
-          }
-          if (this.form.dataTypeFilter === 'modified' && dataType.modified) {
-            return dataType;
-          }
-        }
+
+      this.diffs.filteredDataTypes = this.diffs.dataTypes.filter(dataType => {
+        return (this.form.dataTypeFilter === 'deleted' && dataType.deleted) ||
+          (this.form.dataTypeFilter === 'created' && dataType.created) ||
+          (this.form.dataTypeFilter === 'modified' && dataType.modified);
+      }
       );
     }
   }

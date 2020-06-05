@@ -1,27 +1,41 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
 <div>
-    <div>
-        <small [hidden]="!(record.inDelete)">
-            Are you sure?
-        </small>
-    </div>
-    <button class="btn btn-default btn-xs" *ngIf="!hideEdit && !record.inEdit && !record.inDelete" (click)="editClicked(record, index)" type="button">
-        <i class="fa fa-pencil-square-o editButton themeColor"></i>
-    </button>
-    <button class="btn btn-default btn-xs"  *ngIf="record.inEdit"  (click)="saveClicked(record, index)" type="button">
-        <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
-    </button>
-    <button class="btn btn-default btn-xs"  *ngIf="record.inEdit"  (click)="editCancelled(record, index)" type="button">
-        <i class="fa fa-times editButton themeColor"></i>
-    </button>
-
-    <button class="btn btn-default btn-xs" *ngIf="!hideDelete && !record.inEdit && !record.inDelete" (click)="deleteClicked(record, index)" type="button">
-        <i class="fa fa-trash-o mcTableDeleteBtn"></i>
-    </button>
-    <button class="btn btn-default btn-xs"  *ngIf="record.inDelete" (click)="deleteApproved(record, index)" type="button">
-        <i class="fa fa-check editButton saveButton mcTableApproveBtn"></i>
-    </button>
-    <button class="btn btn-default btn-xs"  *ngIf="record.inDelete"  (click)="deleteCancelled(record, index)" type="button">
-        <i class="fa fa-times editButton"></i>
-    </button>
-
+    <small [hidden]="!(record.inDelete)">
+        Are you sure?
+    </small>
 </div>
+<button mat-button color="primary" type="button" class="paddingless" *ngIf="!hideEdit && !record.inEdit && !record.inDelete" (click)="editClicked(record, index)" matTooltip="Edit">
+    <i class="fas fa-pencil-alt"></i>
+</button>
+<button mat-stroked-button color="accent" type="button" class="paddingless" *ngIf="record.inEdit" (click)="saveClicked(record, index)" matTooltip="Save">
+    <i class="fas fa-check"></i>
+</button>
+<button mat-button color="warn" type="button" class="paddingless" *ngIf="record.inEdit" (click)="editCancelled(record, index)" matTooltip="Cancel edit">
+    <i class="fas fa-times"></i>
+</button>
+
+<button mat-button color="warn" type="button" class="paddingless" *ngIf="!hideDelete && !record.inEdit && !record.inDelete" (click)="deleteClicked(record, index)" matTooltip="Delete">
+    <i class="far fa-trash-alt"></i>
+</button>
+<button mat-stroked-button color="accent" type="button" class="paddingless" *ngIf="record.inDelete" (click)="deleteApproved(record, index)" matTooltip="Approve">
+    <i class="fas fa-check"></i>
+</button>
+<button mat-button color="warn" type="button" class="paddingless" *ngIf="record.inDelete"  (click)="deleteCancelled(record, index)" matTooltip="Cancel deletion">
+    <i class="fas fa-times"></i>
+</button>

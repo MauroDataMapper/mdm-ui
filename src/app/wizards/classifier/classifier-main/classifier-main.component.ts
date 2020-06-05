@@ -1,15 +1,33 @@
-import {Component, EventEmitter, Inject, OnInit} from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import {Step} from "../../../model/stepModel";
-import {StateService} from "@uirouter/core";
-import {StateHandlerService} from "../../../services/handlers/state-handler.service";
-import {ResourcesService} from "../../../services/resources.service";
-import {MessageHandlerService} from "../../../services/utility/message-handler.service";
-import {ClassifierStep1Component} from "../classifier-step1/classifier-step1.component";
-import { BroadcastService } from '../../../services/broadcast.service';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Step } from '@mdm/model/stepModel';
+import { StateService } from '@uirouter/core';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ClassifierStep1Component } from '../classifier-step1/classifier-step1.component';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-classifier-main',
+  selector: 'mdm-classifier-main',
   templateUrl: './classifier-main.component.html',
   styleUrls: ['./classifier-main.component.sass']
 })
@@ -22,64 +40,83 @@ export class ClassifierMainComponent implements OnInit {
   parentFolderId: any;
   parentFolder: any;
 
-  model : any = {
+  model: any = {
     metadata: [],
     classifiers: []
   };
 
-  constructor(private stateHandler: StateHandlerService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private stateService: StateService,private broadcastSvc: BroadcastService) { }
+  constructor(
+    private stateHandler: StateHandlerService,
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateService: StateService,
+    private broadcastSvc: BroadcastService,
+    private title: Title
+  ) {}
 
   ngOnInit() {
     this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder.get(this.parentFolderId, null, null).toPromise().then((result) => {
-      result.domainType = "Folder";
-      this.parentFolder = result.body;
+    this.resources.folder
+      .get(this.parentFolderId, null, null)
+      .toPromise()
+      .then(result => {
+        result.domainType = 'Folder';
+        this.parentFolder = result.body;
 
+        const step1 = new Step();
+        step1.title = 'Classifier Details';
+        step1.component = ClassifierStep1Component;
+        step1.scope = this;
+        step1.hasForm = true;
 
-      const step1 = new Step();
-      step1.title = "Classifier Details";
-      step1.component = ClassifierStep1Component;
-      step1.scope = this;
-      step1.hasForm = true;
-
-
-      this.steps.push(step1);
-
-    }).catch((error) => {
-      this.messageHandler.showError('There was a problem loading the Folder.', error);
-    });
+        this.steps.push(step1);
+      })
+      .catch(error => {
+        this.messageHandler.showError(
+          'There was a problem loading the Folder.',
+          error
+        );
+      });
+    this.title.setTitle(`New Classifier`);
   }
 
   saveClassifier = () => {
-
-    var resource = {
+    const resource = {
       label: this.model.label,
-      description: this.model.description,
-
+      description: this.model.description
     };
 
-    var deferred;
-    deferred = this.resources.classifier.post(null, null, { resource: resource });
-
-
-    deferred.subscribe((response) => {
-      this.messageHandler.showSuccess('Classifier saved successfully.');
-
-      this.stateHandler.Go("classification", {
-         id: response.body.id
-      }, { reload: true, location: true });
-      this.broadcastSvc.broadcast("$reloadClassifiers");
-    }, (error) => {
-      this.messageHandler.showError('There was a problem saving the Classifier.', error);
+    let deferred;
+    deferred = this.resources.classifier.post(null, null, {
+      resource
     });
 
-  }
+    deferred.subscribe(
+      response => {
+        this.messageHandler.showSuccess('Classifier saved successfully.');
+
+        this.stateHandler.Go(
+          'classification',
+          {
+            id: response.body.id
+          },
+          { reload: true, location: true }
+        );
+        this.broadcastSvc.broadcast('$reloadClassifiers');
+      },
+      error => {
+        this.messageHandler.showError(
+          'There was a problem saving the Classifier.',
+          error
+        );
+      }
+    );
+  };
 
   cancelWizard = () => {
     this.stateHandler.GoPrevious();
-  }
+  };
   closeWizard = () => {
     this.stateHandler.GoPrevious();
   }
-
 }

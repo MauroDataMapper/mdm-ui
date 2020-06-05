@@ -1,31 +1,59 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { ElementTypesService } from "../../services/element-types.service";
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 
 @Component({
-  selector: "element-link",
-  inputs: [
-    "hideVersionNumber: hide-Version-Number",
-    "justShowCodeForTerm: just-show-code-for-term"
-  ],
-  templateUrl: "./element-link.component.html"
+  selector: 'mdm-element-link',
+  templateUrl: './element-link.component.html'
 })
 export class ElementLinkComponent implements OnInit {
-  @Input("show-type-title") showTypeTitle: boolean;
-  @Input() element: any;
-  @Input("new-window") newWindow: boolean;
-  @Input("parent-data-model") parentDataModel: any;
-  @Input("parent-data-class") parentDataClass: any;
-  @Input("show-href") showHref = true;
-  @Input("show-parent-data-model-name") showParentDataModelName: boolean;
-  @Input("show-link") showLink: boolean = true;
+  @Input() hideVersionNumber: boolean;
+  @Input() justShowCodeForTerm: boolean;
+  @Input() showTypeTitle: boolean;
+ // @Input() element: any;
+  @Input() newWindow: boolean;
+  @Input() parentDataModel: any;
+  @Input() parentDataClass: any;
+  @Input() showHref = true;
+  @Input() showParentDataModelName: boolean;
+  @Input() showLink = true;
+  elementVal: any;
+  @Output() selectedElementsChange = new EventEmitter<any[]>();
+
+  linkUrl: string;
+
+  @Input()
+  get element() {
+    return this.elementVal;
+  }
+
+  set element(val) {
+    this.elementVal = val;
+    this.selectedElementsChange.emit(this.elementVal);
+    this.ngOnInit();
+  }
 
   label: string;
   versionNumber: string;
   openLinkLocation: string;
   elementTypeTitle: string;
   types: any[];
-  hideVersionNumber: boolean;
-  justShowCodeForTerm: boolean;
 
   replaceLabelBy: any;
   disableLink: any;
@@ -33,20 +61,22 @@ export class ElementLinkComponent implements OnInit {
   constructor(private elementTypes: ElementTypesService) {}
 
   ngOnInit() {
-    this.label = "";
-    this.versionNumber = "";
+    this.label = '';
+    this.versionNumber = '';
+
+    this.linkUrl = this.elementTypes.getLinkUrl(this.element);
 
     if (!this.hideVersionNumber) {
       this.versionNumber = this.element?.documentationVersion
-        ? "Documentation Version: " + this.element.documentationVersion
-        : "";
+        ? 'Documentation Version: ' + this.element.documentationVersion
+        : '';
     }
 
     this.label = this.element?.label || this.element?.definition;
-    if (this.element?.domainType === "Term" && !this.justShowCodeForTerm) {
-      this.label = this.element.code + " : " + this.element.definition;
+    if (this.element?.domainType === 'Term' && !this.justShowCodeForTerm) {
+      this.label = this.element.code + ' : ' + this.element.definition;
     }
-    if (this.element?.domainType === "Term" && this.justShowCodeForTerm) {
+    if (this.element?.domainType === 'Term' && this.justShowCodeForTerm) {
       this.label = this.element.code;
     }
 
@@ -56,17 +86,17 @@ export class ElementLinkComponent implements OnInit {
 
     if (
       this.showParentDataModelName &&
-      this.element?.domainType !== "DataModel" &&
-      this.element?.domainType !== "Term" &&
-      this.element?.domainType !== "Terminology"
+      this.element?.domainType !== 'DataModel' &&
+      this.element?.domainType !== 'Term' &&
+      this.element?.domainType !== 'Terminology'
     ) {
-      var parentDM =
+      const parentDM =
         this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
           ? this.element?.breadcrumbs[0]
           : null;
-      this.label = parentDM?.label + " : " + this.label;
-      if (this.label === undefined) {
-        this.label = "";
+      this.label = parentDM?.label ? (parentDM?.label + ' : ' + this.label) : this.label;
+      if (this.label === 'undefined : undefined') {
+        this.label = '';
       }
     }
 
@@ -75,25 +105,25 @@ export class ElementLinkComponent implements OnInit {
   }
 
   public initTypeLabel(): any {
-    this.elementTypeTitle = "";
+    this.elementTypeTitle = '';
     this.types = this.elementTypes.getTypes();
     if (
       this.element &&
       this.element.domainType &&
-      this.types.filter(x => x.id == this.element.domainType)
+      this.types.filter(x => x.id === this.element.domainType)
     ) {
       this.elementTypeTitle = this.types.filter(
-        x => x.id == this.element.domainType
+        x => x.id === this.element.domainType
       )[0].title;
     }
   }
 
   public initLink() {
-    this.openLinkLocation = "_self";
+    this.openLinkLocation = '_self';
     if (this.newWindow) {
-      this.openLinkLocation = "_blank";
+      this.openLinkLocation = '_blank';
     }
-    //if it's true or it's NOT mentioned then make it true
+    // if it's true or it's NOT mentioned then make it true
     if (
       this.showLink === true ||
       this.showLink ||
@@ -103,7 +133,4 @@ export class ElementLinkComponent implements OnInit {
     }
   }
 
-  public getLinkUrl() {
-    return this.elementTypes.getLinkUrl(this.element);
-  }
 }

@@ -1,71 +1,85 @@
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-        <div style="width: 100%">
-            <terminology-details *ngIf="terminology"
-                                 [hide-edit-button]="true"
-                                 [mc-terminology]="terminology"
-                                 (after-save)="save()"
-                                 [(open-edit-form)]="openEditForm"></terminology-details>
-        </div>
+<!--
+Copyright 2020 University of Oxford
 
-        <div style="width: 100%;margin-bottom: 10px;">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="background-color: #E8E8E8 !important;"><strong>Find Terms</strong></div>
-                <div class="panel-body">
-                    <mc-select [width]="'100%'"
-                               [accept-typed-input]="false"
-                               [value-type]="'dynamic'"
-                               [min-input-length]="1"
-                               [default-placeholder]="'Search for Term...'"
-                               [load-dynamic-values]="fetch"
-                               [do-not-close-on-select]="true"
-                               [id-property]="'id'"
-                               [display-property]="'definition'"
-                               [search-property]="'definition'"
-                               [(pagination)]="pagination"
-                               (on-select)="onTermSelect($event[0])">
-                        <ng-template #lineContent let-item let-inputText="inputText">
-                            <a><span [innerHTML]="(item.code + ': ' + item.definition  | mchighlighter:inputText)"></span></a>
-                            <div *ngIf="item.aliases && item.aliases.length>0">
-                                <span *ngFor="let alias of item.aliases" style="margin:5px 0px; font-size: 12px;">
-                                    <a [innerHTML]="'(' + (alias | mchighlighter:inputText) + ')'"></a>
-                                </span>
-                            </div>
-                        </ng-template>
-                    </mc-select>
-                </div>
-            </div>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="full-width">
+    <mdm-terminology-details *ngIf="terminology"
+                            [hideEditButton]="true"
+                            [mcTerminology]="terminology"
+                            (afterSave)="save()"
+                            [openEditForm]="openEditForm"></mdm-terminology-details>
+</div>
+
+<div class="full-width mb-1 mdm--shadow-block">
+    <div class="panel">
+
+        <div class="panel-body">
+          <h4 class="marginless">Find Terms</h4>
+            <mdm-select [width]="'100%'"
+                        [acceptTypedInput]="false"
+                        [valueType]="'dynamic'"
+                        [minInputLength]="1"
+                        [defaultPlaceholder]="'Search for Term...'"
+                        [loadDynamicValues]="fetch"
+                        [doNotCloseOnSelect]="true"
+                        [idProperty]="'id'"
+                        [displayProperty]="'definition'"
+                        [searchProperty]="'definition'"
+                        [pagination]="pagination"
+                        (selectEvent)="onTermSelect($event[0])">
+                <ng-template #lineContent let-item let-inputText="inputText">
+                    <a><span [innerHTML]="(item.code + ': ' + item.definition  | mchighlighter:inputText)"></span></a>
+                    <div *ngIf="item.aliases && item.aliases.length>0">
+                        <span *ngFor="let alias of item.aliases" style="margin:5px 0px; font-size: 12px;">
+                            <a [innerHTML]="'(' + (alias | mchighlighter:inputText) + ')'"></a>
+                        </span>
+                    </div>
+                </ng-template>
+            </mdm-select>
         </div>
     </div>
 </div>
 
-<div *ngIf="!showEditForm" class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+<div *ngIf="!showEditForm">
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Properties">
             <ng-template matTabContent>
-                <div style="width: 100%;">
-                    <mc-data-set-metadata *ngIf="terminology" [parent]="terminology" [type]="'dynamic'"></mc-data-set-metadata>
+                <div class="full-width">
+                    <mdm-data-set-metadata *ngIf="terminology" [parent]="terminology" [type]="'dynamic'"></mdm-data-set-metadata>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Comments">
             <ng-template matTabContent>
-                <div style="width: 100%;">
-                    <annotation-list *ngIf="terminology" [parent]="terminology"></annotation-list>
+                <div class="full-width">
+                    <mdm-annotation-list *ngIf="terminology" [parent]="terminology"></mdm-annotation-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Attachments">
             <ng-template matTabContent>
-                <div style="width: 100%;">
-                    <attachment-list *ngIf="terminology" [parent]="terminology"></attachment-list>
+                <div class="full-width">
+                    <mdm-attachment-list *ngIf="terminology" [parent]="terminology"></mdm-attachment-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="History">
             <ng-template matTabContent>
-                <div style="width: 100%;">
-                    <app-history *ngIf="terminology" [parent]="terminology" [parentType]="'Terminology'"></app-history>
+                <div class="full-width">
+                    <mdm-history *ngIf="terminology" [parent]="terminology" [parentType]="'Terminology'"></mdm-history>
                 </div>
             </ng-template>
         </mat-tab>

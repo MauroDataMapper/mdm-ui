@@ -1,135 +1,166 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FavouriteHandlerService } from '../../services/handlers/favourite-handler.service';
-import { ElementTypesService } from '../../services/element-types.service';
-import { ResourcesService } from '../../services/resources.service';
-import { Observable } from 'rxjs';
+import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { forkJoin } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
-    selector: 'favourites',
-    templateUrl: './favourites.component.html',
-    styleUrls: ['./favourites.component.sass']
+  selector: 'mdm-favourites',
+  templateUrl: './favourites.component.html',
+  styleUrls: ['./favourites.component.sass']
 })
 export class FavouritesComponent implements OnInit {
+  @Output() favouriteClick = new EventEmitter<any>();
+  @Output() favouriteDbClick = new EventEmitter<any>();
 
-    @Output('on-favourite-click') onFavouriteClick = new EventEmitter<any>();
-    @Output('on-favourite-db-click') onFavouriteDbClick = new EventEmitter<any>();
+  reloading = false;
+  allFavourites: any;
+  selectedFavourite: any;
+  menuOptions = [];
 
-    reloading = false;
-    allFavourites: any;
-    selectedFavourite: any;
-    menuOptions = [];
+  favourites = [];
+  formData = {
+    filterCriteria: ''
+  };
 
-    favourites = [];
-    formData = {
-        filterCriteria: ''
-    };
+  contextMenuPosition = { x: '0px', y: '0px' };
 
-    contextMenuPosition = { x: '0px', y: '0px' };
+  @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
 
-    @ViewChild(MatMenuTrigger, {static: false}) contextMenu: MatMenuTrigger;
+  constructor(
+    private resources: ResourcesService,
+    private elementTypes: ElementTypesService,
+    private favouriteHandler: FavouriteHandlerService
+  ) {}
 
-    constructor(private resources: ResourcesService, private elementTypes: ElementTypesService, private favouriteHandler: FavouriteHandlerService) { }
+  ngOnInit() {
+    this.loadFavourites();
+  }
 
-    ngOnInit() {
+  loadFavourites = () => {
+    this.reloading = true;
+    const queries = [];
+    this.allFavourites = this.favouriteHandler.get();
 
-        this.loadFavourites();
+    const domainTypes = this.elementTypes.getBaseTypes();
+
+    this.allFavourites.forEach(favourite => {
+      const resourceName = domainTypes[favourite.domainType].resourceName;
+      // make sure we have a resource name for it
+      if (!this.resources[resourceName]) {
+        return;
+      }
+
+      queries.push(this.resources[resourceName].get(favourite.id));
+    });
+
+    if (queries.length === 0) {
+      this.reloading = false;
     }
 
-    loadFavourites = () => {
-        this.reloading = true;
-        let queries = [];
-        this.allFavourites = this.favouriteHandler.get();
+    forkJoin(queries).subscribe(results => {
+      let index = 0;
+      results.forEach((res: any) => {
+        const result = res.body;
+        this.allFavourites[index] = result;
+        index++;
+      });
+      this.reloading = false;
+      this.favourites = this.filter(
+        Object.assign([], this.allFavourites),
+        this.formData.filterCriteria
+      );
+    });
+  };
 
-        let domainTypes = this.elementTypes.getBaseTypes();
+  filter = (allFavourites, text) => {
+    let i = allFavourites.length - 1;
+    while (i >= 0) {
+      if (
+        allFavourites[i].label
+          .trim()
+          .toLowerCase()
+          .indexOf(text.trim().toLowerCase()) === -1
+      ) {
+        allFavourites.splice(i, 1);
+      }
+      i--;
+    }
+    return allFavourites;
+  };
 
-        this.allFavourites.forEach((favourite) => {
-            let resourceName = domainTypes[favourite.domainType].resourceName;
-            // make sure we have a resource name for it
-            if (!this.resources[resourceName]) { return; }
+  nodeClick = ($event, favourite) => {
+    this.click($event, favourite);
+  };
 
-            queries.push(this.resources[resourceName].get(favourite.id));
-        });
+  nodeDbClick = ($event, favourite) => {
+    this.click($event, favourite);
+  };
 
-        if (queries.length === 0) {
-            this.reloading = false;
+  click = ($event, favourite) => {
+    favourite.selected = !favourite.selected;
+
+    if (this.selectedFavourite) {
+      this.selectedFavourite.selected = false;
+    }
+    this.selectedFavourite = favourite;
+
+    if (this.favouriteDbClick) {
+      this.favouriteDbClick.emit(favourite);
+    }
+  };
+
+  dataModelContextMenu(favourite) {
+    const subMenu = [
+      {
+        name: 'Remove from Favourites',
+        action: () => {
+          this.favouriteHandler.remove(favourite);
         }
+      }
+    ];
+    return subMenu;
+  }
 
-        Observable.forkJoin(queries).subscribe((results) => {
-            let index = 0;
-            results.forEach((res: any) => {
-                const result = res.body;
-                this.allFavourites[index] = result;
-                index++;
-            });
-            this.reloading = false;
-            this.favourites = this.filter(Object.assign([], this.allFavourites), this.formData.filterCriteria);
-        });
-
-
+  rightClick = (event, favourite) => {
+    if (favourite.domainType === 'DataModel') {
+      this.menuOptions = this.dataModelContextMenu(favourite);
     }
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menuData = { favourite };
+    this.contextMenu.menu.focusFirstItem('mouse');
 
-    filter = (allFavourites, text) => {
-        let i = allFavourites.length - 1;
-        while (i >= 0) {
-            if (allFavourites[i].label.trim().toLowerCase().indexOf(text.trim().toLowerCase()) === -1) {
-                allFavourites.splice(i, 1);
-            }
-            i--;
-        }
-        return allFavourites;
-    }
+    this.contextMenu.openMenu();
+  };
 
-    nodeClick = ($event, favourite) => {
-        this.click($event, favourite);
-    }
+  onSearchInputKeyDown = $event => {
+    this.search();
+  };
 
-    nodeDbClick = ($event, favourite) => {
-        this.click($event, favourite);
-    }
-
-    click = ($event, favourite) => {
-        favourite.selected = !favourite.selected;
-
-        if (this.selectedFavourite) {
-            this.selectedFavourite.selected = false;
-        }
-        this.selectedFavourite = favourite;
-
-        if (this.onFavouriteDbClick) {
-            this.onFavouriteDbClick.emit(favourite);
-        }
-    }
-
-    dataModelContextMenu(favourite) {
-        let subMenu = [
-            {name: 'Remove from Favourites', action: () => { this.favouriteHandler.remove(favourite); }}
-        ];
-        return subMenu;
-    }
-
-    rightClick = (event, favourite) => {
-        if (favourite.domainType === 'DataModel') {
-            this.menuOptions = this.dataModelContextMenu(favourite);
-        }
-        event.preventDefault();
-        this.contextMenuPosition.x = event.clientX + 'px';
-        this.contextMenuPosition.y = event.clientY + 'px';
-        this.contextMenu.menuData = { favourite: favourite };
-        this.contextMenu.menu.focusFirstItem('mouse');
-
-
-        this.contextMenu.openMenu();
-
-
-    }
-
-    onSearchInputKeyDown = ($event) => {
-        this.search();
-    }
-
-    search = () => {
-        this.favourites = this.filter(Object.assign([] , this.allFavourites), this.formData.filterCriteria);
-    }
-
+  search = () => {
+    this.favourites = this.filter(
+      Object.assign([], this.allFavourites),
+      this.formData.filterCriteria
+    );
+  }
 }

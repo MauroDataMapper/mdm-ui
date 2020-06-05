@@ -1,18 +1,36 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 export class DataElementResult {
-        id : string;
-        domainType : string;
-        label : string;
-        dataModel : string;
-        breadcrumbs : Breadcrumb[];
-        aliases : any[] = [];
-        semanticLinks : SemanticLink[];
+        id: string;
+        domainType: string;
+        label: string;
+        dataModel: string;
+        description: string;
+        breadcrumbs: Breadcrumb[];
+        aliases: any[] = [];
+        semanticLinks: SemanticLink[];
         classifiers: Classifiers[];
-        editable : boolean;
-        lastUpdated : Date;
-        maxMultiplicity : number;
-        minMultiplicity : number;
+        editable: boolean;
+        lastUpdated: Date;
+        maxMultiplicity: number;
+        minMultiplicity: number;
         parentDataModel: string;
-        parentDataClass : string;
+        parentDataClass: string;
         finalised: boolean;
         dateFinalised: string;
         dataType: string;
@@ -24,7 +42,7 @@ export class DataElementResult {
 export class Breadcrumb {
     id: string;
     label: string;
-    domainType:string;
+    domainType: string;
     finalised: boolean;
 
 }
@@ -32,7 +50,7 @@ export class Breadcrumb {
 export class SemanticLink {
     id: string;
     linkType: string;
-    domainType:string;
+    domainType: string;
     source: Source;
     target: Target;
 
@@ -40,7 +58,7 @@ export class SemanticLink {
 
 export class Source {
     id: string;
-    domainType:string;
+    domainType: string;
     label: string;
     dataModel: boolean;
     breadcrumbs: Breadcrumb[];
@@ -49,7 +67,7 @@ export class Source {
 
 export class Target {
     id: string;
-    domainType:string;
+    domainType: string;
     label: string;
     dataModel: boolean;
     breadcrumbs: Breadcrumb[];
@@ -59,19 +77,19 @@ export class Target {
 export class Classifiers {
     id: string;
     label: string;
-    lastUpdated:string;
+    lastUpdated: string;
 
 }
 
 export class EditableDataElement {
 
-    constructor(){}
+    constructor() {}
 
     deletePending: boolean;
-    label:string;
+    label: string;
     description: string;
-    classifiers:Classifiers[] = [];
-    aliases:any[] = [];
+    classifiers: Classifiers[] = [];
+    aliases: any[] = [];
     visible: boolean;
     waiting: boolean;
     validationError: boolean;

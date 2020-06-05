@@ -1,96 +1,86 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, AfterViewInit, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { trigger, state, transition, animate, style } from '@angular/animations';
 
 @Component({
-    selector: 'two-side-panel',
-    templateUrl: './two-side-panel.component.html',
-    styleUrls: ['./two-side-panel.component.sass'],
-    animations: [
-        trigger('toggleHeight', [
-            state('inactive', style({
-                height: '0',
-                opacity: '0'
-            })),
-            state('active', style({
-                height: '*',
-                opacity: '1'
-            })),
-            transition('inactive => active', animate('200ms ease-in')),
-            transition('active => inactive', animate('200ms ease-out'))
-        ])
-    ]
+  selector: 'mdm-two-side-panel',
+  templateUrl: './two-side-panel.component.html',
+  styleUrls: ['./two-side-panel.component.sass'],
+  animations: [
+    trigger('openClose', [
+      state( 'closed', style({ height: '0', opacity: '0', display: 'none' })),
+      state( 'open', style({ height: '*', opacity: '1', display: 'block' })),
+      transition('closed => open', animate('30ms ease-in')),
+      transition('open => closed', animate('30ms ease-out'))
+    ])
+  ]
 })
 export class TwoSidePanelComponent implements AfterViewInit {
 
-    @ViewChild("showHideLeftPane", { static: false }) showHideLeftPane;
-    @ViewChild("resizableLeft", { static: false }) resizableLeft;
-    @ViewChild("showHidePaneText", { static: false }) showHidePaneText;
+  constructor(private renderer: Renderer2) {}
+  @ViewChild('showHideLeftPane', { static: false }) showHideLeftPane;
+  @ViewChild('resizableLeft', { static: false }) resizableLeft;
+  @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
 
-    showLeftPane: boolean;
+  showLeftPane: boolean;
+  state = 'inactive';
+  isOpen = true;
 
+  ngAfterViewInit() {
+    const width = window.innerWidth;
+    // this.windowSetup(width);
+  }
 
-    constructor(private renderer: Renderer2) { }
+  toggle() {
+    this.isOpen = !this.isOpen;
+  }
 
-    expand = false;
-
-
-    ngAfterViewInit() {
-        const width = window.innerWidth;
-        this.windowSetup(width);
+  hideShowLeftPane() {
+    this.state = this.state === 'inactive' ? 'active' : 'inactive';
+    console.log(this.state);
+    if (this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')) {
+      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
+      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+      this.resizableLeft.nativeElement.hidden = true;
+    } else {
+      this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+      this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
+      this.resizableLeft.nativeElement.hidden = false;
     }
+  }
 
-    toggle = () => {
-        this.expand = !this.expand;
-    };
+  // @HostListener('window:resize', ['$event'])
+  // onResize() {
+  //   const width = window.innerWidth;
+  //   this.windowSetup(width);
+  //   console.log(width);
+  // }
 
-    state = "inactive";
-
-    hideShowLeftPane() {
-
-        this.state = this.state === "inactive" ? "active" : "inactive";
-
-        if (this.showHideLeftPane.nativeElement.className.includes("fa-chevron-up")) {
-            this.renderer.removeClass(this.showHideLeftPane.nativeElement, "fa-chevron-up");
-            this.renderer.addClass(this.showHideLeftPane.nativeElement, "fa-chevron-down");
-            this.resizableLeft.nativeElement.hidden = true;
-            if (this.showHidePaneText) {
-                this.renderer.setProperty(this.showHidePaneText.nativeElement, "innerText",  "Show Models Tree");
-            }
-        } else {
-            this.renderer.removeClass(this.showHideLeftPane.nativeElement, "fa-chevron-down");
-            this.renderer.addClass(this.showHideLeftPane.nativeElement, "fa-chevron-up");
-            this.resizableLeft.nativeElement.hidden = false;
-            if (this.showHidePaneText) {
-                this.renderer.setProperty(this.showHidePaneText.nativeElement, "innerText",  "Minimise Models Tree");
-            }
-        }
-    }
-
-    @HostListener('window:resize', ["$event"])
-    onResize() {
-        const width = window.innerWidth;
-        this.windowSetup(width);
-    }
-
-    windowSetup = (width) => {
-        if (width > 800) {
-
-            this.resizableLeft.nativeElement.hidden = false;
-            this.renderer.removeClass(this.showHideLeftPane.nativeElement, "fa-chevron-down");
-            this.renderer.addClass(this.showHideLeftPane.nativeElement, "fa-chevron-up");
-            if (this.showHidePaneText) {
-                this.renderer.setProperty(this.showHidePaneText.nativeElement,"innerText", "Minimise Models Tree");
-            }
-        } else {
-
-            this.resizableLeft.nativeElement.hidden = true;
-            this.renderer.removeClass(this.showHideLeftPane.nativeElement, "fa-chevron-up");
-            this.renderer.addClass(this.showHideLeftPane.nativeElement, "fa-chevron-down");
-            if (this.showHidePaneText) {
-                this.renderer.setProperty(this.showHidePaneText.nativeElement, "innerText",  "Show Models Tree");
-            }
-        }
-    }
-
-
+  // windowSetup = width => {
+  //   if (width > 800) {
+  //     this.resizableLeft.nativeElement.hidden = false;
+  //     this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+  //     this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up' );
+  //   } else {
+  //     this.resizableLeft.nativeElement.hidden = true;
+  //     this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
+  //     this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');
+  //   }
+  // }
 }

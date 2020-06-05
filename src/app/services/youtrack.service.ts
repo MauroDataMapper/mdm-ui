@@ -1,63 +1,84 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {SharedService} from "./shared.service"
+import {SharedService} from './shared.service';
 import { Observable } from 'rxjs';
-import {SecurityHandlerService} from "./handlers/security-handler.service";
+import {SecurityHandlerService} from './handlers/security-handler.service';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class YoutrackService {
 
-    username: string
+    username: string;
 
     constructor(
         private httpClient: HttpClient,
         private sharedService: SharedService,
         private securityHandlerService: SecurityHandlerService
     ) {
-        this.username = securityHandlerService.getUserFromCookie().firstName + " " +
-            securityHandlerService.getUserFromCookie().lastName
+        this.username = securityHandlerService.getUserFromLocalStorage()?.firstName + ' ' +
+            securityHandlerService.getUserFromLocalStorage()?.lastName;
     }
 
     reportIssueToYouTrack(summary: string,
                           description: string): Observable<object> {
-        //make sure youTrack is configured
+        // make sure youTrack is configured
 
 
-        return this.getYoutrackProjectId(this.sharedService.youTrack.project).mergeMap(
-            (data:Object) => this.submitIssueToYouTrack(data[0]["id"], summary, description)
-        )
+        return this.getYoutrackProjectId(this.sharedService.youTrack.project).pipe(
+          mergeMap((data: object) => this.submitIssueToYouTrack(data[0].id, summary, description))
+        );
     }
 
-    getYoutrackProjectId(shortName: string): Observable<Object> {
-        var url:string = this.sharedService.youTrack.url + "/api/admin/projects?fields=id,name,shortName&query=" + encodeURIComponent(shortName);
+    getYoutrackProjectId(shortName: string): Observable<object> {
+        const url: string = this.sharedService.youTrack.url + '/api/admin/projects?fields=id,name,shortName&query=' + encodeURIComponent(shortName);
 
-        return this.httpClient.get(url)
+        return this.httpClient.get(url);
     }
 
 
     submitIssueToYouTrack(projectId: string,
                           summary: string,
-                          description: string): Observable<Object> {
+                          description: string): Observable<object> {
 
-        var url = this.sharedService.youTrack.url + "/api/issues"
+        const url = this.sharedService.youTrack.url + '/api/issues';
+
+        this.username = this.securityHandlerService.getUserFromLocalStorage()?.firstName + ' ' +
+            this.securityHandlerService.getUserFromLocalStorage()?.lastName;
 
 
-        var body = {
-            summary: summary,
-            description: description,
+        const body = {
+            summary,
+            description,
             project: {
                 id: projectId
             },
             customFields: [ {
                 value: this.username,
-                name: "Reporter's name",
-                $type: "SimpleIssueCustomField"
+                name: 'Reporter\'s name',
+                $type: 'SimpleIssueCustomField'
             } ]
-        }
+        };
 
-        return this.httpClient.post(url, body)
+        return this.httpClient.post(url, body);
 
     }
 

@@ -1,114 +1,133 @@
-import { Component, OnInit, EventEmitter, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DataModelStep1Component } from "../data-model-step1/data-model-step1.component";
-import { DataModelStep2Component } from "../data-model-step2/data-model-step2.component";
-import { StateHandlerService } from "../../../services/handlers/state-handler.service";
-import { ResourcesService } from "../../../services/resources.service";
-import { MessageHandlerService } from "../../../services/utility/message-handler.service";
-import { StateService } from "@uirouter/core";
-import { Step } from "../../../model/stepModel";
-import { BroadcastService } from '../../../services/broadcast.service';
+/*
+Copyright 2020 University of Oxford
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DataModelStep1Component } from '../data-model-step1/data-model-step1.component';
+import { DataModelStep2Component } from '../data-model-step2/data-model-step2.component';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { StateService } from '@uirouter/core';
+import { Step } from '@mdm/model/stepModel';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-data-model-main',
-    templateUrl: './data-model-main.component.html',
-    //styleUrls: ['./data-model-main.component.sass']
+  selector: 'mdm-data-model-main',
+  templateUrl: './data-model-main.component.html',
+  styleUrls: ['./data-model-main.component.sass']
 })
 export class DataModelMainComponent implements OnInit {
-    isLinear = false;
-    firstFormGroup: FormGroup;
-    secondFormGroup: FormGroup;
-    steps: Step[] = [];
-    doneEvent = new EventEmitter<any>();
-    parentFolderId: any;
 
-    constructor(private broadcastSvc: BroadcastService, private stateHandler: StateHandlerService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private stateService: StateService) { }
+  constructor(
+    private broadcastSvc: BroadcastService,
+    private stateHandler: StateHandlerService,
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateService: StateService,
+    private title: Title
+  ) {}
+  isLinear = false;
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+  steps: Step[] = [];
+  doneEvent = new EventEmitter<any>();
+  parentFolderId: any;
 
-    ngOnInit() {
-        //this.firstFormGroup = this._formBuilder.group({
-        //    firstCtrl: ['', Validators.required]
-        //});
-        //this.secondFormGroup = this._formBuilder.group({
-        //    secondCtrl: ['', Validators.required]
-        //});
+  parentFolder: any;
 
-        this.parentFolderId = this.stateService.params.parentFolderId;
-        this.resources.folder.get(this.parentFolderId, null, null).toPromise().then((result) => {
-            result.domainType = "Folder";
-            this.parentFolder = result.body;
+  model: any = {
+    metadata: [],
+    classifiers: []
+  };
 
+  ngOnInit() {
+    this.title.setTitle(`New Data Model`);
 
-            const step1 = new Step();
-            step1.title = "Data Model Details";
-            step1.component = DataModelStep1Component;
-            step1.scope = this;
-            step1.hasForm = true;
+    this.parentFolderId = this.stateService.params.parentFolderId;
+    this.resources.folder.get(this.parentFolderId, null, null).toPromise().then(result => {
+        result.domainType = 'Folder';
+        this.parentFolder = result.body;
 
-            const step2 = new Step();
-            step2.title = "Default Data Types";
-            step2.component = DataModelStep2Component;
-            step2.scope = this;
+        const step1 = new Step();
+        step1.title = 'Data Model Details';
+        step1.component = DataModelStep1Component;
+        step1.scope = this;
+        step1.hasForm = true;
+        step1.invalid = true;
 
-            this.steps.push(step1);
-            this.steps.push(step2);
+        const step2 = new Step();
+        step2.title = 'Default Data Types';
+        step2.component = DataModelStep2Component;
+        step2.scope = this;
+        step1.invalid = true;
 
+        this.steps.push(step1);
+        this.steps.push(step2);
+      })
+      .catch(error => {
+        this.messageHandler.showError('There was a problem loading the Folder.', error);
+      });
+  }
 
-        }).catch((error) => {
-            this.messageHandler.showError('There was a problem loading the Folder.', error);
-        });
-    }
+  cancelWizard = () => {
+    this.stateHandler.GoPrevious();
+  };
 
-    parentFolder: any;
-
-    model : any = {
-        metadata: [],
-        classifiers: []
-    };
-
-    cancelWizard = () => {
-        this.stateHandler.GoPrevious();
-    }
-
-    save = () => {
-        var resource = {
-            folder: this.parentFolderId,
-            label: this.model.label,
-            description: this.model.description,
-            author: this.model.author,
-            organisation: this.model.organisation,
-            type: this.model.dataModelType,
-            dialect: '',
-            classifiers: this.model.classifiers.map((cls) => {
-                return { id: cls.id };
-            }),
-            metadata: this.model.metadata.map((m) => {
-                return {
-                    key: m.key,
-                    value: m.value,
-                    namespace: m.namespace
-                };
-            })
+  save = () => {
+    const resource = {
+      folder: this.parentFolderId,
+      label: this.model.label,
+      description: this.model.description,
+      author: this.model.author,
+      organisation: this.model.organisation,
+      type: this.model.dataModelType,
+      dialect: '',
+      classifiers: this.model.classifiers.map(cls => {
+        return { id: cls.id };
+      }),
+      metadata: this.model.metadata.map(m => {
+        return {
+          key: m.key,
+          value: m.value,
+          namespace: m.namespace
         };
-        if (resource.type === "Database") {
-            resource.dialect = this.model.dialect;
-        }
-
-        var queryStringParams = null;
-        if (this.model.selectedDataTypeProvider) {
-            queryStringParams = {
-                defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
-            };
-        }
-
-
-        this.resources.dataModel.post(null, null, { resource: resource, queryStringParams: queryStringParams }).subscribe
-             ((response) => {
-                this.messageHandler.showSuccess('Data Model saved successfully.');
-                this.broadcastSvc.broadcast('$reloadFoldersTree');
-                this.stateHandler.Go("dataModel", { id: response.body.id }, { reload: true, location: true });
-            }, (error) => {
-                this.messageHandler.showError('There was a problem saving the Data Model.', error);
-            });
+      })
     };
+    if (resource.type === 'Database') {
+      resource.dialect = this.model.dialect;
+    }
+
+    let queryStringParams = null;
+    if (this.model.selectedDataTypeProvider) {
+      queryStringParams = {
+        defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
+      };
+    }
+
+    this.resources.dataModel.post(null, null, {resource, queryStringParams}).subscribe(response => {
+          this.messageHandler.showSuccess('Data Model saved successfully.');
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.Go('dataModel', { id: response.body.id }, { reload: true, location: true });
+        },
+        error => {
+          this.messageHandler.showError('There was a problem saving the Data Model.', error);
+        }
+      );
+  }
 }

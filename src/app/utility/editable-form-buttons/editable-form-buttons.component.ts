@@ -1,139 +1,143 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { Editable } from '../../model/folderModel';
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Editable } from '@mdm/model/folderModel';
 
 @Component({
-    selector: 'editable-form-buttons',
-    templateUrl: './editable-form-buttons.component.html',
-  //  styleUrls: ['./editable-form-buttons.component.sass']
+  selector: 'mdm-editable-form-buttons',
+  templateUrl: './editable-form-buttons.component.html',
+   styleUrls: ['./editable-form-buttons.component.sass']
 })
 export class EditableFormButtonsComponent implements OnInit {
+  @Input() deleteIcon: any;
+  @Input() deleteTitle: any;
+  @Input() editTitle: any;
+  @Input() processing: any;
+  @Input() editable: Editable;
+  @Input() onEditClicked: any;
+  @Input() onDeleteClicked: any;
+  @Input() onConfirmDelete: any;
+  @Input() onCancelDelete: any;
+  @Input() onCancelEdit: any;
+  @Input() onSave: any;
+  @Input() hasSeparateEditForm: any;
+  @Input() textLocation: any;
+  @Input() hideDelete: any;
+  @Input() hideEdit: any;
+  @Input() hideCancel: any;
+  @Output() delete = new EventEmitter<any>();
 
-    @Input("delete-icon") deleteIcon: any;
-    @Input("delete-title") deleteTitle: any;
-    @Input("edit-title") editTitle: any;
-    @Input("processing") processing: any;
-    @Input("editable") editable: Editable;
-    @Input("on-edit-clicked") onEditClicked: any;
-    @Input("on-delete-clicked") onDeleteClicked: any;
-    @Input("on-confirm-delete") onConfirmDelete: any;
-    @Input("on-cancel-delete") onCancelDelete: any;
-    @Input("on-cancel-edit") onCancelEdit: any;
-    @Input("on-save") onSave: any;
-    @Input("has-separate-edit-form") hasSeparateEditForm: any;
-    @Input("text-location") textLocation: any;
-    @Input("hide-delete") hideDelete: any;
-    @Input("hide-edit") hideEdit: any;
-    @Input("hide-cancel") hideCancel: any;
-    @Output("delete") delete = new EventEmitter<any>();
+  public displayDeleteTitle: string = this.deleteTitle;
+  public displayDeleteIcon: any = this.deleteIcon;
 
-   
-    public displayDeleteTitle: string = this.deleteTitle;
-    public displayDeleteIcon: any = this.deleteIcon;
+  public displayEditTitle: string = this.editTitle;
 
-    public displayEditTitle : string = this.editTitle;
+  constructor() {}
 
-    constructor() { }
-
-    ngOnInit() {
-
-        if (!this.displayDeleteTitle) {
-            this.displayDeleteTitle = "Delete";
-        }
-
-        if (!this.displayDeleteIcon) {
-            this.displayDeleteIcon = "fa-trash-o";
-        }
-
-        
-        if (!this.displayEditTitle) {
-            this.displayEditTitle = "Edit";
-        }
-
-        if (this.onConfirmDelete) {
-            this.onConfirmDelete = this.onConfirmDelete();
-        }
-
-        if (this.onEditClicked) {
-            this.onEditClicked = this.onEditClicked();
-        }
-
-        if (this.onCancelEdit) {
-            this.onCancelEdit = this.onCancelEdit();
-        }
-
-
-        if (this.editable) {
-            this.editable.deletePending = false;
-        }
+  ngOnInit() {
+    if (!this.displayDeleteTitle) {
+      this.displayDeleteTitle = 'Delete';
     }
 
-
-   
-
-    editClicked() {
-        if (this.onEditClicked) {
-            this.onEditClicked();
-        }
-        //if it does not have 'hasSeparateEditForm' && has 'editable'
-        if (!this.hasSeparateEditForm && this.editable) {
-            this.editable.show();
-        }
+    if (!this.displayDeleteIcon) {
+      this.displayDeleteIcon = 'fa-trash-alt';
     }
-    /// Delete ----------------------------------------
-    deleteClicked() {
-        this.editable.deletePending = true;
-        // if (this.onDeleteClicked) {
-        //     this.onDeleteClicked();
-        // }
-        // if (this.editable) {
-        //     this.editable.deletePending = true;
-        // }
-    };
 
-    cancelDeleteClicked() {
-        if (this.editable) {
-            this.editable.deletePending = false;
-        }
-        if (this.onCancelDelete) {
-            this.onCancelDelete();
-        }
-        if(!this.hideDelete)
-        {
-            this.editable.deletePending = false;
-        }
-    };
+    if (!this.displayEditTitle) {
+      this.displayEditTitle = 'Edit';
+    }
 
-    confirmDeleteClicked() {
-        if (this.editable) {
-            this.editable.deletePending = false;
-        }
-        if (this.onConfirmDelete) {
-            this.onConfirmDelete();
-        }
+    if (this.onConfirmDelete) {
+      this.onConfirmDelete = this.onConfirmDelete();
+    }
 
-        if (this.delete) {
-            this.delete.emit();
-        }
-    };
-    /// 	----------------------------------------
+    if (this.onEditClicked) {
+      this.onEditClicked = this.onEditClicked();
+    }
 
+    if (this.onCancelEdit) {
+      this.onCancelEdit = this.onCancelEdit();
+    }
 
+    if (this.editable) {
+      this.editable.deletePending = false;
+    }
+  }
 
-    cancelEditClicked() {
-        if (this.editable) {
-            this.editable.cancel();
-        }
-        if (this.onCancelEdit) {
-            this.onCancelEdit();
-        }
-    };
+  editClicked() {
+    if (this.onEditClicked) {
+      this.onEditClicked();
+    }
+    // if it does not have 'hasSeparateEditForm' && has 'editable'
+    if (!this.hasSeparateEditForm && this.editable) {
+      this.editable.show();
+    }
+  }
+  /// Delete ----------------------------------------
+  deleteClicked() {
+    this.editable.deletePending = true;
+    // if (this.onDeleteClicked) {
+    //     this.onDeleteClicked();
+    // }
+    // if (this.editable) {
+    //     this.editable.deletePending = true;
+    // }
+  }
 
-    saveClicked(): any {
-        if (this.onSave) {
-            this.onSave();
-        }
-        return true;//as it is submit
-    };
+  cancelDeleteClicked() {
+    if (this.editable) {
+      this.editable.deletePending = false;
+    }
+    if (this.onCancelDelete) {
+      this.onCancelDelete();
+    }
+    if (!this.hideDelete) {
+      this.editable.deletePending = false;
+    }
+  }
 
+  confirmDeleteClicked() {
+    if (this.editable) {
+      this.editable.deletePending = false;
+    }
+    if (this.onConfirmDelete) {
+      this.onConfirmDelete();
+    }
+
+    if (this.delete) {
+      this.delete.emit();
+    }
+  }
+  /// 	----------------------------------------
+
+  cancelEditClicked() {
+    if (this.editable) {
+      this.editable.cancel();
+    }
+    if (this.onCancelEdit) {
+      this.onCancelEdit();
+    }
+  }
+
+  saveClicked(): any {
+    if (this.onSave) {
+      this.onSave();
+    }
+    return true; // as it is submit
+  }
 }
-

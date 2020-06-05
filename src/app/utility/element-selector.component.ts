@@ -1,7 +1,24 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
 import { Component, Inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ResourcesService } from '../services/resources.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MarkdownParserService } from '../utility/markdown-parser.service';
+import { MarkdownParserService } from './markdown/markdown-parser/markdown-parser.service';
 import { MessageService } from '../services/message.service';
 import { ContentSearchHandlerService } from '../services/content-search.handler.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -10,7 +27,7 @@ import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-element-selector',
+    selector: 'mdm-element-selector',
     templateUrl: './element-selector.component.html',
     animations: [
         trigger('detailExpand', [
@@ -26,7 +43,7 @@ export class ElementSelectorComponent implements OnInit {
     @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
 
         if (!this.searchControlInput && content) {
-            fromEvent(content.nativeElement, "keyup").pipe(
+            fromEvent(content.nativeElement, 'keyup').pipe(
                 map((event: any) => {
                     return event.target.value;
                 }),
@@ -46,57 +63,51 @@ export class ElementSelectorComponent implements OnInit {
         this.cd.detectChanges();
     }
 
-    constructor(public dialogRef: MatDialogRef<ElementSelectorComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private resourceService: ResourcesService, private markdownParser: MarkdownParserService, private messageService: MessageService, private contextSearchHandler: ContentSearchHandlerService, private cd : ChangeDetectorRef) {
-
-
-    }
-;
-;
-;
-;
-;
-;
-;
-;
-;
-
-    pageSize: number = 40;
-    hideOptions = {};
-    public searchInput: string;
-    loading = true;
-    formData = {
-        showSearchResult: false,
-        selectedType: "",
-        step: 0,
-        currentContext: null,
-        searchResult: null,
-        searchResultTotal: null,
-        searchResultPageSize: 40,
-        searchResultOffset: 0,
-        searchResultDisplayedSoFar: 0,
-        exactMatch: false,
-        treeSearchText: "",
-        startFetching: 0,
-        inSearchMode: false,
-
-    };
-    showPrevBtn: boolean = false;
-    public terminologies: any[];
-    public termsList: any[];
-    options;
-    dataSource = new MatTableDataSource();
-    displayedColumns: string[] = ['label'];
-    selectedTerm;
-    noData = true;
-    currentRecord: number;
-    totalItemCount: number;
-    isProcessing: boolean = false;
-    expandedElement: any;
-    rootNode : any;
-    reloading = false;
+  constructor(
+    public dialogRef: MatDialogRef<ElementSelectorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private resourceService: ResourcesService,
+    private markdownParser: MarkdownParserService,
+    private messageService: MessageService,
+    private contextSearchHandler: ContentSearchHandlerService,
+    private cd: ChangeDetectorRef
+  ) {}
+  pageSize = 40;
+  validTypesToSelect = [];
+  public searchInput: string;
+  loading = true;
+  formData = {
+    showSearchResult: false,
+    selectedType: '',
+    step: 0,
+    currentContext: null,
+    searchResult: null,
+    searchResultTotal: null,
+    searchResultPageSize: 40,
+    searchResultOffset: 0,
+    searchResultDisplayedSoFar: 0,
+    exactMatch: false,
+    treeSearchText: '',
+    startFetching: 0,
+    inSearchMode: false
+  };
+  showPrevBtn = false;
+  public terminologies: any[];
+  public termsList: any[];
+  options;
+  dataSource = new MatTableDataSource();
+  displayedColumns: string[] = ['label'];
+  selectedTerm;
+  noData = true;
+  currentRecord: number;
+  totalItemCount = 0;
+  isProcessing = false;
+  expandedElement: any;
+  rootNode: any;
+  reloading = false;
 
     private searchControlInput: ElementRef;
-    isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
+    isExpansionDetailRow = (i: number, row: object) => row.hasOwnProperty('detailRow');
 
     closeHelp(): void {
         this.dialogRef.close();
@@ -105,31 +116,23 @@ export class ElementSelectorComponent implements OnInit {
     onElementTypeSelect(selectedType) {
         this.formData.selectedType = selectedType;
         this.formData.step = 1;
-        this.searchInput = "";
+        this.searchInput = '';
         this.dataSource = new MatTableDataSource<any>(null);
         this.totalItemCount = 0;
         this.currentRecord = 0;
         this.reLoad();
     }
-    // $scope.$watch('validTypesToSelect', function (newValue, oldValue, scope) { TODO
-    //
-    //     if(newValue){
-    //         if($scope.validTypesToSelect.length === 1){
-    //             $scope.showPrevBtn = false;
-    //             $scope.onElementTypeSelect($scope.validTypesToSelect[0]);
-    //         }else{
-    //             $scope.hideOptions['Folder']    = $scope.validTypesToSelect.indexOf("Folder") === -1 ;
-    //             $scope.hideOptions['DataModel'] = $scope.validTypesToSelect.indexOf("DataModel") === -1 ;
-    //             $scope.hideOptions['DataClass'] = $scope.validTypesToSelect.indexOf("DataClass") === -1 ;
-    //             $scope.hideOptions['DataElement'] = $scope.validTypesToSelect.indexOf("DataElement") === -1 ;
-    //             $scope.hideOptions['DataType'] = $scope.validTypesToSelect.indexOf("DataType") === -1 ;
-    //             $scope.hideOptions['Term'] = $scope.validTypesToSelect.indexOf("Term") === -1 ;
-    //             $scope.showPrevBtn = true;
-    //         }
-    //     }else{
-    //         $scope.showPrevBtn = true;
-    //     }
-    // });
+    configureValidTypes(validTypesToSelect: any[]) {
+      this.validTypesToSelect = validTypesToSelect;
+      if (validTypesToSelect.length === 1) {
+        this.showPrevBtn = false;
+        this.onElementTypeSelect(validTypesToSelect[0]);
+      } else {
+
+        this.showPrevBtn = true;
+        // console.log(this.showOptions)
+      }
+    }
 
     reLoad() {
         if (['DataModel', 'DataClass'].indexOf(this.formData.selectedType) !== -1) {
@@ -137,61 +140,61 @@ export class ElementSelectorComponent implements OnInit {
              this.loadAllDataModels();
         }
 
-        if (this.formData.selectedType === "Folder") {
+        if (this.formData.selectedType === 'Folder') {
             this.showPrevBtn = true;
-             this.loadAllFolders();
+            this.loadAllFolders();
         }
 
-        if (this.formData.selectedType === "Term") {
+        if (this.formData.selectedType === 'Term') {
             this.showPrevBtn = true;
             this.loadTerminologies();
         }
         this.showPrevBtn = true;
 
     }
-    previousStep = function () {
+    previousStep = function() {
         this.formData.step = 0;
         this.formData.currentContext = null;
-        this.formData.treeSearchText = "";
-        this.searchInput = "";
+        this.formData.treeSearchText = '';
+        this.searchInput = '';
         this.dataSource = new MatTableDataSource<any>(null);
     };
 
-    loadAllDataModels (){
+    loadAllDataModels() {
         this.reloading = true;
-        this.resourceService.tree.get().subscribe((data) =>{
+        this.resourceService.tree.get().subscribe((data) => {
             this.rootNode = {
-                "children": data.body,
+                children: data.body,
                 isRoot: true
             };
             this.reloading = false;
-        }, function () {
+        }, function() {
             this.reloading = false;
         });
     }
-  loadAllFolders = function () {
+  loadAllFolders = function() {
     this.loading = true;
-    this.resourceService.tree.get(null, null, { foldersOnly: true }).subscribe( (data) => {
+    this.resourceService.folder.get(null, null, { all: true }).subscribe( (data) => {
       this.loading = false;
       this.rootNode = {
-        children: data.body,
+        children: data.body.items,
         isRoot: true
       };
-    }, function (error) {
+    }, function(error) {
       this.loading = false;
     });
   };
 
-    loadTerminologies = function () {
+    loadTerminologies = function() {
         this.reloading = true;
         this.resourceService.terminology.get(null, null, { all: true }).subscribe(res => {
             if (this.data.notAllowedToSelectIds && this.data.notAllowedToSelectIds.length > 0) {
-                var i = res.body.items.length - 1;
+                let i = res.body.items.length - 1;
                 while (i >= 0) {
                     // var found =  _.find(data.notAllowedToSelectIds, function(terminologyId) {
                     //     return terminologyId === data.items[i].id;
                     // });
-                    var found = false;
+                    let found = false;
                     this.data.notAllowedToSelectIds.forEach((terminologyId) => {
                         if (terminologyId === res.body.items[i].id) {
                             found = true;
@@ -208,7 +211,7 @@ export class ElementSelectorComponent implements OnInit {
             this.terminologies = res.body.items;
 
             // this.reloading = false;
-        }, function () {
+        }, function() {
             this.reloading = false;
         });
     };
@@ -218,38 +221,37 @@ export class ElementSelectorComponent implements OnInit {
         if (terminology != null) {
             this.formData.currentContext = this.terminologies.find((data: any) => data.label === terminology.label);
             this.fetch(40, 0);
-        }
-        else {
+        } else {
             this.totalItemCount = 0;
             this.currentRecord = 0;
             this.noData = true;
-            this.searchInput = "";
+            this.searchInput = '';
         }
     };
 
     onTableScroll(e) {
-        const tableViewHeight = e.target.offsetHeight // viewport: ~500px
-        const tableScrollHeight = e.target.scrollHeight // length of all table
+        const tableViewHeight = e.target.offsetHeight; // viewport: ~500px
+        const tableScrollHeight = e.target.scrollHeight; // length of all table
         const scrollLocation = e.target.scrollTop; // how far user scrolled
 
         // If the user has scrolled within 200px of the bottom, add more data
         const buffer = 200;
         const limit = tableScrollHeight - tableViewHeight - buffer;
         if (scrollLocation > limit && limit > 0) {
-            var requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length + this.pageSize;
-            if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing == false) {
+            const requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length + this.pageSize;
+            if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing === false) {
                 this.isProcessing = true;
-                this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length, true);
+                this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length, true);
             }
         }
     }
 
     onNodeInTreeSelect(node) {
-        if(this.formData.selectedType !== node.domainType){
+        if (this.formData.selectedType !== node.domainType) {
             return;
         }
 
-        var found = false;
+        const found = false;
         // if(this.notAllowedToSelectIds && $scope.notAllowedToSelectIds.length > 0){
         //     angular.forEach($scope.notAllowedToSelectIds, function (notAllowedId) {
         //         if(node.id === notAllowedId){
@@ -257,17 +259,17 @@ export class ElementSelectorComponent implements OnInit {
         //         }
         //     });
         // } TODO Ask
-        if(found){
+        if (found) {
             return;
         }
 
         this.messageService.elementSelectorSendData(node);
-        this.dialogRef.close();
+        this.dialogRef.close(node);
     }
 
     onTermSelect(element) {
         this.messageService.elementSelectorSendData(element);
-        this.dialogRef.close();
+        this.dialogRef.close(element);
     }
 
     public searchTextChanged2() {
@@ -289,15 +291,15 @@ export class ElementSelectorComponent implements OnInit {
 
     public fetch(pageSize: number, offset: number, infinateScrollCall: boolean = false): any {
         if ((!this.searchInput || (this.searchInput && this.searchInput.trim().length === 0)) && this.formData.currentContext) {
-            offset = offset/pageSize;
-            //load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
+          //  offset = offset / pageSize;
+            // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
             this.loadAllContextElements(this.formData.currentContext, this.formData.selectedType, pageSize, offset);
         } else {
                         // var deferred = $q.defer();
             this.formData.searchResultOffset = offset;
 
             this.loading = true;
-            offset = offset/pageSize;
+          //  offset = offset / pageSize;
             // $scope.safeApply();
             // var position = offset * this.formData.searchResultPageSize;
             this.contextSearchHandler.search(
@@ -318,16 +320,15 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
                 this.loading = false;
                 res.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
-                })
+                });
 
                 // if(element.hasOwnProperty("breadcrumbs"))
-                if (infinateScrollCall == true) {
+                if (infinateScrollCall === true) {
                     // this.dataSource.data = this.dataSource.data.concat(rows);
                     // this.dataSource._updateChangeSubscription();
                     this.isProcessing = true;
@@ -341,7 +342,7 @@ export class ElementSelectorComponent implements OnInit {
 
                     this.totalItemCount = res.body.count;
 
-                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
 
 
                     this.dataSource._updateChangeSubscription();
@@ -352,7 +353,7 @@ export class ElementSelectorComponent implements OnInit {
                 } else {
                     this.isProcessing = true;
                     this.dataSource = new MatTableDataSource<any>(rows);
-                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                    this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
                     this.totalItemCount = res.body.count;
                     this.noData = false;
                     this.isProcessing = false;
@@ -364,17 +365,17 @@ export class ElementSelectorComponent implements OnInit {
     }
 
     loadAllDataElements(dataClass, pageSize, pageIndex) {
-        var options = {
-            pageSize: pageSize,
-            pageIndex: pageIndex ,
-            sortBy: "label",
-            sortType: "asc"
+        const options = {
+            pageSize,
+            pageIndex ,
+            sortBy: 'label',
+            sortType: 'asc'
         };
-        return this.resourceService.dataClass.get(dataClass.dataModel, null, dataClass.id, "dataElements", options);
+        return this.resourceService.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
     }
     loadAllContextElements(currentContext, selectedType, pageSize, offset) {
 
-        if (currentContext.domainType === "DataClass" && selectedType === "DataElement") {
+        if (currentContext.domainType === 'DataClass' && selectedType === 'DataElement') {
             this.loading = true;
             this.formData.searchResultOffset = offset;
 
@@ -382,13 +383,12 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
 
                 result.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
-                })
+                });
                 this.formData.searchResult = result.items;
                 this.calculateDisplayedSoFar(result);
 
@@ -396,7 +396,7 @@ export class ElementSelectorComponent implements OnInit {
                 this.loading = false;
             });
 
-        } else if (currentContext.domainType === "DataModel" && selectedType === "DataType") {
+        } else if (currentContext.domainType === 'DataModel' && selectedType === 'DataType') {
 
             this.formData.searchResultOffset = offset;
             this.loading = true;
@@ -404,13 +404,12 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
 
                 result.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
-                })
+                });
 
                 // $scope.loading = false;
                 this.formData.searchResult = result.items;
@@ -424,7 +423,7 @@ export class ElementSelectorComponent implements OnInit {
                 }
 
                 this.totalItemCount = result.body.count;
-                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
 
 
                 this.dataSource._updateChangeSubscription();
@@ -437,7 +436,7 @@ export class ElementSelectorComponent implements OnInit {
 
             this.loading = false;
 
-        } else if (currentContext.domainType === "Terminology" && selectedType === "Term") {
+        } else if (currentContext.domainType === 'Terminology' && selectedType === 'Term') {
 
             this.formData.searchResultOffset = offset;
             this.loading = true;
@@ -447,16 +446,15 @@ export class ElementSelectorComponent implements OnInit {
                 const rows = [];
 
                 result.body.items.forEach(element => {
-                    if (element.hasOwnProperty("breadcrumbs")) {
+                    if (element.hasOwnProperty('breadcrumbs')) {
                         rows.push(element, { detailRow: true, element });
-                    }
-                    else {
+                    } else {
                         rows.push(element);
                     }
-                })
+                });
 
-                    this.termsList = rows;
-                 this.totalItemCount = result.body.count;
+                this.termsList = rows;
+                this.totalItemCount = result.body.count;
                 if (this.dataSource.data) {
                     this.dataSource.data = this.dataSource.data.concat(this.termsList);
                 } else {
@@ -466,96 +464,96 @@ export class ElementSelectorComponent implements OnInit {
 
                // this.currentRecord = this.dataSource.data.length;
 
-                //this.totalItemCount = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
-                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                // this.totalItemCount = this.dataSource.data.filter(x => !x.hasOwnProperty("detailRow")).length;
+                this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
 
                 this.dataSource._updateChangeSubscription();
                 this.noData = false;
                 this.isProcessing = false;
                 this.loading = false;
-
-
-            });
-
-        }
-
-
+      });
     }
-    loadAllTerms(terminology, pageSize, pageIndex) {
-        var options = {
-            pageSize: pageSize,
-            pageIndex: pageIndex,
-        };
-        return this.resourceService.terminology.get(terminology.id, "terms", options);
+  }
+  loadAllTerms(terminology, pageSize, pageIndex) {
+    const options = {
+      pageSize,
+      pageIndex
+    };
+    return this.resourceService.terminology.get(
+      terminology.id,
+      'terms',
+      options
+    );
+  }
+  calculateDisplayedSoFar(result) {
+    this.formData.searchResultTotal = result.count;
+
+    if (result.count >= this.formData.searchResultPageSize) {
+      const total =
+        (this.formData.searchResultOffset + 1) *
+        this.formData.searchResultPageSize;
+      if (total >= result.count) {
+        this.formData.searchResultDisplayedSoFar = result.count;
+      } else {
+        this.formData.searchResultDisplayedSoFar = total;
+      }
+    } else {
+      this.formData.searchResultDisplayedSoFar = result.count;
     }
-    calculateDisplayedSoFar(result) {
-        this.formData.searchResultTotal = result.count;
-
-        if (result.count >= this.formData.searchResultPageSize) {
-            var total = (this.formData.searchResultOffset + 1) * this.formData.searchResultPageSize;
-            if (total >= result.count) {
-                this.formData.searchResultDisplayedSoFar = result.count;
-            } else {
-                this.formData.searchResultDisplayedSoFar = total;
-            }
-
-        } else {
-            this.formData.searchResultDisplayedSoFar = result.count;
-        }
+  }
+  loadAllDataTypes(dataModel, pageSize, pageIndex) {
+    const options = {
+      pageSize,
+      pageIndex,
+      sortBy: 'label',
+      sortType: 'asc'
+    };
+    return this.resourceService.dataModel.get(
+      dataModel.id,
+      'dataTypes',
+      options
+    );
+  }
+  searchInTree(treeSearchDomainType) {
+    if (this.formData.treeSearchText.trim().length === 0) {
+      this.formData.inSearchMode = false;
+      this.reLoad();
+      return;
     }
-    loadAllDataTypes(dataModel, pageSize, pageIndex) {
-        var options = {
-            pageSize: pageSize,
-            pageIndex: pageIndex ,
-            sortBy: "label",
-            sortType: "asc"
-        };
-        return this.resourceService.dataModel.get(dataModel.id, "dataTypes", options);
-    }
-    searchInTree (treeSearchDomainType){
+    this.formData.inSearchMode = true;
+    this.reloading = true;
+    // this.allModels = [];
 
-        if(this.formData.treeSearchText.trim().length === 0){
-            this.formData.inSearchMode = false;
-            this.reLoad();
-            return;
-        }
-        this.formData.inSearchMode = true;
-        this.reloading = true;
-       // this.allModels = [];
-
-        var options = {
-            queryStringParams :{
-                domainType: treeSearchDomainType
-            }
-        };
-
-        this.resourceService.tree.get(null, "search/" + this.formData.treeSearchText, options).subscribe( (result) => {
-            this.reloading = false;
-            this.rootNode = {
-                "children": result.body,
-                isRoot: true
-            };
-        });
-    }
-    onContextSelected = (element) =>{
-
-        if(element && element.length > 0){
-            this.formData.currentContext = element[0];
-        }else {
-            this.formData.currentContext = null;
-            this.dataSource = new MatTableDataSource<any>(null);
-            this.totalItemCount = 0;
-            this.currentRecord = 0;
-        }
-
-        this.fetch(40, 0);
+    const options = {
+      queryStringParams: {
+        domainType: treeSearchDomainType
+      }
     };
 
-    ngOnInit() {
-
+    this.resourceService.tree
+      .get(null, 'search/' + this.formData.treeSearchText, options)
+      .subscribe(result => {
+        this.reloading = false;
+        this.rootNode = {
+          children: result.body,
+          isRoot: true
+        };
+      });
+  }
+  onContextSelected = element => {
+    if (element && element.length > 0) {
+      this.formData.currentContext = element[0];
+    } else {
+      this.formData.currentContext = null;
+      this.dataSource = new MatTableDataSource<any>(null);
+      this.totalItemCount = 0;
+      this.currentRecord = 0;
     }
 
+    this.fetch(40, 0);
+  };
 
-
+  ngOnInit() {
+    this.configureValidTypes(this.data.validTypesToSelect);
+  }
 }
-

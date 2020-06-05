@@ -1,0 +1,178 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+.marginless {
+  margin: 0 !important;
+}
+.paddingless, .paddingless .mat-form-field-wrapper {
+  padding: 0!important;
+}
+
+.required, .danger, .warning {
+  color: #a5122a;
+}
+.text-muted {
+  color: #4F575F!important;
+}
+
+button.custom, a.custom {
+  padding: 7px 16px;
+  @include respond-to($mobile-xs) {
+    padding: 5px 16px;
+  }
+
+  &.inverted-button {
+    color: #fff;
+    &[mat-stroked-button] {
+      border: 1px solid #fff;
+    }
+  }
+}
+.highlight {
+  background-color: #FCFCFC;
+  padding: 24px 0;
+}
+.block {
+  display: block!important;
+}
+
+.mt-0 {
+  margin-top: 0!important
+}
+.mt-1 {
+  margin-top: 8px!important;
+}
+.mt-2 {
+  margin-top: 16px!important;
+}
+.mt-3{
+  margin-top: 32px!important;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+.mb-1 {
+  margin-bottom: 8px!important;
+}
+.mb-2 {
+  margin-bottom: 16px!important;
+}
+.mb-3 {
+  margin-bottom: 32px!important;
+}
+
+/* Margin-right block */
+.mr-0 {
+  margin-right: 0!important;
+}
+.mr-1 {
+  margin-right: 8px!important;
+}
+.mr-2 {
+  margin-right: 16px!important;
+}
+.mr-3 {
+  margin-right: 32px!important;
+}
+/* End of Margin-right */
+
+/* Padding-left block */
+.pl-0 {
+  padding-left: 0px!important;
+}
+.pl-1{
+  padding-left: 8px!important;
+}
+.pl-2 {
+  padding-left: 16px!important;
+}
+.pl-3 {
+  padding-left: 32px!important;
+}
+/* End of padding-left */
+
+/* Padding-right block */
+.pr-0 {
+  padding-right: 0px!important;
+}
+.pr-1{
+  padding-right: 8px!important;
+}
+.pr-2 {
+  padding-right: 16px!important;
+}
+.pr-3 {
+  padding-right: 32px!important;
+}
+/* End of padding-right */
+
+/* Padding-top block */
+.pt-0 {
+  padding-top: 0px!important;
+}
+.pt-1{
+  padding-top: 8px!important;
+}
+.pt-2 {
+  padding-top: 16px!important;
+}
+.pt-3 {
+  padding-top: 32px!important;
+}
+/* End of padding-top */
+
+/* Padding-bottom block */
+.pb-0 {
+  padding-bottom: 0px!important;
+}
+.pb-1{
+  padding-bottom: 8px!important;
+}
+.pb-2 {
+  padding-bottom: 16px!important;
+}
+.pb-3 {
+  padding-bottom: 32px!important;
+}
+/* End of padding-bottom */
+
+
+.pxy-0 {
+  padding: 0!important;
+}
+.pxy-1 {
+  padding: 8px!important;
+}
+.pxy-2 {
+  padding: 16px!important;
+}
+.pxy-3 {
+  padding: 32px!important;
+}
+
+.inline-block {
+  display: inline;
+  vertical-align: middle;
+}
+
+.full-width {
+  width: 100%;
+}
+.bordered {
+  border: 1px solid #f3f3f3;
+}

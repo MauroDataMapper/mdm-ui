@@ -377,7 +377,7 @@ export class ElementTypesService {
     }
 }
 
-class Type {
+export class Type {
 
     constructor() { }
 

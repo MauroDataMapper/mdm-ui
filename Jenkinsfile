@@ -51,7 +51,9 @@ pipeline {
     stage('Lint') {
       steps {
         nvm('') {
-          sh 'ng lint --format=checkstyle > checkstyle-result.xml'
+          catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+            sh 'ng lint --format=checkstyle > checkstyle-result.xml'
+          }
         }
         post {
           always {

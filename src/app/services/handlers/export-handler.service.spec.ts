@@ -18,9 +18,10 @@ SPDX-License-Identifier: Apache-2.0
 import { TestBed } from '@angular/core/testing';
 
 import { ExportHandlerService } from './export-handler.service';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('ExportHandlerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => TestBed.configureTestingModule({imports:[TestModule]}));
 
   it('should be created', () => {
     const service: ExportHandlerService = TestBed.inject(ExportHandlerService);

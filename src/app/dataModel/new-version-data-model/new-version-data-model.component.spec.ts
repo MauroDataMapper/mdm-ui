@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewVersionDataModelComponent } from './new-version-data-model.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('NewVersionDataModelComponent', () => {
   let component: NewVersionDataModelComponent;
@@ -25,6 +26,7 @@ describe('NewVersionDataModelComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ NewVersionDataModelComponent ]
     })
     .compileComponents();

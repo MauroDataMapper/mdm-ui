@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserAccessNewComponent } from './user-access-new.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('UserAccessNewComponent', () => {
   let component: UserAccessNewComponent;
@@ -24,6 +25,7 @@ describe('UserAccessNewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ UserAccessNewComponent ]
     })
     .compileComponents();

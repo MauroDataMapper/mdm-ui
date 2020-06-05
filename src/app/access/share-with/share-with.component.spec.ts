@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShareWithComponent } from './share-with.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('ShareWithComponent', () => {
   let component: ShareWithComponent;
@@ -24,6 +25,7 @@ describe('ShareWithComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ ShareWithComponent ]
     })
     .compileComponents();

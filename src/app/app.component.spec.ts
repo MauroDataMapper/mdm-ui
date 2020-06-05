@@ -17,10 +17,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { TestModule } from './modules/test/test.module';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [
         AppComponent
       ],
@@ -39,10 +41,4 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('mdm-ui');
   });
 
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to mdm-ui!');
-  });
 });

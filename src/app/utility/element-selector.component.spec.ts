@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ElementSelectorComponent } from './element-selector.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('ElementSelectorComponent', () => {
   let component: ElementSelectorComponent;
@@ -25,6 +26,7 @@ describe('ElementSelectorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ ElementSelectorComponent ]
     })
     .compileComponents();

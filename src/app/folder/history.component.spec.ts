@@ -18,10 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryComponent } from './history.component';
-import { HttpClientModule } from '@angular/common/http';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
-import { ElementTypesService } from '@mdm/services/element-types.service';
+import { TestModule } from '@mdm/modules/test/test.module';
+
+
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
@@ -29,18 +28,16 @@ describe('HistoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()],
-      providers: [ElementTypesService]
-    })
-      .compileComponents();
+      imports: [
+      TestModule
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HistoryComponent);
     component = fixture.componentInstance;
-    component.parent = { id: '12345'};
+    component.parent = { id: '12345' };
     fixture.detectChanges();
   });
 

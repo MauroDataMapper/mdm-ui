@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GroupAccessNewComponent } from './group-access-new.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('GroupAccessNewComponent', () => {
   let component: GroupAccessNewComponent;
@@ -24,6 +25,7 @@ describe('GroupAccessNewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ GroupAccessNewComponent ]
     })
     .compileComponents();

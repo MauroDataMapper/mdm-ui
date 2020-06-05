@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
+import { TestModule } from '@mdm/modules/test/test.module';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -25,6 +26,7 @@ describe('SettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [TestModule],
       declarations: [ SettingsComponent ]
     })
     .compileComponents();

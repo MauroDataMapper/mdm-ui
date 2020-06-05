@@ -154,9 +154,9 @@ $bdi-theme: mat-light-theme(
 @import "style/abstracts/mixins";
 @import "style/abstracts/helpers";
 
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/regular";
 
 @import "style/main";
 @import "style/default";

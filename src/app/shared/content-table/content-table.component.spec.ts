@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContentTableComponent } from './content-table.component';
+import { TestModule } from '@mdm/modules/test/test.module';
+import { MatSort } from '@angular/material/sort';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 describe('ContentTableComponent', () => {
   let component: ContentTableComponent;
@@ -25,7 +28,8 @@ describe('ContentTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContentTableComponent ]
+      imports:[TestModule],
+      declarations: [ ContentTableComponent , MatSort, MdmPaginatorComponent]
     })
     .compileComponents();
   }));
@@ -33,6 +37,7 @@ describe('ContentTableComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ContentTableComponent);
     component = fixture.componentInstance;
+    component.parentDataModel = {editable:true,finalised:false};
     fixture.detectChanges();
   });
 

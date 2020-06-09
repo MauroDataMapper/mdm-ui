@@ -61,7 +61,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
     Classifier: { name: 'classifier', message: 'Classifier' },
     Folder: { name: 'folder', message: 'Folder' },
     Terminology: { name: 'terminology', message: 'Terminology' },
-    CodeSet: { name: 'codeset', message: 'CodeSet' }
+    CodeSet: { name: 'codeSet', message: 'CodeSet' }
   };
   constructor(
     private messageService: MessageService,
@@ -230,7 +230,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
 
         // if it's a new User, then we need to find the user's ID
         // So go through all the users and find the user id by matching the email address
-        if (row.isNew) {
+        if (row.isNew && results[0].body.readableByUsers) {
           forEach(results[0].body.readableByUsers, rbu => {
             if (
               rbu.emailAddress.toLowerCase() ===
@@ -262,6 +262,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
   }
 
   add() {
+    this.paginator.pageIndex = 0 ;
     const newRecord = {
       id: '',
       user: {

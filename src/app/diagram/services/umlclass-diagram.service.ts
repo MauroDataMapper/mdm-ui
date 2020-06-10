@@ -42,8 +42,13 @@ export class UmlClassDiagramService extends BasicDiagramService {
 
 
   render(data: any): void {
+    this.graph.clear();
+    this.allDataClasses = [];
+    this.subClassLinks = [];
+    this.referenceLinks = [];
     this.addAllChildDataClasses(data.body);
     this.allDataClasses.forEach( dataClass => {
+      
       this.addRectangleCell(dataClass.id, '', 300, dataClass.attributes.length * 25 + 31);
     });
     this.addLinks();

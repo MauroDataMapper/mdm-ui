@@ -39,10 +39,14 @@ SPDX-License-Identifier: Apache-2.0
 		<table mat-table [dataSource]="dataSourceDataTypes" matSort class="mdm--table table table-striped">
 			<ng-container matColumnDef="checkbox">
 				<th mat-header-cell *matHeaderCellDef columnName="checkbox" style="cursor: pointer; max-width: 5%; width: 5%; text-align: center;">
-					<mat-checkbox [checked]="isAllChecked" (change)="onCheckAll()" [(ngModel)]="checkAllCheckbox" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+					<mat-checkbox [checked]="isAllChecked" (change)="onCheckAll()" [(ngModel)]="checkAllCheckbox" [ngModelOptions]="{standalone: true}" aria-label="Select all Checkboxes">
+                        <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
+                    </mat-checkbox>
 				</th>
 				<td mat-cell *matCellDef="let record" style="max-width: 5%; width: 5%; text-align: center;">
-					<mat-checkbox (change)="onCheck(record)" [(ngModel)]="record.checked" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+					<mat-checkbox (change)="onCheck(record)" [(ngModel)]="record.checked" [ngModelOptions]="{standalone: true}" aria-label="Select this Checkbox">
+                        <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
+                    </mat-checkbox>
 				</td>
 			</ng-container>
 			<ng-container matColumnDef="label">

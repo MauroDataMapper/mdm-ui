@@ -36,14 +36,19 @@ SPDX-License-Identifier: Apache-2.0
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="checkbox">
             <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 2%;width: 2%;text-align: center;cursor:pointer;">
-                <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox"></mat-checkbox>
+                <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
+                    <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
+                </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 2%; width: 2%; text-align: center;">
-                <mat-checkbox [(ngModel)]="record.checked"></mat-checkbox>
+                <mat-checkbox [(ngModel)]="record.checked" aria-label="Select this Checkbox">
+                    <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
+                </mat-checkbox>
             </td>
         </ng-container>
         <ng-container matColumnDef="label">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="minMultiplicity" style="cursor:pointer;max-width: 4%;width: 4%;" columnName="label">
+                Multiplicity
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 4%;width: 4%;text-align: center;">
                 <mdm-multiplicity [min]="record.minMultiplicity" [max]="record.maxMultiplicity"></mdm-multiplicity>
@@ -67,7 +72,6 @@ SPDX-License-Identifier: Apache-2.0
         </ng-container>
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 20%;width: 20%;" columnName="description">
-
                 <span [hidden]="!hideFilters">Description</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">

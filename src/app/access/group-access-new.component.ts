@@ -244,6 +244,7 @@ export class GroupAccessNewComponent implements OnInit {
   }
 
   add() {
+    this.paginator.pageIndex = 0 ;
     const newRecord = {
       group: null,
       writeAccess: false,

@@ -15,7 +15,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div #diagramPopup style="width: 100%; height: 100%">
-  <mdm-diagram-toolbar (toolbarClick)="this.toolbarClick($event)" [isPopup]="true"></mdm-diagram-toolbar>
-  <mdm-diagram [diagramComponent]="this.data.diagramComponent"></mdm-diagram>
+<div #diagramPopup style="width: 100%; height: 100%;">
+  <mdm-diagram-toolbar
+    (toolbarClick)="this.toolbarClick($event)"
+    [isPopup]="true"
+  ></mdm-diagram-toolbar>
+  <mat-sidenav-container style="height: 100%;">
+    <mat-sidenav #sidenav mode="side">
+      <div style="margin: 5px;" *ngIf="node">
+        <mdm-folders-tree [showCheckboxFor]="['DataClass']" (nodeCheckedEvent)="onNodeChecked($event[0],$event[1],$event[2])" [node]="node"></mdm-folders-tree>
+        <button style="margin-right: 5px;" mat-flat-button color="primary" type="button" (click)="filterClick()">
+          Filter
+      </button> 
+      <button mat-flat-button color="primary" type="button" (click)="clearFilterClick()">
+        Clear
+    </button> 
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mdm-diagram
+        [diagramComponent]="this.data.diagramComponent"
+      ></mdm-diagram>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

@@ -15,7 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ResourcesService } from '@mdm/services/resources.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
@@ -33,17 +40,15 @@ import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss'],
 })
-
 export class DiagramComponent implements OnInit {
-
   @Input() mode: string;
 
   @Input() parent: any;
 
   @Input() diagramComponent: DiagramComponent;
 
-  @ViewChild('jointjs', {static: true}) public jointjsDiv: ElementRef;
-  @ViewChild('toolbar', {static: true}) public toolbar: ElementRef;
+  @ViewChild('jointjs', { static: true }) public jointjsDiv: ElementRef;
+  @ViewChild('toolbar', { static: true }) public toolbar: ElementRef;
 
   public svgPanZoom: SvgPanZoom.Instance;
   public paper: joint.dia.Paper;
@@ -59,20 +64,21 @@ export class DiagramComponent implements OnInit {
 
   diagramService: BasicDiagramService;
 
-  constructor(protected resourcesService: ResourcesService,
-              protected messageHandler: MessageHandlerService,
-              protected downloadService: DownloadService,
-              protected matDialog: MatDialog) {
+  constructor(
+    protected resourcesService: ResourcesService,
+    protected messageHandler: MessageHandlerService,
+    protected downloadService: DownloadService,
+    protected matDialog: MatDialog
+  ) {
     this.isLoading = true;
   }
-
 
   public ngOnInit(): void {
     if (this.diagramComponent) {
       this.diagramService = this.diagramComponent.diagramService;
     } else {
       // we're loading from scratch
-      this.initializeDiagramService({parent: this.parent});
+      this.initializeDiagramService({ parent: this.parent });
     }
     this.resetPaper();
   }
@@ -80,31 +86,46 @@ export class DiagramComponent implements OnInit {
   initializeDiagramService(params): void {
     switch (this.mode) {
       case 'dataflow-model':
-        this.diagramService = new DataflowDatamodelDiagramService(this.resourcesService, this.messageHandler);
+        this.diagramService = new DataflowDatamodelDiagramService(
+          this.resourcesService,
+          this.messageHandler
+        );
         break;
       case 'dataflow-class':
-        this.diagramService = new DataflowDataclassDiagramService(this.resourcesService, this.messageHandler);
+        this.diagramService = new DataflowDataclassDiagramService(
+          this.resourcesService,
+          this.messageHandler
+        );
         break;
       case 'dataflow-element':
-        this.diagramService = new DataflowDataelementDiagramService(this.resourcesService, this.messageHandler);
+        this.diagramService = new DataflowDataelementDiagramService(
+          this.resourcesService,
+          this.messageHandler
+        );
         break;
       case 'umlclass':
-        this.diagramService = new UmlClassDiagramService(this.resourcesService, this.messageHandler);
+        this.diagramService = new UmlClassDiagramService(
+          this.resourcesService,
+          this.messageHandler
+        );
         break;
     }
 
     const observable = this.diagramService.getDiagramContent(params);
-    observable.subscribe(data => {
+    observable.subscribe(
+      (data) => {
         // The diagram service is responsible for the graph
         this.diagramService.render(data);
         this.diagramService.layoutNodes();
-
       },
-      error => {
+      (error) => {
         console.log(error);
-        this.messageHandler.showError('There was a problem getting the model hierarchy.', error);
-      });
-
+        this.messageHandler.showError(
+          'There was a problem getting the model hierarchy.',
+          error
+        );
+      }
+    );
   }
 
   resetPaper(): void {
@@ -113,7 +134,6 @@ export class DiagramComponent implements OnInit {
     // then we let the diagram service customise the interaction with the paper
     this.diagramService.configurePaper(this.paper);
     this.isLoading = false;
-
   }
 
   public finaliseDiagram() {
@@ -121,7 +141,7 @@ export class DiagramComponent implements OnInit {
       el: this.jointjsDiv.nativeElement,
       width: '100%',
       height: '100%',
-      background: {color: '#FFFFFF'},
+      background: { color: '#FFFFFF' },
       model: this.diagramService.graph,
       gridSize: 1,
       attributes: {
@@ -130,7 +150,7 @@ export class DiagramComponent implements OnInit {
       This doesn't yet work with the typescript definition...
       interactive: {
         stopDelegation: false
-      }*/
+      }*/,
     });
 
     this.paper.setInteractivity({ stopDelegation: false });
@@ -148,7 +168,9 @@ export class DiagramComponent implements OnInit {
     this.svgPanZoom.disablePan();
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '100%');
-    svg.querySelector('#svg-pan-zoom-controls').setAttribute('transform', 'translate(0 0) scale(0.75)');
+    svg
+      .querySelector('#svg-pan-zoom-controls')
+      .setAttribute('transform', 'translate(0 0) scale(0.75)');
 
     if (this.diagramComponent) {
       this.svgPanZoom.zoom(this.diagramComponent.svgPanZoom.getZoom());
@@ -158,21 +180,15 @@ export class DiagramComponent implements OnInit {
       this.svgPanZoom.enablePan();
     });
 
-    this.paper.on('cell:pointerup blank:pointerup', (cellView: joint.dia.CellView, event) => {
-      this.svgPanZoom.disablePan();
-      this.diagramService.onDrag(cellView, event);
-    });
-
-    this.diagramService.getClickSubject().subscribe(result => {
-      if (result.newMode) {
-        this.mode = result.newMode;
-        this.initializeDiagramService(result);
-        this.resetPaper();
+    this.paper.on(
+      'cell:pointerup blank:pointerup',
+      (cellView: joint.dia.CellView, event) => {
+        this.svgPanZoom.disablePan();
+        this.diagramService.onDrag(cellView, event);
       }
+    );
 
-    });
-
-    this.diagramService.getGoUpSubject().subscribe(result => {
+    this.diagramService.getClickSubject().subscribe((result) => {
       if (result.newMode) {
         this.mode = result.newMode;
         this.initializeDiagramService(result);
@@ -180,6 +196,13 @@ export class DiagramComponent implements OnInit {
       }
     });
 
+    this.diagramService.getGoUpSubject().subscribe((result) => {
+      if (result.newMode) {
+        this.mode = result.newMode;
+        this.initializeDiagramService(result);
+        this.resetPaper();
+      }
+    });
   }
 
   download(): void {
@@ -188,7 +211,9 @@ export class DiagramComponent implements OnInit {
     const height = this.diagramService.graph.getBBox().height;
 
     // copy the SVG and configure it
-    const svg: SVGElement = this.jointjsDiv.nativeElement.querySelector('svg').cloneNode(true) as SVGElement;
+    const svg: SVGElement = this.jointjsDiv.nativeElement
+      .querySelector('svg')
+      .cloneNode(true) as SVGElement;
     const panZoomControls = svg.querySelector('g#svg-pan-zoom-controls');
     panZoomControls.remove();
 
@@ -196,13 +221,37 @@ export class DiagramComponent implements OnInit {
     svg.setAttribute('viewBox', '0 0 ' + (width + 80) + ' ' + (height + 80));
     svg.setAttribute('style', 'font-family: sans-serif;');
     this.jointjsDiv.nativeElement.append(svg);
-    this.downloadService.downloadSVGAsPNG(svg, 'diagram.png', scale, width, height);
+    this.downloadService.downloadSVGAsPNG(
+      svg,
+      'diagram.png',
+      scale,
+      width,
+      height
+    );
     svg.remove();
   }
 
-
   canGoUp(): boolean {
     return this.diagramService.canGoUp();
+  }
+
+  filter(parent: any, filterList: Array<any>): void {
+    var params = { parent: parent };
+    this.diagramService.getDiagramContent(params).subscribe((data) => {
+      let filteredClasses: Array<any> = [];
+      filterList.forEach((x) => {
+        let index = data.body.childDataClasses.findIndex((y) => y.id === x);
+        if (index !== -1) {
+          filteredClasses.push(data.body.childDataClasses[index]);
+        }
+      });
+      if (filterList.length > 0) {
+        data.body.childDataClasses = filteredClasses;
+      }
+      this.diagramService.render(data);
+      this.diagramService.layoutNodes();
+      this.resetPaper();
+    });
   }
 
   toolbarClick(buttonName: string) {
@@ -223,8 +272,5 @@ export class DiagramComponent implements OnInit {
         this.svgPanZoom.resetZoom();
         break;
     }
-
   }
-
-
 }

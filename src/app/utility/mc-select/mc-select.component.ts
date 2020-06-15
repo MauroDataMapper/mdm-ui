@@ -352,6 +352,8 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
       }
     } else {
       this.selectedValue = selectedElement;
+      const value = this.validator.getProperty(this.selectedValue, this.displayProperty);
+      this.inputText = value;
     }
 
     if (this.selectEvent) {
@@ -543,7 +545,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     //  this.showTree = false;
     }
     this.show = false;
-    this.setDefaultValue();
+    // this.setDefaultValue();
   }
 
 }

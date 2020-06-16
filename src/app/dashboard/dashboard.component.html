@@ -1,7 +1,0 @@
-<ngx-grid-stack #gridStackMain id="gridStackMain" class="grid-stack" [options]="area" >
-    <ngx-grid-stack-item *ngFor="let widget of widgets" id="widget-{{widget.ID}}" [option]="widget" class="grid-stack-item">
-      <div class="widget-content">
-        <ng-template [cdkPortalOutlet]="widget.el"></ng-template>
-      </div>
-    </ngx-grid-stack-item>
-</ngx-grid-stack>

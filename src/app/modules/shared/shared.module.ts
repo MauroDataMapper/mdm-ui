@@ -34,6 +34,9 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from '@mdm/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { GridstackModule } from '@libria/gridstack';
+import { MdmDashboardComponent } from '@mdm/mdm-dashboard/mdm-dashboard.component';
+
 
 @NgModule({
   declarations: [
@@ -46,7 +49,8 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
     MetadataCompareComponent,
     EnumerationCompareComponent,
     ErrorComponent,
-    MdmPaginatorComponent
+    MdmPaginatorComponent,
+    MdmDashboardComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +60,8 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
     MatPasswordStrengthModule,
     NgxJsonViewerModule,
     FlexLayoutModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    GridstackModule.forRoot()    
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -75,7 +80,8 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
     NgxJsonViewerModule,
     ErrorComponent,
     FlexLayoutModule,
-    MdmPaginatorComponent
+    MdmPaginatorComponent,
+    GridstackModule
   ]
 })
 export class SharedModule {}

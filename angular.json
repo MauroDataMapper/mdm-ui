@@ -29,9 +29,16 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/gridstack/dist/gridstack.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/lodash/lodash.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery-ui-dist/jquery-ui.js",
+              "node_modules/gridstack/dist/gridstack.js",
+              "node_modules/gridstack/dist/gridstack.jQueryUI.js"    
+            ]
           },
           "configurations": {
             "production": {

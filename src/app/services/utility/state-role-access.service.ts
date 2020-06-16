@@ -29,6 +29,7 @@ export class StateRoleAccessService {
         this.add('appContainer', ['public']);
         this.add('appContainer.mainApp', ['public']);
         this.add('appContainer.mainApp.about', ['public']);
+        this.add('appContainer.mainApp.dashboard', ['public']);
         this.add('appContainer.mainApp.home', ['public']);
 
 

@@ -57,6 +57,7 @@ import { ModelComparisonComponent } from './model-comparison/model-comparison.co
 import {CodeSetMainComponent} from './wizards/codeSet/code-set-main/code-set-main.component';
 import {CodeSetComponent} from './code-set/code-set/code-set.component';
 import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+import { MdmDashboardComponent } from './mdm-dashboard/mdm-dashboard.component';
 
 export const PagesRoutes = {
   states: [
@@ -73,6 +74,11 @@ export const PagesRoutes = {
       name: 'appContainer.mainApp.about',
       url: '/about',
       component: AboutComponent
+    },
+    {
+      name: 'appContainer.mainApp.dashboard',
+      url: '/dashboard',
+      component: MdmDashboardComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel',

@@ -7,17 +7,16 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { HistoryComponent } from '@mdm/folder/history.component';
-import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/new-data-type-inline.component';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
+import { Title } from '@angular/platform-browser';
 import {
   GridstackItemComponent,
   GridstackComponent,
   GridstackOptions,
-  Item,
+  Item
 } from '@libria/gridstack';
-import { AboutComponent } from '@mdm/about/about.component';
-import { Title } from '@angular/platform-browser';
+
+import { MdmFavouritesComponent } from '@mdm/mdm-dashboard/mdm-plugins/mdm-favourites/mdm-favourites.component';
 
 @Component({
   selector: 'mdm-dashboard',
@@ -41,8 +40,8 @@ export class MdmDashboardComponent implements OnInit {
     private title: Title
   ) {}
 
-  ngOnInit(): void {  
-    this.title.setTitle('Dashboard');  
+  ngOnInit(): void {
+    this.title.setTitle('Dashboard');
     const layout = this.usersSetting.get('dashboard');
     if (layout) {
       const data: Array<Widget> = JSON.parse(layout);
@@ -74,19 +73,19 @@ export class MdmDashboardComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
-    this.title.setTitle('Dashboard');  
+    // Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    // Add 'implements AfterViewInit' to the class.
+    this.title.setTitle('Dashboard');
   }
 
   AddWidget(data: Widget) {
-    let widget: Item = {
+    const widget: Item = {
       id: data.id,
       el: this.factory.resolve(data.id),
-      width: <number>data.width,
-      height: <number>data.height,
-      x: <number>data.x,
-      y: <number>data.y,
+      width: <number> data.width,
+      height: <number> data.height,
+      x: <number> data.x,
+      y: <number> data.y,
       autoPosition: false,
       lastTriedHeight: null,
       lastTriedWidth: null,
@@ -106,10 +105,10 @@ export class MdmDashboardComponent implements OnInit {
 
   Save() {
     this.cd.detectChanges();
-    let things = this.gridStackMain.gridstackItems;
+    const things = this.gridStackMain.gridstackItems;
     this.items.forEach((res) => {
       const data = res.elem.nativeElement.dataset;
-      let item = this.compData.find((x) => x.id === res.id);
+      const item = this.compData.find((x) => x.id === res.id);
       item.x = parseInt(data.gsX);
       item.y = parseInt(data.gsY);
       item.width = parseInt(data.gsWidth);
@@ -134,10 +133,10 @@ export class ComponentFactory {
   resolve(name) {
     switch (name) {
       case 'history': {
-        return new ComponentPortal(AboutComponent);
+        return new ComponentPortal(MdmFavouritesComponent);
       }
       case 'new': {
-        return new ComponentPortal(NewDataTypeInlineComponent);
+        return new ComponentPortal(MdmFavouritesComponent);
       }
     }
   }

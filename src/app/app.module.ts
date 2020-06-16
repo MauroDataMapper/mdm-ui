@@ -38,10 +38,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ModalModule } from './modals/modal.module';
 import {HttpClientModule} from '@angular/common/http';
+import { MdmFavouritesComponent } from './mdm-dashboard/mdm-plugins/mdm-favourites/mdm-favourites.component';
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, MdmFavouritesComponent],
   imports: [
     BrowserModule,
     CatalogueModule,

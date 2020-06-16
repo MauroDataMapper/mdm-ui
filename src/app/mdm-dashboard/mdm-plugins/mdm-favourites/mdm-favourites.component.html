@@ -1,0 +1,31 @@
+<div class="mdm--dashboard-container">
+  <h4>Favourites</h4>
+  <ol class="mdm--dashboard-list">
+      <li class="mdm--dashboard-item" *ngFor="let favourite of favourites">
+          <div class="mdm--item-container">
+              <div class="mdm--item-content">
+                  <div class="mdm--item-icon">
+                      <mdm-element-icon [element]="favourite"></mdm-element-icon>
+                  </div>
+                  <div class="mdm--element-text">
+                      <div>{{favourite.label}} <i class="fas fa-external-link-alt"></i></div>
+                      <div class="text-muted">
+                          <span>
+                              <i class="fas fa-cube" matTooltip="Item type"></i> {{favourite.type}}
+                          </span>
+                          <span style="margin-left: 4px; margin-right: 4px;">
+                              &bull;
+                          </span>
+                          <span class="text-muted">
+                              <i class="fas fa-code-branch" matTooltip="Version"></i> {{favourite.documentationVersion}}
+                          </span>
+                      </div>
+                  </div>
+              </div>
+              <div class="mdm--item-actions">
+                  <i class="fas fa-star" matTooltip="Favourite"></i>
+              </div>
+          </div>
+      </li>
+  </ol>
+</div>

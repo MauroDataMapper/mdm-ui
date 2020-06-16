@@ -1,0 +1,18 @@
+ol.mdm--dashboard-list {
+  list-style: none;
+  padding-left: 0;
+  li.mdm--dashboard-item {
+      padding: 10px;
+      border-top: 1px solid #E8E8E8;
+      &:nth-child(even) {
+          background-color: #FCFCFD;
+      }
+  }
+
+  .mdm--item-container, .mdm--item-content {
+      display: flex;
+  }
+  .mdm--item-container {
+      justify-content: space-between;
+  }
+}

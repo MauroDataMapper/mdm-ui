@@ -1,16 +1,18 @@
-<div lb-gridstack #gridStackMain id="gridStackMain" class="grid-stack">
-  <div
-    lb-gridstack-item
-    *ngFor="let widget of widgets"
-    id="{{ widget.id }}"
-    x="{{ widget.x }}"
-    y="{{ widget.y }}"
-    width="{{ widget.width }}"
-    height="{{ widget.height }}"
-    class="grid-stack-item"
-  >
-    <div class="widget-content">
-      <ng-template [cdkPortalOutlet]="widget.el"></ng-template>
+<div class="container">
+  <h2 class="mat-h3">Welcome back, @admin!</h2>
+  <p>Pick up where you left 3 days ago</p>
+  <div lb-gridstack #gridStackMain id="gridStackMain" class="grid-stack">
+    <div lb-gridstack-item
+          *ngFor="let widget of widgets"
+          id="{{ widget.id }}"
+          x="{{ widget.x }}"
+          y="{{ widget.y }}"
+          width="{{ widget.width }}"
+          height="{{ widget.height }}"
+          class="grid-stack-item mdm--shadow-block bordered">
+      <div class="widget-content">
+        <ng-template [cdkPortalOutlet]="widget.el"></ng-template>
+      </div>
     </div>
   </div>
 </div>

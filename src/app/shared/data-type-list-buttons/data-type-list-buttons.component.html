@@ -18,20 +18,24 @@ SPDX-License-Identifier: Apache-2.0
 <div style="float: left;" *ngIf="deletePending">
     <span *ngIf="textLocation == 'left'" style="font-size: 11px !important;">Are you sure?</span>
     <!-- Cancel Delete-->
-    <button mat-button color="primary" class="paddingless" type="button" (click)="cancelDeleteClicked()">
+    <button mat-button color="primary" class="paddingless" type="button" (click)="cancelDeleteClicked()" aria-label="Cancel Delete">
         <i class="fas fa-times"></i>
     </button>
     <!-- Confirm Delete -->
-    <button mat-button color="accent" class="paddingless" type="button" (click)="confirmDeleteClicked()">
+    <button mat-button color="accent" class="paddingless" type="button" (click)="confirmDeleteClicked()" aria-label="Confirm Delete">
         <i class="fas fa-check"></i>
     </button>
     <span *ngIf="textLocation == 'bottom'" style="font-size: 11px !important;"><br>Are you sure?</span>
 </div>
 
 <div class="warning" style="position: relative; float: left; margin-right:8px;" *ngIf="deleteInProgress">
-  <a style="font-size: 14px; text-decoration: none;">
-    <i class="fas fa-sync-alt fa-spin"></i>
-  </a>
+    <i class="fas fa-sync-alt fa-spin" style="font-size: 14px;"></i>
+</div>
+
+<div style="float: left;" *ngIf="showDeleteButton" [hidden]="deletePending">
+    <button mat-stroked-button color="warn" class="paddingless" type="button" (click)="onAskDelete()" [disabled]="deleteInProgress" aria-label="Ask for confirmation">
+        <i class="far fa-trash-alt"></i>
+    </button>
 </div>
 
 <select style="float: left;" [(ngModel)]="selectedAction" #bulkActions (change)="onBulkActionSelected(bulkActions.value)">

@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="icons">
-            <th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="icons"></th>
+            <td mat-header-cell *matHeaderCellDef columnName="icons"></td>
             <td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
                 <button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">
                     Actions

@@ -131,7 +131,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="btns">
-            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-header-cell *matHeaderCellDef></td>
             <td mat-cell *matCellDef="let record;  let i = index" style="text-align: right;">
                 <div *ngIf="access && access.canAddMetadata">
                     <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])" ></mdm-table-buttons>

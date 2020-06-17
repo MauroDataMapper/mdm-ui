@@ -150,3 +150,10 @@ table.table thead {
   justify-content: center;
   align-items: center;
 }
+
+table.mat-table .mat-header-cell, table.mat-table .mat-header-row td {
+    font-size: $defaultFontSize;
+    font-weight: 500;
+    vertical-align: middle;
+    border-bottom: 2px solid #e9ecef;
+  }

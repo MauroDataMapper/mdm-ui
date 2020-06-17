@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { DataElementBulkEditDialogService } from '@mdm/services/data-element-bulk-edit-dialog.service';
 
 @Component({
   selector: 'mdm-data-type-list-buttons',
@@ -23,7 +24,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./data-type-list-buttons.component.sass']
 })
 export class DataTypeListButtonsComponent implements OnInit {
-  constructor() {}
+  constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
   @Output() deleteRows = new EventEmitter<any>();
   @Input() add: any;
@@ -33,10 +34,15 @@ export class DataTypeListButtonsComponent implements OnInit {
   @Input() addDataClass: any;
   @Input() addDataElement: any;
   @Input() showDeleteButton = true;
+  @Input() parentDataModel: any;
+  @Input() parentDataClass: any;
 
   deletePending: boolean;
   textLocation: string;
   deleteWarning: string;
+
+  actionNames = [ "Bulk actions",  "Edit" ];
+  selectedAction = this.actionNames[0];
 
   ngOnInit() {
     this.textLocation = 'left';
@@ -68,5 +74,21 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   cancelDeleteClicked = () => {
     this.deletePending = false;
+  }
+
+  onBulkActionSelected = (option: string) => {
+    
+    if (option === "Edit") {
+
+      const dataElementIdLst = [];
+      
+      this.displayRecords.forEach(record => {
+        if (record.checked === true) {
+          dataElementIdLst.push(record.id);
+        }
+      });
+
+      this.dataElementBulkEditDialogService.open(dataElementIdLst, this.parentDataModel, this.parentDataClass, null);
+    }
   }
 }

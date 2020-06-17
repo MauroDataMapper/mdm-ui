@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoggedIn && showYouTrackLink">
     <p>{{errorReportMessage}}</p>
     <button mat-button color="primary" type="button" (click)="reportIssueToYouTrack()" *ngIf="!issueReporting && !issueReported && !errorInSubmit">
-        <i class="fas fa-share"></i> 
+        <i class="fas fa-share"></i>
         Report Issue
     </button>
 
@@ -51,13 +51,13 @@ SPDX-License-Identifier: Apache-2.0
     <div [hidden]="!showDetails">
         <h3>Details
             <button mat-stroked-button color="primary" type="button" (click)="copyToClipboard()">
-                <i class="fas fa-clipboard"></i> 
+                <i class="fas fa-clipboard"></i>
                 Copy to Clipboard
             </button>
         </h3>
 
 
-        <table class="table dataModelDetailTable">
+        <table class="table dataModelDetailTable mdm--table-fixed">
             <tbody>
             <tr *ngFor="let item of dataSource">
                 <td class="detailsRowHeader">{{item.field}}</td>

@@ -1,18 +1,66 @@
 <div class="container">
   <h2 class="mat-h3">Welcome back, @admin!</h2>
   <p>Pick up where you left 3 days ago</p>
-  <div lb-gridstack #gridStackMain id="gridStackMain" class="grid-stack">
-    <div lb-gridstack-item
-          *ngFor="let widget of widgets"
-          id="{{ widget.id }}"
-          x="{{ widget.x }}"
-          y="{{ widget.y }}"
-          width="{{ widget.width }}"
-          height="{{ widget.height }}"
-          class="grid-stack-item mdm--shadow-block bordered">
-      <div class="widget-content">
-        <ng-template [cdkPortalOutlet]="widget.el"></ng-template>
-      </div>
-    </div>
+  <button
+    style="margin-bottom: 10px;"
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="Edit()"
+    *ngIf="!inEditMode"
+  >
+    <i class="fas fa-plus"></i>
+    Edit Layout
+  </button>
+  <button
+    style="margin-bottom: 10px;"
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="Reset()"
+    *ngIf="!inEditMode"
+  >
+    <i class="fas fa-plus"></i>
+    Reset
+  </button>
+  <button
+    style="margin-bottom: 10px;"
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="Save()"
+    *ngIf="inEditMode"
+  >
+    <i class="fas fa-plus"></i>
+    Save
+  </button>
+  <button
+    style="margin-bottom: 10px;"
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="AddWidget()"
+    *ngIf="inEditMode"
+  >
+    <i class="fas fa-plus"></i>
+    Add
+  </button>
+  <div>
+    <gridster [options]="options" style="min-height: 1000px;">
+      <gridster-item [item]="widget" *ngFor="let widget of widgets">
+        <div style="overflow-y: auto; max-height: calc(100% - 40px);">
+          <button
+            mat-icon-button
+            mat-raised-button
+            class="remove-button"
+            (click)="RemoveItem($event, widget)"
+            *ngIf="inEditMode"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <ng-template [cdkPortalOutlet]="widget.el"></ng-template>
+        </div>
+      </gridster-item>
+    </gridster>
   </div>
 </div>

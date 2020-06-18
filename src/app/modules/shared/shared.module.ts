@@ -34,9 +34,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from '@mdm/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { GridstackModule } from '@libria/gridstack';
 import { MdmDashboardComponent } from '@mdm/mdm-dashboard/mdm-dashboard.component';
-
+import { GridsterModule } from 'angular-gridster2';
 
 @NgModule({
   declarations: [
@@ -61,7 +60,7 @@ import { MdmDashboardComponent } from '@mdm/mdm-dashboard/mdm-dashboard.componen
     NgxJsonViewerModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    GridstackModule.forRoot()    
+    GridsterModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -80,8 +79,8 @@ import { MdmDashboardComponent } from '@mdm/mdm-dashboard/mdm-dashboard.componen
     NgxJsonViewerModule,
     ErrorComponent,
     FlexLayoutModule,
-    MdmPaginatorComponent,
-    GridstackModule
+    MdmPaginatorComponent
+
   ]
 })
 export class SharedModule {}

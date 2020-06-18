@@ -28,6 +28,7 @@ SPDX-License-Identifier: Apache-2.0
             <div *ngIf="parentDataModel.editable && !parentDataModel.finalised" class="mt-1">
                 <mdm-data-type-list-buttons [displayRecords]="records"
                                             (deleteRows)="deleteRows()"
+                                            (refreshParentGrid)="refreshGrid()"
                                             [deleteInProgress]="deleteInProgress"
                                             [showContentDropdown]="true"
                                             [addDataClass]="addDataClass"

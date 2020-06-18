@@ -27,6 +27,7 @@ export class DataTypeListButtonsComponent implements OnInit {
   constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
   @Output() deleteRows = new EventEmitter<any>();
+  @Output() refreshParentGrid = new EventEmitter<any>();
   @Input() add: any;
   @Input() displayRecords: any[];
   @Input() deleteInProgress = false;
@@ -40,6 +41,7 @@ export class DataTypeListButtonsComponent implements OnInit {
   deletePending: boolean;
   textLocation: string;
   deleteWarning: string;
+  message: boolean;
 
   actionNames = [ "Bulk actions",  "Edit" ];
   selectedAction = this.actionNames[0];
@@ -88,7 +90,10 @@ export class DataTypeListButtonsComponent implements OnInit {
         }
       });
 
-      this.dataElementBulkEditDialogService.open(dataElementIdLst, this.parentDataModel, this.parentDataClass, null);
+      this.dataElementBulkEditDialogService.open(dataElementIdLst, this.parentDataModel, this.parentDataClass, null).subscribe(result => {
+
+        this.refreshParentGrid.emit();
+      });
     }
   }
 }

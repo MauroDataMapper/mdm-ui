@@ -112,6 +112,7 @@ export class DataElementBulkEditDialogComponent implements AfterViewInit {
 
     if (this.errorsCount === 0) {
       this.messageHandler.showSuccess('Data Element updated successfully.');
+      this.dialogRef.close();
     }
   }
 }

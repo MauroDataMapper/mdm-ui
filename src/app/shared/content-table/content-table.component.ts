@@ -132,6 +132,10 @@ export class ContentTableComponent implements AfterViewInit {
     );
   };
 
+  refreshGrid = () => {
+    this.filterEvent.emit();
+  }
+
   deleteRows = () => {
     this.processing = true;
     this.failCount = 0;

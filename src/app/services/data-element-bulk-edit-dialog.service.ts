@@ -19,21 +19,30 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DataElementBulkEditDialogComponent } from '../data-element-bulk-edit-dialog/data-element-bulk-edit-dialog.component';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataElementBulkEditDialogService {
 
+  private messageSource = new BehaviorSubject(false);
+  currentMessage = this.messageSource.asObservable();
+
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any, position: DialogPosition) {
-    
-    const dg = this.dialog.open(DataElementBulkEditDialogComponent, {
-      data: { dataElementIdLst, parentDataModel, parentDataClass },
-      panelClass: 'element-selector-modal'
-    });
 
-    return dg;
+    const dg = this.dialog.open(DataElementBulkEditDialogComponent,
+      {
+        data: { dataElementIdLst, parentDataModel, parentDataClass },
+        panelClass: 'element-selector-modal'
+      });
+      
+    return dg.afterClosed();
+  }
+
+  refreshParent = (isRefresh: boolean) => {
+    this.messageSource.next(isRefresh);
   }
 }

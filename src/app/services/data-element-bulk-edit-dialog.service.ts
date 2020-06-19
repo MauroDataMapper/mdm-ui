@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DataElementBulkEditDialogComponent } from '../data-element-bulk-edit-dialog/data-element-bulk-edit-dialog.component';
+import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 
@@ -32,13 +32,10 @@ export class DataElementBulkEditDialogService {
   constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any, position: DialogPosition) {
-
-    const dg = this.dialog.open(DataElementBulkEditDialogComponent,
-      {
+    const dg = this.dialog.open(BulkEditModalComponent, {
         data: { dataElementIdLst, parentDataModel, parentDataClass },
-        panelClass: 'element-selector-modal'
+        panelClass: 'bulk-edit-modal'
       });
-      
     return dg.afterClosed();
   }
 

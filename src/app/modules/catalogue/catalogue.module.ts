@@ -158,7 +158,7 @@ import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summar
 import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DataElementBulkEditDialogComponent } from '@mdm/data-element-bulk-edit-dialog/data-element-bulk-edit-dialog.component';
+import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 
 
 @NgModule({
@@ -293,7 +293,8 @@ import { DataElementBulkEditDialogComponent } from '@mdm/data-element-bulk-edit-
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
-    DataElementBulkEditDialogComponent],
+    BulkEditModalComponent
+  ],
   imports: [
     AdminModule,
     AngularSplitModule.forRoot(),
@@ -445,6 +446,7 @@ import { DataElementBulkEditDialogComponent } from '@mdm/data-element-bulk-edit-
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
-    DataElementBulkEditDialogComponent]
+    BulkEditModalComponent
+  ]
 })
 export class CatalogueModule { }

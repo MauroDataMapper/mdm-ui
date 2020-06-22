@@ -18,8 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mb-2 mdm--profile-block">
 	<img class="img-rounded" *ngIf="trustedUrl" style="width: 64px; height: auto; border-radius: 100%; margin-right: 10px;" [src]="trustedUrl" alt="User profile">
 	<i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></i>
-	<button mat-button color="primary" class="paddingless" [matMenuTriggerFor]="menuProfile">
-	<i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></i>
 	<button mat-button color="primary" class="paddingless" [matMenuTriggerFor]="menuProfile" aria-label="Edit profile picture">
 		<i class="fas fa-pencil-alt"></i>
 	</button>

@@ -262,9 +262,7 @@ export class ContentTableComponent implements AfterViewInit {
         this.checkAllCheckbox = false;
         this.bulkActionsVisibile = 0;
         this.filterEvent.emit();
-      }).catch((error) => {
-        console.log(error);
-      });
+      }).catch(() => {});
     }
 
     askForBulkSoftDeletion = () => {
@@ -289,40 +287,45 @@ export class ContentTableComponent implements AfterViewInit {
         return promise;
     };
 
-    askForSoftDeletion = (row) => {
-        const promise = new Promise((resolve, reject) => {
-            const message = `<strong>NOTE: </strong>This ${row.domainType} will be completely removed from the database.`;
-            const dialog = this.dialog.open(ConfirmationModalComponent, {
-                data: {
-                    title: `Are you sure you want to delete this ${row.domainType}?`,
-                    okBtnTitle: 'Yes, Delete',
-                    btnType: 'warn',
-                    message,
-                },
-            });
+    askForSoftDeletion = (record) => {
+      const promise = new Promise((resolve, reject) => {
+          const message = ` <p>You are deleting the following ${record.domainType}:</p>
+                            <p class='mdm--active-row px-2 py-2'><strong>${record.label}</strong></p>
+                            <p><strong>Note: </strong>This ${record.domainType} will be completely removed from the database</p>`;
+          const dialog = this.dialog.open(ConfirmationModalComponent, {
+              data: {
+                  title: `Are you sure you want to delete this ${record.domainType}?`,
+                  okBtnTitle: 'Yes, Delete',
+                  btnType: 'warn',
+                  message,
+              },
+              panelClass: 'confirmation-soft-delete'
+          });
 
-            dialog.afterClosed().subscribe((result) => {
-                if (result?.status !== 'ok') {
-                    return promise;
-                }
-
-                let call;
-                if (row.domainType === 'DataClass') {
-                  call = this.resources.dataClass.delete(row.dataModel, row.parentDataClass, row.id);
-                } else if (row.domainType === 'DataElement') {
-                  call = this.resources.dataElement.delete(row.dataModel, row.dataClass, row.id);
-                }
-
-                if (call) {
-                  call.subscribe(() => {
-                    this.messageHandler.showSuccess(`${row.domainType} deleted successfully`);
-                    this.filterEvent.emit();
-                  }, error => {
-                    this.messageHandler.showError(`There was a problem deleting this ${row.domainType}`, error);
+          dialog.afterClosed().subscribe((result) => {
+              if (result?.status === 'ok') {
+                if (record.domainType === 'DataClass') {
+                  this.resources.dataClass.delete(record.dataModel, record.parentDataClass, record.id).subscribe(() => {
+                    resolve();
                   });
+                } else if (record.domainType === 'DataElement') {
+                  return this.resources.dataElement.delete(record.dataModel, record.dataClass, record.id).subscribe(() => {
+                    resolve();
+                  });
+                } else {
+                  reject();
                 }
-            });
-        });
-        return promise;
-    };
+              } else {
+                reject();
+              }
+          });
+      });
+
+      promise.then(() => {
+          this.messageHandler.showSuccess(`${record.domainType} deleted successfully`);
+          this.filterEvent.emit();
+      }).catch(() => {
+        record.checked = false;
+      });
+  };
 }

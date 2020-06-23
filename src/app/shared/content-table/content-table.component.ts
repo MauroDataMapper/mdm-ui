@@ -233,34 +233,38 @@ export class ContentTableComponent implements AfterViewInit {
     }
 
     bulkEdit = () => {
+      const dataElementIdLst = [];
+      this.records.forEach(record => {
+        if (record.checked) {
+          dataElementIdLst.push({
+              id: record.id,
+              domainType: record.domainType
+          });
+        }
+      });
       const promise = new Promise((resolve, reject) => {
-        const dataElementIdLst = [];
-        this.records.forEach(record => {
-          if (record.checked) {
-            dataElementIdLst.push({
-                id: record.id,
-                domainType: record.domainType
-            });
-          }
-        });
         const dialog = this.dialog.open(BulkEditModalComponent, {
           data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
           panelClass: 'bulk-edit-modal'
         });
 
         dialog.afterClosed().subscribe((result) => {
-          if (result?.status !== 'ok') {
-            return promise;
+          if (result?.status === 'ok') {
+            resolve();
+          } else {
+            reject();
           }
-          this.records.forEach(x => (x.checked = false));
-          this.records = this.records;
-          // console.log(this.records);
-          this.bulkActionsVisibile = 0;
-          // this.filterEvent.emit();
-          this.refreshGrid();
         });
       });
-      return promise;
+      promise.then(() => {
+        this.records.forEach(x => (x.checked = false));
+        this.records = this.records;
+        this.checkAllCheckbox = false;
+        this.bulkActionsVisibile = 0;
+        this.filterEvent.emit();
+      }).catch((error) => {
+        console.log(error);
+      });
     }
 
     askForBulkSoftDeletion = () => {

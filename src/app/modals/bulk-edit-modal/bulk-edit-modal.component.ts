@@ -83,37 +83,31 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
   };
 
   saveChanges = () => {
-    for (const item of this.records) {
-      const resource = {
-        id: item.id,
-        label: item.label,
-        description: item.description
-      };
-      if (item.domainType === 'DataElement') {
-        from(this.resources.dataElement.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource })).subscribe((result) => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
-        }, error => {
-          this.errorCountDataElement++;
-          this.messageHandler.showError(`There was a problem updating the Data Element ${item.label}`, error);
-        });
-      }
-      if (item.domainType === 'DataClass') {
-        from(this.resources.dataClass.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource })).subscribe((result) => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
-        }, error => {
-          this.errorCountDataClass++;
-          this.messageHandler.showError(`There was a problem updating the Data Class ${item.label}`, error);
-        });
-      }
-    }
+    let promise = Promise.resolve();
 
-    if (!this.errorCountDataElement || !this.errorCountDataClass) {
-      this.messageHandler.showSuccess('All records have been updated successfully!');
-      this.dialogRef.close({ status: 'ok', callback: this.records});
-    }
+    this.records.forEach((item: any) => { promise = promise.then((result: any) => {
+          const resource = {
+            id: item.id,
+            label: item.label,
+            description: item.description
+          };
+          if (item.domainType === 'DataElement') {
+            return this.resources.dataElement.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
+          }
+          if (item.domainType === 'DataClass') {
+            return this.resources.dataClass.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
+          }
+        }).catch(error => {
+          this.dialogRef.close();
+        });
+      });
+
+    promise.then(() => {
+        this.dialogRef.close({ status: 'ok' });
+        this.messageHandler.showSuccess('All records have been updated successfully!');
+      }).catch(error => {
+          this.dialogRef.close();
+          this.messageHandler.showError('There was a problem updating these records', error);
+      });
   };
 }

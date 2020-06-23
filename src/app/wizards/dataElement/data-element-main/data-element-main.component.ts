@@ -151,7 +151,7 @@ export class DataElementMainComponent implements OnInit {
       });
   }
 
-  cancelWizard = () => {
+  closeWizard = () => {
     this.stateHandler.GoPrevious();
   };
 
@@ -191,33 +191,6 @@ export class DataElementMainComponent implements OnInit {
     }
     this.changeRef.detectChanges();
   };
-
-  // saveCopiedDataClasses = () => {
-  //
-  //   this.processing = true;
-  //   this.isProcessComplete = false;
-  //
-  //   const chain = [];
-  //
-  //   this.model.selectedDataElements.forEach((dc) => {
-  //     var link = "dataClasses/" + dc.dataModel + "/" + dc.id;
-  //     if (this.model.parent.domainType === "DataClass") {
-  //       chain.push(this.resources.dataClass.post(this.model.parent.dataModel,this.model.parent.id,link,null));
-  //     } else {
-  //       chain.push(this.resources.dataModel.post(this.model.parent.id, link, null));
-  //     }
-  //   });
-  //
-  //   Observable.forkJoin(chain).subscribe((result) => {
-  //         this.processing = false;
-  //         this.isProcessComplete = true;
-  //
-  //       },
-  //       (error) => {
-  //         this.processing = false;
-  //         this.isProcessComplete = true;
-  //       });
-  // }
 
   saveNewDataElement = () => {
     let dataType;
@@ -421,22 +394,14 @@ export class DataElementMainComponent implements OnInit {
     ) {
       isValid = false;
     }
-    //
-    // //Check if for TerminologyType, the terminology is selected
+
+    // Check if for TerminologyType, the terminology is selected
     if (
       this.model.newlyAddedDataType.domainType === 'TerminologyType' &&
       !this.model.newlyAddedDataType.referencedTerminology
     ) {
       isValid = false;
     }
-
-    // if(!isValid) {
-    //   this.dataTypeErrors = "";
-    //   this.dataTypeErrors = "Please fill in all required values for the new Data Type";
-    //   return false;
-    // }
-    // else
-    //   return true;
   }
 
   saveCopiedDataClasses = () => {

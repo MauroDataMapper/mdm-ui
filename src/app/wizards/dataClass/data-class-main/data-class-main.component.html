@@ -35,12 +35,9 @@ SPDX-License-Identifier: Apache-2.0
                     Next step
                     <i class="fas fa-chevron-right"></i>
                 </button>
-                <button mat-button color="warn" (click)="cancelWizard()">
-                    Cancel
+                <button mat-button color="warn" (click)="closeWizard()">
+                    Close
                 </button>
-                <span *ngIf="step.isProcessComplete">  
-                    <button mat-stroked-button color="primary" (click)="closeWizard()">Close</button>
-                </span>
             </div>
         </div>
     </mat-step>

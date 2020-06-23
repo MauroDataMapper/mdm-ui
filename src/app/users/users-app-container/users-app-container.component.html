@@ -18,25 +18,25 @@ SPDX-License-Identifier: Apache-2.0
  <!-- Main container for the User section -->
  <div class="container settings-container">
   <div flex fxLayout="row" fxLayout.md="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="16px">
-      <aside class="menu" fxFlex="18" fxFlex.md="18" fxHide.sm fxHide.xs>
+      <aside role="menu" class="menu" fxFlex="18" fxFlex.md="18" fxHide.sm fxHide.xs>
           <ul class="menu-list">
               <p class="marginless pl-2 text-muted">Account settings</p>
               <li>
-                  <a uiSref="appContainer.userArea.profile" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.userArea.profile" uiSrefActive="active">
                       <i class="fas fa-id-card"></i>
                       <span>My profile</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.userArea.settings" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.userArea.settings" uiSrefActive="active">
                       <i class="fas fa-sliders-h"></i>
                       <span>Preferences</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.userArea.changePassword" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.userArea.changePassword" uiSrefActive="active">
                       <i class="fas fa-key"></i>
-                      <span>Password</span>
+                      <span>Change password</span>
                   </a>
               </li>
           </ul>
@@ -44,43 +44,43 @@ SPDX-License-Identifier: Apache-2.0
           <ul class="menu-list" *ngIf="isAdmin">
               <p class="marginless pl-2 text-muted">Admin settings</p>
               <li>
-                  <a uiSref="appContainer.adminArea.home" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.home" uiSrefActive="active">
                       <i class="fas fa-tachometer-alt"></i>
                       <span>Dashboard</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.adminArea.modelManagement" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.modelManagement" uiSrefActive="active">
                       <i class="fas fa-list" aria-hidden="true"></i>
                       <span>Model management</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.adminArea.emails" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.emails" uiSrefActive="active">
                       <i class="fas fa-envelope" aria-hidden="true"></i>
                       <span>Emails</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.adminArea.users" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.users" uiSrefActive="active">
                       <i class="fas fa-user" aria-hidden="true"></i>
                       <span>Manage users</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.adminArea.pendingUsers" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.pendingUsers" uiSrefActive="active">
                       <i class="fas fa-user-clock"></i>
                       <span matBadge="{{pendingUsersCount}}" matBadgeOverlap="false" matBadgeColor="warn" [matBadgeHidden]="!pendingUsersCount">Pending users</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.adminArea.groups" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.groups" uiSrefActive="active">
                       <i class="fas fa-users" aria-hidden="true"></i>
                       <span>Manage groups</span>
                   </a>
               </li>
               <li>
-                  <a uiSref="appContainer.adminArea.configuration" uiSrefActive="active">
+                  <a role="menuitem" uiSref="appContainer.adminArea.configuration" uiSrefActive="active">
                       <i class="fas fa-cog" aria-hidden="true"></i>
                       <span>Configuration</span>
                   </a>

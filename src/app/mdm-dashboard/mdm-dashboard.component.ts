@@ -38,7 +38,8 @@ import {
 } from 'angular-gridster2';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { SelectModalComponent } from '@mdm/modals/select-modal/select-modal.component';
+import { SelectModalComponent, SelectModalItem } from '@mdm/modals/select-modal/select-modal.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'mdm-dashboard',
@@ -50,7 +51,7 @@ export class MdmDashboardComponent implements OnInit {
   @ViewChild(GridsterComponent) gridster: GridsterComponent;
   options: GridsterConfig;
 
-  availableWidgets = ["about","mdmFavourites"];
+  availableWidgets : Array<SelectModalItem> = [ {display: "About",  value:"about"},{ value:   "mdmFavourites", display :"Favorites"}];
   factory: ComponentFactory = new ComponentFactory();
   widgets: GridsterItem[] = new Array<GridsterItem>();
 
@@ -60,7 +61,8 @@ export class MdmDashboardComponent implements OnInit {
     private usersSetting: UserSettingsHandlerService,
     private cd: ChangeDetectorRef,
     private title: Title,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private toast: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -134,11 +136,14 @@ export class MdmDashboardComponent implements OnInit {
     this.options.api.optionsChanged();
     this.LayoutGrid();
     this.inEditMode = !this.inEditMode;
+    this.toast.info("Layout has been saved","Layout");
   }
 
   Reset() {
       this.usersSetting.update(this.dashboardSetting, null);
+      this.widgets = [];
       this.LayoutGrid();
+      this.toast.info("Layout has been reset","Layout");
   }
 
   Edit(): void {
@@ -149,8 +154,6 @@ export class MdmDashboardComponent implements OnInit {
   }
 
   AddWidget(): void {
-
-
       const dialog = this.dialog.open(SelectModalComponent, {
         data: {
           items: this.availableWidgets,

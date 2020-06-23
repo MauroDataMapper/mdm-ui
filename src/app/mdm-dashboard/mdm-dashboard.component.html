@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   <h2 class="mat-h3">Welcome back, @admin!</h2>
   <p>Pick up where you left 3 days ago</p>
   <button
-    style="margin-bottom: 10px;"
+    style="margin-bottom: 10px; margin-right: 10px;"
     mat-flat-button
     color="primary"
     type="button"
@@ -31,18 +31,7 @@ SPDX-License-Identifier: Apache-2.0
     Edit Layout
   </button>
   <button
-    style="margin-bottom: 10px;"
-    mat-flat-button
-    color="primary"
-    type="button"
-    (click)="Reset()"
-    *ngIf="!inEditMode"
-  >
-    <i class="fas fa-plus"></i>
-    Reset
-  </button>
-  <button
-    style="margin-bottom: 10px;"
+    style="margin-bottom: 10px; margin-right: 10px;"
     mat-flat-button
     color="primary"
     type="button"
@@ -53,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
     Save
   </button>
   <button
-    style="margin-bottom: 10px;"
+    style="margin-bottom: 10px; margin-right: 10px;"
     mat-flat-button
     color="primary"
     type="button"
@@ -62,6 +51,17 @@ SPDX-License-Identifier: Apache-2.0
   >
     <i class="fas fa-plus"></i>
     Add
+  </button>
+  <button
+    style="margin-bottom: 10px; margin-right: 10px;"
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="Reset()"
+    *ngIf="inEditMode"
+  >
+    <i class="fas fa-plus"></i>
+    Reset
   </button>
   <div>
     <gridster [options]="options" style="min-height: 1000px;">

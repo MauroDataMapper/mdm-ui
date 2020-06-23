@@ -15,7 +15,7 @@ export class SelectModalComponent implements OnInit {
   modalTitle: string;
   message: string;
   inputLabel: string;
-  items: [];
+  items: Array<SelectModalItem>;
   selectedItem: any;
 
   constructor(
@@ -35,4 +35,9 @@ export class SelectModalComponent implements OnInit {
     this.items = this.data.items;
   }
 
+}
+
+export interface SelectModalItem{
+  value:any;
+  display:string;
 }

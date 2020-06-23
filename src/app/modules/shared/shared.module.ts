@@ -34,8 +34,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from '@mdm/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { MdmDashboardComponent } from '@mdm/mdm-dashboard/mdm-dashboard.component';
-import { GridsterModule } from 'angular-gridster2';
+import { DashboardComponent } from '@mdm/admin/home/home.component';
 
 @NgModule({
   declarations: [
@@ -48,8 +47,7 @@ import { GridsterModule } from 'angular-gridster2';
     MetadataCompareComponent,
     EnumerationCompareComponent,
     ErrorComponent,
-    MdmPaginatorComponent,
-    MdmDashboardComponent
+    MdmPaginatorComponent
   ],
   imports: [
     CommonModule,
@@ -59,8 +57,7 @@ import { GridsterModule } from 'angular-gridster2';
     MatPasswordStrengthModule,
     NgxJsonViewerModule,
     FlexLayoutModule,
-    ReactiveFormsModule,
-    GridsterModule
+    ReactiveFormsModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -80,7 +77,6 @@ import { GridsterModule } from 'angular-gridster2';
     ErrorComponent,
     FlexLayoutModule,
     MdmPaginatorComponent
-
   ]
 })
 export class SharedModule {}

@@ -91,7 +91,7 @@ export class NavbarComponent implements OnInit {
           this.stateHandler.CurrentWindow(latestURL);
           return;
         } else {
-          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.dashboard' });
           return;
         }
       }
@@ -121,7 +121,7 @@ export class NavbarComponent implements OnInit {
           this.stateHandler.CurrentWindow(latestURL);
           return;
         } else {
-          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'});
+          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.dashboard'});
           return;
         }
       }

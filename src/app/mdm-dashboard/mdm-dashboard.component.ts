@@ -38,8 +38,16 @@ import {
 } from 'angular-gridster2';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { SelectModalComponent, SelectModalItem } from '@mdm/modals/select-modal/select-modal.component';
+import {
+  SelectModalComponent,
+  SelectModalItem,
+} from '@mdm/modals/select-modal/select-modal.component';
 import { ToastrService } from 'ngx-toastr';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MdmCommentsComponent } from './mdm-plugins/mdm-comments/mdm-comments.component';
+import { MdmRecentActivityComponent } from './mdm-plugins/mdm-recent-activity/mdm-recent-activity.component';
+import { MdmTasksComponent } from './mdm-plugins/mdm-tasks/mdm-tasks.component';
+import { MdmRecentlyAddedDataModelsComponent } from './mdm-plugins/mdm-recently-added-data-models/mdm-recently-added-data-models.component';
 
 @Component({
   selector: 'mdm-dashboard',
@@ -51,11 +59,20 @@ export class MdmDashboardComponent implements OnInit {
   @ViewChild(GridsterComponent) gridster: GridsterComponent;
   options: GridsterConfig;
 
-  availableWidgets : Array<SelectModalItem> = [ {display: "About",  value:"about"},{ value:   "mdmFavourites", display :"Favorites"}];
+  availableWidgets: Array<SelectModalItem> = [
+    { value: 'about', display: 'About' },
+    { value: 'mdmFavourites', display: 'Favorites' },
+    { value: 'comments', display: 'Comments' },
+    { value: 'recentActivity', display: 'Recent Activity' },
+    { value: 'task', display: 'Task' },
+    { value: 'recentAddedDataModel', display: 'Recent Added Data Models' },
+    { value: 'mdmFavourites', display: 'Favorites' },
+  ];
   factory: ComponentFactory = new ComponentFactory();
   widgets: GridsterItem[] = new Array<GridsterItem>();
 
-  dashboardSetting = "dashboard";
+  dashboardSetting = 'dashboard';
+  profile: any;
 
   constructor(
     private usersSetting: UserSettingsHandlerService,
@@ -63,10 +80,12 @@ export class MdmDashboardComponent implements OnInit {
     private title: Title,
     public dialog: MatDialog,
     private toast: ToastrService,
+    private securityHandler: SecurityHandlerService
   ) {}
 
   ngOnInit(): void {
     this.title.setTitle('Dashboard');
+    this.profile = this.securityHandler.getCurrentUser();
     this.options = {
       gridType: GridType.Fit,
       compactType: CompactType.None,
@@ -85,17 +104,16 @@ export class MdmDashboardComponent implements OnInit {
     const layout = this.usersSetting.get(this.dashboardSetting);
     if (layout) {
       const data: Array<GridsterItem> = JSON.parse(layout);
-      data.forEach(x => x.el = this.factory.resolve(x.id));
+      data.forEach((x) => (x.el = this.factory.resolve(x.id)));
       this.widgets = data;
-    }
-    else {
+    } else {
       const item1: GridsterItem = {
         x: 1,
         y: 0,
         id: 'mdmFavourites',
         rows: 2,
         cols: 1,
-        el: this.factory.resolve("mdmFavourites")
+        el: this.factory.resolve('mdmFavourites'),
       };
 
       const item2: GridsterItem = {
@@ -104,14 +122,11 @@ export class MdmDashboardComponent implements OnInit {
         id: 'about',
         rows: 1,
         cols: 1,
-        el: this.factory.resolve("about")
+        el: this.factory.resolve('about'),
       };
-
 
       this.widgets.push(item1, item2);
     }
-
-
 
     this.cd.detectChanges();
   }
@@ -124,8 +139,8 @@ export class MdmDashboardComponent implements OnInit {
 
   Save() {
     this.cd.detectChanges();
-      let saveArray : Array<GridsterItem> = Object.assign([],this.widgets);
-      this.gridster.grid.forEach((item) => {
+    let saveArray: Array<GridsterItem> = Object.assign([], this.widgets);
+    this.gridster.grid.forEach((item) => {
       let wid = saveArray.find((x) => x.id === item.item.id);
       wid = item.item;
       wid.el = null;
@@ -136,14 +151,14 @@ export class MdmDashboardComponent implements OnInit {
     this.options.api.optionsChanged();
     this.LayoutGrid();
     this.inEditMode = !this.inEditMode;
-    this.toast.info("Layout has been saved","Layout");
+    this.toast.info('Layout has been saved', 'Layout');
   }
 
   Reset() {
-      this.usersSetting.update(this.dashboardSetting, null);
-      this.widgets = [];
-      this.LayoutGrid();
-      this.toast.info("Layout has been reset","Layout");
+    this.usersSetting.update(this.dashboardSetting, null);
+    this.widgets = [];
+    this.LayoutGrid();
+    this.toast.info('Layout has been reset', 'Layout');
   }
 
   Edit(): void {
@@ -154,32 +169,30 @@ export class MdmDashboardComponent implements OnInit {
   }
 
   AddWidget(): void {
-      const dialog = this.dialog.open(SelectModalComponent, {
-        data: {
-          items: this.availableWidgets,
-          modalTitle: 'Add a New Widget',
-          okBtn: 'Add Widget',
-          btnType: 'primary',
-          inputLabel: 'Widget name',
-          message: 'Please select a widget to add to dashboard'
-        }
-      });
+    const dialog = this.dialog.open(SelectModalComponent, {
+      data: {
+        items: this.availableWidgets,
+        modalTitle: 'Add a New Widget',
+        okBtn: 'Add Widget',
+        btnType: 'primary',
+        inputLabel: 'Widget name',
+        message: 'Please select a widget to add to dashboard',
+      },
+    });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result) {
-          const newItem: GridsterItem = {
-            x: 0,
-            y: 0,
-            id: result,
-            rows: 1,
-            cols: 1,
-            el: this.factory.resolve(result)
-          };
-          this.widgets.push(newItem)
-        }
-      });
-
-
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        const newItem: GridsterItem = {
+          x: 0,
+          y: 0,
+          id: result,
+          rows: 1,
+          cols: 1,
+          el: this.factory.resolve(result),
+        };
+        this.widgets.push(newItem);
+      }
+    });
   }
 
   RemoveItem($event, item): void {
@@ -189,7 +202,6 @@ export class MdmDashboardComponent implements OnInit {
   }
 }
 
-
 export class ComponentFactory {
   constructor() {}
 
@@ -198,8 +210,17 @@ export class ComponentFactory {
       case 'mdmFavourites': {
         return new ComponentPortal(MdmFavouritesComponent);
       }
-      case 'about': {
-        return new ComponentPortal(AboutComponent);
+      case 'comments': {
+        return new ComponentPortal(MdmCommentsComponent);
+      }
+      case 'recentActivity': {
+        return new ComponentPortal(MdmRecentActivityComponent);
+      }
+      case 'task': {
+        return new ComponentPortal(MdmTasksComponent);
+      }
+      case 'recentAddedDataModel': {
+        return new ComponentPortal(MdmRecentlyAddedDataModelsComponent);
       }
     }
   }

@@ -38,11 +38,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ModalModule } from './modals/modal.module';
 import {HttpClientModule} from '@angular/common/http';
-import { MdmFavouritesComponent } from './mdm-dashboard/mdm-plugins/mdm-favourites/mdm-favourites.component';
+import { DashboardModule } from './mdm-dashboard/mdm-plugins/dashboard/dashboard.module';
+
 
 
 @NgModule({
-  declarations: [AppComponent, MdmFavouritesComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     CatalogueModule,
@@ -52,7 +53,8 @@ import { MdmFavouritesComponent } from './mdm-dashboard/mdm-plugins/mdm-favourit
     AppRoutingModule,
     ModalModule,
     UIRouterModule.forRoot({ useHash: true }),
-    HttpClientModule
+    HttpClientModule,
+    DashboardModule
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },

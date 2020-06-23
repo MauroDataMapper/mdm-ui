@@ -27,6 +27,7 @@ SPDX-License-Identifier: Apache-2.0
             <nav id="mdm--navbar-desktop" flex fxLayout="row" fxLayoutAlign="space-between">
                 <div class="mdm--navbar-items">
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.home" uiSrefActive="active">Home</a>
+                    <a class="nav-item nav-link" *ngIf="isLoggedIn" uiSref="appContainer.mainApp.dashboard" uiSrefActive="active">Dashboard</a>
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel" uiSrefActive="active">Browse models</a>
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.search" uiSrefActive="active">Search</a>
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.about" uiSrefActive="active">About</a>

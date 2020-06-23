@@ -55,14 +55,14 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   dataTypeErrors = '';
   record: any; // TODO
   processing = false;
-  failCount: any; // TODO
   parentScopeHandler: any;
   hideFiltersSelectedDataTypes = true;
   totalItemCount = 0;
   isLoadingResults: boolean;
   isProcessComplete = false;
   finalResult = {};
-  successCount: number;
+  failCount = 0;
+  successCount = 0;
 
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
 
@@ -164,14 +164,8 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
-      this.filterEvent.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
+      this.filterEvent.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
 
       this.dataSourceDataElements.sort = this.sort.toArray()[0];
 
@@ -192,16 +186,8 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         this.paginator !== undefined &&
         this.paginator.length > 0
       ) {
-        merge(
-          this.sort.toArray()[0].sortChange,
-          this.paginator.toArray()[0].page,
-          this.filterEvent
-        )
-          .pipe(
-            startWith({}),
-            switchMap(() => {
+        merge(this.sort.toArray()[0].sortChange, this.paginator.toArray()[0].page, this.filterEvent).pipe(startWith({}), switchMap(() => {
               this.isLoadingResults = true;
-
               return this.dataElementsFetch(
                 this.paginator.toArray()[0].pageSize,
                 this.paginator.toArray()[0].pageIndex * this.paginator.toArray()[0].pageSize,
@@ -219,33 +205,25 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
               this.isLoadingResults = false;
               return [];
             })
-          )
-          .subscribe(data => {
+          ).subscribe(data => {
             this.recordsDataElements = data;
             this.dataSourceDataElements.data = this.recordsDataElements;
 
             // Sorting/paging is making a backend call and looses the checked checkboxes
-            if (
-              this.model.selectedDataElements != null &&
-              this.model.selectedDataElements.length > 0
-            ) {
+            if (this.model.selectedDataElements != null && this.model.selectedDataElements.length > 0) {
               this.reCheckSelectedDataElements();
             }
           });
       }
 
       this.validate();
-
       this.loaded = true;
     }
   }
 
   reCheckSelectedDataElements() {
-
     let currentPageSelectedItemsNum = 0;
-
     this.model.selectedDataElements.forEach((sdt: any) => {
-
       const currentId = sdt.id;
       const item = this.recordsDataElements.find(r => r.id === currentId);
       if (item !== null && item !== undefined) {
@@ -267,16 +245,11 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   onCheckAll = () => {
-
     this.recordsDataElements.forEach(element => {
       element.checked = this.checkAllCheckbox;
-
       if (this.checkAllCheckbox) {
-
         this.model.selectedDataElements.push(element);
-
       } else {
-
         const currentId = element.id;
         const index = this.model.selectedDataElements.findIndex(r => r.id === currentId);
 
@@ -294,12 +267,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
   onCheck(record) {
     if (record.checked) {
-
       this.model.selectedDataElements.push(record);
     } else {
-
       const index = this.model.selectedDataElements.findIndex(r => r.id === record.id);
-
       if (index !== -1) {
         this.model.selectedDataElements.splice(index, 1);
       }
@@ -414,12 +384,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       }
     });
 
-    if (
-      filterValue !== null &&
-      filterValue !== undefined &&
-      filterName !== null &&
-      filterName !== undefined
-    ) {
+    if (filterValue !== null && filterValue !== undefined && filterName !== null && filterName !== undefined) {
       filter += filterName + '=' + filterValue.id + '&';
     }
 
@@ -429,60 +394,48 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
 
   validationStatusEmitter($event) {
-
     this.step.invalid = JSON.parse($event);
   }
 
   filterClick = () => {
-
     this.hideFilters = !this.hideFilters;
   };
 
   filterClickSelectedDataTypes = () => {
-
     this.hideFiltersSelectedDataTypes = !this.hideFiltersSelectedDataTypes;
   };
 
   saveCopiedDataClasses = () => {
     this.processing = true;
     this.isProcessComplete = false;
+    this.failCount = 0;
+    this.successCount = 0;
 
     let promise = Promise.resolve();
 
-    this.model.selectedDataElements.forEach((dc: any) => {
-      promise = promise
-        .then((result: any) => {
+    this.model.selectedDataElements.forEach((dc: any) => { promise = promise.then((result: any) => {
           const link = 'dataElements/' + dc.dataModel + '/' + dc.dataClass + '/' + dc.id;
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
-          return this.resources.dataClass
-              .post(
-                this.model.parent.dataModel,
-                this.model.parent.id,
-                link,
-                null
-              )
-              .toPromise();
+          return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
 
-        })
-        .catch(error => {
+        }).catch(error => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = { result: errorText, hasError: true };
+          this.finalResult[dc.id] = {
+              result: 'Unable to add this Data Element. Ensure that the names that you are importing are unique. If the problem persists, contact the administrator',
+              hasError: true
+            };
         });
     });
 
-    promise
-      .then(() => {
+    promise.then(() => {
         this.processing = false;
-        this.step.isProcessComplete = true;
+        this.isProcessComplete = true;
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-      })
-      .catch(() => {
+      }).catch(() => {
         this.processing = false;
-        this.step.isProcessComplete = true;
+        this.isProcessComplete = true;
       });
   }
-
-
 }

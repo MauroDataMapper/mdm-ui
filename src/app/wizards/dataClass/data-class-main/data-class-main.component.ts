@@ -89,26 +89,14 @@ export class DataClassMainComponent implements AfterViewInit {
     step2.invalid = true;
 
     if (this.parentDataClassId) {
-      this.resources.dataClass
-        .get(
-          this.parentDataModelId,
-          this.grandParentDataClassId,
-          this.parentDataClassId,
-          null,
-          null
-        )
-        .toPromise()
-        .then(result => {
+      this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).toPromise().then(result => {
           result.body.breadcrumbs.push(Object.assign([], result.body));
           this.model.parent = result.body;
           this.steps.push(step1);
           this.steps.push(step2);
         });
     } else {
-      this.resources.dataModel
-        .get(this.parentDataModelId)
-        .toPromise()
-        .then(result => {
+      this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
           result.body.breadcrumbs = [];
           result.body.breadcrumbs.push(Object.assign({}, result.body));
           this.model.parent = result.body;
@@ -117,10 +105,6 @@ export class DataClassMainComponent implements AfterViewInit {
         });
     }
   }
-
-  cancelWizard = () => {
-    this.stateHandler.GoPrevious();
-  };
 
   closeWizard = () => {
     this.stateHandler.GoPrevious();
@@ -201,8 +185,7 @@ export class DataClassMainComponent implements AfterViewInit {
       );
     }
 
-    deferred.subscribe(
-      response => {
+    deferred.subscribe(response => {
         this.messageHandler.showSuccess('Data Class saved successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.Go(
@@ -216,10 +199,7 @@ export class DataClassMainComponent implements AfterViewInit {
         );
       },
       error => {
-        this.messageHandler.showError(
-          'There was a problem saving the Data Class.',
-          error
-        );
+        this.messageHandler.showError('There was a problem saving the Data Class.', error);
       }
     );
   }

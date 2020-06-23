@@ -100,8 +100,6 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
       this.validate(x);
      });
-
-
   }
 
   onLoad() {
@@ -116,23 +114,12 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
       this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
-      this.filterEvent.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
-
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
+      this.filterEvent.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
 
       // Selected Data Class table
       this.dataSource.sort = this.sort.toArray()[0];
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
       this.dataSource.paginator = this.paginator.toArray()[0];
     }
     if (this.model.selectedDataClassesMap) {
@@ -167,17 +154,10 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     if (this.model.createType === 'new') {
       if (newValue) {
         // check Min/Max
-        this.multiplicityError = this.validator.validateMultiplicities(
-          newValue.minMultiplicity,
-          newValue.maxMultiplicity
-        );
+        this.multiplicityError = this.validator.validateMultiplicities(newValue.minMultiplicity, newValue.maxMultiplicity);
 
         // Check Mandatory fields
-        if (
-          !newValue.label ||
-          newValue.label.trim().length === 0 ||
-          this.multiplicityError
-        ) {
+        if (!newValue.label || newValue.label.trim().length === 0 || this.multiplicityError) {
           this.step.invalid = true;
           return;
         }
@@ -191,7 +171,6 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
         return;
       }
     }
-
     this.step.invalid = invalid;
   };
 
@@ -202,46 +181,37 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   saveCopiedDataClasses = () => {
     this.processing = true;
     this.isProcessComplete = false;
+    this.failCount = 0;
+    this.successCount = 0;
 
     let promise = Promise.resolve();
 
-    this.model.selectedDataClasses.forEach((dc: any) => {
-      promise = promise
-        .then((result: any) => {
+    this.model.selectedDataClasses.forEach((dc: any) => { promise = promise.then((result: any) => {
           const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
           if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass
-              .post(
-                this.model.parent.dataModel,
-                this.model.parent.id,
-                link,
-                null
-              )
-              .toPromise();
+            return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
           } else {
-            return this.resources.dataModel
-              .post(this.model.parent.id, link, null)
-              .toPromise();
+            return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
           }
-        })
-        .catch(error => {
+        }).catch(error => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = { result: errorText, hasError: true };
+          this.finalResult[dc.id] = {
+            result: 'Unable to copy this Data Class. Check if this Data Class name already exists in the list. If the problem persists, please contact the administrator',
+            hasError: true
+          };
         });
     });
 
-    promise
-      .then(() => {
+    promise.then(() => {
         this.processing = false;
-        this.step.isProcessComplete = true;
+        this.isProcessComplete = true;
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-      })
-      .catch(() => {
+      }).catch(() => {
         this.processing = false;
-        this.step.isProcessComplete = true;
+        this.isProcessComplete = true;
       });
   }
 }

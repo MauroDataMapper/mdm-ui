@@ -23,28 +23,28 @@ SPDX-License-Identifier: Apache-2.0
 	<div class="mdm--form-input">
 		<mat-form-field appearance="outline">
 			<mat-label>First name</mat-label>
-			<input matInput [(ngModel)]="user.firstName" id="firstName" name="firstName" #firstName="ngModel" required>
+			<input matInput [(ngModel)]="user.firstName" id="firstName" name="firstName" #firstName="ngModel" type="text" required>
 		</mat-form-field>
 	</div>
 	<div class="mdm--form-input">
 		<mat-form-field appearance="outline">
 			<mat-label>Last name</mat-label>
-			<input matInput [(ngModel)]="user.lastName" id="lastName" name="lastName" #lastName="ngModel" required>
+			<input matInput [(ngModel)]="user.lastName" id="lastName" name="lastName" #lastName="ngModel" type="text" required>
 		</mat-form-field>
 	</div>
 	<div class="mdm--form-input">
 		<mat-form-field appearance="outline">
 			<mat-label>Organisation</mat-label>
-			<input matInput [(ngModel)]="user.organisation" name="organisation" required>
+			<input matInput [(ngModel)]="user.organisation" name="organisation" type="text" required>
 		</mat-form-field>
 	</div>
 	<div class="mdm--form-input">
 		<mat-form-field appearance="outline">
 			<mat-label>Role in Organisation</mat-label>
-			<input matInput [(ngModel)]="user.jobTitle" name="jobTitle">
+			<input matInput [(ngModel)]="user.jobTitle" name="jobTitle" type="text">
 		</mat-form-field>
 	</div>
-	<button mat-flat-button class="custom" color="primary">
+	<button mat-flat-button class="custom" color="primary" aria-label="Save profile">
 		Save profile
 	</button>
 </form>

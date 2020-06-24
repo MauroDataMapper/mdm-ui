@@ -1,0 +1,119 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+import { Component, OnInit, Input, Inject, AfterViewInit, EventEmitter } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ResourcesService } from '@mdm/services/resources.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+
+@Component({
+  selector: 'mdm-bulk-delete',
+  templateUrl: './bulk-delete-modal.component.html',
+  styleUrls: ['./bulk-delete-modal.component.scss'],
+})
+export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
+  parentDataModel: any;
+  parentDataClass: any;
+
+  records: any[] = [];
+  successCount = 0;
+  failCount = 0;
+
+  processing = false;
+  isProcessComplete = false;
+  finalResult = {};
+
+
+  constructor(
+    public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private resources: ResourcesService,
+    private messageHandler: MessageHandlerService
+  ) { }
+
+  ngOnInit(): void { }
+
+  ngAfterViewInit() {
+    this.parentDataModel = this.data.parentDataModel;
+    this.parentDataClass = this.data.parentDataClass;
+
+    this.getData();
+  }
+
+  getData = () => {
+    this.data.dataElementIdLst.forEach((item: any) => {
+      if (item.domainType === 'DataElement') {
+        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+          if (result !== undefined) {
+            this.records.push(result.body);
+          }
+        }, err => {
+          this.messageHandler.showError('There was a problem getting the Data Elements.', err);
+        });
+      } else if (item.domainType === 'DataClass') {
+        this.resources.dataClass.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+          if (result !== undefined) {
+            this.records.push(result.body);
+          }
+        }, err => {
+          this.messageHandler.showError('There was a problem getting the Data Classes.', err);
+        });
+      }
+    });
+  }
+
+  closeAndRefresh = () => {
+    this.dialogRef.close({ status: 'ok' });
+  };
+
+  saveChanges = () => {
+    this.processing = true;
+    this.isProcessComplete = false;
+
+    let promise = Promise.resolve();
+    this.records.forEach((item: any) => { promise = promise.then(() => {
+          this.successCount++;
+          this.finalResult[item.id] = {
+            result: `Success`,
+            hasError: false
+          };
+          if (item.domainType === 'DataClass') {
+            return this.resources.dataClass.delete(item.dataModel, item.parentDataClass, item.id).toPromise();
+          }
+          if (item.domainType === 'DataElement') {
+            return this.resources.dataElement.delete(item.dataModel, item.dataClass, item.id).toPromise();
+          }
+        }).catch(() => {
+          this.failCount++;
+          this.finalResult[item.id] = {
+            result: `<i class="fas fa-exclamation-triangle warning"></i> Failed`,
+            hasError: true
+          };
+        });
+      });
+
+    promise.then(() => {
+        this.processing = false;
+        this.isProcessComplete = true;
+      }).catch(() => {
+          this.processing = false;
+          this.isProcessComplete = true;
+          // this.dialogRef.close();
+      });
+  };
+}

@@ -26,6 +26,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
+import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 
 @Component({
     selector: 'mdm-content-table',
@@ -128,59 +129,6 @@ export class ContentTableComponent implements AfterViewInit {
       this.filterEvent.emit();
     }
 
-    deleteRows = () => {
-        this.processing = true;
-        this.failCount = 0;
-        this.total = 0;
-
-        const chain: any[] = [];
-        this.records.forEach(record => {
-            if (!record.checked) {
-                return;
-            }
-            this.total++;
-            if (record.domainType === 'DataClass') {
-                chain.push(this.resources.dataClass.delete(record.dataModel, record.parentDataClass, record.id).catch(() => {
-                    this.failCount++;
-                }));
-            } else if (record.domainType === 'DataElement') {
-                chain.push(this.resources.dataElement.delete(record.dataModel, record.dataClass, record.id).catch(() => {
-                    this.failCount++;
-                }));
-            }
-        });
-
-        forkJoin(chain).subscribe(() => {
-            this.processing = false;
-            if (this.failCount === 0) {
-                this.messageHandler.showSuccess(this.total + ' Elements deleted successfully');
-            } else {
-                const successCount = this.total - this.failCount;
-                let message = '';
-                if (successCount !== 0) {
-                    message += successCount + ' Elements deleted successfully.<br>';
-                }
-                if (this.failCount > 0) {
-                    message += 'There was a problem deleting ' + this.failCount + ' elements.';
-                }
-
-                if (this.failCount > 0) {
-                    this.messageHandler.showError(message, null);
-                } else {
-                    this.messageHandler.showSuccess(message);
-                }
-            }
-
-            this.filterEvent.emit();
-            this.deleteInProgress = false;
-        },
-            error => {
-                this.processing = false;
-                this.messageHandler.showError('There was a problem deleting the elements.', error);
-            }
-        );
-    };
-
     applyFilter = () => {
         let filter: any = '';
         this.filters.forEach((x: any) => {
@@ -265,26 +213,37 @@ export class ContentTableComponent implements AfterViewInit {
       }).catch(() => {});
     }
 
-    askForBulkSoftDeletion = () => {
-        const promise = new Promise((resolve, reject) => {
-            const message = `You are about to delete ${this.bulkActionsVisibile} record(s)! <br> Are you sure you want to perform this bulk action?`;
-            const dialog = this.dialog.open(ConfirmationModalComponent, {
-                data: {
-                    title: 'Bulk deletion',
-                    okBtnTitle: 'Confirm bulk deletion',
-                    btnType: 'warn',
-                    message,
-                },
-            });
-
-            dialog.afterClosed().subscribe((result) => {
-                if (result?.status !== 'ok') {
-                    return promise;
-                }
-                this.deleteRows();
-            });
+    bulkDelete = () => {
+      const dataElementIdLst = [];
+      this.records.forEach(record => {
+        if (record.checked) {
+          dataElementIdLst.push({
+            id: record.id,
+            domainType: record.domainType
+          });
+        }
+      });
+      const promise = new Promise((resolve, reject) => {
+        const dialog = this.dialog.open(BulkDeleteModalComponent, {
+          data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
+          panelClass: 'bulk-delete-modal'
         });
-        return promise;
+
+        dialog.afterClosed().subscribe((result) => {
+          if (result != null && result.status === 'ok') {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
+      promise.then(() => {
+        this.records.forEach(x => (x.checked = false));
+        this.records = this.records;
+        this.checkAllCheckbox = false;
+        this.bulkActionsVisibile = 0;
+        this.filterEvent.emit();
+      }).catch(() => {});
     };
 
     askForSoftDeletion = (record) => {
@@ -303,7 +262,7 @@ export class ContentTableComponent implements AfterViewInit {
           });
 
           dialog.afterClosed().subscribe((result) => {
-              if (result?.status === 'ok') {
+              if (result != null && result.status === 'ok') {
                 if (record.domainType === 'DataClass') {
                   this.resources.dataClass.delete(record.dataModel, record.parentDataClass, record.id).subscribe(() => {
                     resolve();

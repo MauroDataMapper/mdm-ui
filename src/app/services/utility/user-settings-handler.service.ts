@@ -67,7 +67,7 @@ export class UserSettingsHandlerService {
               result[property] = this.defaultSettings[property];
             }
           }
-          // save them into the localStorage
+            // save them into the localStorage
           settings = result;
         }
         // save it locally

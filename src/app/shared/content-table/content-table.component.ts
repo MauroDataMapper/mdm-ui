@@ -197,7 +197,7 @@ export class ContentTableComponent implements AfterViewInit {
         });
 
         dialog.afterClosed().subscribe((result) => {
-          if (result?.status === 'ok') {
+          if (result != null && result.status === 'ok') {
             resolve();
           } else {
             reject();

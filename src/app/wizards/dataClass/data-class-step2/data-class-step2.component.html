@@ -152,7 +152,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
     </div>
     <div *ngIf="!processing && isProcessComplete">
-        <div class="alert alert-success" *ngIf="failCount === 0">
+        <div class="alert alert-success" *ngIf="failCount === 0 && successCount > 0">
             <strong>Success!</strong> All Data Classes have been successfully copied!
         </div>
         <div class="alert alert-danger" *ngIf="failCount > 0">

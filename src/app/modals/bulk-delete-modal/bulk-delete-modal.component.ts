@@ -20,6 +20,7 @@ import { Component, OnInit, Input, Inject, AfterViewInit, EventEmitter } from '@
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ResourcesService } from '@mdm/services/resources.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-bulk-delete',
@@ -43,7 +44,8 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
     public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: ResourcesService,
-    private messageHandler: MessageHandlerService
+    private messageHandler: MessageHandlerService,
+    private broadcastSvc: BroadcastService
   ) { }
 
   ngOnInit(): void { }
@@ -78,6 +80,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
   }
 
   closeAndRefresh = () => {
+    this.broadcastSvc.broadcast('$reloadFoldersTree');
     this.dialogRef.close({ status: 'ok' });
   };
 

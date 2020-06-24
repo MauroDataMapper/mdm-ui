@@ -101,7 +101,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
         }).catch(() => {
           this.failCount++;
           this.finalResult[item.id] = {
-            result: `<i class="fas fa-exclamation-triangle warning"></i> Failed`,
+            result: `Failed`,
             hasError: true
           };
         });

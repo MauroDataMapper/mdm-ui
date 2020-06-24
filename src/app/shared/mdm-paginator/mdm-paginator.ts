@@ -27,7 +27,7 @@ export class MdmPaginatorComponent extends MatPaginator {
   pageSizeOptions = [5, 10, 20, 50]
   ngOnInit(): void {
     super.ngOnInit();
-    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
       this.pageSizeOptions =  settings.counts;

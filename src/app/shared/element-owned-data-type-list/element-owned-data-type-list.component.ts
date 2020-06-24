@@ -100,7 +100,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     } else {
       this.displayedColumns = ['name', 'description', 'type', 'buttons'];
     }
-    // const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    // const settings = JSON.parse(localStorage.getItem('userSettings'));
     // if (settings) {
     //   this.pageSize = settings.countPerTable;
     //   this.pageSizeOptions =  settings.counts;

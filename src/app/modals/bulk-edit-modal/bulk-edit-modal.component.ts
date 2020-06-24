@@ -85,7 +85,7 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
   saveChanges = () => {
     let promise = Promise.resolve();
 
-    this.records.forEach((item: any) => { promise = promise.then((result: any) => {
+    this.records.forEach((item: any) => { promise = promise.then(() => {
           const resource = {
             id: item.id,
             label: item.label,
@@ -97,7 +97,7 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
           if (item.domainType === 'DataClass') {
             return this.resources.dataClass.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
           }
-        }).catch(error => {
+        }).catch(() => {
           this.dialogRef.close();
         });
       });

@@ -80,7 +80,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
   ) {
-    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
       this.pageSizeOptions =  settings.counts;

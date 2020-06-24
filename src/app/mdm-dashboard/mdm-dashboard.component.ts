@@ -60,8 +60,6 @@ export class MdmDashboardComponent implements OnInit {
   options: GridsterConfig;
 
   availableWidgets: Array<SelectModalItem> = [
-    { value: 'about', display: 'About' },
-    { value: 'mdmFavourites', display: 'Favorites' },
     { value: 'comments', display: 'Comments' },
     { value: 'recentActivity', display: 'Recent Activity' },
     { value: 'task', display: 'Task' },
@@ -103,31 +101,12 @@ export class MdmDashboardComponent implements OnInit {
   private LayoutGrid() {
     const layout = this.usersSetting.get(this.dashboardSetting);
     if (layout) {
-      const data: Array<GridsterItem> = JSON.parse(layout);
-      data.forEach((x) => (x.el = this.factory.resolve(x.id)));
-      this.widgets = data;
-    } else {
-      const item1: GridsterItem = {
-        x: 1,
-        y: 0,
-        id: 'mdmFavourites',
-        rows: 2,
-        cols: 1,
-        el: this.factory.resolve('mdmFavourites'),
-      };
-
-      const item2: GridsterItem = {
-        x: 0,
-        y: 0,
-        id: 'about',
-        rows: 1,
-        cols: 1,
-        el: this.factory.resolve('about'),
-      };
-
-      this.widgets.push(item1, item2);
+      if (layout.length > 0) {
+        const data: Array<GridsterItem> = JSON.parse(layout);
+        data.forEach((x) => (x.el = this.factory.resolve(x.id)));
+        this.widgets = data;
+      }
     }
-
     this.cd.detectChanges();
   }
 

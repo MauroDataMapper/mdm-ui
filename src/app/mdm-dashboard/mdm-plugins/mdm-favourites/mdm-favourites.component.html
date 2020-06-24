@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
                       <mdm-element-icon [element]="favourite"></mdm-element-icon>
                   </div>
                   <div class="mdm--element-text">
-                      <div>{{favourite.label}} <i class="fas fa-external-link-alt"></i></div>
+                      <div>{{favourite.label}} <i class="fas fa-external-link-alt" (click)="goToFav(favourite)"></i></div>
                       <div class="text-muted">
                           <span>
                               <i class="fas fa-cube" matTooltip="Item type"></i> {{favourite.type}}

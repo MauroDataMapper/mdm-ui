@@ -21,6 +21,7 @@ import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handle
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { forkJoin } from 'rxjs';
 import { ResourcesService } from '@mdm/services/resources.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 
 @Component({
   selector: 'mdm-mdm-favourites',
@@ -37,7 +38,8 @@ export class MdmFavouritesComponent implements OnInit {
   constructor(
       private resources: ResourcesService,
       private elementTypes: ElementTypesService,
-      private favouriteHandler: FavouriteHandlerService
+      private favouriteHandler: FavouriteHandlerService,
+      private stateHandler: StateHandlerService
   ) { }
 
   ngOnInit(): void {
@@ -84,4 +86,12 @@ export class MdmFavouritesComponent implements OnInit {
       }
       return allFavourites;
   };
+
+  goToFav = (node : any) => {
+    this.stateHandler.Go(node.domainType, {
+        id: node.id,
+        dataModelId: node.dataModel,
+        dataClassId: node.parentDataClass
+      });
+  }
 }

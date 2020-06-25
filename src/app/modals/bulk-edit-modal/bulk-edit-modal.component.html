@@ -23,23 +23,26 @@ SPDX-License-Identifier: Apache-2.0
     <table class="mdm--mat-table table-striped mdm--table-fixed">
         <thead>
           <tr>
-            <th style="width: 30%; max-width: 30%;">Name</th>
-            <th style="width: 70%; max-width: 70%;">Description</th>
-            <th style="width: 20%; max-width: 20%; text-align: center;">Status</th>
+            <th style="width: 25%; max-width: 25%;">Name</th>
+            <th style="width: 10%; max-width: 10%; text-align: center;">Type</th>
+            <th style="width: 55%; max-width: 55%;">Description</th>
+            <th style="width: 10%; max-width: 10%; text-align: center;">Status</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of records">
-            <td style="width: 30%; max-width: 30%;">
+            <td style="width: 25%; max-width: 25%;">
               <span name="elementName" ngDefaultControl [(ngModel)]="item.label">{{item.label}}</span>
-              <small class="item-type ml-1">{{item.domainType}}</small>
             </td>
-            <td style="width: 70%; max-width: 70%;">
+            <td style="width: 10%; max-width: 10%; text-align: center;">
+              <small class="item-type">{{item.domainType}}</small>
+            </td>
+            <td style="width: 55%; max-width: 55%;">
               <mat-form-field appearance="outline" class="full-width paddingless">
                 <textarea matInput rows="4" name="description" [(ngModel)]="item.description"></textarea>
               </mat-form-field>
             </td>
-            <td style="width: 20%; max-width: 20%; text-align: center;">
+            <td style="width: 10%; max-width: 10%; text-align: center;">
               <span *ngIf="finalResult && finalResult[item.id] && finalResult[item.id].hasError">
                 <div class="text-center">
                   <i class="fas fa-exclamation-triangle fa-2x warning"></i>

@@ -66,12 +66,13 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
-  
+
+
   filterEvent = new EventEmitter<string>();
   filter: string;
   hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
-  
+
   dataSource = new MatTableDataSource<any>();
 
   constructor(
@@ -181,9 +182,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   }
 
   saveCopiedDataClasses = () => {
-
     this.step.submitBtnDisabled = true;
-
     this.processing = true;
     this.isProcessComplete = false;
     this.failCount = 0;
@@ -191,24 +190,20 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
     let promise = Promise.resolve();
 
-    this.model.selectedDataClasses.forEach((dc: any) => {
-      promise = promise.then((result: any) => {
-        const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
-        this.successCount++;
-        this.finalResult[dc.id] = { result, hasError: false };
-        if (this.model.parent.domainType === 'DataClass') {
-          return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
-        } else {
-          return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
-        }
-      }).catch(error => {
-        this.failCount++;
-        const errorText = this.messageHandler.getErrorText(error);
-        this.finalResult[dc.id] = {
-          result: 'Unable to copy this Data Class. Check if this Data Class name already exists in the list. If the problem persists, please contact the administrator',
-          hasError: true
-        };
-      });
+    this.model.selectedDataClasses.forEach((dc: any) => { promise = promise.then((result: any) => {
+          const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
+          this.successCount++;
+          this.finalResult[dc.id] = { result, hasError: false };
+          if (this.model.parent.domainType === 'DataClass') {
+            return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
+          } else {
+            return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
+          }
+        }).catch(error => {
+          this.failCount++;
+          const errorText = this.messageHandler.getErrorText(error);
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
+        });
     });
 
     promise.then(() => {

@@ -93,7 +93,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
 
     this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
-    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
       this.pageSizeOptions =  settings.counts;

@@ -46,7 +46,7 @@ export class SecurityHandlerService {
     localStorage.removeItem('role');
     localStorage.removeItem('needsToResetPassword');
     localStorage.removeItem('email');
-    sessionStorage.removeItem('userSettings');
+    localStorage.removeItem('userSettings');
 
   }
 

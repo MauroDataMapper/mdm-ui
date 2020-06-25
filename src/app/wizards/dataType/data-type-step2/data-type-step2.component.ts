@@ -98,7 +98,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
-    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
       this.pageSizeOptions =  settings.counts;

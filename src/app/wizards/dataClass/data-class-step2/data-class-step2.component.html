@@ -119,7 +119,7 @@ SPDX-License-Identifier: Apache-2.0
                     <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
                         <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
                             <div class="text-center">
-                                <i class="fas fa-exclamation-triangle warning"></i>
+                                <i class="fas fa-exclamation-triangle fa-2x warning"></i>
                             </div>
                             <div class="warning">
                                 <mdm-more-description description="{{finalResult[record.id].result}}"></mdm-more-description>

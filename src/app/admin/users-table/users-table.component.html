@@ -130,7 +130,7 @@ SPDX-License-Identifier: Apache-2.0
 						<button mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
 							<i class="fas fa-key" color="primary"></i> Reset password
 						</button>
-						<button mat-menu-item (click)="editUser(record)">
+						<button mat-menu-item (click)="editUser(record)" aria-label="Edit user">
 							<i class="fas fa-pencil-alt" color="primary"></i> Edit user
 						</button>
 						<button mat-menu-item *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">

@@ -22,27 +22,46 @@ SPDX-License-Identifier: Apache-2.0
     <p>You are editing the following record(s):</p>
     <table class="mdm--mat-table table-striped mdm--table-fixed">
         <thead>
-            <tr>
-                <th style="width: 30%; max-width: 30%;">Name</th>
-                <th style="width: 70%; max-width: 70%;">Description</th>
-            </tr>
+          <tr>
+            <th style="width: 30%; max-width: 30%;">Name</th>
+            <th style="width: 70%; max-width: 70%;">Description</th>
+            <th style="width: 20%; max-width: 20%; text-align: center;">Status</th>
+          </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of records">
-                <td style="width: 30%; max-width: 30%;">
-                    <span name="elementName" ngDefaultControl [(ngModel)]="item.label">{{item.label}}</span>
-                    <small class="item-type ml-1">{{item.domainType}}</small>
-                </td>
-                <td style="width: 70%; max-width: 70%;">
-                    <mat-form-field appearance="outline" class="full-width paddingless">
-                        <textarea matInput rows="4" name="description" [(ngModel)]="item.description"></textarea>
-                    </mat-form-field>
-                </td>
-            </tr>
+          <tr *ngFor="let item of records">
+            <td style="width: 30%; max-width: 30%;">
+              <span name="elementName" ngDefaultControl [(ngModel)]="item.label">{{item.label}}</span>
+              <small class="item-type ml-1">{{item.domainType}}</small>
+            </td>
+            <td style="width: 70%; max-width: 70%;">
+              <mat-form-field appearance="outline" class="full-width paddingless">
+                <textarea matInput rows="4" name="description" [(ngModel)]="item.description"></textarea>
+              </mat-form-field>
+            </td>
+            <td style="width: 20%; max-width: 20%; text-align: center;">
+              <span *ngIf="finalResult && finalResult[item.id] && finalResult[item.id].hasError">
+                <div class="text-center">
+                  <i class="fas fa-exclamation-triangle fa-2x warning"></i>
+                </div>
+                <div class="warning">
+                  {{finalResult[item.id].result}}
+                </div>
+              </span>
+              <span *ngIf="finalResult && finalResult[item.id] && !finalResult[item.id].hasError && isProcessComplete">
+                <div class="text-center">
+                  <i class="far fa-check-circle fa-2x copyElementSuccess"></i>
+                </div>
+              </span>
+              <span *ngIf="processing && finalResult && finalResult[item.id] && !finalResult[item.id].hasError">
+                <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin"></i></div>
+              </span>
+            </td>
+          </tr>
         </tbody>
     </table>
 </mat-dialog-content>
 <mat-dialog-actions align="end" class="pt-2 pb-2">
-    <button mat-button (click)="cancel()" color="warn">Cancel</button>
-    <button mat-flat-button (click)="saveChanges()" color="primary">Save all changes</button>
+  <button mat-button (click)="closeAndRefresh()" color="warn">Close</button>
+  <button mat-flat-button (click)="saveChanges()" [disabled]="processing" color="primary">Save all changes</button>
 </mat-dialog-actions>

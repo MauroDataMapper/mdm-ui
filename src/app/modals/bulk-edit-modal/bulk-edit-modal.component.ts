@@ -39,6 +39,12 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
   totalItemCount = 0;
   errorCountDataElement = 0;
   errorCountDataClass = 0;
+  successCount = 0;
+  failCount = 0;
+
+  processing = false;
+  isProcessComplete = false;
+  finalResult = {};
 
   constructor(
     public dialogRef: MatDialogRef<BulkEditModalComponent>,
@@ -54,6 +60,9 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
     this.parentDataClass = this.data.parentDataClass;
 
     this.getDataElements();
+
+    this.failCount = 0;
+    this.successCount = 0;
   }
 
   getDataElements() {
@@ -82,32 +91,58 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
     this.dialogRef.close();
   };
 
+
+  closeAndRefresh = () => {
+    this.dialogRef.close({ status: 'ok' });
+  };
+  
   saveChanges = () => {
+    
+    this.processing = true;
+    this.isProcessComplete = false;
+
     let promise = Promise.resolve();
 
-    this.records.forEach((item: any) => { promise = promise.then(() => {
-          const resource = {
-            id: item.id,
-            label: item.label,
-            description: item.description
-          };
-          if (item.domainType === 'DataElement') {
-            return this.resources.dataElement.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
-          }
-          if (item.domainType === 'DataClass') {
-            return this.resources.dataClass.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
-          }
-        }).catch(() => {
-          this.dialogRef.close();
-        });
+    this.records.forEach((item: any) => {promise = promise.then(() => {
+
+        this.successCount++;
+        this.finalResult[item.id] = {
+          result: `Success`,
+          hasError: false
+        };
+
+        const resource = {
+          id: item.id,
+          label: item.label,
+          description: item.description
+        };
+        if (item.domainType === 'DataElement') {
+          return this.resources.dataElement.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
+        }
+        if (item.domainType === 'DataClass') {
+          return this.resources.dataClass.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
+        }
+      }).catch(() => {
+
+        this.failCount++;
+        this.finalResult[item.id] = {
+          result: `Failed`,
+          hasError: true
+        };
       });
+    });
 
     promise.then(() => {
-        this.dialogRef.close({ status: 'ok' });
-        this.messageHandler.showSuccess('All records have been updated successfully!');
-      }).catch(error => {
-          this.dialogRef.close();
-          this.messageHandler.showError('There was a problem updating these records', error);
-      });
+      this.processing = false;
+      this.isProcessComplete = true;
+      //this.dialogRef.close({ status: 'ok' });
+      //this.messageHandler.showSuccess('All records have been updated successfully!');
+    }).catch(error => {
+      //this.dialogRef.close();
+     // this.messageHandler.showError('There was a problem updating these records', error);
+     this.processing = false;
+     this.isProcessComplete = true;
+    });
+
   };
 }

@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import {
   Component,
   OnInit,
+  Output,
   ViewChild,
   ViewChildren,
   ElementRef,
@@ -83,8 +84,9 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
-      this.pageSizeOptions =  settings.counts;
-    }}
+      this.pageSizeOptions = settings.counts;
+    }
+  }
 
   ngOnInit() {
     this.model = this.step.scope.model;
@@ -99,7 +101,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
       this.validate(x);
-     });
+    });
   }
 
   onLoad() {
@@ -147,6 +149,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     this.dataSource._updateChangeSubscription();
     this.validate();
     this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
+    this.step.submitBtnDisabled = false;
   };
 
   validate = (newValue?) => {
@@ -179,6 +182,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   }
 
   saveCopiedDataClasses = () => {
+    this.step.submitBtnDisabled = true;
     this.processing = true;
     this.isProcessComplete = false;
     this.failCount = 0;
@@ -198,20 +202,19 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
         }).catch(error => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = {
-            result: 'Unable to copy this Data Class. Check if this Data Class name already exists in the list. If the problem persists, please contact the administrator',
-            hasError: true
-          };
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
         });
     });
 
     promise.then(() => {
-        this.processing = false;
-        this.isProcessComplete = true;
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      }).catch(() => {
-        this.processing = false;
-        this.isProcessComplete = true;
-      });
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }).catch(() => {
+    }).finally(() => {
+      this.processing = false;
+      this.step.submitBtnDisabled = false;
+      this.isProcessComplete = true;
+    });
+
+    return promise;
   }
 }

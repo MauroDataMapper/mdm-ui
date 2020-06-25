@@ -40,13 +40,13 @@ export class DataClassMainComponent implements AfterViewInit {
     private resources: ResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
-  ) {}
+  ) { }
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentDataModelId: any;
   grandParentDataClassId: any;
   parentDataClassId: any;
-
+  
   model: any = {
     metadata: [],
     classifiers: [],
@@ -87,22 +87,22 @@ export class DataClassMainComponent implements AfterViewInit {
     step2.component = DataClassStep2Component;
     step2.scope = this;
     step2.invalid = true;
-
+    
     if (this.parentDataClassId) {
       this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).toPromise().then(result => {
-          result.body.breadcrumbs.push(Object.assign([], result.body));
-          this.model.parent = result.body;
-          this.steps.push(step1);
-          this.steps.push(step2);
-        });
+        result.body.breadcrumbs.push(Object.assign([], result.body));
+        this.model.parent = result.body;
+        this.steps.push(step1);
+        this.steps.push(step2);
+      });
     } else {
       this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
-          result.body.breadcrumbs = [];
-          result.body.breadcrumbs.push(Object.assign({}, result.body));
-          this.model.parent = result.body;
-          this.steps.push(step1);
-          this.steps.push(step2);
-        });
+        result.body.breadcrumbs = [];
+        result.body.breadcrumbs.push(Object.assign({}, result.body));
+        this.model.parent = result.body;
+        this.steps.push(step1);
+        this.steps.push(step2);
+      });
     }
   }
 
@@ -149,6 +149,7 @@ export class DataClassMainComponent implements AfterViewInit {
   };
 
   saveNewDataClass = () => {
+
     const resource = {
       label: this.model.label,
       description: this.model.description,
@@ -186,18 +187,19 @@ export class DataClassMainComponent implements AfterViewInit {
     }
 
     deferred.subscribe(response => {
-        this.messageHandler.showSuccess('Data Class saved successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.stateHandler.Go(
-          'dataClass',
-          {
-            dataModelId: response.body.dataModel || '',
-            dataClassId: response.body.parentDataClass || '',
-            id: response.body.id
-          },
-          { reload: true, location: true }
-        );
-      },
+      
+      this.messageHandler.showSuccess('Data Class saved successfully.');
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+      this.stateHandler.Go(
+        'dataClass',
+        {
+          dataModelId: response.body.dataModel || '',
+          dataClassId: response.body.parentDataClass || '',
+          id: response.body.id
+        },
+        { reload: true, location: true }
+      );
+    },
       error => {
         this.messageHandler.showError('There was a problem saving the Data Class.', error);
       }

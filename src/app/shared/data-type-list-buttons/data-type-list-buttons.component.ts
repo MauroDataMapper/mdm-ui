@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { DataElementBulkEditDialogService } from '@mdm/services/data-element-bulk-edit-dialog.service';
 
 @Component({
   selector: 'mdm-data-type-list-buttons',
@@ -23,7 +24,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./data-type-list-buttons.component.sass']
 })
 export class DataTypeListButtonsComponent implements OnInit {
-  constructor() {}
+  constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
   @Output() deleteRows = new EventEmitter<any>();
   @Input() add: any;
@@ -33,10 +34,14 @@ export class DataTypeListButtonsComponent implements OnInit {
   @Input() addDataClass: any;
   @Input() addDataElement: any;
   @Input() showDeleteButton = true;
+  @Input() parentDataModel: any;
+  @Input() parentDataClass: any;
 
   deletePending: boolean;
   textLocation: string;
   deleteWarning: string;
+  message: boolean;
+
 
   ngOnInit() {
     this.textLocation = 'left';

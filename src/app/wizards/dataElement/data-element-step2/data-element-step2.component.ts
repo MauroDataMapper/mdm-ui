@@ -335,7 +335,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   };
 
   // parentScopeHandler = () => {
-  //   // TODO
+  // TODO
   // }
 
 
@@ -422,10 +422,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         }).catch(error => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = {
-              result: 'Unable to add this Data Element. Ensure that the names that you are importing are unique. If the problem persists, contact the administrator',
-              hasError: true
-            };
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
         });
     });
 

@@ -38,6 +38,10 @@ SPDX-License-Identifier: Apache-2.0
     </button>
 </div>
 
+<!-- <select style="float: left;" [(ngModel)]="selectedAction" #bulkActions (change)="onBulkActionSelected(bulkActions.value)">
+  <option *ngFor="let name of actionNames" [value]="name">{{name}}</option>
+</select> -->
+
 <div id="addContent" style="float: left;" [hidden]="deletePending" *ngIf="!showContentDropdown">
     <div style="float: right; margin-left: 8px;">
         <button mat-flat-button type="button" color="primary" (click)="add()" [disabled]="deleteInProgress">

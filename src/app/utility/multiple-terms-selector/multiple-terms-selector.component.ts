@@ -26,7 +26,7 @@ import {
   Input,
   SimpleChanges
 } from '@angular/core';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {ContentSearchHandlerService} from '@mdm/services/content-search.handler.service';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
@@ -105,7 +105,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
   }
 
   constructor(
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private contextSearchHandler: ContentSearchHandlerService,
     private cd: ChangeDetectorRef
   ) {

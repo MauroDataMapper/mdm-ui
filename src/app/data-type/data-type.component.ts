@@ -19,7 +19,7 @@ import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
 
 @Component({
@@ -44,7 +44,7 @@ export class DataTypeComponent implements OnInit {
     private title: Title,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private resource: ResourcesService,
+    private resource: MdmResourcesService,
     private sharedService: SharedService
   ) {}
 

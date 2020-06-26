@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { BasicDiagramService } from './basic-diagram.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import * as joint from 'jointjs';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataflowDataclassDiagramService } from './dataflow-dataclass-diagram.service';
 
@@ -30,7 +30,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
   private subClassLinks: Array<any> = [];
   private referenceLinks: Array<any> = [];
 
-  constructor(protected resourcesService: ResourcesService,
+  constructor(protected resourcesService: MdmResourcesService,
               protected messageHandler: MessageHandlerService) {
     super(resourcesService, messageHandler);
   }
@@ -48,7 +48,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
     this.referenceLinks = [];
     this.addAllChildDataClasses(data.body);
     this.allDataClasses.forEach( dataClass => {
-      
+
       this.addRectangleCell(dataClass.id, '', 300, dataClass.attributes.length * 25 + 31);
     });
     this.addLinks();

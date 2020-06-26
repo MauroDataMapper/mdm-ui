@@ -1,6 +1,6 @@
 import { HistoryComponent } from '@mdm/folder/history.component';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { ResourcesService, Terminology, Folder } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { MaterialModule } from '../material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,10 +24,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 
-
-
 class ResourcesTemplate {
-  constructor(private resourcesService: ResourcesService) {
+  constructor(private resourcesService: MdmResourcesService) {
   }
   get = jest.fn();
   delete =jest.fn();
@@ -35,7 +33,7 @@ class ResourcesTemplate {
   put = jest.fn();
 }
 
-let ResourcesServiceStub: Partial<ResourcesService>;
+let ResourcesServiceStub: Partial<MdmResourcesService>;
 ResourcesServiceStub = {
 
 };
@@ -43,14 +41,14 @@ ResourcesServiceStub = {
 let MessageServiceStub: Partial<MessageService>;
 MessageServiceStub ={
   getFolderPermissions: ()=>{
-    
+
   }
 }
 
 let SecurityHandlerServiceStub: Partial<SecurityHandlerService>;
 SecurityHandlerServiceStub = {
   isLoggedIn : () => {return true} ,
-  isValidSession: () => {return new Observable()} 
+  isValidSession: () => {return new Observable()}
 }
 
 
@@ -73,7 +71,7 @@ SharedServiceStub = {
     FormsModule
     ],
   providers: [
-    { provide: ResourcesService },     
+    { provide: MdmResourcesService },
     { provide: ElementTypesService },
     { provide: SharedService, useValue: SharedServiceStub },
     { provide: YoutrackService, useValue: jest.fn() },

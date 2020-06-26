@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationProperties';
 import { from } from 'rxjs';
@@ -40,7 +40,7 @@ export class ConfigurationComponent implements OnInit {
   indexingTime: string;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,

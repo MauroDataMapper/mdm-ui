@@ -20,7 +20,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SemanticLinkHandlerService } from '@mdm/services/handlers/semantic-link-handler.service';
@@ -40,7 +40,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     public elementTypes: ElementTypesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private semanticLinkHandler: SemanticLinkHandlerService,
     private changeRef: ChangeDetectorRef,

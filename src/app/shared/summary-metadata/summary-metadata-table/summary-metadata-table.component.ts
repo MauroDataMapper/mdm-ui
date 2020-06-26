@@ -25,7 +25,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef, OnInit
 } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
@@ -58,7 +58,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
 
   constructor(
     private changeRef: ChangeDetectorRef,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     protected matDialog: MatDialog
   ) {}
 

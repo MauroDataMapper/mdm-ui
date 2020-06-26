@@ -20,7 +20,7 @@ import {environment} from '@env/environment';
 import {SecurityHandlerService} from './handlers/security-handler.service';
 import {Subject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +46,7 @@ export class SharedService {
   constructor(
     private securityHandler: SecurityHandlerService,
     private toaster: ToastrService,
-    private resources: ResourcesService
+    private resources: MdmResourcesService
   ) {
     this.isAdmin = this.securityHandler.isAdmin();
     this.applicationOffline.subscribe(() => {

@@ -25,7 +25,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
@@ -49,7 +49,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   @Output() refreshUserDetails: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private title: Title,
     private messageHandler: MessageHandlerService

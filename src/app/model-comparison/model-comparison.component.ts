@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
@@ -51,7 +51,7 @@ export class ModelComparisonComponent implements OnInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateService: StateService,
     private changeDetector: ChangeDetectorRef
   ) { }

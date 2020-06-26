@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit } from '@angular/core';
 import { MessageService } from '@mdm/services/message.service';
 import { Subscription } from 'rxjs';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
@@ -33,7 +33,7 @@ export class ShareWithComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService
   ) {}
 

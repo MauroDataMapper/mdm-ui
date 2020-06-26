@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditableDataModel } from '../model/dataModelModel';
 import {
   Component,
@@ -93,7 +93,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   constructor(
     private renderer: Renderer2,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,

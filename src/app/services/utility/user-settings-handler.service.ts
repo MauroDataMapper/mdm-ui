@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from '../resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 
@@ -35,7 +35,7 @@ export class UserSettingsHandlerService {
     dataFlowDiagramsSetting: {}
   };
   constructor(
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService
   ) {}
 

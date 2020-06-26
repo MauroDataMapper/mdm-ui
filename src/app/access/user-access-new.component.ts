@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MessageService } from '../services/message.service';
 import { FolderResult } from '../model/folderModel';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { forkJoin } from 'rxjs';
 import { forEach } from '@uirouter/core';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
@@ -65,7 +65,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
   };
   constructor(
     private messageService: MessageService,
-    private resourceService: ResourcesService,
+    private resourceService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService
   ) {

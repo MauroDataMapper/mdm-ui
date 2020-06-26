@@ -1,0 +1,88 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<h4 mat-dialog-title>Bulk delete <span class="mdm--badge mdm--element-count">{{records.length}} </span></h4>
+<button mat-icon-button color="warn" type="button" class="close-modal paddingless" mat-dialog-close *ngIf="!successCount">
+  <i class="fas fa-times"></i>
+</button>
+<button mat-icon-button color="warn" type="button" class="close-modal paddingless" (click)="closeAndRefresh()" *ngIf="successCount > 0">
+  <i class="fas fa-times"></i>
+</button>
+
+<mat-dialog-content class="mat-typography">
+    <p>You are deleting the following record(s):</p>
+    <p><strong>Note: </strong>These records will be completely removed from the database</p>
+    <table class="mdm--mat-table table-striped mdm--table-fixed">
+        <thead>
+            <tr>
+                <th style="width: 60%; max-width: 60%;">Name</th>
+                <th style="width: 20%; max-width: 20%; text-align: center;">Type</th>
+                <th style="width: 20%; max-width: 20%; text-align: center;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of records">
+                <td style="width: 60%; max-width: 60%;">
+                  <span>{{record.label}}</span>
+                </td>
+                <td style="width: 20%; max-width: 20%; text-align: center;">
+                  <small class="item-type">{{record.domainType}}</small>
+                </td>
+                <td style="width: 20%; max-width: 20%; text-align: center;">
+                    <span *ngIf="finalResult && finalResult[record.id] && finalResult[record.id].hasError">
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle fa-2x warning"></i>
+                        </div>
+                        <div class="warning">
+                          {{finalResult[record.id].result}}
+                        </div>
+                    </span>
+                    <span *ngIf="finalResult && finalResult[record.id] && !finalResult[record.id].hasError && isProcessComplete">
+                        <div class="text-center">
+                            <i class="far fa-check-circle fa-2x copyElementSuccess"></i>
+                        </div>
+                    </span>
+                    <span *ngIf="processing && finalResult && finalResult[record.id] && !finalResult[record.id].hasError">
+                        <div class="text-center"><i class="fas fa-spinner fa-2x fa-spin"></i></div>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pt-2 pb-2">
+  <div class="full-width">
+    <div *ngIf="!processing && isProcessComplete" class="mt-2" style="text-align: left;">
+      <div class="alert alert-success" *ngIf="!failCount">
+          <strong><i class="far fa-check-circle fa-2x copyElementSuccess"></i> Success!</strong> All selected records have been successfully removed!
+      </div>
+      <div class="alert alert-danger" *ngIf="failCount > 0">
+          <strong>Error!</strong> {{failCount}} Error(s) in deletion process!
+          <p>Note: You can try to again to remove the remaining items by pressing the button below</p>
+      </div>
+    </div>
+
+    <div>
+      <button mat-button mat-dialog-close color="warn" class="mr-1" *ngIf="!successCount" [disabled]="processing">Close</button>
+      <button mat-button (click)="closeAndRefresh()" color="warn" *ngIf="successCount > 0 && isProcessComplete">Close and refresh</button>
+
+      <button mat-flat-button (click)="saveChanges()" color="warn" *ngIf="!isProcessComplete && !failCount" [disabled]="processing">Delete {{records.length}} record(s)</button>
+      <button mat-flat-button (click)="saveChanges()" color="warn" *ngIf="!isProcessComplete && failCount > 0" [disabled]="processing">Retry</button>
+    </div>
+  </div>
+</mat-dialog-actions>

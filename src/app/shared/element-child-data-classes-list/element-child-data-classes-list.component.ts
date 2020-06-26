@@ -28,11 +28,12 @@ import {
 } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { merge, Observable, forkJoin } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -68,21 +69,22 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   deleteInProgress: boolean;
 
   checkAllCheckbox = false;
+  bulkActionsVisibile = 0;
 
   constructor(
     private changeRef: ChangeDetectorRef,
-    private messageHandler: MessageHandlerService,
     private resources: MdmResourcesService,
-    private stateHandler: StateHandlerService
-  ) {}
+    private stateHandler: StateHandlerService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
     if (this.parentDataModel.editable && !this.parentDataModel.finalised) {
-      this.displayedColumns = ['checkbox', 'label', 'name', 'description'];
+      this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
     } else {
-      this.displayedColumns = ['label', 'name', 'description'];
+      this.displayedColumns = ['name', 'description', 'multiplicity'];
     }
   }
 
@@ -91,101 +93,33 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-          this.isLoadingResults = true;
-          this.changeRef.detectChanges();
+      this.isLoadingResults = true;
+      this.changeRef.detectChanges();
 
-          return this.dataClassesFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
-        }),
-        map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          this.changeRef.detectChanges();
-          return data.body.items;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          this.changeRef.detectChanges();
-          return [];
-        })
-      )
-      .subscribe(data => {
-        this.records = data;
-      });
+      return this.dataClassesFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter
+      );
+    }), map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        this.changeRef.detectChanges();
+        return data.body.items;
+      }), catchError(() => {
+        this.isLoadingResults = false;
+        this.changeRef.detectChanges();
+        return [];
+      })
+    ).subscribe(data => {
+      this.records = data;
+    });
   }
 
-  openEdit = dataClass => {
-    if (!dataClass || (dataClass && !dataClass.id)) {
-      return '';
-    }
-    this.stateHandler.NewWindow('dataClass', { dataModelId: this.parentDataModel.id, dataClassId: this.parentDataClass ? this.parentDataClass.id : null, id: dataClass.id}, null);
-  };
-
-  add = () => {
-    this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null );
-  };
-
-  deleteRows = () => {
-    this.processing = true;
-    this.failCount = 0;
-    this.total = 0;
-
-    const chain: any[] = [];
-    this.records.forEach(record => {
-      if (record.checked !== true) {
-        return;
-      }
-      this.total++;
-      chain.push(
-        this.resources.dataClass
-          .delete(record.dataModel, record.parentDataClass, record.id)
-          .catch(() => {
-            this.failCount++;
-          })
-      );
-    });
-
-    forkJoin(chain).subscribe(
-      () => {
-        this.processing = false;
-        if (this.failCount === 0) {
-          this.messageHandler.showSuccess(
-            this.total + ' Elements deleted successfully'
-          );
-        } else {
-          const successCount = this.total - this.failCount;
-          let message = '';
-          if (successCount !== 0) {
-            message += successCount + ' Elements deleted successfully.<br>';
-          }
-          if (this.failCount > 0) {
-            message +=
-              'There was a problem deleting ' + this.failCount + ' elements.';
-          }
-
-          if (this.failCount > 0) {
-            this.messageHandler.showError(message, null);
-          } else {
-            this.messageHandler.showSuccess(message);
-          }
-        }
-
-        this.filterEvent.emit();
-        this.deleteInProgress = false;
-      },
-      error => {
-        this.processing = false;
-        this.messageHandler.showError(
-          'There was a problem deleting the elements.',
-          error
-        );
-      }
-    );
+  addDataClass = () => {
+    this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null);
   };
 
   applyFilter = () => {
@@ -206,39 +140,68 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.hideFilters = !this.hideFilters;
   };
 
-  dataClassesFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
-  ): Observable<any> {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
+  dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+    const options = { pageSize, pageIndex, sortBy, sortType, filters };
 
     if (!this.parentDataClass.id) {
-      return this.resources.dataModel.get(
-        this.parentDataModel.id,
-        'dataClasses',
-        options
-      );
+      return this.resources.dataModel.get(this.parentDataModel.id, 'dataClasses', options);
     }
 
-    return this.resources.dataClass.get(
-      this.parentDataModel.id,
-      null,
-      this.parentDataClass.id,
-      'dataClasses',
-      options
-    );
+    return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'dataClasses', options);
   }
 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
+    this.listChecked();
+  }
+
+  toggleCheckbox = (record) => {
+    this.records.forEach(x => (x.checked = false));
+    this.bulkActionsVisibile = 0;
+    record.checked = true;
+    this.bulkDelete();
+  }
+
+  listChecked = () => {
+    let count = 0;
+    for (const value of Object.values(this.records)) {
+      if (value.checked) {
+        count++;
+      }
+    }
+    this.bulkActionsVisibile = count;
+  }
+
+  bulkDelete = () => {
+    const dataElementIdLst = [];
+    this.records.forEach(record => {
+      if (record.checked) {
+        dataElementIdLst.push({
+          id: record.id,
+          domainType: record.domainType
+        });
+      }
+    });
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(BulkDeleteModalComponent, {
+        data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
+        panelClass: 'bulk-delete-modal'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result != null && result.status === 'ok') {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+    promise.then(() => {
+      this.records.forEach(x => (x.checked = false));
+      this.records = this.records;
+      this.checkAllCheckbox = false;
+      this.bulkActionsVisibile = 0;
+      this.filterEvent.emit();
+    });
   }
 }

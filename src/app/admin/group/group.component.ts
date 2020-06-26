@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
@@ -41,7 +41,7 @@ export class GroupComponent implements OnInit {
     private title: Title,
     private stateHandler: StateHandlerService,
     private stateService: StateService,
-    private resources: ResourcesService
+    private resources: MdmResourcesService
   ) {}
 
   ngOnInit() {

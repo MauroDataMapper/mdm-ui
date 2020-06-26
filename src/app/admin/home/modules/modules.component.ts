@@ -24,7 +24,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '@mdm/services/shared.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -50,7 +50,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private shared: SharedService
   ) {}
 

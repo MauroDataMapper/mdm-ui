@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { forkJoin } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
 
@@ -46,7 +46,7 @@ export class FavouritesComponent implements OnInit {
   @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
 
   constructor(
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private elementTypes: ElementTypesService,
     private favouriteHandler: FavouriteHandlerService
   ) {}

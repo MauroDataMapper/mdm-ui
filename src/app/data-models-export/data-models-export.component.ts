@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
@@ -44,7 +44,7 @@ export class DataModelsExportComponent implements OnInit {
   constructor(
     private changeDedRef: ChangeDetectorRef,
     private securityHandler: SecurityHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private exportHandler: ExportHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,

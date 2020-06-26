@@ -33,7 +33,7 @@ import {
 } from '@angular/core';
 import {ValidatorService} from '@mdm/services/validator.service';
 import {DOCUMENT} from '@angular/common';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -137,7 +137,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   }
 
 
-  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: ResourcesService, private elementRef: ElementRef) {
+  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: MdmResourcesService, private elementRef: ElementRef) {
   //  this.setDefaultValue(); ToDo check if it needs here , moved to on Init
  }
 

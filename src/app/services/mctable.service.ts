@@ -19,7 +19,7 @@ import {Injectable, PipeTransform} from '@angular/core';
 import {BehaviorSubject, Observable, of, pipe, Subject} from 'rxjs';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
-import {ResourcesService} from './resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 export type SortDirection = 'asc' | 'desc' | '';
 
@@ -76,7 +76,7 @@ export class MctableService {
     sortDirection: ''
   };
 
-  constructor(private resourcesService: ResourcesService) {
+  constructor(private resourcesService: MdmResourcesService) {
     // this.searchSubject.pipe(
     //     tap(() => this.loadingBehaviorSubject.next(true)),
     //     debounceTime(200),
@@ -88,9 +88,9 @@ export class MctableService {
     //   this._total$.next(result.total);
     // });
     // this.result = this.ResultGetMessage();
-    this.resourcesService.HistoryGet('a61e88e7-c951-4624-baaf-ec03cd09357b', '').subscribe(serverResult => {
-      this.result = serverResult;
-    });
+    // this.resourcesService.HistoryGet('a61e88e7-c951-4624-baaf-ec03cd09357b', '').subscribe(serverResult => {
+    //   this.result = serverResult;
+    // });
     if (this.result !== null && this.result !== undefined) {
       this._total$.next(this.result.count);
     }

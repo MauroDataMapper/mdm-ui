@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren, ChangeDetectorRef} from '@angular/core';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '../model/folderModel';
 import { ElementTypesService } from '../services/element-types.service';
 import { MatSort } from '@angular/material/sort';
@@ -60,7 +60,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   filter: any = '';
   applyFilter = this.gridService.applyFilter(this.filters);
 
-  constructor(public resourcesService: ResourcesService,  private gridService: GridService, private elementTypeService: ElementTypesService, private changeRef: ChangeDetectorRef) {
+  constructor(public resourcesService: MdmResourcesService,  private gridService: GridService, private elementTypeService: ElementTypesService, private changeRef: ChangeDetectorRef) {
 
     }
 

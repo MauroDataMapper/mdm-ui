@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { SharedService } from '../services/shared.service';
 
@@ -42,7 +42,7 @@ export class ResetPasswordComponent implements OnInit {
   constructor(
     private title: Title,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateService: StateService,
     private sharedService: SharedService
   ) {}

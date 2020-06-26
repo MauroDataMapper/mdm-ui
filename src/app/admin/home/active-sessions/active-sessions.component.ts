@@ -24,7 +24,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -45,7 +45,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   hideFilters = true;
   dataSource = new MatTableDataSource<any>();
 
-  constructor(private messageHandler: MessageHandlerService, private resourcesService: ResourcesService) {
+  constructor(private messageHandler: MessageHandlerService, private resourcesService: MdmResourcesService) {
     this.displayedColumns = [ 'userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
   }
 

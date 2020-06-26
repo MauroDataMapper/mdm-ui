@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -41,7 +41,7 @@ export class ChangePasswordComponent implements OnInit {
   backendUrl: string = environment.apiEndpoint;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
     private title: Title

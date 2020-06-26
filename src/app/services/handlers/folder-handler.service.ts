@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from '../resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../utility/message-handler.service';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { SecurityHandlerService } from './security-handler.service';
@@ -28,7 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class FolderHandlerService {
   constructor(
-    private resoucesService: ResourcesService,
+    private resoucesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService,

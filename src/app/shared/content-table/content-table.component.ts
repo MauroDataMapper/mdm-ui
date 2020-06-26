@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, ViewChildren, ViewChild, AfterViewInit, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -62,7 +62,7 @@ export class ContentTableComponent implements AfterViewInit {
 
     constructor(
         private messageHandler: MessageHandlerService,
-        private resources: ResourcesService,
+        private resources: MdmResourcesService,
         private stateHandler: StateHandlerService,
         private changeRef: ChangeDetectorRef,
         private dialog: MatDialog

@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ControlContainer, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -30,7 +30,7 @@ import { Subscription } from 'rxjs';
 export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private helpDialogueHandler: HelpDialogueHandlerService,
-    private resources: ResourcesService
+    private resources: MdmResourcesService
   ) {}
 
   allDataModelTypes: any;

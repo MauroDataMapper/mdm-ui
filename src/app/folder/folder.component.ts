@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {ResourcesService} from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {FolderResult} from '../model/folderModel';
 import {Component, OnInit, Input, EventEmitter, Output, Inject, OnDestroy} from '@angular/core';
 import {StateService} from '@uirouter/core';
@@ -40,7 +40,7 @@ export class FolderComponent implements OnInit, OnDestroy {
   editMode = false;
   activeTab: any;
 
-  constructor(private resourcesService: ResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
+  constructor(private resourcesService: MdmResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
     // this.toaster.success('toast test');
   }
 

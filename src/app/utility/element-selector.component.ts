@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTableDataSource } from '@angular/material/table';
 import { MarkdownParserService } from './markdown/markdown-parser/markdown-parser.service';
 import { MessageService } from '../services/message.service';
@@ -66,7 +66,7 @@ export class ElementSelectorComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ElementSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private resourceService: ResourcesService,
+    private resourceService: MdmResourcesService,
     private markdownParser: MarkdownParserService,
     private messageService: MessageService,
     private contextSearchHandler: ContentSearchHandlerService,

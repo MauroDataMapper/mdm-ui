@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
@@ -58,7 +58,7 @@ export class TerminologyDetailsComponent implements OnInit {
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private exportHandler: ExportHandlerService,
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,

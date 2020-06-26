@@ -19,7 +19,7 @@ import { Component, OnInit } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
 import { SharedService } from '../services/shared.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
@@ -35,7 +35,7 @@ export class TerminologyComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private stateService: StateService,
     private title: Title,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private broadcastSvc: BroadcastService
   ) {}
 

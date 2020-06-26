@@ -27,7 +27,7 @@ import {
   OnInit
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -79,7 +79,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private elementTypes: ElementTypesService,
     private changeRef: ChangeDetectorRef

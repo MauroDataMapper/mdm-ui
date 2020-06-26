@@ -25,7 +25,7 @@ import {
   AfterViewInit,
   OnDestroy
 } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
@@ -71,7 +71,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,

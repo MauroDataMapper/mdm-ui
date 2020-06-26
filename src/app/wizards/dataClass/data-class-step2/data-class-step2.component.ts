@@ -132,6 +132,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     this.loaded = true;
     this.failCount = 0;
     this.successCount = 0;
+    this.step.submitBtnDisabled = false;
   }
 
   createSelectedArray = () => {

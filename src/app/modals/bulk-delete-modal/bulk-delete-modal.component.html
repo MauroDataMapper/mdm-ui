@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="full-width">
     <div *ngIf="!processing && isProcessComplete" class="mt-2" style="text-align: left;">
       <div class="alert alert-success" *ngIf="!failCount">
-          <strong><i class="far fa-check-circle fa-2x copyElementSuccess"></i> Success!</strong> All selected records have been successfully removed!
+          <strong><i class="far fa-check-circle fa-2x copyElementSuccess" style="vertical-align: middle; display: inline-block; margin-right: 5px;"></i> Success!</strong> All selected records have been successfully removed!
       </div>
       <div class="alert alert-danger" *ngIf="failCount > 0">
           <strong>Error!</strong> {{failCount}} Error(s) in deletion process!

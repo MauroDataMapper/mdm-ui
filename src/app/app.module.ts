@@ -15,30 +15,30 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, LOCALE_ID } from '@angular/core';
-
-import { AppComponent } from './app.component';
-import { CatalogueModule } from './modules/catalogue/catalogue.module';
-import { AdminModule } from './modules/admin/admin.module';
-import { UsersModule } from './modules/users/users.module';
-import { APP_BASE_HREF, LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
-import { ROLES } from './constants/roles';
-import { UIRouterModule, TransitionService } from '@uirouter/angular';
-import { SharedModule } from './modules/shared/shared.module';
-import { UiViewComponent } from './shared/ui-view/ui-view.component';
-import { SharedService } from './services/shared.service';
-import { BroadcastService } from './services/broadcast.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { environment } from '@env/environment';
+import { TransitionService, UIRouterModule } from '@uirouter/angular';
 import { ToastrService } from 'ngx-toastr';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { ROLES } from './constants/roles';
+import { ModalModule } from './modals/modal.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { CatalogueModule } from './modules/catalogue/catalogue.module';
+import { MdmResourcesModule } from './modules/resources/mdm-resources.module';
+import { SharedModule } from './modules/shared/shared.module';
+import { UsersModule } from './modules/users/users.module';
+import { BroadcastService } from './services/broadcast.service';
 import { StateHandlerService } from './services/handlers/state-handler.service';
+import { SharedService } from './services/shared.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
-import { AppRoutingModule } from './app-routing.module';
-import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { ModalModule } from './modals/modal.module';
-import {HttpClientModule} from '@angular/common/http';
-
+import { UiViewComponent } from './shared/ui-view/ui-view.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,7 +51,8 @@ import {HttpClientModule} from '@angular/common/http';
     AppRoutingModule,
     ModalModule,
     UIRouterModule.forRoot({ useHash: true }),
-    HttpClientModule
+    HttpClientModule,
+    MdmResourcesModule.forRoot({ apiEndpoint: environment.apiEndpoint })
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },

@@ -10,6 +10,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { MaterialModule } from '@mdm/modules/material/material.module';
+import { MdmSearchComponent } from '../mdm-search/mdm-search.component';
 
 
 
@@ -20,7 +21,8 @@ import { MaterialModule } from '@mdm/modules/material/material.module';
     MdmCommentsComponent,
     MdmRecentlyAddedDataModelsComponent,
     MdmRecentActivityComponent,
-    MdmTasksComponent 
+    MdmTasksComponent,
+    MdmSearchComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +37,8 @@ import { MaterialModule } from '@mdm/modules/material/material.module';
     MdmCommentsComponent,
     MdmRecentlyAddedDataModelsComponent,
     MdmRecentActivityComponent,
-    MdmTasksComponent
+    MdmTasksComponent,
+    MdmSearchComponent
   ]
 })
 export class DashboardModule { }

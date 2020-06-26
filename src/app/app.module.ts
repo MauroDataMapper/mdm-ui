@@ -41,7 +41,6 @@ import {HttpClientModule} from '@angular/common/http';
 import { DashboardModule } from './mdm-dashboard/mdm-plugins/dashboard/dashboard.module';
 
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [

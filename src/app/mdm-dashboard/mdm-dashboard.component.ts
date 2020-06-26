@@ -48,6 +48,8 @@ import { MdmCommentsComponent } from './mdm-plugins/mdm-comments/mdm-comments.co
 import { MdmRecentActivityComponent } from './mdm-plugins/mdm-recent-activity/mdm-recent-activity.component';
 import { MdmTasksComponent } from './mdm-plugins/mdm-tasks/mdm-tasks.component';
 import { MdmRecentlyAddedDataModelsComponent } from './mdm-plugins/mdm-recently-added-data-models/mdm-recently-added-data-models.component';
+import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
+import { MdmSearchComponent } from './mdm-plugins/mdm-search/mdm-search.component';
 
 @Component({
   selector: 'mdm-dashboard',
@@ -65,6 +67,7 @@ export class MdmDashboardComponent implements OnInit {
     { value: 'task', display: 'Task' },
     { value: 'recentAddedDataModel', display: 'Recent Added Data Models' },
     { value: 'mdmFavourites', display: 'Favorites' },
+    { value: 'search', display: 'Search' },
   ];
   factory: ComponentFactory = new ComponentFactory();
   widgets: GridsterItem[] = new Array<GridsterItem>();
@@ -200,6 +203,9 @@ export class ComponentFactory {
       }
       case 'recentAddedDataModel': {
         return new ComponentPortal(MdmRecentlyAddedDataModelsComponent);
+      }
+      case 'search' : {
+        return new ComponentPortal(MdmSearchComponent);
       }
     }
   }

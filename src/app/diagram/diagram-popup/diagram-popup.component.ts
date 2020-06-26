@@ -26,7 +26,7 @@ import {
   PipeTransform,
   ViewChild,
 } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
 import * as _ from 'lodash';
@@ -57,14 +57,14 @@ export class DiagramPopupComponent implements OnInit {
   filterList: Array<any> = [];
 
   constructor(
-    protected resourcesService: ResourcesService,
+    protected resourcesService: MdmResourcesService,
     protected messageHandler: MessageHandlerService,
     protected matDialog: MatDialog,
     protected dialogRef: MatDialogRef<DiagramPopupComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  ngOnInit(): void 
+  ngOnInit(): void
   {
     this.loadTree();
   }
@@ -92,7 +92,7 @@ export class DiagramPopupComponent implements OnInit {
   }
 
   onNodeChecked(node, parent, checkedList): void {
-    this.filterList = Object.keys(checkedList);  
+    this.filterList = Object.keys(checkedList);
   }
 
   filterClick(): void {

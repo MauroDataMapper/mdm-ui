@@ -23,9 +23,9 @@ import {RestHandlerService} from './utility/rest-handler.service';
 import {SharedService} from './shared.service';
 import {environment} from '@env/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+// @Injectable({
+//   providedIn: 'root'
+// })
 export class ResourcesService {
 
   constructor(

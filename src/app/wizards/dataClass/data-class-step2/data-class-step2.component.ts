@@ -30,7 +30,7 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -77,7 +77,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
   constructor(
     private validator: ValidatorService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
   ) {

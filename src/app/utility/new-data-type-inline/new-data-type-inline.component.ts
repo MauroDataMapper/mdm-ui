@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {Component, OnInit, Input, Output, EventEmitter,  ViewChild, AfterViewInit} from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import {NgForm} from '@angular/forms';
 import {Subscription} from 'rxjs';
@@ -51,7 +51,7 @@ export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
   terminologies: any;
 
   constructor(
-    private resourceService: ResourcesService,
+    private resourceService: MdmResourcesService,
     private elementTypes: ElementTypesService
   ) {
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();

@@ -30,7 +30,7 @@ import {NgForm} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {ValidatorService} from '@mdm/services/validator.service';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {McSelectPagination} from '@mdm/utility/mc-select/mc-select.component';
 import {MatTableDataSource} from '@angular/material/table';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
@@ -90,7 +90,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   pageSize = 20;
   pageSizeOptions = [5, 10, 20, 50];
 
-  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: ResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
+  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: MdmResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
 
     this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
     const settings = JSON.parse(localStorage.getItem('userSettings'));

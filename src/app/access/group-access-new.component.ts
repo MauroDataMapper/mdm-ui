@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from '../services/message.service';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 
@@ -61,7 +61,7 @@ export class GroupAccessNewComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private resourceService: ResourcesService,
+    private resourceService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService
   ) {

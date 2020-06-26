@@ -27,7 +27,7 @@ import {
   ChangeDetectorRef,
   AfterViewInit
 } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService } from '@mdm/services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -43,7 +43,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
   constructor(
     private gridSvc: GridService,
     private changeRef: ChangeDetectorRef,
-    private resources: ResourcesService
+    private resources: MdmResourcesService
   ) {}
 
   @Input() parentDataModel: any;

@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit} from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -50,7 +50,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageHandlerService: MessageHandlerService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private stateHandlerService: StateHandlerService,
     private title: Title
   ) {

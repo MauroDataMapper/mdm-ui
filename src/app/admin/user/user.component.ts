@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { Title } from '@angular/platform-browser';
 import { ROLES } from '@mdm/constants/roles';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -60,7 +60,7 @@ export class UserComponent implements OnInit {
   constructor(
     private role: ROLES,
     private title: Title,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private stateSvc: StateService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,

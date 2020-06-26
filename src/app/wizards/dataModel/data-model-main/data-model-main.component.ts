@@ -20,7 +20,7 @@ import { FormGroup } from '@angular/forms';
 import { DataModelStep1Component } from '../data-model-step1/data-model-step1.component';
 import { DataModelStep2Component } from '../data-model-step2/data-model-step2.component';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
 import { Step } from '@mdm/model/stepModel';
@@ -37,7 +37,7 @@ export class DataModelMainComponent implements OnInit {
   constructor(
     private broadcastSvc: BroadcastService,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
     private title: Title

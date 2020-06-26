@@ -24,7 +24,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
@@ -40,7 +40,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 })
 export class TermComponent implements OnInit {
   constructor(
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,

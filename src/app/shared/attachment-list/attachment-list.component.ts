@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, AfterViewInit, Input, ViewChildren, ViewChild, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -32,7 +32,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 export class AttachmentListComponent implements AfterViewInit {
   constructor(
     private changeRef: ChangeDetectorRef,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService
   ) {}

@@ -16,14 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import {ResourcesService} from '../resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExportHandlerService {
 
-  constructor(private resources: ResourcesService) { }
+  constructor(private resources: MdmResourcesService) { }
 
     createFileName(label, exporter) {
       const extension = exporter.fileExtension ? exporter.fileExtension : 'json';

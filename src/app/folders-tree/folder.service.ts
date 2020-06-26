@@ -16,12 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Injectable()
 export class FolderService {
 
-    constructor(private resources: ResourcesService) {
+    constructor(private resources: MdmResourcesService) {
     }
 
     async loadModelsToCompare(dataModel) {

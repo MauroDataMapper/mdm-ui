@@ -26,7 +26,7 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { ROLES } from '@mdm/constants/roles';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { merge } from 'rxjs';
@@ -51,7 +51,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef,
     private gridService: GridService,
     private messageHandler: MessageHandlerService,
-    private resources: ResourcesService
+    private resources: MdmResourcesService
   ) {}
 
   mcDisplayRecords: any;

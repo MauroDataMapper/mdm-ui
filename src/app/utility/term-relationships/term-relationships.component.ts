@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { MatDialog, DialogPosition } from '@angular/material/dialog';
 import { TermResult } from '@mdm/model/termModel';
@@ -38,7 +38,7 @@ export class TermRelationshipsComponent implements OnInit {
   relationshipTypes = [];
   relations = {};
   constructor(
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private helpDialogueService: HelpDialogueHandlerService,
     private dialog: MatDialog,
     private messageService: MessageService

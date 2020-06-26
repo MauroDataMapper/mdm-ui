@@ -24,7 +24,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -52,7 +52,7 @@ export class DataTypeDetailComponent implements OnInit {
     private dialog: MatDialog,
     private sharedService: SharedService,
     private elementTypes: ElementTypesService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,

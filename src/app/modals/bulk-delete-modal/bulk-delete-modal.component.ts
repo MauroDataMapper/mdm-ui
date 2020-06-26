@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, OnInit, Input, Inject, AfterViewInit, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 
@@ -43,7 +43,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<BulkDeleteModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
   ) { }

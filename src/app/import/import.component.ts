@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
@@ -56,7 +56,7 @@ export class ImportComponent implements OnInit {
 
   constructor(
     private title: Title,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
     private stateHandler: StateHandlerService,

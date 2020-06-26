@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { BasicDiagramService } from './basic-diagram.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import * as joint from 'jointjs';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { DataflowDataclassDiagramService } from './dataflow-dataclass-diagram.service';
 
@@ -27,7 +27,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   private parentId: string;
 
-  constructor(protected resourcesService: ResourcesService,
+  constructor(protected resourcesService: MdmResourcesService,
               protected messageHandler: MessageHandlerService) {
     super(resourcesService, messageHandler);
   }

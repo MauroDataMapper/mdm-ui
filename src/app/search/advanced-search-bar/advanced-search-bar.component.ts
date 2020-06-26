@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { FolderResult } from '@mdm/model/folderModel';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, Subject, fromEvent } from 'rxjs';
@@ -95,7 +95,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   constructor(
     private helpDialogueService: HelpDialogueHandlerService,
     private contextSearchHandler: ContentSearchHandlerService,
-    private resouces: ResourcesService
+    private resouces: MdmResourcesService
   ) {}
 
   ngOnInit() {

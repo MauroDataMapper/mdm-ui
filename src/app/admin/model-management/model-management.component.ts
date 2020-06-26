@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ export class ModelManagementComponent implements OnInit {
   folders: any;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,

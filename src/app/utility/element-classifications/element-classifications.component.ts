@@ -20,7 +20,7 @@ import { FolderResult } from '@mdm/model/folderModel';
 import { DataModelResult } from '@mdm/model/dataModelModel';
 import { forEach } from '@uirouter/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -55,7 +55,7 @@ export class ElementClassificationsComponent implements OnInit {
     };
     allClassifications: any;
     selectedClassification = [];
-    constructor(private elementTypes: ElementTypesService, private resourceService: ResourcesService, private fb: FormBuilder) { }
+    constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService, private fb: FormBuilder) { }
 
     ngOnInit() {
         this.getAllClassifications();

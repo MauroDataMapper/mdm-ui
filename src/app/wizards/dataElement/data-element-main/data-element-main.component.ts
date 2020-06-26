@@ -24,7 +24,7 @@ import {
 import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { DataElementStep1Component } from '../data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '../data-element-step2/data-element-step2.component';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -39,7 +39,7 @@ export class DataElementMainComponent implements OnInit {
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
     private title: Title

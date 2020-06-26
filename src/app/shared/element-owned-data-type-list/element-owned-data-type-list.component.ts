@@ -27,7 +27,7 @@ import {
   OnInit
 } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -83,7 +83,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     private changeRef: ChangeDetectorRef,
     private messageHandler: MessageHandlerService,
     private elementTypes: ElementTypesService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateHandler: StateHandlerService
   ) {}
 

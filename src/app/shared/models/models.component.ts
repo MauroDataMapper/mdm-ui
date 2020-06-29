@@ -405,7 +405,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.showFilters = !this.showFilters;
   };
 
-  onDeleteFolder = (event, folder, permanent) => {
+  onDeleteFolder = (event) => {
     if (!this.securityHandler.isAdmin()) {
       return;
     }

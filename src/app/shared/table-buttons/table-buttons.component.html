@@ -21,10 +21,9 @@ SPDX-License-Identifier: Apache-2.0
     </small>
 </div>
 <button
-    mat-button
+    mat-icon-button
     color="primary"
     type="button"
-    class="paddingless"
     *ngIf="!hideEdit && !record.inEdit && !record.inDelete"
     (click)="editClicked(record, index)"
     matTooltip="Edit"
@@ -32,10 +31,9 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-pencil-alt"></i>
 </button>
 <button
-    mat-stroked-button
+    mat-icon-button
     color="accent"
     type="button"
-    class="paddingless"
     *ngIf="record.inEdit"
     (click)="saveClicked(record, index)"
     matTooltip="Save"
@@ -43,10 +41,9 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-check"></i>
 </button>
 <button
-    mat-button
+    mat-icon-button
     color="warn"
     type="button"
-    class="paddingless"
     *ngIf="record.inEdit"
     (click)="editCancelled(record, index)"
     matTooltip="Cancel edit"
@@ -55,10 +52,9 @@ SPDX-License-Identifier: Apache-2.0
 </button>
 
 <button
-    mat-button
+    mat-icon-button
     color="warn"
     type="button"
-    class="paddingless"
     *ngIf="!hideDelete && !record.inEdit && !record.inDelete"
     (click)="deleteClicked(record, index)"
     matTooltip="Delete"
@@ -66,10 +62,9 @@ SPDX-License-Identifier: Apache-2.0
     <i class="far fa-trash-alt"></i>
 </button>
 <button
-    mat-stroked-button
+    mat-icon-button
     color="accent"
     type="button"
-    class="paddingless"
     *ngIf="record.inDelete"
     (click)="deleteApproved(record, index)"
     matTooltip="Approve"
@@ -77,10 +72,9 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-check"></i>
 </button>
 <button
-    mat-button
+    mat-icon-button
     color="warn"
     type="button"
-    class="paddingless"
     *ngIf="record.inDelete"
     (click)="deleteCancelled(record, index)"
     matTooltip="Cancel deletion"

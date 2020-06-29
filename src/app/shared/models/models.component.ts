@@ -406,16 +406,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onDeleteFolder = (event, folder, permanent) => {
-    if (!this.sharedService.isAdmin()) {
+    if (!this.securityHandler.isAdmin()) {
       return;
     }
-    if (permanent === true) {
-      this.folderHandler.askForPermanentDelete(folder.id).then(() => {
+    if (event.permanent) {
+      this.folderHandler.askForPermanentDelete(event.folder.id).then(() => {
         this.loadFolders();
       });
     } else {
-      this.folderHandler.askForSoftDelete(folder.id).then(() => {
-        folder.deleted = true;
+      this.folderHandler.askForSoftDelete(event.folder.id).then(() => {
+        event.folder.deleted = true;
       });
     }
   };

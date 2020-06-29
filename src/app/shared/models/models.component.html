@@ -108,7 +108,7 @@ SPDX-License-Identifier: Apache-2.0
                                         [enableDrop]="true"
                                         [enableContextMenu]="true"
                                         (addFolderEvent)="onAddFolder"
-                                        (deleteFolderEvent)="onDeleteFolder"
+                                        (deleteFolderEvent)="onDeleteFolder($event)"
                                         (addDataModelEvent)="onAddDataModel"
                                         (addCodeSetEvent)="onAddCodeSet"
                                         (addChildDataClassEvent)="onAddChildDataClass"

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <form class="mdm--form mdm--form-modal" role='form' (keyup)="$event.keyCode != 13;">
-  <button mat-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
+  <button mat-icon-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
     <h3 class='modal-title text-center'>Request an account</h3>
     <p class="mb-2 text-center">Please request an account in order to continue using our Catalogue</p>
     <div *ngIf="message" class="alert alert-danger">

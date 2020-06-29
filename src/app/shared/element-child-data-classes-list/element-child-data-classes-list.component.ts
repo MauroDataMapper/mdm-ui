@@ -155,7 +155,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.listChecked();
   }
 
-  toggleCheckbox = (record) => {
+  toggleDelete = (record) => {
     this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisibile = 0;
     record.checked = true;

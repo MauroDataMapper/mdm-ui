@@ -134,11 +134,11 @@ SPDX-License-Identifier: Apache-2.0
           <td mat-cell *matCellDef="let record" style="width: 5%; max-width: 5%; text-align: center;">
               <button mat-icon-button color="primary" [matMenuTriggerFor]="dataClassRowActions" aria-label="Mat menu actions"><i class="fas fa-ellipsis-v"></i></button>
               <mat-menu #dataClassRowActions="matMenu" yPosition="below" xPosition="before" class="mdm--mat-menu--actions">
-                  <button mat-menu-item color="accent" type="button" (click)="toggleCheckbox(record)">
+                  <button mat-menu-item color="accent" type="button" (click)="toggleDelete(record)">
                       <i class="fas fa-pencil-alt"></i> Edit
                   </button>
                   <mat-divider></mat-divider>
-                  <button mat-menu-item color="warn" type="button" (click)="askForSoftDeletion(record)" class="warning">
+                  <button mat-menu-item color="warn" type="button" (click)="toggleEdit(record)" class="warning">
                       <i class="far fa-trash-alt"></i> Delete
                   </button>
               </mat-menu>

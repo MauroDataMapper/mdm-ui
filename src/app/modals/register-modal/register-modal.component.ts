@@ -79,9 +79,12 @@ export class RegisterModalComponent implements OnInit {
     const dialog = this.dialog.open(ConfirmationModalComponent, {
       data: {
         title: 'Registration successful',
-        message: `You have successfully requested access to the Metadata Catalogue. <br>
-                  You will receive an email (to ${this.email}) containing login details <br> once an administrator has approved your request.`,
-        cancelShown: false
+        message: `<p class="marginless">You have successfully requested access to the Mauro Data Mapper. </p>
+                  <p class="marginless">You will receive an email (to ${this.email}) containing your login details </p>
+                  <p class="marginless">once an administrator has approved your request.</p>`,
+        cancelShown: false,
+        okBtnTitle: 'Close modal',
+        btnType: 'warn',
       }
     });
 

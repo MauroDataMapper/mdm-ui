@@ -39,7 +39,8 @@ export class DataClassMainComponent implements AfterViewInit {
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private changeRef: ChangeDetectorRef,
   ) { }
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
@@ -94,6 +95,7 @@ export class DataClassMainComponent implements AfterViewInit {
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
+        this.changeRef.detectChanges();
       });
     } else {
       this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
@@ -102,6 +104,7 @@ export class DataClassMainComponent implements AfterViewInit {
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
+        this.changeRef.detectChanges();
       });
     }
   }

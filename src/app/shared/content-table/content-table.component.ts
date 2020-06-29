@@ -163,11 +163,17 @@ export class ContentTableComponent implements AfterViewInit {
         this.listChecked();
     }
 
-    toggleCheckbox = (record) => {
+    toggleDelete = (record) => {
       this.records.forEach(x => (x.checked = false));
       this.bulkActionsVisibile = 0;
       record.checked = true;
       this.bulkEdit();
+    }
+    toggleEdit = (record) => {
+      this.records.forEach(x => (x.checked = false));
+      this.bulkActionsVisibile = 0;
+      record.checked = true;
+      this.bulkDelete();
     }
 
     listChecked = () => {
@@ -245,46 +251,4 @@ export class ContentTableComponent implements AfterViewInit {
         this.filterEvent.emit();
       }).catch(() => {});
     };
-
-    askForSoftDeletion = (record) => {
-      const promise = new Promise((resolve, reject) => {
-          const message = ` <p>You are deleting the following ${record.domainType}:</p>
-                            <p class='mdm--active-row px-2 py-2'><strong>${record.label}</strong></p>
-                            <p><strong>Note: </strong>This ${record.domainType} will be completely removed from the database</p>`;
-          const dialog = this.dialog.open(ConfirmationModalComponent, {
-              data: {
-                  title: `Are you sure you want to delete this ${record.domainType}?`,
-                  okBtnTitle: 'Yes, Delete',
-                  btnType: 'warn',
-                  message,
-              },
-              panelClass: 'confirmation-soft-delete'
-          });
-
-          dialog.afterClosed().subscribe((result) => {
-              if (result != null && result.status === 'ok') {
-                if (record.domainType === 'DataClass') {
-                  this.resources.dataClass.delete(record.dataModel, record.parentDataClass, record.id).subscribe(() => {
-                    resolve();
-                  });
-                } else if (record.domainType === 'DataElement') {
-                  return this.resources.dataElement.delete(record.dataModel, record.dataClass, record.id).subscribe(() => {
-                    resolve();
-                  });
-                } else {
-                  reject();
-                }
-              } else {
-                reject();
-              }
-          });
-      });
-
-      promise.then(() => {
-          this.messageHandler.showSuccess(`${record.domainType} deleted successfully`);
-          this.filterEvent.emit();
-      }).catch(() => {
-        record.checked = false;
-      });
-  };
 }

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -36,7 +36,8 @@ export class DataTypeMainComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private title: Title
+    private title: Title,
+    private changeRef: ChangeDetectorRef
   ) {}
   parentDataModelId: any;
   steps: Step[] = [];
@@ -95,6 +96,7 @@ export class DataTypeMainComponent implements OnInit {
 
         this.steps.push(step1);
         this.steps.push(step2);
+        this.changeRef.detectChanges();
       });
 
     this.title.setTitle(`New Data Type`);

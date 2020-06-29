@@ -37,12 +37,10 @@ export class ForgotPasswordModalComponent implements OnInit {
   }
 
   resetPassword() {
-    this.resources.catalogueUser.get(this.username, 'resetPasswordLink').subscribe(
-      result => {
+    this.resources.catalogueUser.get(this.username, 'resetPasswordLink').subscribe(() => {
         this.message = 'success';
         this.dialogRef.close(this.username);
-      },
-      error => {
+      }, () => {
         this.message = 'error';
       }
     );
@@ -51,5 +49,9 @@ export class ForgotPasswordModalComponent implements OnInit {
   login() {
     this.dialogRef.close();
     this.broadcastService.broadcast('openLoginModalDialog');
+  }
+  close = () => {
+    this.securityHandler.loginModalDisplayed = false;
+    this.dialogRef.close();
   }
 }

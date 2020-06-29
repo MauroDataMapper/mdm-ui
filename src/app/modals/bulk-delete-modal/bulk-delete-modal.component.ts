@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, Input, Inject, AfterViewInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -45,7 +45,8 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private changeRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void { }
@@ -75,8 +76,16 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
         }, err => {
           this.messageHandler.showError('There was a problem getting the Data Classes.', err);
         });
+      } else if (item.domainType === 'DataType') {
+        this.records.push({
+          domainType: item.domainType,
+          label: item.label,
+          id: item.id,
+          dataModel: item.dataModel
+        });
       }
     });
+    this.changeRef.detectChanges();
   }
 
   closeAndRefresh = () => {
@@ -100,6 +109,9 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
           }
           if (item.domainType === 'DataElement') {
             return this.resources.dataElement.delete(item.dataModel, item.dataClass, item.id).toPromise();
+          }
+          if (item.domainType === 'DataType') {
+            return this.resources.dataType.delete(item.dataModel, item.id).toPromise();
           }
         }).catch(() => {
           this.failCount++;

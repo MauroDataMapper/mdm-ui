@@ -531,9 +531,6 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   async handleDeleteFolder(fnode: FlatNode, permanent = false) {
     this.deleteFolderEvent.emit({ folder: fnode, permanent });
-    if (!permanent) {
-      fnode.deleted = true;
-    }
   }
 
   async handleAddDataClass(fnode: FlatNode) {

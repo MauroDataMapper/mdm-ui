@@ -112,35 +112,12 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    // this.resources.dataClass
-    //     .get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null,null).toPromise()
-    //     .then((result) => {
-    //       result.body.breadcrumbs.push(Object.assign([],result.body));
-    //       this.model.parent = result.body;
-    //       this.steps.push(step1);
-    //       this.steps.push(step2);
-    //     });
-    //
-    // this.resources.dataModel
-    //     .get(this.parentDataModelId, "dataTypes").toPromise().then((result) => {
-    //   result.body.breadcrumbs = [];
-    //   result.body.breadcrumbs.push(Object.assign({}, result.body));
-    //   this.model.parent = result.body;
-    //   this.steps.push(step1);
-    //   this.steps.push(step2);
-    // });
-
-    this.resources.dataClass.get(
-        this.parentDataModelId,
-        this.grandParentDataClassId,
-        this.parentDataClassId,
-        null,
-        null
-      ).subscribe(result => {
+    this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).subscribe(result => {
         // result.body.breadcrumbs.push(Object.assign([],result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
+        this.changeRef.detectChanges();
       });
 
     this.resources.dataModel.get(this.parentDataModelId, 'dataTypes').subscribe(result => {
@@ -148,6 +125,7 @@ export class DataElementMainComponent implements OnInit {
         if (result.count === 0) {
           this.model.showNewInlineDataType = true;
         }
+        this.changeRef.detectChanges();
       });
   }
 

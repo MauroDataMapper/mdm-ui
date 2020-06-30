@@ -21,13 +21,13 @@ SPDX-License-Identifier: Apache-2.0
 			<div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="flex-start center">
 				<h4 [ngPlural]="totalItemCount" class="marginless">
 					<ng-template ngPluralCase="=1">
-						There is <span class="mdm--badge mdm--element-count">1</span> user in this repository.
+						There is <span class="mdm--badge mdm--element-count">1</span> user in this repository
 					</ng-template>
 					<ng-template ngPluralCase="other">
-						There are <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span> users in this repository.
+						There are <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span> users in this repository
 					</ng-template>
+          <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer; margin-left: 2px;"></i>
 				</h4>
-				<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer; margin-left: 2px;"></i>
 			</div>
 			<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center" class="mt-1">
 				<mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="add"></mdm-data-type-list-buttons>
@@ -35,117 +35,112 @@ SPDX-License-Identifier: Apache-2.0
 		</div>
 	</div>
 
-	<table mat-table matSort [dataSource]="records" class="mdm--table mdm--table-responsive table table-striped">
-		<ng-container matColumnDef="username">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer;" columnName="username">
-				<span [hidden]="!hideFilters">Full name</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-						<mat-label>Full name</mat-label>
-						<input #filters matInput name="firstName" (keyup)="applyFilter()" />
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-				<div class="mdm--td-cell">Full name</div>
-				<div>{{ record.firstName }} {{ record.lastName }}</div>
-			</td>
-		</ng-container>
+  <div class="table-responsive">
+    <table mat-table matSort [dataSource]="records" class="mdm--mat-table table-striped">
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 200px;" columnName="username">
+          <span [hidden]="!hideFilters">Full name</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Full name</mat-label>
+              <input #filters matInput name="firstName" (keyup)="applyFilter()" />
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word; max-width: 200px;">
+          <div>{{ record.firstName }} {{ record.lastName }}</div>
+        </td>
+      </ng-container>
 
-		<ng-container matColumnDef="emailAddress">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; " columnName="emailAddress">
-				<span [hidden]="!hideFilters">Email</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" floatLabel="never">
-						<mat-label>Email</mat-label>
-						<input #filters matInput name="emailAddress" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-				<div class="mdm--td-cell">Email</div>
-				<div>{{record.emailAddress}}</div>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="organisation">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer;" columnName="lastName">
-				<span [hidden]="!hideFilters">Organisation</span>
-				<div [hidden]="hideFilters">
-					<mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-						<mat-label>Organisation</mat-label>
-						<input #filters matInput name="organisation" (keyup)="applyFilter()">
-					</mat-form-field>
-				</div>
-			</th>
-			<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-				<div class="mdm--td-cell">Organisation</div>
-				<div>{{record.organisation}}</div>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="userRole">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="userRole" [disabled]="!hideFilters" style="cursor: pointer;" columnName="userRole">
-				<span [hidden]="!hideFilters">Role</span>
-			</th>
-			<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-				<div class="mdm--td-cell">Role</div>
-				<div>{{record.userRole | titlecase }}</div>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="groups">
-			<th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="groups">
-				<span [hidden]="!hideFilters">Groups</span>
-			</th>
-			<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-				<div class="mdm--td-cell">Groups</div>
-				<div>
-					<span *ngFor="let group of record.groups">
-						<div class="group">
-							<span (click)="editGroup(group)">{{group.label}}</span>
-						</div>
-					</span>
-				</div>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="status">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="cursor: pointer;" columnName="status">
-				<span [hidden]="!hideFilters">Status</span>
-			</th>
-			<td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-				<div class="mdm--td-cell">Status</div>
-				<div>
-					<span *ngIf="record.disabled" class="pill-card--red">Disabled</span>
-					<span *ngIf="!record.disabled" class="pill-card--green">Active</span>
-				</div>
-			</td>
-		</ng-container>
+      <ng-container matColumnDef="emailAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="emailAddress" [disabled]="!hideFilters" style="cursor: pointer; " columnName="emailAddress">
+          <span [hidden]="!hideFilters">Email</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Email</mat-label>
+              <input #filters matInput name="emailAddress" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+          <div>{{record.emailAddress}}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="organisation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="organisation" [disabled]="!hideFilters" style="cursor: pointer;" columnName="lastName">
+          <span [hidden]="!hideFilters">Organisation</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Organisation</mat-label>
+              <input #filters matInput name="organisation" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+          <div>{{record.organisation}}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userRole">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userRole" [disabled]="!hideFilters" style="cursor: pointer;" columnName="userRole">
+          <span [hidden]="!hideFilters">Role</span>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+          <div>{{record.userRole | titlecase }}</div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="groups">
+        <th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="groups">
+          <span [hidden]="!hideFilters">Groups</span>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+          <div>
+            <span *ngFor="let group of record.groups">
+              <div class="group">
+                <span (click)="editGroup(group)">{{group.label}}</span>
+              </div>
+            </span>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="disabled" [disabled]="!hideFilters" style="cursor: pointer;" columnName="status">
+          <span [hidden]="!hideFilters">Status</span>
+        </th>
+        <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+            <span *ngIf="record.disabled" class="pill-card--red">Disabled</span>
+            <span *ngIf="!record.disabled" class="pill-card--green">Active</span>
+        </td>
+      </ng-container>
 
-		<ng-container matColumnDef="icons">
-            <td mat-header-cell *matHeaderCellDef columnName="icons"></td>
-			<td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
-				<div style="margin-bottom: 3px;">
-					<button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">
-						Actions <i class="fas fa-chevron-down fa-xs"></i>
-					</button>
-					<mat-menu #actions="matMenu" yPosition="below" xPosition="after">
-						<button mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
-							<i class="fas fa-key" color="primary"></i> Reset password
-						</button>
-						<button mat-menu-item (click)="editUser(record)" aria-label="Edit user">
-							<i class="fas fa-pencil-alt" color="primary"></i> Edit user
-						</button>
-						<button mat-menu-item *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">
-							<i class="fas fa-ban warning"></i> Deactivate
-						</button>
-						<button mat-menu-item *ngIf="record.disabled" (click)="toggleDeactivate(record)" aria-label="Activate">
-							<i class="fas fa-check"></i> Activate
-						</button>
-					</mat-menu>
-				</div>
-			</td>
-		</ng-container>
-		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-		<tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
-	</table>
+      <ng-container matColumnDef="icons">
+        <td mat-header-cell *matHeaderCellDef columnName="icons"></td>
+        <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
+          <div style="margin-bottom: 3px;">
+            <button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">
+              Actions <i class="fas fa-chevron-down fa-xs"></i>
+            </button>
+            <mat-menu #actions="matMenu" yPosition="below" xPosition="after" class="mdm--mat-menu--actions">
+              <button mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
+                <i class="fas fa-key" color="primary"></i> Reset password
+              </button>
+              <button mat-menu-item (click)="editUser(record)" aria-label="Edit user">
+                <i class="fas fa-pencil-alt" color="primary"></i> Edit user
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item class="warning"  *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">
+                <i class="fas fa-ban"></i> Deactivate
+              </button>
+              <button mat-menu-item *ngIf="record.disabled" (click)="toggleDeactivate(record)" aria-label="Activate">
+                <i class="fas fa-check"></i> Activate
+              </button>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
+    </table>
+  </div>
 
 	<div class="mdm--mat-pagination bordered">
 		<mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>

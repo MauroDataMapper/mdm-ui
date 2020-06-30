@@ -25,11 +25,6 @@ SPDX-License-Identifier: Apache-2.0
     display: inline;
     font-weight: 500;
   }
-  .fas.fa-filter {
-    @include respond-to($desktop) {
-      display: none;
-    }
-  }
 }
 
 
@@ -119,7 +114,7 @@ mdm-settings .mat-checkbox-layout {
   #sidenav-content {
     .mat-menu-item.active {
       background-color: rgba(77, 114, 156, 0.1);
-      color: #1157a9; 
+      color: #1157a9;
       font-weight: 600;
     }
   }
@@ -131,7 +126,7 @@ aside.menu {
   }
   .menu-list a.active {
     background-color: rgba(77, 114, 156, 0.1);
-    color: #1157a9; 
+    color: #1157a9;
     font-weight: 600;
   }
 }
@@ -140,11 +135,11 @@ aside.menu {
 .mdm--profile-block {
   position: relative;
   > button {
-    position: absolute; 
-    top: 40px; 
-    left: 12px; 
-    background: #fff; 
-    border-radius: 100%; 
+    position: absolute;
+    top: 40px;
+    left: 12px;
+    background: #fff;
+    border-radius: 100%;
     min-width: 40px;
   }
 }

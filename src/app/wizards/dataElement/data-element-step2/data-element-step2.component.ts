@@ -250,17 +250,11 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       if (this.checkAllCheckbox) {
         this.model.selectedDataElements.push(element);
       } else {
-        const currentId = element.id;
-        const index = this.model.selectedDataElements.findIndex(r => r.id === currentId);
-
-        if (index !== -1) {
-          this.model.selectedDataElements.splice(index, 1);
-        }
+        this.model.selectedDataElements = [];
       }
     });
 
     this.validate();
-
     this.dataSourceSelectedDataElements.data = this.model.selectedDataElements;
     this.totalSelectedItemsCount = this.model.selectedDataElements.length;
   };

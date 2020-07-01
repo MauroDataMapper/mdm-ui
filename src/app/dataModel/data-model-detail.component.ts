@@ -306,7 +306,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Delete permanently',
+          title: `Permanent deletion`,
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `Are you sure you want to <span class='warning'>permanently</span> delete this Data Model?`
@@ -320,7 +320,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Are you sure you want to delete this Data Model?`,
+            title: `Confirm permanent deletion`,
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'

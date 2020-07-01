@@ -26,22 +26,22 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {EditableDataModel} from '@mdm/model/dataModelModel';
-import {from, Subscription} from 'rxjs';
-import {MarkdownTextAreaComponent} from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { from, Subscription } from 'rxjs';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {MessageService} from '@mdm/services/message.service';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
-import {SharedService} from '@mdm/services/shared.service';
-import {ElementSelectorDialogueService} from '@mdm/services/element-selector-dialogue.service';
-import {BroadcastService} from '@mdm/services/broadcast.service';
-import {HelpDialogueHandlerService} from '@mdm/services/helpDialogue.service';
-import {FavouriteHandlerService} from '@mdm/services/handlers/favourite-handler.service';
-import {ConfirmationModalComponent} from '@mdm/modals/confirmation-modal/confirmation-modal.component';
-import {CodeSetResult} from '@mdm/model/codeSetModel';
-import {DialogPosition, MatDialog} from '@angular/material/dialog';
+import { MessageService } from '@mdm/services/message.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { SharedService } from '@mdm/services/shared.service';
+import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { CodeSetResult } from '@mdm/model/codeSetModel';
+import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -146,34 +146,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  ngAfterViewInit(): void {
-
-    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    // this.editForm.changes
-    //     .subscribe((queryList: QueryList<InlineEditorComponent>) => {
-    //       this.invokeInlineEditor();
-    //       // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-    //
-    //       if (this.editMode) {
-    //         this.editForm.forEach(x => x.edit({ editing: true,
-    //           focus: x._name === "moduleName" ? true : false
-    //         }));
-    //         this.showForm();
-    //       }
-    //     });
-  }
-
-  private invokeInlineEditor(): void {
-    // const inlineEditorToInvoke = this.editForm.find(
-    //     (inlineEditorComponent: InlineEditorComponent) => {
-    //       return inlineEditorComponent.name === "editableText";
-    //     });
-
-  }
-
-  // private onInlineEditorEdit(editEvent: InlineEditorEvent): void {
-  //     console.log(editEvent); // OUTPUT: Only logs event when inlineEditor appears in template
-  // }
+  ngAfterViewInit(): void { }
 
   CodeSetDetails(): any {
 
@@ -205,7 +178,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           }
         });
       }
-
 
       if (this.result != null) {
         this.hasResult = true;
@@ -274,9 +246,11 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
           data: {
-            title: 'Code Set',
-            message:
-              'Are you sure you want to delete this Code Set?<br>The Code Set will be marked as deleted and will not be viewable by users except Administrators.'
+            title: 'Are you sure you want to delete this Code Set?',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message: `<p class='marginless'>This Code Set will be marked as deleted and will not be viewable by users</p>
+                      <p class='marginless'>except Administrators.</p>`
           }
         });
 
@@ -301,8 +275,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
           data: {
-            title: 'Code Set',
-            message: 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Code Set?'
+            title: 'Delete permanently',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message: `Are you sure you want to <span class='warning'>permanently</span> delete this Code Set?`
           }
         });
 
@@ -310,11 +286,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         if (result?.status !== 'ok') {
           return;
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent,
-          {
+        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
             data: {
-              title: 'Data Model',
-              message: '<strong>Are you sure?</strong><br>It will be deleted <span class=\'errorMessage\'>permanently</span>.'
+              title: `Are you sure you want to delete this Code Set?`,
+              okBtnTitle: 'Confirm deletion',
+              btnType: 'warn',
+              message: `<strong>Note: </strong>It will be deleted <span class='warning'>permanently</span>.`
             }
           });
 
@@ -324,7 +301,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           }
           this.delete(true);
         });
-
       });
     });
 
@@ -365,27 +341,20 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       organisation: this.result.organisation,
       aliases,
       classifiers
-
     };
 
     if (this.validateLabel(this.result.label)) {
-
-
-      const call = from(this.resourcesService.codeSet.put(resource.id, null, {resource})).subscribe(result => {
+      from(this.resourcesService.codeSet.put(resource.id, null, {resource})).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
           }
           this.messageHandler.showSuccess('Code Set updated successfully.');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({editing: false}));
-
-        },
-        error => {
+        }, error => {
           this.messageHandler.showError('There was a problem updating the Code Set.', error);
         });
     }
-
-
   };
 
   validateLabel(data): any {
@@ -398,9 +367,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   showForm() {
-
     this.editableForm.show();
-
   }
 
   onCancelEdit() {
@@ -420,17 +387,15 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   finalise() {
-    const self = this;
-
     const promise = new Promise((resolve, reject) => {
 
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
+      const dialog = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: 'Are you sure you want to finalise the Code Set ?',
-            message:
-              'Once you finalise a CodeSet, you can not edit it anymore!<br>\ \n' +
-              'but you can create new version of it.'
+            title: 'Are you sure you want to finalise this Code Set ?',
+            okBtnTitle: 'Finalise Code Set',
+            btnType: 'accent',
+            message: `<p class='marginless'>Once you finalise a Code Set, you can not edit it anymore! </p>
+                      <p class='marginless'>but you can create new version of it.</p>`
           }
         });
 
@@ -440,13 +405,11 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(result2 => {
+        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(() => {
             this.processing = false;
-            this.messageHandler.showSuccess('Code Set finalised successfully.');
+            this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
-
-          },
-          error => {
+          }, error => {
             this.processing = false;
             this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
           });

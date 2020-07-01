@@ -156,9 +156,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.showSecuritySection = message;
       }
     );
-    // this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-    //   this.showSearch = message;
-    // });
   }
 
   private setEditableFormData() {
@@ -175,8 +172,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
 
       if (this.editMode) {
-        this.editForm.forEach(x =>
-          x.edit({
+        this.editForm.forEach(x => x.edit({
             editing: true,
             focus: x._name === 'moduleName' ? true : false
           })
@@ -187,10 +183,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private invokeInlineEditor(): void {}
-
-  // private onInlineEditorEdit(editEvent: InlineEditorEvent): void {
-  //     console.log(editEvent); // OUTPUT: Only logs event when inlineEditor appears in template
-  // }
 
   DataModelDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
@@ -256,14 +248,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.subscription.unsubscribe();
   }
 
-  // markDonw(text) {
-  //     if (text === null || text === undefined) {
-  //         return '';
-  //     }
-  //     /* tslint:disable:no-string-literal */
-  //     return window['marked'](text);
-  // }
-
   delete(permanent) {
     if (!this.securityHandler.isAdmin()) {
       return;
@@ -294,9 +278,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Data Model',
-          message:
-            'Are you sure you want to delete this Data Model?<br>The Data Model will be marked as deleted and will not be viewable by users except Administrators.'
+          title: `Are you sure you want to delete this Data Model?`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class="marginless">This Data Model will be marked as deleted and will not be viewable by users </p>
+                    <p class="marginless">except Administrators.</p>`
         }
       });
 
@@ -320,9 +306,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Data Model',
-          message:
-            'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Data Model?'
+          title: 'Delete permanently',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Data Model?`
         }
       });
 
@@ -333,9 +320,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: 'Data Model',
-            message:
-              '<strong>Are you sure?</strong><br>All its \'Data Classes\', \'Data Elements\' and \'Data Types\' will be deleted <span class=\'errorMessage\'>permanently</span>.'
+            title: `Are you sure you want to delete this Data Model?`,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
+                      <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
           }
         });
 
@@ -377,10 +366,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.dataModel
-        .put(resource.id, null, { resource })
-        .subscribe(
-          result => {
+      this.resourcesService.dataModel.put(resource.id, null, { resource }).subscribe(result => {
             if (this.afterSave) {
               this.afterSave(result);
             }
@@ -388,12 +374,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
             this.broadcastSvc.broadcast('$reloadFoldersTree');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem updating the Data Model.',
-              error
-            );
+          }, error => {
+            this.messageHandler.showError('There was a problem updating the Data Model.', error);
           }
         );
     }
@@ -431,12 +413,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Are you sure you want to finalise the Data Model ?',
+          title: 'Are you sure you want to finalise this Data Model?',
           okBtnTitle: 'Finalise model',
           btnType: 'accent',
-          message:
-            'Once you finalise a Data Model, you can not edit it anymore!<br> \n' +
-            'but you can create new version of it.'
+          message: `<p class='marginless'>Once you finalise a Data Model, you can not edit it anymore!</p>
+                    <p class='marginless'>but you can create new version of it.</p>`
         }
       });
 
@@ -446,26 +427,13 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           return promise;
         }
         this.processing = true;
-        this.resourcesService.dataModel
-          .put(this.result.id, 'finalise', null)
-          .subscribe(
-            () => {
+        this.resourcesService.dataModel.put(this.result.id, 'finalise', null).subscribe(() => {
               this.processing = false;
-              this.messageHandler.showSuccess(
-                'Data Model finalised successfully.'
-              );
-              this.stateHandler.Go(
-                'datamodel',
-                { id: this.result.id },
-                { reload: true }
-              );
-            },
-            error => {
+              this.messageHandler.showSuccess('Data Model finalised successfully.');
+              this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });
+            }, error => {
               this.processing = false;
-              this.messageHandler.showError(
-                'There was a problem finalising the Data Model.',
-                error
-              );
+              this.messageHandler.showError('There was a problem finalising the Data Model.', error);
             }
           );
       });
@@ -474,16 +442,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   newVersion() {
-    this.stateHandler.Go(
-      'newVersionDataModel',
-      { dataModelId: this.result.id },
-      { location: true }
-    );
+    this.stateHandler.Go('newVersionDataModel', { dataModelId: this.result.id }, { location: true });
   }
 
   compare(dataModel = null) {
-    this.stateHandler.NewWindow(
-      'modelscomparison',
+    this.stateHandler.NewWindow('modelscomparison',
       {
         sourceId: this.result.id,
         targetId: dataModel ? dataModel.id : null
@@ -496,53 +459,25 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.exportError = null;
     this.processing = true;
     this.exportedFileIsReady = false;
-    this.exportHandler.exportDataModel([this.result], exporter).subscribe(
-      result => {
+    this.exportHandler.exportDataModel([this.result], exporter).subscribe(result => {
         if (result != null) {
           this.exportedFileIsReady = true;
-          const label =
-            [this.result].length === 1 ? [this.result][0].label : 'data_models';
+          const label = [this.result].length === 1 ? [this.result][0].label : 'data_models';
           const fileName = this.exportHandler.createFileName(label, exporter);
           const file = new Blob([result.body], { type: exporter.fileType });
           const link = this.exportHandler.createBlobLink(file, fileName);
 
           this.processing = false;
           this.renderer.appendChild(this.aLink.nativeElement, link);
-          // remove if any link exists
-          // jQuery("#exportFileDownload a").remove();
-          // jQuery("#exportFileDownload").append(jQuery(aLink)[0]);
         } else {
           this.processing = false;
-          this.messageHandler.showError(
-            'There was a problem exporting the Data Model.',
-            ''
-          );
+          this.messageHandler.showError('There was a problem exporting the Data Model.', '');
         }
-      },
-      error => {
+      }, error => {
         this.processing = false;
-        this.messageHandler.showError(
-          'There was a problem exporting the Data Model.',
-          error
-        );
+        this.messageHandler.showError('There was a problem exporting the Data Model.', error);
       }
     );
-    // var promise = exportHandler.exportDataModel([$scope.mcModelObject], exporter);
-    // promise.then(function (result) {
-    //     $scope.exportedFileIsReady = true;
-    //
-    //     var aLink = exportHandler.createBlobLink(result.fileBlob, result.fileName);
-    //     //remove if any link exists
-    //     jQuery("#exportFileDownload a").remove();
-    //     jQuery("#exportFileDownload").append(jQuery(aLink)[0]);
-    //
-    //     $scope.processing = false;
-    // },function(response){
-    //     $scope.processing = false;
-    //     //error in saving!!
-    //     console.log(response);
-    //     $scope.exportError = "An error occurred when processing the request.";
-    // });
   }
 
   loadExporterList() {
@@ -551,15 +486,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       if (result.body === false) {
         return;
       }
-      this.resourcesService.public.dataModelExporterPlugins().subscribe(
-        res => {
+      this.resourcesService.public.dataModelExporterPlugins().subscribe(res => {
           this.exportList = res.body;
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
         }
       );
     });

@@ -146,15 +146,11 @@ export class TerminologyDetailsComponent implements OnInit {
           this.afterSave.emit(resource);
         }
         this.mcTerminology.aliases = Object.assign({}, result.aliases || []);
-        this.mcTerminology.editAliases = Object.assign(
-          {},
-          this.mcTerminology.aliases
-        );
+        this.mcTerminology.editAliases = Object.assign({}, this.mcTerminology.aliases);
 
         this.messageHandler.showSuccess('Terminology updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-      },
-      error => {
+      }, error => {
         this.messageHandler.showError('There was a problem updating the Terminology.', error);
       }
     );
@@ -173,10 +169,7 @@ export class TerminologyDetailsComponent implements OnInit {
           const result = res.body;
           this.exportedFileIsReady = true;
 
-          const aLink = this.exportHandler.createBlobLink(
-            result.fileBlob,
-            result.fileName
-          );
+          this.exportHandler.createBlobLink(result.fileBlob, result.fileName);
           this.processing = false;
         }, () => {
           this.processing = false;
@@ -204,8 +197,7 @@ export class TerminologyDetailsComponent implements OnInit {
           this.broadcastSvc.broadcast('$elementDeleted', () => {
            // this.mcTerminology, permanent;  TODO
           });
-        },
-        error => {
+        }, error => {
           this.deleteInProgress = false;
           this.messageHandler.showError('There was a problem deleting the Terminology.', error);
         });
@@ -217,16 +209,19 @@ export class TerminologyDetailsComponent implements OnInit {
     }
     this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Terminology',
-          message:
-            'Are you sure you want to delete this Terminology?<br>The Terminology will be marked as deleted and will not be viewable by users except Administrators.'
+          title: `Are you sure you want to delete this Terminology?`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class="marginless">This Terminology will be marked as deleted and will not be viewable by users </p>
+                    <p class="marginless">except Administrators.</p>`
         }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
-        }
+    }).afterClosed().subscribe(result => {
+      if (result != null && result.status === 'ok') {
         this.delete();
-      });
+      } else {
+        return;
+      }
+    });
   };
 
   askForPermanentDelete = () => {
@@ -235,9 +230,10 @@ export class TerminologyDetailsComponent implements OnInit {
     }
     this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Terminology',
-          message:
-            'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Terminology?'
+          title: 'Permanent deletion',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Terminology?`
         }
       }).afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
@@ -245,15 +241,17 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.dialog.open(ConfirmationModalComponent, {
             data: {
-              title: 'Terminology',
-              message:
-                '<strong>Are you sure?</strong><br>All its \'Terms\' will be deleted <span class=\'errorMessage\'>permanently</span>.'
+              title: `Confirm permanent deletion`,
+              okBtnTitle: 'Confirm deletion',
+              btnType: 'warn',
+              message: `<strong>Note: </strong>All its 'Terms' will be deleted <span class='warning'>permanently</span>.`
             }
           }).afterClosed().subscribe(result2 => {
-            if (result2?.status !== 'ok') {
+            if (result2 != null && result.status === 'ok') {
+              this.delete(true);
+            } else {
               return;
             }
-            this.delete(true);
           });
       });
   };
@@ -271,10 +269,11 @@ export class TerminologyDetailsComponent implements OnInit {
   finalise = () => {
     this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Are you sure you want to finalise the Terminology ?',
-          message:
-            'Once you finalise a Terminology, you can not edit it anymore!<br>' +
-            'but you can create new version of it.'
+          title: 'Are you sure you want to finalise this Terminology?',
+          okBtnTitle: 'Finalise Terminology',
+          btnType: 'accent',
+          message: `<p class='marginless'>Once you finalise a Terminology, you can not edit it anymore!</p>
+                    <p class='marginless'>but you can create new version of it.</p>`
         }
       }).afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
@@ -283,20 +282,11 @@ export class TerminologyDetailsComponent implements OnInit {
         this.processing = true;
         this.resources.terminology.put(this.mcTerminology.id, 'finalise', null).subscribe(() => {
               this.processing = false;
-              this.messageHandler.showSuccess(
-                'Terminology finalised successfully.'
-              );
-              this.stateHandler.Go(
-                'terminology',
-                { id: this.mcTerminology.id },
-                { reload: true }
-              );
+              this.messageHandler.showSuccess('Terminology finalised successfully.');
+              this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
             }, error => {
               this.processing = false;
-              this.messageHandler.showError(
-                'There was a problem finalising the Terminology.',
-                error
-              );
+              this.messageHandler.showError('There was a problem finalising the Terminology.', error);
             }
           );
       });
@@ -312,15 +302,10 @@ export class TerminologyDetailsComponent implements OnInit {
       if (result.body === false) {
         return;
       }
-      this.resources.public.dataModelExporterPlugins().subscribe(
-        result2 => {
+      this.resources.public.dataModelExporterPlugins().subscribe(result2 => {
           this.exportList = result2;
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
         }
       );
     });

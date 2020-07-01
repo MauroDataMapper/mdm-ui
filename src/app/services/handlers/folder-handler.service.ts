@@ -73,7 +73,7 @@ export class FolderHandlerService {
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Delete Folder`,
+          title: `Permanent deletion`,
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `Are you sure you want to <span class='warning'>permanently</span> delete this Folder?`
@@ -87,10 +87,10 @@ export class FolderHandlerService {
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: 'Delete permanently',
+            title: `Confirm permanent deletion`,
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message: `<strong>Note: </strong> All its \'Data Models\' and \'Folders\' will be deleted <span class=\'warning\'>permanently</span>.`
+            message: `<strong>Note: </strong> All its 'Data Models' and 'Folders' will be deleted <span class='warning'>permanently</span>.`
           }
         });
 

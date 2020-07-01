@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
 	<div class="heading-container">
 		Data Types
 		<span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-		<i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+		<i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
 	</div>
 	<div class="table-responsive">
 		<table mat-table [dataSource]="dataSourceDataTypes" matSort class="mdm--table table table-striped">

@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="heading-container">
     <h4 class="marginless">Classified Elements</h4>
     <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-    <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+    <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
 </div>
 <div class="table-responsive">
     <mat-table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">

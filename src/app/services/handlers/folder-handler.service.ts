@@ -68,15 +68,15 @@ export class FolderHandlerService {
   askForPermanentDelete(id) {
     const promise = new Promise((resolve, reject) => {
       if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
+        reject({ message: 'Only Admins are allowed to delete records permanently!' });
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Folder',
+          title: `Delete Folder`,
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Folder?'
+          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Folder?`
         }
       });
 
@@ -87,7 +87,7 @@ export class FolderHandlerService {
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: 'Confirm permanent deletion',
+            title: 'Delete permanently',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message: `<strong>Note: </strong> All its \'Data Models\' and \'Folders\' will be deleted <span class=\'warning\'>permanently</span>.`

@@ -31,7 +31,7 @@ import {McSelectPagination} from '../utility/mc-select/mc-select.component';
 @Component({
     selector: 'mdm-history',
     templateUrl: './history.component.html',
-    // styleUrls: ['./history.component.sass']
+    styleUrls: ['./history.component.sass']
 })
 
 export class HistoryComponent implements OnInit, AfterViewInit {
@@ -109,7 +109,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
       .subscribe(data => {
         this.records = data;
       });
-      this.changeRef.detectChanges();
+    this.changeRef.detectChanges();
   }
     public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
         // this.isLoading = true;

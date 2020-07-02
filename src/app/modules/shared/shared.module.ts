@@ -34,6 +34,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ErrorComponent } from '@mdm/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
     MatPasswordStrengthModule,
     NgxJsonViewerModule,
     FlexLayoutModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSkeletonLoaderModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -75,7 +77,8 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
     NgxJsonViewerModule,
     ErrorComponent,
     FlexLayoutModule,
-    MdmPaginatorComponent
+    MdmPaginatorComponent,
+    NgxSkeletonLoaderModule
   ]
 })
 export class SharedModule {}

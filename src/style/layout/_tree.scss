@@ -255,6 +255,8 @@ ul.favourites li:focus {
   border: 1px solid rgba(10, 133, 53, 0.5);
   border-radius: 5px;
   padding: 4px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .detail-icons--cta {
   float: right;

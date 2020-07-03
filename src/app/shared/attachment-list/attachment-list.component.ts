@@ -49,7 +49,7 @@ export class AttachmentListComponent implements AfterViewInit {
   displayedColumns: string[] = ['fileName', 'fileSize', 'lastUpdated', 'other'];
   loading: boolean;
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   filter: string;
 
   currentUser: any;

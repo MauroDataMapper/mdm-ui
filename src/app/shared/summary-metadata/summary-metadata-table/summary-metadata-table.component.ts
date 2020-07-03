@@ -45,7 +45,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   hideFilters = true;
   displayedColumns: string[] = ['name', 'description'];
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   filterEvent = new EventEmitter<string>();
   filter: string;
   records: any[] = [];
@@ -70,10 +70,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
           this.changeRef.detectChanges();
 
@@ -87,19 +84,13 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
         }),
         map((data: any) => {
           data.body.items.forEach(item => {
-            if (
-              item.summaryMetadataType &&
-              item.summaryMetadataType.toLowerCase() === 'map'
-            ) {
+            if (item.summaryMetadataType && item.summaryMetadataType.toLowerCase() === 'map') {
               item.summaryMetadataType = 'map';
               item.summaryMetadataReports.forEach(report => {
                 report.reportValue = JSON.parse(report.reportValue);
                 report.reportDate = report.reportDate.substring(0, 10);
               });
-            } else if (
-              item.summaryMetadataType &&
-              item.summaryMetadataType.toLowerCase() === 'number'
-            ) {
+            } else if (item.summaryMetadataType && item.summaryMetadataType.toLowerCase() === 'number') {
               item.summaryMetadataType = 'number';
               item.summaryMetadataReports.forEach(report => {
                 report.reportValue = parseInt(report.reportValue, 10);
@@ -138,11 +129,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
       filters
     };
 
-    return this.resources.facets.get(
-      this.parent.id,
-      'summaryMetadata',
-      options
-    );
+    return this.resources.facets.get(this.parent.id, 'summaryMetadata', options);
   };
 
   applyFilter = () => {
@@ -166,7 +153,6 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   popup(record: any) {
     this.matDialog.open(SummaryMetadataPopupComponent, {
       width: '90%',
-      autoFocus: false,
       data: record,
       panelClass: 'summary-metadata-modal'
     });

@@ -80,7 +80,7 @@ export class FolderComponent implements OnInit, OnDestroy {
 
       this.parentId = this.result.id;
       if (this.sharedService.isLoggedIn(true)) {
-        this.folderPermissions(id);
+        // this.folderPermissions(id);
       } else {
         this.messageService.FolderSendMessage(this.result);
         this.messageService.dataChanged(this.result);

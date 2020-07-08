@@ -260,8 +260,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.stateHandler.Go(node.domainType, {
       id: node.id,
       edit: false,
-      dataModelId: node.dataModel,
-      dataClassId: node.parentDataClass || '',
+      dataModelId: node.modelId,
+      dataClassId: node.parentId || '',
       terminologyId: node.terminology
     });
   };

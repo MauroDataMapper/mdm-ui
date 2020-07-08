@@ -129,20 +129,12 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="other">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 8%; width: 8%;" columnName="name">
-                <span [hidden]="!hideFilters"></span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Name</mat-label>
-                        <input #filters matInput name="label" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let record; let i = index; " style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
-                <div *ngIf="access && access.canAddLink && record.status == 'source' && semanticLinkTypes[record.linkType].editable == true">
-                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])"></mdm-table-buttons>
-                </div>
-            </td>
+          <td mat-header-cell *matHeaderCellDef style=" max-width: 8%; width: 8%;"></td>
+          <td mat-cell *matCellDef="let record; let i = index; " style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
+              <div *ngIf="access && access.canAddLink && record.status == 'source' && semanticLinkTypes[record.linkType].editable == true">
+                  <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])"></mdm-table-buttons>
+              </div>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

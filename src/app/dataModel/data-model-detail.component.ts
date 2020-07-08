@@ -482,7 +482,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isValidSession().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe(result => {
       if (result.body === false) {
         return;
       }

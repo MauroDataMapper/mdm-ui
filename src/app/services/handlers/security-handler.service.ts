@@ -171,8 +171,9 @@ expireToken() {
 //      return false;
 //   }
 
-  isValidSession() {
-    return this.resources.authentication.get('isValidSession');
+  isAuthenticated() {
+    // return this.resources.authentication.get('isValidSession');
+    return this.resources.authentication.isAuthenticated();
   }
 
 
@@ -241,7 +242,7 @@ isCurrentSessionExpired() {
       if (this.getCurrentUser()) { // Check for valid session when getting user from local storage
         // check session and see if it's still valid
 
-        this.isValidSession().subscribe(response => {
+        this.isAuthenticated().subscribe(response => {
           if (response.body === false) {
             this.removeLocalStorage();
           }

@@ -48,7 +48,7 @@ MessageServiceStub ={
 let SecurityHandlerServiceStub: Partial<SecurityHandlerService>;
 SecurityHandlerServiceStub = {
   isLoggedIn : () => {return true} ,
-  isValidSession: () => {return new Observable()}
+  isAuthenticated: () => {return new Observable()}
 }
 
 

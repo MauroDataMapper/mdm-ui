@@ -68,7 +68,7 @@ export class DataModelsExportComponent implements OnInit {
   loadExporterList() {
     this.exportersList = [];
 
-    this.securityHandler.isValidSession().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe(result => {
       if (result.body === false) {
         return;
       }

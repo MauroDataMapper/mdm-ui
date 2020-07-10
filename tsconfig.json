@@ -3,10 +3,27 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@mdm/*": ["./app/*"],
-      "@env/*": ["./environments/*"]
+      "@mdm/*": [
+        "./app/*"
+      ],
+      "@env/*": [
+        "./environments/*"
+      ],
+      "shared": [
+        "dist/shared/shared",
+        "dist/shared",
+        "dist/shared/shared",
+        "dist/shared"
+      ],
+      "mdm-resources/*": [
+        "../dist/mdm-resources/mdm-resources",
+        "../dist/mdm-resources"
+      ],
+      "mdm-resources": [
+        "../dist/mdm-resources"
+      ]
     },
-    "emitDecoratorMetadata" : true,
+    "emitDecoratorMetadata": true,
     "outDir": "./dist/",
     "sourceMap": true,
     "declaration": false,

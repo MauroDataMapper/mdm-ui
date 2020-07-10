@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmResourcesService } from 'mdm-resources';
 import { Observable } from 'rxjs';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 

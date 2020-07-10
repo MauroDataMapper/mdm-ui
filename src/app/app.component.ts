@@ -15,9 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewContainerRef, ViewChild, Injector, ComponentFactoryResolver } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
 import { SharedService } from './services/shared.service';
+import { PluginLoaderService } from './services/plugin-handler/plugin-loader.service';
+
 
 @Component({
   selector: 'mdm-root',
@@ -26,10 +28,14 @@ import { SharedService } from './services/shared.service';
 })
 export class AppComponent implements OnInit {
   title = 'mdm-ui';
-
+  @ViewChild('targetRef', { read: ViewContainerRef }) vcRef: ViewContainerRef;
+  
   constructor(
     private userIdle: UserIdleService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private pluginLoader: PluginLoaderService,
+    private injector: Injector,
+    private cfr: ComponentFactoryResolver
   ) {}
 
   ngOnInit() {
@@ -47,10 +53,27 @@ export class AppComponent implements OnInit {
       lastDigestRun = now;
 
     });
+    
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.loadPlugin("plugin1");
   }
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove(e) {
     this.userIdle.resetTimer();
   }
+
+  
+  loadPlugin(pluginName: string) {
+    this.pluginLoader.load(pluginName).then((moduleType: any) => {
+      const entry = moduleType.entry;
+      const componentFactory = this.cfr.resolveComponentFactory(entry);
+      this.vcRef.createComponent(componentFactory, undefined, this.injector);
+    });
+  }
+
 }

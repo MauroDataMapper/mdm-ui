@@ -86,3 +86,14 @@ import 'core-js/es/reflect';
 import 'classlist.js';  // Run `npm install --save classlist.js`.
 import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 import 'zone.js/dist/zone';  // Included with Angular CLI.
+
+declare global {
+    export interface Window{
+        define: (name: string, deps: string[], definitionFn: () => any) => void;
+      
+        System: {
+          import: (path) => Promise<any>;
+        };
+      }     
+      
+}

@@ -20,7 +20,7 @@ import {environment} from '@env/environment';
 import {SecurityHandlerService} from './handlers/security-handler.service';
 import {Subject} from 'rxjs';
 import {ToastrService} from 'ngx-toastr';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmResourcesService } from 'mdm-resources';
 
 @Injectable({
   providedIn: 'root'

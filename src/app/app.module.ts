@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, APP_INITIALIZER } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
@@ -30,7 +30,7 @@ import { ROLES } from './constants/roles';
 import { ModalModule } from './modals/modal.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { CatalogueModule } from './modules/catalogue/catalogue.module';
-import { MdmResourcesModule } from './modules/resources/mdm-resources.module';
+import { MdmResourcesModule } from 'mdm-resources';
 import { SharedModule } from './modules/shared/shared.module';
 import { UsersModule } from './modules/users/users.module';
 import { BroadcastService } from './services/broadcast.service';
@@ -39,6 +39,9 @@ import { SharedService } from './services/shared.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
+import { PluginLoaderService } from './services/plugin-handler/plugin-loader.service';
+import { ClientPluginLoaderService } from './services/plugin-handler/client-plugin-loader.service';
+import { PluginsConfigProvider } from './services/plugin-config.provider';
 
 @NgModule({
   declarations: [AppComponent],
@@ -61,7 +64,19 @@ import { UiViewComponent } from './shared/ui-view/ui-view.component';
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: MatDialogRef, useValue: {} },
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, autoFocus: false} }
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, autoFocus: false} },
+    { provide: PluginLoaderService, useClass: ClientPluginLoaderService },
+    PluginsConfigProvider,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (provider: PluginsConfigProvider) => () =>
+        provider
+          .loadConfig()
+          .toPromise()
+          .then(config => (provider.config = config)),
+      multi: true,
+      deps: [PluginsConfigProvider]
+    }
 ],
   bootstrap: [UiViewComponent]
 })

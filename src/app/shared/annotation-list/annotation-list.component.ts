@@ -102,7 +102,8 @@ export class AnnotationListComponent implements AfterViewInit {
       sortType,
       filters
     };
-    return this.resources.facets.get(this.parent.id, 'annotations', options);
+    // return this.resources.facets.get(this.parent.id, 'annotations', options);
+    return this.resources.catalogueItem.listAnnotations(this.parent.domainType, this.parent.id);
   }
 
   add = () => {

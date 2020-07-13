@@ -70,7 +70,9 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.admin.get('activeSessions', options).subscribe(resp => {
+    this.resourcesService.session.activeSessions(options)
+    // this.resourcesService.admin.get('activeSessions', options)
+      .subscribe(resp => {
         for (const [key, value] of Object.entries(resp.body)) {
           resp.body[key].start = new Date(resp.body[key].sessionOpened);
           resp.body[key].last = new Date(resp.body[key].lastAccess);

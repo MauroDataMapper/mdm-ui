@@ -187,8 +187,9 @@ export class LinkSuggestionComponent implements OnInit {
     if (i >= 0) {
       this.model.suggestions[i].processing = true;
       // create the link and then remove it
-      this.resources.catalogueItem
-        .post(this.model.source.id, 'semanticLinks', { resource })
+      this.resources.catalogueItem.saveSemanticLinks(this.model.source.domainType, this.model.source.id, { resource })
+      // this.resources.catalogueItem
+      //   .post(this.model.source.id, 'semanticLinks', { resource })
         .subscribe(() => {
             this.model.suggestions[i].processing = false;
             this.model.suggestions[i].success = true;

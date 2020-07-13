@@ -222,17 +222,36 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   loadFolder(folder) {
     const id = (folder && folder.id) ? folder.id : null;
     this.loading = true;
-    this.resources.folder.get(id, null, {all: true, sortBy: 'label'}).subscribe(data => {
-      this.loading = false;
-      this.rootNode = {
-        children: data.body.items,
-        isRoot: true
-      };
-      this.filteredRootNode = this.rootNode;
+    if (folder?.id) {
+      this.resources.folder.get(id)
+      // this.resources.folder.get(id, null, {all: true, sortBy: 'label'})
+        .subscribe(data => {
+        this.loading = false;
+        this.rootNode = {
+          children: data.body.items,
+          isRoot: true
+        };
+        this.filteredRootNode = this.rootNode;
 
-    }, function(error) {
-      this.loading = false;
-    });
+      }, function(error) {
+        this.loading = false;
+      });
+    } else {
+      this.resources.folder.list()
+      // this.resources.folder.get(id, null, {all: true, sortBy: 'label'})
+        .subscribe(data => {
+        this.loading = false;
+        this.rootNode = {
+          children: data.body.items,
+          isRoot: true
+        };
+        this.filteredRootNode = this.rootNode;
+
+      }, function(error) {
+        this.loading = false;
+      });
+    }
+
   }
 
   loadTree(model) {

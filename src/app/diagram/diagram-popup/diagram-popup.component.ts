@@ -72,7 +72,8 @@ export class DiagramPopupComponent implements OnInit {
   private loadTree() {
     this.node = null;
     this.resourcesService.tree
-      .get(this.data.diagramComponent.parent.id)
+      .get('folders', this.data.diagramComponent.parent.domainType, this.data.diagramComponent.parent.id)
+      // .get(this.data.diagramComponent.parent.id)
       .subscribe((result) => {
         this.node = {
           children: result.body,

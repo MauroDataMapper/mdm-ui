@@ -53,7 +53,6 @@ export class TwoSidePanelComponent implements AfterViewInit {
 
   hideShowLeftPane() {
     this.state = this.state === 'inactive' ? 'active' : 'inactive';
-    console.log(this.state);
     if (this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')) {
       this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
       this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');

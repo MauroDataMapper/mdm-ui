@@ -88,8 +88,9 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
 
       if (this.type === 'dynamic') {
-
-        this.resources.metadata.namespaces.get().toPromise().then((result) => {
+        this.resources.metadata.namespaces()
+        // this.resources.metadata.namespaces.get()
+        .toPromise().then((result) => {
           this.namespaces = result.body.filter((n) => n.defaultNamespace);
 
 
@@ -146,7 +147,9 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   loadNamespaces() {
-    this.resources.metadata.namespaces.get().toPromise().then((result) => {
+    this.resources.metadata.namespaces()
+    // this.resources.metadata.namespaces.get()
+    .toPromise().then((result) => {
       this.namespaces = result.body.filter((n) => {
         return n.defaultNamespace;
       });
@@ -169,7 +172,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         options.filters = options.filters.replace('namespace', 'ns');
       }
     }
-    return this.resources.facets.get(this.parent.id, 'metadata', options);
+    // return this.resources.facets.get(this.parent.id, 'metadata', options);
+    return this.resources.catalogueItem.listMetadata(this.parent.domainType, this.parent.id);
   }
 
   applyFilter = () => {

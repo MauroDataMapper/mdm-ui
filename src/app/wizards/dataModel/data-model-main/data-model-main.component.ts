@@ -60,7 +60,9 @@ export class DataModelMainComponent implements OnInit {
     this.title.setTitle(`New Data Model`);
 
     this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder.get(this.parentFolderId, null, null).toPromise().then(result => {
+    this.resources.folder.get(this.parentFolderId)
+    // this.resources.folder.get(this.parentFolderId, null, null)
+    .toPromise().then(result => {
         result.domainType = 'Folder';
         this.parentFolder = result.body;
 

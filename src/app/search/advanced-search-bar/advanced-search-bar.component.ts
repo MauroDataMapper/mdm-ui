@@ -101,7 +101,9 @@ export class AdvancedSearchBarComponent implements OnInit {
   ngOnInit() {
     this.advancedSearch = false;
 
-    this.resouces.classifier.get(null, null, { all: true }).subscribe(result => {
+    this.resouces.classifier.list()
+    // this.resouces.classifier.get(null, null, { all: true })
+      .subscribe(result => {
         this.classifications = result.body.items;
       });
 

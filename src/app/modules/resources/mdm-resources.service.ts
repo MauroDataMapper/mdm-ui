@@ -26,7 +26,9 @@ import {
   MdmTerminologyResource,
   MdmTermResource,
   MdmCatalogueUserResource,
-  MdmTreeResource,
+  MdmSecurityResource,
+  MdmProviderResource,
+  MdmSessionResource,
   MdmImporterResource,
   MdmAdminResource,
   MdmUserGroupResource,
@@ -39,7 +41,8 @@ import {
   MdmPublicResource,
   MdmCodeSetResource,
   MdmFacetsResource,
-  MdmMetadataResource
+  MdmMetadataResource,
+  MdmTreeItemResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -63,18 +66,21 @@ export class MdmResourcesService {
   catalogueItem = new MdmCatalogueItemResource(this.resourcesConfig, this.restHandler);
   userGroup = new MdmUserGroupResource(this.resourcesConfig, this.restHandler);
   enumerationValues = new MdmEnumerationValuesResource(this.resourcesConfig, this.restHandler);
-  authentication = new MdmAuthenticationResource(this.resourcesConfig, this.restHandler);
-  tree = new MdmTreeResource(this.resourcesConfig, this.restHandler);
+  // authentication = new MdmAuthenticationResource(this.resourcesConfig, this.restHandler);
+  security = new MdmSecurityResource(this.resourcesConfig, this.restHandler);
+  session = new MdmSessionResource(this.resourcesConfig, this.restHandler);
+  tree = new MdmTreeItemResource(this.resourcesConfig, this.restHandler);
   metadata = new MdmMetadataResource(this.resourcesConfig, this.restHandler);
   facets = new MdmFacetsResource(this.resourcesConfig, this.restHandler);
   dataModel = new MdmDataModelResource(this.resourcesConfig, this.restHandler);
   hierarchy = new MdmHierarchyResource(this.resourcesConfig, this.restHandler);
   dataFlow = new MdmDataFlowResource(this.resourcesConfig, this.restHandler);
-  dataClass: MdmDataClassResource = new MdmDataClassResource(this.resourcesConfig, this.restHandler);
+  dataClass = new MdmDataClassResource(this.resourcesConfig, this.restHandler);
   dataType = new MdmDataTypeResource(this.resourcesConfig, this.restHandler);
   public = new MdmPublicResource(this.resourcesConfig, this.restHandler);
   admin = new MdmAdminResource(this.resourcesConfig, this.restHandler);
-  dataElement: MdmDataElementResource = new MdmDataElementResource(this.resourcesConfig, this.restHandler);
+  dataElement = new MdmDataElementResource(this.resourcesConfig, this.restHandler);
   importer = new MdmImporterResource(this.resourcesConfig, this.restHandler);
   codeSet = new MdmCodeSetResource(this.resourcesConfig, this.restHandler);
+  provider = new MdmProviderResource(this.resourcesConfig, this.restHandler);
 }

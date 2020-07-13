@@ -162,7 +162,10 @@ export class ElementSelectorComponent implements OnInit {
 
     loadAllDataModels() {
         this.reloading = true;
-        this.resourceService.tree.get().subscribe((data) => {
+
+        this.resourceService.tree.list('folders')
+        // this.resourceService.tree.get()
+        .subscribe((data) => {
             this.rootNode = {
                 children: data.body,
                 isRoot: true

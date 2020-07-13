@@ -89,7 +89,7 @@ export class CodeSetComponent implements OnInit, OnDestroy {
       this.parentId = this.codeSetModel.id;
       this.showExtraTabs = !this.sharedService.isLoggedIn() || (!this.codeSetModel.editable || this.codeSetModel.finalised);
       if (this.sharedService.isLoggedIn(true)) {
-        this.CodeSetPermissions(id);
+        // this.CodeSetPermissions(id);
       } else {
         this.messageService.FolderSendMessage(this.codeSetModel);
         this.messageService.dataChanged(this.codeSetModel);

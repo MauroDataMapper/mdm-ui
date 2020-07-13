@@ -101,7 +101,8 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
     const options = { pageSize, pageIndex, sortBy, sortType, filters };
 
-    return this.resourcesService.admin.get('emails', options);
+    // return this.resourcesService.admin.get('emails', options);
+    return this.resourcesService.admin.emails(options);
   }
 
 

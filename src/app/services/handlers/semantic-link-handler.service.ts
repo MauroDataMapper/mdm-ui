@@ -62,10 +62,11 @@ export class SemanticLinkHandlerService {
             }
         } else {
             if (operation === 'POST') {
-               return this.resources.catalogueItem.post(source.id, 'semanticLinks', { resource });
-
+              //  return this.resources.catalogueItem.post(source.id, 'semanticLinks', { resource });
+              return this.resources.catalogueItem.saveSemanticLinks(source.domainType, source.id, { resource });
             } else {
-               return this.resources.catalogueItem.put(source.id, 'semanticLinks', linkId, { resource });
+              //  return this.resources.catalogueItem.put(source.id, 'semanticLinks', linkId, { resource });
+              return this.resources.catalogueItem.updateSemanticLink(source.domainType, source.id, linkId, { resource });
             }
         }
     }

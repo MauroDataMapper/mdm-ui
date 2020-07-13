@@ -108,7 +108,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  attachmentFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
+  attachmentFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
     const options = {
       pageSize,
       pageIndex,
@@ -116,7 +116,8 @@ export class AttachmentListComponent implements AfterViewInit {
       sortType,
       filters
     };
-    return this.resources.facets.get(this.parent.id, 'referenceFiles', options);
+    // return this.resources.facets.get(this.parent.id, 'referenceFiles', options);
+    return this.resources.catalogueItem.listReferenceFiles(this.parent.domainType, this.parent.id);
   };
 
   cancelEdit = (record, index) => {

@@ -76,7 +76,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messageService.sendUserDetails(this.user);
 
       // Create a trusted image URL
-      this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.backendUrl}/catalogueUsers/${this.user.id}/image?thumnail${this.imageVersion}`);
+      this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.backendUrl}/userImageFiles/${this.user.id}`);
     },
       err => {
         this.messageHandler.showError('There was a problem loading user details.', err);

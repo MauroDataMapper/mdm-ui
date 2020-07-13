@@ -56,7 +56,10 @@ export class CodeSetMainComponent implements OnInit {
     if (!this.stateService.params.parentFolderId) {
       this.stateHandler.NotFound({ location: false });
     }
-    this.resources.folder.get(this.model.parentFolderId, null, null).toPromise().then((result) => {
+
+    this.resources.folder.get(this.model.parentFolderId)
+    // this.resources.folder.get(this.model.parentFolderId, null, null)
+    .toPromise().then((result) => {
         result.domainType = 'Folder';
         this.model.parentFolder = result.body;
         const step1 = new Step();

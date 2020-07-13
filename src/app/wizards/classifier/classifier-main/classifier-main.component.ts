@@ -57,7 +57,8 @@ export class ClassifierMainComponent implements OnInit {
   ngOnInit() {
     this.parentFolderId = this.stateService.params.parentFolderId;
     this.resources.folder
-      .get(this.parentFolderId, null, null)
+      .get(this.parentFolderId)
+      // .get(this.parentFolderId, null, null)
       .toPromise()
       .then(result => {
         result.domainType = 'Folder';
@@ -86,12 +87,14 @@ export class ClassifierMainComponent implements OnInit {
       description: this.model.description
     };
 
-    let deferred;
-    deferred = this.resources.classifier.post(null, null, {
-      resource
-    });
+    this.resources.classifier.save({resource})
+    // let deferred;
+    // deferred = this.resources.classifier.post(null, null, {
+    //   resource
+    // });
 
-    deferred.subscribe(
+    // deferred
+    .subscribe(
       response => {
         this.messageHandler.showSuccess('Classifier saved successfully.');
 

@@ -77,8 +77,9 @@ export class ContentSearchHandlerService {
         }
 
         if (contextElement == null) {
-            return this.resources.catalogueItem.post(null,
-                'search',
+          return this.resources.tree.search('all',
+            // return this.resources.catalogueItem.post(null,
+            //     'search',
                 {
                     resource: {
                         searchTerm: searchText,

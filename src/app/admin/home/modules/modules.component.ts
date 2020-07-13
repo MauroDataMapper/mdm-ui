@@ -78,7 +78,9 @@ export class ModulesComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.admin.get('modules', options).subscribe(resp => {
+    this.resourcesService.admin.modules(options)
+    // this.resourcesService.admin.get('modules', options)
+      .subscribe(resp => {
         this.records = resp.body;
         this.records.push({
           id: '0',

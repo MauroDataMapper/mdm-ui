@@ -101,12 +101,13 @@ login(username, password) {
     const resource = { username, password };
 
     const promise = new Promise((resolve, reject) => {
-      this.resources.authentication
-        .post(
-          'login',
-          { resource },
-          { login: true, ignoreAuthModule: true, withCredentials: true }
-        )
+      this.resources.security.login({ resource })
+      // this.resources.authentication
+      //   .post(
+      //     'login',
+      //     { resource },
+      //     { login: true, ignoreAuthModule: true, withCredentials: true }
+      //   )
         .subscribe(
           res => {
             const result = res.body;
@@ -144,8 +145,9 @@ login(username, password) {
   //       }
 
 logout() {
-    return this.resources.authentication
-      .post('logout', null, { responseType: 'text' })
+    return this.resources.security.logout({ responseType: 'text' })
+    // return this.resources.authentication
+    //   .post('logout', null, { responseType: 'text' })
       .subscribe(result => {
         this.broadcastService.broadcast('userLoggedOut');
         this.removeLocalStorage();
@@ -173,7 +175,7 @@ expireToken() {
 
   isAuthenticated() {
     // return this.resources.authentication.get('isValidSession');
-    return this.resources.authentication.isAuthenticated();
+    return this.resources.session.isAuthenticated();
   }
 
 
@@ -243,7 +245,7 @@ isCurrentSessionExpired() {
         // check session and see if it's still valid
 
         this.isAuthenticated().subscribe(response => {
-          if (response.body === false) {
+          if (response.body.authenticatedSession === false) {
             this.removeLocalStorage();
           }
           resolve(!response.body);

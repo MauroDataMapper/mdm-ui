@@ -156,7 +156,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
       sortType,
       filters
     };
-    return this.resources.classifier.get(this.parent.id, this.classifiedElementType, options);
+    // return this.resources.classifier.get(this.parent.id, this.classifiedElementType, options);
+    return this.resources.classifier.listForCatalogueItem(this.classifiedElementType, this.parent.id, options);
   }
 
   applyFilter = () => {

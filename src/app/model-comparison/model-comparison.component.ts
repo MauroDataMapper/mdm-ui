@@ -118,7 +118,7 @@ export class ModelComparisonComponent implements OnInit {
 
     const response = await this.resources.dataModel.get(modelId).toPromise();
     const model = response.body;
-    const children = await this.resources.tree.get(model.id).toPromise();
+    const children = await this.resources.tree.get('dataModels', model.domainType, model.id).toPromise();
     model.children = children.body;
     if (model.children?.length > 0) {
       model.hasChildren = true;
@@ -676,7 +676,9 @@ export class ModelComparisonComponent implements OnInit {
 
   onNodeExpand = node => {
     const obs = new Observable(sub => {
-      this.resources.tree.get(node.id).subscribe(
+      this.resources.tree.get('dataModels', node.domainType, node.id)
+      // this.resources.tree.get(node.id)
+        .subscribe(
         res => {
           const result = res.body;
           result.forEach(dc => {

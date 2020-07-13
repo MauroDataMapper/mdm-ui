@@ -77,7 +77,9 @@ export class PluginsComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.admin.get('plugins/importers', options).subscribe(resp => {
+    this.resourcesService.provider.importers(options)
+    // this.resourcesService.admin.get('plugins/importers', options)
+      .subscribe(resp => {
         this.dataSource.data = [...this.dataSource.data, ...resp.body];
         this.totalItemCount = this.dataSource.data.length;
       }, err => {
@@ -85,7 +87,9 @@ export class PluginsComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.resourcesService.admin.get('plugins/emailers', options).subscribe(resp => {
+    this.resourcesService.provider.emailers(options)
+    // this.resourcesService.admin.get('plugins/emailers', options)
+      .subscribe(resp => {
         this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
         this.totalItemCount = this.dataSource.data.length;
@@ -94,7 +98,9 @@ export class PluginsComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.resourcesService.admin.get('plugins/dataLoaders', options).subscribe(resp => {
+    this.resourcesService.provider.dataLoaders(options)
+    // this.resourcesService.admin.get('plugins/dataLoaders', options)
+      .subscribe(resp => {
         this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
         this.totalItemCount = this.dataSource.data.length;
@@ -103,7 +109,9 @@ export class PluginsComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.resourcesService.admin.get('plugins/exporters', options).subscribe(resp => {
+    this.resourcesService.provider.exporters(options)
+    // this.resourcesService.admin.get('plugins/exporters', options)
+      .subscribe(resp => {
         this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
         this.totalItemCount = this.dataSource.data.length;

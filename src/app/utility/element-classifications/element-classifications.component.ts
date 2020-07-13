@@ -80,7 +80,9 @@ export class ElementClassificationsComponent implements OnInit {
 
     }
     getAllClassifications() {
-        this.resourceService.classifier.get(null, null, { all: true }).subscribe(result => {
+        this.resourceService.classifier.list()
+        // this.resourceService.classifier.get(null, null, { all: true })
+        .subscribe(result => {
             this.allClassifications = result.body.items;
             const selectedList: any[] = [];
             if (this.classifications !== undefined) {

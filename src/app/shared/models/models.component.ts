@@ -86,7 +86,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloading = true;
 
       if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
-        this.resources.tree.get(this.levels.currentFocusedElement.id).subscribe(result => {
+        this.resources.tree.get('dataModels', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id)
+        // this.resources.tree.get(this.levels.currentFocusedElement.id)
+          .subscribe(result => {
             const children = result.body;
             self.levels.currentFocusedElement.children = children;
             self.levels.currentFocusedElement.open = true;
@@ -160,7 +162,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.initializeModelsTree();
 
     this.broadcastSvc.subscribe('$reloadClassifiers', () => {
-      this.resources.classifier.get(null, null, {all: true}).subscribe(data => {
+      this.resources.classifier.list()
+      // this.resources.classifier.get(null, null, {all: true})
+      .subscribe(data => {
         this.allClassifiers = data.items;
         this.classifiers = {
           children: data,
@@ -207,7 +211,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   loadClassifiers = () => {
     this.classifierLoading = true;
-    this.resources.classifier.get(null, null, {all: true}).subscribe(result => {
+    this.resources.classifier.list()
+    // this.resources.classifier.get(null, null, {all: true})
+      .subscribe(result => {
         const data = result.body;
         this.allClassifiers = data.items;
         data.items.forEach(x => {
@@ -242,7 +248,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
     if (noCache) {
       options.queryStringParams.noCache = true;
     }
-    this.resources.tree.get(null, null, options).subscribe(result => {
+
+    this.resources.tree.list('folders', options)
+    // this.resources.tree.get(null, null, options)
+      .subscribe(result => {
         const data = result.body;
         this.allModels = {
           children: data,
@@ -262,7 +271,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       edit: false,
       dataModelId: node.modelId,
       dataClassId: node.parentId || '',
-      terminologyId: node.terminology
+      terminologyId: node.id
     });
   };
 
@@ -330,9 +339,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.folder.post(parentId, 'folders', {resource: {label}});
+      // endpoint = this.folder.post(parentId, 'folders', {resource: {label}});
+      endpoint = this.resources.folder.saveChildrenOf(parentId, { label });
     } else {
-      endpoint = this.resources.folder.post(null, null, {resource: {label}});
+      // endpoint = this.resources.folder.post(null, null, {resource: {label}});
+      endpoint = this.resources.folder.save({label});
     }
     endpoint.subscribe(res => {
         const result = res.body;
@@ -476,7 +487,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = [];
 
-      this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria).subscribe(res => {
+      this.resources.tree.search(null, this.sharedService.searchCriteria)
+      // this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria)
+        .subscribe(res => {
         const result = res.body;
         this.reloading = false;
         this.allModels = {

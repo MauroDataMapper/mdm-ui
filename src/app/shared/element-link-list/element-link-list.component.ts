@@ -112,7 +112,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       )
       .subscribe(data => {
         data.forEach( element => {
-         element.status = element.source.id === this.parent.id ? 'source' : 'target';
+         element.status = element.sourceCatalogueItem.id === this.parent.id ? 'source' : 'target';
         });
 
         this.records = data;
@@ -155,11 +155,12 @@ export class ElementLinkListComponent implements AfterViewInit {
         options
       );
     } else {
-      return this.resources.catalogueItem.get(
-        this.parent.id,
-        'semanticLinks',
-        options
-      );
+      return this.resources.catalogueItem.listSemanticLinks(this.parent.domainType, this.parent.id, options);
+      // return this.resources.catalogueItem.get(
+      //   this.parent.id,
+      //   'semanticLinks',
+      //   options
+      // );
     }
   };
 
@@ -193,7 +194,8 @@ export class ElementLinkListComponent implements AfterViewInit {
       return;
     }
     this.resources.catalogueItem
-      .delete(this.parent.id, 'semanticLinks', record.id)
+      .removeSemanticLink(this.parent.domainType, this.parent.id, record.id)
+      // .delete(this.parent.id, 'semanticLinks', record.id)
       .subscribe(
         () => {
           if (this.type === 'static') {

@@ -111,13 +111,15 @@ export class FolderHandlerService {
     return promise;
   }
 
-  delete(id, permanent) {
+  delete(id, permanent = false) {
     const promise = new Promise((resolve, reject) => {
       if (!this.securityHandler.isAdmin()) {
         reject({ message: 'You should be an Admin!' });
       } else {
-        const queryString = permanent ? 'permanent=true' : null;
-        this.resoucesService.folder.delete(id, null, queryString).subscribe(result => {
+        this.resoucesService.folder.remove(id, { permanent: permanent })
+        // const queryString = permanent ? 'permanent=true' : null;
+        // this.resoucesService.folder.delete(id, null, queryString)
+          .subscribe(result => {
             if (permanent) {
               this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'permanentDelete', result});
             } else {

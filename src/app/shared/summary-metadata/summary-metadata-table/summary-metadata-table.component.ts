@@ -129,7 +129,8 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
       filters
     };
 
-    return this.resources.facets.get(this.parent.id, 'summaryMetadata', options);
+    // return this.resources.facets.get(this.parent.id, 'summaryMetadata', options);
+    return this.resources.catalogueItem.listMetadata(this.parent.domainType, this.parent.id);
   };
 
   applyFilter = () => {

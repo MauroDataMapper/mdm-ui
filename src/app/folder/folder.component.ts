@@ -75,12 +75,14 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   folderDetails(id: any) {
-    this.resourcesService.folder.get(id, null, null).subscribe((result: { body: FolderResult; }) => {
+    this.resourcesService.folder.get(id)
+    // this.resourcesService.folder.get(id, null, null)
+      .subscribe((result: { body: FolderResult; }) => {
       this.result = result.body;
 
       this.parentId = this.result.id;
       if (this.sharedService.isLoggedIn(true)) {
-        // this.folderPermissions(id);
+        this.folderPermissions(id);
       } else {
         this.messageService.FolderSendMessage(this.result);
         this.messageService.dataChanged(this.result);
@@ -89,7 +91,9 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   folderPermissions(id: any) {
-    this.resourcesService.folder.get(id, 'permissions', null).subscribe((permissions: { body: { [x: string]: any; }; }) => {
+    this.resourcesService.security.permissions('folders', id)
+    // this.resourcesService.folder.get(id, 'permissions', null)
+      .subscribe((permissions: { body: { [x: string]: any; }; }) => {
       Object.keys(permissions.body).forEach(attrname => {
         this.result[attrname] = permissions.body[attrname];
       });

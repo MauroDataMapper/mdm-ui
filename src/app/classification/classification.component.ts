@@ -83,32 +83,36 @@ export class ClassificationComponent implements OnInit, OnDestroy {
 
     const promises = [];
     promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'catalogueItems',
-        null
-      )
+      this.resourcesService.classifier.listForCatalogueItem('catalogueItems', this.stateService.params.id)
+      // this.resourcesService.classifier.get(
+      //   this.stateService.params.id,
+      //   'catalogueItems',
+      //   null
+      // )
     );
     promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'terminologies',
-        null
-      )
+      this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
+      // this.resourcesService.classifier.get(
+      //   this.stateService.params.id,
+      //   'terminologies',
+      //   null
+      // )
     );
     promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'terms',
-        null
-      )
+      this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id)
+      // this.resourcesService.classifier.get(
+      //   this.stateService.params.id,
+      //   'terms',
+      //   null
+      // )
     );
     promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'codeSets',
-        null
-      )
+      this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
+      // this.resourcesService.classifier.get(
+      //   this.stateService.params.id,
+      //   'codeSets',
+      //   null
+      // )
     );
 
     forkJoin(promises).subscribe((results: any) => {
@@ -139,7 +143,8 @@ export class ClassificationComponent implements OnInit, OnDestroy {
 
   classifierDetails(id: any) {
     this.resourcesService.classifier
-      .get(id, null, null)
+      .get(id)
+      //.get(id, null, null)
       .subscribe((result: { body: FolderResult }) => {
         this.result = result.body;
 
@@ -153,8 +158,9 @@ export class ClassificationComponent implements OnInit, OnDestroy {
       });
   }
   classifierPermissions(id: any) {
-    this.resourcesService.classifier
-      .get(id, 'permissions', null)
+    this.resourcesService.security.permissions('classifiers', id)
+    // this.resourcesService.classifier
+      // .get(id, 'permissions', null)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach(attrname => {
           this.result[attrname] = permissions.body[attrname];

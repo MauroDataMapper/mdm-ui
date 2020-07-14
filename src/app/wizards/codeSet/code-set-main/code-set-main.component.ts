@@ -91,7 +91,9 @@ export class CodeSetMainComponent implements OnInit {
 
       terms: this.model.terms,
     };
-    this.resources.codeSet.post(null, null, { resource }).subscribe((result) => {
+    this.resources.folder.addCondeSets(this.model.parentFolderId, resource )
+    // this.resources.codeSet.post(null, null, { resource })
+      .subscribe((result) => {
         this.messageHandler.showSuccess('Code Set created successfully.');
         this.stateHandler.Go('codeset', { id: result.body.id });
         this.broadcastSvc.broadcast('$reloadFoldersTree');

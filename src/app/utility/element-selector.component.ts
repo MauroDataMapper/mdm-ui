@@ -482,11 +482,12 @@ export class ElementSelectorComponent implements OnInit {
       pageSize,
       pageIndex
     };
-    return this.resourceService.terminology.get(
-      terminology.id,
-      'terms',
-      options
-    );
+    return this.resourceService.terminology.terms.list(terminology.id, options);
+    // return this.resourceService.terminology.get(
+    //   terminology.id,
+    //   'terms',
+    //   options
+    // );
   }
   calculateDisplayedSoFar(result) {
     this.formData.searchResultTotal = result.count;

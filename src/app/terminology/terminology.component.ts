@@ -160,13 +160,18 @@ export class TerminologyComponent implements OnInit {
 
     this.searchTerm = text;
 
-    return this.resources.terminology.get(this.terminology.id, 'terms/search', {
-      queryStringParams: {
-        search: encodeURIComponent(text),
-        limit,
-        offset
-      }
+    return this.resources.terminology.terms.search(this.terminology.id, {
+      search: encodeURIComponent(text),
+      limit,
+      offset
     });
+    // return this.resources.terminology.get(this.terminology.id, 'terms/search', {
+    //   queryStringParams: {
+    //     search: encodeURIComponent(text),
+    //     limit,
+    //     offset
+    //   }
+    // });
   };
 
   onTermSelect = term => {

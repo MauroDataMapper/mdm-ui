@@ -113,8 +113,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
   }
 
   loadTerminologies = () => {
-    this.resources.terminology
-      .get(null, null, { all: true })
+    this.resources.terminology.list()
+      // .get(null, null, { all: true })
       .subscribe(data => {
         this.selectorSection.terminologies = data.body.items;
       });
@@ -148,8 +148,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
 
     this.selectorSection.loading = true;
 
-    this.resources.terminology
-      .get(terminology.id, 'terms', options)
+    this.resources.terminology.terms.list(terminology.id, options)
+      // .get(terminology.id, 'terms', options)
       .subscribe(result => {
         // make check=true if element is already selected
         result.body.items.forEach(item => {

@@ -148,6 +148,7 @@ export class ContentSearchHandlerService {
 
             });
         } else if (contextElement.domainType === 'DataClass') {
+
             return this.resources.dataClass.post(contextElement.dataModel,
                 contextElement.id,
                 'search',
@@ -170,20 +171,28 @@ export class ContentSearchHandlerService {
                     pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Terminology') {
-            return this.resources.terminology.get(contextElement.id,
-                'terms/search',
-                {
-                    queryStringParams: {
-                        search: encodeURIComponent(searchText),
-                        limit,
-                        offset,
-                        labelOnly
-                    },
-                    options: {
-                        pageSize: limit,
-                        pageIndex: offset  * limit
-                    }
-                });
+            return this.resources.terminology.terms.search(contextElement.id, {
+                          search: encodeURIComponent(searchText),
+                          limit,
+                          offset,
+                          labelOnly,
+                          pageSize: limit,
+                          pageIndex: offset  * limit
+                      });
+            // return this.resources.terminology.get(contextElement.id,
+            //     'terms/search',
+            //     {
+            //         queryStringParams: {
+            //             search: encodeURIComponent(searchText),
+            //             limit,
+            //             offset,
+            //             labelOnly
+            //         },
+            //         options: {
+            //             pageSize: limit,
+            //             pageIndex: offset  * limit
+            //         }
+            //     });
         }
     }
 }

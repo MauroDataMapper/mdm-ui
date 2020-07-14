@@ -55,7 +55,8 @@ export class NewVersionCodeSetComponent implements OnInit {
     }
 
     this.resources.codeSet
-      .get(this.stateService.params.codeSetId, null, null)
+      .get(this.stateService.params.codeSetId)
+      // .get(this.stateService.params.codeSetId, null, null)
       .subscribe(response => {
         this.codeSet = response.body;
       });
@@ -92,16 +93,18 @@ export class NewVersionCodeSetComponent implements OnInit {
     if (!this.validate()) {
       return;
     }
-    // newElementVersion
+    // newModelVersion
     // newDocumentVersion
-    if (this.versionType === 'newElementVersion') {
+    if (this.versionType === 'newModelVersion') {
       const resource = {
         label: this.form.label,
         copyPermissions: this.form.copyPermissions,
         copyDataFlows: this.form.copyDataFlows
       };
       this.processing = true;
-      this.resources.codeSet.put(this.codeSet.id, 'newVersion', { resource }).subscribe(
+      this.resources.codeSet.newModelVersion(this.codeSet.id, resource)
+      // this.resources.codeSet.put(this.codeSet.id, 'newVersion', { resource })
+        .subscribe(
         response => {
           this.processing = false;
           this.messageHandler.showSuccess('New Codeset version created successfully.');
@@ -115,7 +118,9 @@ export class NewVersionCodeSetComponent implements OnInit {
     } else if (this.versionType === 'newDocumentVersion') {
       const resources = {moveDataFlows: this.form.moveDataFlows};
       this.processing = true;
-      this.resources.codeSet.put(this.codeSet.id, 'newDocumentationVersion', { resource: resources }).subscribe(
+      this.resources.codeSet.newDocumentationVersion(this.codeSet.id, resources)
+      // this.resources.codeSet.put(this.codeSet.id, 'newDocumentationVersion', { resource: resources })
+        .subscribe(
         response => {
           this.processing = false;
           this.messageHandler.showSuccess('New Document Model version created successfully.');

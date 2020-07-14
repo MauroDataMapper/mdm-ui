@@ -147,21 +147,22 @@ export class ElementLinkListComponent implements AfterViewInit {
       filters
     };
 
-    if (this.parent.domainType === 'Term') {
-      return this.resources.term.get(
-        this.terminology,
-        this.parent.id,
-        'semanticLinks',
-        options
-      );
-    } else {
-      return this.resources.catalogueItem.listSemanticLinks(this.parent.domainType, this.parent.id, options);
-      // return this.resources.catalogueItem.get(
-      //   this.parent.id,
-      //   'semanticLinks',
-      //   options
-      // );
-    }
+    return this.resources.catalogueItem.listSemanticLinks(this.parent.domainType, this.parent.id, options);
+
+    // if (this.parent.domainType === 'Term') {
+    //   return this.resources.term.get(
+    //     this.terminology,
+    //     this.parent.id,
+    //     'semanticLinks',
+    //     options
+    //   );
+    // } else {
+    //   return this.resources.catalogueItem.get(
+    //     this.parent.id,
+    //     'semanticLinks',
+    //     options
+    //   );
+    // }
   };
 
   handleShowLinkSuggestion = element => {

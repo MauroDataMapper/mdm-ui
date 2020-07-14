@@ -83,7 +83,9 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   }
 
   codeSetDetails(id: any) {
-    this.resourcesService.codeSet.get(id, null, null).subscribe((result: { body: CodeSetResult; }) => {
+    this.resourcesService.codeSet.get(id)
+    // this.resourcesService.codeSet.get(id, null, null)
+    .subscribe((result: { body: CodeSetResult; }) => {
       this.codeSetModel = result.body;
 
       this.parentId = this.codeSetModel.id;
@@ -102,7 +104,9 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   }
 
   CodeSetPermissions(id: any) {
-    this.resourcesService.codeSet.get(id, 'permissions', null).subscribe((permissions: {body: {[x: string]: any; }; }) => {
+    this.resourcesService.security.permissions('codeSets', id)
+    // this.resourcesService.codeSet.get(id, 'permissions', null)
+    .subscribe((permissions: {body: {[x: string]: any; }; }) => {
       Object.keys(permissions.body).forEach( attrname => {
         this.codeSetModel[attrname] = permissions.body[attrname];
       });

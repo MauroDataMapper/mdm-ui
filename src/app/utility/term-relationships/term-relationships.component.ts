@@ -50,11 +50,13 @@ export class TermRelationshipsComponent implements OnInit {
 
   ngOnInit() {
     if (this.term) {
-      this.resources.term.get(this.term.terminology.id, this.term.id, 'termRelationships', {
-          queryStringParams: {
-            type: 'source'
-          }
-        }).subscribe(data => {
+      this.resources.term.termRelationships(this.term.terminology.id, this.term.id)
+      // this.resources.term.get(this.term.terminology.id, this.term.id, 'termRelationships', {
+      //     queryStringParams: {
+      //       type: 'source'
+      //     }
+      //   })
+        .subscribe(data => {
             this.totalItems = data.body.count;
             data.body.items.forEach(item => {
               if (!this.relations[item.relationshipType.displayLabel]) {

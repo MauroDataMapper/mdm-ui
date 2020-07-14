@@ -139,7 +139,9 @@ export class TerminologyDetailsComponent implements OnInit {
       })
     };
 
-    this.resources.terminology.put(resource.id, null, { resource }).subscribe(res => {
+    this.resources.terminology.update(resource.id, resource)
+    // this.resources.terminology.put(resource.id, null, { resource })
+      .subscribe(res => {
         const result = res.body;
 
         if (this.afterSave) {
@@ -188,7 +190,10 @@ export class TerminologyDetailsComponent implements OnInit {
     }
     const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
-    this.resources.terminology.delete(this.mcTerminology.id, null, queryString).subscribe(() => {
+
+    this.resources.terminology.remove(this.mcTerminology.id, {permanent: true})
+    // this.resources.terminology.delete(this.mcTerminology.id, null, queryString)
+      .subscribe(() => {
           if (permanent) {
             this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
           } else {
@@ -280,7 +285,10 @@ export class TerminologyDetailsComponent implements OnInit {
           return;
         }
         this.processing = true;
-        this.resources.terminology.put(this.mcTerminology.id, 'finalise', null).subscribe(() => {
+
+        this.resources.terminology.finalise(this.mcTerminology.id, null)
+        // this.resources.terminology.put(this.mcTerminology.id, 'finalise', null)
+        .subscribe(() => {
               this.processing = false;
               this.messageHandler.showSuccess('Terminology finalised successfully.');
               this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });

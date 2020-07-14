@@ -48,27 +48,30 @@ export class SemanticLinkHandlerService {
     private action(source, target, linkId, linkType, operation) {
 
         const resource = {
-            target: { id: target.id },
-            linkType,
-            domainType: this.findSemanticLinkType(source, target)
+          target: { id: target.id },
+          linkType,
+          domainType: this.findSemanticLinkType(source, target)
         };
 
-        if (source.domainType === 'Term') {
-
-            if (operation === 'POST') {
-                return this.resources.term.post(source.terminology, source.id, 'semanticLinks', { resource });
-            } else {
-                return this.resources.term.put(source.terminology, source.id, 'semanticLinks/' + linkId, { resource });
-            }
+        if (operation === 'POST') {
+          return this.resources.catalogueItem.saveSemanticLinks(source.domainType, source.id, resource);
         } else {
-            if (operation === 'POST') {
-              //  return this.resources.catalogueItem.post(source.id, 'semanticLinks', { resource });
-              return this.resources.catalogueItem.saveSemanticLinks(source.domainType, source.id, { resource });
-            } else {
-              //  return this.resources.catalogueItem.put(source.id, 'semanticLinks', linkId, { resource });
-              return this.resources.catalogueItem.updateSemanticLink(source.domainType, source.id, linkId, { resource });
-            }
+          return this.resources.catalogueItem.updateSemanticLink(source.domainType, source.id, linkId, resource)
         }
+
+        // if (source.domainType === 'Term') {
+        //     if (operation === 'POST') {
+        //       return this.resources.term.post(source.terminology, source.id, 'semanticLinks', { resource });
+        //     } else {
+        //       return this.resources.term.put(source.terminology, source.id, 'semanticLinks/' + linkId, { resource });
+        //     }
+        // } else {
+        //     if (operation === 'POST') {
+        //       return this.resources.catalogueItem.post(source.id, 'semanticLinks', { resource });
+        //     } else {
+        //       return this.resources.catalogueItem.put(source.id, 'semanticLinks', linkId, { resource });
+        //     }
+        // }
     }
 
     post = (source, target, linkType) => {

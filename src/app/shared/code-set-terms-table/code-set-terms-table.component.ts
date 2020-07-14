@@ -138,7 +138,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       sortType,
       filters
     };
-    return this.resources.codeSet.get(this.codeSet.id, 'terms', options);
+    return this.resources.codeSet.terms(this.codeSet.id, options);
+    // return this.resources.codeSet.get(this.codeSet.id, 'terms', options);
 
   }
 
@@ -182,7 +183,9 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
 
       return;
     }
-    this.resources.codeSet.delete(this.codeSet.id, 'terms/' + record.id, null, null)
+
+    this.resources.codeSet.removeTerm(this.codeSet.id, record.id)
+    // this.resources.codeSet.delete(this.codeSet.id, 'terms/' + record.id, null, null)
       .subscribe(() => {
         if (this.type === 'static') {
           this.records.splice($index, 1);
@@ -216,8 +219,9 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
 
     const allTermIds = [].concat(newTermIds).concat(currentTerms);
 
-
-    this.resources.codeSet.put(this.codeSet.id, null, {resource: {terms: allTermIds}}).subscribe((result) => {
+    this.resources.codeSet.update(this.codeSet.id, { terms: allTermIds })
+    // this.resources.codeSet.put(this.codeSet.id, null, {resource: {terms: allTermIds}})
+      .subscribe((result) => {
       this.messageHandler.showSuccess('Terms added successfully.');
       // this.mcTableHandler.fetchForDynamic();
       // $scope.mcDisplayRecords[index].success = false;
@@ -228,7 +232,10 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
         sortType: null,
         filters: null
       };
-      this.resources.codeSet.get(this.codeSet.id, 'terms', options).subscribe(data => {
+
+      this.resources.codeSet.terms(this.codeSet.id, options)
+      // this.resources.codeSet.get(this.codeSet.id, 'terms', options)
+      .subscribe(data => {
         this.records = data.body.items;
       });
       setTimeout(() => {

@@ -144,7 +144,9 @@ export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
 
   loadTerminologies() {
     this.reloading = true;
-    this.resourceService.terminology.get(null, null, null).subscribe(
+    this.resourceService.terminology.list()
+    // this.resourceService.terminology.get(null, null, null)
+      .subscribe(
       data => {
         this.terminologies = data.body.items;
         this.reloading = false;

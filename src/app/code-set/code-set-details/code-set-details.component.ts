@@ -217,10 +217,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     if (!this.securityHandler.isAdmin()) {
       return;
     }
-    const queryString = permanent ? 'permanent=true' : null;
+    // const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
 
-    this.resourcesService.codeSet.delete(this.result.id, null, queryString, null).subscribe(result => {
+    this.resourcesService.codeSet.remove(this.result.id, permanent)
+    // this.resourcesService.codeSet.delete(this.result.id, null, queryString, null)
+      .subscribe(result => {
         if (permanent) {
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
@@ -344,7 +346,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     };
 
     if (this.validateLabel(this.result.label)) {
-      from(this.resourcesService.codeSet.put(resource.id, null, {resource})).subscribe(result => {
+      from(
+        this.resourcesService.codeSet.update(resource.id, resource)
+        // this.resourcesService.codeSet.put(resource.id, null, {resource})
+        ).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
           }
@@ -405,7 +410,9 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(() => {
+        this.resourcesService.codeSet.finalise(this.result.id)
+        // this.resourcesService.codeSet.put(this.result.id, 'finalise', null)
+          .subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});

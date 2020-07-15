@@ -145,7 +145,9 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
       sortBy: 'emailAddress',
       sortType: 'asc'
     };
-    return this.resources.catalogueUser.get(null, 'search', options);
+
+    return this.resources.catalogueUser.search(options);
+    // return this.resources.catalogueUser.get(null, 'search', options);
   };
 
   onUserSelect = (select, record) => {

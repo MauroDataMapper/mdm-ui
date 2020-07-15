@@ -131,7 +131,7 @@ export class DataClassComponent implements OnInit {
 
   dataClassDetails(dataModelId: any, parentDataClassId, id) {
     this.resourcesService.dataClass
-      .get(dataModelId, parentDataClassId, id, null, null)
+      .getChildDataClass(dataModelId, parentDataClassId, id)
       .subscribe((result: { body: DataClassResult }) => {
         this.dataClass = result.body;
         this.dataClass.parentDataModel = dataModelId;

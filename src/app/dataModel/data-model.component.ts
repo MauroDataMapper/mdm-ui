@@ -24,6 +24,7 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { DataModelResult } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-data-model',
@@ -86,7 +87,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
 
   dataModelDetails(id: any) {
     this.resourcesService.dataModel
-      .get(id, null, null)
+      .get(id)
       .subscribe((result: { body: DataModelResult }) => {
         this.dataModel = result.body;
 
@@ -107,8 +108,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
   }
 
   DataModelPermissions(id: any) {
-    this.resourcesService.dataModel
-      .get(id, 'permissions', null)
+    this.resourcesService.security.permissions(DOMAIN_TYPE.DataModel, id)
+    // this.resourcesService.dataModel
+    //   .get(id, 'permissions', null)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach( attrname => {
           this.dataModel[attrname] = permissions.body[attrname];

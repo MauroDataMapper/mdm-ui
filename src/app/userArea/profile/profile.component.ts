@@ -70,7 +70,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Get the user details data
   userDetails() {
-    this.resourcesService.catalogueUser.get(this.currentUser.id, null, null).subscribe((result: { body: UserDetailsResult }) => {
+    this.resourcesService.catalogueUser.get(this.currentUser.id)
+    // this.resourcesService.catalogueUser.get(this.currentUser.id, null, null)
+      .subscribe((result: { body: UserDetailsResult }) => {
       this.user = result.body;
 
       this.messageService.sendUserDetails(this.user);
@@ -100,18 +102,19 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Saves the selected profile picture
   public savePicture() {
-    const imageData = { image: this.imageThumb, type: 'png' };
+    // const imageData = { image: this.imageThumb, type: 'png' };
 
-    from(this.resourcesService.catalogueUser.put(this.user.id, 'image', { resource: imageData })).subscribe(() => {
-        this.messageHandler.showSuccess('User profile image updated successfully.');
-        this.imageVersion++;
-        this.isImageLoaded = null;
-        this.userDetails();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem updating the User Details.', error);
-      }
-    );
+    // from(this.resourcesService.catalogueUser.put(this.user.id, 'image', { resource: imageData })).subscribe(() => {
+    //     this.messageHandler.showSuccess('User profile image updated successfully.');
+    //     this.imageVersion++;
+    //     this.isImageLoaded = null;
+    //     this.userDetails();
+    //   },
+    //   error => {
+    //     this.messageHandler.showError('There was a problem updating the User Details.', error);
+    //   }
+    // );
+    console.error('Not implemented');
   }
 
   // When a file is selected
@@ -133,16 +136,17 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Remove the profile image
   public removeProfileImage() {
-    from(this.resourcesService.catalogueUser.delete(this.user.id, 'image')).subscribe(() => {
-        this.messageHandler.showSuccess('User profile image removed successfully.');
-        this.imageVersion++;
-        this.isImageLoaded = null;
-        this.userDetails();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem removing the user profile image.', error);
-      }
-    );
+    // from(this.resourcesService.catalogueUser.delete(this.user.id, 'image')).subscribe(() => {
+    //     this.messageHandler.showSuccess('User profile image removed successfully.');
+    //     this.imageVersion++;
+    //     this.isImageLoaded = null;
+    //     this.userDetails();
+    //   },
+    //   error => {
+    //     this.messageHandler.showError('There was a problem removing the user profile image.', error);
+    //   }
+    // );
+    console.error('Not implemented');
   }
 
   // Cancel the add image process

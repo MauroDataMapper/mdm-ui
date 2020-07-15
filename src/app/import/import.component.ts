@@ -159,7 +159,7 @@ export class ImportComponent implements OnInit {
     });
 
     this.resources.dataModel
-      .import(`${namespace}/${name}/${version}`, this.formData)
+      .importModels(namespace, name, version, this.formData)
       .subscribe(
         (result: any) => {
           this.importingInProgress = false;

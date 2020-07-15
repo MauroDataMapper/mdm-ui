@@ -112,7 +112,9 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).subscribe(result => {
+    this.resources.dataClass.listChildDataClasses(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId)
+    // this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null)
+      .subscribe(result => {
         // result.body.breadcrumbs.push(Object.assign([],result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
@@ -120,7 +122,9 @@ export class DataElementMainComponent implements OnInit {
         this.changeRef.detectChanges();
       });
 
-    this.resources.dataModel.get(this.parentDataModelId, 'dataTypes').subscribe(result => {
+    this.resources.dataType.list(this.parentDataModelId)
+    // this.resources.dataModel.get(this.parentDataModelId, 'dataTypes')
+      .subscribe(result => {
         this.model.allDataTypesCount = result.count;
         if (result.count === 0) {
           this.model.showNewInlineDataType = true;
@@ -213,13 +217,16 @@ export class DataElementMainComponent implements OnInit {
         }))
       };
 
-      const deferred = this.resources.dataModel.post(
-        this.parentDataModelId,
-        'dataTypes',
-        { resource: res }
-      );
+      // const deferred = this.resources.dataModel.post(
+      //   this.parentDataModelId,
+      //   'dataTypes',
+      //   { resource: res }
+      // );
 
-      deferred.subscribe(
+      // deferred
+
+      this.resources.dataType.save(this.parentDataModelId, res)
+      .subscribe(
         response => {
           dataType = response.body;
           this.saveDataElement(response.body);
@@ -272,13 +279,15 @@ export class DataElementMainComponent implements OnInit {
       }))
     };
 
-    const deferred = this.resources.dataModel.post(
-      this.parentDataModelId,
-      'dataTypes',
-      { resource }
-    );
+    // const deferred = this.resources.dataModel.post(
+    //   this.parentDataModelId,
+    //   'dataTypes',
+    //   { resource }
+    // );
 
-    deferred.subscribe(
+    // deferred
+    this.resources.dataType.save(this.parentDataModelId, resource)
+    .subscribe(
       response => {
         this.datatype = response.body;
       },
@@ -315,15 +324,17 @@ export class DataElementMainComponent implements OnInit {
     this.getMultiplicity(resource, 'minMultiplicity');
     this.getMultiplicity(resource, 'maxMultiplicity');
 
-    let deferred;
-    deferred = this.resources.dataClass.post(
-      this.parentDataModelId,
-      this.parentDataClassId,
-      'dataElements',
-      { resource }
-    );
+    // let deferred;
+    // deferred = this.resources.dataClass.post(
+    //   this.parentDataModelId,
+    //   this.parentDataClassId,
+    //   'dataElements',
+    //   { resource }
+    // );
 
-    deferred.subscribe(
+    // deferred
+    this.resources.dataElement.save(this.parentDataModelId, this.parentDataClassId, resource)
+    .subscribe(
       response => {
         this.messageHandler.showSuccess('Data Element saved successfully.');
 

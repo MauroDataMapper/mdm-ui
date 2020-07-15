@@ -202,7 +202,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       filters
     };
 
-    return this.resources.dataModel.get(this.parent.id, 'dataTypes', options);
+    return this.resources.dataType.list(this.parent.id, options);
+    // return this.resources.dataModel.get(this.parent.id, 'dataTypes', options);
   };
 
   onChecked = () => {

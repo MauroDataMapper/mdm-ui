@@ -218,7 +218,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   delete() {
-    this.resourcesService.dataClass.delete(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
+    this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
       this.messageHandler.showSuccess('Data Class deleted successfully.');
       this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
       this.broadcastSvc.broadcast('$reloadFoldersTree');

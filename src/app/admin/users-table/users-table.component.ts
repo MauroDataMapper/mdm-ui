@@ -96,7 +96,8 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   ): Observable<any> {
     const options = { pageSize, pageIndex, sortBy, sortType, filters };
 
-    return this.resources.catalogueUser.get(null, null, options);
+    return this.resources.catalogueUser.list(options);
+    // return this.resources.catalogueUser.get(null, null, options);
   }
 
   editUser(row) {
@@ -116,7 +117,10 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   };
 
   resetPassword(row) {
-    from(this.resources.catalogueUser.put(row.id, 'adminPasswordReset', null)).subscribe(() => {
+    from(
+      this.resources.catalogueUser.adminPasswordReset(row.id, null)
+      // this.resources.catalogueUser.put(row.id, 'adminPasswordReset', null)
+    ).subscribe(() => {
         this.messageHandler.showSuccess('Reset password email sent successfully!');
       }, error => {
         this.messageHandler.showError('There was a problem sending reset password email.', error);
@@ -126,7 +130,10 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
 
   toggleDeactivate(row) {
     row.disabled = !row.disabled;
-    from(this.resources.catalogueUser.put(row.id, null, { resource: row })).subscribe(() => {
+    from(
+      this.resources.catalogueUser.update(row.id, row)
+      //this.resources.catalogueUser.put(row.id, null, { resource: row })
+    ).subscribe(() => {
         this.messageHandler.showSuccess('User details updated successfully.');
         this.broadcastSvc.broadcast('pendingUserUpdated');
       }, error => {

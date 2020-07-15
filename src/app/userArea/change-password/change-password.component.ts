@@ -66,7 +66,10 @@ export class ChangePasswordComponent implements OnInit {
       oldPassword: this.oldPassword,
       newPassword: this.newPassword
     };
-    this.resourcesService.catalogueUser.put(this.currentUser.id, 'changePassword', { resource: body }).subscribe(() => {
+
+    this.resourcesService.catalogueUser.changePassword(this.currentUser.id, body)
+    // this.resourcesService.catalogueUser.put(this.currentUser.id, 'changePassword', { resource: body })
+      .subscribe(() => {
         this.messageHandler.showSuccess('Password updated successfully.');
         this.newPassword = '';
         this.oldPassword = '';

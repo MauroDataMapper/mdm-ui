@@ -59,7 +59,10 @@ export class RegisterModalComponent implements OnInit {
       password: this.password,
       confirmPassword: this.confirmPassword
     };
-    this.resources.catalogueUser.post(null, null, { resource }).subscribe(() => {
+
+    this.resources.catalogueUser.save(resource)
+    // this.resources.catalogueUser.post(null, null, { resource })
+      .subscribe(() => {
         this.dialogRef.close();
         this.registerSuccess();
       },

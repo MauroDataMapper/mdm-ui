@@ -127,49 +127,80 @@ export class ContentSearchHandlerService {
 
                 });
         } else if (contextElement.domainType === 'DataModel') {
-            return this.resources.dataModel.post(contextElement.id, 'search', {
-                resource: {
-                    searchTerm: searchText,
-                    limit,
-                    offset,
-                    domainTypes,
-                    labelOnly,
-                    dataModelTypes,
+            return this.resources.dataModel.search(contextElement.id, {
+                  searchTerm: searchText,
+                  limit,
+                  offset,
+                  domainTypes,
+                  labelOnly,
+                  dataModelTypes,
 
-                    lastUpdatedAfter,
-                    lastUpdatedBefore,
+                  lastUpdatedAfter,
+                  lastUpdatedBefore,
 
-                    createdAfter,
-                    createdBefore,
-                },
+                  createdAfter,
+                  createdBefore,
+                  pageSize: limit,
+                  pageIndex: offset * limit
+              });
+            // return this.resources.dataModel.post(contextElement.id, 'search', {
+            //     resource: {
+            //         searchTerm: searchText,
+            //         limit,
+            //         offset,
+            //         domainTypes,
+            //         labelOnly,
+            //         dataModelTypes,
 
+            //         lastUpdatedAfter,
+            //         lastUpdatedBefore,
+
+            //         createdAfter,
+            //         createdBefore,
+            //     },
+
+            //     pageSize: limit,
+            //     pageIndex: offset * limit
+
+            // });
+        } else if (contextElement.domainType === 'DataClass') {
+            return this.resources.dataClass.search(contextElement.dataModel, contextElement.id, {
+                searchTerm: searchText,
+                limit,
+                offset,
+                domainTypes,
+                labelOnly,
+                dataModelTypes,
+
+                lastUpdatedAfter,
+                lastUpdatedBefore,
+
+                createdAfter,
+                createdBefore,
                 pageSize: limit,
                 pageIndex: offset * limit
-
             });
-        } else if (contextElement.domainType === 'DataClass') {
+            // return this.resources.dataClass.post(contextElement.dataModel,
+            //     contextElement.id,
+            //     'search',
+            //     {
+            //         resource: {
+            //             searchTerm: searchText,
+            //             limit,
+            //             offset,
+            //             domainTypes,
+            //             labelOnly,
+            //             dataModelTypes,
 
-            return this.resources.dataClass.post(contextElement.dataModel,
-                contextElement.id,
-                'search',
-                {
-                    resource: {
-                        searchTerm: searchText,
-                        limit,
-                        offset,
-                        domainTypes,
-                        labelOnly,
-                        dataModelTypes,
+            //             lastUpdatedAfter,
+            //             lastUpdatedBefore,
 
-                        lastUpdatedAfter,
-                        lastUpdatedBefore,
-
-                        createdAfter,
-                        createdBefore,
-                    },
-                    pageSize: limit,
-                    pageIndex: offset * limit
-                });
+            //             createdAfter,
+            //             createdBefore,
+            //         },
+            //         pageSize: limit,
+            //         pageIndex: offset * limit
+            //     });
         } else if (contextElement.domainType === 'Terminology') {
             return this.resources.terminology.terms.search(contextElement.id, {
                           search: encodeURIComponent(searchText),

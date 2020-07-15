@@ -139,11 +139,12 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       filters
     };
 
-    return this.resourceService.dataModel.get(
-      this.model.copyFromDataModel[0].id,
-      'dataTypes',
-      options
-    );
+    return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
+    // return this.resourceService.dataModel.get(
+    //   this.model.copyFromDataModel[0].id,
+    //   'dataTypes',
+    //   options
+    // );
   }
 
   onLoad() {
@@ -403,15 +404,17 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.model.selectedDataTypes.forEach((dc: any) => {
       promise = promise
         .then((result: any) => {
-          const action = 'dataTypes/' + dc.dataModel + '/' + dc.id;
+          // const action = 'dataTypes/' + dc.dataModel + '/' + dc.id;
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
-          return this.resourceService.dataModel
-            .post(
-              this.model.parent.id,
-              action,
-              null
-            )
+
+          return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.dataModel, dc.id, null)
+          // return this.resourceService.dataModel
+          //   .post(
+          //     this.model.parent.id,
+          //     action,
+          //     null
+          //   )
             .toPromise();
 
         })
@@ -439,10 +442,11 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.isProcessComplete = false;
 
     this.model.selectedDataTypes.forEach(async (dt: any) => {
-      const action = 'dataTypes/' + dt.dataModel + '/' + dt.id;
+      // const action = 'dataTypes/' + dt.dataModel + '/' + dt.id;
 
-      await this.resourceService.dataModel
-        .post(this.model.parent.id, action, null)
+      await this.resourceService.dataType.copyDataType(this.model.parent.id, dt.dataModel, dt.id, null)
+      // await this.resourceService.dataModel
+        // .post(this.model.parent.id, action, null)
         .toPromise()
         .then(
           result => {

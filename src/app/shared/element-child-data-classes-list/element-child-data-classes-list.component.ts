@@ -144,10 +144,12 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     const options = { pageSize, pageIndex, sortBy, sortType, filters };
 
     if (!this.parentDataClass.id) {
-      return this.resources.dataModel.get(this.parentDataModel.id, 'dataClasses', options);
+      return this.resources.dataClass.list(this.parentDataModel.id, options);
+      // return this.resources.dataModel.get(this.parentDataModel.id, 'dataClasses', options);
     }
 
-    return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'dataClasses', options);
+    return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
+    // return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'dataClasses', options);
   }
 
   onChecked = () => {

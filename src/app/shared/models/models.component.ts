@@ -28,7 +28,7 @@ import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-
 import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
@@ -103,7 +103,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.reloading = false;
             self.levels.current = 1;
           },
-          error => {
+          () => {
             this.reloading = false;
           }
         );
@@ -121,7 +121,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.reloading = false;
             self.levels.current = 1;
           },
-          error => {
+          () => {
             this.reloading = false;
           }
         );
@@ -278,7 +278,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onNodeDbClick = node => {
     // if the element if a dataModel, load it
-    if (['DataModel', 'Terminology'].indexOf(node.domainType) === -1) {
+    if ([DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(node.domainType) === -1) {
       return;
     }
     this.levels.focusedElement(node);
@@ -292,7 +292,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   loadModelsToCompare = dataModel => {
-    this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'}).subscribe(result => {
+    this.resources.catalogueItem.listSemanticLinks(dataModel.domainType, dataModel.id, { all: true })
+    // this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'})
+      .subscribe(result => {
       const compareToList = [];
       const semanticLinks = result.body;
       semanticLinks.items.forEach(link => {
@@ -304,7 +306,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onFolderAddModal = () => {
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
       const dialog = this.dialog.open(InputModalComponent, {
         data: {
           inputValue: this.folder,

@@ -199,9 +199,11 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
           if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
+            return this.resources.dataClass.copyChildDataClass(this.model.parent.dataModel, this.model.parent.id, dc.dataModel, dc.id, null);
+            // return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
           } else {
-            return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
+            return this.resources.dataClass.copyDataClass(this.model.parent.dataModel, dc.dataModel, dc.id, null);
+            // return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
           }
         }).catch(error => {
           this.failCount++;

@@ -90,7 +90,9 @@ export class DataClassMainComponent implements AfterViewInit {
     step2.invalid = true;
 
     if (this.parentDataClassId) {
-      this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).toPromise().then(result => {
+      this.resources.dataClass.getChildDataClass(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId)
+      // this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null)
+        .toPromise().then(result => {
         result.body.breadcrumbs.push(Object.assign([], result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
@@ -175,18 +177,20 @@ export class DataClassMainComponent implements AfterViewInit {
 
     let deferred;
     if (this.model.parent.domainType === 'DataClass') {
-      deferred = this.resources.dataClass.post(
-        this.model.parent.dataModel,
-        this.model.parent.id,
-        'dataClasses',
-        { resource }
-      );
+      deferred = this.resources.dataClass.addChildDataClass(this.model.parent.dataModel, this.model.parent.id, resource);
+      // this.resources.dataClass.post(
+      //   this.model.parent.dataModel,
+      //   this.model.parent.id,
+      //   'dataClasses',
+      //   { resource }
+      // );
     } else {
-      deferred = this.resources.dataModel.post(
-        this.model.parent.id,
-        'dataClasses',
-        { resource }
-      );
+      deferred = this.resources.dataClass.save(this.model.parent.id, resource);
+      // this.resources.dataModel.post(
+      //   this.model.parent.id,
+      //   'dataClasses',
+      //   { resource }
+      // );
     }
 
     deferred.subscribe(response => {

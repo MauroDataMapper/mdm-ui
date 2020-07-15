@@ -283,7 +283,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
 
   delete() {
     this.resourcesService.dataClass
-      .delete(
+      .removeChildDataClass(
         this.result.parentDataModel,
         this.result.parentDataClass,
         this.result.id

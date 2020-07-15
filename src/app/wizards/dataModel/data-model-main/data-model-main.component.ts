@@ -122,7 +122,9 @@ export class DataModelMainComponent implements OnInit {
       };
     }
 
-    this.resources.dataModel.post(null, null, {resource, queryStringParams}).subscribe(response => {
+    this.resources.dataModel.addToFolder(this.parentFolderId, resource)
+    // this.resources.dataModel.post(null, null, {resource, queryStringParams})
+      .subscribe(response => {
           this.messageHandler.showSuccess('Data Model saved successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.stateHandler.Go('dataModel', { id: response.body.id }, { reload: true, location: true });

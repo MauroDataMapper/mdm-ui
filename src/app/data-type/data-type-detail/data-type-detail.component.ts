@@ -132,7 +132,9 @@ export class DataTypeDetailComponent implements OnInit {
       domainType: this.mcDataTypeObject.domainType,
       classifiers: this.mcDataTypeObject.classifiers.map(cls => ({id: cls.id}))
     };
-    this.resources.dataType.put(this.mcParentDataModel.id, this.mcDataTypeObject.id, null, {resource}).subscribe((res) => {
+    this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource)
+    // this.resources.dataType.put(this.mcParentDataModel.id, this.mcDataTypeObject.id, null, {resource})
+      .subscribe((res) => {
           const result = res.body;
           if (this.afterSave) {
             this.afterSave(resource);
@@ -163,7 +165,7 @@ export class DataTypeDetailComponent implements OnInit {
   };
 
   delete = () => {
-    this.resources.dataType.delete(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe(() => {
+    this.resources.dataType.remove(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe(() => {
           this.messageHandler.showSuccess('Data Type deleted successfully.');
           this.stateHandler.Go('dataModel', { id: this.mcParentDataModel.id }, { reload: true, location: true });
         }, error => {
@@ -178,7 +180,9 @@ export class DataTypeDetailComponent implements OnInit {
     }
 
     // check if it has DataElements
-    this.resources.dataType.get(this.mcParentDataModel.id, this.mcDataTypeObject.id, 'dataElements', null).subscribe((res) => {
+    this.resources.dataElement.listWithDataType(this.mcParentDataModel.id, this.mcDataTypeObject.id)
+    // this.resources.dataType.get(this.mcParentDataModel.id, this.mcDataTypeObject.id, 'dataElements', null)
+      .subscribe((res) => {
         const result = res.body;
         const dataElementsCount = result.count;
 

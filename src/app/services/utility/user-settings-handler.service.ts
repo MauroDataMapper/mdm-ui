@@ -55,8 +55,9 @@ export class UserSettingsHandlerService {
   initUserSettings() {
 
     const promise = new Promise((resolve, reject) => {
-    this.resources.catalogueUser
-      .get(localStorage.getItem('userId'), 'userPreferences', null)
+    this.resources.catalogueUser.userPreferences(localStorage.getItem('userId'))
+    // this.resources.catalogueUser
+    //   .get(localStorage.getItem('userId'), 'userPreferences', null)
       .subscribe(
         res => {
           const result = res.body;
@@ -110,13 +111,14 @@ export class UserSettingsHandlerService {
   }
 
   saveOnServer(): Observable<any> {
-    const defaultSettings = this.getUserSettings();
-    const settingsStr = JSON.stringify(defaultSettings);
-    return this.resources.catalogueUser.put(
-      localStorage.getItem('userId'),
-      'userPreferences',
-      { resource: settingsStr, contentType: 'text/plain' }
-    );
+    return this.resources.catalogueUser.updateUserPreferences(localStorage.getItem('userId'), this.getUserSettings());
+    // const defaultSettings = this.getUserSettings();
+    // const settingsStr = JSON.stringify(defaultSettings);
+    // return this.resources.catalogueUser.put(
+    //   localStorage.getItem('userId'),
+    //   'userPreferences',
+    //   { resource: settingsStr, contentType: 'text/plain' }
+    // );
 
   }
 

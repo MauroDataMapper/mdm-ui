@@ -132,21 +132,23 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
     };
 
     if (this.parentDataModel && this.parentDataClass) {
-      return this.resources.dataClass.get(
-        this.parentDataModel.id,
-        null,
-        this.parentDataClass.id,
-        'dataElements',
-        options
-      );
+      return this.resources.dataElement.list(this.parentDataModel.id, this.parentDataClass.id, options);
+      // return this.resources.dataClass.get(
+      //   this.parentDataModel.id,
+      //   null,
+      //   this.parentDataClass.id,
+      //   'dataElements',
+      //   options
+      // );
     }
     if (this.parentDataModel && this.parentDataType) {
-      return this.resources.dataType.get(
-        this.parentDataModel.id,
-        this.parentDataType.id,
-        'dataElements',
-        options
-      );
+      return this.resources.dataElement.listWithDataType(this.parentDataModel.id, this.parentDataType.id, options);
+      // return this.resources.dataType.get(
+      //   this.parentDataModel.id,
+      //   this.parentDataType.id,
+      //   'dataElements',
+      //   options
+      // );
     }
   };
 

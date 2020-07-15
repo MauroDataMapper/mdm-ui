@@ -53,7 +53,8 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             parentClassId = this.classes[classId][this.classes[classId].length - 2].id;
           }
           classGetters.push(
-            this.resourcesService.dataClass.get(dataModelId, null, classId, 'dataElements', options)
+            this.resourcesService.dataClass.get(dataModelId, classId, options)
+            // this.resourcesService.dataClass.get(dataModelId, null, classId, 'dataElements', options)
           );
         });
         return forkJoin(classGetters);

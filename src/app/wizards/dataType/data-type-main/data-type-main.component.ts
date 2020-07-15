@@ -173,11 +173,12 @@ export class DataTypeMainComponent implements OnInit {
       })
     };
 
-    const deferred = this.resources.dataModel.post(
-      this.model.parent.id,
-      'dataTypes',
-      { resource }
-    );
+    const deferred = this.resources.dataType.save(this.model.parent.id, resource);
+    // this.resources.dataModel.post(
+    //   this.model.parent.id,
+    //   'dataTypes',
+    //   { resource }
+    // );
 
     deferred.subscribe(
       response => {

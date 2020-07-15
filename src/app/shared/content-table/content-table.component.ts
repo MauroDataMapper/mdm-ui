@@ -155,7 +155,9 @@ export class ContentTableComponent implements AfterViewInit {
             sortType,
             filters
         };
-        return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'content', options);
+
+        return this.resources.dataClass.content(this.parentDataModel.id, this.parentDataClass.id, options);
+        // return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'content', options);
     }
 
     onChecked = () => {

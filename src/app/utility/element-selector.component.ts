@@ -374,7 +374,9 @@ export class ElementSelectorComponent implements OnInit {
             sortBy: 'label',
             sortType: 'asc'
         };
-        return this.resourceService.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
+
+        return this.resourceService.dataElement.list(dataClass.dataModel, dataClass.id);
+        // return this.resourceService.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
     }
     loadAllContextElements(currentContext, selectedType, pageSize, offset) {
 
@@ -512,11 +514,13 @@ export class ElementSelectorComponent implements OnInit {
       sortBy: 'label',
       sortType: 'asc'
     };
-    return this.resourceService.dataModel.get(
-      dataModel.id,
-      'dataTypes',
-      options
-    );
+
+    return this.resourceService.dataType.list(dataModel.id, options);
+    // return this.resourceService.dataModel.get(
+    //   dataModel.id,
+    //   'dataTypes',
+    //   options
+    // );
   }
   searchInTree(treeSearchDomainType) {
     if (this.formData.treeSearchText.trim().length === 0) {

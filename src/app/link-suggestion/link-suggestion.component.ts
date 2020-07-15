@@ -140,7 +140,7 @@ export class LinkSuggestionComponent implements OnInit {
   setSourceDataElement = (sourceDMId, sourceDCId, sourceDEId) => {
     this.model.loadingSource = true;
     this.resources.dataElement
-      .get(sourceDMId, sourceDCId, sourceDEId, null, null)
+      .get(sourceDMId, sourceDCId, sourceDEId)
       .subscribe(result => {
         const data = result.body;
         this.model.source = data;

@@ -102,7 +102,9 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       sortType
     };
     options.filters += '&disabled=false';
-    return this.resourcesService.catalogueUser.get(null, 'pending', options);
+
+    return this.resourcesService.catalogueUser.pending(options);
+    // return this.resourcesService.catalogueUser.get(null, 'pending', options);
   }
 
   pendingUsersFetchold(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
@@ -114,7 +116,9 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       sortType
     };
     options.filters += '&disabled=false';
-    this.resourcesService.catalogueUser.get(null, 'pending', options).subscribe(resp => {
+    this.resourcesService.catalogueUser.pending(options)
+    // this.resourcesService.catalogueUser.get(null, 'pending', options)
+      .subscribe(resp => {
         this.records = resp.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
@@ -192,7 +196,9 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   }
 
   approveUser = (row) => {
-    this.resourcesService.catalogueUser.put(row.id, 'approveRegistration', {}).subscribe(() => {
+    this.resourcesService.catalogueUser.approve(row.id, null)
+    // this.resourcesService.catalogueUser.put(row.id, 'approveRegistration', {})
+      .subscribe(() => {
         this.messageHandler.showSuccess('User approved successfully');
         this.broadcastSvc.broadcast('pendingUserUpdated');
         this.pendingUsersFetch().subscribe(data => {
@@ -208,7 +214,9 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   };
 
   rejectUser = (row) => {
-    this.resourcesService.catalogueUser.put(row.id, 'rejectRegistration', {}).subscribe(() => {
+    this.resourcesService.catalogueUser.reject(row.id, null)
+    // this.resourcesService.catalogueUser.put(row.id, 'rejectRegistration', {})
+      .subscribe(() => {
         this.messageHandler.showSuccess('User rejected successfully');
         this.broadcastSvc.broadcast('pendingUserUpdated');
         this.pendingUsersFetch().subscribe(data => {

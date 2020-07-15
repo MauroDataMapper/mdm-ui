@@ -112,31 +112,32 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     this.changeRef.detectChanges();
   }
     public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
-        // this.isLoading = true;
+      // this.isLoading = true;
 
-        this.options = {
-            pageSize,
-            pageIndex: offset,
-            sortBy,
-            sortType,
-            filters
-        };
-        this.elementMap = this.elementTypeService.getBaseWithUserTypes();
-        let resource = this.elementMap.find(x => x.id === this.parentType);
+      this.options = {
+          pageSize,
+          pageIndex: offset,
+          sortBy,
+          sortType,
+          filters
+      };
+      this.elementMap = this.elementTypeService.getBaseWithUserTypes();
+      let resource = this.elementMap.find(x => x.id === this.parentType);
 
-        for (const type in this.elementMap) {
-            if (this.elementMap[type].id === this.parentTypeVal) {
-                resource = this.elementMap[type];
-                break;
-            }
-        }
-
-        if (resource) {
-        return this.resourcesService[resource.resourceName].get(this.parentIdVal, 'edits', this.options
-        );
-      } else {
-        return this.resourcesService.dataModel.get(this.parent, 'edits', this.options);
+      for (const type in this.elementMap) {
+          if (this.elementMap[type].id === this.parentTypeVal) {
+              resource = this.elementMap[type];
+              break;
           }
+      }
+
+      if (resource) {
+        return this.resourcesService.edit.status(resource.domainType, resource.id, this.options);
+        // return this.resourcesService[resource.resourceName].get(this.parentIdVal, 'edits', this.options);
+      } else {
+        return this.resourcesService.edit.status(this.parent.domainType, this.parent.id, this.options);
+        // return this.resourcesService.dataModel.get(this.parent, 'edits', this.options);
+      }
         // if (resource) {
         //    return this.resourcesService[resource.resourceName].get(this.parentIdVal, 'edits', this.options
         //     ).subscribe(result => {

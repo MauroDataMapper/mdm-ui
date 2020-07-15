@@ -87,7 +87,8 @@ export class SharedService {
   };
 
   pendingUsersCount = () => {
-    return this.resources.catalogueUser.get(null, 'pending', { filters: 'disabled=false' });
+    return this.resources.catalogueUser.pendingCount({ filters: 'disabled=false' });
+    // return this.resources.catalogueUser.get(null, 'pending', { filters: 'disabled=false' });
   }
 
 }

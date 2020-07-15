@@ -104,7 +104,10 @@ export class NewVersionDataModelComponent implements OnInit {
         copyDataFlows: this.form.copyDataFlows
       };
       this.processing = true;
-      this.resources.dataModel.put(this.dataModel.id, 'newVersion', { resource }).subscribe(
+
+      this.resources.dataModel.newModelVersion(this.dataModel.id, resource)
+      // this.resources.dataModel.put(this.dataModel.id, 'newVersion', { resource })
+        .subscribe(
           response => {
             this.processing = false;
             this.messageHandler.showSuccess('New Data Model version created successfully.');
@@ -118,7 +121,10 @@ export class NewVersionDataModelComponent implements OnInit {
     } else if (this.versionType === 'newDocumentVersion') {
       const resources = {moveDataFlows: this.form.moveDataFlows};
       this.processing = true;
-      this.resources.dataModel.put(this.dataModel.id, 'newDocumentationVersion', { resource: resources }).subscribe(
+
+      this.resources.dataModel.newDocumentationVersion(this.dataModel.id, resources)
+      // this.resources.dataModel.put(this.dataModel.id, 'newDocumentationVersion', { resource: resources })
+        .subscribe(
           response => {
             this.processing = false;
             this.messageHandler.showSuccess('New Document Model version created successfully.');

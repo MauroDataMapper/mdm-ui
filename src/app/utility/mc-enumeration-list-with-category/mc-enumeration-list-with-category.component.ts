@@ -172,10 +172,11 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         category: newCategory
       };
 
-      this.resourcesService.enumerationValues
-        .put(this.parent.dataModel, this.parent.id, enumId, null, {
-          resource
-        })
+      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.dataModel, this.parent.id, enumId, resource)
+      // this.resourcesService.enumerationValues
+      //   .put(this.parent.dataModel, this.parent.id, enumId, null, {
+      //     resource
+      //   })
         .subscribe(
           () => {
             this.reloadRecordsFromServer().subscribe(data => {
@@ -419,8 +420,9 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
       this.showRecords([].concat(this.allRecords));
     } else {
-      this.resourcesService.enumerationValues
-        .delete(this.parent.dataModel, this.parent.id, record.id)
+      this.resourcesService.enumerationValues.removeFromEnumeratedType(this.parent.dataModel, this.parent.id, record.id)
+      // this.resourcesService.enumerationValues
+      //   .delete(this.parent.dataModel, this.parent.id, record.id)
         .subscribe(() => {
           this.messageHandler.showSuccess('Enumeration deleted successfully.');
           // reload all enums
@@ -510,10 +512,11 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
     // in edit mode, we save them here
     if (record.id && record.id.indexOf('temp-') !== 0) {
-      this.resourcesService.enumerationValues
-        .put(this.parent.dataModel, this.parent.id, record.id, null, {
-          resource
-        })
+      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.dataModel, this.parent.id, record.id, resource)
+      // this.resourcesService.enumerationValues
+      //   .put(this.parent.dataModel, this.parent.id, record.id, null, {
+      //     resource
+      //   })
         .subscribe(() => {
           if (this.afterSave) {
             this.afterSave.emit(resource);
@@ -535,8 +538,9 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
           );
         });
     } else {
-      this.resourcesService.enumerationValues
-        .post(this.parent.dataModel, this.parent.id, {resource})
+      this.resourcesService.enumerationValues.saveToEnumeratedType(this.parent.dataModel, this.parent.id, resource)
+      // this.resourcesService.enumerationValues
+      //   .post(this.parent.dataModel, this.parent.id, {resource})
         .subscribe(
           () => {
             this.reloadRecordsFromServer().subscribe(data => {
@@ -567,12 +571,13 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   }
 
   reloadRecordsFromServer() {
-    return this.resourcesService.dataType.get(
-      this.parent.dataModel,
-      this.parent.id,
-      null,
-      null
-    );
+    return this.resourcesService.dataType.get(this.parent.dataModel, this.parent.id);
+    // return this.resourcesService.dataType.get(
+    //   this.parent.dataModel,
+    //   this.parent.id,
+    //   null,
+    //   null
+    // );
   }
 
   groupSortClicked() {

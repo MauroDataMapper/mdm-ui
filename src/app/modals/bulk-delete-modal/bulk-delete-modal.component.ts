@@ -61,7 +61,9 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
   getData = () => {
     this.data.dataElementIdLst.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id)
+        // this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null)
+          .subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -69,7 +71,9 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
           this.messageHandler.showError('There was a problem getting the Data Elements.', err);
         });
       } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id)
+        // this.resources.dataClass.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null)
+          .subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -105,13 +109,13 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
             hasError: false
           };
           if (item.domainType === 'DataClass') {
-            return this.resources.dataClass.delete(item.dataModel, item.parentDataClass, item.id).toPromise();
+            return this.resources.dataClass.removeChildDataClass(item.dataModel, item.parentDataClass, item.id).toPromise();
           }
           if (item.domainType === 'DataElement') {
-            return this.resources.dataElement.delete(item.dataModel, item.dataClass, item.id).toPromise();
+            return this.resources.dataElement.remove(item.dataModel, item.dataClass, item.id).toPromise();
           }
           if (item.domainType === 'DataType') {
-            return this.resources.dataType.delete(item.dataModel, item.id).toPromise();
+            return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
           }
         }).catch(() => {
           this.failCount++;

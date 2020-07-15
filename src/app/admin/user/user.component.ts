@@ -74,7 +74,7 @@ export class UserComponent implements OnInit {
     this.id = this.stateSvc.params.id;
 
     if (this.id) {
-      this.resourcesService.catalogueUser.get(this.id, null, null).subscribe(res => {
+      this.resourcesService.catalogueUser.get(this.id).subscribe(res => {
           const user = res.body;
           this.user = user;
           this.title.setTitle('Admin - Edit User');

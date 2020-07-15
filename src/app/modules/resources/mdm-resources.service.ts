@@ -42,7 +42,8 @@ import {
   MdmCodeSetResource,
   MdmFacetsResource,
   MdmMetadataResource,
-  MdmTreeItemResource
+  MdmTreeItemResource,
+  MdmEditResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -83,4 +84,5 @@ export class MdmResourcesService {
   importer = new MdmImporterResource(this.resourcesConfig, this.restHandler);
   codeSet = new MdmCodeSetResource(this.resourcesConfig, this.restHandler);
   provider = new MdmProviderResource(this.resourcesConfig, this.restHandler);
+  edit = new MdmEditResource(this.resourcesConfig, this.restHandler);
 }

@@ -255,7 +255,9 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
 
-    this.resourcesService.dataModel.delete(this.result.id, null, queryString, null).subscribe(() => {
+    this.resourcesService.dataModel.remove(this.result.id, { permanent })
+    // this.resourcesService.dataModel.delete(this.result.id, null, queryString, null)
+      .subscribe(() => {
           if (permanent) {
             this.broadcastSvc.broadcast('$reloadFoldersTree');
             this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
@@ -427,7 +429,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           return promise;
         }
         this.processing = true;
-        this.resourcesService.dataModel.put(this.result.id, 'finalise', null).subscribe(() => {
+
+        this.resourcesService.dataModel.finalise(this.result.id, null)
+        // this.resourcesService.dataModel.put(this.result.id, 'finalise', null)
+          .subscribe(() => {
               this.processing = false;
               this.messageHandler.showSuccess('Data Model finalised successfully.');
               this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });

@@ -254,8 +254,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
     };
 
-    return this.resourcesService.dataModel
-      .get(this.parentDataModel.id, 'dataTypes', options);
+    return this.resourcesService.dataType.list(this.parentDataModel.id, options);
+    // this.resourcesService.dataModel.get(this.parentDataModel.id, 'dataTypes', options);
 
     // if (loadAll) {
     //     delete options.filters;
@@ -278,7 +278,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
   delete() {
     this.resourcesService.dataClass
-      .delete(
+      .remove(
         this.result.parentDataModel,
         this.result.parentDataClass,
         this.result.id

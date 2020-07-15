@@ -144,7 +144,7 @@ export class DataElementComponent implements OnInit {
 
   dataElementDetails(dataModelId: any, dataClassId, id) {
     this.resourcesService.dataElement
-      .get(dataModelId, dataClassId, id, null, null)
+      .get(dataModelId, dataClassId, id)
       .subscribe((result: { body: DataElementResult }) => {
         this.dataElement = result.body;
         // this.dataClass.parentDataModel = dataModelId;

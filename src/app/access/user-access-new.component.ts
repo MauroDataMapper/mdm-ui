@@ -378,7 +378,9 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
       sortBy: 'emailAddress',
       sortType: 'asc'
     };
-    return this.resourceService.catalogueUser.get(null, 'search', options);
+
+    return this.resourceService.catalogueUser.search(options);
+    // return this.resourceService.catalogueUser.get(null, 'search', options);
   }
 
   readAccessChecked = function(record, index) {

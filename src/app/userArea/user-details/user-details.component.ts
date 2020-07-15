@@ -69,7 +69,8 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
 
   checkEmailExists(data: string) {
-    return this.resourcesService.catalogueUser.get(null, `userExists/${data}`, null);
+    return this.resourcesService.catalogueUser.exists(data);
+    // return this.resourcesService.catalogueUser.get(null, `userExists/${data}`, null);
   }
 
   formBeforeSave = function() {

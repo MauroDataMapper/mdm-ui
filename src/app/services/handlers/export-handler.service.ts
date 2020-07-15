@@ -25,23 +25,26 @@ export class ExportHandlerService {
 
   constructor(private resources: MdmResourcesService) { }
 
-    createFileName(label, exporter) {
-      const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
-      const rightNow = new Date();
-      const res = rightNow.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '');
-      // remove space from dataModelLabel and replace all spaces with _ and also add date/time and extension
-      return label.trim().toLowerCase().split(' ').join('_') + '_' + res + '.' + extension;
-    }
+  createFileName(label, exporter) {
+    const extension = exporter.fileExtension ? exporter.fileExtension : 'json';
+    const rightNow = new Date();
+    const res = rightNow.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '');
+    // remove space from dataModelLabel and replace all spaces with _ and also add date/time and extension
+    return label.trim().toLowerCase().split(' ').join('_') + '_' + res + '.' + extension;
+  }
 
-      exportDataModel(dataModels, exporter) {
-       // var deferred = $q.defer();
-      return  this.resources.dataModel.export(dataModels, exporter, exporter.fileType);
+  exportDataModel(dataModels, exporter) {
+      // var deferred = $q.defer();
 
-      }
+    return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, dataModels);
+    // return  this.resources.dataModel.export(dataModels, exporter, exporter.fileType);
+  }
 
   exportDataModel2(dataModels, exporter) {
     // var deferred = $q.defer();
-    this.resources.dataModel.export(dataModels, exporter, exporter.fileType).subscribe(fileBlob => {
+    this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, dataModels)
+    // this.resources.dataModel.export(dataModels, exporter, exporter.fileType)
+    .subscribe(fileBlob => {
       const label = dataModels.length === 1 ? dataModels[0].label : 'data_model_export';
       const fileName = this.createFileName(label, exporter);
       return ({fileBlob, fileName});

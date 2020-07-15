@@ -130,7 +130,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     };
 
     const dataClass = this.model.copyFromDataClass[0];
-    return this.resources.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
+
+    return this.resources.dataElement.list(dataClass.dataModel, dataClass.id, options);
+    // return this.resources.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
   }
 
   onLoad() {
@@ -358,7 +360,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     if (loadAll) {
       delete options.filters;
     }
-    return this.resources.dataModel.get(this.model.parent.dataModel, 'dataTypes', options);
+
+    return this.resources.dataType.list(this.model.parent.dataModel, options);
+    // return this.resources.dataModel.get(this.model.parent.dataModel, 'dataTypes', options);
 
   };
 
@@ -408,10 +412,12 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     let promise = Promise.resolve();
 
     this.model.selectedDataElements.forEach((dc: any) => { promise = promise.then((result: any) => {
-          const link = 'dataElements/' + dc.dataModel + '/' + dc.dataClass + '/' + dc.id;
+          // const link = 'dataElements/' + dc.dataModel + '/' + dc.dataClass + '/' + dc.id;
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
-          return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
+
+          return this.resources.dataElement.copyDataElement(this.model.parent.dataModel, this.model.parent.id, dc.dataModel, dc.dataClass, dc.id, null);
+          // return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
 
         }).catch(error => {
           this.failCount++;

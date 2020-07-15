@@ -108,8 +108,10 @@ export class TermComponent implements OnInit {
       this.termDetails(result.body.id);
   }
 
-  termDetails = id => {
+  termDetails = async id => {
     const terms = [];
+    // console.log(this.stateService.params.terminologyId, this.stateService.params.id);
+    // console.log(id, await this.resources.terminology.list().toPromise());
     terms.push(
       this.resources.terminology.get(
         this.stateService.params.terminologyId,

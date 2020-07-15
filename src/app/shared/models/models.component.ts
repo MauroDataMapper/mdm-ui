@@ -249,7 +249,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       options.queryStringParams.noCache = true;
     }
 
-    this.resources.tree.list('folders', options)
+    this.resources.tree.list('folders', options.queryStringParams)
     // this.resources.tree.get(null, null, options)
       .subscribe(result => {
         const data = result.body;

@@ -63,7 +63,9 @@ export class TerminologyComponent implements OnInit {
 
     this.title.setTitle('Terminology');
 
-    this.resources.terminology.get(id, null).subscribe(result => {
+    this.resources.terminology.get(id)
+    // this.resources.terminology.get(id, null)
+      .subscribe(result => {
       const data = result.body;
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];

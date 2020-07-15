@@ -74,7 +74,7 @@ export class ConfigurationComponent implements OnInit {
   submitConfig() {
     this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
 
-    from(this.resourcesService.admin.editProperties({resource: this.resource})).subscribe(() => {
+    from(this.resourcesService.admin.editProperties(this.resource)).subscribe(() => {
     // from(this.resourcesService.admin.post('editProperties', {resource: this.resource})).subscribe(() => {
         this.messageHandler.showSuccess('Configuration properties updated successfully.');
         // refresh the page

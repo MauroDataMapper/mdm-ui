@@ -101,7 +101,7 @@ login(username, password) {
     const resource = { username, password };
 
     const promise = new Promise((resolve, reject) => {
-      this.resources.security.login({ resource })
+      this.resources.security.login(resource)
       // this.resources.authentication
       //   .post(
       //     'login',

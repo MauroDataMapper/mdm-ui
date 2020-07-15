@@ -87,7 +87,7 @@ export class ClassifierMainComponent implements OnInit {
       description: this.model.description
     };
 
-    this.resources.classifier.save({resource})
+    this.resources.classifier.save(resource)
     // let deferred;
     // deferred = this.resources.classifier.post(null, null, {
     //   resource

@@ -30,6 +30,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-models',
@@ -271,7 +272,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       edit: false,
       dataModelId: node.modelId,
       dataClassId: node.parentId || '',
-      terminologyId: node.id
+      terminologyId: node.model
     });
   };
 

@@ -32,6 +32,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { TermResult } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-term',
@@ -110,27 +111,28 @@ export class TermComponent implements OnInit {
 
   termDetails = async id => {
     const terms = [];
-    // console.log(this.stateService.params.terminologyId, this.stateService.params.id);
-    // console.log(id, await this.resources.terminology.list().toPromise());
     terms.push(
-      this.resources.terminology.get(
-        this.stateService.params.terminologyId,
-        null
-      )
+      this.resources.terminology.get(this.stateService.params.terminologyId)
+      // this.resources.terminology.get(
+      //   this.stateService.params.terminologyId,
+      //   null
+      // )
     );
     terms.push(
-      this.resources.term.get(
-        this.stateService.params.terminologyId,
-        this.stateService.params.id,
-        null
-      )
+      this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id)
+      // this.resources.term.get(
+      //   this.stateService.params.terminologyId,
+      //   this.stateService.params.id,
+      //   null
+      // )
     );
     terms.push(
-      this.resources.term.get(
-        this.stateService.params.terminologyId,
-        this.stateService.params.id,
-        'semanticLinks'
-      )
+      this.resources.catalogueItem.listSemanticLinks(DOMAIN_TYPE.Term, this.stateService.params.id)
+      // this.resources.term.get(
+      //   this.stateService.params.terminologyId,
+      //   this.stateService.params.id,
+      //   'semanticLinks'
+      // )
     );
 
     forkJoin(terms).subscribe((results: any) => {

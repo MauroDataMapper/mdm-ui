@@ -93,6 +93,10 @@ header#mdm--header {
   .profile-name {
     line-height: 1;
     margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
   }
   .profile-role {
     font-size: 14px;

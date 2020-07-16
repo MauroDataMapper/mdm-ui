@@ -254,7 +254,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   delete(permanent) {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showDelete) {
       return;
     }
     const queryString = permanent ? 'permanent=true' : null;
@@ -279,7 +279,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showSoftDelete) {
       return;
     }
     const promise = new Promise(() => {
@@ -294,20 +294,21 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       });
 
       dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
+        if (result != null && result.status === 'ok') {
+          this.processing = true;
+          this.delete(false);
+          this.processing = false;
           // reject("cancelled");
-          return promise;
+        } else {
+          return;
         }
-        this.processing = true;
-        this.delete(false);
-        this.processing = false;
       });
     });
     return promise;
   }
 
   askForPermanentDelete(): any {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showPermDelete) {
       return;
     }
     const promise = new Promise(() => {
@@ -336,11 +337,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         });
 
         dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            // reject(null);
+          if (result != null && result2.status === 'ok') {
+            this.delete(true);
+          } else {
             return;
           }
-          this.delete(true);
         });
       });
     });

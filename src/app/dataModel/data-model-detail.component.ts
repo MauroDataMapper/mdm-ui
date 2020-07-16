@@ -63,6 +63,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   showFinalise: boolean;
   showPermission: boolean;
   showDelete: boolean;
+  showSoftDelete: boolean;
+  showPermDelete: boolean;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
@@ -226,12 +228,15 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   watchDataModelObject() {
     const access: any = this.securityHandler.elementAccess(this.result);
+    // console.log(access);
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showPermission = access.showPermission;
-      this.showDelete = access.showDelete;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
       this.showFinalise = access.showFinalise;
       this.showNewVersion = access.showNewVersion;
+      this.showSoftDelete = access.showSoftDelete;
+      this.showPermDelete = access.showPermanentDelete;
     }
     this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
   }

@@ -271,13 +271,15 @@ removeLatestURL() {
   }
 
 dataModelAccess(element) {
+    // console.log(element);
     return {
-      showEdit: element.editable && !element.finalised,
-      showNewVersion: element.editable && element.finalised,
-      showFinalise: element.editable && !element.finalised,
-      showPermission: element.editable || this.isAdmin(),
-      showDelete: this.isAdmin(),
-      canAddAnnotation: this.isLoggedIn(),
+      showEdit: element.availableActions.includes('update') && !element.finalised,
+      showNewVersion: element.availableActions.includes('update') && element.finalised,
+      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showPermission: element.availableActions.includes('update') || this.isAdmin(),
+      showSoftDelete: element.availableActions.includes('softDelete'),
+      showPermanentDelete: element.availableActions.includes('delete'),
+      canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: this.isLoggedIn(),
 
       canAddLink: element.editable && !element.finalised

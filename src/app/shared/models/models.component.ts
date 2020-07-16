@@ -284,11 +284,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.levels.focusedElement(node);
   };
 
-  onCompareTo = (source, target) => {
-    this.stateHandler.NewWindow('modelscomparison', {
-      sourceId: source.id,
-      targetId: target ? target.id : null
-    });
+  onCompareTo = (source) => {
+    // this.stateHandler.NewWindow('modelscomparison', { sourceId: source.id, targetId: target ? target.id : null });
   };
 
   loadModelsToCompare = dataModel => {
@@ -372,15 +369,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   };
 
-  onAddDataModel = (event, folder) => {
+  onAddDataModel = (folder) => {
     this.stateHandler.Go('NewDataModelNew', {parentFolderId: folder.id});
   };
 
-  onAddCodeSet = (event, folder) => {
+  onAddCodeSet = (folder) => {
     this.stateHandler.Go('NewCodeSet', {parentFolderId: folder.id});
   };
 
-  onAddChildDataClass = (event, element) => {
+  onAddChildDataClass = (element) => {
     this.stateHandler.Go('NewDataClassNew', {
       grandParentDataClassId: element.domainType === 'DataClass' ? element.parentDataClass : null,
       parentDataModelId: element.domainType === 'DataModel' ? element.id : element.dataModel,
@@ -388,7 +385,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataElement = (event, element) => {
+  onAddChildDataElement = (element) => {
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: element.parentDataClass ? element.parentDataClass : null,
       parentDataModelId: element.dataModel,
@@ -396,7 +393,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataType = (event, element) => {
+  onAddChildDataType = (element) => {
     this.stateHandler.Go('NewDataType', {parentDataModelId: element.id});
   };
 

@@ -69,11 +69,9 @@ export class ImportComponent implements OnInit {
   }
 
   loadImporters = (multiple?) => {
-    this.resources.public.dataModelImporterPlugins(multiple).subscribe(
-      (result) => {
+    this.resources.public.dataModelImporterPlugins(multiple).subscribe(result => {
         this.importers = result.body;
-      },
-      (error) => {
+      }, error => {
         this.messageHandler.showError('Can not load importers!', error);
       }
     );
@@ -90,8 +88,8 @@ export class ImportComponent implements OnInit {
       selectedItem.name
     );
 
-    const action = `parameters/${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
-    this.resources.importer.get(action).subscribe((res) => {
+    const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
+    this.resources.importer.get(action).subscribe(res => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 

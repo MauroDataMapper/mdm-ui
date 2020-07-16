@@ -373,7 +373,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.dataModel.put(resource.id, null, { resource }).subscribe(result => {
+      // this.resourcesService.dataModel.put(resource.id, null, { resource }).subscribe(result => {
+      this.resourcesService.dataModel.update(resource.id, resource).subscribe(result => {
             if (this.afterSave) {
               this.afterSave(result);
             }

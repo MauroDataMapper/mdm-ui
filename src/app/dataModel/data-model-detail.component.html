@@ -147,7 +147,7 @@ SPDX-License-Identifier: Apache-2.0
                             </button>
 
                             <mat-menu #menu>
-                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete">
+                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
                                     Mark as deleted
                                 </button>
                                 <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">

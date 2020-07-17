@@ -374,12 +374,10 @@ elementAccess(element) {
 
 folderAccess(folder) {
     return {
-      showEdit: folder.editable,
-      showPermission: folder.editable || this.isAdmin(),
-      showDelete: this.isAdmin()
+      showEdit: folder.availableActions.includes('update'),
+      showPermission: folder.availableActions.includes('update') || this.isAdmin(),
+      showSoftDelete: folder.availableActions.includes('softDelete'),
+      showPermanentDelete: folder.availableActions.includes('delete'),
     };
   }
-
-  // return factoryObject;
-  // };
 }

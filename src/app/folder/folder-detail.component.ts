@@ -44,7 +44,7 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 @Component({
   selector: 'mdm-folder-detail',
   templateUrl: './folder-detail.component.html',
-  styleUrls: ['./folder-detail.component.css']
+  styleUrls: ['./folder-detail.component.scss']
 })
 export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   result: FolderResult;
@@ -55,6 +55,8 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEdit: boolean;
   showPermission: boolean;
   showDelete: boolean;
+  showPermDelete: boolean;
+  showSoftDelete: boolean;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
@@ -90,12 +92,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open(
-      'Search_Help',
-      'left' as DialogPosition,
-      null,
-      null
-    );
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
   }
 
   ngOnInit() {
@@ -161,7 +158,9 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
         const access: any = this.securityHandler.folderAccess(this.result);
         this.showEdit = access.showEdit;
         this.showPermission = access.showPermission;
-        this.showDelete = access.showDelete;
+        this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+        this.showPermDelete = access.showPermanentDelete;
+        this.showSoftDelete = access.showSoftDelete;
         if (this.result != null) {
           this.hasResult = true;
           this.watchFolderObject();
@@ -175,7 +174,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     const access = this.securityHandler.folderAccess(this.result);
     this.showEdit = access.showEdit;
     this.showPermission = access.showPermission;
-    this.showDelete = access.showDelete;
+    this.showDelete = access.showPermanentDelete || access.showSoftDelete;
   }
 
   toggleSecuritySection() {
@@ -191,7 +190,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showDelete) {
       return;
     }
 
@@ -201,7 +200,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   askForPermanentDelete(): any {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showDelete) {
       return;
     }
 
@@ -221,25 +220,17 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.folder
-        .put(resource.id, null, { resource })
-        .subscribe(
-          result => {
-            if (this.afterSave) {
-              this.afterSave(result);
-            }
-            this.messageHandlerService.showSuccess('Folder updated successfully.');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem updating the Folder.',
-              error
-            );
+      this.resourcesService.folder.update(resource.id, resource).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
           }
-        );
+          this.messageHandlerService.showSuccess('Folder updated successfully.');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Folder.', error);
+      });
     }
   };
 

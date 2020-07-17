@@ -187,7 +187,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     const access = this.securityHandler.folderAccess(this.result);
     this.showEdit = access.showEdit;
     this.showPermission = access.showPermission;
-    this.showDelete = access.showDelete;
+    this.showDelete = access.showPermanentDelete || access.showSoftDelete;
   }
 
   toggleSecuritySection() {

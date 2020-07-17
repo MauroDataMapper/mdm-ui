@@ -176,7 +176,7 @@ SPDX-License-Identifier: Apache-2.0
                             </button>
                         </div>
 
-                      <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                      <!-- <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                         <button mat-stroked-button
                                 type="button"
                                 class="paddingless"
@@ -186,9 +186,9 @@ SPDX-License-Identifier: Apache-2.0
                                 (click)="newVersion()">
                           <i class="fas fa-copy"></i>
                         </button>
-                      </div>
+                      </div> -->
 
-                        <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;"
+                        <!-- <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;"
                             [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" class="paddingless"
                                 (click)="toggleSecuritySection()" type="button" *ngIf="showPermission"
@@ -197,7 +197,7 @@ SPDX-License-Identifier: Apache-2.0
                                 <i class="fas fa-user-lock"></i>
                             </button>
 
-                        </div>
+                        </div> -->
                     </td>
                 </tr>
             </tbody>

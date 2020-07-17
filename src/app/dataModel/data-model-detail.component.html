@@ -258,11 +258,12 @@ SPDX-License-Identifier: Apache-2.0
                                 </div>
                             </mat-menu>
                         </div>
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <!-- TODO - DB migration -->
+                        <!-- <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
                                 <i class="fas fa-search"></i>
                             </button>
-                        </div>
+                        </div> -->
                         <div style="position: relative; float: right; margin-right:8px;">
                             <div id="exportFileDownload" #aLink></div>
                         </div>

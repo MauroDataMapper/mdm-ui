@@ -46,6 +46,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   @Input() mcDataClass: any;
   @Input() type: any;
   @Input() childDataClasses: any;
+  @Input() isEditable: any;
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -81,7 +82,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
-    if (this.parentDataModel.editable && !this.parentDataModel.finalised) {
+    if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
     } else {
       this.displayedColumns = ['name', 'description', 'multiplicity'];

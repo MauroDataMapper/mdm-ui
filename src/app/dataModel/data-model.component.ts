@@ -39,6 +39,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
   parentId: string;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
+  isEditable: boolean;
   showExtraTabs = false;
   activeTab: any;
   dataModel4Diagram: any;
@@ -86,11 +87,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
   }
 
   dataModelDetails(id: any) {
-    this.resourcesService.dataModel
-      .get(id)
-      .subscribe((result: { body: DataModelResult }) => {
+    this.resourcesService.dataModel.get(id).subscribe((result: { body: DataModelResult }) => {
         this.dataModel = result.body;
-
+        this.isEditable = this.dataModel['availableActions'].includes('update');
         this.parentId = this.dataModel.id;
         if (this.sharedService.isLoggedIn(true)) {
           this.DataModelPermissions(id);

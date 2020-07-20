@@ -89,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Data Classes">
         <ng-template matTabContent>
             <div class="mb-2 full-width">
-                <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
+                <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [isEditable]="isEditable" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
             </div>
         </ng-template>
     </mat-tab>

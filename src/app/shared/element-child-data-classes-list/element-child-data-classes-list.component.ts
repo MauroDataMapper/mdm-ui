@@ -205,6 +205,6 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    });
+    }).catch(() => {});
   }
 }

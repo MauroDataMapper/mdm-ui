@@ -84,7 +84,7 @@ export class FolderHandlerService {
           if (result2.status !== 'ok') {
             return;
           }
-          this.delete(id, true);
+          resolve(this.delete(id, true));
         });
       });
     });
@@ -93,19 +93,13 @@ export class FolderHandlerService {
   }
 
   delete(id, permanent = false) {
-    const promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         this.resoucesService.folder.remove(id, { permanent }).subscribe((result) => {
-          resolve();
+          this.messageHandler.showSuccess("Successfully Deleted Folder")
+           resolve();
         }, error => {
           this.messageHandler.showError('There was a problem deleting the Folder.', error);
         });
-    });
-    promise.then(() => {
-      if (permanent) {
-        this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'permanentDelete'});
-      } else {
-        this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'softDelete'});
-      }
-    }).catch(() => {});
+    }); 
   }
 }

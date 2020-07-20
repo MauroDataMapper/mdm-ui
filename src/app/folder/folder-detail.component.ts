@@ -165,7 +165,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
           this.hasResult = true;
           this.watchFolderObject();
         }
-        this.title.setTitle(`Folder - ${this.result?.label}`);
+        this.title.setTitle("Folder -" + this.result?.label);
       }
     );
   }
@@ -206,6 +206,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.folderHandler.askForPermanentDelete(this.result.id).then(() => {
       this.broadcastSvc.broadcast('$reloadFoldersTree');
+      this.stateHandler.Go("appContainer.mainApp.twoSidePanel.catalogue.allDataModel");  
     });
   }
 

@@ -175,7 +175,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
 
     this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
-      this.loadFolders();
+      this.loadFolders(true);
     });
 
     this.currentClassification = null;

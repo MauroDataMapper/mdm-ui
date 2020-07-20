@@ -65,7 +65,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td colspan="2" style="text-align: right;">
                         <!-- TODO - DB migration -->
-                        <!-- <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                        <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
                             <button mat-stroked-button
                                     color="warn"
                                     type="button"
@@ -85,7 +85,7 @@ SPDX-License-Identifier: Apache-2.0
                                     Delete <span class="warning">permanently</span>
                                 </button>
                             </mat-menu>
-                        </div> -->
+                        </div>
 
                         <div style="float: right;">
                             <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; margin-right:4px;">
@@ -106,7 +106,7 @@ SPDX-License-Identifier: Apache-2.0
 
                         <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <!-- TODO - DB migration -->
-                          <!-- <button mat-stroked-button
+                          <button mat-stroked-button
                                     color="primary"
                                     type="button"
                                     class="paddingless"
@@ -115,8 +115,8 @@ SPDX-License-Identifier: Apache-2.0
                                     [disabled]="processing"
                                     (click)="toggleShowSearch()" >
                                 <i class="fas fa-search"></i>
-                            </button> -->
-                            <!-- <button mat-stroked-button
+                            </button>
+                            <button mat-stroked-button
                                     color="primary"
                                     type="button"
                                     class="paddingless"
@@ -126,7 +126,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [disabled]="deleteInProgress || processing"
                                     (click)="toggleSecuritySection()">
                                     <i class="fas fa-user-lock"></i>
-                            </button> -->
+                            </button>
                         </div>
                     </td>
                 </tr>

@@ -110,7 +110,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Summary" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-summary-metadata-table *ngIf="dataModel" [parent]="dataModel"></mdm-summary-metadata-table>
+                <mdm-summary-metadata-table *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-summary-metadata-table>
             </div>
         </ng-template>
     </mat-tab>

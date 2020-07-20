@@ -41,6 +41,7 @@ import { SummaryMetadataPopupComponent } from '../summary-metadata-popup/summary
 })
 export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
+  @Input() domainType: any;
 
   hideFilters = true;
   displayedColumns: string[] = ['name', 'description'];
@@ -130,7 +131,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
     };
 
     // return this.resources.facets.get(this.parent.id, 'summaryMetadata', options);
-    return this.resources.catalogueItem.listMetadata(this.parent.domainType, this.parent.id);
+    return this.resources.summaryMetadata.list(this.domainType, this.parent.id);
   };
 
   applyFilter = () => {

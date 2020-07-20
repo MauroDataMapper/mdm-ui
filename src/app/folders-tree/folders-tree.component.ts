@@ -471,7 +471,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
             this.handleAddFolder(fnode, this.folder);
           } else {
             const error = 'err';
-            this.messageHandler.showError('DataModel name can not be empty', error);
+            this.messageHandler.showError('Data Model name can not be empty', error);
             return promise;
           }
         } else {
@@ -500,7 +500,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         this.treeControl.dataNodes.push(newNode);
       } else {
         // Add new folder to existing folder
-        result = await this.resources.folder.saveChildrenOf(fnode.id, label).toPromise();
+        result = await this.resources.folder.saveChildrenOf(fnode.id, {label}).toPromise();
         // result = await this.resources.folder.post(fnode.id, 'folders', { resource: {label} }).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         if (!fnode.children) {

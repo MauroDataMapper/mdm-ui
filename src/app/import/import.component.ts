@@ -26,7 +26,7 @@ import { BroadcastService } from '../services/broadcast.service';
 @Component({
   selector: 'mdm-import',
   templateUrl: './import.component.html',
-  styleUrls: ['./import.component.sass']
+  styleUrls: ['./import.component.sass'],
 })
 export class ImportComponent implements OnInit {
   importers: any;
@@ -51,7 +51,7 @@ export class ImportComponent implements OnInit {
     String: 'text',
     Password: 'password',
     Boolean: 'checkbox',
-    File: 'file'
+    File: 'file',
   };
 
   constructor(
@@ -70,32 +70,34 @@ export class ImportComponent implements OnInit {
 
   loadImporters = (multiple?) => {
     this.resources.public.dataModelImporterPlugins(multiple).subscribe(
-      result => {
+      (result) => {
         this.importers = result.body;
       },
-      error => {
+      (error) => {
         this.messageHandler.showError('Can not load importers!', error);
       }
     );
   };
 
-  loadImporterParameters = selectedItem => {
+  loadImporterParameters = (selectedItem) => {
     if (!selectedItem) {
       this.selectedImporterGroups = [];
       this.step = 1;
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(selectedItem.name);
+    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
+      selectedItem.name
+    );
 
     const action = `parameters/${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
-    this.resources.importer.get(action).subscribe(res => {
+    this.resources.importer.get(action).subscribe((res) => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 
-      this.selectedImporterGroups.forEach(selectedImporterGroup => {
+      this.selectedImporterGroups.forEach((selectedImporterGroup) => {
         const parameters = selectedImporterGroup.parameters;
-        parameters.forEach(option => {
+        parameters.forEach((option) => {
           // add default value
           option.value = '';
 
@@ -109,11 +111,10 @@ export class ImportComponent implements OnInit {
             option.optional = true;
             option.value = false;
           }
-
         });
       });
     });
-  }
+  };
 
   importerChanged = () => {
     this.step = 2;
@@ -124,7 +125,7 @@ export class ImportComponent implements OnInit {
     this.loadImporterParameters(this.selectedImporterObj);
   };
 
-  submitForm = isValid => {
+  submitForm = (isValid) => {
     // if the form is not valid, return
     if (!isValid) {
       return;
@@ -142,9 +143,9 @@ export class ImportComponent implements OnInit {
     const version = this.selectedImporterObj.version;
     this.formData = new FormData();
 
-    this.selectedImporterGroups.forEach( selectedImporterGroup => {
+    this.selectedImporterGroups.forEach((selectedImporterGroup) => {
       const parameters = selectedImporterGroup.parameters;
-      parameters.forEach(param => {
+      parameters.forEach((param) => {
         if (param.type === 'File') {
           this.formData.append(param.name, this.getFile(param.name));
         } else if (param.type === 'DataModel') {
@@ -156,7 +157,6 @@ export class ImportComponent implements OnInit {
         }
       });
     });
-
 
     this.resources.dataModel
       .import(`${namespace}/${name}/${version}`, this.formData)
@@ -181,10 +181,14 @@ export class ImportComponent implements OnInit {
             );
           }
         },
-        error => {
+        (error) => {
           if (error.status === 422) {
             this.importHasError = true;
-            this.importErrors = error.error.validationErrors.errors;
+            if (error.error.validationErrors) {
+              this.importErrors = error.error.validationErrors.errors;
+            } else if (error.error.errors) {
+              this.importErrors = error.error.errors;
+            }
           }
           this.importingInProgress = false;
           this.messageHandler.showError('Error in import process', '');
@@ -192,7 +196,7 @@ export class ImportComponent implements OnInit {
       );
   };
 
-  getFile = paramName => {
+  getFile = (paramName) => {
     const element: any = document.getElementById(paramName);
     return element && element.files ? element.files[0] : '';
   };

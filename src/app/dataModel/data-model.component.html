@@ -96,7 +96,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Types">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'"></mdm-element-owned-data-type-list>
+                <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'" [isEditable]="isEditable"></mdm-element-owned-data-type-list>
             </div>
         </ng-template>
     </mat-tab>

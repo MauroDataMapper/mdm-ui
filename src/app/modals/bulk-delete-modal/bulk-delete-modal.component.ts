@@ -109,11 +109,10 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
             hasError: false
           };
           if (item.domainType === 'DataClass') {
-            console.log(item);
             return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
           }
           if (item.domainType === 'DataElement') {
-            return this.resources.dataElement.remove(item.dataModel, item.dataClass, item.id).toPromise();
+            return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
           }
           if (item.domainType === 'DataType') {
             return this.resources.dataType.remove(item.dataModel, item.id).toPromise();

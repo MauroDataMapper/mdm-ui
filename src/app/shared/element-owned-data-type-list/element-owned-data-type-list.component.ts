@@ -47,6 +47,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
 export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
   @Input() type: any;
+  @Input() isEditable: any;
 
   @Input() childOwnedDataTypes: any;
 
@@ -92,7 +93,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     }
-    if (this.parent.editable && !this.parent.finalised) {
+    if (this.isEditable && !this.parent.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'type', 'actions'];
     } else {
       this.displayedColumns = ['name', 'description', 'type'];
@@ -233,7 +234,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         dataElementIdLst.push({
           id: record.id,
           label: record.label,
-          dataModel: record.dataModel,
+          dataModel: record.model,
           domainType: 'DataType',
           type: record.domainType
         });

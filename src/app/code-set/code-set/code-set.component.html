@@ -61,7 +61,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Attachments">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-attachment-list>
+                    <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-attachment-list>
                 </div>
             </ng-template>
         </mat-tab>

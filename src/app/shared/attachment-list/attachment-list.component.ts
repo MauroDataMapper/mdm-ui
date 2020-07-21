@@ -38,6 +38,7 @@ export class AttachmentListComponent implements AfterViewInit {
   ) {}
 
   @Input() parent: any;
+  @Input() domainType: any;
   @ViewChildren('filters', { read: ElementRef })
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
@@ -117,7 +118,7 @@ export class AttachmentListComponent implements AfterViewInit {
       filters
     };
     // return this.resources.facets.get(this.parent.id, 'referenceFiles', options);
-    return this.resources.catalogueItem.listReferenceFiles(this.parent.domainType, this.parent.id);
+    return this.resources.catalogueItem.listReferenceFiles(this.domainType, this.parent.id);
   };
 
   cancelEdit = (record, index) => {

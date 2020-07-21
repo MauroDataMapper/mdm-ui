@@ -145,7 +145,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Attachments" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel"></mdm-attachment-list>
+                <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-attachment-list>
             </div>
         </ng-template>
     </mat-tab>

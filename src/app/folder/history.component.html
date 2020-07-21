@@ -28,12 +28,7 @@ SPDX-License-Identifier: Apache-2.0
             <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
                 <div style="float: left;margin: 3px;">
                     <mdm-profile-picture [user]="element.createdBy"></mdm-profile-picture>
-                </div>
-                <div style="float: left;margin: 4px 3px;">
-                    <div title="{{element.createdBy.emailAddress}}">
-                        <span [innerHTML]="element.createdBy.firstName"></span>
-                        <span [innerHTML]="element.createdBy.lastName"></span>
-                    </div>
+                    <span [innerHTML]="element.createdBy"></span>
                 </div>
             </td>
         </ng-container>

@@ -42,6 +42,7 @@ export class DataClassComponent implements OnInit {
   activeTab: any;
   parentDataClass = { id: null };
   parentDataModel = {};
+  isEditable: boolean;
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -67,51 +68,24 @@ export class DataClassComponent implements OnInit {
       this.editMode = true;
     }
 
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
-    this.showExtraTabs =
-      this.sharedService.isLoggedIn() ;
-    // this.fetch();
+    this.showExtraTabs = this.sharedService.isLoggedIn() ;
 
     this.parentId = this.stateService.params.id;
-    // this.resourcesService.dataModel.get(this.stateService.params.id).subscribe(x => { this.dataModel = x.body });
-
-    // if(this.stateService.params.edit === "true"){ //Call this if using message service.
-    //     // this.editMode = true;
-    //     this.messageService.showEditMode(true);
-    // }
-    // else
-    //     this.messageService.showEditMode(false);
     window.document.title = 'Data Class';
-    this.dataClassDetails(
-      this.stateService.params.dataModelId,
-      this.parentDataClass.id,
-      this.stateService.params.id
-    );
-    // this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-    //   this.showSecuritySection = message;
-    // });
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
+    this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, this.stateService.params.id);
+    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
         this.showSearch = message;
-      }
-    );
+    });
     this.afterSave = (result: { body: { id: any } }) =>
-      this.dataClassDetails(
-        this.stateService.params.dataModelId,
-        this.parentDataClass.id,
-        result.body.id
-      );
+      this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, result.body.id);
   }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'content':
         return { index: 0, name: 'content' };
-      // case 'dataClasses':  return {index:0, name:'dataClasses'};
-      // case 'dataElements': return {index:1, name:'dataElements'};
       case 'properties':
         return { index: 1, name: 'properties' };
       case 'comments':
@@ -122,25 +96,21 @@ export class DataClassComponent implements OnInit {
         return { index: 4, name: 'summaryMetadata' };
       case 'attachments':
         return { index: 5, name: 'attachments' };
-      // case 'history': 	 return {index:4, name:'history'     , fetchUrl:null};
-      // default: 			 return {index:0, name:'dataClasses', fetchUrl:'dataClasses'};
       default:
         return { index: 0, name: 'content' };
     }
   }
 
   dataClassDetails(dataModelId: any, parentDataClassId, id) {
-    this.resourcesService.dataClass
-      .getChildDataClass(dataModelId, parentDataClassId, id)
-      .subscribe((result: { body: DataClassResult }) => {
+    this.resourcesService.dataClass.getChildDataClass(dataModelId, parentDataClassId, id).subscribe((result: { body: DataClassResult }) => {
         this.dataClass = result.body;
         this.dataClass.parentDataModel = dataModelId;
         this.dataClass.parentDataClass = parentDataClassId;
         this.parentDataModel = {
           id: dataModelId,
-          editable: this.dataClass.editable,
           finalised: this.dataClass.breadcrumbs[0].finalised
         };
+        this.isEditable = this.dataClass['availableActions'].includes('update');
         this.messageService.FolderSendMessage(this.dataClass);
         this.messageService.dataChanged(this.dataClass);
 
@@ -172,23 +142,13 @@ export class DataClassComponent implements OnInit {
         return { index: 4, name: 'summaryMetadata' };
       case 5:
         return { index: 5, name: 'attachments' };
-/*      case 6:
-        return { index: 6, name: 'diagram' };
-      case 7:
-        return { index: 7, name: 'links' };
-      case 8:
-        return { index: 8, name: 'attachments' }; */
       default:
         return { index: 0, name: 'content' };
     }
   }
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go(
-      'dataClass',
-      { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
-    );
+    this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
     this.activeTab = tab.index;
   }
 }

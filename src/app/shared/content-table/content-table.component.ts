@@ -38,6 +38,7 @@ export class ContentTableComponent implements AfterViewInit {
     @Input() grandParentDataClass: any;
     @Input() parentDataClass: any;
     @Input() loadingData: any;
+    @Input() isEditable: any;
     checkAllCheckbox = false;
     @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
     @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -68,7 +69,7 @@ export class ContentTableComponent implements AfterViewInit {
         private dialog: MatDialog
     ) { }
     ngAfterViewInit() {
-        if (this.parentDataModel.editable && !this.parentDataModel.finalised) {
+        if (this.isEditable && !this.parentDataModel.finalised) {
             this.displayedColumns = ['checkbox', 'name', 'description', 'label', 'actions'];
         } else {
             this.displayedColumns = ['name', 'description', 'label'];

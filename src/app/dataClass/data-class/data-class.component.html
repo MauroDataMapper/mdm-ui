@@ -62,8 +62,12 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Content">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-content-table *ngIf="dataClass" [parentDataModel]="parentDataModel"
-                        [parentDataClass]="dataClass" [grandParentDataClass]="parentDataClass">
+                    <mdm-content-table *ngIf="dataClass"
+                                        [parentDataModel]="parentDataModel"
+                                        [parentDataClass]="dataClass"
+                                        [grandParentDataClass]="parentDataClass"
+                                        [isEditable]="isEditable"
+                                        >
                     </mdm-content-table>
                 </div>
             </ng-template>

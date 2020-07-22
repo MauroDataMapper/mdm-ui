@@ -57,26 +57,21 @@ export class CodeSetMainComponent implements OnInit {
       this.stateHandler.NotFound({ location: false });
     }
 
-    this.resources.folder.get(this.model.parentFolderId)
-    // this.resources.folder.get(this.model.parentFolderId, null, null)
-    .toPromise().then((result) => {
-        result.domainType = 'Folder';
-        this.model.parentFolder = result.body;
-        const step1 = new Step();
-        step1.title = 'Code Set Details';
-        step1.component = CodeSetStep1Component;
-        step1.scope = this;
-        step1.hasForm = true;
+    this.resources.folder.get(this.model.parentFolderId).toPromise().then((result) => {
+      result.domainType = 'Folder';
+      this.model.parentFolder = result.body;
+      const step1 = new Step();
+      step1.title = 'Code Set Details';
+      step1.component = CodeSetStep1Component;
+      step1.scope = this;
+      step1.hasForm = true;
 
-        this.steps.push(step1);
-      }).catch((error) => {
-        this.messageHandler.showError('There was a problem loading the Folder.', error);
-      });
+      this.steps.push(step1);
+    }).catch((error) => {
+      this.messageHandler.showError('There was a problem loading the Folder.', error);
+    });
   }
 
-  onSelectedTermsChange = (terms) => {
-    // angular.copy(terms, this.model.terms);
-  };
   cancelWizard = () => {
     this.stateHandler.GoPrevious();
   };
@@ -91,20 +86,13 @@ export class CodeSetMainComponent implements OnInit {
 
       terms: this.model.terms,
     };
-    this.resources.folder.addCondeSets(this.model.parentFolderId, resource )
-    // this.resources.codeSet.post(null, null, { resource })
-      .subscribe((result) => {
-        this.messageHandler.showSuccess('Code Set created successfully.');
-        this.stateHandler.Go('codeset', { id: result.body.id });
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem creating the Code Set.',
-          error
-        );
-      }
-    );
+    this.resources.folder.addCondeSets(this.model.parentFolderId, resource).toPromise().then((result) => {
+      this.messageHandler.showSuccess('Code Set created successfully.');
+      this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }).catch((error) => {
+        this.messageHandler.showError('There was a problem creating the Code Set.', error);
+    });
   };
   ngOnInit() {
     this.title.setTitle(`New Code Set`);

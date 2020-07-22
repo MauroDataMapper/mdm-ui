@@ -54,17 +54,13 @@ export class NewVersionCodeSetComponent implements OnInit {
       return;
     }
 
-    this.resources.codeSet
-      .get(this.stateService.params.codeSetId)
-      // .get(this.stateService.params.codeSetId, null, null)
-      .subscribe(response => {
-        this.codeSet = response.body;
-      });
+    this.resources.codeSet.get(this.stateService.params.codeSetId).subscribe(response => {
+      this.codeSet = response.body;
+    });
   }
 
   versionTypeChecked() {
     this.step++;
-    // this.isCompleted = true;
   }
 
   validate() {
@@ -78,10 +74,7 @@ export class NewVersionCodeSetComponent implements OnInit {
       if (this.validator.isEmpty(this.form.label)) {
         this.errors = this.errors || {};
         this.errors.label = 'Codeset name can not be empty!';
-      } else if (
-        this.form.label.trim().toLowerCase() ===
-        this.codeSet.label.trim().toLowerCase()
-      ) {
+      } else if (this.form.label.trim().toLowerCase() === this.codeSet.label.trim().toLowerCase()) {
         this.errors = this.errors || {};
         this.errors.label = `The name should be different from the current version name ${this.codeSet.label}`;
       }
@@ -93,35 +86,28 @@ export class NewVersionCodeSetComponent implements OnInit {
     if (!this.validate()) {
       return;
     }
-    // newModelVersion
-    // newDocumentVersion
-    if (this.versionType === 'newModelVersion') {
+
+    if (this.versionType === 'newModelVersion') { // newModelVersion
       const resource = {
         label: this.form.label,
         copyPermissions: this.form.copyPermissions,
         copyDataFlows: this.form.copyDataFlows
       };
       this.processing = true;
-      this.resources.codeSet.newModelVersion(this.codeSet.id, resource)
-      // this.resources.codeSet.put(this.codeSet.id, 'newVersion', { resource })
-        .subscribe(
-        response => {
+      this.resources.codeSet.newModelVersion(this.codeSet.id, resource).subscribe(response => {
           this.processing = false;
-          this.messageHandler.showSuccess('New Codeset version created successfully.');
-          this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
-        },
-        error => {
+          if (response) {
+            this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+            this.messageHandler.showSuccess('New Codeset version created successfully.');
+          }
+      }, error => {
           this.processing = false;
           this.messageHandler.showError('There was a problem creating the new Codeset version.', error);
-        }
-      );
-    } else if (this.versionType === 'newDocumentVersion') {
+      });
+    } else if (this.versionType === 'newDocumentationVersion') { // newDocumentationVersion
       const resources = {moveDataFlows: this.form.moveDataFlows};
       this.processing = true;
-      this.resources.codeSet.newDocumentationVersion(this.codeSet.id, resources)
-      // this.resources.codeSet.put(this.codeSet.id, 'newDocumentationVersion', { resource: resources })
-        .subscribe(
-        response => {
+      this.resources.codeSet.newDocumentationVersion(this.codeSet.id, resources).subscribe(response => {
           this.processing = false;
           this.messageHandler.showSuccess('New Document Model version created successfully.');
           this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true } );
@@ -133,9 +119,7 @@ export class NewVersionCodeSetComponent implements OnInit {
       );
     }
   }
-
   cancel = function() {
     this.stateHandler.Go('codeset', { id: this.codeSet.id });
   };
-
 }

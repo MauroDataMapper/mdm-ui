@@ -226,14 +226,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.resourcesService.codeSet.remove(this.result.id, {permanent}).subscribe(result => {
         if (permanent) {
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
         } else {
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.stateHandler.reload();
         }
-      },
-      error => {
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting the Code Set.', error);
       });
@@ -258,7 +256,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
       dialog.afterClosed().subscribe(result => {
-        if (result != null && result.status === 'ok') {          // reject("cancelled");
+        if (result != null && result.status === 'ok') {
         this.processing = true;
         this.delete(false);
         this.processing = false;
@@ -315,7 +313,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
-    // this.editForm.forEach(x => this.result["label"] = x.getHotState().value);
     this.editForm.forEach((modules) => {
       if (modules.config.name === 'moduleName') {
         this.result.label = modules.getHotState().value;
@@ -348,10 +345,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     };
 
     if (this.validateLabel(this.result.label)) {
-      from(
-        this.resourcesService.codeSet.update(resource.id, resource)
-        // this.resourcesService.codeSet.put(resource.id, null, {resource})
-        ).subscribe(result => {
+      from(this.resourcesService.codeSet.update(resource.id, resource)).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
           }
@@ -390,7 +384,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.favouriteHandler.toggle(this.result)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
     }
-
   }
 
   finalise() {
@@ -408,13 +401,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
       dialog.afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
-          // reject("cancelled");
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.finalise(this.result.id)
-        // this.resourcesService.codeSet.put(this.result.id, 'finalise', null)
-          .subscribe(() => {
+        this.resourcesService.codeSet.finalise(this.result.id).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
@@ -428,7 +418,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     return promise;
   }
 
-
   onLabelChange(value: any) {
     if (!this.validateLabel(value)) {
       this.editableForm.validationError = true;
@@ -436,7 +425,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       this.editableForm.validationError = false;
       this.errorMessage = '';
     }
-
   }
   newVersion() {
     this.stateHandler.Go(

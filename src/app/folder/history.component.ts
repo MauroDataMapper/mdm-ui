@@ -120,10 +120,8 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
     if (this.parentId) {
       return this.resourcesService.edit.status(this.domainType, this.parentId);
+    } else {
+      return this.resourcesService.edit.status(this.domainType, this.parent.id, this.options);
     }
-    // else {
-    //   return this.resourcesService.edit.status(this.parent.domainType, this.parent.id, this.options);
-    //   // return this.resourcesService.dataModel.get(this.parent, 'edits', this.options);
-    // }
   }
 }

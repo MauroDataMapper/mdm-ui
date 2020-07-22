@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="History">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></mdm-history>
+                    <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'" [domainType]="'codeSets'"></mdm-history>
                 </div>
             </ng-template>
         </mat-tab>

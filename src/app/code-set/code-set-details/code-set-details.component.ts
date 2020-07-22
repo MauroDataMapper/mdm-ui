@@ -51,6 +51,15 @@ import { Title } from '@angular/platform-browser';
 })
 export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @ViewChild('aLink', {static: false}) aLink: ElementRef;
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
+  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
+  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
+
+  @Input() afterSave: any;
+  @Input() editMode = false;
+
   result: CodeSetResult;
   hasResult = false;
   subscription: Subscription;
@@ -60,6 +69,8 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   showFinalise: boolean;
   showPermission: boolean;
   showDelete: boolean;
+  showSoftDelete: boolean;
+  showPermDelete: boolean;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
@@ -67,6 +78,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   editableForm: EditableDataModel;
   errorMessage = '';
   showEditMode = false;
+  showEditDescription: boolean;
   processing = false;
   showNewVersion = false;
   compareToList = [];
@@ -74,19 +86,9 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  @ViewChild('aLink', {static: false}) aLink: ElementRef;
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input() afterSave: any;
-  @Input() editMode = false;
-
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-
   constructor(private resourcesService: MdmResourcesService,
               private messageService: MessageService,
               private messageHandler: MessageHandlerService,
@@ -191,8 +193,11 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const access: any = this.securityHandler.elementAccess(this.result);
     if (access !== undefined) {
       this.showEdit = access.showEdit;
+      this.showEditDescription = access.showEditDescription;
       this.showPermission = access.showPermission;
-      this.showDelete = access.showDelete;
+      this.showDelete = access.showSoftDelete || access.showPermanentDelete;
+      this.showSoftDelete = access.showSoftDelete;
+      this.showPermDelete = access.showPermanentDelete;
       this.showFinalise = access.showFinalise;
       this.showNewVersion = access.showNewVersion;
     }
@@ -214,15 +219,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   delete(permanent) {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showDelete) {
       return;
     }
-    // const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
 
-    this.resourcesService.codeSet.remove(this.result.id, permanent)
-    // this.resourcesService.codeSet.delete(this.result.id, null, queryString, null)
-      .subscribe(result => {
+    this.resourcesService.codeSet.remove(this.result.id, {permanent}).subscribe(result => {
         if (permanent) {
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
@@ -230,7 +232,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.stateHandler.reload();
         }
-
       },
       error => {
         this.deleteInProgress = false;
@@ -240,7 +241,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showSoftDelete) {
       return;
     }
     const promise = new Promise((resolve, reject) => {
@@ -251,26 +252,26 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             title: 'Are you sure you want to delete this Code Set?',
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
-            message: `<p class='marginless'>This Code Set will be marked as deleted and will not be viewable by users</p>
+            message: `<p class='marginless'>This Code Set will be marked as deleted and will not be visible to users,</p>
                       <p class='marginless'>except Administrators.</p>`
           }
         });
 
       dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          // reject("cancelled");
-          return promise;
-        }
+        if (result != null && result.status === 'ok') {          // reject("cancelled");
         this.processing = true;
         this.delete(false);
         this.processing = false;
+      } else {
+        return promise;
+        }
       });
     });
     return promise;
   }
 
   askForPermanentDelete(): any {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showPermDelete) {
       return;
     }
     const promise = new Promise((resolve, reject) => {
@@ -298,10 +299,11 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           });
 
         dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
+          if (result != null && result2.status === 'ok') {
+            this.delete(true);
+          } else {
             return;
           }
-          this.delete(true);
         });
       });
     });

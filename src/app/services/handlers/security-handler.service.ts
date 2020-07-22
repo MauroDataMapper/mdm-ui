@@ -20,8 +20,8 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
-import {MessageService} from '@mdm/services/message.service';
-import {BroadcastService} from '@mdm/services/broadcast.service';
+import { MessageService } from '@mdm/services/message.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,7 @@ export class SecurityHandlerService {
     private stateHandler: StateHandlerService,
     private messageService: MessageService,
     private broadcastService: BroadcastService
-  ) {}
+  ) { }
 
   removeLocalStorage() {
     localStorage.removeItem('token');
@@ -51,12 +51,7 @@ export class SecurityHandlerService {
   }
 
   getUserFromLocalStorage() {
-    // if (this.isValidSession()) {
-
-    if (
-      localStorage.getItem('username') &&
-      localStorage.getItem('username').length > 0
-    ) {
+    if (localStorage.getItem('username') && localStorage.getItem('username').length > 0) {
       return {
         id: localStorage.getItem('userId'),
         token: localStorage.getItem('token'),
@@ -69,15 +64,13 @@ export class SecurityHandlerService {
       };
     }
     return null;
-  // }
-  //   return null;
   }
 
-getEmailFromStorage() {
+  getEmailFromStorage() {
     return localStorage.getItem('email');
   }
 
-addToLocalStorage(user) {
+  addToLocalStorage(user) {
     localStorage.setItem('userId', user.id);
     localStorage.setItem('token', user.token);
     localStorage.setItem('firstName', user.firstName);
@@ -93,23 +86,12 @@ addToLocalStorage(user) {
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-login(username, password) {
-    // //ignoreAuthModule: true
-    // //This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
-    // //as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
-    // var deferred = $q.defer();
+  login(username, password) {
+    // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
+    // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     const resource = { username, password };
-
     const promise = new Promise((resolve, reject) => {
-      this.resources.security.login(resource)
-      // this.resources.authentication
-      //   .post(
-      //     'login',
-      //     { resource },
-      //     { login: true, ignoreAuthModule: true, withCredentials: true }
-      //   )
-        .subscribe(
-          res => {
+      this.resources.security.login(resource).subscribe(res => {
             const result = res.body;
             const currentUser = {
               id: result.id,
@@ -131,47 +113,18 @@ login(username, password) {
     return promise;
   }
 
-  //       login2(username, password) {
-  //           var resource = {username:username,password:password};
-  //           this.resources.authenticationPost("login", {resource:resource}, {login:true, ignoreAuthModule: true, withCredentials: true})
-  //           // this.http.post(url)
-  //               .map((res: Response)=>{
-  //     console.log("res")
-  // })
-  // .catch((error:any)=>{
-  //     // Observable.throw(error);
-  //     console.log('login test fails')
-  // })
-  //       }
-
-logout() {
-    return this.resources.security.logout({ responseType: 'text' })
-    // return this.resources.authentication
-    //   .post('logout', null, { responseType: 'text' })
-      .subscribe(result => {
-        this.broadcastService.broadcast('userLoggedOut');
-        this.removeLocalStorage();
-        this.messageService.loggedInChanged(false);
-        this.stateHandler.Go('appContainer.mainApp.home');
-      });
+  logout() {
+    return this.resources.security.logout({ responseType: 'text' }).subscribe(() => {
+      this.broadcastService.broadcast('userLoggedOut');
+      this.removeLocalStorage();
+      this.messageService.loggedInChanged(false);
+      this.stateHandler.Go('appContainer.mainApp.home');
+    });
   }
 
-expireToken() {
+  expireToken() {
     localStorage.removeItem('token');
   }
-
-// isValidSession() {
-//      this.resources.authentication.get('isValidSession').subscribe(result => {
-//        if (result.body === false) {
-//           this.removeLocalStorage();
-//           return false;
-//        }
-//        if (result.body === true) {
-//           return true;
-//        }
-//          });
-//      return false;
-//   }
 
   isAuthenticated() {
     // return this.resources.authentication.get('isValidSession');
@@ -179,11 +132,11 @@ expireToken() {
   }
 
 
-isLoggedIn() {
+  isLoggedIn() {
     return this.getUserFromLocalStorage() != null;
   }
 
-isAdmin() {
+  isAdmin() {
     if (this.isLoggedIn()) {
         //return this.resources.session.isApplicationAdministration();
         return true;
@@ -191,11 +144,11 @@ isAdmin() {
     return false;
   }
 
-getCurrentUser() {
+  getCurrentUser() {
     return this.getUserFromLocalStorage();
   }
 
-showIfRoleIsWritable(element) {
+  showIfRoleIsWritable(element) {
     // if this app is NOT 'editable', return false
     const isEditable = environment.appIsEditable;
     if (isEditable !== null && isEditable === false) {
@@ -209,22 +162,9 @@ showIfRoleIsWritable(element) {
         return false;
       }
 
-      // because of circular dependencies between stateRoleAccess and SecurityHandler, we load it locally instead of injecting it
-      // var stateRoleAccess: StateRoleAccessService = this.inject.get(StateRoleAccessService);
-
-      // check if the user role is a writable one and return false if it is NOT
-      // var allRoles = stateRoleAccess.getAllRoles();
-      // if (user && user.role && allRoles[user.role]) {
-      //    if (allRoles[user.role].writable === false) {
-      //        return false;
-      //    }
-      // } else {
-      //    return false;
-      // }
-
       // if a value is provided, we need to check if the user has writable access to the element
       if (element) {
-        if (element.editable && !element.finalised) {
+        if (element.availableActions.includes('update') && !element.finalised) {
           return true;
         }
         return false;
@@ -236,9 +176,8 @@ showIfRoleIsWritable(element) {
     return false;
   }
 
-isCurrentSessionExpired() {
+  isCurrentSessionExpired() {
     const promise = new Promise(resolve => {
-      // var deferred = $q.defer();
       if (this.getCurrentUser()) { // Check for valid session when getting user from local storage
         // check session and see if it's still valid
 
@@ -258,20 +197,20 @@ isCurrentSessionExpired() {
 
 
 
-saveLatestURL(url) {
+  saveLatestURL(url) {
     localStorage.setItem('latestURL', url);
   }
-getLatestURL() {
+  getLatestURL() {
     return localStorage.getItem('latestURL');
   }
-removeLatestURL() {
+  removeLatestURL() {
     localStorage.removeItem('latestURL');
   }
 
-dataModelAccess(element) {
-    // console.log(element);
+  dataModelAccess(element) {
     return {
-      showEdit: element.availableActions.includes('update') && !element.finalised,
+      showEdit: element.availableActions.includes('update'),
+      showEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.availableActions.includes('update') && element.finalised,
       showFinalise: element.availableActions.includes('update') && !element.finalised,
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
@@ -280,71 +219,79 @@ dataModelAccess(element) {
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.editable && !element.finalised
+      canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
 
-termAccess(element) {
+  termAccess(element) {
     return {
-      showEdit: element.editable && !element.finalised,
-      showNewVersion: element.editable && element.finalised,
-      showFinalise: element.editable && !element.finalised,
-      showPermission: element.editable || this.isAdmin(),
-      showDelete: this.isAdmin(),
+      showEdit: element.availableActions.includes('update') && !element.finalised,
+      showEditDescription: element.availableActions.includes('editDescription'),
+      showNewVersion: element.availableActions.includes('update') && element.finalised,
+      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showPermission: element.availableActions.includes('update') || this.isAdmin(),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showSoftDelete: element.availableActions.includes('softDelete'),
+      showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.editable
+      canAddLink: element.availableActions.includes('update')
     };
   }
 
-dataElementAccess(element) {
+  dataElementAccess(element) {
     return {
-      showEdit: element.editable,
-      showDelete: this.isAdmin(),
+      showEdit: element.availableActions.includes('update'),
+      showEditDescription: element.availableActions.includes('editDescription'),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showSoftDelete: element.availableActions.includes('softDelete'),
+      showPermanentDelete: element.availableActions.includes('delete'),
+      canAddAnnotation: this.isLoggedIn(),
+      canAddMetadata: this.isLoggedIn(),
+      canAddLink: element.availableActions.includes('update') && !element.finalised
+    };
+  }
+
+  dataClassAccess(element) {
+    return {
+      showEdit: element.availableActions.includes('update'),
+      showEditDescription: element.availableActions.includes('editDescription'),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showSoftDelete: element.availableActions.includes('softDelete'),
+      showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.editable && !element.finalised
+      canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
 
-dataClassAccess(element) {
+  dataTypeAccess(element) {
     return {
-      showEdit: element.editable,
-      showDelete: this.isAdmin(),
+      showEdit: element.availableActions.includes('update'),
+      showEditDescription: element.availableActions.includes('editDescription'),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showSoftDelete: element.availableActions.includes('softDelete'),
+      showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.editable && !element.finalised
+      canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
 
-dataTypeAccess(element) {
+  datFlowAccess(dataFlow) {
     return {
-      showEdit: element.editable,
-      showDelete: this.isAdmin(),
-      canAddAnnotation: this.isLoggedIn(),
-      canAddMetadata: this.isLoggedIn(),
-
-      canAddLink: element.editable && !element.finalised
-    };
-  }
-
-datFlowAccess(dataFlow) {
-    return {
-      showEdit: dataFlow.editable,
-      canAddAnnotation: dataFlow.editable,
+      showEdit: dataFlow.availableActions.includes('update'),
+      canAddAnnotation: dataFlow.availableActions.includes('update'),
       canAddMetadata: this.isLoggedIn()
     };
   }
 
-elementAccess(element) {
-    if (
-      element.domainType === 'DataModel' ||
-      element.domainType === 'Terminology' ||
-      element.domainType === 'CodeSet'
-    ) {
+  elementAccess(element) {
+    console.log(element);
+    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet') {
       return this.dataModelAccess(element);
     }
 
@@ -370,7 +317,7 @@ elementAccess(element) {
     }
   }
 
-folderAccess(folder) {
+  folderAccess(folder) {
     return {
       showEdit: folder.availableActions.includes('update'),
       showPermission: folder.availableActions.includes('update') || this.isAdmin(),

@@ -43,14 +43,17 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
   styleUrls: ['./data-class-details.component.sass']
 })
 export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
+  @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
+  @Input() editMode = false;
+  @Input() afterSave: any;
+
   result: DataClassResult;
   hasResult = false;
   subscription: Subscription;
   editableForm: EditableDataClass;
-  @Input() afterSave: any;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
   errorMessage = '';
   error = '';
   newMinText: any;
@@ -63,7 +66,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   exporting: boolean;
   showEditMode = false;
   processing = false;
-  @Input() editMode = false;
   aliases: any[] = [];
   max: any;
   min: any;
@@ -261,13 +263,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         minMultiplicity: parseInt(this.min, 10),
         maxMultiplicity: parseInt(this.max, 10)
       };
-      this.resourcesService.dataClass.put(
-          this.result.parentDataModel,
-          this.result.parentDataClass,
-          resource.id,
-          null,
-          { resource }
-        ).subscribe(result => {
+      this.resourcesService.dataClass.updateChildDataClass(this.result.parentDataModel, this.result.parentDataClass, resource.id, resource).subscribe(result => {
             if (this.afterSave) {
               this.afterSave(result);
             }
@@ -279,7 +275,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           error => {
             this.messageHandler.showError('There was a problem updating the Data Class.', error);
           }
-        );
+      );
     }
   };
 

@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Comments">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-annotation-list *ngIf="dataElement" [parent]="dataElement"></mdm-annotation-list>
+                <mdm-annotation-list *ngIf="dataElement" [parent]="dataElement" [domainType]="'dataElements'"></mdm-annotation-list>
             </div>
         </ng-template>
     </mat-tab>

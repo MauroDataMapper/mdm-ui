@@ -79,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0
         </mat-tab>
         <mat-tab label="History">
             <div class="full-width" *ngIf="activeTab.name === 'history' && 'folder'">
-                <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></mdm-history>
+                <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId [domainType]="'folders'"></mdm-history>
             </div>
         </mat-tab>
     </mat-tab-group>
@@ -138,7 +138,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Links">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-element-link-list *ngIf="dataModel" [parent]="dataModel"></mdm-element-link-list>
+                <mdm-element-link-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-element-link-list>
             </div>
         </ng-template>
     </mat-tab>

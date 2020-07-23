@@ -50,6 +50,7 @@ export class ElementLinkListComponent implements AfterViewInit {
   @Input() searchCriteria: any;
   @Input() type: any;
   @Input() afterSave: any;
+  @Input() domainType: any;
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   @ViewChildren('filters', { read: ElementRef })
@@ -147,7 +148,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       filters
     };
 
-    return this.resources.catalogueItem.listSemanticLinks(this.parent.domainType, this.parent.id, options);
+    return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);
 
     // if (this.parent.domainType === 'Term') {
     //   return this.resources.term.get(

@@ -52,14 +52,14 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Links">
       <ng-template matTabContent>
         <div class="full-width">
-          <mdm-element-link-list *ngIf="dataType" [parent]="dataType"></mdm-element-link-list>
+          <mdm-element-link-list *ngIf="dataType" [parent]="dataType" [domainType]="'dataTypes'"></mdm-element-link-list>
         </div>
       </ng-template>
     </mat-tab>
     <mat-tab label="Attachments">
       <ng-template matTabContent>
         <div class="full-width">
-          <mdm-attachment-list *ngIf="dataType" [parent]="dataType"></mdm-attachment-list>
+          <mdm-attachment-list *ngIf="dataType" [parent]="dataType" [domainType]="'dataTypes'"></mdm-attachment-list>
         </div>
       </ng-template>
     </mat-tab>

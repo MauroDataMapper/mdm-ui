@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
@@ -51,16 +51,14 @@ export class ClassifierMainComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
     private broadcastSvc: BroadcastService,
-    private title: Title
+    private title: Title,
+    private changeRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder
-      .get(this.parentFolderId)
-      // .get(this.parentFolderId, null, null)
-      .toPromise()
-      .then(result => {
+
+    this.parentFolderId = this.stateService.params.parentFolderId || '';
+    this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
         result.domainType = 'Folder';
         this.parentFolder = result.body;
 
@@ -71,12 +69,9 @@ export class ClassifierMainComponent implements OnInit {
         step1.hasForm = true;
 
         this.steps.push(step1);
-      })
-      .catch(error => {
-        this.messageHandler.showError(
-          'There was a problem loading the Folder.',
-          error
-        );
+        this.changeRef.detectChanges();
+      }).catch(error => {
+        this.messageHandler.showError('There was a problem loading the Folder.', error);
       });
     this.title.setTitle(`New Classifier`);
   }
@@ -87,31 +82,18 @@ export class ClassifierMainComponent implements OnInit {
       description: this.model.description
     };
 
-    this.resources.classifier.save(resource)
-    // let deferred;
-    // deferred = this.resources.classifier.post(null, null, {
-    //   resource
-    // });
-
-    // deferred
-    .subscribe(
-      response => {
+    this.resources.classifier.save(resource).subscribe(response => {
         this.messageHandler.showSuccess('Classifier saved successfully.');
 
-        this.stateHandler.Go(
-          'classification',
+        this.stateHandler.Go('classification',
           {
             id: response.body.id
           },
           { reload: true, location: true }
         );
         this.broadcastSvc.broadcast('$reloadClassifiers');
-      },
-      error => {
-        this.messageHandler.showError(
-          'There was a problem saving the Classifier.',
-          error
-        );
+      }, error => {
+        this.messageHandler.showError('There was a problem saving the Classifier.', error);
       }
     );
   };

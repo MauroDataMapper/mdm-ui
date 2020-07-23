@@ -58,9 +58,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService
-  ) {
-    // this.toaster.success('toast test');
-  }
+  ) { }
 
   ngOnInit() {
     if (!this.stateService.params.id) {
@@ -71,27 +69,19 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-
-    // if(this.stateService.params.edit === "true"){ //Call this if using message service.
-    //     // this.editMode = true;
-    //     this.messageService.showEditMode(true);
-    // }
-    // else
-    //     this.messageService.showEditMode(false);
     window.document.title = 'Classifier';
     this.classifierDetails(this.stateService.params.id);
 
     const promises = [];
-    promises.push(
-      this.resourcesService.classifier.listForCatalogueItem('catalogueItems', this.stateService.params.id)
+    // promises.push(this.resourcesService.classifier.listForCatalogueItem('classifiers', this.stateService.params.id)
       // this.resourcesService.classifier.get(
       //   this.stateService.params.id,
       //   'catalogueItems',
       //   null
       // )
-    );
-    promises.push(
-      this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
+    // );
+    promises.push([]
+      // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
       // this.resourcesService.classifier.get(
       //   this.stateService.params.id,
       //   'terminologies',
@@ -142,10 +132,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   }
 
   classifierDetails(id: any) {
-    this.resourcesService.classifier
-      .get(id)
-      //.get(id, null, null)
-      .subscribe((result: { body: FolderResult }) => {
+    this.resourcesService.classifier.get(id).subscribe((result: { body: FolderResult }) => {
         this.result = result.body;
 
         this.parentId = this.result.id;
@@ -158,10 +145,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
       });
   }
   classifierPermissions(id: any) {
-    this.resourcesService.security.permissions('classifiers', id)
-    // this.resourcesService.classifier
-      // .get(id, 'permissions', null)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+    this.resourcesService.security.permissions('classifiers', id).subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach(attrname => {
           this.result[attrname] = permissions.body[attrname];
         });

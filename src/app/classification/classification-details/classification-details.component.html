@@ -70,17 +70,17 @@ SPDX-License-Identifier: Apache-2.0
                 </tr>
                 <tr mdmShowIfRolesWritable>
                     <td colspan="2" style="text-align: right;">
-                        <div style="float: right">
-                            <mdm-editable-form-buttons [hidden]="editableForm.visible"
-                                                       [onCancelEdit]="onCancelEdit"
-                                                       [editable]="editableForm"
-                                                       [textLocation]="'left'"
-                                                       [hideDelete]="false"
-                                                       [hideCancel]="false"
-                                                       [hideEdit]="true"
-                                                       (delete)="delete()"
-                                                       [processing]="deleteInProgress">
-                            </mdm-editable-form-buttons>
+                        <div style="float: right;" [hidden]="editableForm.visible" *ngIf="showDelete">
+                          <button mat-stroked-button
+                                  color="warn"
+                                  type="button"
+                                  matTooltip="Delete"
+                                  aria-label="Delete"
+                                  class="paddingless"
+                                  [disabled]="deleteInProgress || exporting"
+                                  (click)="askForPermanentDelete()">
+                                  <i class="far fa-trash-alt warning"></i>
+                          </button>
                         </div>
 
                         <div style="float: right;margin-bottom: 3px">
@@ -106,7 +106,8 @@ SPDX-License-Identifier: Apache-2.0
                             </mdm-editable-form-buttons>
                         </div>
 
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <!-- TODO - DB migration -->
+                        <!-- <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     color="primary"
                                     type="button"
@@ -119,7 +120,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [hidden]="editableForm.visible || editableForm.deletePending">
                                     <i class="fas fa-user-lock"></i>
                             </button>
-                        </div>
+                        </div> -->
                     </td>
                 </tr>
             </tbody>

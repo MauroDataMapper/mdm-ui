@@ -44,7 +44,8 @@ import {
   MdmMetadataResource,
   MdmSummaryMetadataResource,
   MdmTreeItemResource,
-  MdmEditResource
+  MdmEditResource,
+  MdmTreeResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -87,4 +88,5 @@ export class MdmResourcesService {
   provider = new MdmProviderResource(this.resourcesConfig, this.restHandler);
   edit = new MdmEditResource(this.resourcesConfig, this.restHandler);
   summaryMetadata = new MdmSummaryMetadataResource(this.resourcesConfig, this.restHandler);
+  otherTree = new MdmTreeResource(this.resourcesConfig, this.restHandler);
 }

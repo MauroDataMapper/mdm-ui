@@ -88,11 +88,11 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-                    <span *ngIf="isToday(record.start)">
-                        {{record.start | date: 'h:mm a' }}
+                    <span *ngIf="isToday(record.creationDateTime)">
+                        {{record.creationDateTime | date: 'h:mm a' }}
                     </span>
-                    <span *ngIf="!isToday(record.start)">
-                        {{record.start | date: 'dd/MM/yyyy h:mm a'}}
+                    <span *ngIf="!isToday(record.creationDateTime)">
+                        {{record.creationDateTime | date: 'dd/MM/yyyy h:mm a'}}
                     </span>
                 </td>
             </ng-container>
@@ -107,11 +107,11 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                 </th>
                 <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-                    <span *ngIf="isToday(record.last)">
-                        {{record.last | date: 'h:mm a' }}
+                    <span *ngIf="isToday(record.lastAccessedDateTime)">
+                        {{record.lastAccessedDateTime | date: 'h:mm a' }}
                     </span>
-                    <span *ngIf="!isToday(record.last)">
-                        {{record.last | date: 'dd/MM/yyyy h:mm a'}}
+                    <span *ngIf="!isToday(record.lastAccessedDateTime)">
+                        {{record.lastAccessedDateTime | date: 'dd/MM/yyyy h:mm a'}}
                     </span>
                 </td>
             </ng-container>

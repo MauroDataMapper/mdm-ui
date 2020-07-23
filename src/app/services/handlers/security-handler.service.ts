@@ -185,10 +185,8 @@ isLoggedIn() {
 
 isAdmin() {
     if (this.isLoggedIn()) {
-      const user = this.getUserFromLocalStorage();
-      if (user.role === 'administrator') {
+        //return this.resources.session.isApplicationAdministration();
         return true;
-      }
     }
     return false;
   }

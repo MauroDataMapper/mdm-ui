@@ -26,7 +26,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'mdm-model-management',
   templateUrl: './model-management.component.html',
-  styleUrls: ['./model-management.component.sass']
+  styleUrls: ['./model-management.component.sass'],
 })
 export class ModelManagementComponent implements OnInit {
   filterElement: string;
@@ -55,7 +55,7 @@ export class ModelManagementComponent implements OnInit {
     this.title.setTitle('Model management');
   }
 
-  onFilterChange = function() {
+  onFilterChange = function () {
     if (this.filterElement === '') {
       this.filterStatus = '';
     }
@@ -70,11 +70,9 @@ export class ModelManagementComponent implements OnInit {
       queryStringParams: {
         includeDocumentSuperseded: true,
         includeModelSuperseded: true,
-        includeDeleted: true
-      }
+        includeDeleted: true,
+      },
     };
-
-    let method = this.resourcesService.tree.get(null, null, options);
     if (this.filterStatus === null) {
       // no op
     } else if (this.filterStatus === 'deleted') {
@@ -82,12 +80,17 @@ export class ModelManagementComponent implements OnInit {
         queryStringParams: {
           includeDocumentSuperseded: false,
           includeModelSuperseded: false,
-          includeDeleted: true
-        }
+          includeDeleted: true,
+        },
       };
-      method = this.resourcesService.tree.get(null, null, options);
     } else if (this.filterStatus === 'documentSuperseded') {
-      //   if (this.filterElement === "dataModel") {
+      if (this.filterElement === 'dataModel') {
+        this.resourcesService.admin.documentationSupersededModels(
+          'folders',
+          'dataModels',
+          options
+        );
+      }
       //     method = this.resourcesService.admin.get(
       //       "dataModels/documentSuperseded"
       //     );
@@ -100,10 +103,9 @@ export class ModelManagementComponent implements OnInit {
         queryStringParams: {
           includeDocumentSuperseded: true,
           includeModelSuperseded: false,
-          includeDeleted: false
-        }
+          includeDeleted: false,
+        },
       };
-      method = this.resourcesService.tree.get(null, null, options);
     } else if (this.filterStatus === 'modelSuperseded') {
       //   if (this.filterElement === "dataModel") {
       //     method = this.resourcesService.admin.get("dataModels/modelSuperseded");
@@ -116,32 +118,33 @@ export class ModelManagementComponent implements OnInit {
         queryStringParams: {
           includeDocumentSuperseded: false,
           includeModelSuperseded: true,
-          includeDeleted: false
-        }
+          includeDeleted: false,
+        },
       };
-      method = this.resourcesService.tree.get(null, null, options);
     }
 
-    method.subscribe(resp => {
-      this.folders = {
-        children: resp.body,
-        isRoot: true
-      };
+    this.resourcesService.otherTree.get(null, null, options).subscribe(
+      (resp) => {
+        this.folders = {
+          children: resp.body,
+          isRoot: true,
+        };
 
-      for (const entry of this.folders.children) {
-        entry.checked = false;
-        this.markChildren(entry);
-      }
+        for (const entry of this.folders.children) {
+          entry.checked = false;
+          this.markChildren(entry);
+        }
 
-      this.reloading = false;
-    },
-      err => {
+        this.reloading = false;
+      },
+      (err) => {
         this.reloading = false;
         this.messageHandler.showError('There was a problem loading tree.', err);
-      });
+      }
+    );
   };
 
-  markChildren = function(node) {
+  markChildren = function (node) {
     if (this.selectedElements) {
       if (this.selectedElements[node.id]) {
         node.checked = true;
@@ -155,28 +158,48 @@ export class ModelManagementComponent implements OnInit {
     }
   };
 
-  onNodeChecked = function(node) {
-    const currentIdx = this.selectedElements.findIndex(x => x.id === [node.id]);
+  onNodeChecked = (node) => {
+    const currentIdx = this.selectedElements.findIndex(
+      (x) => x.node.id === node.node.id
+    );
     if (currentIdx === -1) {
       this.selectedElements.push(node);
       this.selectedElementsCount++;
-    } else {
+      this.removeChildren(node);
+        } else {
       this.selectedElements.splice(currentIdx, 1);
       this.selectedElementsCount--;
+      this.removeChildren(node);
     }
   };
 
-  resetSettings = function() {
+  resetSettings = function () {
     this.loadFolders();
     this.selectedElements = {};
     this.selectedElementsCount = 0;
     this.deleteSuccessMessage = null;
   };
 
+  private removeChildren(node: any) {
+    if (node.hasChildren) {
+      let i = 0;
+      while (i < node.children.length) {
+        const childIdx = this.selectedElements.findIndex(
+          (y) => y.node.id === node.children[i].id
+        );
+        if (childIdx >= 0) {
+          this.selectedElements.splice(childIdx, 1);
+          this.selectedElementsCount--;
+        }
+        i++;
+      }
+    }
+  }
+
   delete(permanent?) {
     const dataModelResources = {
       permanent,
-      ids: []
+      ids: [],
     };
 
     for (const id in this.selectedElements) {
@@ -186,27 +209,37 @@ export class ModelManagementComponent implements OnInit {
     }
 
     this.deleteInProgress = true;
-    this.resourcesService.dataModel.removeAll(dataModelResources)
-    // this.resourcesService.dataModel.delete(null, null, null, dataModelResources)
-      .subscribe(() => {
+    this.resourcesService.dataModel
+      .removeAll(dataModelResources)
+      // this.resourcesService.dataModel.delete(null, null, null, dataModelResources)
+      .subscribe(
+        () => {
           if (permanent) {
-            this.deleteSuccessMessage = this.selectedElementsCount + ' Data Model(s) deleted successfully.';
+            this.deleteSuccessMessage =
+              this.selectedElementsCount +
+              ' Data Model(s) deleted successfully.';
             this.deleteInProgress = false;
 
             setTimeout(() => {
               this.resetSettings();
             }, 2000);
           } else {
-            this.deleteSuccessMessage = this.selectedElementsCount + ' Data Model(s) marked as deleted successfully.';
+            this.deleteSuccessMessage =
+              this.selectedElementsCount +
+              ' Data Model(s) marked as deleted successfully.';
             this.deleteInProgress = false;
 
             setTimeout(() => {
               this.resetSettings();
             }, 2000);
           }
-        }, error => {
+        },
+        (error) => {
           this.deleteInProgress = false;
-          this.messageHandler.showError('There was a problem deleting the Data Model(s).', error);
+          this.messageHandler.showError(
+            'There was a problem deleting the Data Model(s).',
+            error
+          );
         }
       );
   }
@@ -231,11 +264,11 @@ export class ModelManagementComponent implements OnInit {
           title,
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message
-        }
+          message,
+        },
       });
 
-      dialog.afterClosed().subscribe(result => {
+      dialog.afterClosed().subscribe((result) => {
         if (result?.status !== 'ok') {
           return promise;
         }
@@ -263,10 +296,10 @@ export class ModelManagementComponent implements OnInit {
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message,
-        }
+        },
       });
 
-      dialog.afterClosed().subscribe(result => {
+      dialog.afterClosed().subscribe((result) => {
         if (result?.status !== 'ok') {
           return;
         }
@@ -283,11 +316,11 @@ export class ModelManagementComponent implements OnInit {
             title,
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message
-          }
+            message,
+          },
         });
 
-        dialog2.afterClosed().subscribe(res => {
+        dialog2.afterClosed().subscribe((res) => {
           if (res?.status !== 'ok') {
             reject(null);
             return;

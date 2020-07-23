@@ -381,7 +381,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   nodeChecked(child: FlatNode) {
-    const element = this.find(this.node, null, child.id);
+    const element = this.find(this.node, null, child.node.id);
 
     this.markChildren(child, child, child.checked);
 
@@ -398,7 +398,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     if (node.id === id) {
       return { node, parent };
     }
-    if (node.domainType === DOMAIN_TYPE.Folder || node.domainType === DOMAIN_TYPE.DataModel || node.domainType === DOMAIN_TYPE.DataClass || node.isRoot === true) {
+    if (node.domainType === DOMAIN_TYPE.Terminology || node.domainType === DOMAIN_TYPE.Folder || node.domainType === DOMAIN_TYPE.DataModel || node.domainType === DOMAIN_TYPE.DataClass || node.isRoot === true) {
       if (!node.children) {
         return null;
       }

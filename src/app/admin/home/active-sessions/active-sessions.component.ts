@@ -63,21 +63,18 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
   activeSessionsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
     const options = {
-      pageSize,
-      pageIndex,
-      filters,
       sortBy: 'userEmailAddress',
       sortType: 'asc'
     };
 
-    this.resourcesService.session.activeSessions(options)
-    // this.resourcesService.admin.get('activeSessions', options)
+    
+   this.resourcesService.admin.activeSessions(options)
       .subscribe(resp => {
-        for (const [key, value] of Object.entries(resp.body)) {
-          resp.body[key].start = new Date(resp.body[key].sessionOpened);
-          resp.body[key].last = new Date(resp.body[key].lastAccess);
+        for (const [key, value] of Object.entries(resp.body.items)) {
+          resp.body.items[key].creationDateTime = new Date(resp.body.items[key].creationDateTime);
+          resp.body.items[key].lastAccessedDateTime = new Date(resp.body.items[key].lastAccessedDateTime);
 
-          this.records.push(resp.body[key]);
+          this.records.push(resp.body.items[key]);
         }
         this.totalItemCount = this.records.length;
         this.dataSource.data = this.records;

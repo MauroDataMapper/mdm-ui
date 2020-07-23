@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50"
             fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
             <h4>Please select one or more element(s):</h4>
-            <div class="mb-1">
+            <!-- <div class="mb-1">
                 <span class="block">Filter elements by type:</span>
                 <mat-radio-group aria-label="filterElement" class="marginless" name="filterElement" [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
                     <mat-radio-button value="dataModel">Data Model</mat-radio-button>
@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
                     <mat-radio-button value="documentSuperseded">Document Superseded</mat-radio-button>
                     <mat-radio-button value="modelSuperseded">Model Superseded</mat-radio-button>
                 </mat-radio-group>
-            </div>
+            </div> -->
 
             <div *ngIf="!reloading">
                 <div class="treeDropDown">

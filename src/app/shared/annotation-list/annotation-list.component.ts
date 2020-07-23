@@ -39,6 +39,7 @@ export class AnnotationListComponent implements AfterViewInit {
   ) {}
 
   @Input() parent: any;
+  @Input() domainType: any;
 
   access: any;
   currentUser: any;
@@ -46,10 +47,8 @@ export class AnnotationListComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   childEditor: MarkdownTextAreaComponent;
-
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-
   @ViewChild('childEditor', { static: false })
   set content(content: MarkdownTextAreaComponent) {
     this.childEditor = content;
@@ -102,8 +101,7 @@ export class AnnotationListComponent implements AfterViewInit {
       sortType,
       filters
     };
-    // return this.resources.facets.get(this.parent.id, 'annotations', options);
-    return this.resources.catalogueItem.listAnnotations(this.parent.domainType, this.parent.id);
+    return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
   }
 
   add = () => {
@@ -139,7 +137,7 @@ export class AnnotationListComponent implements AfterViewInit {
       label: record.edit.label,
       description: record.edit.description
     };
-    this.resources.facets.post(this.parent.id, 'annotations', { resource }).subscribe(() => {
+    this.resources.catalogueItem.saveAnnotations(this.domainType, this.parent.id, resource).subscribe(() => {
           this.messageHandler.showSuccess('Comment saved successfully.');
           this.reloadEvent.emit();
         },
@@ -154,7 +152,7 @@ export class AnnotationListComponent implements AfterViewInit {
       description: annotation.newChildText
     };
 
-    this.resources.facets.post(this.parent.id, 'annotations/' + annotation.id + '/annotations', {resource}).toPromise().then(response => {
+    this.resources.catalogueItem.saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource).toPromise().then(response => {
           annotation.childAnnotations = annotation.childAnnotations || [];
           annotation.childAnnotations.push(response.body);
           annotation.newChildText = '';

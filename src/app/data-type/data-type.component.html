@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Properties">
       <ng-template matTabContent>
         <div class="full-width">
-          <mdm-data-set-metadata *ngIf="dataType" [parent]="dataType" [type]="'dynamic'"></mdm-data-set-metadata>
+          <mdm-data-set-metadata *ngIf="dataType" [parent]="dataType" [type]="'dynamic'" [domainType]="'dataTypes'"></mdm-data-set-metadata>
         </div>
       </ng-template>
     </mat-tab>

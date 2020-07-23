@@ -50,6 +50,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   @Input() loadingData: any;
   @Input() clientSide: any;
   @Input() afterSave: any;
+  @Input() domainType: any;
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
@@ -332,8 +333,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
-      this.resources.facets.put(this.parent.id, 'metadata', record.id, {resource})
-        .subscribe((result) => {
+      this.resources.catalogueItem.updateMetadata(this.domainType, this.parent.id, record.id, resource).subscribe((result) => {
             if (this.afterSave) {
               this.afterSave(resource);
             }
@@ -343,8 +343,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
             record.value = resource.value;
             record.inEdit = false;
             this.messageHandler.showSuccess('Property updated successfully.');
-          },
-          (error) => {
+          }, (error) => {
             // duplicate namespace + key
             if (error.status === 422) {
               record.edit.errors = [];
@@ -354,7 +353,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
             this.messageHandler.showError('There was a problem updating the property.', error);
           });
     } else {
-      this.resources.facets.post(this.parent.id, 'metadata', {resource}).subscribe((response) => {
+      // this.resources.facets.post(this.parent.id, 'metadata', {resource}).subscribe((response) => {
+      this.resources.catalogueItem.saveMetadata(this.domainType, this.parent.id, resource).subscribe((response) => {
         // after successfully saving the row, it if is a new row,then remove its newRow property
         record.id = response.body.id;
         record.namespace = response.body.namespace;
@@ -389,8 +389,10 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.metaDataItems = this.records;
       return;
     }
-    this.resources.facets.delete(this.parent.id, 'metadata', record.id)
-      .subscribe(() => {
+    // removeMetadata(catalogueItemDomainType: any, catalogueItemId: any, metadataId: any, queryStringParams?: any, restHandlerOptions?: any): any;
+    // |  DELETE  | /api/${catalogueItemDomainType}/${catalogueItemId}/metadata/${id}
+
+    this.resources.catalogueItem.removeMetadata(this.domainType, this.parent.id, record.id).subscribe(() => {
         if (this.type === 'static') {
           this.records.splice($index, 1);
           this.messageHandler.showSuccess('Property deleted successfully.');

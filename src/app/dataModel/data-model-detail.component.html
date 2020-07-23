@@ -176,12 +176,12 @@ SPDX-License-Identifier: Apache-2.0
 
                         <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
+                                    color="accent"
                                     type="button"
                                     class="paddingless"
                                     (click)="finalise()"
                                     matTooltip="Finalise"
                                     aria-label="Finalise"
-                                    color="accent"
                                     [disabled]="deleteInProgress || processing">
                                 <i class="fas fa-check-circle" aria-hidden="true"></i>
                             </button>
@@ -202,7 +202,9 @@ SPDX-License-Identifier: Apache-2.0
 
                         <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
-                                    type="button" class="paddingless"
+                                    color="primary"
+                                    type="button"
+                                    class="paddingless"
                                     matTooltip="Create a New Version"
                                     aria-label="Create a New Version"
                                     [disabled]="deleteInProgress || processing"
@@ -213,6 +215,7 @@ SPDX-License-Identifier: Apache-2.0
 
                         <div *ngIf="isAdminUser && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
+                                    color="primary"
                                     type="button"
                                     matTooltip="Compare"
                                     aria-label="Compare"

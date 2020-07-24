@@ -99,8 +99,7 @@ export class UserComponent implements OnInit {
 
     this.resourcesService.userGroup.get(null, null, options).subscribe(res => {
         this.allGroups = res.body.items;
-      },
-      error => {
+      }, error => {
         this.messageHandler.showError('There was a problem getting the group list', error);
       }
     );
@@ -133,7 +132,6 @@ export class UserComponent implements OnInit {
     if (isValid) {
       delete this.errors;
     }
-    console.log("validating");
     return isValid;
   };
 
@@ -152,16 +150,15 @@ export class UserComponent implements OnInit {
     // it's in edit mode
     if (this.user.id) {
       // it's in edit mode (update)
-      this.resourcesService.catalogueUser.put(this.user.id, null, { resource }).subscribe(() => {
+      this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
         this.messageHandler.showSuccess('User updated successfully.');
         this.stateHandler.Go('admin.users');
-      },
-      error => {
+      }, error => {
         this.messageHandler.showError('There was a problem updating the user.', error);
       });
     } else {
       // it's in new mode (create)
-      this.resourcesService.catalogueUser.post(null, 'adminRegister', { resource }).subscribe(() => {
+      this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
           this.messageHandler.showSuccess('User saved successfully.');
           this.stateHandler.Go('admin.users');
         },

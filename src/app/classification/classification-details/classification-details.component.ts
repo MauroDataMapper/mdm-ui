@@ -252,27 +252,25 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     return promise;
   }
 
-  formBeforeSave = function () {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
     this.editForm.forEach(x => (this.result.label = x.getHotState().value));
 
     const resource = {
-      id: this.result.id,
-      label: this.result.label,
+      label: this.editableForm.label,
       description: this.editableForm.description
     };
 
-    if (this.validateLabel(this.result.label)) {
-      this.resourcesService.classifier.put(resource.id, null, { resource }).subscribe(result => {
+    if (this.validateLabel(this.editableForm.label)) {
+      this.resourcesService.classifier.update(this.result.id, resource).subscribe(result => {
         if (this.afterSave) {
           this.afterSave(result);
         }
         this.messageHandler.showSuccess('Classifier updated successfully.');
         this.editableForm.visible = false;
         this.editForm.forEach(x => x.edit({ editing: false }));
-      },
-        error => {
+      }, error => {
           this.messageHandler.showError('There was a problem updating the Classifier.', error);
         }
       );

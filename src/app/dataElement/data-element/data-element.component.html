@@ -50,11 +50,12 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </ng-template>
     </mat-tab>
-    <mat-tab label="Attachments" *ngIf="showExtraTabs">
+    <!-- TODO - DB migration -->
+    <!-- <mat-tab label="Attachments" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-attachment-list *ngIf="dataElement" [parent]="dataElement" [domainType]="'dataElements'"></mdm-attachment-list>
             </div>
         </ng-template>
-    </mat-tab>
+    </mat-tab> -->
 </mat-tab-group>

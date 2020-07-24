@@ -37,6 +37,9 @@ import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-term-details',
@@ -91,7 +94,10 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     private sharedService: SharedService,
     private helpDialogueService: HelpDialogueHandlerService,
     private favouriteHandler: FavouriteHandlerService,
-    private title: Title
+    private title: Title,
+    private messageHandler: MessageHandlerService,
+    private resourcesService: MdmResourcesService,
+    private broadcastSvc: BroadcastService
   ) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
@@ -211,7 +217,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  formBeforeSave = function() {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
 
@@ -233,10 +239,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
       classifiers
     };
 
-    this.resourcesService.term
-      .put(this.mcTerm.terminology.id, resource.id, null, { resource })
-      .subscribe(
-        result => {
+    this.resourcesService.term.update(this.mcTerm.terminology.id, resource.id,  resource).subscribe(() => {
           if (this.afterSave) {
             this.afterSave(this.mcTerm);
           }
@@ -244,12 +247,8 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
           this.broadcastSvc.broadcast('$reloadFoldersTree');
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem updating the Term.',
-            error
-          );
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Term.', error);
         }
       );
   };

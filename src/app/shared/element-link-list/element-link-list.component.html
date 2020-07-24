@@ -24,7 +24,8 @@ SPDX-License-Identifier: Apache-2.0
                 <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+        <!-- TODO - DB migration -->
+        <!-- <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="access && access.canAddLink" class="mt-1">
                 <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
                 <button mat-flat-button color="primary" (click)="add()">
@@ -35,7 +36,7 @@ SPDX-License-Identifier: Apache-2.0
             <div *ngIf="access && !access.canAddLink && showLinkSuggestion" class="mt-1">
                 <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 

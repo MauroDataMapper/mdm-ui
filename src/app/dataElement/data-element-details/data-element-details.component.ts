@@ -36,7 +36,6 @@ import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementMo
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -96,7 +95,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private stateHandler: StateHandlerService,
     private title: Title,
     private broadcastSvc: BroadcastService,
-    private securityHandler: SecurityHandlerService
   ) {
     this.DataElementDetails();
   }
@@ -306,7 +304,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       );
   }
 
-  formBeforeSave = () => {
+  formBeforeSave () {
     if (!this.validate()) {
       return;
     }
@@ -314,7 +312,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     this.error = '';
     this.editMode = false;
     this.errorMessage = '';
-    // this.editForm.forEach(x => this.result["label"] = x.getHotState().value);
 
     const classifiers = [];
     this.editableForm.classifiers.forEach(cls => {
@@ -344,7 +341,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       }
       const resource = {
         id: this.result.id,
-        label: this.result.label,
+        label: this.editableForm.label,
         description: this.editableForm.description,
         domainType: this.result.domainType,
         aliases,
@@ -353,16 +350,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         minMultiplicity: parseInt(this.min, 10),
         maxMultiplicity: parseInt(this.max, 10)
       };
-      const call = from(
-        this.resourcesService.dataElement.put(
-          this.parentDataModel.id,
-          this.parentDataClass.id,
-          resource.id,
-          null,
-          { resource }
-        )
-      ).subscribe(
-        result => {
+      this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
           }
@@ -370,16 +358,11 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem updating the Data Element.',
-            error
-          );
-        }
-      );
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Data Element.', error);
+      });
     }
-  };
+  }
 
   validate() {
     let isValid = true;

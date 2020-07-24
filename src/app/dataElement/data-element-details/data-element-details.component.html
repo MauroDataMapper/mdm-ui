@@ -20,9 +20,12 @@ SPDX-License-Identifier: Apache-2.0
         <div class="panel-body">
             <div *ngIf="result">
                 <h4 class="inline-block marginless" [ngClass]="{ 'has-error': errorMessage != ''}">
-                    <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
-                        [styleCss]="'dataModelDetailsLabel'" (input)="onLabelChange($event.target)" name="moduleName"
-                        size="20">
+                    <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                          [(ngModel)]="editableForm.label"
+                                          [styleCss]="'dataModelDetailsLabel'"
+                                          (input)="onLabelChange($event.target.value)"
+                                          name="moduleName"
+                                          size="20">
                     </mdm-inline-text-edit>
                 </h4>
                 <div [ngClass]="{'has-error': true }" *ngIf="errorMessage != ''">
@@ -79,13 +82,12 @@ SPDX-License-Identifier: Apache-2.0
                     <th class="detailsRowHeader">Data Type</th>
                     <td>
                         <div *ngIf="!editableForm.visible && result">
-                            <mdm-element-data-type [elementDataType]="result.dataType"
-                                [mcParentDataModel]="parentDataModel">
+                            <mdm-element-data-type  [elementDataType]="result.dataType"
+                                                    [mcParentDataModel]="parentDataModel">
                             </mdm-element-data-type>
                         </div>
 
                         <div *ngIf="editableForm.visible">
-
                             <div *ngIf="!showNewInlineDataType">
                                 Please select a Data Type below or
                                 <button mat-stroked-button color="primary" (click)="toggleShowNewInlineDataType()">Add a
@@ -101,8 +103,10 @@ SPDX-License-Identifier: Apache-2.0
                             </div>
 
                             <div *ngIf="showNewInlineDataType">
-                                <mdm-data-type-inline [model]="newlyAddedDataType" [parentDataModel]="parentDataModel"
-                                    [showClassification]="false" [showParentDataModel]="false">
+                                <mdm-data-type-inline   [model]="newlyAddedDataType"
+                                                        [parentDataModel]="parentDataModel"
+                                                        [showClassification]="false"
+                                                        [showParentDataModel]="false">
                                 </mdm-data-type-inline>
                             </div>
                             <div *ngIf="!showNewInlineDataType">
@@ -111,12 +115,16 @@ SPDX-License-Identifier: Apache-2.0
                                     [loadDynamicValues]="fetchDataTypes" [loadAllOnClick]="true" [record]="result"
                                     [minInputLength]="1" [idProperty]="'id'" [pagination]="pagination"
                                     [displayProperty]="'label'" [searchProperty]="'label'"
-                                    (selectEvent)="onDataTypeSelect($event[0])">
+                                            (selectEvent)="onDataTypeSelect($event[0])">
                                     <ng-template #lineContent let-item='item' let-searchTerm="inputText">
                                         <div [innerHTML]="item.label | mchighlighter:searchTerm"></div>
                                         <div>
                                             <mdm-element-link [element]="item" [showTypeTitle]="true"
                                                 [showLink]="false"></mdm-element-link>
+                                            <mdm-element-link [element]="item"
+                                                              [showTypeTitle]="true"
+                                                              [showLink]="false">
+                                            </mdm-element-link>
                                         </div>
                                     </ng-template>
                                 </mdm-select>
@@ -138,11 +146,16 @@ SPDX-License-Identifier: Apache-2.0
                         <div *ngIf="result">
                             <div style="float: left;">
                                 <div *ngIf="editableForm.visible" style="padding-left: 8px">Min</div>
-                                <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" size="5"></mdm-inline-text-edit>
+                                <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                                      [(ngModel)]="min"
+                                                      [styleCss]="'dataModelDetailsLabel'"
+                                                      name="moduleNameMinText"
+                                                      size="20"
+                                                      size="5">
+                                </mdm-inline-text-edit>
                                 <span *ngIf="!editableForm.visible && (result.minMultiplicity || result.minMultiplicity == 0)">..</span>
                                 <span *ngIf="editableForm.visible" style="padding-right: 10px"></span>
                             </div>
-
                             <div style="float: left;margin-right: 13px;">
                                 <div *ngIf="editableForm.visible" style="padding-left: 6px">Max</div>
                                 <mdm-inline-text-edit [inEditMode]="editableForm.visible"
@@ -156,7 +169,6 @@ SPDX-License-Identifier: Apache-2.0
                             <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
                                 <span class="help-block warning">{{error}}</span>
                             </div>
-
                             <div style="clear: both;font-size: 11px;font-style: italic;" *ngIf="editableForm.visible">
                                 Please enter <strong>*</strong> for unbound multiplicity.
                             </div>
@@ -167,32 +179,35 @@ SPDX-License-Identifier: Apache-2.0
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
                         <mdm-element-classifications [classifications]="result.classifiers"
-                            [editableForm]="editableForm" [element]="result" [property]="'classifiers'">
+                                                     [editableForm]="editableForm"
+                                                     [element]="result"
+                                                     [property]="'classifiers'">
                         </mdm-element-classifications>
-
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: right;">
-                        <div *ngIf="result" style="float: right;margin-bottom: 3px">
-                            <div style="float: right" *ngIf="isAdmin()">
+                        <div *ngIf="result" mdmShowIfRolesWritable [result]="result" style="float: right;margin-bottom: 3px">
+                            <div style="float: right">
                                 <mdm-editable-form-buttons [hidden]="editableForm.visible" [onCancelEdit]="onCancelEdit"
                                     [editable]="editableForm" [textLocation]="'left'" [hideDelete]="false"
                                     [hideCancel]="false" [hideEdit]="true" (delete)="delete()"
-                                    [processing]="deleteInProgress">
-                                </mdm-editable-form-buttons>
+                                    [processing]="deleteInProgress"></mdm-editable-form-buttons>
                             </div>
-                            <div *ngIf="result.editable" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                            <div [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button color="primary" type="button" class="paddingless" [disabled]="deleteInProgress" matTooltip="Edit" aria-label="Edit" (click)="showForm();">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
-                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
-                                [hideCancel]="false" [processing]="deleteInProgress">
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
+                                                       [onCancelEdit]="onCancelEdit"
+                                                       [editable]="editableForm"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="true"
+                                                       [hideCancel]="false"
+                                                       [processing]="deleteInProgress">
                             </mdm-editable-form-buttons>
                         </div>
-
 
                         <div style="clear: both;" *ngIf="processing">
                             <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>

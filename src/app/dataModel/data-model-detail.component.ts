@@ -374,7 +374,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     if (this.validateLabel(this.result.label)) {
-      // this.resourcesService.dataModel.put(resource.id, null, { resource }).subscribe(result => {
       this.resourcesService.dataModel.update(resource.id, resource).subscribe(result => {
             if (this.afterSave) {
               this.afterSave(result);
@@ -432,14 +431,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
       dialog.afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
-          // reject("cancelled");
           return promise;
         }
         this.processing = true;
 
-        this.resourcesService.dataModel.finalise(this.result.id, null)
-        // this.resourcesService.dataModel.put(this.result.id, 'finalise', null)
-          .subscribe(() => {
+        this.resourcesService.dataModel.finalise(this.result.id, null).subscribe(() => {
               this.processing = false;
               this.messageHandler.showSuccess('Data Model finalised successfully.');
               this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });

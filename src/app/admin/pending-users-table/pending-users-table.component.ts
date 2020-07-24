@@ -196,9 +196,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   }
 
   approveUser = (row) => {
-    this.resourcesService.catalogueUser.approve(row.id, null)
-    // this.resourcesService.catalogueUser.put(row.id, 'approveRegistration', {})
-      .subscribe(() => {
+    this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
         this.messageHandler.showSuccess('User approved successfully');
         this.broadcastSvc.broadcast('pendingUserUpdated');
         this.pendingUsersFetch().subscribe(data => {
@@ -214,9 +212,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   };
 
   rejectUser = (row) => {
-    this.resourcesService.catalogueUser.reject(row.id, null)
-    // this.resourcesService.catalogueUser.put(row.id, 'rejectRegistration', {})
-      .subscribe(() => {
+    this.resourcesService.catalogueUser.reject(row.id, null).subscribe(() => {
         this.messageHandler.showSuccess('User rejected successfully');
         this.broadcastSvc.broadcast('pendingUserUpdated');
         this.pendingUsersFetch().subscribe(data => {

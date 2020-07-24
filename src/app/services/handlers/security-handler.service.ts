@@ -290,7 +290,6 @@ export class SecurityHandlerService {
   }
 
   elementAccess(element) {
-    console.log(element);
     if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet') {
       return this.dataModelAccess(element);
     }

@@ -212,7 +212,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  formBeforeSave = function() {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
 
@@ -232,7 +232,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
           this.editForm.forEach(x => x.edit({ editing: false }));
           this.broadcastSvc.broadcast('$reloadFoldersTree');
         }, error => {
-          this.messageHandler.showError('There was a problem updating the Folder.', error);
+          this.messageHandlerService.showError('There was a problem updating the Folder.', error);
       });
     }
   };

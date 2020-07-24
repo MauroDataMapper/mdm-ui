@@ -452,25 +452,4 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   inputClick = () => {
     this.showTree = true;
   };
-
-  // TODO NEEDS LOOK AT
-  onAddFolder = (var1) => {
-
-  }
-  // this.reload();//TODO
-
-
-  // markChildren (node){
-  //   if(this.defaultCheckedMap[node.id]){
-  //     node.checked = true;
-  //   }
-  //   if(this.propagateCheckbox) {
-  //     angular.forEach(node.children, function (n) {
-  //       n.disableChecked = status;
-  //       this.markChildren(n, null, status);
-  //     });
-  //   }
-  // };
-
-
 }

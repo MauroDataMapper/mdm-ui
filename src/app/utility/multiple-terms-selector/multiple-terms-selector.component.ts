@@ -138,7 +138,6 @@ export class MultipleTermsSelectorComponent implements OnInit {
     this.fetch(40, 0);
   };
   loadAllTerms = (terminology, pageSize, offset) => {
-    // var deferred = $q.defer();
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
     const options = {
@@ -155,12 +154,6 @@ export class MultipleTermsSelectorComponent implements OnInit {
         result.body.items.forEach(item => {
           item.terminology = terminology;
         });
-        // angular.forEach(result.items, function (item) {
-        //   item.terminology = terminology;
-        //   if(this.selectorSection.selectedTerms[item.id]){
-        //     item.checked = true;
-        //   }
-        // });
 
         this.selectorSection.searchResult = result.body.items;
 
@@ -182,17 +175,6 @@ export class MultipleTermsSelectorComponent implements OnInit {
           this.isProcessing = false;
           this.loading = false;
         }
-
-    //   deferred.resolve({
-    //     items: result.items,
-    //     count: result.count,
-    //     offset: offset + 1,
-    //     pageSize: $scope.selectorSection.searchResultPageSize
-    //   });
-    // }, function (error) {
-    //   $scope.selectorSection.loading = false;
-    // });
-    // return deferred.promise;
   });
   };
   fetch = (pageSize, offset) => {
@@ -200,12 +182,9 @@ export class MultipleTermsSelectorComponent implements OnInit {
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
       return this.loadAllTerms(this.selectorSection.selectedTerminology, pageSize, offset);
     } else {
-     // var deferred = $q.defer();
       this.selectorSection.searchResultOffset = offset;
       this.loading = true;
-      // $scope.safeApply();
 
-    //  const position = offset * this.selectorSection.searchResultPageSize;
       const position = offset;
       this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ['Term'], null, null, null, null, null, null, null, null).subscribe(result => {
         this.selectorSection.searchResult = result.body.items;
@@ -301,12 +280,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
       this.selectorSection.selectedTermsCount--;
     }
 
-  //  if(this.onSelectedTermsChange){
     this.selectedTermsChange.emit(this.selectorSection.selectedTermsArray);
-    // }
-    // if(this.selectorSection.selectedTermsCount >0)
-    //   this.hideAddButton = false;
-   // this.cd.detectChanges();
 
   };
   removeTerm = ($item) => {
@@ -345,7 +319,4 @@ export class MultipleTermsSelectorComponent implements OnInit {
   ngOnInit() {
 
   }
-
-
-
 }

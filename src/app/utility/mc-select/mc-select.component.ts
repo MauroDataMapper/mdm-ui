@@ -514,7 +514,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     return false;
   }
 
-  getDisplayValue = function(element, displayProperty) {
+  getDisplayValue = (element, displayProperty) => {
     if (element) {
       return this.validator.getProperty(element, displayProperty);
     }

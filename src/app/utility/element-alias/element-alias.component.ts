@@ -71,13 +71,11 @@ export class ElementAliasComponent implements OnInit {
     this.alias.nativeElement.focus();
   }
 
-  keyup = function(event) {
+  keyup = (event) => {
     if (event.keyCode && event.keyCode === 13) {
       this.add();
     }
     event.preventDefault();
     return false;
   };
-
-
 }

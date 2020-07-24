@@ -332,7 +332,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
     return promise;
   }
-  onAddFolder = function(event?, folder?, label?) {
+  onAddFolder = (event?, folder?, label?) => {
     let parentId;
     if (folder) {
       parentId = folder.id;

@@ -452,4 +452,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   inputClick = () => {
     this.showTree = true;
   };
+
+  // TODO NEEDS LOOK AT
+  onAddFolder = (var1) => { }
 }

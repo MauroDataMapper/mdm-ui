@@ -99,6 +99,7 @@ export class DataElementMainComponent implements OnInit {
       return;
     }
     this.model.parentDataModel.id = this.parentDataModelId;
+    this.model.parentDataClass.id = this.parentDataClassId;
     const step1 = new Step();
     step1.title = 'Data Element Import Method';
     step1.component = DataElementStep1Component;
@@ -341,7 +342,7 @@ export class DataElementMainComponent implements OnInit {
         this.stateHandler.Go(
           'dataElement',
           {
-            dataModelId: response.body.dataModel || '',
+            dataModelId: response.body.model || '',
             dataClassId: response.body.dataClass || '',
             id: response.body.id
           },

@@ -177,7 +177,7 @@ export class DataClassMainComponent implements AfterViewInit {
 
     let deferred;
     if (this.model.parent.domainType === 'DataClass') {
-      deferred = this.resources.dataClass.addChildDataClass(this.model.parent.dataModel, this.model.parent.id, resource);
+      deferred = this.resources.dataClass.addChildDataClass(this.model.parent.model, this.model.parent.id, resource);
       // this.resources.dataClass.post(
       //   this.model.parent.dataModel,
       //   this.model.parent.id,

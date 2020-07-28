@@ -541,7 +541,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   async handleAddDataClass(fnode: FlatNode) {
     this.stateHandler.Go('NewDataClass', {
-      grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.parentDataClass : null,
+      grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.node['parentId'] : null,
       parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node['modelId'],
       parentDataClassId: fnode.domainType === DOMAIN_TYPE.DataModel ? null : fnode.id
     });

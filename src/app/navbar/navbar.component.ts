@@ -53,9 +53,9 @@ export class NavbarComponent implements OnInit {
     });
     if (this.isLoggedIn) {
           this.profile = this.securityHandler.getCurrentUser();
-          if (this.isAdmin()) {
-            this.getPendingUsers();
-          }
+          // if (this.isAdmin()) {
+          //   this.getPendingUsers();
+          // }
       }
     this.backendURL = this.sharedService.backendURL;
     this.HDFLink = this.sharedService.HDFLink;

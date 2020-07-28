@@ -542,7 +542,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   async handleAddDataClass(fnode: FlatNode) {
     this.stateHandler.Go('NewDataClass', {
       grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.parentDataClass : null,
-      parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.dataModel,
+      parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node['modelId'],
       parentDataClassId: fnode.domainType === DOMAIN_TYPE.DataModel ? null : fnode.id
     });
   }
@@ -550,7 +550,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   async handleAddDataElement(fnode: FlatNode) {
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: fnode.parentDataClass ? fnode.parentDataClass : null,
-      parentDataModelId: fnode.dataModel,
+      parentDataModelId: fnode.node['modelId'],
       parentDataClassId: fnode.id
     });
   }

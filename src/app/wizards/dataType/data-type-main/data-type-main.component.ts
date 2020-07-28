@@ -173,7 +173,7 @@ export class DataTypeMainComponent implements OnInit {
       })
     };
 
-    const deferred = this.resources.dataType.save(this.model.parent.id, resource);
+    const deferred = this.resources.dataType.save(this.model.parent.id,  resource );
     // this.resources.dataModel.post(
     //   this.model.parent.id,
     //   'dataTypes',
@@ -186,7 +186,7 @@ export class DataTypeMainComponent implements OnInit {
 
         this.stateHandler.Go(
           'DataType',
-          { dataModelId: response.body.dataModel, id: response.body.id },
+          { dataModelId: response.body.model, id: response.body.id },
           { reload: true, location: true }
         );
       }, error => {

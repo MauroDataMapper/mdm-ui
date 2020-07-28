@@ -98,6 +98,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
+    
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
@@ -106,6 +107,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit() {
+ 
+
     this.model = this.step.scope.model;
     this.scope = this.step.scope;
     this.model.selectedDataTypes = [];

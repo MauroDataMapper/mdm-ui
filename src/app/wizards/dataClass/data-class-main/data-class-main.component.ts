@@ -200,7 +200,7 @@ export class DataClassMainComponent implements AfterViewInit {
       this.stateHandler.Go(
         'dataClass',
         {
-          dataModelId: response.body.dataModel || '',
+          dataModelId: response.body.model || '',
           dataClassId: response.body.parentDataClass || '',
           id: response.body.id
         },

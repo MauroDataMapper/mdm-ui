@@ -151,7 +151,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.get(null, 'search/' + this.searchCriteria, options).subscribe(
+        this.resources.tree.search("folders", this.searchCriteria, options).subscribe(
           (result) => {
             this.filteredRootNode = {
               children: result.body,
@@ -203,7 +203,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 
           if (this.searchCriteria.trim().length > 0) {
             this.inSearchMode = true;
-            this.resources.tree.get(null, 'search/' + this.searchCriteria, options).subscribe( (result) => {
+            this.resources.tree.search("folders", this.searchCriteria).subscribe((result) => {
               this.filteredRootNode = {
                 children: result.body,
                 isRoot: true
@@ -279,8 +279,15 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
+    let method = this.resources.tree.list("folders",options);
 
-    this.resources.tree.get(id, null, options).subscribe(data => {
+
+    if(id)
+    {
+      method = this.resources.tree.get("folders","dataModel",id,options);
+    }
+
+    method.subscribe(data => {
       this.loading = false;
       this.rootNode = {
         children: data.body,

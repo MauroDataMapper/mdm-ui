@@ -183,7 +183,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     if (this.parent.domainType === 'DataElement') {
       params = {
         sourceDEId: this.parent.id,
-        sourceDMId: this.parent.dataModel,
+        sourceDMId: this.parent.model,
         sourceDCId: this.parent.dataClass
       };
     }

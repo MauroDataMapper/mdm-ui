@@ -98,7 +98,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
-    
+
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
@@ -107,7 +107,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit() {
- 
+
 
     this.model = this.step.scope.model;
     this.scope = this.step.scope;
@@ -405,13 +405,15 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     let promise = Promise.resolve();
 
     this.model.selectedDataTypes.forEach((dc: any) => {
+      console.log(this.model);
+      console.log(dc);
+
       promise = promise
         .then((result: any) => {
           // const action = 'dataTypes/' + dc.dataModel + '/' + dc.id;
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
 
-          return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.dataModel, dc.id, null)
           return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.model, dc.id, null)
           // return this.resourceService.dataModel
           //   .post(
@@ -447,7 +449,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
     this.model.selectedDataTypes.forEach(async (dt: any) => {
       // const action = 'dataTypes/' + dt.dataModel + '/' + dt.id;
-
       await this.resourceService.dataType.copyDataType(this.model.parent.id, dt.dataModel, dt.id, null)
       // await this.resourceService.dataModel
         // .post(this.model.parent.id, action, null)

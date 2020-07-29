@@ -229,7 +229,7 @@ export class DataClassStep2Component
               .toPromise();
           } else {
             return this.resources.dataClass
-              .copyDataClass(this.model.parent.model, dc.modelId, dc.id, null)
+              .copyDataClass(this.model.parent.id, dc.modelId, dc.id, null)
               .toPromise();
           }
         })

@@ -175,9 +175,9 @@ export class ElementSelectorComponent implements OnInit {
             this.reloading = false;
         });
     }
-  loadAllFolders = function() {
+  loadAllFolders = () => {
     this.loading = true;
-    this.resourceService.folder.get(null, null, { all: true }).subscribe( (data) => {
+    this.resourceService.folder.list().subscribe( (data) => {
       this.loading = false;
       this.rootNode = {
         children: data.body.items,

@@ -316,8 +316,7 @@ export class ModelComparisonComponent implements OnInit {
     this.diffs = [];
     this.processing = true;
 
-    this.resources.dataModel
-      .get(this.sourceModel.id, 'diff/' + this.targetModel.id)
+    this.resources.dataModel.diff(this.sourceModel.id, this.targetModel.id)
       .subscribe(
         res => {
           this.processing = false;
@@ -380,7 +379,7 @@ export class ModelComparisonComponent implements OnInit {
                 return;
               }
 
-              diff[diffElement].created.forEach(el => {
+              diff[diffElement].created?.forEach(el => {
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
                 diffMap[el.id].created = true;

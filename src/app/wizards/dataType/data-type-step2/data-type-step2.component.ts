@@ -412,6 +412,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
           this.finalResult[dc.id] = { result, hasError: false };
 
           return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.dataModel, dc.id, null)
+          return this.resourceService.dataType.copyDataType(this.model.parent.id, dc.model, dc.id, null)
           // return this.resourceService.dataModel
           //   .post(
           //     this.model.parent.id,

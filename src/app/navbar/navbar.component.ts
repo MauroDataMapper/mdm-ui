@@ -89,10 +89,8 @@ export class NavbarComponent implements OnInit {
           this.broadcastSvc.broadcast('userLoggedIn');
           this.securityHandler.removeLatestURL();
           this.stateHandler.CurrentWindow(latestURL);
-          return;
         } else {
           this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-          return;
         }
       }
     });

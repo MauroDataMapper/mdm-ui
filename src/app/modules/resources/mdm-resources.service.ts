@@ -32,13 +32,11 @@ import {
   MdmImporterResource,
   MdmAdminResource,
   MdmUserGroupResource,
-  MdmAuthenticationResource,
   MdmDataModelResource,
   MdmDataFlowResource,
   MdmHierarchyResource,
   MdmEnumerationValuesResource,
   MdmDataTypeResource,
-  MdmPublicResource,
   MdmCodeSetResource,
   MdmFacetsResource,
   MdmMetadataResource,
@@ -69,7 +67,6 @@ export class MdmResourcesService {
   catalogueItem = new MdmCatalogueItemResource(this.resourcesConfig, this.restHandler);
   userGroup = new MdmUserGroupResource(this.resourcesConfig, this.restHandler);
   enumerationValues = new MdmEnumerationValuesResource(this.resourcesConfig, this.restHandler);
-  // authentication = new MdmAuthenticationResource(this.resourcesConfig, this.restHandler);
   security = new MdmSecurityResource(this.resourcesConfig, this.restHandler);
   session = new MdmSessionResource(this.resourcesConfig, this.restHandler);
   tree = new MdmTreeItemResource(this.resourcesConfig, this.restHandler);
@@ -80,7 +77,6 @@ export class MdmResourcesService {
   dataFlow = new MdmDataFlowResource(this.resourcesConfig, this.restHandler);
   dataClass = new MdmDataClassResource(this.resourcesConfig, this.restHandler);
   dataType = new MdmDataTypeResource(this.resourcesConfig, this.restHandler);
-  public = new MdmPublicResource(this.resourcesConfig, this.restHandler);
   admin = new MdmAdminResource(this.resourcesConfig, this.restHandler);
   dataElement = new MdmDataElementResource(this.resourcesConfig, this.restHandler);
   importer = new MdmImporterResource(this.resourcesConfig, this.restHandler);

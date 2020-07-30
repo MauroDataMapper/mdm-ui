@@ -72,7 +72,8 @@ export class DataModelsExportComponent implements OnInit {
       if (result.body === false) {
         return;
       }
-      this.resources.public.dataModelExporterPlugins().subscribe(
+
+      this.resources.dataModel.exporters().subscribe(
         result2 => {
           this.exportersList = result2.body;
         },

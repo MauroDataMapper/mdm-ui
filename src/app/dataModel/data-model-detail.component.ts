@@ -494,7 +494,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       if (result.body === false) {
         return;
       }
-      this.resourcesService.public.dataModelExporterPlugins().subscribe(res => {
+
+      this.resourcesService.dataModel.exporters().subscribe(res => {
           this.exportList = res.body;
         }, error => {
           this.messageHandler.showError('There was a problem loading exporters list.', error);

@@ -68,14 +68,14 @@ export class ImportComponent implements OnInit {
     this.loadImporters();
   }
 
-  loadImporters = (multiple?) => {
-    this.resources.public.dataModelImporterPlugins(multiple).subscribe(result => {
+  loadImporters() {
+    this.resources.dataModel.importers().subscribe(result => {
         this.importers = result.body;
       }, error => {
         this.messageHandler.showError('Can not load importers!', error);
       }
     );
-  };
+  }
 
   loadImporterParameters = (selectedItem) => {
     if (!selectedItem) {

@@ -303,7 +303,7 @@ export class TerminologyDetailsComponent implements OnInit {
       if (result.body === false) {
         return;
       }
-      this.resources.public.dataModelExporterPlugins().subscribe(result2 => {
+      this.resources.dataModel.exporters().subscribe(result2 => {
           this.exportList = result2;
         }, error => {
           this.messageHandler.showError('There was a problem loading exporters list.', error);

@@ -86,40 +86,41 @@ export class SecurityHandlerService {
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-  login(username, password) {
+  async login(username, password) {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     const resource = { username, password };
-    const promise = new Promise((resolve, reject) => {
-      this.resources.security.login(resource).subscribe(res => {
-            const result = res.body;
-            const currentUser = {
-              id: result.id,
-              token: result.token,
-              firstName: result.firstName,
-              lastName: result.lastName,
-              username: result.emailAddress,
-              role: result.userRole ? result.userRole.toLowerCase() : '',
-              needsToResetPassword: result.needsToResetPassword ? true : false
-            };
-            this.addToLocalStorage(currentUser);
-            return resolve(currentUser);
-          },
-          error => {
-            return reject(error);
-          }
-        );
-    });
-    return promise;
+    const response = await this.resources.security.login(resource).toPromise();
+    const result = response.body;
+    const currentUser = {
+      id: result.id,
+      token: result.token,
+      firstName: result.firstName,
+      lastName: result.lastName,
+      username: result.emailAddress,
+      role: result.userRole ? result.userRole.toLowerCase() : '',
+      needsToResetPassword: result.needsToResetPassword ? true : false
+    };
+    this.addToLocalStorage(currentUser);
+    return currentUser;
   }
 
-  logout() {
-    return this.resources.security.logout({ responseType: 'text' }).subscribe(() => {
-      this.broadcastService.broadcast('userLoggedOut');
-      this.removeLocalStorage();
-      this.messageService.loggedInChanged(false);
-      this.stateHandler.Go('appContainer.mainApp.home');
-    });
+  async logout() {
+    try {
+      await this.resources.security.logout({ responseType: 'text' }).toPromise();
+    } catch (err) {
+      if (err.status === 500 && err.message === 'Session has been invalidated') {
+        // Something's wrong
+      } else {
+        console.log(`Status ${err.status}: ${err.message}`);
+      }
+    }
+
+    // Clear everything on client side whether server acknowledge or not.
+    this.removeLocalStorage();
+    this.broadcastService.broadcast('userLoggedOut');
+    this.messageService.loggedInChanged(false);
+    this.stateHandler.Go('appContainer.mainApp.home');
   }
 
   expireToken() {
@@ -176,23 +177,39 @@ export class SecurityHandlerService {
     return false;
   }
 
-  isCurrentSessionExpired() {
-    const promise = new Promise(resolve => {
-      if (this.getCurrentUser()) { // Check for valid session when getting user from local storage
-        // check session and see if it's still valid
-
-        this.isAuthenticated().subscribe(response => {
-          if (response.body.authenticatedSession === false) {
-            this.removeLocalStorage();
-          }
-          resolve(!response.body);
-        });
-      } else {
-        resolve(false);
+  async isCurrentSessionExpired() {
+    if (this.getCurrentUser()) {
+      try {
+        const response = await this.isAuthenticated().toPromise();
+        const json = response.json();
+        if (!json?.authentication) {
+          this.removeLocalStorage();
+          return true;
+        }
+      } catch (err) {
+        if (err.status === 500 && err.message === 'Session has been invalidated') {
+          this.removeLocalStorage();
+        }
       }
-    });
+    }
 
-    return promise;
+    return false;
+
+    // const promise = new Promise(resolve => {
+    //   if (this.getCurrentUser()) { // Check for valid session when getting user from local storage
+    //     // check session and see if it's still valid
+    //     this.isAuthenticated().subscribe(response => {
+    //       if (response.body.authenticatedSession === false) {
+    //         this.removeLocalStorage();
+    //       }
+    //       resolve(!response.body);
+    //     });
+    //   } else {
+    //     resolve(false);
+    //   }
+    // });
+
+    // return promise;
   }
 
 

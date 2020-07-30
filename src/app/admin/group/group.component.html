@@ -15,6 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
+<div class="heading-container mb-2">
+  <h4>
+      <span *ngIf="group.id">Edit Group</span>
+      <span *ngIf="!group.id">Add Group</span>
+  </h4>
+</div>
 <form name="editableForm" class="mdm--form">
     <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>

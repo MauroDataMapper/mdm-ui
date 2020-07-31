@@ -59,7 +59,7 @@ SPDX-License-Identifier: Apache-2.0
             <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Add Code Set</button>
             <ng-container *ngIf="isUserAdmin">
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button>
+                <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button> -->
                 <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanenly</span></button>
             </ng-container>
         </ng-container>

@@ -36,12 +36,12 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-striped">
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="label">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="name">
                 <span [hidden]="!hideFilters">Name</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
                         <mat-label>Name</mat-label>
-                        <input #filters matInput name="label" (keyup)="applyFilter()">
+                        <input #filters matInput name="name" (keyup)="applyFilter()">
                     </mat-form-field>
                 </div>
             </th>
@@ -49,7 +49,7 @@ SPDX-License-Identifier: Apache-2.0
                 <div class="mdm--td-cell">
                     Name
                 </div>
-                <span>{{record.label}}</span>
+                <span>{{record.name}}</span>
             </td>
         </ng-container>
         <ng-container matColumnDef="description">

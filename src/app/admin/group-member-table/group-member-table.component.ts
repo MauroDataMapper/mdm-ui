@@ -23,7 +23,9 @@ import {
   ElementRef,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { ROLES } from '@mdm/constants/roles';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -45,6 +47,7 @@ import { DialogPosition, MatDialog } from '@angular/material/dialog';
 })
 export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   @Input() parent: any;
+  @Output() childEvent = new EventEmitter<any>();
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
@@ -61,7 +64,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
 
   ROLES = this.roles.map;
   errors: any;
-  displayedColumns = ['fullName', 'emailAddress', 'organisation', 'disabled', 'empty'];
+  displayedColumns = ['fullName', 'emailAddress', 'disabled', 'empty'];
   pagination: McSelectPagination;
   totalItemCount = 0;
   isLoadingResults: boolean;
@@ -100,8 +103,8 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   validate = () => {
     let isValid = true;
     this.errors = [];
-    if (this.parent.label.trim().length === 0) {
-      this.errors.label = 'Name can\'t be empty!';
+    if (this.parent.name.trim().length === 0) {
+      this.errors.name = 'Name can\'t be empty!';
       isValid = false;
     }
     if (isValid) {
@@ -151,6 +154,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
+      this.table.renderRows();
     }
   };
 
@@ -166,6 +170,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
         this.totalItemCount = data.body.count;
         this.records = data.body.items;
         this.table.renderRows();
+        this.childEvent.emit(data.body.items);
       });
     }, error => {
         this.messageHandler.showError('There was a problem adding the user to the group.', error);

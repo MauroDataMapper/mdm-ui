@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -75,8 +75,8 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
         this.sort.active,
         this.sort.direction,
         this.filter
-        );
-      }),
+      );
+    }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
         this.isLoadingResults = false;
@@ -86,31 +86,13 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-      ).subscribe(data => {
-        this.records = data;
-        this.dataSource.data = this.records;
-      });
-  }
-
-  // TODO: sorting, paging and filtering without backend call
-  groupsFetch2() {
-    this.resourcesService.userGroup.get(null, null, null).subscribe(resp => {
-      this.records = resp.body.items;
-      this.totalItemCount = this.records.length;
+    ).subscribe(data => {
+      this.records = data;
       this.dataSource.data = this.records;
-    },
-      err => {
-        this.messageHandlerService.showError('There was a problem loading groups.', err);
-      });
+    });
   }
 
-  groupsFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
-  ): Observable<any> {
+  groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
     const options = {
       pageSize,
       pageIndex,
@@ -119,7 +101,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
       sortType
     };
 
-    return this.resourcesService.userGroup.get(null, null, options);
+    return this.resourcesService.userGroups.list(options);
   }
 
   applyFilter = () => {
@@ -147,18 +129,18 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   }
 
   deleteUser(row) {
-    this.resourcesService.userGroup.delete(row.id, null).subscribe(resp => {
+    this.resourcesService.userGroups.remove(row.id).subscribe(() => {
       this.messageHandlerService.showSuccess('Group deleted successfully.');
-
       this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
         this.records = data.body.items;
+        this.totalItemCount = data.body.count;
         this.dataSource.data = this.records;
       }, err => {
-          this.messageHandlerService.showError('There was a problem loading the groups.', err);
-        });
-    }, err => {
-        this.messageHandlerService.showError('There was a problem deleting the group.', err);
+        this.messageHandlerService.showError('There was a problem loading the groups.', err);
       });
+    }, err => {
+      this.messageHandlerService.showError('There was a problem deleting the group.', err);
+    });
   }
 
   add = () => {

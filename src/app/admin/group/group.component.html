@@ -21,12 +21,12 @@ SPDX-License-Identifier: Apache-2.0
       <span *ngIf="!group.id">Add Group</span>
   </h4>
 </div>
-<form name="editableForm" class="mdm--form">
+<form name="editableForm" class="mdm--form mb-2">
     <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput name="label" [(ngModel)]="group.label" required>
-        <mat-error *ngIf="errors && errors['label']">
-            {{errors['label']}}
+        <input matInput name="name" [(ngModel)]="group.name" required>
+        <mat-error *ngIf="errors && errors['name']">
+            {{errors['name']}}
         </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
@@ -39,17 +39,20 @@ SPDX-License-Identifier: Apache-2.0
     <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
         Cancel
     </button>
-    <button mat-flat-button color="primary" type="submit" (click)="save()">
-        Save group
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="group.id">
+      Update group details
     </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!group.id">
+      Add group
+  </button>
 </form>
-<hr>
-<div class="mt-2" *ngIf="group && group.id">
+<div class="mt-3" *ngIf="group && group.id" style="max-width: 800px;">
+  <hr style="max-width: 800px;">
     <mat-tab-group>
         <mat-tab label="Members">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-group-member-table [parent]="group"></mdm-group-member-table>
+                    <mdm-group-member-table [parent]="group" (childEvent)="onUpdateGroupMembers($event)"></mdm-group-member-table>
                 </div>
             </ng-template>
         </mat-tab>

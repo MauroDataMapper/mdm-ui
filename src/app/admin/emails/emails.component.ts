@@ -22,17 +22,15 @@ import {
   ViewChildren,
   EventEmitter,
   ElementRef,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {merge, Observable} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { merge, Observable } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
-
-
 
 @Component({
   selector: 'mdm-app-emails',
@@ -49,26 +47,14 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   totalItemCount = 0;
   filter: string;
 
-
   records: any[] = [];
-  displayedColumns = [
-    'sentToEmailAddress',
-    'dateTimeSent',
-    'subject',
-    'body',
-    'successfullySent'
-  ];
-
-  // dataSource = new MatTableDataSource<any>();
+  displayedColumns = ['sentToEmailAddress', 'dateTimeSent', 'subject', 'body', 'successfullySent'];
 
   constructor(
-    private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private title: Title
-
-  ) {
-
-  }
+    private title: Title,
+    private changeRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Emails');
@@ -77,12 +63,10 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-        this.isLoadingResults = true;
-
-        return this.mailsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
-      }),
+      this.isLoadingResults = true;
+      return this.mailsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+    }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
         this.isLoadingResults = false;
@@ -95,17 +79,14 @@ export class EmailsComponent implements OnInit, AfterViewInit {
       })).subscribe(data => {
         this.records = data;
 
-      });
+    });
+    this.changeRef.detectChanges();
   }
 
   mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
     const options = { pageSize, pageIndex, sortBy, sortType, filters };
-
-    // return this.resourcesService.admin.get('emails', options);
     return this.resourcesService.admin.emails(options);
   }
-
-
 
   applyFilter = () => {
     let filter: any = '';
@@ -128,6 +109,4 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   toggleMessage(record) {
     record.showFailure = !record.showFailure;
   }
-
-
 }

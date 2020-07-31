@@ -81,16 +81,12 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
         this.totalItemCount = data.body.count;
         this.isLoadingResults = false;
         return data.body.items;
-        //
-        // this.records = data.body.items;
-        // this.totalItemCount = this.records.length;
       }),
       catchError(() => {
         this.isLoadingResults = false;
         return [];
       })).subscribe(data => {
       this.records = data;
-
     });
   }
   pendingUsersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
@@ -104,27 +100,6 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     options.filters += '&disabled=false';
 
     return this.resourcesService.catalogueUser.pending(options);
-    // return this.resourcesService.catalogueUser.get(null, 'pending', options);
-  }
-
-  pendingUsersFetchold(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy,
-      sortType
-    };
-    options.filters += '&disabled=false';
-    this.resourcesService.catalogueUser.pending(options)
-    // this.resourcesService.catalogueUser.get(null, 'pending', options)
-      .subscribe(resp => {
-        this.records = resp.body.items;
-        this.totalItemCount = this.records.length;
-        this.refreshDataSource();
-      }, err => {
-        this.messageHandler.showError('There was a problem loading pending users.', err);
-      });
   }
 
   refreshDataSource() {

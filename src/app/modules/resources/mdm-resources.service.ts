@@ -43,7 +43,9 @@ import {
   MdmSummaryMetadataResource,
   MdmTreeItemResource,
   MdmEditResource,
-  MdmTreeResource
+  MdmTreeResource,
+  MdmUserGroupsResource,
+  MdmSecurableResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -85,4 +87,6 @@ export class MdmResourcesService {
   edit = new MdmEditResource(this.resourcesConfig, this.restHandler);
   summaryMetadata = new MdmSummaryMetadataResource(this.resourcesConfig, this.restHandler);
   otherTree = new MdmTreeResource(this.resourcesConfig, this.restHandler);
+  userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
+  securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
 }

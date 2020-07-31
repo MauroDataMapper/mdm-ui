@@ -60,7 +60,8 @@ export class SecurityHandlerService {
         firstName: localStorage.getItem('firstName'),
         lastName: localStorage.getItem('lastName'),
         role: localStorage.getItem('role'),
-        needsToResetPassword: localStorage.getItem('needsToResetPassword')
+        needsToResetPassword: localStorage.getItem('needsToResetPassword'),
+        isAdmin: localStorage.getItem('isAdmin'),
       };
     }
     return null;
@@ -77,6 +78,7 @@ export class SecurityHandlerService {
     localStorage.setItem('lastName', user.lastName);
     localStorage.setItem('username', user.username);
     localStorage.setItem('userId', user.id);
+    localStorage.setItem('isAdmin', user.isAdmin);
 
     // Keep username for 100 days
     const expireDate = new Date();
@@ -91,6 +93,8 @@ export class SecurityHandlerService {
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     const resource = { username, password };
     const response = await this.resources.security.login(resource).toPromise();
+    const admin = await this.resources.session.isApplicationAdministration().toPromise()
+    const adminResult = admin.body;
     const result = response.body;
     const currentUser = {
       id: result.id,
@@ -99,6 +103,7 @@ export class SecurityHandlerService {
       lastName: result.lastName,
       username: result.emailAddress,
       role: result.userRole ? result.userRole.toLowerCase() : '',
+      isAdmin: adminResult.applicationAdministrationSession ? adminResult.applicationAdministrationSession : false,
       needsToResetPassword: result.needsToResetPassword ? true : false
     };
     this.addToLocalStorage(currentUser);
@@ -138,9 +143,8 @@ export class SecurityHandlerService {
   }
 
   isAdmin() {
-    if (this.isLoggedIn()) {
-        //return this.resources.session.isApplicationAdministration();
-        return true;
+    if(this.getCurrentUser()){
+    return this.getCurrentUser().isAdmin;
     }
     return false;
   }

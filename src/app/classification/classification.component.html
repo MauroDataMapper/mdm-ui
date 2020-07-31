@@ -46,34 +46,34 @@ SPDX-License-Identifier: Apache-2.0
 
 
 <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-    <mat-tab label="Classified Elements">
+    <!-- <mat-tab label="Classified Elements">
         <ng-template matTabContent>
             <div class="full-width">
-                <!-- <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'catalogueItems'"></mdm-classified-elements-list> -->
+                <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'catalogueItems'"></mdm-classified-elements-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Classified Terminologies">
         <ng-template matTabContent>
             <div class="full-width">
-                <!-- <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'terminologies'"></mdm-classified-elements-list> -->
+                <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'terminologies'"></mdm-classified-elements-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Classified Terms" *ngIf="termsCount">
         <ng-template matTabContent>
             <div class="full-width">
-                <!-- <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'terms'"></mdm-classified-elements-list> -->
+                <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'terms'"></mdm-classified-elements-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Classified CodeSets" *ngIf="codeSetsCount">
         <ng-template matTabContent>
             <div class="full-width">
-                <!-- <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'codeSets'"></mdm-classified-elements-list> -->
+                <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'codeSets'"></mdm-classified-elements-list>
             </div>
         </ng-template>
-    </mat-tab>
+    </mat-tab> -->
 
     <mat-tab label="History">
         <ng-template matTabContent>

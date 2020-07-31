@@ -113,10 +113,10 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    this.resources.dataClass.listChildDataClasses(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId)
+    this.resources.dataClass.getChildDataClass(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId)
     // this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null)
       .subscribe(result => {
-        // result.body.breadcrumbs.push(Object.assign([],result.body));
+        result.body.breadcrumbs.push(Object.assign([], result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);

@@ -97,7 +97,7 @@ export class UserComponent implements OnInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.userGroup.get(null, null, options).subscribe(res => {
+    this.resourcesService.userGroups.list(options).subscribe(res => {
         this.allGroups = res.body.items;
       }, error => {
         this.messageHandler.showError('There was a problem getting the group list', error);

@@ -77,7 +77,7 @@ SPDX-License-Identifier: Apache-2.0
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Choose a Group</mat-label>
         <mat-select name="groupList" (selectionChange)="onGroupSelect($event)" multiple [(ngModel)]="selectedGroups">
-          <mat-option [value]="item.id" *ngFor="let item of allGroups">{{item.label}}</mat-option>
+          <mat-option [value]="item.id" *ngFor="let item of allGroups">{{item.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

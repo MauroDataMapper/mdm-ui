@@ -16,10 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { forkJoin, Observable, pipe } from 'rxjs';
+import { Observable, EMPTY, forkJoin } from 'rxjs';
 import * as joint from 'jointjs';
-import { flatMap, map } from 'rxjs/operators';
-import { forEach } from '@uirouter/core';
+import { mergeMap } from 'rxjs/operators';
 
 
 export class DataflowDataelementDiagramService extends BasicDiagramService {
@@ -34,8 +33,14 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
     const classGetters = [];
-    return (this.resourcesService.dataFlow.getFlowComponents(params.parent.id, params.flowId, params.flowComponentId) as Observable<any>).pipe(
-      flatMap(data => {
+
+    // TODO: Revisit when server side ready.
+    // const flowComponents: Observable<any> = this.resourcesService.dataFlow.getFlowComponents(params.parent.id, params.flowId, params.flowComponentId);
+    console.warn('resources.dataFlow.getFlowComponents() currently not implemented');
+    const flowComponents: Observable<any> = EMPTY;
+
+    return (flowComponents).pipe(
+      mergeMap(data => {
         this.dataFlows = data.body;
         data.body.items.forEach((dataFlowComponent) => {
           dataFlowComponent.sourceElements.forEach((element) => {
@@ -60,7 +65,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
         return forkJoin(classGetters);
       })
     );
-
   }
 
   render(result: any): void {

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, EMPTY } from 'rxjs';
 import * as joint from 'jointjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -34,7 +34,11 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.parentId = params.parent.id;
-    return this.resourcesService.dataFlow.getAllFlows(this.parentId);
+
+    // TODO: Revisit when server side ready.
+    // return this.resourcesService.dataFlow.getAllFlows(this.parentId);
+    console.warn('resources.dataFlow.getAllFlows() currently not implemented');
+    return EMPTY;
   }
 
   render(data: any): void {

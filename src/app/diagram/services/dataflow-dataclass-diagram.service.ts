@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { Observable } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import * as joint from 'jointjs';
 
 
@@ -29,7 +29,11 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     // console.log('getting class diagram content');
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
-    return this.resourcesService.dataFlow.getFlow(params.parent.id, params.flowId);
+
+    // TODO: Revisit when server side ready.
+    // return this.resourcesService.dataFlow.getFlow(params.parent.id, params.flowId);
+    console.warn('resources.dataFlow.getFlow() currently not implemented');
+    return EMPTY;
   }
 
   render(data: any): void {

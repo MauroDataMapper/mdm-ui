@@ -98,46 +98,44 @@ export class ContentSearchHandlerService {
                    pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Folder') {
-            return this.resources.folder.post(contextElement.id, 'search',
-                {
-                    resource: {
-                        searchTerm: searchText,
-                        limit,
-                        offset,
-                        domainTypes,
-                        labelOnly,
-                        dataModelTypes,
-                        classifiers,
-                        classifierFilter,
-
-                        lastUpdatedAfter,
-                        lastUpdatedBefore,
-
-                        createdAfter,
-                        createdBefore,
-                    },
-
-                    pageSize: limit,
-                    pageIndex: offset * limit
-
-                });
-        } else if (contextElement.domainType === 'DataModel') {
-            return this.resources.dataModel.search(contextElement.id, {
+          return this.resources.tree.search('folders', searchText,
+              {
                   searchTerm: searchText,
                   limit,
                   offset,
                   domainTypes,
                   labelOnly,
                   dataModelTypes,
+                  classifiers,
+                  classifierFilter,
 
                   lastUpdatedAfter,
                   lastUpdatedBefore,
 
                   createdAfter,
                   createdBefore,
+
                   pageSize: limit,
                   pageIndex: offset * limit
+
               });
+        } else if (contextElement.domainType === 'DataModel') {
+          return this.resources.dataModel.search(contextElement.id, {
+                searchTerm: searchText,
+                limit,
+                offset,
+                domainTypes,
+                labelOnly,
+                dataModelTypes,
+
+                lastUpdatedAfter,
+                lastUpdatedBefore,
+
+                createdAfter,
+                createdBefore,
+                pageSize: limit,
+                pageIndex: offset * limit
+            });
             // return this.resources.dataModel.post(contextElement.id, 'search', {
             //     resource: {
             //         searchTerm: searchText,

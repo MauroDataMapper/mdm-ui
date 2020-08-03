@@ -20,7 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from './validator.service';
 import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, Observable, of as observableOf, EMPTY } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +33,6 @@ export class ContentSearchHandlerService {
            domainTypes, labelOnly, dataModelTypes,
            classifiers, classifierFilter,
            lastUpdatedAfter, lastUpdatedBefore, createdAfter, createdBefore): Observable<any> {
-
         const dtIndex = domainTypes.indexOf('DataType');
         if (dtIndex !== -1) {
             domainTypes.splice(dtIndex, 1);
@@ -77,11 +76,9 @@ export class ContentSearchHandlerService {
         }
 
         if (contextElement == null) {
-          return this.resources.tree.search('all',
-            // return this.resources.catalogueItem.post(null,
-            //     'search',
+          // TODO: not working because there is no 'all' context.
+          return this.resources.tree.search('all', searchText,
                 {
-                    resource: {
                         searchTerm: searchText,
                         limit,
                         offset,
@@ -96,10 +93,8 @@ export class ContentSearchHandlerService {
 
                         createdAfter,
                         createdBefore,
-                    },
 
                     pageSize: limit,
-                  //  pageIndex: offset
                    pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Folder') {

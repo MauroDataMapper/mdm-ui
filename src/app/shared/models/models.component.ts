@@ -487,7 +487,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = [];
 
-      this.resources.tree.search(null, this.sharedService.searchCriteria)
+      this.resources.tree.search('folders', this.sharedService.searchCriteria)
       // this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria)
         .subscribe(res => {
         const result = res.body;

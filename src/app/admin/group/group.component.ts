@@ -46,7 +46,7 @@ export class GroupComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.groupId = this.stateService.params.id
+    this.groupId = this.stateService.params.id;
     if (this.groupId) {
       this.title.setTitle(`Group - Edit Group`);
       this.resources.userGroups.get(this.groupId).subscribe(result => {

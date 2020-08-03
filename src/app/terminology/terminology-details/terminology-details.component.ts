@@ -304,11 +304,11 @@ export class TerminologyDetailsComponent implements OnInit {
         return;
       }
       this.resources.dataModel.exporters().subscribe(result2 => {
-          this.exportList = result2;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        }
-      );
+        this.exportList = result2;
+      },
+      error => {
+        this.messageHandler.showError('There was a problem loading exporters list.', error);
+      });
     });
   };
 

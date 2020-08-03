@@ -73,7 +73,7 @@ export class GroupAccessNewComponent implements OnInit {
   ngOnInit() {
     this.buildGroups();
     this.loadAllGroups('', 0, 0);
-    
+
     this.editable = this.folderResult["availableActions"].indexOf("update") !== -1;
 
     this.dataSource = new MatTableDataSource(this.groups);
@@ -107,8 +107,8 @@ export class GroupAccessNewComponent implements OnInit {
         // sortBy: "emailAddress",
         sortType: 'asc',
       };
-      this.resourceService.userGroup.get().subscribe(
-        (data) => {
+      this.resourceService.userGroups.list().subscribe(
+        data => {
           this.allGroups = data.body.items;
         },
         (error) => {

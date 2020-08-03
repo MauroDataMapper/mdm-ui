@@ -140,7 +140,8 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
   delete = record => {
-    this.resources.facets.delete(this.parent.id, 'referenceFiles/' + record.id, null).subscribe(() => {
+    this.resources.catalogueItem.removeReferenceFile(this.parent.domainType, this.parent.id, record.id)
+      .subscribe(() => {
         this.messageHandler.showSuccess('Attachment deleted successfully.');
         this.reloadEvent.emit();
       },

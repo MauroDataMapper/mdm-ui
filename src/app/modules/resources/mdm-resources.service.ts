@@ -31,10 +31,9 @@ import {
   MdmSessionResource,
   MdmImporterResource,
   MdmAdminResource,
-  MdmUserGroupResource,
+  MdmUserGroupsResource,
   MdmDataModelResource,
   MdmDataFlowResource,
-  MdmHierarchyResource,
   MdmEnumerationValuesResource,
   MdmDataTypeResource,
   MdmCodeSetResource,
@@ -43,8 +42,6 @@ import {
   MdmSummaryMetadataResource,
   MdmTreeItemResource,
   MdmEditResource,
-  MdmTreeResource,
-  MdmUserGroupsResource,
   MdmSecurableResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
@@ -67,7 +64,7 @@ export class MdmResourcesService {
   folder = new MdmFolderResource(this.resourcesConfig, this.restHandler);
   catalogueUser = new MdmCatalogueUserResource(this.resourcesConfig, this.restHandler);
   catalogueItem = new MdmCatalogueItemResource(this.resourcesConfig, this.restHandler);
-  userGroup = new MdmUserGroupResource(this.resourcesConfig, this.restHandler);
+  userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
   enumerationValues = new MdmEnumerationValuesResource(this.resourcesConfig, this.restHandler);
   security = new MdmSecurityResource(this.resourcesConfig, this.restHandler);
   session = new MdmSessionResource(this.resourcesConfig, this.restHandler);
@@ -75,7 +72,6 @@ export class MdmResourcesService {
   metadata = new MdmMetadataResource(this.resourcesConfig, this.restHandler);
   facets = new MdmFacetsResource(this.resourcesConfig, this.restHandler);
   dataModel = new MdmDataModelResource(this.resourcesConfig, this.restHandler);
-  hierarchy = new MdmHierarchyResource(this.resourcesConfig, this.restHandler);
   dataFlow = new MdmDataFlowResource(this.resourcesConfig, this.restHandler);
   dataClass = new MdmDataClassResource(this.resourcesConfig, this.restHandler);
   dataType = new MdmDataTypeResource(this.resourcesConfig, this.restHandler);
@@ -86,7 +82,5 @@ export class MdmResourcesService {
   provider = new MdmProviderResource(this.resourcesConfig, this.restHandler);
   edit = new MdmEditResource(this.resourcesConfig, this.restHandler);
   summaryMetadata = new MdmSummaryMetadataResource(this.resourcesConfig, this.restHandler);
-  otherTree = new MdmTreeResource(this.resourcesConfig, this.restHandler);
-  userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
   securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
 }

@@ -37,7 +37,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.modelId = params.parent.id;
-    return this.resourcesService.hierarchy.get(this.modelId);
+    return this.resourcesService.dataModel.hierarchy(this.modelId);
   }
 
 

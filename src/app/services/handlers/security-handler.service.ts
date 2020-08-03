@@ -29,6 +29,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 export class SecurityHandlerService {
   loginModalDisplayed = false;
   in_AuthLoginRequiredCheck = false;
+
   constructor(
     private elementTypes: ElementTypesService,
     private resources: MdmResourcesService,

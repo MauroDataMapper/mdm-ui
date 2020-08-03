@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="45" fxFlex.md="45" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-            <!-- <div *ngIf="access && access.canAddLink" class="mt-1">
+            <div *ngIf="access && access.canAddLink" class="mt-1">
                 <button mat-stroked-button color="primary" (click)="linkSuggestion()" *ngIf="showLinkSuggestion" class="mr-1 mb-1">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
                 <button mat-flat-button color="primary" (click)="add()">
                     <i class="fas fa-plus" aria-hidden="true"></i>
@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
             <div *ngIf="access && !access.canAddLink && showLinkSuggestion" class="mt-1">
                 <button mat-stroked-button color="primary" (click)="linkSuggestion()">Link Suggestions <i class="fas fa-external-link-alt fa-xs"></i></button>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>
@@ -107,15 +107,15 @@ SPDX-License-Identifier: Apache-2.0
                                 <mdm-element-link [element]="record.targetCatalogueItem" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
                             </div>
                             <div *ngIf="record.status == 'target'">
-                                <span [innerHtml]="record.targetCatalogueItem.label| mchighlighter:searchCriteria"></span>
+                                <span [innerHtml]="record.targetCatalogueItem.label | mchighlighter:searchCriteria"></span>
                             </div>
                         </div>
                         <div *ngIf="record.inEdit">
                             <div *ngIf="record.status == 'source'">
-                                <mdm-element-link [element]="record.edit.targetCatalogueItem" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
+                                <mdm-element-link [element]="record.edit.target" [showParentDataModelName]="true" [showTypeTitle]="'true'"></mdm-element-link>
                             </div>
                             <div *ngIf="record.status == 'target'">
-                                <span [innerHtml]="record.targetCatalogueItem.label| mchighlighter:searchCriteria"></span>
+                                <span [innerHtml]="record.targetCatalogueItem.label | mchighlighter:searchCriteria"></span>
                             </div>
                         </div>
                     </div>

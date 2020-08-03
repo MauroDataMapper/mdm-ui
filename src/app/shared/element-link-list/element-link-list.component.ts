@@ -44,7 +44,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     private semanticLinkHandler: SemanticLinkHandlerService,
     private changeRef: ChangeDetectorRef,
     private elementSelector: ElementSelectorDialogueService
-  ) {}
+  ) { }
 
   @Input() parent: any;
   @Input() searchCriteria: any;
@@ -87,37 +87,33 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+      this.isLoadingResults = true;
 
-          return this.semanticLinkFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
-        }),
-        map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          return data.body.items;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          return [];
-        })
-      )
-      .subscribe(data => {
-        data.forEach( element => {
-         element.status = element.sourceCatalogueItem.id === this.parent.id ? 'source' : 'target';
-        });
-
-        this.records = data;
+      return this.semanticLinkFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter
+      );
+    }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.items;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })
+    ).subscribe(data => {
+      data.forEach(element => {
+        element.status = element.sourceCatalogueItem.id === this.parent.id ? 'source' : 'target';
       });
+
+      this.records = data;
+    });
     this.changeRef.detectChanges();
   }
 
@@ -195,27 +191,18 @@ export class ElementLinkListComponent implements AfterViewInit {
       this.records.splice($index, 0);
       return;
     }
-    this.resources.catalogueItem
-      .removeSemanticLink(this.parent.domainType, this.parent.id, record.id)
-      // .delete(this.parent.id, 'semanticLinks', record.id)
-      .subscribe(
-        () => {
-          if (this.type === 'static') {
-            this.records.splice($index, 1);
-            this.messageHandler.showSuccess('Link deleted successfully.');
-          } else {
-            this.records.splice($index, 1);
-            this.messageHandler.showSuccess('Link deleted successfully.');
-            this.filterEvent.emit();
-          }
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem deleting the link.',
-            error
-          );
-        }
-      );
+    this.resources.catalogueItem.removeSemanticLink(this.parent.domainType, this.parent.id, record.id).subscribe(() => {
+      if (this.type === 'static') {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Link deleted successfully.');
+      } else {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Link deleted successfully.');
+        this.filterEvent.emit();
+      }
+    }, error => {
+      this.messageHandler.showError('There was a problem deleting the link.', error);
+    });
   };
 
   add = () => {
@@ -240,7 +227,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     return;
   };
 
-  onEdit = (record, index) => {};
+  onEdit = (record, index) => { };
 
   cancelEdit = (record, index) => {
     if (record.isNew) {
@@ -273,42 +260,54 @@ export class ElementLinkListComponent implements AfterViewInit {
 
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
-      // resources.catalogueItem.put($scope.parent.id, "semanticLinks", record.id, {resource: resource})
+      const body = {
+        targetCatalogueItemDomainType: `${record.edit.target.domainType}`,
+        targetCatalogueItemId: `${record.edit.target.id}`,
+        domainType: 'SemanticLink',
+        linkType: record.edit.linkType,
+      };
 
-      this.semanticLinkHandler.put(this.parent, record.edit.target, record.id, record.edit.linkType).subscribe(res => {
-          if (this.afterSave) {
-            this.afterSave(resource);
-          }
+      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(res => {
+        if (this.afterSave) {
+          this.afterSave(resource);
+        }
+        // this.filterEvent.emit();
 
-          const result = res.body;
-          record.source = result.source;
-          record.target = Object.assign({}, result.target);
-          record.edit.target = Object.assign({}, result.target);
-          record.linkType = result.linkType;
-          record.inEdit = false;
+        // const result = res.body;
+        // record.source = result.source;
+        // record.target = Object.assign({}, result.target);
+        // record.edit.target = Object.assign({}, result.target);
+        // record.linkType = result.linkType;
+        record.inEdit = false;
+        this.table.renderRows();
 
-          this.messageHandler.showSuccess('Link updated successfully.');
+        this.messageHandler.showSuccess('Link updated successfully.');
       }, err => {
-          this.messageHandler.showError('There was a problem updating the link.', err);
-        });
+        this.messageHandler.showError('There was a problem updating the link.', err);
+      });
     } else {
-      // resources.catalogueItem.post($scope.parent.id, "semanticLinks", {resource: resource})
-      this.semanticLinkHandler.post(this.parent, record.edit.target, record.edit.linkType).subscribe(response => {
-            record = Object.assign({}, response);
-            record.status = 'source';
+      const body = {
+        targetCatalogueItemDomainType: `${record.edit.target.domainType}`,
+        targetCatalogueItemId: `${record.edit.target.id}`,
+        domainType: 'SemanticLink',
+        linkType: record.edit.linkType,
+      };
 
-            if (this.type === 'static') {
-              this.records[index] = record;
-              this.messageHandler.showSuccess('Link saved successfully.');
-            } else {
-              this.records[index] = record;
-              this.messageHandler.showSuccess('Link saved successfully.');
-              this.filterEvent.emit();
-            }
-          }, error => {
-            this.messageHandler.showError('There was a problem saving link.', error);
-          }
-        );
+      this.resources.catalogueItem.saveSemanticLinks(this.domainType, this.parent.id, body).subscribe(response => {
+        record = Object.assign({}, response);
+        record.status = 'source';
+
+        if (this.type === 'static') {
+          this.records[index] = record;
+          this.messageHandler.showSuccess('Link saved successfully.');
+        } else {
+          this.records[index] = record;
+          this.messageHandler.showSuccess('Link saved successfully.');
+          this.filterEvent.emit();
+        }
+      }, error => {
+        this.messageHandler.showError('There was a problem saving link.', error);
+      });
     }
   };
 
@@ -342,37 +341,16 @@ export class ElementLinkListComponent implements AfterViewInit {
       domainTypes = ['Term', 'DataType'];
     }
 
-    this.elementSelector
-      .open(domainTypes, notAllowedToSelectIds, 'Element Selector', null)
-      .afterClosed()
-      .subscribe(selectedElement => {
-        if (!selectedElement) {
-          return;
-        }
-
-        record.edit.target = selectedElement;
-        // if target has value, then remove any validation error which already exists
-        if (
-          selectedElement &&
-          record.edit.errors &&
-          record.edit.errors.target
-        ) {
-          delete record.edit.errors.target;
-        }
-      });
-
+    this.elementSelector.open(domainTypes, notAllowedToSelectIds, 'Element Selector', null).afterClosed().subscribe(selectedElement => {
+      if (!selectedElement) {
+        return;
+      }
+      record.edit.target = selectedElement;
+      // if target has value, then remove any validation error which already exists
+      if (selectedElement && record.edit.errors && record.edit.errors.target) {
+        delete record.edit.errors.target;
+      }
+    });
     this.changeRef.detectChanges();
-
-    // elementSelectorDialogue.open(domainTypes, notAllowedToSelectIds).then(function (selectedElement) {
-    //    if (!selectedElement) {
-    //        return;
-    //    }
-    //    record.edit.target = selectedElement;
-    //    //if target has value, then remove any validation error which already exists
-    //    if (selectedElement && record.edit.errors && record.edit.errors['target']) {
-    //        delete record.edit.errors['target'];
-    //    }
-
-    // });
   }
 }

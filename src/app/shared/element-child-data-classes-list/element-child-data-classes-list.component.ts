@@ -63,7 +63,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   displayedColumns: string[];
   loading: boolean;
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   filterEvent = new EventEmitter<string>();
   filter: string;
   deleteInProgress: boolean;

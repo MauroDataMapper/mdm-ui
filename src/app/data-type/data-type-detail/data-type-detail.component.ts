@@ -182,24 +182,32 @@ export class DataTypeDetailComponent implements OnInit {
         const result = res.body;
         const dataElementsCount = result.count;
 
-        let message = `Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?`;
+        let message = `<p class='marginless'>Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?</p>`;
         if (dataElementsCount > 0) {
-          message += `<br>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:<br>`;
+          message += `<p>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:</p>`;
 
           for (let i = 0; i < Math.min(5, result.items.length); i++) {
             const link = this.elementTypes.getLinkUrl(result.items[i]);
-            message += `<a target='_blank' href='${link}'>${result.items[i].label}</a><br>`;
+            message += `<div><a target='_blank' href='${link}'>${result.items[i].label}</a></div>`;
           }
           if (result.count > 5) {
             message += ' ...';
           }
         }
 
-        this.dialog.open(ConfirmationModalComponent, { data: { message } }).afterClosed().subscribe((result2) => {
-            if (result2.status !== 'ok') {
+        this.dialog.open(ConfirmationModalComponent, {
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message
+          }
+        }).afterClosed().subscribe((result2) => {
+            if (result2 != null && result2.status === 'ok') {
+              this.delete();
+            } else {
               return;
             }
-            this.delete();
           });
       });
   };

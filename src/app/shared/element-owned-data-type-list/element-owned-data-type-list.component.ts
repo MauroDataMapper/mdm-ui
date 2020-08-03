@@ -67,7 +67,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   hideFilters = true;
   displayedColumns: string[];
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   filterEvent = new EventEmitter<string>();
   filter: string;
   deleteInProgress: boolean;

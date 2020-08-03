@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0
         </thead>
         <tbody>
           <tr *ngFor="let item of records">
-            <td style="width: 25%; max-width: 25%;">
+            <td style="width: 25%; max-width: 25%; word-break: break-all;">
               <span name="elementName" ngDefaultControl [(ngModel)]="item.label">{{item.label}}</span>
             </td>
             <td style="width: 10%; max-width: 10%; text-align: center;">

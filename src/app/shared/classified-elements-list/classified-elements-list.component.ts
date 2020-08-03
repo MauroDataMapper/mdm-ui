@@ -66,7 +66,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[];
   loading: boolean;
   totalItemCount = 0;
-  isLoadingResults = false;
+  isLoadingResults = true;
   filterEvent = new EventEmitter<string>();
   filter: string;
   deleteInProgress: boolean;
@@ -85,7 +85,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-    this.displayedColumns = ['type', 'label', 'description'];
+    this.displayedColumns = ['label', 'description', 'type'];
     this.isLoadingResults = false;
     // this.allDataTypes = this.elementTypes.getAllDataTypesArray();
   }
@@ -115,10 +115,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     //      filters: filters
     //   // };
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
           this.isLoadingResults = true;
 
           return this.classificationFetch(
@@ -159,11 +156,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
       sortType,
       filters
     };
-    return this.resources.classifier.get(
-      this.parent.id,
-      this.classifiedElementType,
-      options
-    );
+    return this.resources.classifier.get(this.parent.id, this.classifiedElementType, options);
   }
 
   applyFilter = () => {

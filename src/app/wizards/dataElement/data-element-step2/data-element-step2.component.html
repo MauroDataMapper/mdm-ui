@@ -116,9 +116,11 @@ SPDX-License-Identifier: Apache-2.0
     <div *ngIf="model.createType == 'copy'" class="mb-3">
         <h4 class="mt-4">Select the Data Element(s) that you'd like to copy:</h4>
         <div class="heading-container">
-            Data Elements
-            <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-            <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+            <h4 class="mb-1 mt-2">
+              Data Elements
+              <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+              <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
+            </h4>
         </div>
         <div class="table-responsive" [ngClass]="{'is-hidden':!totalItemCount}">
             <table mat-table [dataSource]="dataSourceDataElements" matSort class="mdm--mat-table table-striped">
@@ -190,8 +192,10 @@ SPDX-License-Identifier: Apache-2.0
 
     <div *ngIf="model.createType == 'copy'" class="mt-1">
         <div class="heading-container">
+          <h4 class="marginless">
             <span>Summary of Selected Data Elements</span>
             <span class="mdm--badge mdm--element-count">{{totalSelectedItemsCount}}</span>
+          </h4>
         </div>
         <div class="table-responsive" [ngClass]="{'is-hidden':!totalSelectedItemsCount}">
             <table mat-table [dataSource]="dataSourceSelectedDataElements" matSort class="mdm--mat-table table-striped">
@@ -267,7 +271,7 @@ SPDX-License-Identifier: Apache-2.0
             </table>
         </div>
         <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalSelectedItemsCount}">
-            <p class="marginless">You have not selected any Data Elements.</p>
+            <p class="marginless warning">You have not selected any Data Elements.</p>
         </div>
         <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalSelectedItemsCount < 6}">
             <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="totalSelectedItemsCount" showFirstLastButtons></mat-paginator>
@@ -277,12 +281,11 @@ SPDX-License-Identifier: Apache-2.0
                 <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
             </div>
             <div *ngIf="!processing && isProcessComplete">
-                <div class="alert alert-success" *ngIf="failCount === 0">
+                <div class="alert alert-success" *ngIf="!failCount">
                     <strong>Success!</strong> All Data Elements have been successfully copied!
                 </div>
                 <div class="alert alert-danger" *ngIf="failCount > 0">
                     <strong>Error!</strong> {{failCount}} Error(s) in copy process!
-                    <p>Note: You will not be able to have 2 Data Elements with the same name under the same Folder. </p>
                 </div>
             </div>
         </div>

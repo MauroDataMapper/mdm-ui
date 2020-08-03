@@ -51,7 +51,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   defaultCheckedMap: any;
   loaded = false;
   totalItemCount = 0;
-  totalSelectedItemsCount: number;
+  totalSelectedItemsCount = 0;
   processing: any;
   isProcessComplete: any;
   finalResult = {};

@@ -239,3 +239,29 @@ span.mchighlighter {
 .mdm--mat-menu--actions .warning{
   color: #a5122a;
 }
+
+
+.fas.fa-filter {
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+ngx-skeleton-loader .loader {
+  margin: 0!important;
+}
+
+.mdm--skeleton-table {
+    th:first-of-type, td:first-of-type {
+      padding-left: 24px;
+    }
+    ngx-skeleton-loader {
+      display: flex;
+    }
+}
+
+.mdm--skeleton-badge ngx-skeleton-loader {
+    display: inline-flex;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0px 3px;
+}

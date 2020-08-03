@@ -133,13 +133,13 @@ export class UserComponent implements OnInit {
     if (isValid) {
       delete this.errors;
     }
+    console.log("validating");
     return isValid;
   };
 
   save = () => {
-    if (!this.validate()) {
-      return;
-    }
+    this.validate();
+
     const resource = {
       emailAddress: this.user.emailAddress,
       firstName: this.user.firstName,

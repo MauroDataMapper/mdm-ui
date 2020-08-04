@@ -32,14 +32,14 @@ SPDX-License-Identifier: Apache-2.0
   <div class="modelSelectorTree" style="position: relative;">
     <div [ngClass]="{'input-group':true,'has-error': hasValidationError}">
       <input #searchInputTreeControl type="text" [readonly]="readOnlySearchInput" [disabled]="processing" class="form-control outlined-input"
-        [(ngModel)]="searchCriteria" [ngModelOptions]='{ debounce: 500 }' focus="inputClick()"
+        [(ngModel)]="searchCriteria" [ngModelOptions]='{ debounce: 500 }' focus="inputClick()" (click)="toggleTree()"
         placeholder="{{placeholderStr}}" [required]="isRequired">
 
       <span class="import-folder-actions">
-        <button mat-stroked-button [disabled]="processing" *ngIf="!multiple" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="cleanSelection()">
+        <button mat-stroked-button type="button" [disabled]="processing" *ngIf="!multiple" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="cleanSelection()">
           <i class="fas fa-times warning" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
         </button>
-        <button mat-stroked-button [disabled]="processing" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="toggleTree()">
+        <button mat-stroked-button type="button" [disabled]="processing" [ngClass]="{'foldersTreeSelectorButton hasError': hasValidationError}" (click)="toggleTree()">
           <i class="fas fa-list" [ngStyle]="usedInModalDialogue ? {'font-size': '18px'} :''"></i>
         </button>
       </span>

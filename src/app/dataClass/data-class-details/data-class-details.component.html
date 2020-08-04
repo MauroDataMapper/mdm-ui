@@ -152,14 +152,14 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <!-- TODO - DB migration -->
-                        <!-- <div style="position: relative; float: right; margin-right:4px;"
+                        <div style="position: relative; float: right; margin-right:4px;"
                             [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" type="button" class="paddingless"
                                 matTooltipPosition="below" matTooltip="Search" aria-label="Search"
                                 [disabled]="processing" (click)="toggleShowSearch()">
                                 <i class="fas fa-search"></i>
                             </button>
-                        </div> -->
+                        </div>
 
                         <div style="clear: both;" *ngIf="processing">
                             <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>

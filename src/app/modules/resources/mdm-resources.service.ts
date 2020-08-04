@@ -31,7 +31,6 @@ import {
   MdmSessionResource,
   MdmImporterResource,
   MdmAdminResource,
-  MdmUserGroupsResource,
   MdmDataModelResource,
   MdmDataFlowResource,
   MdmEnumerationValuesResource,
@@ -42,7 +41,8 @@ import {
   MdmSummaryMetadataResource,
   MdmTreeItemResource,
   MdmEditResource,
-  MdmSecurableResource
+  MdmSecurableResource,
+  MdmUserGroupsResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -64,7 +64,6 @@ export class MdmResourcesService {
   folder = new MdmFolderResource(this.resourcesConfig, this.restHandler);
   catalogueUser = new MdmCatalogueUserResource(this.resourcesConfig, this.restHandler);
   catalogueItem = new MdmCatalogueItemResource(this.resourcesConfig, this.restHandler);
-  userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
   enumerationValues = new MdmEnumerationValuesResource(this.resourcesConfig, this.restHandler);
   security = new MdmSecurityResource(this.resourcesConfig, this.restHandler);
   session = new MdmSessionResource(this.resourcesConfig, this.restHandler);
@@ -82,5 +81,6 @@ export class MdmResourcesService {
   provider = new MdmProviderResource(this.resourcesConfig, this.restHandler);
   edit = new MdmEditResource(this.resourcesConfig, this.restHandler);
   summaryMetadata = new MdmSummaryMetadataResource(this.resourcesConfig, this.restHandler);
+  userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
   securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
 }

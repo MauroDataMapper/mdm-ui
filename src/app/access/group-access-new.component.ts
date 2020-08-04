@@ -108,7 +108,7 @@ export class GroupAccessNewComponent implements OnInit {
         sortType: 'asc',
       };
       this.resourceService.userGroups.list().subscribe(
-        data => {
+        (data) => {
           this.allGroups = data.body.items;
         },
         (error) => {

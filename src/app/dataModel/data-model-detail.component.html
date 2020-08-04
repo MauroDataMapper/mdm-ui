@@ -188,7 +188,7 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <!-- TODO - DB migration -->
-                        <!-- <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     type="button"
                                     class="paddingless"
@@ -199,7 +199,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [disabled]="deleteInProgress || processing">
                                 <i class="fas fa-user-lock"></i>
                             </button>
-                        </div> -->
+                        </div>
 
                         <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
@@ -262,12 +262,11 @@ SPDX-License-Identifier: Apache-2.0
                                 </div>
                             </mat-menu>
                         </div>
-                        <!-- TODO - DB migration -->
-                        <!-- <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                          <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
                                 <i class="fas fa-search"></i>
                             </button>
-                        </div> -->
+                        </div>
                         <div style="position: relative; float: right; margin-right:8px;">
                             <div id="exportFileDownload" #aLink></div>
                         </div>

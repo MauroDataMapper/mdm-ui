@@ -123,7 +123,7 @@ export class ModelManagementComponent implements OnInit {
       };
     }
 
-    this.resourcesService.tree.list('folders', options.queryStringParams).subscribe(
+    this.resourcesService.tree.list("folders", null, options).subscribe(
       (resp) => {
         this.folders = {
           children: resp.body,

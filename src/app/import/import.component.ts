@@ -51,7 +51,9 @@ export class ImportComponent implements OnInit {
     String: 'text',
     Password: 'password',
     Boolean: 'checkbox',
-    File: 'file',
+    boolean: 'checkbox',
+    int: 'number',
+    File: 'file'
   };
 
   constructor(
@@ -105,7 +107,7 @@ export class ImportComponent implements OnInit {
 
           // When the input is just a checkbox we give it 'false' as the default value
           // so don't mark it as optional, as the form will be invalid unless the user checks or unChecks the input
-          if (option.type === 'Boolean') {
+          if (option.type === 'Boolean' || option.type === "boolean") {
             option.optional = true;
             option.value = false;
           }

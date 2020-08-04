@@ -27,10 +27,10 @@ import {
   ChangeDetectorRef, OnChanges, ViewChild
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {SecurityHandlerService} from '../services/handlers/security-handler.service';
-import {UserSettingsHandlerService} from '../services/utility/user-settings-handler.service';
-import {fromEvent, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { SecurityHandlerService } from '../services/handlers/security-handler.service';
+import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
+import { fromEvent, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -57,7 +57,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   selectedElementsVal: any;
   @Output() ngModelChange = new EventEmitter<any>();
 
-  // @Input("ng-model") ngModel: any;
 
   @Input()
   get ngModel() {
@@ -109,14 +108,10 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   wasInside = false;
 
   constructor(private resources: MdmResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private eRef: ElementRef, private changeRef: ChangeDetectorRef) {
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    // Add '${implements OnChanges}' to the class.
     if (changes.defaultElements) {
-      // this.selectedElements.push(this.defaultElements);  TODO check why this is needed
       if (!this.multiple) {
         this.searchCriteria = this.selectedElements[0] ? this.selectedElements[0].label : null;
       }
@@ -134,11 +129,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         }
       }
 
-      // $scope.filteredRootNode = angular.copy($scope.rootNode);
-      // $scope.filterDataModels($scope.filteredRootNode, newValue);
-      // $scope.showTree = true;
-
-
       const options = {
         queryStringParams: {
           domainType: this.treeSearchDomainType,
@@ -147,23 +137,18 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           includeDeleted: true
         }
       };
-
-
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.search("folders", this.searchCriteria, options).subscribe(
-          (result) => {
-            this.filteredRootNode = {
-              children: result.body,
-              isRoot: true
-            };
-          });
+        this.resources.tree.search('folders', this.searchCriteria, options).subscribe((result) => {
+          this.filteredRootNode = {
+            children: result.body,
+            isRoot: true
+          };
+        });
       } else {
         this.inSearchMode = false;
         this.reload();
       }
-
-
     }
   }
 
@@ -172,95 +157,72 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.placeholderStr = this.placeholder ? this.placeholder : 'Select';
     this.reload();
 
-    fromEvent(this.searchInputTreeControl.nativeElement, 'keyup')
-      .pipe(map((event: any) => {
-          return event.target.value;
-        }),
-        filter((res: any) => res.length >= 0),
-        debounceTime(500),
-        distinctUntilChanged()
-      )
-      .subscribe((text: string) => {
-        if (text.length !== 0) {
-          if (!this.multiple) {
-            if (this.selectedElements && this.selectedElements.length > 0) {
-              const label = this.selectedElements[0] ? this.selectedElements[0].label : '';
-              if (this.selectedElements && text.trim().toLowerCase() === label.trim().toLowerCase() && label.trim().toLowerCase() !== '') {
-                return;
-              }
+    fromEvent(this.searchInputTreeControl.nativeElement, 'keyup').pipe(map((event: any) => {
+      return event.target.value;
+    }),
+      filter((res: any) => res.length >= 0),
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe((text: string) => {
+      if (text.length !== 0) {
+        if (!this.multiple) {
+          if (this.selectedElements && this.selectedElements.length > 0) {
+            const label = this.selectedElements[0] ? this.selectedElements[0].label : '';
+            if (this.selectedElements && text.trim().toLowerCase() === label.trim().toLowerCase() && label.trim().toLowerCase() !== '') {
+              return;
             }
           }
-
-          const options = {
-            queryStringParams : {
-              domainType: this.treeSearchDomainType,
-              includeDocumentSuperseded: true,
-              includeModelSuperseded: true,
-              includeDeleted: true
-            }
-          };
-
-
-          if (this.searchCriteria.trim().length > 0) {
-            this.inSearchMode = true;
-            this.resources.tree.search("folders", this.searchCriteria).subscribe((result) => {
-              this.filteredRootNode = {
-                children: result.body,
-                isRoot: true
-              };
-            });
-          } else {
-            this.inSearchMode = false;
-            this.reload();
-          }
+        }
+        if (this.searchCriteria.trim().length > 0) {
+          this.inSearchMode = true;
+          this.resources.tree.search('folders', this.searchCriteria).subscribe((result) => {
+            this.filteredRootNode = {
+              children: result.body,
+              isRoot: true
+            };
+          });
         } else {
-          this.reload(); }
-      });
-
+          this.inSearchMode = false;
+          this.reload();
+        }
+      } else {
+        this.reload();
+      }
+    });
   }
 
   loadFolder(folder) {
     const id = (folder && folder.id) ? folder.id : null;
     this.loading = true;
     if (folder?.id) {
-      this.resources.folder.get(id)
-      // this.resources.folder.get(id, null, {all: true, sortBy: 'label'})
-        .subscribe(data => {
+      this.resources.folder.get(id).subscribe(data => {
         this.loading = false;
         this.rootNode = {
           children: data.body.items,
           isRoot: true
         };
         this.filteredRootNode = this.rootNode;
-
-      }, function(error) {
+      }, () => {
         this.loading = false;
       });
     } else {
-      this.resources.folder.list()
-      // this.resources.folder.get(id, null, {all: true, sortBy: 'label'})
-        .subscribe(data => {
+      this.resources.folder.list().subscribe(data => {
         this.loading = false;
         this.rootNode = {
           children: data.body.items,
           isRoot: true
         };
         this.filteredRootNode = this.rootNode;
-
-      }, function(error) {
+      }, () => {
         this.loading = false;
       });
     }
-
   }
 
   loadTree(model) {
     const id = (model && model.id) ? model.id : null;
     this.loading = true;
-
-
     let options = {};
-
     if (!this.doNotApplySettingsFilter && this.securityHandler.isLoggedIn()) {
       if (this.userSettingsHandler.get('includeSupersededDocModels') || false) {
         options = {
@@ -279,12 +241,11 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       };
     }
 
-    let method = this.resources.tree.list("folders",options);
+    let method = this.resources.tree.list('folders', options);
 
 
-    if(id)
-    {
-      method = this.resources.tree.get("folders","dataModel",id,options);
+    if (id) {
+      method = this.resources.tree.get('folders', 'dataModel', id, options);
     }
 
     method.subscribe(data => {
@@ -294,12 +255,10 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         isRoot: true
       };
       this.filteredRootNode = this.rootNode;
-
       if (this.defaultCheckedMap && this.markChildren) {
         this.markChildren(this.filteredRootNode);
       }
-
-    }, function(error) {
+    }, () => {
       this.loading = false;
     });
   }
@@ -319,7 +278,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     let i = 0;
     while (this.selectedElements && i < this.selectedElements.length) {
       if (this.selectedElements[i] && this.selectedElements[i].id === element.id) {
-        return {element: this.selectedElements[i], index: i};
+        return { element: this.selectedElements[i], index: i };
       }
       i++;
     }
@@ -329,7 +288,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   cleanSelection() {
     if (!this.multiple) {
       this.selectedElements = [];
-      // this.safeApply();
 
       this.ngModel = this.selectedElements;
       this.checkValidationError();
@@ -340,7 +298,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       this.selectChange.emit(this.selectedElements);
     }
     this.searchCriteria = null;
-    /// this.filteredRootNode = angular.copy(this.rootNode);TODO
     this.checkValidationError();
   }
 
@@ -360,7 +317,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
   toggleTree() {
-
     if (this.alwaysShowTree) {
       this.showTree = true;
       return;
@@ -388,7 +344,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.click(node);
   };
 
-  onNodeDbClick = function(node) {
+  onNodeDbClick = (node) => {
     this.click(node);
   };
 

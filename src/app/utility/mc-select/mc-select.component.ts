@@ -31,16 +31,16 @@ import {
   EventEmitter,
   ChangeDetectorRef, HostListener, OnChanges
 } from '@angular/core';
-import {ValidatorService} from '@mdm/services/validator.service';
-import {DOCUMENT} from '@angular/common';
+import { ValidatorService } from '@mdm/services/validator.service';
+import { DOCUMENT } from '@angular/common';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'mdm-select',
   templateUrl: './mc-select.component.html',
   styleUrls: ['./mc-select.component.sass'],
-  host: {'(click)': 'onClick($event)'} // TODO - check if this is needed
+  host: { '(click)': 'onClick($event)' } // TODO - check if this is needed
 })
 export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
@@ -83,17 +83,15 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   @Input() defaultPlaceholder: any;
 
   @ViewChildren('mcSelectItem') elements;
-  @ViewChild('input', {static: false}) input;
-  @ViewChild('mcSelect2', {static: false}) mcSelect2;
-  @ViewChild('mcSelectHolder', {static: false}) mcSelectHolder;
+  @ViewChild('input', { static: false }) input;
+  @ViewChild('mcSelect2', { static: false }) mcSelect2;
+  @ViewChild('mcSelectHolder', { static: false }) mcSelectHolder;
 
-  @ContentChild('lineContent', {static: true}) lineContentTmpl: TemplateRef<any>;
-
+  @ContentChild('lineContent', { static: true }) lineContentTmpl: TemplateRef<any>;
 
   @Output() selectEvent = new EventEmitter<any>();
-  recordVal: any;
   @Output() recordChanged = new EventEmitter<any>();
-
+  recordVal: any;
 
   @Input() get pagination() {
     return this.paginationVal;
@@ -109,22 +107,15 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   }
 
   set defaultValue(val) {
-    // if(this.displayProperty) {
-      this.defaultVal = val;
-      // this.setDefaultValue();
-      // this.defaultValueChanged.emit(val);
-    // }
+    this.defaultVal = val;
   }
 
   ngOnChanges() {
     if (this.displayProperty && this.defaultVal) {
       this.setDefaultValue();
       this.defaultValueChanged.emit(this.defaultVal);
-
     }
   }
-
-
 
   @Input()
   get record() {
@@ -136,18 +127,16 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     this.recordChanged.emit(val);
   }
 
-
   constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, @Inject(DOCUMENT) private document: Document, private resourceService: MdmResourcesService, private elementRef: ElementRef) {
-  //  this.setDefaultValue(); ToDo check if it needs here , moved to on Init
- }
+  }
 
   ngOnInit() {
     this.setDefaultValue();
-    this.pagination = {offset: undefined, count: undefined};
+    this.pagination = { offset: undefined, count: undefined };
     this.showCaret = true;
 
-    this.inputStyle = {width: this.width, padding: '6px 40px 6px 12px'};
-    this.holderStyle = {width: this.width, 'background-color': '#FFF'};
+    this.inputStyle = { width: this.width, padding: '6px 40px 6px 12px' };
+    this.holderStyle = { width: this.width, 'background-color': '#FFF' };
     if (this.input !== undefined) {
       this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
     }
@@ -157,16 +146,13 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
   }
 
-  ngOnDestroy(): void {
-
-  }
+  ngOnDestroy(): void { }
 
   onScroll(event) {
     if (event.target.scrollTop + event.target.clientHeight + 300 >= event.target.scrollHeight) {
       this.loadMore();
     }
   }
-
 
   setDefaultValue() {
     if (this.defaultValue) {
@@ -191,14 +177,11 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   }
 
   onClick(event) {
-
     if (this.processing) {
       return;
     }
-
     // if clicking on input
     if (event.target === this.input.nativeElement || event.target === this.mcSelect2.nativeElement) {
-
       if (this.valueType === 'static') {
         // load all values
         this.displayValues = this.staticValues;
@@ -210,15 +193,12 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
         this.input.nativeElement.focus();
         this.showCaret = false;
         this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : 'Search...'));
-
         if (this.loadAllOnClick) {
           this.inputText = '';
           this.textUpdated();
         }
       }
-
     } else {
-
       this.showCaret = true;
       this.input.nativeElement.setAttribute('placeholder', (this.defaultPlaceholder ? this.defaultPlaceholder : ''));
 
@@ -226,7 +206,7 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
         // clear the input
         this.inputText = '';
         if (this.input.val !== undefined) {
-        this.input.val('');
+          this.input.val('');
         }
         this.show = false;
       } else {
@@ -264,8 +244,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
       }
 
       const currentElements = this.mcSelectHolder.nativeElement.querySelectorAll('#current');
-
-
       if (currentElements.length > 0) {
         const nextElement = this.elements._results[this.elements._results.findIndex(x => x.nativeElement === currentElements[0]) + 1];
         if (nextElement.length === 0) {
@@ -281,11 +259,9 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
         const elPosition = this.elementPositionInHolder(nextElement);
         const elHeight = nextElement.nativeElement.offsetHeight;
         const holderHeight = this.mcSelectHolder.nativeElement.offsetHeight;
-
         if (elPosition + elHeight > holderHeight) {
           this.mcSelectHolder.nativeElement.scrollTop = elPosition;
         }
-
       } else {
         this.elements._results[0].nativeElement.id = 'current';
         this.elements._results[0].nativeElement.className = 'mcSelectItem current';
@@ -397,12 +373,8 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   }
 
   filterValues(inputValue) {
-
-
     const found = [];
-
     const p = new Promise((resolve, error) => {
-
       if (this.valueType === 'static') {
         if (inputValue.trim().length === 0) {
           resolve(this.staticValues);
@@ -414,42 +386,31 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
               found.push(staticValue);
             }
           });
-
           resolve(found);
         } else {
           resolve([]);
         }
       } else if (this.valueType === 'dynamic') {
-
         if ((inputValue && inputValue.trim().length === 0) || !this.loadDynamicValues) {
-
           resolve([]);
         }
         let loadAll = false;
         if (!inputValue && this.loadAllOnClick) {
           loadAll = true;
         }
-
         const query = this.loadDynamicValues(inputValue, loadAll, this.pagination.offset, this.pagination.limit);
-
-
         this.loadingDynamicData = true;
         query.subscribe((result) => {
-
-            if (result.body.count != null && result.body.count !== undefined) {
-              this.pagination.count = result.body.count;
-            }
-
-            resolve(result.body.items);
-            this.loadingDynamicData = false;
-          },
-          (error2) => {
+          if (result.body.count != null && result.body.count !== undefined) {
+            this.pagination.count = result.body.count;
+          }
+          resolve(result.body.items);
+          this.loadingDynamicData = false;
+        }, () => {
             this.loadingDynamicData = false;
           });
-
       }
     });
-
     return p;
   }
 
@@ -457,28 +418,19 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     // if dynamic and is not loading
     // if it's loading, so do not load it again
     if (this.valueType === 'dynamic' && this.loadingDynamicData === false) {
-
-      // console.log("In loadMore");
-
       const loadedSoFar = this.pagination.offset + this.pagination.limit;
       if (loadedSoFar > 0 && this.pagination.count <= loadedSoFar) {
         return;
       }
-
       const inputValue = this.inputText;
       this.loadingDynamicData = true;
-
       this.pagination.offset += this.pagination.limit;
       this.changeRef.detectChanges();
-
-      // console.log("loadMore......");
       this.loadDynamicValues(inputValue, false, this.pagination.offset, this.pagination.limit).subscribe((result) => {
-        // console.log("done");
-
         // append to this.displayValues
         this.displayValues = this.displayValues.concat(result.body.items);
         this.loadingDynamicData = false;
-      }, (error) => {
+      }, () => {
         this.loadingDynamicData = false;
       });
     }
@@ -534,18 +486,9 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
     this.loadingDynamicData = false;
   }
 
-  // @HostListener('click')
-  // clickInside() {
-  //   this.wasInside = true;
-  // }
-
   @HostListener('document:click')
   clickout() {
-    if (!this.wasInside) {
-    //  this.showTree = false;
-    }
     this.show = false;
-    // this.setDefaultValue();
   }
 
 }

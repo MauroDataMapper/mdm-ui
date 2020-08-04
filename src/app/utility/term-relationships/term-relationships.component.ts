@@ -18,10 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
-import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { DialogPosition } from '@angular/material/dialog';
 import { TermResult } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MessageService } from '@mdm/services/message.service';
 
 @Component({
   selector: 'mdm-term-relationships',
@@ -40,35 +39,24 @@ export class TermRelationshipsComponent implements OnInit {
   constructor(
     private resources: MdmResourcesService,
     private helpDialogueService: HelpDialogueHandlerService,
-    private dialog: MatDialog,
-    private messageService: MessageService
   ) {
-    // this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-    //   this.term = serverResult;
-    // });
   }
 
   ngOnInit() {
     if (this.term) {
-      this.resources.term.termRelationships(this.term.terminology.id, this.term.id)
-      // this.resources.term.get(this.term.terminology.id, this.term.id, 'termRelationships', {
-      //     queryStringParams: {
-      //       type: 'source'
-      //     }
-      //   })
-        .subscribe(data => {
-            this.totalItems = data.body.count;
-            data.body.items.forEach(item => {
-              if (!this.relations[item.relationshipType.displayLabel]) {
-                this.relationshipTypes.push(item.relationshipType.displayLabel);
-                this.relations[item.relationshipType.displayLabel] = [];
-              }
-              this.relations[item.relationshipType.displayLabel].push(item);
-            });
-            this.loading = false;
-        }, () => {
-          this.loading = false;
+      this.resources.term.termRelationships(this.term.terminology.id, this.term.id).subscribe(data => {
+        this.totalItems = data.body.count;
+        data.body.items.forEach(item => {
+          if (!this.relations[item.relationshipType.displayLabel]) {
+            this.relationshipTypes.push(item.relationshipType.displayLabel);
+            this.relations[item.relationshipType.displayLabel] = [];
+          }
+          this.relations[item.relationshipType.displayLabel].push(item);
         });
+        this.loading = false;
+      }, () => {
+        this.loading = false;
+      });
     }
   }
 

@@ -84,7 +84,6 @@ export class ClassifierMainComponent implements OnInit {
 
     this.resources.classifier.save(resource).subscribe(response => {
         this.messageHandler.showSuccess('Classifier saved successfully.');
-
         this.stateHandler.Go('classification',
           {
             id: response.body.id

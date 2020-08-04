@@ -675,10 +675,7 @@ export class ModelComparisonComponent implements OnInit {
 
   onNodeExpand = node => {
     const obs = new Observable(sub => {
-      this.resources.tree.get('dataModels', node.domainType, node.id)
-      // this.resources.tree.get(node.id)
-        .subscribe(
-        res => {
+      this.resources.tree.get('dataModels', node.domainType, node.id).subscribe(res => {
           const result = res.body;
           result.forEach(dc => {
             if (this.diffMap[dc.id]) {
@@ -688,8 +685,7 @@ export class ModelComparisonComponent implements OnInit {
             }
           });
           sub.next(result);
-        },
-        error => { }
+        }, () => { }
       );
     });
     return obs;

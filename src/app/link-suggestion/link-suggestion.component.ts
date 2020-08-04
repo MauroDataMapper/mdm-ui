@@ -32,7 +32,6 @@ import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
@@ -53,21 +52,17 @@ export class LinkSuggestionComponent implements OnInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
-
   doNotSuggest: any;
 
   model = {
     source: null,
     sourceLink: null,
     loadingSource: false,
-
     target: null,
     targetLink: null,
     loadingTarget: false,
-
     suggestions: [],
     processing: false,
-
     sourceEditable: true,
     successfullyAdded: 0,
     totalSuggestionLinks: 0,
@@ -84,31 +79,19 @@ export class LinkSuggestionComponent implements OnInit {
     private title: Title,
     private state: StateService,
     private messageHandler: MessageHandlerService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Link Suggestion');
     this.hideFilters = true;
 
-    this.sourceDataModelId = this.sourceDataModelId
-      ? this.sourceDataModelId
-      : this.state.params.sourceDMId;
-    this.sourceDataElementId = this.sourceDataElementId
-      ? this.sourceDataElementId
-      : this.state.params.sourceDEId;
-    this.sourceDataClassId = this.sourceDataClassId
-      ? this.sourceDataClassId
-      : this.state.params.sourceDCId;
-    this.targetDataModelId = this.targetDataModelId
-      ? this.targetDataModelId
-      : this.state.params.targetDMId;
+    this.sourceDataModelId = this.sourceDataModelId ? this.sourceDataModelId : this.state.params.sourceDMId;
+    this.sourceDataElementId = this.sourceDataElementId ? this.sourceDataElementId : this.state.params.sourceDEId;
+    this.sourceDataClassId = this.sourceDataClassId ? this.sourceDataClassId : this.state.params.sourceDCId;
+    this.targetDataModelId = this.targetDataModelId ? this.targetDataModelId : this.state.params.targetDMId;
 
     if (this.sourceDataElementId) {
-      this.setSourceDataElement(
-        this.sourceDataModelId,
-        this.sourceDataClassId,
-        this.sourceDataElementId
-      );
+      this.setSourceDataElement(this.sourceDataModelId, this.sourceDataClassId, this.sourceDataElementId);
     } else if (this.sourceDataModelId) {
       this.setSourceDataModel([{ id: this.sourceDataModelId }]);
     }
@@ -143,16 +126,14 @@ export class LinkSuggestionComponent implements OnInit {
 
   setSourceDataElement = (sourceDMId, sourceDCId, sourceDEId) => {
     this.model.loadingSource = true;
-    this.resources.dataElement
-      .get(sourceDMId, sourceDCId, sourceDEId)
-      .subscribe((result) => {
-        const data = result.body;
-        this.model.source = data;
-        this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
-        const access = this.securityHandler.dataModelAccess(this.model.source);
-        this.model.sourceEditable = access.showEdit;
-        this.model.loadingSource = false;
-      });
+    this.resources.dataElement.get(sourceDMId, sourceDCId, sourceDEId).subscribe((result) => {
+      const data = result.body;
+      this.model.source = data;
+      this.model.sourceLink = this.elementTypes.getLinkUrl(this.model.source);
+      const access = this.securityHandler.dataModelAccess(this.model.source);
+      this.model.sourceEditable = access.showEdit;
+      this.model.loadingSource = false;
+    });
   };
 
   onTargetSelect = (dataModels) => {
@@ -191,35 +172,19 @@ export class LinkSuggestionComponent implements OnInit {
     if (i >= 0) {
       this.model.suggestions[i].processing = true;
       // create the link and then remove it
-      this.resources.catalogueItem
-        .saveSemanticLinks(
-          this.model.source.domainType,
-          this.model.source.id,
-          resource
-        )
-        // this.resources.catalogueItem
-        //   .post(this.model.source.id, 'semanticLinks', { resource })
-        .subscribe(
-          () => {
-            this.model.suggestions[i].processing = false;
-            this.model.suggestions[i].success = true;
-            this.model.successfullyAdded++;
-
-            setTimeout(() => {
-              // $scope.mcDisplayRecords[index].success = false;
-              this.model.suggestions.splice(i, 1);
-              this.table.renderRows();
-            }, 300);
-          },
-          (error) => {
-            this.model.suggestions[i].processing = false;
-            this.model.suggestions[i].success = false;
-            this.messageHandler.showError(
-              'There was a problem saving link.',
-              error
-            );
-          }
-        );
+      this.resources.catalogueItem.saveSemanticLinks(this.model.source.domainType, this.model.source.id, resource).subscribe(() => {
+        this.model.suggestions[i].processing = false;
+        this.model.suggestions[i].success = true;
+        this.model.successfullyAdded++;
+        setTimeout(() => {
+          this.model.suggestions.splice(i, 1);
+          this.table.renderRows();
+        }, 300);
+      }, (error) => {
+        this.model.suggestions[i].processing = false;
+        this.model.suggestions[i].success = false;
+        this.messageHandler.showError('There was a problem saving link.', error);
+      });
     }
   };
 
@@ -248,54 +213,38 @@ export class LinkSuggestionComponent implements OnInit {
     this.model.totalIgnoredLinks = 0;
 
     if (this.model.source.domainType === 'DataModel') {
-      this.resources.dataModel
-        .suggestLinks(this.model.source.id, this.model.target.id)
-        .subscribe(
-          (result) => {
-            const data = result.body;
-            if (data.links) {
-              this.model.suggestions = data.links;
-              this.model.totalSuggestionLinks = data.links.length;
-              this.model.suggestions.forEach((suggestion) => {
-                suggestion.selectedTarget = suggestion.results[0];
-              });
-              this.datasource.data = data.links;
-              this.datasource.paginator = this.paginator;
-              this.datasource.sort = this.sort;
-            }
-            this.model.processing = false;
-          },
-          () => {
-            this.model.processing = false;
-          }
-        );
+      this.resources.dataModel.suggestLinks(this.model.source.id, this.model.target.id).subscribe((result) => {
+        const data = result.body;
+        if (data.links) {
+          this.model.suggestions = data.links;
+          this.model.totalSuggestionLinks = data.links.length;
+          this.model.suggestions.forEach((suggestion) => {
+            suggestion.selectedTarget = suggestion.results[0];
+          });
+          this.datasource.data = data.links;
+          this.datasource.paginator = this.paginator;
+          this.datasource.sort = this.sort;
+        }
+        this.model.processing = false;
+      }, () => {
+        this.model.processing = false;
+      });
     } else if (this.model.source.domainType === 'DataElement') {
-      this.resources.dataElement
-        .suggestLinks(
-          this.model.source.model,
-          this.model.source.dataClass,
-          this.model.source.id,
-          this.model.target.id
-        )
-        .subscribe(
-          (data) => {
-            if (data.body) {
-              this.model.suggestions = data.body;
-              this.model.totalSuggestionLinks = 1;
-
-              this.model.suggestions.forEach((suggestion) => {
-                suggestion.selectedTarget = suggestion.results[0];
-              });
-              this.datasource.data = [data];
-              this.datasource.paginator = this.paginator;
-              this.datasource.sort = this.sort;
-            }
-            this.model.processing = false;
-          },
-          () => {
-            this.model.processing = false;
-          }
-        );
+      this.resources.dataElement.suggestLinks(this.model.source.model, this.model.source.dataClass, this.model.source.id, this.model.target.id).subscribe((data) => {
+        if (data.body) {
+          this.model.suggestions = data.body;
+          this.model.totalSuggestionLinks = 1;
+          this.model.suggestions.forEach((suggestion) => {
+            suggestion.selectedTarget = suggestion.results[0];
+          });
+          this.datasource.data = [data];
+          this.datasource.paginator = this.paginator;
+          this.datasource.sort = this.sort;
+        }
+        this.model.processing = false;
+      }, () => {
+        this.model.processing = false;
+      });
     }
   };
 

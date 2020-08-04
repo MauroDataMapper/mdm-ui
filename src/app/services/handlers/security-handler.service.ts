@@ -134,7 +134,6 @@ export class SecurityHandlerService {
   }
 
   isAuthenticated() {
-    // return this.resources.authentication.get('isValidSession');
     return this.resources.session.isAuthenticated();
   }
 
@@ -144,8 +143,8 @@ export class SecurityHandlerService {
   }
 
   isAdmin() {
-    if(this.getCurrentUser()){
-    return this.getCurrentUser().isAdmin;
+    if (this.getCurrentUser()) {
+      return this.getCurrentUser().isAdmin;
     }
     return false;
   }
@@ -197,27 +196,8 @@ export class SecurityHandlerService {
         }
       }
     }
-
     return false;
-
-    // const promise = new Promise(resolve => {
-    //   if (this.getCurrentUser()) { // Check for valid session when getting user from local storage
-    //     // check session and see if it's still valid
-    //     this.isAuthenticated().subscribe(response => {
-    //       if (response.body.authenticatedSession === false) {
-    //         this.removeLocalStorage();
-    //       }
-    //       resolve(!response.body);
-    //     });
-    //   } else {
-    //     resolve(false);
-    //   }
-    // });
-
-    // return promise;
   }
-
-
 
   saveLatestURL(url) {
     localStorage.setItem('latestURL', url);

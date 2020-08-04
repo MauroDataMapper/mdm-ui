@@ -41,16 +41,14 @@ export class DataModelMainComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
     private title: Title
-  ) {}
+  ) { }
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentFolderId: any;
-
   parentFolder: any;
-
   model: any = {
     metadata: [],
     classifiers: []
@@ -58,30 +56,27 @@ export class DataModelMainComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle(`New Data Model`);
-
     this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder.get(this.parentFolderId)
-    // this.resources.folder.get(this.parentFolderId, null, null)
-    .toPromise().then(result => {
-        result.domainType = 'Folder';
-        this.parentFolder = result.body;
+    this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
+      result.domainType = 'Folder';
+      this.parentFolder = result.body;
 
-        const step1 = new Step();
-        step1.title = 'Data Model Details';
-        step1.component = DataModelStep1Component;
-        step1.scope = this;
-        step1.hasForm = true;
-        step1.invalid = true;
+      const step1 = new Step();
+      step1.title = 'Data Model Details';
+      step1.component = DataModelStep1Component;
+      step1.scope = this;
+      step1.hasForm = true;
+      step1.invalid = true;
 
-        const step2 = new Step();
-        step2.title = 'Default Data Types';
-        step2.component = DataModelStep2Component;
-        step2.scope = this;
-        step1.invalid = true;
+      const step2 = new Step();
+      step2.title = 'Default Data Types';
+      step2.component = DataModelStep2Component;
+      step2.scope = this;
+      step1.invalid = true;
 
-        this.steps.push(step1);
-        this.steps.push(step2);
-      })
+      this.steps.push(step1);
+      this.steps.push(step2);
+    })
       .catch(error => {
         this.messageHandler.showError('There was a problem loading the Folder.', error);
       });
@@ -122,16 +117,13 @@ export class DataModelMainComponent implements OnInit {
       };
     }
 
-    this.resources.dataModel.addToFolder(this.parentFolderId, resource)
-    // this.resources.dataModel.post(null, null, {resource, queryStringParams})
-      .subscribe(response => {
-          this.messageHandler.showSuccess('Data Model saved successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.stateHandler.Go('dataModel', { id: response.body.id }, { reload: true, location: true });
-        },
-        error => {
-          this.messageHandler.showError('There was a problem saving the Data Model.', error);
-        }
-      );
+    this.resources.dataModel.addToFolder(this.parentFolderId, resource).subscribe(response => {
+      this.messageHandler.showSuccess('Data Model saved successfully.');
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+      this.stateHandler.Go('dataModel', { id: response.body.id }, { reload: true, location: true });
+    },
+      error => {
+        this.messageHandler.showError('There was a problem saving the Data Model.', error);
+      });
   }
 }

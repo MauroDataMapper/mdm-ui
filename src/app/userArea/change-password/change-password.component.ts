@@ -67,19 +67,15 @@ export class ChangePasswordComponent implements OnInit {
       newPassword: this.newPassword
     };
 
-    this.resourcesService.catalogueUser.changePassword(this.currentUser.id, body)
-    // this.resourcesService.catalogueUser.put(this.currentUser.id, 'changePassword', { resource: body })
-      .subscribe(() => {
+    this.resourcesService.catalogueUser.changePassword(this.currentUser.id, body).subscribe(() => {
         this.messageHandler.showSuccess('Password updated successfully.');
         this.newPassword = '';
         this.oldPassword = '';
         this.confirm = '';
         this.message = '';
         this.changePasswordForm.reset();
-      },
-      error => {
+      }, error => {
         this.message = 'Error : ' + error.error.errors[0].message;
-      }
-    );
+    });
   };
 }

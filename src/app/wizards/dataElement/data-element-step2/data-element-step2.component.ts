@@ -25,17 +25,17 @@ import {
   ChangeDetectorRef,
   QueryList, AfterViewInit, OnDestroy
 } from '@angular/core';
-import {merge, Subscription} from 'rxjs';
-import {NgForm} from '@angular/forms';
-import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {ValidatorService} from '@mdm/services/validator.service';
+import { merge, Subscription } from 'rxjs';
+import { NgForm } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {McSelectPagination} from '@mdm/utility/mc-select/mc-select.component';
-import {MatTableDataSource} from '@angular/material/table';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
-import {BroadcastService} from '@mdm/services/broadcast.service';
+import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-data-element-step2',
@@ -65,13 +65,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   successCount = 0;
 
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
-
   formChangesSubscription: Subscription;
-
-  @ViewChild('myForm', {static: false}) myForm: NgForm;
-  @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
-  // @ViewChild(MatSort, { static: false }) sort: MatSort;
-  // @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
   dataSourceDataElements = new MatTableDataSource<any>();
   filterEvent = new EventEmitter<string>();
@@ -96,31 +92,22 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
-      this.pageSizeOptions =  settings.counts;
+      this.pageSizeOptions = settings.counts;
     }
   }
 
   ngOnInit() {
-
     this.model = this.step.scope.model;
-    this.dataSourceSelectedDataElements = new MatTableDataSource<any>(
-      this.model.selectedDataTypes
-    );
+    this.dataSourceSelectedDataElements = new MatTableDataSource<any>(this.model.selectedDataTypes);
   }
 
   ngAfterViewInit() {
-
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
       this.validate(x);
-      // this.step.invalid = this.myForm.invalid;
-      // this.validateDataType();
     });
-
-
   }
 
   dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
-
     const options = {
       pageSize,
       pageIndex,
@@ -128,15 +115,11 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       sortType,
       filters
     };
-
     const dataClass = this.model.copyFromDataClass[0];
-
     return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
-    // return this.resources.dataClass.get(dataClass.dataModel, null, dataClass.id, 'dataElements', options);
   }
 
   onLoad() {
-
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
 
     if (this.model.selectedDataClassesMap) {
@@ -145,69 +128,35 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     }
 
     this.loaded = true;
-    this.displayedColumnsDataTypes = [
-      'checkbox',
-      'label',
-      'description',
-      'domainType'
-    ];
-    this.displayedColumnsSelectedDataTypes = [
-      'label',
-      'description',
-      'domainType',
-      'status'
-    ];
+    this.displayedColumnsDataTypes = ['checkbox', 'label', 'description', 'domainType'];
+    this.displayedColumnsSelectedDataTypes = ['label', 'description', 'domainType', 'status'];
 
-    if (
-      this.sort !== null &&
-      this.sort !== undefined &&
-      this.sort.toArray().length > 0 &&
-      this.paginator !== null &&
-      this.paginator !== undefined &&
-      this.paginator.toArray().length > 0
-    ) {
+    if (this.sort !== null && this.sort !== undefined && this.sort.toArray().length > 0 && this.paginator !== null && this.paginator !== undefined && this.paginator.toArray().length > 0) {
       this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
       this.filterEvent.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
-
       this.dataSourceDataElements.sort = this.sort.toArray()[0];
-
-      // Selected Data Elements table
-      // this.dataSourceSelectedDataTypes.sort = this.sort.toArray()[1];
-      // this.sort
-      //   .toArray()[1]
-      //   .sortChange.subscribe(
-      //   () => (this.paginator.toArray()[1].pageIndex = 0)
-      // );
       this.dataSourceSelectedDataElements.paginator = this.paginator.toArray()[1];
 
-      if (
-        this.sort != null &&
-        this.sort !== undefined &&
-        this.sort.length > 0 &&
-        this.paginator != null &&
-        this.paginator !== undefined &&
-        this.paginator.length > 0
-      ) {
+      if (this.sort != null && this.sort !== undefined && this.sort.length > 0 && this.paginator != null && this.paginator !== undefined && this.paginator.length > 0) {
         merge(this.sort.toArray()[0].sortChange, this.paginator.toArray()[0].page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-              this.isLoadingResults = true;
-              return this.dataElementsFetch(
-                this.paginator.toArray()[0].pageSize,
-                this.paginator.toArray()[0].pageIndex * this.paginator.toArray()[0].pageSize,
-                this.sort.toArray()[0].active,
-                this.sort.toArray()[0].direction,
-                this.filter
-              );
-            }),
-            map((data: any) => {
-              this.totalItemCount = data.body.count;
-              this.isLoadingResults = false;
-              return data.body.items;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              return [];
-            })
-          ).subscribe(data => {
+          this.isLoadingResults = true;
+          return this.dataElementsFetch(
+            this.paginator.toArray()[0].pageSize,
+            this.paginator.toArray()[0].pageIndex * this.paginator.toArray()[0].pageSize,
+            this.sort.toArray()[0].active,
+            this.sort.toArray()[0].direction,
+            this.filter
+          );
+        }),
+          map((data: any) => {
+            this.totalItemCount = data.body.count;
+            this.isLoadingResults = false;
+            return data.body.items;
+          }),
+          catchError(() => {
+            this.isLoadingResults = false;
+            return [];
+          })).subscribe(data => {
             this.recordsDataElements = data;
             this.dataSourceDataElements.data = this.recordsDataElements;
 
@@ -270,9 +219,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         this.model.selectedDataElements.splice(index, 1);
       }
     }
-
     this.validate();
-
     this.dataSourceSelectedDataElements.data = this.model.selectedDataElements;
     this.totalSelectedItemsCount = this.model.selectedDataElements.length;
   }
@@ -281,9 +228,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.model.showNewInlineDataType = !this.model.showNewInlineDataType;
     this.error = '';
     this.dataTypeErrors = '';
-    //  this.validateDataType();
   }
-
 
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
@@ -293,11 +238,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         this.model.selectedDataClasses.push(element.node);
       }
     }
- };
-
+  };
 
   validate = (newValue?) => {
-
     let invalid = false;
     this.step.invalid = false;
     if (newValue && this.model.createType === 'new') {
@@ -314,10 +257,6 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         return;
       }
       invalid = this.myForm.invalid;
-      // if(this.model.showNewInlineDataType ){
-      //   this.step.invalid = true;
-      //   return;
-      // }
     }
     if (this.model.createType === 'copy') {
       if (this.model.selectedDataElements.length === 0) {
@@ -325,22 +264,14 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
         return;
       }
     }
-
     this.step.invalid = invalid;
-
   };
-
-  // parentScopeHandler = () => {
-  // TODO
-  // }
-
 
   ngOnDestroy() {
     this.formChangesSubscription.unsubscribe();
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-
     const options = {
       pageSize: limit ? limit : 30,
       pageIndex: offset ? offset : 0,
@@ -352,7 +283,6 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.pagination = {
       limit: options.pageSize,
       offset: options.pageIndex
-
     };
 
     this.changeRef.detectChanges();
@@ -409,24 +339,25 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
 
     let promise = Promise.resolve();
 
-    this.model.selectedDataElements.forEach((dc: any) => { promise = promise.then((result: any) => {
-          this.successCount++;
-          this.finalResult[dc.id] = { result, hasError: false };
-          return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.modelId, dc.dataClass, dc.id, null).toPromise();
-        }).catch(error => {
-          this.failCount++;
-          const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = { result: errorText, hasError: true };
-        });
+    this.model.selectedDataElements.forEach((dc: any) => {
+      promise = promise.then((result: any) => {
+        this.successCount++;
+        this.finalResult[dc.id] = { result, hasError: false };
+        return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.modelId, dc.dataClass, dc.id, null).toPromise();
+      }).catch(error => {
+        this.failCount++;
+        const errorText = this.messageHandler.getErrorText(error);
+        this.finalResult[dc.id] = { result: errorText, hasError: true };
+      });
     });
 
     promise.then(() => {
-        this.processing = false;
-        this.isProcessComplete = true;
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      }).catch(() => {
-        this.processing = false;
-        this.isProcessComplete = true;
-      });
+      this.processing = false;
+      this.isProcessComplete = true;
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }).catch(() => {
+      this.processing = false;
+      this.isProcessComplete = true;
+    });
   }
 }

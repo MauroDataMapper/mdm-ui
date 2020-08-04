@@ -160,7 +160,6 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       });
 
       dialog.afterClosed().subscribe(result => {
-        console.log(result);
         if (result?.status !== 'ok') {
           return promise;
         }

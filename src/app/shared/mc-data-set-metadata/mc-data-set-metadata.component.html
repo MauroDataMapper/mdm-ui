@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="access && access.canAddMetadata" class="mt-1">
-                <i class="fas fa-info-circle helpIcon" (click)="loadHelp($event)" matTooltip="Help" style="margin-right: 12px;"></i>
+                <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltip="Help" style="margin-right: 12px;"></i>
                 <button mat-flat-button color="primary" type="button" (click)="add()">
                     <i class="fas fa-plus" aria-hidden="true"></i>
                     Add Property

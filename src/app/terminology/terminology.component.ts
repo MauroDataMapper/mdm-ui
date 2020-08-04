@@ -21,7 +21,6 @@ import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
-import { SharedService } from '../services/shared.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 
 @Component({
@@ -31,13 +30,12 @@ import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 })
 export class TerminologyComponent implements OnInit {
   constructor(
-    private sharedService: SharedService,
     private stateHandler: StateHandlerService,
     private stateService: StateService,
     private title: Title,
     private resources: MdmResourcesService,
     private broadcastSvc: BroadcastService
-  ) {}
+  ) { }
 
   terminology: any;
   diagram: any;
@@ -45,38 +43,22 @@ export class TerminologyComponent implements OnInit {
   loadingData: boolean;
   searchTerm: any;
   pagination: McSelectPagination;
-
-
   showEditForm = false;
   editForm = null;
 
   ngOnInit() {
     const id = this.stateService.params.id;
-
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-
     this.terminology = null;
     this.diagram = null;
-
     this.title.setTitle('Terminology');
-
-    this.resources.terminology.get(id)
-    // this.resources.terminology.get(id, null)
-      .subscribe(result => {
+    this.resources.terminology.get(id).subscribe(result => {
       const data = result.body;
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
-      if (this.sharedService.isLoggedIn()) {
-        // this.resources.terminology.get(id, 'permissions').subscribe((result) => {
-        //    const permissions = result.body;
-        //    permissions.forEach((attrName) => {
-        //        this.terminology[attrName] = permissions[attrName];
-        //    });
-        // });
-      }
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
   }
@@ -123,18 +105,15 @@ export class TerminologyComponent implements OnInit {
       { notify: false, location: tab.index !== 0 }
     );
     this[tab.name] = [];
-
     this.activeTab = tab.index;
 
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resources.dataModel
-        .get(this.stateService.params.id, this.activeTab.fetchUrl)
-        .then(data => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
+      this.resources.dataModel.get(this.stateService.params.id, this.activeTab.fetchUrl).then(data => {
+        this[this.activeTab.name] = data || [];
+        this.loadingData = false;
+      });
     }
   };
 
@@ -149,38 +128,18 @@ export class TerminologyComponent implements OnInit {
   };
 
   fetch = (text, loadAll, offset, limit) => {
-    // var deferred = $q.defer();
-
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
-
-
     this.pagination = {
-        limit,
-        offset
-      };
-
-    this.searchTerm = text;
-
-    return this.resources.terminology.terms.search(this.terminology.id, {
-      search: encodeURIComponent(text),
       limit,
       offset
-    });
-    // return this.resources.terminology.get(this.terminology.id, 'terms/search', {
-    //   queryStringParams: {
-    //     search: encodeURIComponent(text),
-    //     limit,
-    //     offset
-    //   }
-    // });
+    };
+
+    this.searchTerm = text;
+    return this.resources.terminology.terms.search(this.terminology.id, { search: encodeURIComponent(text), limit, offset });
   };
 
   onTermSelect = term => {
-    this.stateHandler.NewWindow(
-      'term',
-      { terminologyId: term.terminology, id: term.id },
-      null
-    );
+    this.stateHandler.NewWindow('term', { terminologyId: term.terminology, id: term.id }, null);
   }
 }

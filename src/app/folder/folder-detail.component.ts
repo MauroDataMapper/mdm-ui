@@ -47,6 +47,8 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
   styleUrls: ['./folder-detail.component.scss']
 })
 export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() afterSave: any;
+  @Input() editMode = false;
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
@@ -66,8 +68,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEditMode = false;
   processing: boolean;
 
-  @Input() afterSave: any;
-  @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
@@ -124,8 +124,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -138,17 +136,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private invokeInlineEditor(): void {
-    // console.log(inlineEditorToInvoke.state);  // OUTPUT: InlineEditorState {value: "Some Value", disabled: false, editing: false, empty: false}
-    //  if (inlineEditorToInvoke) {
-    //      inlineEditorToInvoke.edit({editing: true, focus: true, select: true});
-    //  }
-    // console.log(inlineEditorToInvoke.state); // OUTPUT: InlineEditorState {value: "Some Value", disabled: false, editing: true, empty: false}
-  }
-
-  // private onInlineEditorEdit(editEvent: InlineEditorEvent): void {
-  //     console.log(editEvent); // OUTPUT: Only logs event when inlineEditor appears in template
-  // }
+  private invokeInlineEditor(): void { }
 
   FolderDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
@@ -165,7 +153,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
           this.hasResult = true;
           this.watchFolderObject();
         }
-        this.title.setTitle('Folder -' + this.result?.label);
+        this.title.setTitle('Folder - ' + this.result?.label);
       }
     );
   }
@@ -195,7 +183,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.showDelete) {
       return;
     }
-
     this.folderHandler.askForSoftDelete(this.result.id).then(() => {
       this.stateHandler.reload();
     });
@@ -205,7 +192,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.showDelete) {
       return;
     }
-
     this.folderHandler.askForPermanentDelete(this.result.id).then(() => {
       this.broadcastSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
@@ -231,6 +217,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
           this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.reload();
         }, error => {
           this.messageHandlerService.showError('There was a problem updating the Folder.', error);
       });

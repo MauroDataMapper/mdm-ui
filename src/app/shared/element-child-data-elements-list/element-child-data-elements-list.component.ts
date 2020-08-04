@@ -32,7 +32,7 @@ import { GridService } from '@mdm/services/grid.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-child-data-elements-list',
@@ -44,7 +44,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
     private gridSvc: GridService,
     private changeRef: ChangeDetectorRef,
     private resources: MdmResourcesService
-  ) {}
+  ) { }
 
   @Input() parentDataModel: any;
   @Input() parentDataClass: any;
@@ -63,15 +63,13 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
 
   filterEvent = new EventEmitter<string>();
   filter: string;
-
   isLoadingResults: boolean;
   records: any[];
   totalItemCount = 0;
   hideFilters = true;
-
   displayedColumns = ['label', 'name', 'description'];
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     if (this.type === 'dynamic') {
@@ -84,35 +82,30 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
         this.paginator.page,
         this.filterEvent,
         this.gridSvc.reloadEvent
-      )
-        .pipe(
-          startWith({}),
-          switchMap(() => {
-            this.isLoadingResults = true;
-
-            return this.dataElementsFetch(
-              this.paginator.pageSize,
-              this.paginator.pageOffset,
-              this.sort.active,
-              this.sort.direction,
-              this.filter
-            );
-          }),
-          map((data: any) => {
-            this.totalItemCount = data.body.count;
-            this.isLoadingResults = false;
-            this.changeRef.detectChanges();
-            return data.body.items;
-          }),
-          catchError(() => {
-            this.isLoadingResults = false;
-            this.changeRef.detectChanges();
-            return [];
-          })
-        )
-        .subscribe(data => {
-          this.records = data;
-        });
+      ).pipe(startWith({}), switchMap(() => {
+        this.isLoadingResults = true;
+        return this.dataElementsFetch(
+          this.paginator.pageSize,
+          this.paginator.pageOffset,
+          this.sort.active,
+          this.sort.direction,
+          this.filter
+        );
+      }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.isLoadingResults = false;
+          this.changeRef.detectChanges();
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.changeRef.detectChanges();
+          return [];
+        })
+      ).subscribe(data => {
+        this.records = data;
+      });
       this.changeRef.detectChanges();
     }
 
@@ -133,22 +126,9 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
 
     if (this.parentDataModel && this.parentDataClass) {
       return this.resources.dataElement.list(this.parentDataModel.id, this.parentDataClass.id, options);
-      // return this.resources.dataClass.get(
-      //   this.parentDataModel.id,
-      //   null,
-      //   this.parentDataClass.id,
-      //   'dataElements',
-      //   options
-      // );
     }
     if (this.parentDataModel && this.parentDataType) {
       return this.resources.dataElement.listWithDataType(this.parentDataModel.id, this.parentDataType.id, options);
-      // return this.resources.dataType.get(
-      //   this.parentDataModel.id,
-      //   this.parentDataType.id,
-      //   'dataElements',
-      //   options
-      // );
     }
   };
 

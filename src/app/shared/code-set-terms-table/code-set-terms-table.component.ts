@@ -25,16 +25,15 @@ import {
   EventEmitter,
   AfterViewInit, ChangeDetectorRef
 } from '@angular/core';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
-import {merge, Observable} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {ElementTypesService} from '@mdm/services/element-types.service';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { merge, Observable } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 
 @Component({
@@ -56,8 +55,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   deleteInProgress: boolean;
   records: any[] = [];
   access: any;
-  @ViewChildren('filters', {read: ElementRef}) filters: ElementRef[];
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   baseTypes: any;
   classifiableBaseTypes: any;
@@ -71,57 +70,33 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
     this.isLoadingResults = false;
-
-
   }
 
   ngAfterViewInit() {
-
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     this.filterEvent.subscribe(() => this.paginator.pageIndex = 0);
-
-    this.baseTypes = [{id: '', title: ''}].concat(this.elementTypes.getBaseTypesAsArray());
-
+    this.baseTypes = [{ id: '', title: '' }].concat(this.elementTypes.getBaseTypesAsArray());
     this.classifiableBaseTypes = this.baseTypes.filter(f => f.classifiable === true);
+    this.classifiableBaseTypes = [{ id: '', title: '' }].concat(this.classifiableBaseTypes);
 
-
-    this.classifiableBaseTypes = [{id: '', title: ''}].concat(this.classifiableBaseTypes);
-
-
-    // // this.elementsFetch = function (pageSize, pageIndex, sortBy, sortType, filters) {
-    //    var options = {
-    //      pageSize: pageSize,
-    //      pageIndex:pageIndex,
-    //      sortBy: sortBy,
-    //      sortType:sortType,
-    //      filters: filters
-    //   // };
-
-
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-            this.isLoadingResults = true;
-
-            return this.termFetch(this.paginator.pageSize,
-              this.paginator.pageOffset,
-              this.sort.active,
-              this.sort.direction,
-              this.filter);
-
-          }
-        ),
-        map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          return data.body.items;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          return [];
-        })
-      ).subscribe(data => {
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+      this.isLoadingResults = true;
+      return this.termFetch(this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter);
+    }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.items;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })
+    ).subscribe(data => {
 
       this.records = data;
       this.access = this.securityHandler.elementAccess(this.codeSet);
@@ -130,7 +105,6 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   }
 
   termFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-
     const options = {
       pageSize,
       pageIndex,
@@ -139,8 +113,6 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       filters
     };
     return this.resources.codeSet.terms(this.codeSet.id, options);
-    // return this.resources.codeSet.get(this.codeSet.id, 'terms', options);
-
   }
 
   applyFilter = () => {
@@ -171,60 +143,49 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     this.applyFilter();
   }
 
-
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
   };
 
-
   delete(record, $index) {
     if (this.clientSide) {
       this.records.splice($index, 1);
-
       return;
     }
 
-    this.resources.codeSet.removeTerm(this.codeSet.id, record.id)
-    // this.resources.codeSet.delete(this.codeSet.id, 'terms/' + record.id, null, null)
-      .subscribe(() => {
-        if (this.type === 'static') {
-          this.records.splice($index, 1);
-          this.messageHandler.showSuccess('Term removed successfully.');
-        } else {
-          this.records.splice($index, 1);
-          this.messageHandler.showSuccess('Term removed successfully.');
-          this.filterEvent.emit();
-        }
-      }, (error) => {
-        this.messageHandler.showError('There was a problem removing the term.', error);
-      });
+    this.resources.codeSet.removeTerm(this.codeSet.id, record.id).subscribe(() => {
+      if (this.type === 'static') {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Term removed successfully.');
+      } else {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Term removed successfully.');
+        this.filterEvent.emit();
+      }
+    }, (error) => {
+      this.messageHandler.showError('There was a problem removing the term.', error);
+    });
   }
 
   toggleAddTermsSection = () => {
     this.showAddTerm = !this.showAddTerm;
-
     return;
-
   };
 
   addTerms = (terms) => {
     this.codeSet.terms = this.records;
     // current terms
     const currentTerms = this.codeSet.terms.map((term) => {
-      return {id: term.id};
+      return { id: term.id };
     });
     const newTermIds = terms.map((term) => {
-      return {id: term.id};
+      return { id: term.id };
     });
 
     const allTermIds = [].concat(newTermIds).concat(currentTerms);
 
-    this.resources.codeSet.update(this.codeSet.id, { terms: allTermIds })
-    // this.resources.codeSet.put(this.codeSet.id, null, {resource: {terms: allTermIds}})
-      .subscribe((result) => {
+    this.resources.codeSet.update(this.codeSet.id, { terms: allTermIds }).subscribe(() => {
       this.messageHandler.showSuccess('Terms added successfully.');
-      // this.mcTableHandler.fetchForDynamic();
-      // $scope.mcDisplayRecords[index].success = false;
       const options = {
         pageSize: 40,
         pageIndex: 0,
@@ -233,9 +194,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
         filters: null
       };
 
-      this.resources.codeSet.terms(this.codeSet.id, options)
-      // this.resources.codeSet.get(this.codeSet.id, 'terms', options)
-      .subscribe(data => {
+      this.resources.codeSet.terms(this.codeSet.id, options).subscribe(data => {
         this.records = data.body.items;
       });
       setTimeout(() => {
@@ -245,6 +204,4 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       this.messageHandler.showError('There was a problem adding the Terms.', error);
     });
   };
-
-
 }

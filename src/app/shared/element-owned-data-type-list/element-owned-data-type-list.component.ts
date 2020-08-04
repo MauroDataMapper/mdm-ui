@@ -31,7 +31,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -80,7 +79,6 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
   constructor(
     private changeRef: ChangeDetectorRef,
-    private messageHandler: MessageHandlerService,
     private elementTypes: ElementTypesService,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
@@ -202,9 +200,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       sortType,
       filters
     };
-
     return this.resources.dataType.list(this.parent.id, options);
-    // return this.resources.dataModel.get(this.parent.id, 'dataTypes', options);
   };
 
   onChecked = () => {

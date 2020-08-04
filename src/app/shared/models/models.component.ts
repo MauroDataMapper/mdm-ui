@@ -46,7 +46,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   inSearchMode = false;
   folder = '';
   searchboxFocused = false;
-  debounceInputEvent: Subject<KeyboardEvent|InputEvent>;
+  debounceInputEvent: Subject<KeyboardEvent | InputEvent>;
   subscriptions: Subscription;
 
   // Hard
@@ -75,7 +75,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     folders: () => {
       this.levels.current = 0;
-      // $scope.filteredModels = $scope.filterDataModels(angular.copy($scope.allModels));
       this.reloadTree();
     },
     focusedElement: (node?) => {
@@ -87,43 +86,37 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloading = true;
 
       if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
-        this.resources.tree.get('dataModels', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id)
-        // this.resources.tree.get(this.levels.currentFocusedElement.id)
-          .subscribe(result => {
-            const children = result.body;
-            self.levels.currentFocusedElement.children = children;
-            self.levels.currentFocusedElement.open = true;
-            self.levels.currentFocusedElement.selected = true;
-            const curModel = {
-              children: [self.levels.currentFocusedElement],
-              isRoot: true
-            };
-            // $scope.filteredModels = $scope.filterDataModels(angular.copy(curModel));
-            this.filteredModels = Object.assign({}, curModel);
-            this.reloading = false;
-            self.levels.current = 1;
-          },
-          () => {
-            this.reloading = false;
-          }
+        this.resources.tree.get('dataModels', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(result => {
+          const children = result.body;
+          self.levels.currentFocusedElement.children = children;
+          self.levels.currentFocusedElement.open = true;
+          self.levels.currentFocusedElement.selected = true;
+          const curModel = {
+            children: [self.levels.currentFocusedElement],
+            isRoot: true
+          };
+          this.filteredModels = Object.assign({}, curModel);
+          this.reloading = false;
+          self.levels.current = 1;
+        }, () => {
+          this.reloading = false;
+        }
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
         this.resources.terminology.get(this.levels.currentFocusedElement.id, 'tree').subscribe(children => {
-            self.levels.currentFocusedElement.children = children.body;
-            self.levels.currentFocusedElement.open = true;
-            self.levels.currentFocusedElement.selected = true;
-            const curElement = {
-              children: [self.levels.currentFocusedElement],
-              isRoot: true
-            };
-            // $scope.filteredModels = $scope.filterDataModels(angular.copy(curElement));
-            this.filteredModels = Object.assign({}, curElement);
-            this.reloading = false;
-            self.levels.current = 1;
-          },
-          () => {
-            this.reloading = false;
-          }
+          self.levels.currentFocusedElement.children = children.body;
+          self.levels.currentFocusedElement.open = true;
+          self.levels.currentFocusedElement.selected = true;
+          const curElement = {
+            children: [self.levels.currentFocusedElement],
+            isRoot: true
+          };
+          this.filteredModels = Object.assign({}, curElement);
+          this.reloading = false;
+          self.levels.current = 1;
+        }, () => {
+          this.reloading = false;
+        }
         );
       }
     }
@@ -163,9 +156,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.initializeModelsTree();
 
     this.broadcastSvc.subscribe('$reloadClassifiers', () => {
-      this.resources.classifier.list()
-      // this.resources.classifier.get(null, null, {all: true})
-      .subscribe(data => {
+      this.resources.classifier.list().subscribe(data => {
         this.allClassifiers = data.items;
         this.classifiers = {
           children: data,
@@ -192,7 +183,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
     return this.sharedService.isLoggedIn();
   }
 
-
   tabSelected = tabIndex => {
     switch (tabIndex) {
       case 0: {
@@ -212,24 +202,21 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   loadClassifiers = () => {
     this.classifierLoading = true;
-    this.resources.classifier.list()
-    // this.resources.classifier.get(null, null, {all: true})
-      .subscribe(result => {
-        const data = result.body;
-        this.allClassifiers = data.items;
-        data.items.forEach(x => {
-          x.hasChildren = false;
-          x.domainType = 'Classification';
-        });
-        this.classifiers = {
-          children: data.items,
-          isRoot: true
-        };
-        this.classifierLoading = false;
-      },
-      () => {
-        this.classifierLoading = false;
-      }
+    this.resources.classifier.list().subscribe(result => {
+      const data = result.body;
+      this.allClassifiers = data.items;
+      data.items.forEach(x => {
+        x.hasChildren = false;
+        x.domainType = 'Classification';
+      });
+      this.classifiers = {
+        children: data.items,
+        isRoot: true
+      };
+      this.classifierLoading = false;
+    }, () => {
+      this.classifierLoading = false;
+    }
     );
   };
 
@@ -250,19 +237,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
       options.queryStringParams.noCache = true;
     }
 
-    this.resources.tree.list('folders', options.queryStringParams)
-    // this.resources.tree.get(null, null, options)
-      .subscribe(result => {
-        const data = result.body;
-        this.allModels = {
-          children: data,
-          isRoot: true
-        };
-        this.filteredModels = Object.assign({}, this.allModels);
-        this.reloading = false;
-      }, () => {
-        this.reloading = false;
-      }
+    this.resources.tree.list('folders', options.queryStringParams).subscribe(result => {
+      const data = result.body;
+      this.allModels = {
+        children: data,
+        isRoot: true
+      };
+      this.filteredModels = Object.assign({}, this.allModels);
+      this.reloading = false;
+    }, () => {
+      this.reloading = false;
+    }
     );
   };
 
@@ -289,9 +274,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   loadModelsToCompare = dataModel => {
-    this.resources.catalogueItem.listSemanticLinks(dataModel.domainType, dataModel.id, { all: true })
-    // this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'})
-      .subscribe(result => {
+    this.resources.catalogueItem.listSemanticLinks(dataModel.domainType, dataModel.id, { all: true }).subscribe(result => {
       const compareToList = [];
       const semanticLinks = result.body;
       semanticLinks.items.forEach(link => {
@@ -339,42 +322,38 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     let endpoint;
     if (parentId) {
-      // endpoint = this.folder.post(parentId, 'folders', {resource: {label}});
       endpoint = this.resources.folder.saveChildrenOf(parentId, { label });
     } else {
-      // endpoint = this.resources.folder.post(null, null, {resource: {label}});
-      endpoint = this.resources.folder.save({label});
+      endpoint = this.resources.folder.save({ label });
     }
     endpoint.subscribe(res => {
-        const result = res.body;
-        if (folder) {
-          result.domainType = 'Folder';
-          folder.children = folder.children || [];
-          folder.children.push(result);
-        } else {
-          result.domainType = 'Folder';
-          this.allModels.children.push(result);
-          this.filteredModels.children.push(result);
-        }
+      const result = res.body;
+      if (folder) {
+        result.domainType = 'Folder';
+        folder.children = folder.children || [];
+        folder.children.push(result);
+      } else {
+        result.domainType = 'Folder';
+        this.allModels.children.push(result);
+        this.filteredModels.children.push(result);
+      }
 
-        // go to folder
-        this.stateHandler.Go('Folder', {id: result.id, edit: false});
-
-        this.messageHandler.showSuccess(`Folder ${label} created successfully.`);
-        this.folder = '';
-        this.loadFolders();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem creating the Folder.', error);
-      });
+      // go to folder
+      this.stateHandler.Go('Folder', { id: result.id, edit: false });
+      this.messageHandler.showSuccess(`Folder ${label} created successfully.`);
+      this.folder = '';
+      this.loadFolders();
+    }, error => {
+      this.messageHandler.showError('There was a problem creating the Folder.', error);
+    });
   };
 
   onAddDataModel = (folder) => {
-    this.stateHandler.Go('NewDataModelNew', {parentFolderId: folder.id});
+    this.stateHandler.Go('NewDataModelNew', { parentFolderId: folder.id });
   };
 
   onAddCodeSet = (folder) => {
-    this.stateHandler.Go('NewCodeSet', {parentFolderId: folder.id});
+    this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
   };
 
   onAddChildDataClass = (element) => {
@@ -394,7 +373,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onAddChildDataType = (element) => {
-    this.stateHandler.Go('NewDataType', {parentDataModelId: element.id});
+    this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
   };
 
   toggleFilterMenu = () => {
@@ -410,9 +389,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.userSettingsHandler.update('showDeletedModels', this.showDeletedModels);
       this.userSettingsHandler.saveOnServer();
     }
-
     this.loadFolders();
-
     this.showFilters = !this.showFilters;
   };
 
@@ -444,13 +421,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.stateHandler.Go(newState);
   };
 
-  onSearchInputKeyDown(event: KeyboardEvent|InputEvent) {
+  onSearchInputKeyDown(event: KeyboardEvent | InputEvent) {
     // Initialize debounce listener if neccessary
     if (!this.debounceInputEvent) {
-      this.debounceInputEvent = new Subject<KeyboardEvent|InputEvent>();
-      this.subscriptions = this.debounceInputEvent.pipe(
-        debounceTime(300)
-      ).subscribe(e => {
+      this.debounceInputEvent = new Subject<KeyboardEvent | InputEvent>();
+      this.subscriptions = this.debounceInputEvent.pipe(debounceTime(300)).subscribe(e => {
         if (e instanceof KeyboardEvent) {
           switch (e.key) {
             case 'Enter': this.search(); return;
@@ -487,9 +462,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = [];
 
-      this.resources.tree.search('folders', this.sharedService.searchCriteria)
-      // this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria)
-        .subscribe(res => {
+      this.resources.tree.search('folders', this.sharedService.searchCriteria).subscribe(res => {
         const result = res.body;
         this.reloading = false;
         this.allModels = {
@@ -497,7 +470,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           isRoot: true
         };
 
-        this.filteredModels = Object.assign({}, this.allModels); // $scope.filterDataModels();
+        this.filteredModels = Object.assign({}, this.allModels);
         this.searchText = this.formData.filterCriteria;
       });
     } else {
@@ -509,7 +482,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   classifierTreeOnSelect = node => {
-    this.stateHandler.Go('classification', {id: node.id});
+    this.stateHandler.Go('classification', { id: node.id });
   };
 
   classificationFilterChange = val => {
@@ -520,7 +493,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  filterClassifications = function() {
+  filterClassifications = () => {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
       this.formData.filterCriteria = '';
       this.sharedService.searchCriteria = this.formData.ClassificationFilterCriteria;

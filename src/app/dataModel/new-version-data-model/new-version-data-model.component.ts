@@ -21,6 +21,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-new-version-data-model',
@@ -37,53 +38,43 @@ export class NewVersionDataModelComponent implements OnInit {
     label: '',
     copyPermissions: false,
     copyDataFlows: false,
-
     moveDataFlows: false
   };
-
-  // isCompleted = false;
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private validator: ValidatorService,
-    private messageHandler: MessageHandlerService
-  ) {
-    window.document.title = 'New Version';
-  }
+    private messageHandler: MessageHandlerService,
+    private title: Title
+  ) { }
+
   ngOnInit() {
+    this.title.setTitle(`New Data Model Version`);
     if (!this.stateService.params.dataModelId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    this.resources.dataModel
-      .get(this.stateService.params.dataModelId)
-      .subscribe(response => {
-        this.dataModel = response.body;
-      });
+    this.resources.dataModel.get(this.stateService.params.dataModelId).subscribe(response => {
+      this.dataModel = response.body;
+    });
   }
 
   versionTypeChecked() {
     this.step++;
-    // this.isCompleted = true;
   }
 
   validate() {
     this.errors = null;
-
     if (!this.versionType) {
       return false;
     }
-
     if (this.versionType === 'newElementVersion') {
       if (this.validator.isEmpty(this.form.label)) {
         this.errors = this.errors || {};
         this.errors.label = 'Data Model name can not be empty!';
-      } else if (
-        this.form.label.trim().toLowerCase() ===
-        this.dataModel.label.trim().toLowerCase()
-      ) {
+      } else if (this.form.label.trim().toLowerCase() === this.dataModel.label.trim().toLowerCase()) {
         this.errors = this.errors || {};
         this.errors.label = `The name should be different from the current version name ${this.dataModel.label}`;
       }
@@ -95,8 +86,6 @@ export class NewVersionDataModelComponent implements OnInit {
     if (!this.validate()) {
       return;
     }
-    // newElementVersion
-    // newDocumentVersion
     if (this.versionType === 'newElementVersion') {
       const resource = {
         label: this.form.label,
@@ -105,40 +94,31 @@ export class NewVersionDataModelComponent implements OnInit {
       };
       this.processing = true;
 
-      this.resources.dataModel.newModelVersion(this.dataModel.id, resource)
-      // this.resources.dataModel.put(this.dataModel.id, 'newVersion', { resource })
-        .subscribe(
-          response => {
-            this.processing = false;
-            this.messageHandler.showSuccess('New Data Model version created successfully.');
-            this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
-          },
-          error => {
-            this.processing = false;
-            this.messageHandler.showError('There was a problem creating the new Data Model version.', error);
-          }
-        );
+      this.resources.dataModel.newModelVersion(this.dataModel.id, resource).subscribe(response => {
+        this.processing = false;
+        this.messageHandler.showSuccess('New Data Model version created successfully.');
+        this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
+      }, error => {
+        this.processing = false;
+        this.messageHandler.showError('There was a problem creating the new Data Model version.', error);
+      }
+      );
     } else if (this.versionType === 'newDocumentVersion') {
-      const resources = {moveDataFlows: this.form.moveDataFlows};
+      const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
-
-      this.resources.dataModel.newDocumentationVersion(this.dataModel.id, resources)
-      // this.resources.dataModel.put(this.dataModel.id, 'newDocumentationVersion', { resource: resources })
-        .subscribe(
-          response => {
-            this.processing = false;
-            this.messageHandler.showSuccess('New Document Model version created successfully.');
-            this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true } );
-          },
-          error => {
-            this.processing = false;
-            this.messageHandler.showError('There was a problem creating the new Document Model version.', error );
-          }
-        );
+      this.resources.dataModel.newDocumentationVersion(this.dataModel.id, resources).subscribe(
+        response => {
+          this.processing = false;
+          this.messageHandler.showSuccess('New Document Model version created successfully.');
+          this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
+        }, error => {
+          this.processing = false;
+          this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
+        });
     }
   }
 
-  cancel = function() {
+  cancel = () => {
     this.stateHandler.Go('datamodel', { id: this.dataModel.id });
   };
 }

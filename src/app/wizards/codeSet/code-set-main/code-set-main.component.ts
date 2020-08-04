@@ -91,7 +91,7 @@ export class CodeSetMainComponent implements OnInit {
       this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
       this.broadcastSvc.broadcast('$reloadFoldersTree');
     }).catch((error) => {
-        this.messageHandler.showError('There was a problem creating the Code Set.', error);
+      this.messageHandler.showError('There was a problem creating the Code Set.', error);
     });
   };
   ngOnInit() {

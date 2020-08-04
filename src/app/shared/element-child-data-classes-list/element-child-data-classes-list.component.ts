@@ -55,11 +55,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   processing: boolean;
   failCount: number;
   total: number;
-
   showStaticRecords: any;
-
   records: any[] = [];
-
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
@@ -68,7 +65,6 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   filterEvent = new EventEmitter<string>();
   filter: string;
   deleteInProgress: boolean;
-
   checkAllCheckbox = false;
   bulkActionsVisibile = 0;
 
@@ -92,11 +88,9 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
-
       return this.dataClassesFetch(
         this.paginator.pageSize,
         this.paginator.pageOffset,
@@ -105,15 +99,15 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         this.filter
       );
     }), map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return data.body.items;
-      }), catchError(() => {
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return [];
-      })
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return [];
+    })
     ).subscribe(data => {
       this.records = data;
     });
@@ -143,14 +137,10 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
 
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
     const options = { pageSize, pageIndex, sortBy, sortType, filters };
-
     if (!this.parentDataClass.id) {
       return this.resources.dataClass.list(this.parentDataModel.id, options);
-      // return this.resources.dataModel.get(this.parentDataModel.id, 'dataClasses', options);
     }
-
     return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
-    // return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'dataClasses', options);
   }
 
   onChecked = () => {
@@ -205,6 +195,6 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    }).catch(() => {});
+    }).catch(() => { });
   }
 }

@@ -107,18 +107,6 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.messageService.toggleSearch();
   }
 
-  // Use this if we want to Make API call from resource file & child component read from the resource file too
-  //     FolderGet():any { //NG
-  //         this.resourcesService.FoldersGet();
-  //     }
-  //     function getTabDetail(tabName) { TODO, check if we need to add Tab from tabView from stateService.
-  //         switch (tabName) {
-  //             case 'access': 	 return {index:0, name:'access'};
-  //             case 'history':  return {index:1, name:'history'};
-  //             default: 		 return {index:0, name:'access'};
-  //         }
-  //     }
-
   ngOnDestroy() {
     if (this.subscription) {
       // unsubscribe to ensure no memory leaks

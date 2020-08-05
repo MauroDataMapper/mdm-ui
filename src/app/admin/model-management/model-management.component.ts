@@ -31,7 +31,7 @@ import { Title } from '@angular/platform-browser';
 export class ModelManagementComponent implements OnInit {
   filterElement: string;
   filterStatus: string;
-  selectedElements: any[];
+  selectedElements: Array<any>;
   selectedElementsCount = 0;
   reloading = false;
   deleteInProgress = false;
@@ -173,15 +173,15 @@ export class ModelManagementComponent implements OnInit {
     }
   };
 
-  resetSettings = function () {
+  resetSettings = () => {
     this.loadFolders();
-    this.selectedElements = {};
+    this.selectedElements = [];
     this.selectedElementsCount = 0;
     this.deleteSuccessMessage = null;
   };
 
   private removeChildren(node: any) {
-    if (node.hasChildren) {
+    if (node.hasChildren && node.children) {
       let i = 0;
       while (i < node.children.length) {
         const childIdx = this.selectedElements.findIndex(
@@ -210,7 +210,7 @@ export class ModelManagementComponent implements OnInit {
 
     this.deleteInProgress = true;
     this.resourcesService.dataModel
-      .removeAll(dataModelResources)
+      .removeAll("",{"body" : dataModelResources})
       // this.resourcesService.dataModel.delete(null, null, null, dataModelResources)
       .subscribe(
         () => {

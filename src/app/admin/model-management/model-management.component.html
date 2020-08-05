@@ -77,7 +77,8 @@ SPDX-License-Identifier: Apache-2.0
                                       [newWindow]="true"
                                       [parentDataModel]="{id:record.dataModel}"
                                       [parentDataClass]="{id:record.dataClass}"
-                                      [element]="record"></mdm-element-link>
+                                      [element]="record"
+                                      [justShowCodeForTerm]="true"></mdm-element-link>
                 </div>
                 <div style="padding-top: 20px;">
                     <button mat-stroked-button color="warn" type="button" class="custom mr-1 mb-1" (click)="askForPermanentDelete()" [disabled]="deleteInProgress">

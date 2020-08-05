@@ -34,11 +34,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.parentId = params.parent.id;
-
-    // TODO: Revisit when server side ready.
-    // return this.resourcesService.dataFlow.getAllFlows(this.parentId);
-    console.warn('resources.dataFlow.getAllFlows() currently not implemented');
-    return EMPTY;
+    return this.resourcesService.dataFlow.list(this.parentId);
   }
 
   render(data: any): void {

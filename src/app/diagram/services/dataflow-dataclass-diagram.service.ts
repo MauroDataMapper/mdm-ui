@@ -30,10 +30,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
 
-    // TODO: Revisit when server side ready.
-    // return this.resourcesService.dataFlow.getFlow(params.parent.id, params.flowId);
-    console.warn('resources.dataFlow.getFlow() currently not implemented');
-    return EMPTY;
+    return this.resourcesService.dataFlow.get(params.parent.id, params.flowId);
   }
 
   render(data: any): void {

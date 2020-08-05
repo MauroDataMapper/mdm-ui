@@ -34,11 +34,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     this.flowId = params.flowId;
     const classGetters = [];
 
-    // TODO: Revisit when server side ready.
-    // const flowComponents: Observable<any> = this.resourcesService.dataFlow.getFlowComponents(params.parent.id, params.flowId, params.flowComponentId);
-    console.warn('resources.dataFlow.getFlowComponents() currently not implemented');
-    const flowComponents: Observable<any> = EMPTY;
-
+    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId);
     return (flowComponents).pipe(
       mergeMap(data => {
         this.dataFlows = data.body;

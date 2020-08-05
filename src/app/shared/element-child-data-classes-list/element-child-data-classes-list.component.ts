@@ -62,8 +62,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   deleteInProgress: boolean;
   checkAllCheckbox = false;
   bulkActionsVisibile = 0;
@@ -118,13 +118,12 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value;
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;
@@ -136,7 +135,12 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType, filters };
+    const options = { pageSize, pageIndex, sortBy, sortType };
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
     if (!this.parentDataClass.id) {
       return this.resources.dataClass.list(this.parentDataModel.id, options);
     }

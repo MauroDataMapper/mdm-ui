@@ -22,12 +22,12 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
     <table mat-table [dataSource]="records" matSort (matSortChange)="getSortedData($event)" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="createdBy">
-            <th style="cursor:pointer;max-width: 20%;width: 20%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th style="cursor:pointer;max-width: 30%;width: 30%;" mat-header-cell *matHeaderCellDef mat-sort-header>
                 User
             </th>
-            <td style="max-width: 20%;width: 20%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
+            <td style="max-width: 30%;width: 30%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
                 <div style="float: left;margin: 3px;">
-                    <mdm-profile-picture [user]="element.createdBy"></mdm-profile-picture>
+                    <mdm-profile-picture [user]="element.createdBy" class="inline-block mr-1" style="display: inline-block;"></mdm-profile-picture>
                     <span [innerHTML]="element.createdBy"></span>
                 </div>
             </td>
@@ -43,10 +43,10 @@ SPDX-License-Identifier: Apache-2.0
         </ng-container>
 
         <ng-container matColumnDef="description">
-            <th style="cursor:pointer;max-width: 60%;width: 60%;" mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th style="cursor:pointer;max-width: 50%;width: 50%;" mat-header-cell *matHeaderCellDef mat-sort-header>
                 Description
             </th>
-            <td style="max-width: 60%;width: 60%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
+            <td style="max-width: 50%;width: 50%;text-align: left;word-wrap: break-word;" mat-cell *matCellDef="let element">
                 {{element.description}}
             </td>
         </ng-container>

@@ -23,7 +23,7 @@ import {
   ViewChildren,
   QueryList,
   EventEmitter,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
@@ -36,14 +36,12 @@ import { MatInput } from '@angular/material/input';
 import { DialogPosition } from '@angular/material/dialog';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
-
 @Component({
   selector: 'mdm-data-set-metadata',
   templateUrl: './mc-data-set-metadata.component.html',
-  styleUrls: ['./mc-data-set-metadata.component.scss']
+  styleUrls: ['./mc-data-set-metadata.component.scss'],
 })
 export class McDataSetMetadataComponent implements AfterViewInit {
-
   @Input() parent: any;
   @Input() type: any;
   @Input() metaDataItems: any;
@@ -53,7 +51,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   @Input() domainType: any;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   @ViewChildren('filters') filters: QueryList<MatInput>;
 
   namespaces: any[];
@@ -66,15 +65,16 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   hideFilters = true;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
 
-  constructor(private resources: MdmResourcesService,
-              private securityHandler: SecurityHandlerService,
-              private messageHandler: MessageHandlerService,
-              private helpService: HelpDialogueHandlerService,
-              private changeDetectorRefs: ChangeDetectorRef) {
-  }
+  constructor(
+    private resources: MdmResourcesService,
+    private securityHandler: SecurityHandlerService,
+    private messageHandler: MessageHandlerService,
+    private helpService: HelpDialogueHandlerService,
+    private changeDetectorRefs: ChangeDetectorRef
+  ) {}
 
   ngAfterViewInit() {
     if (this.parent) {
@@ -85,35 +85,45 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.changeDetectorRefs.detectChanges();
 
       if (this.type === 'dynamic') {
-        this.resources.metadata.namespaces().toPromise().then((result) => {
-          this.namespaces = result.body.filter((n) => n.defaultNamespace);
-          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-          this.filterEvent.subscribe(() => this.paginator.pageIndex = 0);
-          merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-            this.isLoadingResults = true;
-            this.changeDetectorRefs.detectChanges();
-            return this.metadataFetch(this.paginator.pageSize,
-              this.paginator.pageOffset,
-              this.sort.active,
-              this.sort.direction,
-              this.filter);
-          }
-          ),
-            map((data: any) => {
-              this.totalItemCount = data.body.count;
-              this.isLoadingResults = false;
-              this.changeDetectorRefs.detectChanges();
-              return data.body.items;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.changeDetectorRefs.detectChanges();
-              return [];
-            })
-          ).subscribe(data => {
-            this.records = data;
+        this.resources.metadata
+          .namespaces()
+          .toPromise()
+          .then((result) => {
+            this.namespaces = result.body.filter((n) => n.defaultNamespace);
+            this.sort.sortChange.subscribe(
+              () => (this.paginator.pageIndex = 0)
+            );
+            this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
+            merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
+              .pipe(
+                startWith({}),
+                switchMap(() => {
+                  this.isLoadingResults = true;
+                  this.changeDetectorRefs.detectChanges();
+                  return this.metadataFetch(
+                    this.paginator.pageSize,
+                    this.paginator.pageOffset,
+                    this.sort.active,
+                    this.sort.direction,
+                    this.filter
+                  );
+                }),
+                map((data: any) => {
+                  this.totalItemCount = data.body.count;
+                  this.isLoadingResults = false;
+                  this.changeDetectorRefs.detectChanges();
+                  return data.body.items;
+                }),
+                catchError(() => {
+                  this.isLoadingResults = false;
+                  this.changeDetectorRefs.detectChanges();
+                  return [];
+                })
+              )
+              .subscribe((data) => {
+                this.records = data;
+              });
           });
-        });
       }
 
       if (this.type === 'static') {
@@ -134,11 +144,14 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   loadNamespaces() {
-    this.resources.metadata.namespaces().toPromise().then((result) => {
-      this.namespaces = result.body.filter((n) => {
-        return n.defaultNamespace;
+    this.resources.metadata
+      .namespaces()
+      .toPromise()
+      .then((result) => {
+        this.namespaces = result.body.filter((n) => {
+          return n.defaultNamespace;
+        });
       });
-    });
   }
 
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
@@ -147,24 +160,32 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       pageIndex,
       sortBy,
       sortType,
-      filters
     };
-    if (options.filters) {
-      if (options.filters.indexOf('namespace') !== -1) {
-        options.filters = options.filters.replace('namespace', 'ns');
-      }
+
+    if (filters) {
+      Object.keys(filters).map((key) => {
+        options[key] = filters[key];
+      });
     }
-    return this.resources.catalogueItem.listMetadata(this.parent.domainType, this.parent.id);
+
+    return this.resources.catalogueItem.listMetadata(
+      this.parent.domainType,
+      this.parent.id,
+      options
+    );
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+        if (name === 'namespace') {
+          filter["ns"] = value;
+        } else {
+          filter[name] = value;
+        }
       }
     });
     this.filter = filter;
@@ -172,7 +193,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   };
 
   onNamespaceSelect(select, record) {
-
     if (select) {
       record.edit.namespace = select.namespace;
       record.metadataKeys = [];
@@ -225,19 +245,23 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     if (this.type === 'static') {
       if (record.edit.key.trim().length === 0) {
-        record.edit.errors.key = 'Key can\'t be empty!';
+        record.edit.errors.key = "Key can't be empty!";
         isValid = false;
       }
       if (record.edit.value.trim().length === 0) {
-        record.edit.errors.value = 'Value can\'t be empty!';
+        record.edit.errors.value = "Value can't be empty!";
         isValid = false;
       }
       for (let i = 0; i < this.records.length; i++) {
         if (i === index) {
           continue;
         }
-        if (this.records[i].key.toLowerCase().trim() === record.edit.key.toLowerCase().trim() &&
-          this.records[i].namespace.toLowerCase().trim() === record.edit.namespace.toLowerCase().trim()) {
+        if (
+          this.records[i].key.toLowerCase().trim() ===
+            record.edit.key.toLowerCase().trim() &&
+          this.records[i].namespace.toLowerCase().trim() ===
+            record.edit.namespace.toLowerCase().trim()
+        ) {
           record.edit.errors.key = 'Key already exists';
           isValid = false;
         }
@@ -247,11 +271,11 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       }
     } else {
       if (record.edit.key.trim().length === 0) {
-        record.edit.errors.key = 'Key can\'t be empty!';
+        record.edit.errors.key = "Key can't be empty!";
         isValid = false;
       }
       if (record.edit.value.trim().length === 0) {
-        record.edit.errors.value = 'Value can\'t be empty!';
+        record.edit.errors.value = "Value can't be empty!";
         isValid = false;
       }
       // Call a backend service and see if it's duplicate
@@ -269,10 +293,10 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         id: '',
         namespace: '',
         key: '',
-        value: ''
+        value: '',
       },
       inEdit: true,
-      isNew: true
+      isNew: true,
     };
     this.records = [].concat([newRecord]).concat(this.records);
   }
@@ -285,11 +309,10 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   save(record, index) {
-
     const resource = {
       key: record.edit.key,
       value: record.edit.value,
-      namespace: record.edit.namespace
+      namespace: record.edit.namespace,
     };
 
     // if clientSide is true, it should not pass details to the server
@@ -307,52 +330,68 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
-      this.resources.catalogueItem.updateMetadata(this.domainType, this.parent.id, record.id, resource).subscribe((result) => {
-        if (this.afterSave) {
-          this.afterSave(resource);
-        }
+      this.resources.catalogueItem
+        .updateMetadata(this.domainType, this.parent.id, record.id, resource)
+        .subscribe(
+          (result) => {
+            if (this.afterSave) {
+              this.afterSave(resource);
+            }
 
-        record.namespace = resource.namespace;
-        record.key = resource.key;
-        record.value = resource.value;
-        record.inEdit = false;
-        this.messageHandler.showSuccess('Property updated successfully.');
-      }, (error) => {
-        // duplicate namespace + key
-        if (error.status === 422) {
-          record.edit.errors = [];
-          record.edit.errors.key = 'Key already exists';
-          return;
-        }
-        this.messageHandler.showError('There was a problem updating the property.', error);
-      });
+            record.namespace = resource.namespace;
+            record.key = resource.key;
+            record.value = resource.value;
+            record.inEdit = false;
+            this.messageHandler.showSuccess('Property updated successfully.');
+          },
+          (error) => {
+            // duplicate namespace + key
+            if (error.status === 422) {
+              record.edit.errors = [];
+              record.edit.errors.key = 'Key already exists';
+              return;
+            }
+            this.messageHandler.showError(
+              'There was a problem updating the property.',
+              error
+            );
+          }
+        );
     } else {
-      this.resources.catalogueItem.saveMetadata(this.domainType, this.parent.id, resource).subscribe((response) => {
-        // after successfully saving the row, it if is a new row,then remove its newRow property
-        record.id = response.body.id;
-        record.namespace = response.body.namespace;
-        record.key = response.body.key;
-        record.value = response.body.value;
-        record.inEdit = false;
-        delete record.edit;
+      this.resources.catalogueItem
+        .saveMetadata(this.domainType, this.parent.id, resource)
+        .subscribe(
+          (response) => {
+            // after successfully saving the row, it if is a new row,then remove its newRow property
+            record.id = response.body.id;
+            record.namespace = response.body.namespace;
+            record.key = response.body.key;
+            record.value = response.body.value;
+            record.inEdit = false;
+            delete record.edit;
 
-        if (this.type === 'static') {
-          this.records[index] = record;
-          this.messageHandler.showSuccess('Property saved successfully.');
-        } else {
-          this.records[index] = record;
-          this.messageHandler.showSuccess('Property saved successfully.');
-          this.filterEvent.emit();
-        }
-      }, (error) => {
-        // duplicate namespace + key
-        if (error.status === 422) {
-          record.edit.errors = [];
-          record.edit.errors.key = 'Key already exists';
-          return;
-        }
-        this.messageHandler.showError('There was a problem saving property.', error);
-      });
+            if (this.type === 'static') {
+              this.records[index] = record;
+              this.messageHandler.showSuccess('Property saved successfully.');
+            } else {
+              this.records[index] = record;
+              this.messageHandler.showSuccess('Property saved successfully.');
+              this.filterEvent.emit();
+            }
+          },
+          (error) => {
+            // duplicate namespace + key
+            if (error.status === 422) {
+              record.edit.errors = [];
+              record.edit.errors.key = 'Key already exists';
+              return;
+            }
+            this.messageHandler.showError(
+              'There was a problem saving property.',
+              error
+            );
+          }
+        );
     }
   }
 
@@ -362,18 +401,26 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.metaDataItems = this.records;
       return;
     }
-    this.resources.catalogueItem.removeMetadata(this.domainType, this.parent.id, record.id).subscribe(() => {
-      if (this.type === 'static') {
-        this.records.splice($index, 1);
-        this.messageHandler.showSuccess('Property deleted successfully.');
-      } else {
-        this.records.splice($index, 1);
-        this.messageHandler.showSuccess('Property deleted successfully.');
-        this.filterEvent.emit();
-      }
-    }, (error) => {
-      this.messageHandler.showError('There was a problem deleting the property.', error);
-    });
+    this.resources.catalogueItem
+      .removeMetadata(this.domainType, this.parent.id, record.id)
+      .subscribe(
+        () => {
+          if (this.type === 'static') {
+            this.records.splice($index, 1);
+            this.messageHandler.showSuccess('Property deleted successfully.');
+          } else {
+            this.records.splice($index, 1);
+            this.messageHandler.showSuccess('Property deleted successfully.');
+            this.filterEvent.emit();
+          }
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem deleting the property.',
+            error
+          );
+        }
+      );
   }
 
   loadHelp = () => {

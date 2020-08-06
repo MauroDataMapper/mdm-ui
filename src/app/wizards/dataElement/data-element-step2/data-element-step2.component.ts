@@ -70,8 +70,8 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
   dataSourceDataElements = new MatTableDataSource<any>();
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   hideFilters = true;
   displayedColumns = ['name', 'description', 'status'];
   pagination: McSelectPagination;
@@ -112,9 +112,13 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       pageSize,
       pageIndex,
       sortBy,
-      sortType,
-      filters
+      sortType      
     };
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
     const dataClass = this.model.copyFromDataClass[0];
     return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
   }
@@ -277,7 +281,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       pageIndex: offset ? offset : 0,
       sortBy: 'label',
       sortType: 'asc',
-      filters: 'label=' + text
+      label: text
     };
 
     this.pagination = {
@@ -288,7 +292,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.changeRef.detectChanges();
 
     if (loadAll) {
-      delete options.filters;
+      delete options.label;
     }
 
     return this.resources.dataType.list(this.model.parentDataModel.id, options);
@@ -299,25 +303,18 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     this.validate(this.model);
   };
 
-  applyFilter = (filterValue?: any, filterName?) => {
-    let filter: any = '';
+  applyFilter = () => {
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '' && value !== undefined) {
-        filter += name + '=' + value + '&';
+      if(value !== "") {
+       filter[name] = value;
       }
     });
-
-    if (filterValue !== null && filterValue !== undefined && filterName !== null && filterName !== undefined) {
-      filter += filterName + '=' + filterValue.id + '&';
-    }
-
     this.filter = filter;
     this.filterEvent.emit(filter);
-  };
-
+  }
 
   validationStatusEmitter($event) {
     this.step.invalid = JSON.parse($event);

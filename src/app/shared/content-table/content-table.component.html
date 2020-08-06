@@ -59,7 +59,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
   </div>
 </div>
-<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
+<div class="table-responsive">
   <table mat-table #table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
       <ng-container matColumnDef="checkbox">
           <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;">

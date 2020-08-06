@@ -36,9 +36,9 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   hideFilters = true;
-  filter: string;
   isLoadingResults: boolean;
   totalItemCount = 0;
   deleteInProgress: boolean;
@@ -94,7 +94,12 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType, filters };
+    const options = { pageSize, pageIndex, sortBy, sortType };
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
 
     return this.resources.catalogueUser.list(options);
   }
@@ -136,13 +141,12 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value + '&';
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;

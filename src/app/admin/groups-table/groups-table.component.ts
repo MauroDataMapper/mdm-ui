@@ -36,10 +36,9 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   isLoadingResults: boolean;
-  filter: string;
   totalItemCount = 0;
   hideFilters = true;
 
@@ -96,22 +95,26 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     const options = {
       pageSize,
       pageIndex,
-      filters,
       sortBy,
       sortType
     };
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
 
     return this.resourcesService.userGroups.list(options);
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value + '&';
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;

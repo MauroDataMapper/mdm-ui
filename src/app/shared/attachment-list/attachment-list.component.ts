@@ -44,13 +44,13 @@ export class AttachmentListComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  reloadEvent = new EventEmitter<string>();
+  reloadEvent = new EventEmitter<any>();
   hideFilters = true;
   displayedColumns: string[] = ['fileName', 'fileSize', 'lastUpdated', 'other'];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filter: string;
+  filter: {};
   currentUser: any;
   access: any;
   records: any[] = [];
@@ -89,13 +89,12 @@ export class AttachmentListComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value;
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;

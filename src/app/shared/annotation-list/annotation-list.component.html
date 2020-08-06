@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 </div>
 
-<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
+<div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="lastUpdated">
             <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 90%;width: 90%;" columnName="lastUpdated">Last Updated</th>

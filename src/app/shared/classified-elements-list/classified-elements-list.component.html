@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
     <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
 </div>
 <!-- <div class="table-responsive"> -->
-<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
+<div class="table-responsive">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table table-striped">
         <ng-container matColumnDef="label">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 30%;width: 30%;" columnName="label">

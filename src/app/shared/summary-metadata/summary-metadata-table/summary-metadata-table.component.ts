@@ -47,8 +47,8 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['name', 'description'];
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   records: any[] = [];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -119,13 +119,12 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   };
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value;
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;

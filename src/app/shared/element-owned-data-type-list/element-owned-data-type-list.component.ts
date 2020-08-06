@@ -68,8 +68,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   displayedColumns: string[];
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: any;
   deleteInProgress: boolean;
   domainType;
   dataSource: MatTableDataSource<any>;
@@ -149,22 +149,19 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   }
 
   applyFilter = (filterValue?: any, filterName?) => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
-      const value = x.nativeElement.value;
+      const value = x.nativeElement.value;     
+      if(value !== "") {
+        filter[name] = value;
+       }
+      });
 
-      if (value !== '') {
-        filter += name + '=' + value;
-      }
-    });
-
-    if (filterValue !== null && filterValue !== undefined && filterName !== null && filterName !== undefined) {
-      filter += filterName + '=' + filterValue.id + '&';
-    }
     this.filter = filter;
     this.filterEvent.emit(filter);
-  };
+  
+}
 
   applyMatSelectFilter(filterValue: any, filterName) {
     this.applyFilter(filterValue, filterName);
@@ -197,9 +194,13 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       pageSize,
       pageIndex,
       sortBy,
-      sortType,
-      filters
+      sortType      
     };
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
     return this.resources.dataType.list(this.parent.id, options);
   };
 

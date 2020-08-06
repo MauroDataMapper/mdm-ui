@@ -51,8 +51,8 @@ export class ContentTableComponent implements AfterViewInit {
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   deleteInProgress: boolean;
   bulkActionsVisibile = 0;
 
@@ -125,18 +125,18 @@ export class ContentTableComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value;
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
   };
+
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
@@ -147,9 +147,15 @@ export class ContentTableComponent implements AfterViewInit {
       pageSize,
       pageIndex,
       sortBy,
-      sortType,
-      filters
+      sortType
     };
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
+
     return this.resources.dataClass.content(this.parentDataModel.id, this.parentDataClass.id, options);
   }
 

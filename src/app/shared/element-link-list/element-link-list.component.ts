@@ -61,13 +61,13 @@ export class ElementLinkListComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   // paginator: MatPaginator;
 
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   hideFilters = true;
   displayedColumns: string[] = ['source', 'link', 'target', 'other'];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filter: string;
   clientSide: boolean;
 
   semanticLinkTypes: any[];
@@ -118,13 +118,12 @@ export class ElementLinkListComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value;
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;
@@ -140,9 +139,14 @@ export class ElementLinkListComponent implements AfterViewInit {
       pageSize,
       pageIndex,
       sortBy,
-      sortType,
-      filters
+      sortType
     };
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
 
     return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);
 

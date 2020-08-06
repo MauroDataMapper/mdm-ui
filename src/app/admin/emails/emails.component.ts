@@ -41,11 +41,11 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  filterEvent = new EventEmitter<string>();
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
 
   records: any[] = [];
   displayedColumns = ['sentToEmailAddress', 'dateTimeSent', 'subject', 'body', 'successfullySent'];
@@ -84,18 +84,21 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   }
 
   mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType, filters };
+    const options = { pageSize, pageIndex, sortBy, sortType };
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
     return this.resourcesService.admin.emails(options);
   }
-
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value + '&';
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;

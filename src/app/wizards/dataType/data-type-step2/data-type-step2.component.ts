@@ -50,7 +50,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   failCount = 0;
   totalItemCount = 0;
   totalSelectedItemsCount: number;
-  filter: string;
+  filter: {};
   step: any;
   model: any;
   scope: any;
@@ -73,7 +73,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   dataSourceDataTypes = new MatTableDataSource<any>();
   formChangesSubscription: Subscription;
   parentScopeHandler: any;
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
 
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -126,9 +126,14 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       pageSize,
       pageIndex,
       sortBy,
-      sortType,
-      filters
+      sortType
     };
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
   }
@@ -288,28 +293,22 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.formChangesSubscription.unsubscribe();
   }
 
-  applyFilter = (filterValue?: any, filterName?) => {
-    let filter: any = '';
+  applyFilter = () => {
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '' && value !== undefined) {
-        filter += name + '=' + value + '&';
+      if(value !== "") {
+       filter[name] = value;
       }
     });
-
-    if (filterValue !== null && filterValue !== undefined && filterName !== null && filterName !== undefined) {
-      filter += filterName + '=' + filterValue.id + '&';
-    }
-
     this.filter = filter;
     this.filterEvent.emit(filter);
   };
 
   // Gets the selected value of a dropdown and adds it to the filter string
   applyMatSelectFilter(filterValue: any, filterName) {
-    this.applyFilter(filterValue, filterName);
+    this.applyFilter();
   }
 
   filterClick = () => {

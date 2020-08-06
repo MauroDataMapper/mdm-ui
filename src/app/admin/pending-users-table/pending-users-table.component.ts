@@ -39,11 +39,11 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-  filterEvent = new EventEmitter<string>();
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
 
   records: any[] = [];
   displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'actions'];
@@ -93,11 +93,17 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     const options = {
       pageSize,
       pageIndex,
-      filters,
       sortBy,
       sortType
     };
-    options.filters += '&disabled=false';
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
+
+    options["disabled"] = false;
 
     return this.resourcesService.catalogueUser.pending(options);
   }
@@ -107,13 +113,12 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value;
+      if(value !== "") {
+       filter[name] = value;
       }
     });
     this.filter = filter;

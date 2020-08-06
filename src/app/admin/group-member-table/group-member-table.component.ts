@@ -80,7 +80,13 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     this.gridService.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
     merge(this.sort.sortChange, this.paginator.page, this.gridService.reloadEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
-      return this.groupMembersFetch();
+      return this.groupMembersFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter
+      );
     }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
@@ -96,8 +102,20 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     this.changeRef.detectChanges();
   }
 
-  groupMembersFetch = () => {
-    return this.resources.catalogueUser.listInUserGroup(this.parent.id);
+  groupMembersFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
+    const options = {
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+    };
+
+    if (filters) {
+      Object.keys(filters).map((key) => {
+        options[key] = filters[key];
+      });
+    }
+    return this.resources.catalogueUser.listInUserGroup(this.parent.id,options);
   };
 
   validate = () => {
@@ -130,7 +148,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     const options = {
       pageSize: limit ? limit : 10,
       pageIndex: offset ? offset : 0,
-      filters: 'search=' + text,
+      search: text,
       sortBy: 'emailAddress',
       sortType: 'asc'
     };

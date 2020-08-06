@@ -105,9 +105,15 @@ export class HistoryComponent implements OnInit, AfterViewInit {
       pageSize,
       pageIndex: offset,
       sortBy,
-      sortType,
-      filters
+      sortType,      
     };
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        this.options[key] = filters[key];
+      })
+    }
+
     this.elementMap = this.elementTypeService.getBaseWithUserTypes();
     let resource = this.elementMap.find(x => x.id === this.parentType);
 

@@ -24,7 +24,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SecurityHandlerService {
   loginModalDisplayed = false;
@@ -36,7 +36,7 @@ export class SecurityHandlerService {
     private stateHandler: StateHandlerService,
     private messageService: MessageService,
     private broadcastService: BroadcastService
-  ) { }
+  ) {}
 
   removeLocalStorage() {
     localStorage.removeItem('token');
@@ -48,11 +48,13 @@ export class SecurityHandlerService {
     localStorage.removeItem('needsToResetPassword');
     localStorage.removeItem('email');
     localStorage.removeItem('userSettings');
-
   }
 
   getUserFromLocalStorage() {
-    if (localStorage.getItem('username') && localStorage.getItem('username').length > 0) {
+    if (
+      localStorage.getItem('username') &&
+      localStorage.getItem('username').length > 0
+    ) {
       return {
         id: localStorage.getItem('userId'),
         token: localStorage.getItem('token'),
@@ -94,7 +96,9 @@ export class SecurityHandlerService {
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     const resource = { username, password };
     const response = await this.resources.security.login(resource).toPromise();
-    const admin = await this.resources.session.isApplicationAdministration().toPromise()
+    const admin = await this.resources.session
+      .isApplicationAdministration()
+      .toPromise();
     const adminResult = admin.body;
     const result = response.body;
     const currentUser = {
@@ -104,8 +108,10 @@ export class SecurityHandlerService {
       lastName: result.lastName,
       username: result.emailAddress,
       role: result.userRole ? result.userRole.toLowerCase() : '',
-      isAdmin: adminResult.applicationAdministrationSession ? adminResult.applicationAdministrationSession : false,
-      needsToResetPassword: result.needsToResetPassword ? true : false
+      isAdmin: adminResult.applicationAdministrationSession
+        ? adminResult.applicationAdministrationSession
+        : false,
+      needsToResetPassword: result.needsToResetPassword ? true : false,
     };
     this.addToLocalStorage(currentUser);
     return currentUser;
@@ -113,9 +119,14 @@ export class SecurityHandlerService {
 
   async logout() {
     try {
-      await this.resources.security.logout({ responseType: 'text' }).toPromise();
+      await this.resources.security
+        .logout({ responseType: 'text' })
+        .toPromise();
     } catch (err) {
-      if (err.status === 500 && err.message === 'Session has been invalidated') {
+      if (
+        err.status === 500 &&
+        err.message === 'Session has been invalidated'
+      ) {
         // Something's wrong
       } else {
         console.log(`Status ${err.status}: ${err.message}`);
@@ -136,7 +147,6 @@ export class SecurityHandlerService {
   isAuthenticated() {
     return this.resources.session.isAuthenticated();
   }
-
 
   isLoggedIn() {
     return this.getUserFromLocalStorage() != null;
@@ -181,22 +191,29 @@ export class SecurityHandlerService {
     return false;
   }
 
-  async isCurrentSessionExpired() {
-    if (this.getCurrentUser()) {
-      try {
-        const response = await this.isAuthenticated().toPromise();
-        const json = response.json();
-        if (!json?.authentication) {
-          this.removeLocalStorage();
-          return true;
+  isCurrentSessionExpired() : any { 
+    return new Promise((resolve, error) => {
+      this.isAuthenticated().subscribe(
+        (result) => {
+          const res = result.body;
+          if (!res.authenticatedSession) {
+            this.removeLocalStorage();
+            resolve(true);
+          }
+          resolve(false);
+        },
+        (err) => {
+          if (
+            err.status === 500 &&
+            err.message === 'Session has been invalidated'
+          ) {
+            resolve(true);
+            this.removeLocalStorage();
+          }
+          resolve(false);
         }
-      } catch (err) {
-        if (err.status === 500 && err.message === 'Session has been invalidated') {
-          this.removeLocalStorage();
-        }
-      }
-    }
-    return false;
+      )
+    });
   }
 
   saveLatestURL(url) {
@@ -213,32 +230,42 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showNewVersion: element.availableActions.includes('update') && element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
-      showPermission: element.availableActions.includes('update') || this.isAdmin(),
+      showNewVersion:
+        element.availableActions.includes('update') && element.finalised,
+      showFinalise:
+        element.availableActions.includes('update') && !element.finalised,
+      showPermission:
+        element.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink:
+        element.availableActions.includes('update') && !element.finalised,
     };
   }
 
   termAccess(element) {
     return {
-      showEdit: element.availableActions.includes('update') && !element.finalised,
+      showEdit:
+        element.availableActions.includes('update') && !element.finalised,
       showEditDescription: element.availableActions.includes('editDescription'),
-      showNewVersion: element.availableActions.includes('update') && element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
-      showPermission: element.availableActions.includes('update') || this.isAdmin(),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showNewVersion:
+        element.availableActions.includes('update') && element.finalised,
+      showFinalise:
+        element.availableActions.includes('update') && !element.finalised,
+      showPermission:
+        element.availableActions.includes('update') || this.isAdmin(),
+      showDelete:
+        element.availableActions.includes('softDelete') ||
+        element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.availableActions.includes('update')
+      canAddLink: element.availableActions.includes('update'),
     };
   }
 
@@ -246,12 +273,15 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showDelete:
+        element.availableActions.includes('softDelete') ||
+        element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink:
+        element.availableActions.includes('update') && !element.finalised,
     };
   }
 
@@ -259,13 +289,16 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showDelete:
+        element.availableActions.includes('softDelete') ||
+        element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink:
+        element.availableActions.includes('update') && !element.finalised,
     };
   }
 
@@ -273,13 +306,16 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      showDelete:
+        element.availableActions.includes('softDelete') ||
+        element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink:
+        element.availableActions.includes('update') && !element.finalised,
     };
   }
 
@@ -287,12 +323,16 @@ export class SecurityHandlerService {
     return {
       showEdit: dataFlow.availableActions.includes('update'),
       canAddAnnotation: dataFlow.availableActions.includes('update'),
-      canAddMetadata: this.isLoggedIn()
+      canAddMetadata: this.isLoggedIn(),
     };
   }
 
   elementAccess(element) {
-    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet') {
+    if (
+      element.domainType === 'DataModel' ||
+      element.domainType === 'Terminology' ||
+      element.domainType === 'CodeSet'
+    ) {
       return this.dataModelAccess(element);
     }
 
@@ -321,7 +361,8 @@ export class SecurityHandlerService {
   folderAccess(folder) {
     return {
       showEdit: folder.availableActions.includes('update'),
-      showPermission: folder.availableActions.includes('update') || this.isAdmin(),
+      showPermission:
+        folder.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: folder.availableActions.includes('softDelete'),
       showPermanentDelete: folder.availableActions.includes('delete'),
     };

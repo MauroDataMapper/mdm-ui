@@ -27,14 +27,12 @@ import {
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -64,11 +62,15 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   filterName: any;
   showAddTerm: any;
 
-  constructor(private messageHandler: MessageHandlerService, private resources: MdmResourcesService, private stateHandler: StateHandlerService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
+  constructor(private messageHandler: MessageHandlerService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
   }
 
   ngOnInit() {
-    this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
+    if (this.access && this.access.showEdit) {
+      this.displayedColumns = ['terminology', 'term', 'definition', 'btns'];
+    } else {
+      this.displayedColumns = ['terminology', 'term', 'definition'];
+    }
     this.isLoadingResults = false;
   }
 

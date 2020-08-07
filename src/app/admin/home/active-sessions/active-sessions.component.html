@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
     <div class="table-responsive">
         <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped marginless">
             <ng-container matColumnDef="userEmailAddress">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; max-width: 40%; width: 40%;" columnName="userEmailAddress">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="userEmailAddress">
                     <span [hidden]="!hideFilters">Email</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" floatLabel="never">
@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
                         </mat-form-field>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 40%; width: 40%; text-align: left; word-wrap: break-word;">
+                <td mat-cell *matCellDef="let record" style="max-width: 35%; width: 35%; text-align: left; word-wrap: break-word;">
                     <div>
                         <i class="fas fa-circle onlineUser" aria-hidden="true" matTooltip="Online"></i>
                         {{ record.userEmailAddress }}
@@ -41,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="userName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="userName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 20%; width: 20%;" columnName="userName">
                     <span [hidden]="!hideFilters">Name</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
                         </mat-form-field>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
+                <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
                     <div>
                         {{record.userName}}
                     </div>
@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
             </ng-container>
             <ng-container matColumnDef="lastAccess">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 13%; width: 13%;" columnName="lastAccess">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 20%; width: 20%;" columnName="lastAccess">
                     <span [hidden]="!hideFilters">Last Access</span>
                     <div [hidden]="hideFilters">
                         <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
@@ -101,7 +101,7 @@ SPDX-License-Identifier: Apache-2.0
                         </mat-form-field>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+                <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
                     <span *ngIf="isToday(record.lastAccessedDateTime)">
                         {{record.lastAccessedDateTime | date: 'h:mm a' }}
                     </span>

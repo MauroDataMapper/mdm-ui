@@ -18,12 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mdm--shadow-block">
     <div class="heading-container">
         <h4 [ngPlural]="totalItemCount" class="marginless">
-          <ng-template ngPluralCase="=1">
-            There is <span class="mdm--badge mdm--element-count">1</span> active session in this repository.
-          </ng-template>
-          <ng-template ngPluralCase="other">
-            There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> active sessions in this repository.
-          </ng-template>
+          Active sessions <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
         </h4>
     </div>
     <div class="table-responsive">

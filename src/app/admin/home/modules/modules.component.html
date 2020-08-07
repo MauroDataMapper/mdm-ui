@@ -18,12 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mdm--shadow-block">
     <div class="heading-container">
         <h4 [ngPlural]="totalItemCount" class="marginless">
-          <ng-template ngPluralCase="=1">
-            There is <span class="mdm--badge mdm--element-count">1</span> module in this repository.
-          </ng-template>
-          <ng-template ngPluralCase="other">
-            There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> modules in this repository.
-          </ng-template>
+          Modules <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
         </h4>
     </div>
     <div class="table-responsive">

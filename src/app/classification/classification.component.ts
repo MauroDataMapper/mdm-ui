@@ -24,6 +24,7 @@ import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-classification',
@@ -57,7 +58,8 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) { }
 
   ngOnInit() {
@@ -69,7 +71,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    window.document.title = 'Classifier';
+    this.title.setTitle(`Classifier`);
     this.classifierDetails(this.stateService.params.id);
 
     const promises = [];

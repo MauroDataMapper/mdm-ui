@@ -16,11 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import {StateService} from '@uirouter/core';
-import {StateHandlerService} from '@mdm/services/handlers/state-handler.service';
+import { StateService } from '@uirouter/core';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {ValidatorService} from '@mdm/services/validator.service';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
+import { ValidatorService } from '@mdm/services/validator.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-new-version-code-set',
@@ -37,15 +38,14 @@ export class NewVersionCodeSetComponent implements OnInit {
     label: '',
     copyPermissions: false,
     copyDataFlows: false,
-
     moveDataFlows: false
   };
-  constructor( private stateService: StateService,
-               private stateHandler: StateHandlerService,
-               private resources: MdmResourcesService,
-               private validator: ValidatorService,
-               private messageHandler: MessageHandlerService) {
-    window.document.title = 'New Version';
+  constructor(private stateService: StateService,
+              private stateHandler: StateHandlerService,
+              private resources: MdmResourcesService,
+              private validator: ValidatorService,
+              private messageHandler: MessageHandlerService,
+              private title: Title) {
   }
 
   ngOnInit() {
@@ -53,7 +53,7 @@ export class NewVersionCodeSetComponent implements OnInit {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-
+    this.title.setTitle(`New Version`);
     this.resources.codeSet.get(this.stateService.params.codeSetId).subscribe(response => {
       this.codeSet = response.body;
     });
@@ -95,31 +95,29 @@ export class NewVersionCodeSetComponent implements OnInit {
       };
       this.processing = true;
       this.resources.codeSet.newModelVersion(this.codeSet.id, resource).subscribe(response => {
-          this.processing = false;
-          if (response) {
-            this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
-            this.messageHandler.showSuccess('New Codeset version created successfully.');
-          }
+        this.processing = false;
+        if (response) {
+          this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+          this.messageHandler.showSuccess('New Codeset version created successfully.');
+        }
       }, error => {
-          this.processing = false;
-          this.messageHandler.showError('There was a problem creating the new Codeset version.', error);
+        this.processing = false;
+        this.messageHandler.showError('There was a problem creating the new Codeset version.', error);
       });
     } else if (this.versionType === 'newDocumentationVersion') { // newDocumentationVersion
-      const resources = {moveDataFlows: this.form.moveDataFlows};
+      const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
       this.resources.codeSet.newDocumentationVersion(this.codeSet.id, resources).subscribe(response => {
-          this.processing = false;
-          this.messageHandler.showSuccess('New Document Model version created successfully.');
-          this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true } );
-        },
-        error => {
-          this.processing = false;
-          this.messageHandler.showError('There was a problem creating the new Document Model version.', error );
-        }
-      );
+        this.processing = false;
+        this.messageHandler.showSuccess('New Document Model version created successfully.');
+        this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+      }, error => {
+        this.processing = false;
+        this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
+      });
     }
   }
-  cancel = function() {
+  cancel = () => {
     this.stateHandler.Go('codeset', { id: this.codeSet.id });
   };
 }

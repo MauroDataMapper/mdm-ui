@@ -21,6 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-models-export',
@@ -48,9 +49,9 @@ export class DataModelsExportComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private exportHandler: ExportHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private title: Title
   ) {
-    window.document.title = 'Data Models Export';
     this.loadExporterList();
     this.step = 1;
   }
@@ -135,5 +136,7 @@ export class DataModelsExportComponent implements OnInit {
     this.helpDialogueHandler.open('Exporting_models', {});
   };
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.title.setTitle(`Data Models Export`);
+  }
 }

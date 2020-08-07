@@ -24,6 +24,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { DataElementResult } from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-element',
@@ -50,7 +51,8 @@ export class DataElementComponent implements OnInit {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) {
     if (
       !this.stateService.params.id ||
@@ -85,7 +87,7 @@ export class DataElementComponent implements OnInit {
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
-    window.document.title = 'Data Element';
+    this.title.setTitle(`Data Element`);
     this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;

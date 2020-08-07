@@ -24,6 +24,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { DataClassResult } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-class',
@@ -51,7 +52,8 @@ export class DataClassComponent implements OnInit {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) {}
 
   async ngOnInit() {
@@ -73,7 +75,7 @@ export class DataClassComponent implements OnInit {
     this.showExtraTabs = this.sharedService.isLoggedIn() ;
 
     this.parentId = this.stateService.params.id;
-    window.document.title = 'Data Class';
+    this.title.setTitle(`Data Class`);
     this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
         this.showSearch = message;

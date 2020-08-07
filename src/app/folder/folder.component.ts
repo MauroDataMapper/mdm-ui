@@ -23,6 +23,7 @@ import { MessageService } from '../services/message.service';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../services/shared.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-folder',
@@ -44,7 +45,8 @@ export class FolderComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) { }
 
   ngOnInit() {
@@ -56,7 +58,7 @@ export class FolderComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    window.document.title = 'Folder';
+    this.title.setTitle(`Folder`);
     this.folderDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;

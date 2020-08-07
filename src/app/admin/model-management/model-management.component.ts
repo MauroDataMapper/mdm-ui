@@ -55,7 +55,7 @@ export class ModelManagementComponent implements OnInit {
     this.title.setTitle('Model management');
   }
 
-  onFilterChange = function () {
+  onFilterChange = () => {
     if (this.filterElement === '') {
       this.filterStatus = '';
     }
@@ -124,7 +124,7 @@ export class ModelManagementComponent implements OnInit {
     );
   };
 
-  markChildren = function (node) {
+  markChildren = (node) => {
     if (this.selectedElements) {
       if (this.selectedElements[node.id]) {
         node.checked = true;

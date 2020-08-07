@@ -318,7 +318,7 @@ export class ElementTypesService {
         return array;
     }
 
-    getBaseTypes = function() {
+    getBaseTypes = () => {
         return this.baseTypes;
     };
 

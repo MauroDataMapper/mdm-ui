@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 export class FolderResult {
   id: string;
   label: string;
-  domainType:String;
+  domainType: string;
   description: string;
   finalised: boolean;
   deleted: boolean;

@@ -191,7 +191,7 @@ export class SecurityHandlerService {
     return false;
   }
 
-  isCurrentSessionExpired() : any { 
+  isCurrentSessionExpired(): any {
     return new Promise((resolve, error) => {
       this.isAuthenticated().subscribe(
         (result) => {
@@ -212,7 +212,7 @@ export class SecurityHandlerService {
           }
           resolve(false);
         }
-      )
+      );
     });
   }
 

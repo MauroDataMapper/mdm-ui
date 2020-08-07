@@ -149,18 +149,18 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   }
 
   applyFilter = (filterValue?: any, filterName?) => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
-      const value = x.nativeElement.value;     
-      if(value !== "") {
+      const value = x.nativeElement.value;
+      if (value !== '') {
         filter[name] = value;
        }
       });
 
     this.filter = filter;
     this.filterEvent.emit(filter);
-  
+
 }
 
   applyMatSelectFilter(filterValue: any, filterName) {
@@ -194,12 +194,12 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       pageSize,
       pageIndex,
       sortBy,
-      sortType      
+      sortType
     };
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
     return this.resources.dataType.list(this.parent.id, options);
   };

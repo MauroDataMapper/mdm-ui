@@ -89,11 +89,11 @@ export class AttachmentListComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });

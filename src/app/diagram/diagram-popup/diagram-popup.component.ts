@@ -64,8 +64,7 @@ export class DiagramPopupComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  ngOnInit(): void
-  {
+  ngOnInit(): void {
     this.loadTree();
   }
 
@@ -89,7 +88,7 @@ export class DiagramPopupComponent implements OnInit {
 
   showFilterTree(): void {
     this.drawer.toggle();
-    //this.diagramComponent.filter(this.data.diagramComponent.parent)
+    // this.diagramComponent.filter(this.data.diagramComponent.parent)
   }
 
   onNodeChecked(node, parent, checkedList): void {
@@ -97,12 +96,12 @@ export class DiagramPopupComponent implements OnInit {
   }
 
   filterClick(): void {
-    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList)
+    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList);
   }
 
   clearFilterClick(): void {
     this.loadTree();
-    this.diagramComponent.filter(this.data.diagramComponent.parent, [])
+    this.diagramComponent.filter(this.data.diagramComponent.parent, []);
   }
 
   toolbarClick(buttonName: string) {

@@ -56,7 +56,7 @@ export class SemanticLinkHandlerService {
         if (operation === 'POST') {
           return this.resources.catalogueItem.saveSemanticLinks(source.domainType, source.id, resource);
         } else {
-          return this.resources.catalogueItem.updateSemanticLink(source.domainType, source.id, linkId, resource)
+          return this.resources.catalogueItem.updateSemanticLink(source.domainType, source.id, linkId, resource);
         }
 
         // if (source.domainType === 'Term') {

@@ -99,21 +99,21 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
       sortType
     };
 
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
 
     return this.resourcesService.userGroups.list(options);
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });

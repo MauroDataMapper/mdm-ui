@@ -118,11 +118,11 @@ export class ElementLinkListComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });
@@ -142,10 +142,10 @@ export class ElementLinkListComponent implements AfterViewInit {
       sortType
     };
 
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
 
     return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);

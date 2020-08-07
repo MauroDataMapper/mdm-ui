@@ -28,7 +28,7 @@ class ResourcesTemplate {
   constructor(private resourcesService: MdmResourcesService) {
   }
   get = jest.fn();
-  delete =jest.fn();
+  delete = jest.fn();
   post = jest.fn();
   put = jest.fn();
 }
@@ -39,28 +39,28 @@ ResourcesServiceStub = {
 };
 
 let MessageServiceStub: Partial<MessageService>;
-MessageServiceStub ={
-  getFolderPermissions: ()=>{
+MessageServiceStub = {
+  getFolderPermissions: () => {
 
   }
-}
+};
 
 let SecurityHandlerServiceStub: Partial<SecurityHandlerService>;
 SecurityHandlerServiceStub = {
-  isLoggedIn : () => {return true} ,
-  isAuthenticated: () => {return new Observable()}
-}
+  isLoggedIn : () => true ,
+  isAuthenticated: () => new Observable()
+};
 
 
 let StateServiceStub: Partial<StateService>;
 StateServiceStub = {
-  params: new StateParams({parentFolderId:"111", folder:"test", codeSetId:120, id:2344, dataModelId:234})
-}
+  params: new StateParams({parentFolderId: '111', folder: 'test', codeSetId: 120, id: 2344, dataModelId: 234})
+};
 
 let SharedServiceStub: Partial<SharedService>;
 SharedServiceStub = {
-  isLoggedIn: () => {return true;}
-}
+  isLoggedIn: () => true
+};
 
 @NgModule({
   declarations: [HistoryComponent, MdmPaginatorComponent],

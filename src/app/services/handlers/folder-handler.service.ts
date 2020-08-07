@@ -95,11 +95,11 @@ export class FolderHandlerService {
   delete(id, permanent = false) {
     return new Promise((resolve, reject) => {
         this.resoucesService.folder.remove(id, { permanent }).subscribe((result) => {
-          this.messageHandler.showSuccess("Successfully Deleted Folder")
-           resolve();
+          this.messageHandler.showSuccess('Successfully Deleted Folder');
+          resolve();
         }, error => {
           this.messageHandler.showError('There was a problem deleting the Folder.', error);
         });
-    }); 
+    });
   }
 }

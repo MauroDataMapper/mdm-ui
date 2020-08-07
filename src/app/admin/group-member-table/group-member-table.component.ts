@@ -115,7 +115,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
         options[key] = filters[key];
       });
     }
-    return this.resources.catalogueUser.listInUserGroup(this.parent.id,options);
+    return this.resources.catalogueUser.listInUserGroup(this.parent.id, options);
   };
 
   validate = () => {

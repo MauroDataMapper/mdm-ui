@@ -36,7 +36,7 @@ export class DataModelStep2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-  
+
     this.resources.dataModel.defaultDataTypes().subscribe(result => {
         this.defaultDataTypeProviders = result.body;
       },

@@ -33,7 +33,7 @@ export class StateRoleAccessService {
         'appContainer.mainApp.about',
         'appContainer.mainApp.twoSidePanel',
         'appContainer.mainApp.twoSidePanel.catalogue',
-        'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',  
+        'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',
         'appContainer.mainApp.home',
         'appContainer.mainApp.twoSidePanel.catalogue.dataType',
         'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -58,7 +58,7 @@ export class StateRoleAccessService {
       state = state.toLowerCase();
     }
     // if it is a public resource, then show it, regardless of the user role
-    if (allowedStates.findIndex(x => x.toLowerCase() == state) > -1) {
+    if (allowedStates.findIndex(x => x.toLowerCase() === state) > -1) {
       return true;
     }
 

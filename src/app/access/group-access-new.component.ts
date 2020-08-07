@@ -74,7 +74,7 @@ export class GroupAccessNewComponent implements OnInit {
     this.buildGroups();
     this.loadAllGroups('', 0, 0);
 
-    this.editable = this.folderResult["availableActions"].indexOf("update") !== -1;
+    this.editable = this.folderResult['availableActions'].indexOf('update') !== -1;
 
     this.dataSource = new MatTableDataSource(this.groups);
     this.dataSource.sort = this.sort;
@@ -222,7 +222,7 @@ export class GroupAccessNewComponent implements OnInit {
     let isValid = true;
     record.edit.errors = [];
     if (!record.edit.group) {
-      record.edit.errors.group = "Group can't be empty!";
+      record.edit.errors.group = 'Group can\'t be empty!';
       isValid = false;
     }
     if (isValid) {
@@ -250,13 +250,12 @@ export class GroupAccessNewComponent implements OnInit {
   }
 
   deleteRecord = (record, index) => {
-    debugger;
-    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult.domainType,this.folderResult.id,record.groupRole.id,record.userGroup.id).subscribe((res) => {
-      this.messageHandler.showSuccess("Delete Successful")
+    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult.domainType, this.folderResult.id, record.groupRole.id, record.userGroup.id).subscribe((res) => {
+      this.messageHandler.showSuccess('Delete Successful');
       this.buildGroups();
     },
     (error) => {
-      this.messageHandler.showError("Error Removing",error);
-    })
+      this.messageHandler.showError('Error Removing', error);
+    });
   }
 }

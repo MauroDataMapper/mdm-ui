@@ -138,7 +138,7 @@ export class ElementTypesService {
             classifiable: true
         },
         {
-            //TODO remove (HIDDEN) once backend is fixed
+            // TODO remove (HIDDEN) once backend is fixed
             id: 'TerminologyType',
             link: 'dataType(HIDDEN)',
             title: 'DataType (Terminology)',

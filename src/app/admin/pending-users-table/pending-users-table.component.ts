@@ -93,7 +93,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
 
     options['disabled'] = false;

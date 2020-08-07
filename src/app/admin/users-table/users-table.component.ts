@@ -95,10 +95,10 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     filters?
   ): Observable<any> {
     const options = { pageSize, pageIndex, sortBy, sortType };
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
 
     return this.resources.catalogueUser.list(options);
@@ -141,11 +141,11 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });

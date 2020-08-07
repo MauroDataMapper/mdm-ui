@@ -85,19 +85,19 @@ export class EmailsComponent implements OnInit, AfterViewInit {
 
   mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
     const options = { pageSize, pageIndex, sortBy, sortType };
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
     return this.resourcesService.admin.emails(options);
   }
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });

@@ -26,13 +26,13 @@ export class GridService {
   constructor() {}
 
   applyFilter = (filters: any[]) => {
-    let filter = {};
+    const filter = {};
     if (filters) {
       filters.forEach((x: any) => {
         const name = x.nativeElement.name;
         const value = x.nativeElement.value;
 
-        if(value !== "") {
+        if (value !== '') {
           filter[name] = value;
          }
       });

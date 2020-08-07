@@ -112,12 +112,12 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       pageSize,
       pageIndex,
       sortBy,
-      sortType      
+      sortType
     };
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
     const dataClass = this.model.copyFromDataClass[0];
     return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
@@ -304,11 +304,11 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   };
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });

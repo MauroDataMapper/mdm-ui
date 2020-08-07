@@ -42,7 +42,7 @@ export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit
 
   ngOnInit() {
 
-    this.model = this.step.scope.model;  
+    this.model = this.step.scope.model;
     this.resources.dataModel.types().toPromise().then(dataTypes => {
       this.allDataModelTypes = dataTypes.body;
   });

@@ -107,7 +107,7 @@ export class ImportComponent implements OnInit {
 
           // When the input is just a checkbox we give it 'false' as the default value
           // so don't mark it as optional, as the form will be invalid unless the user checks or unChecks the input
-          if (option.type === 'Boolean' || option.type === "boolean") {
+          if (option.type === 'Boolean' || option.type === 'boolean') {
             option.optional = true;
             option.value = false;
           }

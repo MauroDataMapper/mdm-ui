@@ -36,7 +36,7 @@ export class AnnotationListComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   @Input() parent: any;
   @Input() domainType: any;
@@ -67,28 +67,27 @@ export class AnnotationListComponent implements AfterViewInit {
     this.currentUser = this.securityHandler.getCurrentUser();
 
     merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
-          this.isLoadingResults = true;
-          this.changeRef.detectChanges();
+      this.isLoadingResults = true;
+      this.changeRef.detectChanges();
 
-          return this.annotationFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction
-          );
-        }), map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          this.changeRef.detectChanges();
-          return data.body.items;
-        }), catchError(() => {
-          this.isLoadingResults = false;
-          // this.changeRef.detectChanges();
-          return [];
-        })
-      ).subscribe(data => {
-        this.records = data;
-      });
+      return this.annotationFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction
+      );
+    }), map((data: any) => {
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      return [];
+    })
+    ).subscribe(data => {
+      this.records = data;
+    });
 
     this.changeRef.detectChanges();
   }
@@ -138,13 +137,11 @@ export class AnnotationListComponent implements AfterViewInit {
       description: record.edit.description
     };
     this.resources.catalogueItem.saveAnnotations(this.domainType, this.parent.id, resource).subscribe(() => {
-          this.messageHandler.showSuccess('Comment saved successfully.');
-          this.reloadEvent.emit();
-        },
-        error => {
-          this.messageHandler.showError('There was a problem adding the comment.', error);
-        }
-      );
+      this.messageHandler.showSuccess('Comment saved successfully.');
+      this.reloadEvent.emit();
+    }, error => {
+      this.messageHandler.showError('There was a problem adding the comment.', error);
+    });
   };
 
   addChild = annotation => {
@@ -153,19 +150,18 @@ export class AnnotationListComponent implements AfterViewInit {
     };
 
     this.resources.catalogueItem.saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource).toPromise().then(response => {
-          annotation.childAnnotations = annotation.childAnnotations || [];
-          annotation.childAnnotations.push(response.body);
-          annotation.newChildText = '';
-          this.messageHandler.showSuccess('Comment saved successfully.');
-        },
-        error => {
-          this.messageHandler.showError('There was a problem saving the comment.', error);
-          // element not found
-          if (error.status === 400) {
-            // viewError
-          }
+      annotation.childAnnotations = annotation.childAnnotations || [];
+      annotation.childAnnotations.push(response.body);
+      annotation.newChildText = '';
+      this.messageHandler.showSuccess('Comment saved successfully.');
+    }, error => {
+        this.messageHandler.showError('There was a problem saving the comment.', error);
+        // element not found
+        if (error.status === 400) {
+          // viewError
         }
-      );
+      }
+    );
   };
 
   showChildren = annotation => {

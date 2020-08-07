@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '../model/folderModel';
 import { ElementTypesService } from '../services/element-types.service';
@@ -94,21 +94,21 @@ export class HistoryComponent implements OnInit, AfterViewInit {
       this.isLoadingResults = false;
       return [];
     })).subscribe(data => {
-        this.records = data;
-      });
+      this.records = data;
+    });
     this.changeRef.detectChanges();
   }
   public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
-      // this.isLoading = true;
+    // this.isLoading = true;
 
     this.options = {
       pageSize,
       pageIndex: offset,
       sortBy,
-      sortType,      
+      sortType,
     };
 
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         this.options[key] = filters[key];
       })

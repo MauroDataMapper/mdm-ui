@@ -47,7 +47,7 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this.sort) {
@@ -57,7 +57,6 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.displayedColumns;
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
@@ -77,50 +76,41 @@ export class PluginsComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.provider.importers(options)
-    // this.resourcesService.admin.get('plugins/importers', options)
-      .subscribe(resp => {
-        this.dataSource.data = [...this.dataSource.data, ...resp.body];
-        this.totalItemCount = this.dataSource.data.length;
-      }, err => {
-        this.messageHandler.showError('There was a problem loading the importers.', err);
-      }
+    this.resourcesService.provider.importers(options).subscribe(resp => {
+      this.dataSource.data = [...this.dataSource.data, ...resp.body];
+      this.totalItemCount = this.dataSource.data.length;
+    }, err => {
+      this.messageHandler.showError('There was a problem loading the importers.', err);
+    }
     );
 
-    this.resourcesService.provider.emailers(options)
-    // this.resourcesService.admin.get('plugins/emailers', options)
-      .subscribe(resp => {
-        this.dataSource.data = [...this.dataSource.data, ...resp.body];
+    this.resourcesService.provider.emailers(options).subscribe(resp => {
+      this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
-        this.totalItemCount = this.dataSource.data.length;
-      }, err => {
-        this.messageHandler.showError('There was a problem loading the emailers.', err);
-      }
+      this.totalItemCount = this.dataSource.data.length;
+    }, err => {
+      this.messageHandler.showError('There was a problem loading the emailers.', err);
+    }
     );
 
-    this.resourcesService.provider.dataLoaders(options)
-    // this.resourcesService.admin.get('plugins/dataLoaders', options)
-      .subscribe(resp => {
-        this.dataSource.data = [...this.dataSource.data, ...resp.body];
+    this.resourcesService.provider.dataLoaders(options).subscribe(resp => {
+      this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
-        this.totalItemCount = this.dataSource.data.length;
-      }, err => {
-        this.messageHandler.showError('There was a problem loading the dataLoaders.', err);
-      }
+      this.totalItemCount = this.dataSource.data.length;
+    }, err => {
+      this.messageHandler.showError('There was a problem loading the dataLoaders.', err);
+    }
     );
 
-    this.resourcesService.provider.exporters(options)
-    // this.resourcesService.admin.get('plugins/exporters', options)
-      .subscribe(resp => {
-        this.dataSource.data = [...this.dataSource.data, ...resp.body];
+    this.resourcesService.provider.exporters(options).subscribe(resp => {
+      this.dataSource.data = [...this.dataSource.data, ...resp.body];
 
-        this.totalItemCount = this.dataSource.data.length;
-      },
-      (err: any) => {
-        this.messageHandler.showError('There was a problem loading the exporters.', err);
-      });
+      this.totalItemCount = this.dataSource.data.length;
+    }, (err: any) => {
+      this.messageHandler.showError('There was a problem loading the exporters.', err);
+    });
   }
 
   // TODO
-  applyFilter = () => {};
+  applyFilter = () => { };
 }

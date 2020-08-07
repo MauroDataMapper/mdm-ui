@@ -107,8 +107,6 @@ export class DataClassStep2Component
 
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
     if (
       this.sort !== null &&
       this.sort !== undefined &&
@@ -117,22 +115,12 @@ export class DataClassStep2Component
       this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-          () => (this.paginator.toArray()[0].pageIndex = 0)
-        );
-      this.filterEvent.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
+      this.filterEvent.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
 
       // Selected Data Class table
       this.dataSource.sort = this.sort.toArray()[0];
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-          () => (this.paginator.toArray()[0].pageIndex = 0)
-        );
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
       this.dataSource.paginator = this.paginator.toArray()[0];
     }
     if (this.model.selectedDataClassesMap) {
@@ -213,43 +201,28 @@ export class DataClassStep2Component
     let promise = Promise.resolve();
 
     this.model.selectedDataClasses.forEach((dc: any) => {
-      promise = promise
-        .then((result: any) => {
-          this.successCount++;
-          this.finalResult[dc.id] = { result, hasError: false };
-          if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass
-              .copyChildDataClass(
-                this.model.parent.model,
-                this.model.parent.id,
-                dc.modelId,
-                dc.id,
-                null
-              )
-              .toPromise();
-          } else {
-            return this.resources.dataClass
-              .copyDataClass(this.model.parent.id, dc.modelId, dc.id, null)
-              .toPromise();
-          }
-        })
-        .catch((error) => {
-          this.failCount++;
-          const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = { result: errorText, hasError: true };
-        });
+      promise = promise.then((result: any) => {
+        this.successCount++;
+        this.finalResult[dc.id] = { result, hasError: false };
+        if (this.model.parent.domainType === 'DataClass') {
+          return this.resources.dataClass.copyChildDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+        } else {
+          return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+        }
+      }).catch((error) => {
+        this.failCount++;
+        const errorText = this.messageHandler.getErrorText(error);
+        this.finalResult[dc.id] = { result: errorText, hasError: true };
+      });
     });
 
-    promise
-      .then(() => {
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      })
-      .catch(() => {})
-      .finally(() => {
-        this.processing = false;
-        this.step.submitBtnDisabled = false;
-        this.isProcessComplete = true;
-      });
+    promise.then(() => {
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }).catch(() => { }).finally(() => {
+      this.processing = false;
+      this.step.submitBtnDisabled = false;
+      this.isProcessComplete = true;
+    });
 
     return promise;
   };

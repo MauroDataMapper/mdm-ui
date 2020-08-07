@@ -23,14 +23,13 @@ import {
   ViewChild,
   Output,
   EventEmitter,
-  Input,
-  SimpleChanges
+  Input
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {ContentSearchHandlerService} from '@mdm/services/content-search.handler.service';
-import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {MatTableDataSource} from '@angular/material/table';
+import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'mdm-multiple-terms-selector',
@@ -68,7 +67,6 @@ export class MultipleTermsSelectorComponent implements OnInit {
   isProcessing = false;
   private searchControlInput: ElementRef;
   selectedItems: any;
-  // @Input() selectedTerms: any;
   @Input()
   get selectedTerms() {
     return this.selectedItems;
@@ -82,16 +80,13 @@ export class MultipleTermsSelectorComponent implements OnInit {
   @ViewChild('searchInputControl', { static: false }) set content(content: ElementRef) {
 
     if (!this.searchControlInput && content) {
-      fromEvent(content.nativeElement, 'keyup')
-        .pipe(
-          map((event: any) => {
+      fromEvent(content.nativeElement, 'keyup').pipe(map((event: any) => {
             return event.target.value;
           }),
           filter(res => res.length >= 0),
           debounceTime(500),
           distinctUntilChanged()
-        )
-        .subscribe((text: string) => {
+        ).subscribe((text: string) => {
           this.dataSource = new MatTableDataSource<any>(null);
           this.loading = false;
           this.totalItemCount = 0;
@@ -113,11 +108,9 @@ export class MultipleTermsSelectorComponent implements OnInit {
   }
 
   loadTerminologies = () => {
-    this.resources.terminology.list()
-      // .get(null, null, { all: true })
-      .subscribe(data => {
-        this.selectorSection.terminologies = data.body.items;
-      });
+    this.resources.terminology.list().subscribe(data => {
+      this.selectorSection.terminologies = data.body.items;
+    });
   };
   onTerminologySelect = (terminology: any, record: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
@@ -127,14 +120,9 @@ export class MultipleTermsSelectorComponent implements OnInit {
     } else {
       this.totalItemCount = 0;
       this.currentRecord = 0;
-      // this.noData = true;
-      // this.searchInput = "";
     }
-
-    // this.selectorSection.startFetching++;
   };
   runTermSearch = () => {
-    // this.selectorSection.startFetching++;
     this.fetch(40, 0);
   };
   loadAllTerms = (terminology, pageSize, offset) => {
@@ -147,35 +135,30 @@ export class MultipleTermsSelectorComponent implements OnInit {
 
     this.selectorSection.loading = true;
 
-    this.resources.terminology.terms.list(terminology.id, options)
-      // .get(terminology.id, 'terms', options)
-      .subscribe(result => {
-        // make check=true if element is already selected
-        result.body.items.forEach(item => {
-          item.terminology = terminology;
-        });
+    this.resources.terminology.terms.list(terminology.id, options).subscribe(result => {
+      // make check=true if element is already selected
+      result.body.items.forEach(item => {
+        item.terminology = terminology;
+      });
 
-        this.selectorSection.searchResult = result.body.items;
-
-        this.calculateDisplayedSoFar(result);
-
-        this.selectorSection.loading = false;
-
-        this.totalItemCount = result.body.count;
-        if (this.dataSource.data) {
-          this.dataSource.data = this.dataSource.data.concat(
-            this.selectorSection.searchResult
-          );
-          this.currentRecord = this.dataSource.data.length;
-          this.loading = false;
-          this.isProcessing = false;
-        } else {
-          this.dataSource.data = this.selectorSection.searchResult;
-          this.currentRecord = this.dataSource.data.length;
-          this.isProcessing = false;
-          this.loading = false;
-        }
-  });
+      this.selectorSection.searchResult = result.body.items;
+      this.calculateDisplayedSoFar(result);
+      this.selectorSection.loading = false;
+      this.totalItemCount = result.body.count;
+      if (this.dataSource.data) {
+        this.dataSource.data = this.dataSource.data.concat(
+          this.selectorSection.searchResult
+        );
+        this.currentRecord = this.dataSource.data.length;
+        this.loading = false;
+        this.isProcessing = false;
+      } else {
+        this.dataSource.data = this.selectorSection.searchResult;
+        this.currentRecord = this.dataSource.data.length;
+        this.isProcessing = false;
+        this.loading = false;
+      }
+    });
   };
   fetch = (pageSize, offset) => {
     if (this.selectorSection.termSearchText.length === 0 && this.selectorSection.selectedTerminology) {
@@ -189,7 +172,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
       this.contextSearchHandler.search(this.selectorSection.selectedTerminology, this.selectorSection.termSearchText, this.selectorSection.searchResultPageSize, position, ['Term'], null, null, null, null, null, null, null, null).subscribe(result => {
         this.selectorSection.searchResult = result.body.items;
         // make check=true if element is already selected
-        result.body.items.forEach( (item) => {
+        result.body.items.forEach((item) => {
           item.terminology = this.selectorSection.selectedTerminology;
           if (this.selectorSection.selectedTerms[item.id]) {
             item.checked = true;
@@ -220,7 +203,6 @@ export class MultipleTermsSelectorComponent implements OnInit {
         this.loading = false;
         this.isProcessing = false;
       });
-    // return deferred.promise;
     }
   };
 
@@ -234,7 +216,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit && limit > 0) {
       const requiredNum = this.dataSource.data.length + this.pageSize;
-      if (this.totalItemCount + this.pageSize > requiredNum && !this.isProcessing ) {
+      if (this.totalItemCount + this.pageSize > requiredNum && !this.isProcessing) {
         this.isProcessing = true;
         this.fetch(this.pageSize, this.dataSource.data.length);
       }

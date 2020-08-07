@@ -151,8 +151,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe((queryList: QueryList<any>) => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -167,8 +165,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
+    const inlineEditorToInvoke = this.editForm.find((inlineEditorComponent: any) => {
         return inlineEditorComponent.name === 'editableText';
       }
     );
@@ -176,41 +173,40 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   DataClassDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-        this.result = serverResult;
+      this.result = serverResult;
 
-        this.editableForm.description = this.result.description;
-        this.editableForm.label = this.result.label;
+      this.editableForm.description = this.result.description;
+      this.editableForm.label = this.result.label;
 
-        if (this.result.classifiers) {
-          this.result.classifiers.forEach(item => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        this.aliases = [];
-        if (this.result.aliases) {
-          this.result.aliases.forEach(item => {
-            this.aliases.push(item);
-            // this.editableForm.aliases.push(item);
-          });
-        }
-
-        if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
-          this.min = '*';
-        } else {
-          this.min = this.result.minMultiplicity;
-        }
-
-        if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
-          this.max = '*';
-        } else {
-          this.max = this.result.maxMultiplicity;
-        }
-
-        if (this.result != null) {
-          this.hasResult = true;
-        }
-        this.title.setTitle(`Data Class - ${this.result?.label}`);
+      if (this.result.classifiers) {
+        this.result.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
       }
+      this.aliases = [];
+      if (this.result.aliases) {
+        this.result.aliases.forEach(item => {
+          this.aliases.push(item);
+        });
+      }
+
+      if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
+        this.min = '*';
+      } else {
+        this.min = this.result.minMultiplicity;
+      }
+
+      if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
+        this.max = '*';
+      } else {
+        this.max = this.result.maxMultiplicity;
+      }
+
+      if (this.result != null) {
+        this.hasResult = true;
+      }
+      this.title.setTitle(`Data Class - ${this.result?.label}`);
+    }
     );
   }
 
@@ -224,11 +220,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.messageHandler.showSuccess('Data Class deleted successfully.');
       this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
       this.broadcastSvc.broadcast('$reloadFoldersTree');
-    },
-    error => {
-      this.deleteInProgress = false;
-      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
-    });
+    }, error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      });
   }
 
   formBeforeSave = () => {
@@ -245,7 +240,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       aliases.push(alias);
     });
     if (this.validateLabel(this.result.label) && this.validateMultiplicity(this.min, this.max)) {
-      if (this.min != null && this.min !== '' && this.max != null && this.max !== '' ) {
+      if (this.min != null && this.min !== '' && this.max != null && this.max !== '') {
         if (this.newMinText === '*') {
           this.newMinText = -1;
         }
@@ -264,17 +259,16 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         maxMultiplicity: parseInt(this.max, 10)
       };
       this.resourcesService.dataClass.updateChildDataClass(this.result.parentDataModel, this.result.parentDataClass, resource.id, resource).subscribe(result => {
-            if (this.afterSave) {
-              this.afterSave(result);
-            }
-            this.messageHandler.showSuccess('Data Class updated successfully.');
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
-          },
-          error => {
-            this.messageHandler.showError('There was a problem updating the Data Class.', error);
-          }
+        if (this.afterSave) {
+          this.afterSave(result);
+        }
+        this.messageHandler.showSuccess('Data Class updated successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.editableForm.visible = false;
+        this.editForm.forEach(x => x.edit({ editing: false }));
+      }, error => {
+          this.messageHandler.showError('There was a problem updating the Data Class.', error);
+        }
       );
     }
   };

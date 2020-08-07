@@ -15,17 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
-import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
-import {ValidatorService} from '@mdm/services/validator.service';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTable} from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { ValidatorService } from '@mdm/services/validator.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatTable } from '@angular/material/table';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -43,7 +41,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-  @ViewChild(MatTable, {static: false}) table: MatTable<any>;
+  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   dataSource: any;
   enumsCount: number;
@@ -127,8 +125,6 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   updateOrder = (enumId, newPosition, newCategory) => {
     if (this.clientSide) {
-      // sort it
-      // var sorted = _.sortBy(this.allRecords, 'index'); !
       const sorted = this.allRecords;
 
       // find it & remove it
@@ -140,11 +136,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       });
 
       const foundRecords = sorted.splice(index, 1);
-      // var record = [];
       if (foundRecords && foundRecords.length > 0) {
         const record = foundRecords[0];
-        // record.category = newCategory; !
-        // }
 
         let location = -1;
         for (let i = 0; i < sorted.length && location === -1; i++) {
@@ -172,30 +165,18 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         category: newCategory
       };
 
-      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.dataModel, this.parent.id, enumId, resource)
-      // this.resourcesService.enumerationValues
-      //   .put(this.parent.dataModel, this.parent.id, enumId, null, {
-      //     resource
-      //   })
-        .subscribe(
-          () => {
-            this.reloadRecordsFromServer().subscribe(data => {
-              this.showRecords(data.body.enumerationValues);
-            });
+      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.dataModel, this.parent.id, enumId, resource).subscribe(() => {
+        this.reloadRecordsFromServer().subscribe(data => {
+          this.showRecords(data.body.enumerationValues);
+        });
 
-            this.messageHandler.showSuccess(
-              'Enumeration updated successfully.'
-            );
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem updating the enumeration.',
-              error
-            );
-          }
-        );
+        this.messageHandler.showSuccess('Enumeration updated successfully.');
+      },
+        error => {
+          this.messageHandler.showError('There was a problem updating the enumeration.', error);
+        }
+      );
     }
-    // };
   };
 
   identify(item) {
@@ -262,7 +243,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       // TODO sort
       // categories[category] = _.sortBy(categories[category], 'index');
       if (category !== null && category !== '' && category !== undefined) {
-        this.categories.push({key: category, value: category});
+        this.categories.push({ key: category, value: category });
       }
 
       allRecordsWithGroups.push({
@@ -420,21 +401,15 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
       this.showRecords([].concat(this.allRecords));
     } else {
-      this.resourcesService.enumerationValues.removeFromEnumeratedType(this.parent.dataModel, this.parent.id, record.id)
-      // this.resourcesService.enumerationValues
-      //   .delete(this.parent.dataModel, this.parent.id, record.id)
-        .subscribe(() => {
-          this.messageHandler.showSuccess('Enumeration deleted successfully.');
-          // reload all enums
-          this.reloadRecordsFromServer().subscribe((data) => {
-            this.showRecords(data.body.enumerationValues);
-          });
-        }, error => {
-              this.messageHandler.showError(
-                'There was a problem deleting the enumeration.',
-                error
-              );
-            });
+      this.resourcesService.enumerationValues.removeFromEnumeratedType(this.parent.dataModel, this.parent.id, record.id).subscribe(() => {
+        this.messageHandler.showSuccess('Enumeration deleted successfully.');
+        // reload all enums
+        this.reloadRecordsFromServer().subscribe((data) => {
+          this.showRecords(data.body.enumerationValues);
+        });
+      }, error => {
+        this.messageHandler.showError('There was a problem deleting the enumeration.', error);
+      });
 
     }
     if (this.onUpdate) {
@@ -512,49 +487,32 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
     // in edit mode, we save them here
     if (record.id && record.id.indexOf('temp-') !== 0) {
-      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.dataModel, this.parent.id, record.id, resource)
-      // this.resourcesService.enumerationValues
-      //   .put(this.parent.dataModel, this.parent.id, record.id, null, {
-      //     resource
-      //   })
-        .subscribe(() => {
-          if (this.afterSave) {
-            this.afterSave.emit(resource);
-          }
-          record.key = resource.key;
-          record.value = resource.value;
-          record.category = resource.category;
-          record.inEdit = false;
+      this.resourcesService.enumerationValues.updateInEnumeratedType(this.parent.dataModel, this.parent.id, record.id, resource).subscribe(() => {
+        if (this.afterSave) {
+          this.afterSave.emit(resource);
+        }
+        record.key = resource.key;
+        record.value = resource.value;
+        record.category = resource.category;
+        record.inEdit = false;
 
-          this.reloadRecordsFromServer().subscribe((data) => {
-            this.showRecords(data.body.enumerationValues);
-          });
-
-          this.messageHandler.showSuccess('Enumeration updated successfully.');
-        }, error => {
-          this.messageHandler.showError(
-            'There was a problem updating the enumeration.',
-            error
-          );
+        this.reloadRecordsFromServer().subscribe((data) => {
+          this.showRecords(data.body.enumerationValues);
         });
+
+        this.messageHandler.showSuccess('Enumeration updated successfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the enumeration.', error);
+      });
     } else {
-      this.resourcesService.enumerationValues.saveToEnumeratedType(this.parent.dataModel, this.parent.id, resource)
-      // this.resourcesService.enumerationValues
-      //   .post(this.parent.dataModel, this.parent.id, {resource})
-        .subscribe(
-          () => {
-            this.reloadRecordsFromServer().subscribe(data => {
-              this.showRecords(data.body.enumerationValues);
-            });
-            this.messageHandler.showSuccess('Enumeration saved successfully.');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem saving the enumeration.',
-              error
-            );
-          }
-        );
+      this.resourcesService.enumerationValues.saveToEnumeratedType(this.parent.dataModel, this.parent.id, resource).subscribe(() => {
+        this.reloadRecordsFromServer().subscribe(data => {
+          this.showRecords(data.body.enumerationValues);
+        });
+        this.messageHandler.showSuccess('Enumeration saved successfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem saving the enumeration.', error);
+      });
     }
   }
 
@@ -572,12 +530,6 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   reloadRecordsFromServer() {
     return this.resourcesService.dataType.get(this.parent.dataModel, this.parent.id);
-    // return this.resourcesService.dataType.get(
-    //   this.parent.dataModel,
-    //   this.parent.id,
-    //   null,
-    //   null
-    // );
   }
 
   groupSortClicked() {

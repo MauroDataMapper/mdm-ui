@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -25,6 +25,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { DataModelResult } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-model',
@@ -53,8 +54,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
-  ) {}
+    private stateHandler: StateHandlerService,
+    private title: Title
+  ) { }
 
   ngOnInit() {
     if (!this.stateService.params.id) {
@@ -65,59 +67,45 @@ export class DataModelComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    this.showExtraTabs =
-      this.sharedService.isLoggedIn() ;
-    // ||!this.dataModel.editable ;
-    // || this.dataModel.finalised;
-    // this.fetch();
-
+    this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.stateService.params.id;
-    // this.resourcesService.dataModel.get(this.stateService.params.id).subscribe(x => { this.dataModel = x.body });
 
-    window.document.title = 'Data Model';
+    this.title.setTitle('Data Model');
     this.dataModelDetails(this.stateService.params.id);
 
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
-    this.afterSave = (result: { body: { id: any } }) =>
-      this.dataModelDetails(result.body.id);
+    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
+      this.showSearch = message;
+    });
+    this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
   }
 
   dataModelDetails(id: any) {
     this.resourcesService.dataModel.get(id).subscribe((result: { body: DataModelResult }) => {
-        this.dataModel = result.body;
-        this.isEditable = this.dataModel['availableActions'].includes('update');
-        this.parentId = this.dataModel.id;
-        if (this.sharedService.isLoggedIn(true)) {
-          this.DataModelPermissions(id);
-        } else {
-          this.messageService.FolderSendMessage(this.dataModel);
-          this.messageService.dataChanged(this.dataModel);
-        }
+      this.dataModel = result.body;
+      this.isEditable = this.dataModel['availableActions'].includes('update');
+      this.parentId = this.dataModel.id;
+      if (this.sharedService.isLoggedIn(true)) {
+        this.DataModelPermissions(id);
+      } else {
+        this.messageService.FolderSendMessage(this.dataModel);
+        this.messageService.dataChanged(this.dataModel);
+      }
 
-        this.tabGroup.realignInkBar();
-        this.activeTab = this.getTabDetailByName(
-          this.stateService.params.tabView
-        ).index;
-        this.tabSelected(this.activeTab);
-      });
+      this.tabGroup.realignInkBar();
+      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+      this.tabSelected(this.activeTab);
+    });
   }
 
   DataModelPermissions(id: any) {
-    this.resourcesService.security.permissions(DOMAIN_TYPE.DataModel, id)
-    // this.resourcesService.dataModel
-    //   .get(id, 'permissions', null)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
-        Object.keys(permissions.body).forEach( attrname => {
-          this.dataModel[attrname] = permissions.body[attrname];
-        });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.dataModel);
-        this.messageService.dataChanged(this.dataModel);
+    this.resourcesService.security.permissions(DOMAIN_TYPE.DataModel, id).subscribe((permissions: { body: { [x: string]: any } }) => {
+      Object.keys(permissions.body).forEach(attrname => {
+        this.dataModel[attrname] = permissions.body[attrname];
       });
+      // Send it to message service to receive in child components
+      this.messageService.FolderSendMessage(this.dataModel);
+      this.messageService.dataChanged(this.dataModel);
+    });
   }
 
   toggleShowSearch() {
@@ -195,20 +183,10 @@ export class DataModelComponent implements OnInit, OnDestroy {
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false, location: tab.index !== 0 } );
+    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
     this.activeTab = tab.index;
 
     if (tab.name === 'diagram') {
-      // this.dataModel4Diagram = null;
-      // this.cells = null;
-      // this.rootCell = null;
-
-      // this.resourcesService.dataModel.get(this.dataModel.id, "hierarchy", {}).toPromise().then((data) => {
-      //     this.dataModel4Diagram = data.body;
-      //     var result = this.jointDiagram3Service.DrawDataModel(data.body);
-      //     this.cells = result.cells;
-      //     this.rootCell = result.rootCell;
-      // });
       return;
     }
   }

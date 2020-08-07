@@ -26,7 +26,6 @@ import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators'
 
 @Component({
   selector: 'mdm-advanced-search-bar',
-  // inputs: ['parent', 'placeholder', 'showDomainTypes: show-domain-types'],
   templateUrl: './advanced-search-bar.component.html',
   styleUrls: ['./advanced-search-bar.component.sass']
 })
@@ -96,16 +95,14 @@ export class AdvancedSearchBarComponent implements OnInit {
     private helpDialogueService: HelpDialogueHandlerService,
     private contextSearchHandler: ContentSearchHandlerService,
     private resouces: MdmResourcesService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.advancedSearch = false;
 
-    this.resouces.classifier.list()
-    // this.resouces.classifier.get(null, null, { all: true })
-      .subscribe(result => {
-        this.classifications = result.body.items;
-      });
+    this.resouces.classifier.list().subscribe(result => {
+      this.classifications = result.body.items;
+    });
 
     this.context = this.parent;
 
@@ -120,29 +117,29 @@ export class AdvancedSearchBarComponent implements OnInit {
     this.placeHolderText = this.placeholder ? this.placeholder : 'Search for...';
 
     fromEvent(this.searchInputControl.nativeElement, 'keyup').pipe(map((event: any) => {
-          return event.target.value;
-        }),
-        filter((res: any) => res.length >= 0),
-        debounceTime(500),
-        distinctUntilChanged()
-      ).subscribe((text: string) => {
-        if (text.length === 0) {
-          this.formData.showSearchResult = false;
-          this.searchResults = [];
+      return event.target.value;
+    }),
+      filter((res: any) => res.length >= 0),
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe((text: string) => {
+      if (text.length === 0) {
+        this.formData.showSearchResult = false;
+        this.searchResults = [];
+        this.isLoading = false;
+      } else {
+        this.formData.showSearchResult = true;
+        this.fetch(10, 0).subscribe(res => {
+          this.searchResults = res.body.items;
           this.isLoading = false;
-        } else {
-          this.formData.showSearchResult = true;
-          this.fetch(10, 0).subscribe(res => {
-              this.searchResults = res.body.items;
-              this.isLoading = false;
 
-              this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
-            }, () => {
-              this.isLoading = false;
-            }
-          );
+          this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
+        }, () => {
+          this.isLoading = false;
         }
-      });
+        );
+      }
+    });
   }
 
   loadHelp = () => {
@@ -155,12 +152,12 @@ export class AdvancedSearchBarComponent implements OnInit {
 
   getServerData($event) {
     this.fetch($event.pageSize, $event.pageIndex).subscribe(res => {
-        this.searchResults = res.body.items;
-        this.totalItemCount = res.body.count;
-        this.isLoading = false;
-      }, () => {
-        this.isLoading = false;
-      });
+      this.searchResults = res.body.items;
+      this.totalItemCount = res.body.count;
+      this.isLoading = false;
+    }, () => {
+      this.isLoading = false;
+    });
   }
 
   fetch(pageSize: number, offset: number): Observable<any> {
@@ -225,12 +222,12 @@ export class AdvancedSearchBarComponent implements OnInit {
           this.pageIndex = 0;
         }
         this.fetch(10, this.pageIndex).subscribe(res => {
-            this.isLoading = false;
-            this.searchResults = res.body.items;
-            this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
-          }, () => {
-            this.isLoading = false;
-          }
+          this.isLoading = false;
+          this.searchResults = res.body.items;
+          this.totalItemCount = res.body.count > 0 ? res.body.count : -1;
+        }, () => {
+          this.isLoading = false;
+        }
         );
       }
     }

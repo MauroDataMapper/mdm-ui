@@ -46,7 +46,7 @@ export class DataTypeComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private resource: MdmResourcesService,
     private sharedService: SharedService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.id = this.stateService.params.id;
@@ -62,19 +62,17 @@ export class DataTypeComponent implements OnInit {
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
-    this.resource.dataType.get(this.dataModelId, this.id).subscribe(
-      result => {
-        const data = result.body;
-        this.dataType = data;
-        this.dataType.classifiers = this.dataType.classifiers || [];
-        this.loadingData = false;
-        this.activeTab = this.getTabDetail(this.tabView);
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() || !this.dataType.editable;
-      },
-      error => {
-        this.loadingData = false;
-      }
+    this.resource.dataType.get(this.dataModelId, this.id).subscribe(result => {
+      const data = result.body;
+      this.dataType = data;
+      this.dataType.classifiers = this.dataType.classifiers || [];
+      this.loadingData = false;
+      this.activeTab = this.getTabDetail(this.tabView);
+      this.showExtraTabs =
+        !this.sharedService.isLoggedIn() || !this.dataType.editable;
+    }, () => {
+      this.loadingData = false;
+    }
     );
   }
 
@@ -91,13 +89,10 @@ export class DataTypeComponent implements OnInit {
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resource.dataType.get(this.dataModelId, this.id)
-      // this.resource.dataType
-      //   .get(this.dataModelId, this.id, this.activeTab.fetchUrl, null)
-        .subscribe(data => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
+      this.resource.dataType.get(this.dataModelId, this.id).subscribe(data => {
+        this[this.activeTab.name] = data || [];
+        this.loadingData = false;
+      });
     }
   };
 

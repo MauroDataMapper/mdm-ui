@@ -44,7 +44,7 @@ export class ModelManagementComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
     private title: Title
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.selectedElements = [];
@@ -59,7 +59,6 @@ export class ModelManagementComponent implements OnInit {
     if (this.filterElement === '') {
       this.filterStatus = '';
     }
-
     this.loadFolders();
   };
 
@@ -91,14 +90,6 @@ export class ModelManagementComponent implements OnInit {
           options
         );
       }
-      //     method = this.resourcesService.admin.get(
-      //       "dataModels/documentSuperseded"
-      //     );
-      //   } else if (this.filterElement === "terminology") {
-      //     method = this.resourcesService.admin.get(
-      //       "terminologies/documentSuperseded"
-      //     );
-      //   }
       options = {
         queryStringParams: {
           includeDocumentSuperseded: true,
@@ -107,13 +98,6 @@ export class ModelManagementComponent implements OnInit {
         },
       };
     } else if (this.filterStatus === 'modelSuperseded') {
-      //   if (this.filterElement === "dataModel") {
-      //     method = this.resourcesService.admin.get("dataModels/modelSuperseded");
-      //   } else if (this.filterElement === "terminology") {
-      //     method = this.resourcesService.admin.get(
-      //       "terminologies/modelSuperseded"
-      //     );
-      //   }
       options = {
         queryStringParams: {
           includeDocumentSuperseded: false,
@@ -123,24 +107,20 @@ export class ModelManagementComponent implements OnInit {
       };
     }
 
-    this.resourcesService.tree.list('folders', options.queryStringParams).subscribe(
-      (resp) => {
-        this.folders = {
-          children: resp.body,
-          isRoot: true,
-        };
-
-        for (const entry of this.folders.children) {
-          entry.checked = false;
-          this.markChildren(entry);
-        }
-
-        this.reloading = false;
-      },
-      (err) => {
-        this.reloading = false;
-        this.messageHandler.showError('There was a problem loading tree.', err);
+    this.resourcesService.tree.list('folders', options.queryStringParams).subscribe((resp) => {
+      this.folders = {
+        children: resp.body,
+        isRoot: true,
+      };
+      for (const entry of this.folders.children) {
+        entry.checked = false;
+        this.markChildren(entry);
       }
+      this.reloading = false;
+    }, (err) => {
+      this.reloading = false;
+      this.messageHandler.showError('There was a problem loading tree.', err);
+    }
     );
   };
 
@@ -166,7 +146,7 @@ export class ModelManagementComponent implements OnInit {
       this.selectedElements.push(node);
       this.selectedElementsCount++;
       this.removeChildren(node);
-        } else {
+    } else {
       this.selectedElements.splice(currentIdx, 1);
       this.selectedElementsCount--;
       this.removeChildren(node);
@@ -184,9 +164,7 @@ export class ModelManagementComponent implements OnInit {
     if (node.hasChildren && node.children) {
       let i = 0;
       while (i < node.children.length) {
-        const childIdx = this.selectedElements.findIndex(
-          (y) => y.node.id === node.children[i].id
-        );
+        const childIdx = this.selectedElements.findIndex((y) => y.node.id === node.children[i].id);
         if (childIdx >= 0) {
           this.selectedElements.splice(childIdx, 1);
           this.selectedElementsCount--;
@@ -209,39 +187,26 @@ export class ModelManagementComponent implements OnInit {
     }
 
     this.deleteInProgress = true;
-    this.resourcesService.dataModel
-      .removeAll("",{"body" : dataModelResources})
-      // this.resourcesService.dataModel.delete(null, null, null, dataModelResources)
-      .subscribe(
-        () => {
-          if (permanent) {
-            this.deleteSuccessMessage =
-              this.selectedElementsCount +
-              ' Data Model(s) deleted successfully.';
-            this.deleteInProgress = false;
+    this.resourcesService.dataModel.removeAll('', { body: dataModelResources }).subscribe(() => {
+      if (permanent) {
+        this.deleteSuccessMessage = `${this.selectedElementsCount} Data Model(s) deleted successfully.`;
+        this.deleteInProgress = false;
 
-            setTimeout(() => {
-              this.resetSettings();
-            }, 2000);
-          } else {
-            this.deleteSuccessMessage =
-              this.selectedElementsCount +
-              ' Data Model(s) marked as deleted successfully.';
-            this.deleteInProgress = false;
+        setTimeout(() => {
+          this.resetSettings();
+        }, 2000);
+      } else {
+        this.deleteSuccessMessage = `${this.selectedElementsCount} Data Model(s) marked as deleted successfully.`;
+        this.deleteInProgress = false;
 
-            setTimeout(() => {
-              this.resetSettings();
-            }, 2000);
-          }
-        },
-        (error) => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Model(s).',
-            error
-          );
-        }
-      );
+        setTimeout(() => {
+          this.resetSettings();
+        }, 2000);
+      }
+    }, (error) => {
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Data Model(s).', error);
+    });
   }
 
   askForSoftDelete() {

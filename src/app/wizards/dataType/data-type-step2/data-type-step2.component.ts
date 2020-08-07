@@ -129,10 +129,10 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       sortType
     };
 
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
-      })
+      });
     }
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
@@ -275,7 +275,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
           return;
         }
       }
-      invalid = true; // this.myForm.invalid; - this is false???
+      invalid = true;
     }
     if (this.model.createType === 'copy') {
       if (this.model.selectedDataTypes !== null && this.model.selectedDataTypes !== undefined && this.model.selectedDataTypes.length === 0) {
@@ -294,12 +294,12 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
-       filter[name] = value;
+      if (value !== '') {
+        filter[name] = value;
       }
     });
     this.filter = filter;

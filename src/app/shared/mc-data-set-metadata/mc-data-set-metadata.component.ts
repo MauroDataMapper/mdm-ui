@@ -74,7 +74,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private helpService: HelpDialogueHandlerService,
     private changeDetectorRefs: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngAfterViewInit() {
     if (this.parent) {
@@ -176,13 +176,13 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
         if (name === 'namespace') {
-          filter["ns"] = value;
+          filter['ns'] = value;
         } else {
           filter[name] = value;
         }
@@ -245,11 +245,11 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     if (this.type === 'static') {
       if (record.edit.key.trim().length === 0) {
-        record.edit.errors.key = "Key can't be empty!";
+        record.edit.errors.key = 'Key can\'t be empty!';
         isValid = false;
       }
       if (record.edit.value.trim().length === 0) {
-        record.edit.errors.value = "Value can't be empty!";
+        record.edit.errors.value = 'Value can\'t be empty!';
         isValid = false;
       }
       for (let i = 0; i < this.records.length; i++) {
@@ -258,9 +258,9 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         }
         if (
           this.records[i].key.toLowerCase().trim() ===
-            record.edit.key.toLowerCase().trim() &&
+          record.edit.key.toLowerCase().trim() &&
           this.records[i].namespace.toLowerCase().trim() ===
-            record.edit.namespace.toLowerCase().trim()
+          record.edit.namespace.toLowerCase().trim()
         ) {
           record.edit.errors.key = 'Key already exists';
           isValid = false;
@@ -271,11 +271,11 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       }
     } else {
       if (record.edit.key.trim().length === 0) {
-        record.edit.errors.key = "Key can't be empty!";
+        record.edit.errors.key = 'Key can\'t be empty!';
         isValid = false;
       }
       if (record.edit.value.trim().length === 0) {
-        record.edit.errors.value = "Value can't be empty!";
+        record.edit.errors.value = 'Value can\'t be empty!';
         isValid = false;
       }
       // Call a backend service and see if it's duplicate
@@ -330,68 +330,53 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
-      this.resources.catalogueItem
-        .updateMetadata(this.domainType, this.parent.id, record.id, resource)
-        .subscribe(
-          (result) => {
-            if (this.afterSave) {
-              this.afterSave(resource);
-            }
+      this.resources.catalogueItem.updateMetadata(this.domainType, this.parent.id, record.id, resource).subscribe(() => {
+        if (this.afterSave) {
+          this.afterSave(resource);
+        }
 
-            record.namespace = resource.namespace;
-            record.key = resource.key;
-            record.value = resource.value;
-            record.inEdit = false;
-            this.messageHandler.showSuccess('Property updated successfully.');
-          },
-          (error) => {
-            // duplicate namespace + key
-            if (error.status === 422) {
-              record.edit.errors = [];
-              record.edit.errors.key = 'Key already exists';
-              return;
-            }
-            this.messageHandler.showError(
-              'There was a problem updating the property.',
-              error
-            );
+        record.namespace = resource.namespace;
+        record.key = resource.key;
+        record.value = resource.value;
+        record.inEdit = false;
+        this.messageHandler.showSuccess('Property updated successfully.');
+      }, (error) => {
+          // duplicate namespace + key
+          if (error.status === 422) {
+            record.edit.errors = [];
+            record.edit.errors.key = 'Key already exists';
+            return;
           }
-        );
+          this.messageHandler.showError('There was a problem updating the property.', error);
+        }
+      );
     } else {
-      this.resources.catalogueItem
-        .saveMetadata(this.domainType, this.parent.id, resource)
-        .subscribe(
-          (response) => {
-            // after successfully saving the row, it if is a new row,then remove its newRow property
-            record.id = response.body.id;
-            record.namespace = response.body.namespace;
-            record.key = response.body.key;
-            record.value = response.body.value;
-            record.inEdit = false;
-            delete record.edit;
+      this.resources.catalogueItem.saveMetadata(this.domainType, this.parent.id, resource).subscribe((response) => {
+        // after successfully saving the row, it if is a new row,then remove its newRow property
+        record.id = response.body.id;
+        record.namespace = response.body.namespace;
+        record.key = response.body.key;
+        record.value = response.body.value;
+        record.inEdit = false;
+        delete record.edit;
 
-            if (this.type === 'static') {
-              this.records[index] = record;
-              this.messageHandler.showSuccess('Property saved successfully.');
-            } else {
-              this.records[index] = record;
-              this.messageHandler.showSuccess('Property saved successfully.');
-              this.filterEvent.emit();
-            }
-          },
-          (error) => {
-            // duplicate namespace + key
-            if (error.status === 422) {
-              record.edit.errors = [];
-              record.edit.errors.key = 'Key already exists';
-              return;
-            }
-            this.messageHandler.showError(
-              'There was a problem saving property.',
-              error
-            );
-          }
-        );
+        if (this.type === 'static') {
+          this.records[index] = record;
+          this.messageHandler.showSuccess('Property saved successfully.');
+        } else {
+          this.records[index] = record;
+          this.messageHandler.showSuccess('Property saved successfully.');
+          this.filterEvent.emit();
+        }
+      }, (error) => {
+        // duplicate namespace + key
+        if (error.status === 422) {
+          record.edit.errors = [];
+          record.edit.errors.key = 'Key already exists';
+          return;
+        }
+        this.messageHandler.showError('There was a problem saving property.', error);
+      });
     }
   }
 
@@ -401,26 +386,19 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.metaDataItems = this.records;
       return;
     }
-    this.resources.catalogueItem
-      .removeMetadata(this.domainType, this.parent.id, record.id)
-      .subscribe(
-        () => {
-          if (this.type === 'static') {
-            this.records.splice($index, 1);
-            this.messageHandler.showSuccess('Property deleted successfully.');
-          } else {
-            this.records.splice($index, 1);
-            this.messageHandler.showSuccess('Property deleted successfully.');
-            this.filterEvent.emit();
-          }
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem deleting the property.',
-            error
-          );
-        }
-      );
+    this.resources.catalogueItem.removeMetadata(this.domainType, this.parent.id, record.id).subscribe(() => {
+      if (this.type === 'static') {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Property deleted successfully.');
+      } else {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Property deleted successfully.');
+        this.filterEvent.emit();
+      }
+    },
+      (error) => {
+        this.messageHandler.showError('There was a problem deleting the property.', error);
+      });
   }
 
   loadHelp = () => {

@@ -23,7 +23,6 @@ import {
   Input,
   OnInit,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -51,8 +50,6 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   processing = false;
   exportError = null;
   exportList = [];
-  // isAdminUser = $rootScope.isAdmin();
-  // isLoggedIn = securityHandler.isLoggedIn();
   exportedFileIsReady = false;
   addedToFavourite = false;
   hasResult = false;
@@ -137,53 +134,46 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
         });
       }
     };
-
-    // this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-    //   this.showSecuritySection = message;
-    // });
-    // this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-    //   this.showSearch = message;
-    // });
   }
 
   TermDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-        this.mcTerm = serverResult;
+      this.mcTerm = serverResult;
 
-        this.editableForm.url = this.mcTerm.url;
-        this.editableForm.description = this.mcTerm.description;
-        if (this.mcTerm.classifiers) {
-          this.mcTerm.classifiers.forEach(item => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.mcTerm.aliases) {
-          this.mcTerm.aliases.forEach(item => {
-            this.editableForm.aliases.push(item);
-          });
-        }
-        if (this.mcTerm.semanticLinks) {
-          this.mcTerm.semanticLinks.forEach(link => {
-            if (link.linkType === 'New Version Of') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.mcTerm.semanticLinks) {
-          this.mcTerm.semanticLinks.forEach(link => {
-            if (link.linkType === 'Superseded By') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.mcTerm != null) {
-          this.hasResult = true;
-          this.watchDataModelObject();
-        }
-        this.title.setTitle(`Term - ${this.mcTerm?.label}`);
+      this.editableForm.url = this.mcTerm.url;
+      this.editableForm.description = this.mcTerm.description;
+      if (this.mcTerm.classifiers) {
+        this.mcTerm.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
       }
+      if (this.mcTerm.aliases) {
+        this.mcTerm.aliases.forEach(item => {
+          this.editableForm.aliases.push(item);
+        });
+      }
+      if (this.mcTerm.semanticLinks) {
+        this.mcTerm.semanticLinks.forEach(link => {
+          if (link.linkType === 'New Version Of') {
+            this.compareToList.push(link.target);
+          }
+        });
+      }
+
+      if (this.mcTerm.semanticLinks) {
+        this.mcTerm.semanticLinks.forEach(link => {
+          if (link.linkType === 'Superseded By') {
+            this.compareToList.push(link.target);
+          }
+        });
+      }
+
+      if (this.mcTerm != null) {
+        this.hasResult = true;
+        this.watchDataModelObject();
+      }
+      this.title.setTitle(`Term - ${this.mcTerm?.label}`);
+    }
     );
   }
 
@@ -203,7 +193,6 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe((queryList: QueryList<any>) => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
 
       if (this.editMode) {
         this.editForm.forEach(x =>
@@ -239,18 +228,18 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
       classifiers
     };
 
-    this.resourcesService.term.update(this.mcTerm.terminology.id, resource.id,  resource).subscribe(() => {
-          if (this.afterSave) {
-            this.afterSave(this.mcTerm);
-          }
-          this.messageHandler.showSuccess('Term updated successfully.');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Term.', error);
-        }
-      );
+    this.resourcesService.term.update(this.mcTerm.terminology.id, resource.id, resource).subscribe(() => {
+      if (this.afterSave) {
+        this.afterSave(this.mcTerm);
+      }
+      this.messageHandler.showSuccess('Term updated successfully.');
+      this.editableForm.visible = false;
+      this.editForm.forEach(x => x.edit({ editing: false }));
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }, error => {
+      this.messageHandler.showError('There was a problem updating the Term.', error);
+    }
+    );
   };
 
   private invokeInlineEditor(): void {

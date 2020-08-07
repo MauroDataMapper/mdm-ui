@@ -52,7 +52,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
     private shared: SharedService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.appVersion = this.shared.appVersion;
@@ -67,7 +67,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  applyFilter = () => {};
+  applyFilter = () => { };
 
   modulesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
     const options = {
@@ -78,21 +78,19 @@ export class ModulesComponent implements OnInit, AfterViewInit {
       sortType: 'asc'
     };
 
-    this.resourcesService.admin.modules(options)
-    // this.resourcesService.admin.get('modules', options)
-      .subscribe(resp => {
-        this.records = resp.body;
-        this.records.push({
-          id: '0',
-          name: 'UI',
-          version: this.appVersion,
-          isUI: true
-        });
-        this.totalItemCount = this.records.length;
-        this.dataSource.data = this.records;
-      }, err => {
-        this.messageHandler.showError('There was a problem loading the modules.', err);
-      }
+    this.resourcesService.admin.modules(options).subscribe(resp => {
+      this.records = resp.body;
+      this.records.push({
+        id: '0',
+        name: 'UI',
+        version: this.appVersion,
+        isUI: true
+      });
+      this.totalItemCount = this.records.length;
+      this.dataSource.data = this.records;
+    }, err => {
+      this.messageHandler.showError('There was a problem loading the modules.', err);
+    }
     );
   }
 }

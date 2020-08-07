@@ -25,10 +25,8 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { ValidatorService } from '../services/validator.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
-import { MatPaginator } from '@angular/material/paginator';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-user-access-new',
@@ -36,14 +34,7 @@ import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
   styleUrls: ['./user-access-new.component.sass']
 })
 export class UserAccessNewComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = [
-    'user',
-    'firstName',
-    'lastName',
-    'read',
-    'write',
-    'edit'
-  ];
+  displayedColumns: string[] = ['user', 'firstName', 'lastName', 'read', 'write', 'edit'];
   users = [];
   usersMap = {};
   folderResult: FolderResult;
@@ -96,7 +87,7 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
     };
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   buildUsers() {
     this.folderResult = this.messageService.getFolderPermissions();
@@ -147,7 +138,6 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
         };
 
         this.users.push(this.usersMap[key]);
-        // console.log(this.users);
       }
     }
     this.totalItemCount = this.users.length;
@@ -166,9 +156,6 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
     const message = this.supportedDomainTypes[this.parentType].message;
 
     const mId = this.folderResult.id;
-
-    // this.resourceService[name].put(mId, "write/user/", {resource: resource});
-    // in edit mode, we save them here
 
     if (row.edit.user && row.edit.user.id !== -1) {
       const uId = row.edit.user.id;
@@ -251,18 +238,14 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
         }
         this.messageHandler.showSuccess(message + ' updated successfully.');
         this.refreshDataSource();
-      },
-      error => {
-        this.messageHandler.showError(
-          'There was a problem updating the ' + message + '.',
-          error
-        );
+      }, error => {
+        this.messageHandler.showError(`There was a problem updating the ${message}.`, error);
       }
     );
   }
 
   add() {
-    this.paginator.pageIndex = 0 ;
+    this.paginator.pageIndex = 0;
     const newRecord = {
       id: '',
       user: {
@@ -300,7 +283,6 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
       isNew: true
     };
 
-    // this.users = this.users.concat([newRecord]);
     this.users = [].concat([newRecord]).concat(this.users);
     this.refreshDataSource();
   }
@@ -341,18 +323,12 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
       isValid = false;
     }
 
-    if (
-      record.edit.user &&
-      !this.validator.validateEmail(record.edit.user.emailAddress)
-    ) {
+    if (record.edit.user && !this.validator.validateEmail(record.edit.user.emailAddress)) {
       record.edit.errors.user = 'Invalid Email';
       isValid = false;
     }
 
-    if (
-      record.edit.user &&
-      this.validator.isEmpty(record.edit.user.firstName)
-    ) {
+    if (record.edit.user && this.validator.isEmpty(record.edit.user.firstName)) {
       record.edit.errors.firstName = 'FirstName can\'t be empty!';
       isValid = false;
     }
@@ -380,10 +356,9 @@ export class UserAccessNewComponent implements OnInit, AfterViewInit {
     };
 
     return this.resourceService.catalogueUser.search(options);
-    // return this.resourceService.catalogueUser.get(null, 'search', options);
   }
 
-  readAccessChecked = function(record, index) {
+  readAccessChecked = (record, index) => {
     if (record.edit.readAccess === false) {
       record.edit.writeAccess = false;
     }

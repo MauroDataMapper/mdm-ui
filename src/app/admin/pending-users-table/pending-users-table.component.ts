@@ -19,15 +19,15 @@ import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, A
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
- // import { MatPaginator } from '@angular/material/paginator';
+// import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Title } from '@angular/platform-browser';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
-import {merge} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { merge } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-pending-users-table',
@@ -48,8 +48,6 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   records: any[] = [];
   displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'actions'];
 
-  // dataSource = new MatTableDataSource<any>();
-
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
@@ -57,14 +55,9 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private title: Title
   ) {
-   // this.dataSource = new MatTableDataSource(this.records);
   }
 
   ngOnInit() {
-    // this.pendingUsersFetch();
-    // this.broadcastSvc.subscribe('pendingUserUpdated', () => {
-    //   this.pendingUsersFetch();
-    // });
     this.title.setTitle('Pending users');
   }
 
@@ -73,10 +66,10 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-        this.isLoadingResults = true;
+      this.isLoadingResults = true;
 
-        return this.pendingUsersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
-      }),
+      return this.pendingUsersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+    }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
         this.isLoadingResults = false;
@@ -86,8 +79,8 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })).subscribe(data => {
-      this.records = data;
-    });
+        this.records = data;
+      });
   }
   pendingUsersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
     const options = {
@@ -97,28 +90,28 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       sortType
     };
 
-    if(filters){
+    if (filters) {
       Object.keys(filters).map(key => {
         options[key] = filters[key];
       })
     }
 
-    options["disabled"] = false;
+    options['disabled'] = false;
 
     return this.resourcesService.catalogueUser.pending(options);
   }
 
   refreshDataSource() {
-  //  this.dataSource.data = this.records;
+    //  this.dataSource.data = this.records;
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
-       filter[name] = value;
+      if (value !== '') {
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -176,33 +169,33 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
 
   approveUser = (row) => {
     this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
-        this.messageHandler.showSuccess('User approved successfully');
-        this.broadcastSvc.broadcast('pendingUserUpdated');
-        this.pendingUsersFetch().subscribe(data => {
+      this.messageHandler.showSuccess('User approved successfully');
+      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.pendingUsersFetch().subscribe(data => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
       }, err => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
       });
-      }, (error) => {
-        this.messageHandler.showError('There was a problem approving this user.', error);
-      });
+    }, (error) => {
+      this.messageHandler.showError('There was a problem approving this user.', error);
+    });
   };
 
   rejectUser = (row) => {
     this.resourcesService.catalogueUser.reject(row.id, null).subscribe(() => {
-        this.messageHandler.showSuccess('User rejected successfully');
-        this.broadcastSvc.broadcast('pendingUserUpdated');
-        this.pendingUsersFetch().subscribe(data => {
+      this.messageHandler.showSuccess('User rejected successfully');
+      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.pendingUsersFetch().subscribe(data => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
       }, err => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
       });
-      }, (error) => {
-        this.messageHandler.showError('There was a problem approving this user.', error);
+    }, (error) => {
+      this.messageHandler.showError('There was a problem approving this user.', error);
     });
   };
 }

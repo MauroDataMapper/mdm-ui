@@ -25,7 +25,7 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { from, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -108,8 +108,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   ngOnInit() {
     if (this.parentDataModel) {
       this.fetchDataTypes(null, null, null, null).subscribe(result => {
-            this.dataTypes = result.body.items;
-           });
+        this.dataTypes = result.body.items;
+      });
     }
     this.editableForm = new EditableDataElement();
     this.editableForm.visible = false;
@@ -171,8 +171,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe((queryList: QueryList<any>) => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -251,22 +249,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       offset: options.pageIndex
 
     };
-
     return this.resourcesService.dataType.list(this.parentDataModel.id, options);
-    // this.resourcesService.dataModel.get(this.parentDataModel.id, 'dataTypes', options);
-
-    // if (loadAll) {
-    //     delete options.filters;
-    // }
-    // return this.resourcesService.dataModel
-    //   .get(this.parentDataModel.id, 'dataTypes', options)
-    //   .subscribe(result => {
-    //     this.dataTypes = result.body.items;
-    //
-    //     // count: result.count,
-    //     // limit: options.pageSize,
-    //     // offset: options.pageIndex
-    //   });
   }
 
   ngOnDestroy() {
@@ -275,36 +258,25 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   delete() {
-    this.resourcesService.dataClass
-      .remove(
-        this.result.parentDataModel,
-        this.result.parentDataClass,
-        this.result.id
-      )
-      .subscribe(
-        result => {
-          this.messageHandler.showSuccess('Data Class deleted successfully.');
-          this.stateHandler.Go(
-            'dataModel',
-            {
-              id: this.result.parentDataModel,
-              reload: true,
-              location: true
-            },
-            null
-          );
+    this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(result => {
+      this.messageHandler.showSuccess('Data Class deleted successfully.');
+      this.stateHandler.Go(
+        'dataModel',
+        {
+          id: this.result.parentDataModel,
+          reload: true,
+          location: true
         },
-        error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Model.',
-            error
-          );
-        }
+        null
       );
+    },
+      error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      });
   }
 
-  formBeforeSave () {
+  formBeforeSave() {
     if (!this.validate()) {
       return;
     }
@@ -351,15 +323,15 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         maxMultiplicity: parseInt(this.max, 10)
       };
       this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).subscribe(result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
-          this.messageHandler.showSuccess('Data Element updated successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Data Element.', error);
+        if (this.afterSave) {
+          this.afterSave(result);
+        }
+        this.messageHandler.showSuccess('Data Element updated successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.editableForm.visible = false;
+        this.editForm.forEach(x => x.edit({ editing: false }));
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Element.', error);
       });
     }
   }

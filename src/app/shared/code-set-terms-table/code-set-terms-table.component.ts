@@ -50,8 +50,8 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = false;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   deleteInProgress: boolean;
   records: any[] = [];
   access: any;
@@ -109,27 +109,28 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       pageSize,
       pageIndex,
       sortBy,
-      sortType,
-      filters
+      sortType      
     };
+
+    if(filters){
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      })
+    }
+
     return this.resources.codeSet.terms(this.codeSet.id, options);
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    let filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
-      if (value !== '') {
-        filter += name + '=' + value + '&';
+      if(value !== "") {
+       filter[name] = value;
       }
     });
-
-    if (this.filterValue !== null && this.filterValue !== undefined && this.filterName !== null && this.filterName !== undefined) {
-      filter += this.filterName + '=' + this.filterValue + '&';
-    }
-    this.filter = filter.substring(0, filter.length - 1);
+    this.filter = filter;
     this.filterEvent.emit(filter);
   };
 

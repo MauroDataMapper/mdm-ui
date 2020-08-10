@@ -68,7 +68,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
   records: any[];
   totalItemCount = 0;
   hideFilters = true;
-  displayedColumns = ['label', 'name', 'description'];
+  displayedColumns = ['name', 'description', 'multiplicity'];
 
   ngOnInit() { }
 

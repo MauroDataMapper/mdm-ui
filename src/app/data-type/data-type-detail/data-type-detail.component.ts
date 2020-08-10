@@ -33,6 +33,7 @@ import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confi
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -47,8 +48,8 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   @Input() hideEditButton: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
 
-  deleteInProgress: boolean; // TODO
-
+  showDelete: boolean;
+  showEdit: boolean;
   constructor(
     private dialog: MatDialog,
     private sharedService: SharedService,
@@ -57,7 +58,8 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
-    private title: Title
+    private title: Title,
+    private securityHandler: SecurityHandlerService
   ) { }
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
@@ -99,6 +101,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
         });
       }
     };
+    this.watchDataTypeObject();
   }
 
   validateLabel = (data) => {
@@ -116,6 +119,13 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
         })
       );
     });
+  }
+  watchDataTypeObject() {
+    const access: any = this.securityHandler.elementAccess(this.mcDataTypeObject);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    }
   }
 
   formBeforeSave = () => {

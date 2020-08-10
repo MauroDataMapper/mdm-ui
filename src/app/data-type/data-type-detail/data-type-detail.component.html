@@ -90,7 +90,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [textLocation]="'left'">
                             </mdm-editable-form-buttons>
                         </div>
-                        <div style="float: right">
+                        <div style="float: right" *ngIf="showDelete">
                             <div  [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="warn"
@@ -99,14 +99,13 @@ SPDX-License-Identifier: Apache-2.0
                                         aria-label="Delete"
                                         class="paddingless"
                                         (click)="askToDelete()"
-                                        *ngIf="!editableForm.visible && !editableForm.deletePending"
-                                        [disabled]="deleteInProgress">
+                                        *ngIf="!editableForm.visible && !editableForm.deletePending">
                                     <i class="far fa-trash-alt warning" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
-                        <div style="float: right">
-                            <div *ngIf="!editableForm.visible && !editableForm.deletePending" style="position: relative; margin-right:4px;">
+                        <div style="float: right" *ngIf="!editableForm.visible && !editableForm.deletePending && showEdit">
+                            <div style="position: relative; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
@@ -114,8 +113,7 @@ SPDX-License-Identifier: Apache-2.0
                                         aria-label="Edit"
                                         class="paddingless"
                                         (click)="editableForm.show();"
-                                        [hidden]="editableForm.visible"
-                                        [disabled]="deleteInProgress">
+                                        [hidden]="editableForm.visible">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
                             </div>

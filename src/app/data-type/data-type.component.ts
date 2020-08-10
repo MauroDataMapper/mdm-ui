@@ -115,11 +115,6 @@ export class DataTypeComponent implements OnInit {
     }
   };
 
-  Save = () => {
-    // TODO
-  };
-
-
   openEditForm = (formName: any) => {
     this.showEditForm = true;
     this.editForm = formName;

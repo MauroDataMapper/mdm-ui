@@ -50,7 +50,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription;
 
   // Hard
-  includeSupersededDocModels = false;
+  includeSupersededModels = false;
 
   // Soft
   showSupersededModels = false;
@@ -141,7 +141,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.title.setTitle('Models');
 
     if (this.sharedService.isLoggedIn()) {
-      this.includeSupersededDocModels = this.userSettingsHandler.get('includeSupersededDocModels') || false;
+      this.includeSupersededModels = this.userSettingsHandler.get('includeSupersededModels') || false;
       this.showSupersededModels = this.userSettingsHandler.get('showSupersededModels') || false;
       this.showDeletedModels = this.userSettingsHandler.get('showDeletedModels') || false;
     }

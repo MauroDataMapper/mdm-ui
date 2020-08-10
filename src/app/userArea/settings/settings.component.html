@@ -44,9 +44,14 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div class="mb-2">
         <mat-checkbox name="includeSupersededModels" [(ngModel)]="includeSupersededModels" labelPosition="after">
-            Include Superseded Document Models in Data Model Tree
+            Include Superseded Data Models
         </mat-checkbox>
     </div>
+    <div class="mb-2" *ngIf="isAdmin()">
+      <mat-checkbox name="showDeletedModels" [(ngModel)]="showDeletedModels" labelPosition="after">
+          Show Deleted Data Models
+      </mat-checkbox>
+  </div>
     <div>
         <button mat-flat-button class="custom save-email-config" color="primary" aria-label="Save preferences">
             Save preferences

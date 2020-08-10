@@ -36,6 +36,7 @@ import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementMo
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -95,6 +96,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private stateHandler: StateHandlerService,
     private title: Title,
     private broadcastSvc: BroadcastService,
+    private gridService:GridService
   ) {
     this.DataElementDetails();
   }
@@ -237,16 +239,11 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-    const options = {
-      pageSize: limit ? limit : 30,
-      pageIndex: offset ? offset : 0,
-      sortBy: 'label',
-      sortType: 'asc',
-      filters: 'label=' + text
-    };
+
+    const options = this.gridService.constructOptions(limit,offset,'label','asc',{label:text});
     this.pagination = {
-      limit: options.pageSize,
-      offset: options.pageIndex
+      limit: options["limit"],
+      offset: options["offset"]
 
     };
     return this.resourcesService.dataType.list(this.parentDataModel.id, options);

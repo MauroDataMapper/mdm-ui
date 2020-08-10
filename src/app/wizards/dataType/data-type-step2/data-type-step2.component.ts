@@ -37,6 +37,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-data-type-step2',
@@ -87,7 +88,8 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     private resourceService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
-    private elementTypes: ElementTypesService
+    private elementTypes: ElementTypesService,
+    private gridService:GridService
   ) {
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
@@ -122,18 +124,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after aech backend call
   dataTypesFetch(pageSize, pageIndex, sortBy, sortType, filters) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType
-    };
-
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
   }

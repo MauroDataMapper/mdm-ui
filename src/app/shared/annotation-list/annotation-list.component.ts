@@ -24,6 +24,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -35,7 +36,8 @@ export class AnnotationListComponent implements AfterViewInit {
     private securityHandler: SecurityHandlerService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private gridService: GridService
   ) { }
 
   @Input() parent: any;
@@ -93,13 +95,7 @@ export class AnnotationListComponent implements AfterViewInit {
   }
 
   annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
   }
 

@@ -25,6 +25,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -70,7 +71,8 @@ export class ElementSelectorComponent implements OnInit {
     private markdownParser: MarkdownParserService,
     private messageService: MessageService,
     private contextSearchHandler: ContentSearchHandlerService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private gridService:GridService
   ) { }
   pageSize = 40;
   validTypesToSelect = [];
@@ -411,10 +413,7 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
   loadAllTerms(terminology, pageSize, pageIndex) {
-    const options = {
-      pageSize,
-      pageIndex
-    };
+    const options = this.gridService.constructOptions(pageSize,pageIndex);
     return this.resourceService.terminology.terms.list(terminology.id, options);
   }
   calculateDisplayedSoFar(result) {
@@ -434,12 +433,7 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
   loadAllDataTypes(dataModel, pageSize, pageIndex) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy: 'label',
-      sortType: 'asc'
-    };
+    const options = this.gridService.constructOptions(pageSize,pageIndex,"label","asc");
     return this.resourceService.dataType.list(dataModel.id, options);
   }
   searchInTree(treeSearchDomainType) {
@@ -450,10 +444,8 @@ export class ElementSelectorComponent implements OnInit {
     }
     this.formData.inSearchMode = true;
     this.reloading = true;
-    const options = {
-      queryStringParams: {
-        domainType: treeSearchDomainType
-      }
+    const options = {    
+        domainType: treeSearchDomainType      
     };
 
     this.resourceService.tree.get(null, 'search/' + this.formData.treeSearchText, options).subscribe(result => {

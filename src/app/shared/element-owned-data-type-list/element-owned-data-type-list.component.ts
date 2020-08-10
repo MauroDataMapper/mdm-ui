@@ -37,6 +37,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',
@@ -82,7 +83,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     private elementTypes: ElementTypesService,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private gridService:GridService
   ) { }
 
   ngOnInit(): void {
@@ -190,17 +192,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   dataTypesFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType
-    };
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     return this.resources.dataType.list(this.parent.id, options);
   };
 

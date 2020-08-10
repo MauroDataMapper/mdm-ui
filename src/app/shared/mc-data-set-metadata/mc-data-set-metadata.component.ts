@@ -35,6 +35,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatInput } from '@angular/material/input';
 import { DialogPosition } from '@angular/material/dialog';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-data-set-metadata',
@@ -73,7 +74,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
     private helpService: HelpDialogueHandlerService,
-    private changeDetectorRefs: ChangeDetectorRef
+    private changeDetectorRefs: ChangeDetectorRef,
+    private gridService:GridService
   ) { }
 
   ngAfterViewInit() {
@@ -155,18 +157,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-    };
-
-    if (filters) {
-      Object.keys(filters).map((key) => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
 
     return this.resources.catalogueItem.listMetadata(
       this.parent.domainType,

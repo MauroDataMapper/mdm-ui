@@ -63,8 +63,8 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
 
   activeSessionsFetch() {
     const options = {
-      sortBy: 'userEmailAddress',
-      sortType: 'asc'
+      sort: 'userEmailAddress',
+      order: 'asc'
     };
 
     this.resourcesService.admin.activeSessions(options).subscribe(resp => {

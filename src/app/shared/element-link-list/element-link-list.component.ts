@@ -28,6 +28,7 @@ import { ElementSelectorDialogueService } from '@mdm/services/element-selector-d
 import { MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -43,7 +44,8 @@ export class ElementLinkListComponent implements AfterViewInit {
     private stateHandler: StateHandlerService,
     private semanticLinkHandler: SemanticLinkHandlerService,
     private changeRef: ChangeDetectorRef,
-    private elementSelector: ElementSelectorDialogueService
+    private elementSelector: ElementSelectorDialogueService,
+    private gridService: GridService
   ) { }
 
   @Input() parent: any;
@@ -135,18 +137,7 @@ export class ElementLinkListComponent implements AfterViewInit {
   };
 
   semanticLinkFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType
-    };
-
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
 
     return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);
 

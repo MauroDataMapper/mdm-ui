@@ -30,6 +30,7 @@ import { ContentSearchHandlerService } from '@mdm/services/content-search.handle
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-multiple-terms-selector',
@@ -102,7 +103,8 @@ export class MultipleTermsSelectorComponent implements OnInit {
   constructor(
     private resources: MdmResourcesService,
     private contextSearchHandler: ContentSearchHandlerService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private gridService:GridService
   ) {
     this.loadTerminologies();
   }
@@ -128,11 +130,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
   loadAllTerms = (terminology, pageSize, offset) => {
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
-    const options = {
-      pageSize,
-      pageIndex: offset
-    };
-
+    const options = this.gridService.constructOptions(pageSize,offset);
     this.selectorSection.loading = true;
 
     this.resources.terminology.terms.list(terminology.id, options).subscribe(result => {

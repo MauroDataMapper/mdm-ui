@@ -32,6 +32,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-classified-elements-list',
@@ -73,7 +74,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   constructor(
     private resources: MdmResourcesService,
     private elementTypes: ElementTypesService,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private gridService: GridService
   ) { }
   ngOnInit(): void {
     this.displayedColumns = ['label', 'description', 'type'];
@@ -122,13 +124,7 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     return this.resources.classifier.listForCatalogueItem(this.classifiedElementType, this.parent.id, options);
   }
 

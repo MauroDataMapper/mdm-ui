@@ -34,6 +34,7 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -72,7 +73,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     private changeRef: ChangeDetectorRef,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private gridService:GridService
   ) { }
 
   ngOnInit(): void {
@@ -135,12 +137,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType };
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    
     if (!this.parentDataClass.id) {
       return this.resources.dataClass.list(this.parentDataModel.id, options);
     }

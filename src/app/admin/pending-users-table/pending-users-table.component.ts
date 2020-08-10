@@ -28,6 +28,7 @@ import { Title } from '@angular/platform-browser';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-pending-users-table',
@@ -53,7 +54,8 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     private resourcesService: MdmResourcesService,
     private broadcastSvc: BroadcastService,
     private dialog: MatDialog,
-    private title: Title
+    private title: Title,
+    private gridService:GridService
   ) {
   }
 
@@ -83,19 +85,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       });
   }
   pendingUsersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType
-    };
-
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
-
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     options['disabled'] = false;
 
     return this.resourcesService.catalogueUser.pending(options);

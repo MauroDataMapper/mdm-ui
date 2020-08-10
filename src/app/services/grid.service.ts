@@ -39,4 +39,38 @@ export class GridService {
       this.reloadEvent.emit(filter);
     }
   };
+
+  constructOptions(pageSize?,
+    pageIndex?,
+    sortBy?,
+    sortType?,
+    filters?
+  ) {
+    const options = {}
+
+    if(pageSize)
+    {
+      options["max"] = pageSize;
+    }
+    if(pageIndex)
+    {
+      options["offset"] = pageIndex;
+    }
+    if(sortBy)
+    {
+      options["sort"] = sortBy;
+    }
+    if(sortType)
+    {
+      options["order"] = sortType;
+    }
+
+    if (filters) {
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      });
+    }
+  
+    return options; 
+  }
 }

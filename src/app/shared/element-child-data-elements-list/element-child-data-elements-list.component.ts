@@ -43,7 +43,8 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
   constructor(
     private gridSvc: GridService,
     private changeRef: ChangeDetectorRef,
-    private resources: MdmResourcesService
+    private resources: MdmResourcesService,
+    private gridService: GridService
   ) { }
 
   @Input() parentDataModel: any;
@@ -116,13 +117,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
   }
 
   dataElementsFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
 
     if (this.parentDataModel && this.parentDataClass) {
       return this.resources.dataElement.list(this.parentDataModel.id, this.parentDataClass.id, options);

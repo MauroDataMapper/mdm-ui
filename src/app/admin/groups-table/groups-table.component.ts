@@ -25,6 +25,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-groups-table',
@@ -51,7 +52,8 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     private messageHandlerService: MessageHandlerService,
     private resourcesService: MdmResourcesService,
     private stateHandlerService: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private gridService: GridService
   ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
@@ -92,18 +94,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   }
 
   groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType
-    };
-
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
 
     return this.resourcesService.userGroups.list(options);
   }

@@ -25,6 +25,7 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-users-table',
@@ -54,7 +55,8 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
-    private title: Title
+    private title: Title,
+    private gridService: GridService
   ) {}
 
   ngOnInit() {
@@ -94,13 +96,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType };
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
-
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     return this.resources.catalogueUser.list(options);
   }
 

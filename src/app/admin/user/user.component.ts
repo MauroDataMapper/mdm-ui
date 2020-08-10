@@ -23,6 +23,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-user',
@@ -64,7 +65,8 @@ export class UserComponent implements OnInit {
     private stateSvc: StateService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private gridService:GridService
   ) {}
 
   ngOnInit() {
@@ -89,13 +91,7 @@ export class UserComponent implements OnInit {
 
     const limit = 0;
     const offset = 0;
-    const options = {
-      pageSize: limit,
-      pageIndex: offset,
-      filters: null,
-      // sortBy: "label",
-      sortType: 'asc'
-    };
+    const options = this.gridService.constructOptions(limit,offset,null,"asc");
 
     this.resourcesService.userGroups.list(options).subscribe(res => {
         this.allGroups = res.body.items;

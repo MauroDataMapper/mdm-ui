@@ -36,6 +36,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-data-element-step2',
@@ -84,7 +85,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   pageSize = 20;
   pageSizeOptions = [5, 10, 20, 50];
 
-  constructor(private changeRef: ChangeDetectorRef, private validator: ValidatorService, private resources: MdmResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
+  constructor(private changeRef: ChangeDetectorRef, private gridService: GridService, private validator: ValidatorService, private resources: MdmResourcesService, private messageHandler: MessageHandlerService, private broadcastSvc: BroadcastService) {
 
     this.dataSourceDataElements = new MatTableDataSource(this.recordsDataElements);
     const settings = JSON.parse(localStorage.getItem('userSettings'));
@@ -106,17 +107,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType
-    };
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     const dataClass = this.model.copyFromDataClass[0];
     return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
   }
@@ -274,23 +265,17 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-    const options = {
-      pageSize: limit ? limit : 30,
-      pageIndex: offset ? offset : 0,
-      sortBy: 'label',
-      sortType: 'asc',
-      label: text
-    };
+    const options = this.gridService.constructOptions(limit,offset,"label","asc",{label:text});
 
     this.pagination = {
-      limit: options.pageSize,
-      offset: options.pageIndex
+      limit: options["limit"],
+      offset: options["offset"]
     };
 
     this.changeRef.detectChanges();
 
     if (loadAll) {
-      delete options.label;
+      delete options["label"];
     }
 
     return this.resources.dataType.list(this.model.parentDataModel.id, options);

@@ -31,6 +31,7 @@ import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-app-emails',
@@ -53,7 +54,8 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   constructor(
     private resourcesService: MdmResourcesService,
     private title: Title,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private gridService: GridService
   ) { }
 
   ngOnInit() {
@@ -84,12 +86,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
   }
 
   mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType };
-    if (filters) {
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      });
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
     return this.resourcesService.admin.emails(options);
   }
   applyFilter = () => {

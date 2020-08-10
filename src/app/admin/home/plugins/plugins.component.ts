@@ -28,6 +28,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-plugins',
@@ -47,6 +48,7 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
+    private gridService:GridService
   ) { }
 
   ngOnInit() {
@@ -68,13 +70,8 @@ export class PluginsComponent implements OnInit, AfterViewInit {
     sortType?,
     filters?
   ) {
-    const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy: 'displayName',
-      sortType: 'asc'
-    };
+
+    const options = this.gridService.constructOptions(pageSize,pageIndex,"displayName","asc",filters);
 
     this.resourcesService.provider.importers(options).subscribe(resp => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];

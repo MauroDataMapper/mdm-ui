@@ -101,11 +101,11 @@ export class GroupAccessNewComponent implements OnInit {
       limit = limit ? limit : 10;
       offset = offset ? offset : 0;
       const options = {
-        pageSize: limit,
-        pageIndex: offset,
+        max: limit,
+        offset,
         //  filters: "search=" + text,
         // sortBy: "emailAddress",
-        sortType: 'asc',
+        order: 'asc',
       };
       this.resourceService.userGroups.list().subscribe(
         (data) => {

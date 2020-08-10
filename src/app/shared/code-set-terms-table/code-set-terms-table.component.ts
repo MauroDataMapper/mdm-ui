@@ -33,6 +33,7 @@ import { MatSort } from '@angular/material/sort';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -62,7 +63,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   filterName: any;
   showAddTerm: any;
 
-  constructor(private messageHandler: MessageHandlerService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
+  constructor(private messageHandler: MessageHandlerService, private gridService:GridService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
   }
 
   ngOnInit() {
@@ -107,18 +108,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   }
 
   termFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType      
-    };
-
-    if(filters){
-      Object.keys(filters).map(key => {
-        options[key] = filters[key];
-      })
-    }
+    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
 
     return this.resources.codeSet.terms(this.codeSet.id, options);
   }
@@ -189,13 +179,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
 
     this.resources.codeSet.update(this.codeSet.id, { terms: allTermIds }).subscribe(() => {
       this.messageHandler.showSuccess('Terms added successfully.');
-      const options = {
-        pageSize: 40,
-        pageIndex: 0,
-        sortBy: null,
-        sortType: null,
-        filters: null
-      };
+      const options = this.gridService.constructOptions(40,0);
 
       this.resources.codeSet.terms(this.codeSet.id, options).subscribe(data => {
         this.records = data.body.items;

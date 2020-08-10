@@ -330,8 +330,9 @@ export class ElementTypesService {
         const types = this.getTypes();
         let parentDataModel = null;
         let parentDataClass = null;
-        if (element.dataModel) {
-            parentDataModel = element.dataModel;
+        let terminologyId = null;
+        if (element.model) {
+            parentDataModel = element.model;
         } else if (element.breadcrumbs) {
             parentDataModel = element.breadcrumbs[0].id;
         }
@@ -353,6 +354,14 @@ export class ElementTypesService {
             }
         }
 
+        if (element.domainType === 'Term') {
+            if (element.terminology) {
+                terminologyId = element.terminology;
+            } else if (element.breadcrumbs) {
+                terminologyId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+            }
+        }
+
 
         if (element.domainType === 'EnumerationValue') {
             let dataTypeId = element.dataType;
@@ -371,7 +380,7 @@ export class ElementTypesService {
                 id: element.id,
                 dataModelId: parentDataModel,
                 dataClassId: parentDataClass,
-                terminologyId: element.terminology,
+                terminologyId: terminologyId,
                 domainType: element.domainType,
                 mode
             });

@@ -54,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0
             </th>
             <td mat-cell *matCellDef="let record" style="width: 30%;text-align: left;word-wrap: break-word;">
                 <mdm-element-link
-                    [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}">
+                    [element]="{id:record.breadcrumbs[0].id, label:record.breadcrumbs[0].label, domainType:'Terminology'}">
                 </mdm-element-link>
             </td>
         </ng-container>
@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </th>
             <td mat-cell *matCellDef="let record" style="width: 25%;text-align: left;word-wrap: break-word;">
-                <mdm-element-link [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClass}" [element]="record"></mdm-element-link>
+                <mdm-element-link [parentDataModel]="{id:record.model}" [parentDataClass]="{id:record.dataClass}" [element]="record"></mdm-element-link>
             </td>
         </ng-container>
         <ng-container matColumnDef="definition">

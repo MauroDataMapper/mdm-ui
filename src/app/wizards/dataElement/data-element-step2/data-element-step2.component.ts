@@ -50,10 +50,8 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   selectedDataClassesStr = '';
   defaultCheckedMap: any;
   loaded = false;
-  // showNewInlineDataType = false;
   error = '';
   dataTypeErrors = '';
-  record: any; // TODO
   processing = false;
   parentScopeHandler: any;
   hideFiltersSelectedDataTypes = true;

@@ -30,7 +30,6 @@ import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { DataModelsExportComponent } from '@mdm/data-models-export/data-models-export.component';
-import { UserAccessNewComponent } from '@mdm/access/user-access-new.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { HistoryComponent } from '@mdm/folder/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
@@ -168,7 +167,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     AdvancedSearchBarComponent,
     ShareWithComponent,
     DataModelsExportComponent ,
-    UserAccessNewComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
@@ -325,7 +323,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     SummaryMetadataPopupComponent,
     ShareWithComponent,
     DataModelsExportComponent ,
-    UserAccessNewComponent,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,

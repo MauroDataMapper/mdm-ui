@@ -30,48 +30,56 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
 
-    return this.resourcesService.dataFlow.get(params.parent.id, params.flowId);
+    return this.resourcesService.dataFlow.dataClassComponents.list(params.parent.id, params.flowId);
   }
 
   render(data: any): void {
     const nodes: any = {};
     data.body.items.forEach((flow: any) => {
-      nodes[flow.source.id] = flow.source.label;
-      nodes[flow.target.id] = flow.target.label;
+      flow.sourceDataClasses.forEach((dataClass: any) => {
+        nodes[dataClass.id] = dataClass.label;
+      });
+
+      flow.targetDataClasses.forEach((dataClass: any) => {
+        nodes[dataClass.id] = dataClass.label;
+      });
     });
 
     Object.keys(nodes).forEach((key) => {
       this.addRectangleCell(key, nodes[key]);
     });
     data.body.items.forEach((flow: any) => {
-      const link = new joint.shapes.standard.Link({
-        id: flow.id,
-        source: {id: flow.source.id},
-        target: {id: flow.target.id},
+      flow.sourceDataClasses.forEach((sourceDataClass: any) => {
+        flow.targetDataClasses.forEach((targetDataClass: any) => {
+          const link = new joint.shapes.standard.Link({
+            id: flow.id,
+            source: { id: sourceDataClass.id },
+            target: { id: targetDataClass.id }
+          });
+          // link.id = flow.id as string;
+          link.connector('rounded', { radius: 40 });
+          link.toBack();
+          this.graph.addCell(link);
+        });
       });
-      // link.id = flow.id as string;
-      link.connector('rounded', {radius: 40});
-      link.toBack();
-      this.graph.addCell(link);
     });
-
   }
 
   configurePaper(paper: joint.dia.Paper): void {
     paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
-        const result: any = {
-          flowId: this.flowId as string,
-          flowComponentId: cellView.model.attributes.source.id as string,
-          parent: {
-            id: this.parentId
-          },
-          newMode: 'dataflow-element'
-        };
-        // console.log(result);
-        this.clickSubject.next(result);
-        this.clickSubject.complete();
-        // console.log('next clicked: service');
-      });
+      const result: any = {
+        flowId: this.flowId as string,
+        flowComponentId: cellView.model.attributes.source.id as string,
+        parent: {
+          id: this.parentId
+        },
+        newMode: 'dataflow-element'
+      };
+      // console.log(result);
+      this.clickSubject.next(result);
+      this.clickSubject.complete();
+      // console.log('next clicked: service');
+    });
   }
 
   canGoUp(): boolean {

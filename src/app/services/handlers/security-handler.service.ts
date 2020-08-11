@@ -230,12 +230,9 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showNewVersion:
-        element.availableActions.includes('update') && element.finalised,
-      showFinalise:
-        element.availableActions.includes('update') && !element.finalised,
-      showPermission:
-        element.availableActions.includes('update') || this.isAdmin(),
+      showNewVersion: element.finalised,
+      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showPermission: element.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),

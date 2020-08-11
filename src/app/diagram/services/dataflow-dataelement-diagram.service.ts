@@ -30,6 +30,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   flowId: string;
 
   getDiagramContent(params: any): Observable<any> {
+    
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
     const classGetters = [];
@@ -39,10 +40,10 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       mergeMap(data => {
         this.dataFlows = data.body;
         data.body.items.forEach((dataFlowComponent) => {
-          dataFlowComponent.sourceElements.forEach((element) => {
+          dataFlowComponent.sourceDataElements.forEach((element) => {
             this.classes[element.dataClass] = element.breadcrumbs;
           });
-          dataFlowComponent.targetElements.forEach((element) => {
+          dataFlowComponent.targetDataElements.forEach((element) => {
             this.classes[element.dataClass] = element.breadcrumbs;
           });
         });
@@ -54,8 +55,8 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             parentClassId = this.classes[classId][this.classes[classId].length - 2].id;
           }
           classGetters.push(
-            this.resourcesService.dataClass.get(dataModelId, classId, options)
-            // this.resourcesService.dataClass.get(dataModelId, null, classId, 'dataElements', options)
+            this.resourcesService.dataClass.content(dataModelId, classId, options)
+            //this.resourcesService.dataClass.get(dataModelId, null, classId, 'dataElements', options)
           );
         });
         return forkJoin(classGetters);
@@ -85,7 +86,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
       this.addSmallRectangleCell(flowComponent.id, flowComponent.label);
 
-      flowComponent.sourceElements.forEach((sourceElement) => {
+      flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
         const link1 = new joint.shapes.standard.Link({
           id: sourceElement.id + '/' + flowComponent.id,
@@ -106,7 +107,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
         link1.connector('rounded', {radius: 40});
         this.graph.addCell(link1);
       });
-      flowComponent.targetElements.forEach((targetElement) => {
+      flowComponent.targetDataElements.forEach((targetElement) => {
         const link2 = new joint.shapes.standard.Link({
           id: targetElement.id + '/' + flowComponent.id,
           source: {
@@ -147,7 +148,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
       this.addSmallRectangleCell(flowComponent.id, flowComponent.label);
 
-      flowComponent.sourceElements.forEach((sourceElement) => {
+      flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
         const link1 = new joint.shapes.standard.Link({
           id: sourceElement.id + '/' + flowComponent.id,
@@ -168,7 +169,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
         link1.connector('rounded', {radius: 40});
         this.graph.addCell(link1);
       });
-      flowComponent.targetElements.forEach((targetElement) => {
+      flowComponent.targetDataElements.forEach((targetElement) => {
         const link2 = new joint.shapes.standard.Link({
           id: targetElement.id + '/' + flowComponent.id,
           source: {

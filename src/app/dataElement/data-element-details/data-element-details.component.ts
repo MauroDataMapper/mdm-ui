@@ -37,6 +37,8 @@ import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -96,7 +98,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private stateHandler: StateHandlerService,
     private title: Title,
     private broadcastSvc: BroadcastService,
-    private gridService:GridService
+    private gridService: GridService,
+    private dialog: MatDialog
   ) {
     this.DataElementDetails();
   }
@@ -240,37 +243,64 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
 
-    const options = this.gridService.constructOptions(limit,offset,'label','asc',{label:text});
+    const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', { label: text });
     this.pagination = {
-      limit: options["limit"],
-      offset: options["offset"]
+      limit: options['limit'],
+      offset: options['offset']
 
     };
     return this.resourcesService.dataType.list(this.parentDataModel.id, options);
   }
 
   ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
+    this.subscription.unsubscribe(); // unsubscribe to ensure no memory leaks
+  }
+  askForPermanentDelete() {
+
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(ConfirmationModalComponent, {
+        data: {
+          title: `Permanent deletion`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Element?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Element.</p>`
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result?.status !== 'ok') {
+          return;
+        }
+        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
+          data: {
+            title: `Confirm permanent deletion`,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+          }
+        });
+
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
+            return;
+          }
+          resolve(this.delete());
+        });
+      });
+    });
+
+    return promise;
   }
 
   delete() {
-    this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(result => {
+    this.resourcesService.dataElement.remove(this.result.model, this.result.dataClass, this.result.id).subscribe(() => {
       this.messageHandler.showSuccess('Data Class deleted successfully.');
-      this.stateHandler.Go(
-        'dataModel',
-        {
-          id: this.result.parentDataModel,
-          reload: true,
-          location: true
-        },
-        null
-      );
-    },
-      error => {
+      this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
+    }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting the Data Model.', error);
-      });
+    });
   }
 
   formBeforeSave() {

@@ -35,7 +35,8 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
-import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -79,7 +80,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private broadcastSvc: BroadcastService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private securityHandler: SecurityHandlerService
+    private dialog: MatDialog
   ) {
     this.DataClassDetails();
   }
@@ -166,8 +167,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   private invokeInlineEditor(): void {
     const inlineEditorToInvoke = this.editForm.find((inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
+      return inlineEditorComponent.name === 'editableText';
+    }
     );
   }
 
@@ -206,24 +207,72 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         this.hasResult = true;
       }
       this.title.setTitle(`Data Class - ${this.result?.label}`);
-    }
-    );
+    });
   }
+
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
+  askForPermanentDelete() {
+
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(ConfirmationModalComponent, {
+        data: {
+          title: `Permanent deletion`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Class?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Class.</p>`
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result?.status !== 'ok') {
+          return;
+        }
+        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
+          data: {
+            title: `Confirm permanent deletion`,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+          }
+        });
+
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
+            return;
+          }
+          resolve(this.delete());
+        });
+      });
+    });
+
+    return promise;
+  }
 
   delete() {
-    this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
-      this.messageHandler.showSuccess('Data Class deleted successfully.');
-      this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }, error => {
+    if (!this.result.parentDataClass) {
+      this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.id).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class deleted successfully.');
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting the Data Model.', error);
       });
+    } else {
+      this.resourcesService.dataClass.removeChildDataClass(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class deleted successfully.');
+        this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      });
+    }
   }
 
   formBeforeSave = () => {
@@ -258,18 +307,31 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         minMultiplicity: parseInt(this.min, 10),
         maxMultiplicity: parseInt(this.max, 10)
       };
-      this.resourcesService.dataClass.updateChildDataClass(this.result.parentDataModel, this.result.parentDataClass, resource.id, resource).subscribe(result => {
-        if (this.afterSave) {
-          this.afterSave(result);
-        }
-        this.messageHandler.showSuccess('Data Class updated successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.editableForm.visible = false;
-        this.editForm.forEach(x => x.edit({ editing: false }));
-      }, error => {
+      if (!this.result.parentDataClass) {
+        this.resourcesService.dataClass.update(this.result.parentDataModel, this.result.id, resource).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
+          }
+          this.messageHandler.showSuccess('Data Class updated successfully.');
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+        }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
-        }
-      );
+        });
+      } else {
+        this.resourcesService.dataClass.updateChildDataClass(this.result.parentDataModel, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
+          }
+          this.messageHandler.showSuccess('Data Class updated successfully.');
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Data Class.', error);
+        });
+      }
     }
   };
 

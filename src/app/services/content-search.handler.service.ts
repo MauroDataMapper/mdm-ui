@@ -77,7 +77,7 @@ export class ContentSearchHandlerService {
 
         if (contextElement == null) {
           // TODO: not working because there is no 'all' context.
-          return this.resources.tree.search('all', searchText,
+          return this.resources.catalogueItem.search(
                 {
                         searchTerm: searchText,
                         limit,
@@ -136,26 +136,6 @@ export class ContentSearchHandlerService {
                 pageSize: limit,
                 pageIndex: offset * limit
             });
-            // return this.resources.dataModel.post(contextElement.id, 'search', {
-            //     resource: {
-            //         searchTerm: searchText,
-            //         limit,
-            //         offset,
-            //         domainTypes,
-            //         labelOnly,
-            //         dataModelTypes,
-
-            //         lastUpdatedAfter,
-            //         lastUpdatedBefore,
-
-            //         createdAfter,
-            //         createdBefore,
-            //     },
-
-            //     pageSize: limit,
-            //     pageIndex: offset * limit
-
-            // });
         } else if (contextElement.domainType === 'DataClass') {
             return this.resources.dataClass.search(contextElement.dataModel, contextElement.id, {
                 searchTerm: searchText,
@@ -173,27 +153,6 @@ export class ContentSearchHandlerService {
                 pageSize: limit,
                 pageIndex: offset * limit
             });
-            // return this.resources.dataClass.post(contextElement.dataModel,
-            //     contextElement.id,
-            //     'search',
-            //     {
-            //         resource: {
-            //             searchTerm: searchText,
-            //             limit,
-            //             offset,
-            //             domainTypes,
-            //             labelOnly,
-            //             dataModelTypes,
-
-            //             lastUpdatedAfter,
-            //             lastUpdatedBefore,
-
-            //             createdAfter,
-            //             createdBefore,
-            //         },
-            //         pageSize: limit,
-            //         pageIndex: offset * limit
-            //     });
         } else if (contextElement.domainType === 'Terminology') {
             return this.resources.terminology.terms.search(contextElement.id, {
                           search: encodeURIComponent(searchText),
@@ -203,20 +162,6 @@ export class ContentSearchHandlerService {
                           pageSize: limit,
                           pageIndex: offset  * limit
                       });
-            // return this.resources.terminology.get(contextElement.id,
-            //     'terms/search',
-            //     {
-            //         queryStringParams: {
-            //             search: encodeURIComponent(searchText),
-            //             limit,
-            //             offset,
-            //             labelOnly
-            //         },
-            //         options: {
-            //             pageSize: limit,
-            //             pageIndex: offset  * limit
-            //         }
-            //     });
         }
     }
 }

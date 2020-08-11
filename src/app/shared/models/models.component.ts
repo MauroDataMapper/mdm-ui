@@ -399,7 +399,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     if (event.permanent) {
       this.folderHandler.askForPermanentDelete(event.folder.id).then(() => {
-        this.loadFolders();
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       });
     } else {
       this.folderHandler.askForSoftDelete(event.folder.id).then(() => {

@@ -103,7 +103,7 @@ SPDX-License-Identifier: Apache-2.0
             <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
         </table>
 
-        <div class="pxy-2 bordered" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+        <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
             <p class="mt-2">There are no pending users in this repository.</p>
         </div>
         <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">

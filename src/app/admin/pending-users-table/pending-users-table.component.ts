@@ -15,12 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-// import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
@@ -55,7 +53,8 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     private broadcastSvc: BroadcastService,
     private dialog: MatDialog,
     private title: Title,
-    private gridService:GridService
+    private gridService: GridService,
+    private changeRef: ChangeDetectorRef
   ) {
   }
 
@@ -83,9 +82,10 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
       })).subscribe(data => {
         this.records = data;
       });
+    this.changeRef.detectChanges();
   }
   pendingUsersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     options['disabled'] = false;
 
     return this.resourcesService.catalogueUser.pending(options);

@@ -39,10 +39,16 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       flow.sourceDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
       });
+      if (flow.sourceDataClasses.length > 1) {
+        nodes[flow.id] = flow.label;
+      }
 
       flow.targetDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
       });
+      if (flow.targetDataClasses.length > 1) {
+        nodes[flow.id] = flow.label;
+      }
     });
 
     Object.keys(nodes).forEach((key) => {
@@ -51,17 +57,42 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((sourceDataClass: any) => {
         flow.targetDataClasses.forEach((targetDataClass: any) => {
-          const link = new joint.shapes.standard.Link({
-            id: flow.id,
-            source: { id: sourceDataClass.id },
-            target: { id: targetDataClass.id }
-          });
+
+          let link: any;
+          if (flow.sourceDataClasses.length > 1) {
+            //link the sourceDataClass to the merged dataClassComponent 
+            link = new joint.shapes.standard.Link({
+              id: flow.id + '-' + sourceDataClass.id + '-' + targetDataClass.id,
+              source: { id: sourceDataClass.id },
+              target: { id: flow.id }
+            });
+          } else {
+            link = new joint.shapes.standard.Link({
+              id: flow.id + '-' + sourceDataClass.id + '-' + targetDataClass.id,
+              source: { id: sourceDataClass.id },
+              target: { id: targetDataClass.id }
+            });
+          }
+
           // link.id = flow.id as string;
           link.connector('rounded', { radius: 40 });
           link.toBack();
           this.graph.addCell(link);
         });
       });
+      if (flow.sourceDataClasses.length > 1) {
+        //link the merged dataClassComponent to the targetDataClass
+        const mergedLink = new joint.shapes.standard.Link({
+          id: flow.id + '-' + flow.targetDataClasses[0].id,
+          source: { id: flow.id },
+          target: { id: flow.targetDataClasses[0].id }
+        });
+
+        mergedLink.connector('rounded', { radius: 40 });
+        mergedLink.toBack();
+        this.graph.addCell(mergedLink);
+      }
+
     });
   }
 

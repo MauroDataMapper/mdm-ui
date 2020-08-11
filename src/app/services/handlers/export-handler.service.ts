@@ -34,11 +34,21 @@ export class ExportHandlerService {
   }
 
   exportDataModel(dataModels, exporter) {
-    return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, dataModels);
+
+    let modelIds = [];
+    dataModels.forEach(dm => {
+      modelIds.push(dm.id);
+    });
+
+    return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds);
   }
 
   exportDataModel2(dataModels, exporter) {
-    this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, dataModels).subscribe(fileBlob => {
+    let modelIds = [];
+    dataModels.forEach(dm => {
+      modelIds.push(dm.id);
+    });
+    this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds).subscribe(fileBlob => {
       const label = dataModels.length === 1 ? dataModels[0].label : 'data_model_export';
       const fileName = this.createFileName(label, exporter);
       return ({ fileBlob, fileName });

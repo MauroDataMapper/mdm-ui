@@ -347,7 +347,6 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       switch (node.domainType) {
         case DOMAIN_TYPE.Folder:
           if (this.justShowFolders) {
-            // const folderResponse = await this.resources.folder.get(node.id, node.domainType, { all: true }).toPromise();
             const folderResponse = await this.resources.folder.get(node.id).toPromise();
             return folderResponse.body.items;
           } else {
@@ -355,16 +354,13 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           }
         case DOMAIN_TYPE.DataModel:
         case DOMAIN_TYPE.DataClass:
-          // const response = await this.resources.tree.get(node.id).toPromise();
           const response = await this.resources.tree.get('dataClasses', node.domainType, node.id).toPromise();
           return response.body;
         case DOMAIN_TYPE.Terminology:
           const terminologyResponse = await this.resources.terminology.terms.list(node.id, { all: true }).toPromise();
-          // const terminologyResponse = await this.resources.terminology.get(node.id, 'terms').toPromise();
           return terminologyResponse.body.items;
         case DOMAIN_TYPE.Term:
           const termResponse = await this.resources.terminology.terms.get(node.terminology, node.id).toPromise();
-          // const termResponse = await this.resources.term.get(node.terminology, node.id, { withCredentials: true }).toPromise();
           return termResponse.body;
         default:
           return [];
@@ -492,7 +488,6 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       if (!fnode) {
         // Create new top level folder
         result = await this.resources.folder.save(label).toPromise();
-        // result = await this.resources.folder.post(null, null, { resource: {label} }).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         this.node.children.push(result.body);
 
@@ -501,7 +496,6 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         // Add new folder to existing folder
         result = await this.resources.folder.saveChildrenOf(fnode.id, {label}).toPromise();
-        // result = await this.resources.folder.post(fnode.id, 'folders', { resource: {label} }).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         if (!fnode.children) {
           fnode.children = [];

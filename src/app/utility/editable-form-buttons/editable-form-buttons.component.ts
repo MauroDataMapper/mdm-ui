@@ -91,12 +91,6 @@ export class EditableFormButtonsComponent implements OnInit {
   /// Delete ----------------------------------------
   deleteClicked() {
     this.editable.deletePending = true;
-    // if (this.onDeleteClicked) {
-    //     this.onDeleteClicked();
-    // }
-    // if (this.editable) {
-    //     this.editable.deletePending = true;
-    // }
   }
 
   cancelDeleteClicked() {

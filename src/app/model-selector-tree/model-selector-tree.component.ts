@@ -35,7 +35,7 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
 @Component({
   selector: 'mdm-model-selector-tree',
   templateUrl: './model-selector-tree.component.html',
-  // styleUrls: ['./model-selector-tree.component.sass']
+  styleUrls: ['./model-selector-tree.component.sass']
 })
 export class ModelSelectorTreeComponent implements OnInit, OnChanges {
 

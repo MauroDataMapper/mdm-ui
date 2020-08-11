@@ -57,7 +57,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     private broadcastSvc: BroadcastService,
     private title: Title,
     private gridService: GridService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Manage users');
@@ -68,25 +68,18 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-          this.isLoadingResults = true;
-
-          return this.usersFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
-        }), map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          return data.body.items;
-        }), catchError(() => {
-          this.isLoadingResults = false;
-          return [];
-        })).subscribe((data) => {
-        this.records = data;
-      });
+      this.isLoadingResults = true;
+      return this.usersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+    }), map((data: any) => {
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      return [];
+    })).subscribe((data) => {
+      this.records = data;
+    });
   }
 
   usersFetch(
@@ -96,7 +89,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.list(options);
   }
 
@@ -118,21 +111,21 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
 
   resetPassword(row) {
     from(this.resources.catalogueUser.adminPasswordReset(row.id, null)).subscribe(() => {
-        this.messageHandler.showSuccess('Reset password email sent successfully!');
-      }, error => {
-        this.messageHandler.showError('There was a problem sending reset password email.', error);
-      }
+      this.messageHandler.showSuccess('Reset password email sent successfully!');
+    }, error => {
+      this.messageHandler.showError('There was a problem sending reset password email.', error);
+    }
     );
   }
 
   toggleDeactivate(row) {
     row.disabled = !row.disabled;
     from(this.resources.catalogueUser.update(row.id, row)).subscribe(() => {
-        this.messageHandler.showSuccess('User details updated successfully.');
-        this.broadcastSvc.broadcast('pendingUserUpdated');
-      }, error => {
-        this.messageHandler.showError('There was a problem updating the user.', error);
-      }
+      this.messageHandler.showSuccess('User details updated successfully.');
+      this.broadcastSvc.broadcast('pendingUserUpdated');
+    }, error => {
+      this.messageHandler.showError('There was a problem updating the user.', error);
+    }
     );
   }
 
@@ -142,7 +135,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
-       filter[name] = value;
+        filter[name] = value;
       }
     });
     this.filter = filter;

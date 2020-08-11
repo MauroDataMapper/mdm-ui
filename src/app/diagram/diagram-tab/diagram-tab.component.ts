@@ -43,7 +43,6 @@ export class DiagramTabComponent implements OnInit {
   constructor(protected resourcesService: MdmResourcesService,
               protected messageHandler: MessageHandlerService,
               protected matDialog: MatDialog) {
-    // super(resourcesService, messageHandler, matDialog);
   }
 
   ngOnInit(): void {
@@ -51,7 +50,6 @@ export class DiagramTabComponent implements OnInit {
   }
 
   popUp(): void {
-    // console.log('Popping up...');
     const dialogRef = this.matDialog.open(DiagramPopupComponent, {
       width: '100%',
       height: '100%',
@@ -60,7 +58,6 @@ export class DiagramTabComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
       this.diagramComponent.diagramComponent = result.diagramComponent;
       this.diagramComponent.diagramService = result.diagramComponent.diagramService;
       this.diagramComponent.resetPaper();

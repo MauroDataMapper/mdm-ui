@@ -108,7 +108,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private exportHandler: ExportHandlerService,
     private title: Title
   ) {
-    // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.loadExporterList();

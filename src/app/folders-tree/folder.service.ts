@@ -26,7 +26,6 @@ export class FolderService {
 
     async loadModelsToCompare(dataModel) {
         const semanticLinks: any = await this.resources.catalogueItem.listSemanticLinks(dataModel.domainType, dataModel.id, {filters: 'all=true'}).toPromise();
-        // const semanticLinks: any = await this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'}).toPromise();
         const compareToList = [];
         if (semanticLinks && semanticLinks.body.items) {
             semanticLinks.body.items.map(link => {

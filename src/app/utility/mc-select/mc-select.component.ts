@@ -65,7 +65,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   holderStyle: any;
   @Input() loadAllOnClick: boolean;
   @Input() acceptTypedInput: boolean;
-  // @Input() defaultValue: any;
   @Input() minInputLength: number;
   @Input() idProperty: any;
   @Input() displayProperty: any;

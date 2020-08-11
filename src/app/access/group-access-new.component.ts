@@ -20,10 +20,8 @@ import { MessageService } from '../services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-
 import { FolderResult } from '../model/folderModel';
-import { forkJoin } from 'rxjs';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -145,15 +143,6 @@ export class GroupAccessNewComponent implements OnInit {
         (error) => {}
       );
   };
-
-  // public getServerData($event) {
-  //     var offset = $event.pageIndex * $event.pageSize;
-  //     this.fetch($event.pageSize, offset ,$event.pageIndex, this.sort.active,this.sort.direction,null );
-  // }
-  //
-  // public getSortedData($event) {
-  //     this.fetch(this.paginator.pageSize, this.paginator.pageIndex,this.paginator.pageIndex, $event.active,$event.direction,null );
-  // }
 
   save(row, index) {
     // if nothing's changed, then return

@@ -42,8 +42,6 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     referencedTerminology: ''
   };
 
-  childDataClasses: any; // TODO - FIGURE OUT IF NEEDED
-
   @Input() parentScopeHandler;
   allDataTypes;
   isValid = false;

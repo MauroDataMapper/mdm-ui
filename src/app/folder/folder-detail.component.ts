@@ -83,7 +83,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private broadcastSvc: BroadcastService,
     private title: Title,
   ) {
-    // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.FolderDetails();

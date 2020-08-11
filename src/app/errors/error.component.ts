@@ -92,13 +92,11 @@ export class ErrorComponent implements OnInit {
   }
 
   successfulReport() {
-    // console.log(data);
     this.issueReporting = false;
     this.issueReported = true;
   }
 
   errorReport() {
-    // console.log(data);
     this.issueReporting = false;
     this.errorInSubmit = true;
   }

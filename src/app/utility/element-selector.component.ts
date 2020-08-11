@@ -37,7 +37,7 @@ import { GridService } from '@mdm/services/grid.service';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  // styleUrls: ['./element-selector.component.sass']
+  styleUrls: ['./element-selector.component.sass']
 })
 export class ElementSelectorComponent implements OnInit {
 
@@ -444,8 +444,8 @@ export class ElementSelectorComponent implements OnInit {
     }
     this.formData.inSearchMode = true;
     this.reloading = true;
-    const options = {    
-        domainType: treeSearchDomainType      
+    const options = {
+        domainType: treeSearchDomainType
     };
 
     this.resourceService.tree.get(null, 'search/' + this.formData.treeSearchText, options).subscribe(result => {

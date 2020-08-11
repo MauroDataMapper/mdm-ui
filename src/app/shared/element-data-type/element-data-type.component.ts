@@ -121,8 +121,6 @@ export class ElementDataTypeComponent implements OnInit {
 
           this.allRecordsWithGroups = [];
           categoryNames.forEach(category => {
-            // categories[category] = categories[category].sortBy('index');
-
             if (category !== null) {
               this.categories.push({ key: category, value: category });
             }

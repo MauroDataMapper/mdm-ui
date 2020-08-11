@@ -23,7 +23,7 @@ import { DataModelResult } from '@mdm/model/dataModelModel';
 @Component({
     selector: 'mdm-element-status',
     templateUrl: './element-status.component.html',
-    // styleUrls: ['./element-status.component.sass']
+    styleUrls: ['./element-status.component.sass']
 })
 export class ElementStatusComponent implements OnInit {
 

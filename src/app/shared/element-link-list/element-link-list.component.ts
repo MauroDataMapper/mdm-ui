@@ -59,9 +59,7 @@ export class ElementLinkListComponent implements AfterViewInit {
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
-  // @ViewChild(MatPaginator, { static: false })
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  // paginator: MatPaginator;
 
   filterEvent = new EventEmitter<any>();
   filter: {};
@@ -137,24 +135,9 @@ export class ElementLinkListComponent implements AfterViewInit {
   };
 
   semanticLinkFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);
-
-    // if (this.parent.domainType === 'Term') {
-    //   return this.resources.term.get(
-    //     this.terminology,
-    //     this.parent.id,
-    //     'semanticLinks',
-    //     options
-    //   );
-    // } else {
-    //   return this.resources.catalogueItem.get(
-    //     this.parent.id,
-    //     'semanticLinks',
-    //     options
-    //   );
-    // }
   };
 
   handleShowLinkSuggestion = element => {

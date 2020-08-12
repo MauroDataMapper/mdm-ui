@@ -349,6 +349,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           if (this.afterSave) {
             this.afterSave(result);
           }
+          this.CodeSetDetails();
           this.messageHandler.showSuccess('Code Set updated successfully.');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({editing: false}));

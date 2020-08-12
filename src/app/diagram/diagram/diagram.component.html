@@ -15,15 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div id="viewport" style='margin-top: 5px; border: 1px solid rgb(221, 221, 221); width: 100%; height: 100%;'>
-  <div style="float: left; width: 200px">
-    <div *ngIf="dataClassComponent">{{dataClassComponent.label}}</div>
+<div id="viewport">
+  <div *ngIf="dataClassComponent" style="width: 300px; padding: 10px;">
+    <h4 *ngIf="dataClassComponent">{{dataClassComponent.label}}</h4>
     <div *ngIf="dataClassComponent">{{dataClassComponent.description}}</div>
-    <div *ngIf="dataClassComponent">{{dataClassComponent.definition}}</div>
+    <pre *ngIf="dataClassComponent">{{dataClassComponent.definition}}</pre>
   </div>
   <mat-card *ngIf="isLoading" style="height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.286); z-index: 10; display: flex; justify-content: center; align-items: center">
-    <mat-progress-spinner color="primary" mode="indeterminate">
-    </mat-progress-spinner>
+    <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
   </mat-card>
   <div #jointjs style="width: 100%; height: 100%; margin: 1em;"></div>
 </div>

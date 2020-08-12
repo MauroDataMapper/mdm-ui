@@ -24,7 +24,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
   parentId: string;
   flowId: string;
-  
+
   getDiagramContent(params: any): Observable<any> {
     // console.log('getting class diagram content');
     this.parentId = params.parent.id;
@@ -60,7 +60,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
           let link: any;
           if (flow.sourceDataClasses.length > 1) {
-            //link the sourceDataClass to the merged dataClassComponent 
+            // link the sourceDataClass to the merged dataClassComponent
             link = new joint.shapes.standard.Link({
               id: flow.id + '/' + sourceDataClass.id,
               source: { id: sourceDataClass.id },
@@ -81,7 +81,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
         });
       });
       if (flow.sourceDataClasses.length > 1) {
-        //link the merged dataClassComponent to the targetDataClass
+        // link the merged dataClassComponent to the targetDataClass
         const mergedLink = new joint.shapes.standard.Link({
           id: flow.id + '/' + flow.targetDataClasses[0].id,
           source: { id: flow.id },
@@ -95,15 +95,15 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
     });
   }
-  
+
   configurePaper(paper: joint.dia.Paper): void {
 
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
       console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
 
       if (cellView.model.id !== undefined && cellView.model.id !== null) {
-        
-        let arrMergedId: any[] = cellView.model.id.split('/');
+
+        const arrMergedId: any[] = cellView.model.id.toString().split('/');
 
         if (arrMergedId.length > 0) {
           const options = { sort: 'label', order: 'asc', all: true };

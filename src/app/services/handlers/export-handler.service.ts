@@ -40,7 +40,11 @@ export class ExportHandlerService {
       modelIds.push(dm.id);
     });
 
-    return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds);
+    if(modelIds.length > 1){
+      return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType : "arraybuffer" });
+    }
+
+    return this.resources.dataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version,{}, { responseType : "arraybuffer" }); 
   }
 
   exportDataModel2(dataModels, exporter) {

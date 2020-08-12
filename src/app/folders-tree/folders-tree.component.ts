@@ -134,7 +134,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     public dialog: MatDialog
   ) {
     this.loadFavourites();
-    this.subscriptions.add(this.messages.on('favoutires', () => {
+    this.subscriptions.add(this.messages.on('favourites', () => {
       this.loadFavourites();
     }));
 

@@ -16,107 +16,107 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm--shadow-block">
-    <div class="heading-container">
-        <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-            <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-                <h4 class="marginless">Restrict user access based on group(s) <span class="mdm--badge mdm--element-count">{{dataSource.data.length}}</span></h4>
-            </div>
-            <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                <div *ngIf="folderResult['editable']" class="mt-1">
-                    <button mat-flat-button color="primary" type="button" (click)="add()">
-                        <i class="fas fa-plus"></i>
-                        Add Group
-                    </button>
+  <div class="heading-container">
+      <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+          <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="75" fxFlex.xs="100" fxLayoutAlign="flex-start center">
+              <h4 class="marginless">Restrict user access based on group(s) <span class="mdm--badge mdm--element-count">{{dataSource.data.length}}</span></h4>
+          </div>
+          <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+              <div *ngIf="folderResult['editable']" class="mt-1">
+                  <button mat-flat-button color="primary" type="button" (click)="add()">
+                      <i class="fas fa-plus"></i>
+                      Add Group
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <form>
+    <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
+        <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
+            <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
+
+                <div *ngIf="!record.inEdit">
+                    {{record.group.label}}
                 </div>
-            </div>
-        </div>
-    </div>
-    <form>
-        <div class="table-responsive">
-            <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table-striped">
-                <ng-container matColumnDef="user">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Group name</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
 
-                        <div *ngIf="!record.inEdit">
-                            {{record.group.label}}
-                        </div>
+                <div *ngIf="record.inEdit">
+                    <div *ngIf="!record.isNew">
+                        {{record.group.label}}
+                    </div>
+                    <div *ngIf="record.isNew">
+                        <mdm-select [width]="'100%'"
+                                    [acceptTypedInput]="false"
+                                    [valueType]="'static'"
+                                    [defaultValue]="record.group"
+                                    [staticValues]="allGroups"
+                                    [minInputLength]="1"
+                                    [hasError]="record.edit.errors && record.edit.errors['group']"
+                                    [record]="record"
+                                    [idProperty]="'id'"
+                                    [displayProperty]="'label'"
+                                    [searchProperty]="'label'"
+                                    (selectEvent)="onGroupSelect($event[0],$event[1])">
+                            <ng-template #lineContent let-item>
+                                <div>{{item.label}}</div>
+                            </ng-template>
+                        </mdm-select>
+                        <small *ngIf="record.edit.errors && record.edit.errors['group']" class="warning">{{record.edit.errors['group']}}</small>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
 
-                        <div *ngIf="record.inEdit">
-                            <div *ngIf="!record.isNew">
-                                {{record.group.label}}
-                            </div>
-                            <div *ngIf="record.isNew">
-                                <mdm-select [width]="'100%'"
-                                            [acceptTypedInput]="false"
-                                            [valueType]="'static'"
-                                            [defaultValue]="record.group"
-                                            [staticValues]="allGroups"
-                                            [minInputLength]="1"
-                                            [hasError]="record.edit.errors && record.edit.errors['group']"
-                                            [record]="record"
-                                            [idProperty]="'id'"
-                                            [displayProperty]="'label'"
-                                            [searchProperty]="'label'"
-                                            (selectEvent)="onGroupSelect($event[0],$event[1])">
-                                    <ng-template #lineContent let-item>
-                                        <div>{{item.label}}</div>
-                                    </ng-template>
-                                </mdm-select>
-                                <small *ngIf="record.edit.errors && record.edit.errors['group']" class="warning">{{record.edit.errors['group']}}</small>
-                            </div>
-                        </div>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="read">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
+            <td mat-cell *matCellDef="let record; let i = index" style="text-align:  left; word-wrap: break-word;">
+                <span *ngIf="record.readAccess && !record.inEdit">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                </span>
+                <span *ngIf="record.inEdit">
+                    <mat-checkbox [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)" aria-label="Check Read Access">
+                        <span class="mdm-hidden-checkbox-label">Select Read Access</span>
+                    </mat-checkbox>
+                </span>
+            </td>
+        </ng-container>
 
-                <ng-container matColumnDef="read">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="text-align:  left; word-wrap: break-word;">
-                        <span *ngIf="record.readAccess && !record.inEdit">
-                            <i class="fas fa-check" aria-hidden="true"></i>
-                        </span>
-                        <span *ngIf="record.inEdit">
-                            <mat-checkbox [(ngModel)]="record.edit.readAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="readAccessChecked(record, i)">
-                            </mat-checkbox>
-                        </span>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="write">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
+            <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
+                <span *ngIf="record.writeAccess && !record.inEdit">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                </span>
+                <span *ngIf="record.inEdit">
+                    <mat-checkbox [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)" aria-label="Check Write Access">
+                        <span class="mdm-hidden-checkbox-label">Select Write Access</span>
+                    </mat-checkbox>
+                </span>
+            </td>
+        </ng-container>
 
-                <ng-container matColumnDef="write">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Write</th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: left; word-wrap: break-word;">
-                        <span *ngIf="record.writeAccess && !record.inEdit">
-                            <i class="fas fa-check" aria-hidden="true"></i>
-                        </span>
-                        <span *ngIf="record.inEdit">
-                            <mat-checkbox [(ngModel)]="record.edit.writeAccess" [ngModelOptions]="{standalone: true}" (ngModelChange)="writeAccessChecked(record, i)">
-                            </mat-checkbox>
-                        </span>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="edit">
+            <td mat-header-cell *matHeaderCellDef></td>
+            <td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
+                <div *ngIf="record.isNew">
+                    <div>
+                        <button mat-stroked-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button" aria-label="Cancel edit">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button mat-stroked-button color="primary" *ngIf="record.inEdit" (click)="save(record, i)" type="button" aria-label="Save record">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </form>
 
-                <ng-container matColumnDef="edit">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-                    <td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
-                        <div *ngIf="record.isNew">
-                            <div>
-                                <button mat-stroked-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                <button mat-stroked-button color="primary" *ngIf="record.inEdit" (click)="save(record, i)" type="button">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-        </div>
-    </form>
-
-    <div class="mdm--mat-pagination">
-        <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
-    </div>
+  <div class="mdm--mat-pagination">
+      <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+  </div>
 </div>

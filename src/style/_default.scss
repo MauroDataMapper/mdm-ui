@@ -61,7 +61,7 @@ em {
 }
 
 a.show-more, a.show-less {
-  color: $defaultLinkColour;
+  color: #3279B5;
   text-decoration:none;
   cursor: pointer;
 }
@@ -167,7 +167,7 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 .mdm--element-count {
-  background-color: #777777;
+  background-color: #585858;
   color: #fff;
   margin: 0px 3px;
 }
@@ -182,7 +182,7 @@ mat-progress-bar.mat-progress-bar.mat-primary {
 }
 
 a {
-  color: #337ab7;
+  color: #3279B5;
 }
 
 .breadcrumb {
@@ -193,8 +193,13 @@ a {
   margin-bottom: 1rem;
   list-style: none;
   background-color: #e9ecef;
+//   background-color: #6F6F6F;
+    color: #266CA8;
   border-radius: .25rem;
   margin-bottom: 0;
+  a {
+      color: #266CA8;
+  }
 }
 
 .loading-spinner {
@@ -213,10 +218,50 @@ a {
   font-size: 100%;
 }
 
+.badge-success {
+    background-color: #028821;
+}
 
 .mat-checkbox-layout { white-space: normal !important; }
 
 // Background colour for mchighlighter pipe
 span.mchighlighter {
   background-color: #fbff00;
+}
+
+
+
+.mdm-hidden-checkbox-label {
+    display: none;
+}
+
+
+.mdm--mat-menu--actions .warning{
+  color: #a5122a;
+}
+
+
+.fas.fa-filter {
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+ngx-skeleton-loader .loader {
+  margin: 0!important;
+}
+
+.mdm--skeleton-table {
+    th:first-of-type, td:first-of-type {
+      padding-left: 24px;
+    }
+    ngx-skeleton-loader {
+      display: flex;
+    }
+}
+
+.mdm--skeleton-badge ngx-skeleton-loader {
+    display: inline-flex;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0px 3px;
 }

@@ -21,7 +21,7 @@ import { DataClassStep2Component } from '../data-class-step2/data-class-step2.co
 import { DataClassStep1Component } from '../data-class-step1/data-class-step1.component';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -37,10 +37,11 @@ export class DataClassMainComponent implements AfterViewInit {
     private title: Title,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService
-  ) {}
+    private broadcastSvc: BroadcastService,
+    private changeRef: ChangeDetectorRef,
+  ) { }
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentDataModelId: any;
@@ -89,38 +90,24 @@ export class DataClassMainComponent implements AfterViewInit {
     step2.invalid = true;
 
     if (this.parentDataClassId) {
-      this.resources.dataClass
-        .get(
-          this.parentDataModelId,
-          this.grandParentDataClassId,
-          this.parentDataClassId,
-          null,
-          null
-        )
-        .toPromise()
-        .then(result => {
-          result.body.breadcrumbs.push(Object.assign([], result.body));
-          this.model.parent = result.body;
-          this.steps.push(step1);
-          this.steps.push(step2);
-        });
+      this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).toPromise().then(result => {
+        result.body.breadcrumbs.push(Object.assign([], result.body));
+        this.model.parent = result.body;
+        this.steps.push(step1);
+        this.steps.push(step2);
+        this.changeRef.detectChanges();
+      });
     } else {
-      this.resources.dataModel
-        .get(this.parentDataModelId)
-        .toPromise()
-        .then(result => {
-          result.body.breadcrumbs = [];
-          result.body.breadcrumbs.push(Object.assign({}, result.body));
-          this.model.parent = result.body;
-          this.steps.push(step1);
-          this.steps.push(step2);
-        });
+      this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
+        result.body.breadcrumbs = [];
+        result.body.breadcrumbs.push(Object.assign({}, result.body));
+        this.model.parent = result.body;
+        this.steps.push(step1);
+        this.steps.push(step2);
+        this.changeRef.detectChanges();
+      });
     }
   }
-
-  cancelWizard = () => {
-    this.stateHandler.GoPrevious();
-  };
 
   closeWizard = () => {
     this.stateHandler.GoPrevious();
@@ -165,6 +152,7 @@ export class DataClassMainComponent implements AfterViewInit {
   };
 
   saveNewDataClass = () => {
+
     const resource = {
       label: this.model.label,
       description: this.model.description,
@@ -201,25 +189,22 @@ export class DataClassMainComponent implements AfterViewInit {
       );
     }
 
-    deferred.subscribe(
-      response => {
-        this.messageHandler.showSuccess('Data Class saved successfully.');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.stateHandler.Go(
-          'dataClass',
-          {
-            dataModelId: response.body.dataModel || '',
-            dataClassId: response.body.parentDataClass || '',
-            id: response.body.id
-          },
-          { reload: true, location: true }
-        );
-      },
+    deferred.subscribe(response => {
+
+      this.messageHandler.showSuccess('Data Class saved successfully.');
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+      this.stateHandler.Go(
+        'dataClass',
+        {
+          dataModelId: response.body.dataModel || '',
+          dataClassId: response.body.parentDataClass || '',
+          id: response.body.id
+        },
+        { reload: true, location: true }
+      );
+    },
       error => {
-        this.messageHandler.showError(
-          'There was a problem saving the Data Class.',
-          error
-        );
+        this.messageHandler.showError('There was a problem saving the Data Class.', error);
       }
     );
   }

@@ -24,7 +24,7 @@ import {
 import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { DataElementStep1Component } from '../data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '../data-element-step2/data-element-step2.component';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -39,7 +39,7 @@ export class DataElementMainComponent implements OnInit {
   constructor(
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
     private title: Title
@@ -112,35 +112,12 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    // this.resources.dataClass
-    //     .get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null,null).toPromise()
-    //     .then((result) => {
-    //       result.body.breadcrumbs.push(Object.assign([],result.body));
-    //       this.model.parent = result.body;
-    //       this.steps.push(step1);
-    //       this.steps.push(step2);
-    //     });
-    //
-    // this.resources.dataModel
-    //     .get(this.parentDataModelId, "dataTypes").toPromise().then((result) => {
-    //   result.body.breadcrumbs = [];
-    //   result.body.breadcrumbs.push(Object.assign({}, result.body));
-    //   this.model.parent = result.body;
-    //   this.steps.push(step1);
-    //   this.steps.push(step2);
-    // });
-
-    this.resources.dataClass.get(
-        this.parentDataModelId,
-        this.grandParentDataClassId,
-        this.parentDataClassId,
-        null,
-        null
-      ).subscribe(result => {
+    this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).subscribe(result => {
         // result.body.breadcrumbs.push(Object.assign([],result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
+        this.changeRef.detectChanges();
       });
 
     this.resources.dataModel.get(this.parentDataModelId, 'dataTypes').subscribe(result => {
@@ -148,10 +125,11 @@ export class DataElementMainComponent implements OnInit {
         if (result.count === 0) {
           this.model.showNewInlineDataType = true;
         }
+        this.changeRef.detectChanges();
       });
   }
 
-  cancelWizard = () => {
+  closeWizard = () => {
     this.stateHandler.GoPrevious();
   };
 
@@ -191,33 +169,6 @@ export class DataElementMainComponent implements OnInit {
     }
     this.changeRef.detectChanges();
   };
-
-  // saveCopiedDataClasses = () => {
-  //
-  //   this.processing = true;
-  //   this.isProcessComplete = false;
-  //
-  //   const chain = [];
-  //
-  //   this.model.selectedDataElements.forEach((dc) => {
-  //     var link = "dataClasses/" + dc.dataModel + "/" + dc.id;
-  //     if (this.model.parent.domainType === "DataClass") {
-  //       chain.push(this.resources.dataClass.post(this.model.parent.dataModel,this.model.parent.id,link,null));
-  //     } else {
-  //       chain.push(this.resources.dataModel.post(this.model.parent.id, link, null));
-  //     }
-  //   });
-  //
-  //   Observable.forkJoin(chain).subscribe((result) => {
-  //         this.processing = false;
-  //         this.isProcessComplete = true;
-  //
-  //       },
-  //       (error) => {
-  //         this.processing = false;
-  //         this.isProcessComplete = true;
-  //       });
-  // }
 
   saveNewDataElement = () => {
     let dataType;
@@ -421,22 +372,14 @@ export class DataElementMainComponent implements OnInit {
     ) {
       isValid = false;
     }
-    //
-    // //Check if for TerminologyType, the terminology is selected
+
+    // Check if for TerminologyType, the terminology is selected
     if (
       this.model.newlyAddedDataType.domainType === 'TerminologyType' &&
       !this.model.newlyAddedDataType.referencedTerminology
     ) {
       isValid = false;
     }
-
-    // if(!isValid) {
-    //   this.dataTypeErrors = "";
-    //   this.dataTypeErrors = "Please fill in all required values for the new Data Type";
-    //   return false;
-    // }
-    // else
-    //   return true;
   }
 
   saveCopiedDataClasses = () => {

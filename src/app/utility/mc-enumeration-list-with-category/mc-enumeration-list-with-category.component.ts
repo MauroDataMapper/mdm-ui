@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {UserSettingsHandlerService} from '@mdm/services/utility/user-settings-handler.service';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import {ValidatorService} from '@mdm/services/validator.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -68,7 +68,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   constructor(
     private userSettingsHandler: UserSettingsHandlerService,
     private securityHandler: SecurityHandlerService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService
   ) {

@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -37,7 +37,7 @@ export class RegisterModalComponent implements OnInit {
   confirmPassword: any;
   message: any;
 
-  constructor(public broadcastService: BroadcastService, public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
+  constructor(public broadcastService: BroadcastService, public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: MdmResourcesService) {}
 
   ngOnInit() {
     this.email = '';
@@ -79,9 +79,12 @@ export class RegisterModalComponent implements OnInit {
     const dialog = this.dialog.open(ConfirmationModalComponent, {
       data: {
         title: 'Registration successful',
-        message: `You have successfully requested access to the Metadata Catalogue. <br>
-                  You will receive an email (to ${this.email}) containing login details <br> once an administrator has approved your request.`,
-        cancelShown: false
+        message: `<p class="marginless">You have successfully requested access to the Mauro Data Mapper. </p>
+                  <p class="marginless">You will receive an email (to ${this.email}) containing your login details </p>
+                  <p class="marginless">once an administrator has approved your request.</p>`,
+        cancelShown: false,
+        okBtnTitle: 'Close modal',
+        btnType: 'warn',
       }
     });
 

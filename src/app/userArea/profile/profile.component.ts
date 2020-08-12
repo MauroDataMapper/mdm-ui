@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { UserDetailsResult } from '@mdm/model/userDetailsModel';
@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('imgCropperComp', { static: true }) imgCropperComp;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,

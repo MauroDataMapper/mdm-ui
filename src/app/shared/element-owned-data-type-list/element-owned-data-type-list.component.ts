@@ -27,16 +27,17 @@ import {
   OnInit
 } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
-import {MdmPaginatorComponent} from "@mdm/shared/mdm-paginator/mdm-paginator";
+import { MatTableDataSource } from '@angular/material/table';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',
@@ -54,13 +55,10 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
- // @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-
 
   allDataTypes: any;
   allDataTypesMap: any;
-  // showStaticRecords: () => void;
   loading = false;
   records: any[] = [];
   total: number;
@@ -69,42 +67,36 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   hideFilters = true;
   displayedColumns: string[];
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   filterEvent = new EventEmitter<string>();
   filter: string;
   deleteInProgress: boolean;
-  parentDataModel: any; // TODO find use for this
   domainType;
   dataSource: MatTableDataSource<any>;
   checkAllCheckbox = false;
+  bulkActionsVisibile = 0;
 
 
   constructor(
     private changeRef: ChangeDetectorRef,
     private messageHandler: MessageHandlerService,
     private elementTypes: ElementTypesService,
-    private resources: ResourcesService,
-    private stateHandler: StateHandlerService
-  ) {}
+    private resources: MdmResourcesService,
+    private stateHandler: StateHandlerService,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
-    // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    // Add 'implements OnInit' to the class.
     if (this.type === 'static') {
       this.dataSource = new MatTableDataSource(this.records);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     }
     if (this.parent.editable && !this.parent.finalised) {
-      this.displayedColumns = [ 'checkbox', 'name', 'description', 'type', 'buttons' ];
+      this.displayedColumns = ['checkbox', 'name', 'description', 'type', 'actions'];
     } else {
-      this.displayedColumns = ['name', 'description', 'type', 'buttons'];
+      this.displayedColumns = ['name', 'description', 'type'];
     }
-    // const settings = JSON.parse(sessionStorage.getItem('userSettings'));
-    // if (settings) {
-    //   this.pageSize = settings.countPerTable;
-    //   this.pageSizeOptions =  settings.counts;
-    // }
   }
 
   ngAfterViewInit() {
@@ -115,38 +107,33 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-      merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-        .pipe(
-          startWith({}),
-          switchMap(() => {
-            this.isLoadingResults = true;
-            this.changeRef.detectChanges();
+      merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+        this.isLoadingResults = true;
+        this.changeRef.detectChanges();
 
-            return this.dataTypesFetch(
-              this.paginator.pageSize,
-              this.paginator.pageOffset,
-              this.sort.active,
-              this.sort.direction,
-              this.filter
-            );
-          }),
-          map((data: any) => {
-            this.totalItemCount = data.body.count;
-            this.isLoadingResults = false;
-            return data.body.items;
-          }),
-          catchError(() => {
-            this.isLoadingResults = false;
-            this.changeRef.detectChanges();
-            return [];
-          })
-        )
-        .subscribe(data => {
-          this.records = data;
-         // this.refreshDataSource();
+        return this.dataTypesFetch(
+          this.paginator.pageSize,
+          this.paginator.pageOffset,
+          this.sort.active,
+          this.sort.direction,
+          this.filter
+        );
+      }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.isLoadingResults = false;
+          return data.body.items;
+        }),
+        catchError(() => {
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
-        });
+          return [];
+        })
+      ).subscribe(data => {
+        this.records = data;
+        this.isLoadingResults = false;
+        this.changeRef.detectChanges();
+      });
     }
 
     if (this.type === 'static') {
@@ -173,12 +160,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       }
     });
 
-    if (
-      filterValue !== null &&
-      filterValue !== undefined &&
-      filterName !== null &&
-      filterName !== undefined
-    ) {
+    if (filterValue !== null && filterValue !== undefined && filterName !== null && filterName !== undefined) {
       filter += filterName + '=' + filterValue.id + '&';
     }
     this.filter = filter;
@@ -203,73 +185,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     );
   };
 
-  add = () => {
-    this.stateHandler.Go(
-      'newDataType',
-      {
-        parentDataModelId: this.parent.id
-      },
-      null
-    );
-  };
-
-  deleteRows = () => {
-    this.processing = true;
-    this.failCount = 0;
-    this.total = 0;
-
-    const chain: any[] = [];
-    this.records.forEach(record => {
-      if (record.checked !== true) {
-        return;
-      }
-      this.total++;
-      chain.push(
-        this.resources.dataType
-          .delete(record.dataModel, record.id)
-          .catch(() => {
-            this.failCount++;
-          })
-      );
-    });
-
-    forkJoin(chain).subscribe(
-      () => {
-        this.processing = false;
-        if (this.failCount === 0) {
-          this.refreshDataSource();
-          this.messageHandler.showSuccess(
-            this.total + ' Elements deleted successfully'
-          );
-        } else {
-          const successCount = this.total - this.failCount;
-          let message = '';
-          if (successCount !== 0) {
-            message += successCount + ' Elements deleted successfully.<br>';
-          }
-          if (this.failCount > 0) {
-            message +=
-              'There was a problem deleting ' + this.failCount + ' elements.';
-          }
-
-          if (this.failCount > 0) {
-            this.messageHandler.showError(message, null);
-          } else {
-            this.messageHandler.showSuccess(message);
-          }
-        }
-
-        this.filterEvent.emit();
-        this.deleteInProgress = false;
-      },
-      error => {
-        this.processing = false;
-        this.messageHandler.showError(
-          'There was a problem deleting the elements.',
-          error
-        );
-      }
-    );
+  addDataType = () => {
+    this.stateHandler.Go('newDataType', { parentDataModelId: this.parent.id }, null);
   };
 
   filterClick = () => {
@@ -290,8 +207,59 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
-    this.refreshDataSource();
+    this.listChecked();
   }
+  listChecked = () => {
+    let count = 0;
+    for (const value of Object.values(this.records)) {
+      if (value.checked) {
+        count++;
+      }
+    }
+    this.bulkActionsVisibile = count;
+  }
+  toggleCheckbox = (record) => {
+    this.records.forEach(x => (x.checked = false));
+    this.bulkActionsVisibile = 0;
+    record.checked = true;
+    this.bulkDelete();
+  }
+
+  bulkDelete = () => {
+    const dataElementIdLst = [];
+    this.records.forEach(record => {
+      if (record.checked) {
+        dataElementIdLst.push({
+          id: record.id,
+          label: record.label,
+          dataModel: record.dataModel,
+          domainType: 'DataType',
+          type: record.domainType
+        });
+      }
+    });
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(BulkDeleteModalComponent, {
+        data: { dataElementIdLst, parentDataModel: this.parent },
+        panelClass: 'bulk-delete-modal'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result != null && result.status === 'ok') {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+    promise.then(() => {
+      this.records.forEach(x => (x.checked = false));
+      this.records = this.records;
+      this.checkAllCheckbox = false;
+      this.bulkActionsVisibile = 0;
+      this.filterEvent.emit();
+    }).catch(() => { });
+  };
 
   refreshDataSource() {
     this.dataSource.data = this.records;

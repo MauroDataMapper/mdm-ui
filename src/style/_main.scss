@@ -216,11 +216,11 @@ SPDX-License-Identifier: Apache-2.0
 .dataTypeLabel {
   font-style: italic;
   font-size: 11px;
-  color: #4cae4c;
+  color: #028821;
   padding-left: 5px;
 }
 .enumCaretShow {
-  color: #4cae4c;
+  color: #028821;
 }
 .hiddenMoreEnumerationKeyValue {
   display: none;
@@ -417,18 +417,6 @@ div.mcSelectItem.current {
   cursor: pointer;
 }
 
-div.mcSelectHolder {
-  border: 1px solid #ddd;
-  max-height: 200px;
-  overflow-y: scroll;
-  position: absolute;
-  background-color: #ffffff;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-
-
 
 div.noClassification {
   color: #686868;
@@ -604,7 +592,7 @@ li.aliasSearchResult {
 
 .copyElementSuccess {
   color: #5cb85c;
-  font-size: 26px;
+//   font-size: 26px;
 }
 
 .copyElementError {
@@ -627,7 +615,7 @@ small.simpleView.elementType {
 ///.....................................................................................................................
 
 .mat-dialog-container {
-  padding: 3px !important;
+//   padding: 3px !important;
   // overflow: hidden !important;
 }
 .mat-table-row-select {

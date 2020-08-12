@@ -16,26 +16,68 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div>
-    <small [hidden]="!(record.inDelete)">
+    <small [hidden]="!record.inDelete">
         Are you sure?
     </small>
 </div>
-<button mat-button color="primary" type="button" class="paddingless" *ngIf="!hideEdit && !record.inEdit && !record.inDelete" (click)="editClicked(record, index)" matTooltip="Edit">
+<button
+    mat-icon-button
+    color="primary"
+    type="button"
+    *ngIf="!hideEdit && !record.inEdit && !record.inDelete"
+    (click)="editClicked(record, index)"
+    matTooltip="Edit"
+    aria-label="Edit">
     <i class="fas fa-pencil-alt"></i>
 </button>
-<button mat-stroked-button color="accent" type="button" class="paddingless" *ngIf="record.inEdit" (click)="saveClicked(record, index)" matTooltip="Save">
+<button
+    mat-icon-button
+    color="accent"
+    type="button"
+    *ngIf="record.inEdit"
+    (click)="saveClicked(record, index)"
+    matTooltip="Save"
+    aria-label="Save">
     <i class="fas fa-check"></i>
 </button>
-<button mat-button color="warn" type="button" class="paddingless" *ngIf="record.inEdit" (click)="editCancelled(record, index)" matTooltip="Cancel edit">
+<button
+    mat-icon-button
+    color="warn"
+    type="button"
+    *ngIf="record.inEdit"
+    (click)="editCancelled(record, index)"
+    matTooltip="Cancel edit"
+    aria-label="Cancel edit">
     <i class="fas fa-times"></i>
 </button>
 
-<button mat-button color="warn" type="button" class="paddingless" *ngIf="!hideDelete && !record.inEdit && !record.inDelete" (click)="deleteClicked(record, index)" matTooltip="Delete">
+<button
+    mat-icon-button
+    color="warn"
+    type="button"
+    *ngIf="!hideDelete && !record.inEdit && !record.inDelete"
+    (click)="deleteClicked(record, index)"
+    matTooltip="Delete"
+    aria-label="Delete">
     <i class="far fa-trash-alt"></i>
 </button>
-<button mat-stroked-button color="accent" type="button" class="paddingless" *ngIf="record.inDelete" (click)="deleteApproved(record, index)" matTooltip="Approve">
+<button
+    mat-icon-button
+    color="accent"
+    type="button"
+    *ngIf="record.inDelete"
+    (click)="deleteApproved(record, index)"
+    matTooltip="Approve"
+    aria-label="Approve">
     <i class="fas fa-check"></i>
 </button>
-<button mat-button color="warn" type="button" class="paddingless" *ngIf="record.inDelete"  (click)="deleteCancelled(record, index)" matTooltip="Cancel deletion">
+<button
+    mat-icon-button
+    color="warn"
+    type="button"
+    *ngIf="record.inDelete"
+    (click)="deleteCancelled(record, index)"
+    matTooltip="Cancel deletion"
+    aria-label="Cancel deletion">
     <i class="fas fa-times"></i>
 </button>

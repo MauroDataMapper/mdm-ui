@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { Title } from '@angular/platform-browser';
 import { ROLES } from '@mdm/constants/roles';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -33,6 +33,7 @@ export class UserComponent implements OnInit {
   id: any;
   result = [];
   allGroups = [];
+  selectedGroups = [];
   errors = {
     id: null,
     emailAddress: '',
@@ -59,7 +60,7 @@ export class UserComponent implements OnInit {
   constructor(
     private role: ROLES,
     private title: Title,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private stateSvc: StateService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
@@ -77,6 +78,12 @@ export class UserComponent implements OnInit {
           const user = res.body;
           this.user = user;
           this.title.setTitle('Admin - Edit User');
+
+          if (this.user.groups) {
+            for (const val of this.user.groups) {
+              this.selectedGroups.push(val.id);
+            }
+          }
         });
     }
 
@@ -126,13 +133,13 @@ export class UserComponent implements OnInit {
     if (isValid) {
       delete this.errors;
     }
+    console.log("validating");
     return isValid;
   };
 
   save = () => {
-    if (!this.validate()) {
-      return;
-    }
+    this.validate();
+
     const resource = {
       emailAddress: this.user.emailAddress,
       firstName: this.user.firstName,
@@ -146,11 +153,11 @@ export class UserComponent implements OnInit {
     if (this.user.id) {
       // it's in edit mode (update)
       this.resourcesService.catalogueUser.put(this.user.id, null, { resource }).subscribe(() => {
-          this.messageHandler.showSuccess('User updated successfully.');
-          this.stateHandler.Go('admin.users');
-        },
-        error => {
-          this.messageHandler.showError('There was a problem updating the user.', error);
+        this.messageHandler.showSuccess('User updated successfully.');
+        this.stateHandler.Go('admin.users');
+      },
+      error => {
+        this.messageHandler.showError('There was a problem updating the user.', error);
       });
     } else {
       // it's in new mode (create)
@@ -168,9 +175,15 @@ export class UserComponent implements OnInit {
     this.stateHandler.Go('admin.users');
   };
 
-  onGroupSelect = groups => {
-    this.user.groups = groups.map(group => {
-      return { id: group.id, label: group.label };
-    });
+  onGroupSelect = (groups) => {
+    this.user.groups = [];
+    for (const val of this.allGroups) {
+      if (groups.value.includes(val.id)) {
+        this.user.groups.push({
+          id: val.id,
+          label: val.label
+        });
+      }
+    }
   }
 }

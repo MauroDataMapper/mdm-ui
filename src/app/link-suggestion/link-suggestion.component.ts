@@ -24,7 +24,7 @@ import {
   ViewChildren,
   ElementRef
 } from '@angular/core';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '../services/element-types.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { Title } from '@angular/platform-browser';
@@ -79,7 +79,7 @@ export class LinkSuggestionComponent implements OnInit {
   constructor(
     private securityHandler: SecurityHandlerService,
     private elementTypes: ElementTypesService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private title: Title,
     private state: StateService,
     private messageHandler: MessageHandlerService

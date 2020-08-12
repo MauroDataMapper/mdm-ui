@@ -25,7 +25,7 @@ import {
   EventEmitter,
   ChangeDetectorRef
 } from '@angular/core';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import {HelpDialogueHandlerService} from '@mdm/services/helpDialogue.service';
@@ -68,7 +68,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   filterEvent = new EventEmitter<string>();
   filter: string;
 
-  constructor(private resources: ResourcesService,
+  constructor(private resources: MdmResourcesService,
               private securityHandler: SecurityHandlerService,
               private messageHandler: MessageHandlerService,
               private helpService: HelpDialogueHandlerService,

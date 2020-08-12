@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import {
   Component,
   OnInit,
+  Output,
   ViewChild,
   ViewChildren,
   ElementRef,
@@ -29,7 +30,7 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -50,7 +51,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   defaultCheckedMap: any;
   loaded = false;
   totalItemCount = 0;
-  totalSelectedItemsCount: number;
+  totalSelectedItemsCount = 0;
   processing: any;
   isProcessComplete: any;
   finalResult = {};
@@ -76,15 +77,16 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
   constructor(
     private validator: ValidatorService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService
   ) {
-    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
-      this.pageSizeOptions =  settings.counts;
-    }}
+      this.pageSizeOptions = settings.counts;
+    }
+  }
 
   ngOnInit() {
     this.model = this.step.scope.model;
@@ -99,9 +101,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
     this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
       this.validate(x);
-     });
-
-
+    });
   }
 
   onLoad() {
@@ -116,30 +116,23 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
       this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
-      this.filterEvent.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
-
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
+      this.filterEvent.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
 
       // Selected Data Class table
       this.dataSource.sort = this.sort.toArray()[0];
-      this.sort
-        .toArray()[0]
-        .sortChange.subscribe(
-        () => (this.paginator.toArray()[0].pageIndex = 0)
-      );
+      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
       this.dataSource.paginator = this.paginator.toArray()[0];
     }
     if (this.model.selectedDataClassesMap) {
       this.createSelectedArray();
       this.validate();
     }
+
     this.loaded = true;
+    this.failCount = 0;
+    this.successCount = 0;
+    this.step.submitBtnDisabled = false;
   }
 
   createSelectedArray = () => {
@@ -160,6 +153,7 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     this.dataSource._updateChangeSubscription();
     this.validate();
     this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
+    this.step.submitBtnDisabled = false;
   };
 
   validate = (newValue?) => {
@@ -167,17 +161,10 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     if (this.model.createType === 'new') {
       if (newValue) {
         // check Min/Max
-        this.multiplicityError = this.validator.validateMultiplicities(
-          newValue.minMultiplicity,
-          newValue.maxMultiplicity
-        );
+        this.multiplicityError = this.validator.validateMultiplicities(newValue.minMultiplicity, newValue.maxMultiplicity);
 
         // Check Mandatory fields
-        if (
-          !newValue.label ||
-          newValue.label.trim().length === 0 ||
-          this.multiplicityError
-        ) {
+        if (!newValue.label || newValue.label.trim().length === 0 || this.multiplicityError) {
           this.step.invalid = true;
           return;
         }
@@ -191,7 +178,6 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
         return;
       }
     }
-
     this.step.invalid = invalid;
   };
 
@@ -200,48 +186,39 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   }
 
   saveCopiedDataClasses = () => {
+    this.step.submitBtnDisabled = true;
     this.processing = true;
     this.isProcessComplete = false;
+    this.failCount = 0;
+    this.successCount = 0;
 
     let promise = Promise.resolve();
 
-    this.model.selectedDataClasses.forEach((dc: any) => {
-      promise = promise
-        .then((result: any) => {
+    this.model.selectedDataClasses.forEach((dc: any) => { promise = promise.then((result: any) => {
           const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
           this.successCount++;
           this.finalResult[dc.id] = { result, hasError: false };
           if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass
-              .post(
-                this.model.parent.dataModel,
-                this.model.parent.id,
-                link,
-                null
-              )
-              .toPromise();
+            return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
           } else {
-            return this.resources.dataModel
-              .post(this.model.parent.id, link, null)
-              .toPromise();
+            return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
           }
-        })
-        .catch(error => {
+        }).catch(error => {
           this.failCount++;
           const errorText = this.messageHandler.getErrorText(error);
           this.finalResult[dc.id] = { result: errorText, hasError: true };
         });
     });
 
-    promise
-      .then(() => {
-        this.processing = false;
-        this.step.isProcessComplete = true;
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      })
-      .catch(() => {
-        this.processing = false;
-        this.step.isProcessComplete = true;
-      });
+    promise.then(() => {
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }).catch(() => {
+    }).finally(() => {
+      this.processing = false;
+      this.step.submitBtnDisabled = false;
+      this.isProcessComplete = true;
+    });
+
+    return promise;
   }
 }

@@ -20,7 +20,7 @@ import * as joint from 'jointjs';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import dagre from 'dagre';
 import graphlib from 'graphlib';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { LayoutConfigOptions } from '@angular/flex-layout';
 import * as _ from 'lodash';
@@ -39,7 +39,7 @@ export abstract class BasicDiagramService {
   protected clickSubject = new Subject<any>();
   protected goUpSubject = new Subject<any>();
 
-  public constructor(protected resourcesService: ResourcesService,
+  public constructor(protected resourcesService: MdmResourcesService,
                      protected messageHandler: MessageHandlerService) {
 
     this.graph = new joint.dia.Graph();

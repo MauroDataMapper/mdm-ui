@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
             <h4 class="marginless">
                 Attachments
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+                <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
 </div>
-<div class="table-responsive">
+<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="fileName">
             <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
@@ -76,7 +76,7 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="other">
-            <th *matHeaderCellDef style="cursor:pointer;width: 70px;" columnName="other"></th>
+            <td *matHeaderCellDef style="width: 70px;" columnName="other"></td>
             <td *matCellDef="let record;  let i = index " mat-cell style="width: 70px; text-align: left;">
                 <div *ngIf="access && access.showEdit">
                     <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0],$event[1])" (delete)="delete($event[0])" [hideEdit]="true"></mdm-table-buttons>
@@ -87,9 +87,14 @@ SPDX-License-Identifier: Apache-2.0
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
+<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+    <p class="marginless">
+      There are no attachments in this table. You can add attachments by clicking the button above.
+    </p>
+</div>
 <mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </mat-card>
-<div class="mdm--mat-pagination">
+<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
     <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

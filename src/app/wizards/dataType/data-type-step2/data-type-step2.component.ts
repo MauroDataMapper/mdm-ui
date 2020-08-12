@@ -30,7 +30,7 @@ import {
 import {NgForm} from '@angular/forms';
 import {Subscription, Observable, merge} from 'rxjs';
 import {ValidatorService} from '@mdm/services/validator.service';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {ElementTypesService} from '@mdm/services/element-types.service';
@@ -90,7 +90,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
 
   constructor(
     private validator: ValidatorService,
-    private resourceService: ResourcesService,
+    private resourceService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
     private elementTypes: ElementTypesService
@@ -98,7 +98,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
-    const settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    const settings = JSON.parse(localStorage.getItem('userSettings'));
     if (settings) {
       this.pageSize = settings.countPerTable;
       this.pageSizeOptions =  settings.counts;

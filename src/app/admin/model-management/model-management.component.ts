@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ export class ModelManagementComponent implements OnInit {
   folders: any;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
@@ -78,11 +78,6 @@ export class ModelManagementComponent implements OnInit {
     if (this.filterStatus === null) {
       // no op
     } else if (this.filterStatus === 'deleted') {
-      //   if (this.filterElement === "dataModel") {
-      //     method = this.resourcesService.admin.get("dataModels/deleted");
-      //   } else if (this.filterElement === "terminology") {
-      //     method = this.resourcesService.admin.get("terminologies/deleted");
-      //   }
       options = {
         queryStringParams: {
           includeDocumentSuperseded: false,
@@ -217,18 +212,22 @@ export class ModelManagementComponent implements OnInit {
   askForSoftDelete() {
     const promise = new Promise((resolve, reject) => {
       if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
+        reject({ message: 'Only Admins are allowed to delete records!' });
       }
 
-      let message = 'Are you sure you want to delete these Elements?<br>They will be marked as deleted and will not be viewable by users except Administrators.';
+      let title = 'Are you sure you want to delete these records?';
+      let message = `<p class="marginless">They will be marked as deleted and will not be viewable by users</p>
+                     <p class="marginless">except Administrators.</p>`;
       if (this.selectedElementsCount === 1) {
-        message = 'Are you sure you want to delete this Element?<br>It will be marked as deleted and will not be viewable by users except Administrators.';
+        title = 'Are you sure you want to delete this record?';
+        message = `<p class="marginless">It will be marked as deleted and will not be viewable by users</p>
+                   <p class="marginless">except Administrators.</p>`;
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Folder delete',
-          okBtnTitle: 'Confirm folder deletion',
+          title,
+          okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message
         }
@@ -248,18 +247,18 @@ export class ModelManagementComponent implements OnInit {
   askForPermanentDelete() {
     const promise = new Promise((resolve, reject) => {
       if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
+        reject({ message: 'Only Admins are allowed to delete records!' });
       }
 
-      let message = 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete these Elements?';
+      let message = `Are you sure you want to <span class='warning'>permanently</span> delete these records?`;
       if (this.selectedElementsCount === 1) {
-        message = 'Are you sure you want to <span class=\'errorMessage\'>permanently</span> delete this Element?';
+        message = `Are you sure you want to <span class='warning'>permanently</span> delete this record?`;
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Data Model deletion',
-          okBtnTitle: 'Delete permanently',
+          title: 'Delete permanently',
+          okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message,
         }
@@ -270,15 +269,17 @@ export class ModelManagementComponent implements OnInit {
           return;
         }
 
-        message = '<strong>Are you sure?</strong><br>All their child elements such as \'Data Classes\', \'Data Elements\', <br> \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'warning\'>permanently</span>.';
+        let title = `Are you sure you want to delete these records?`;
+        message = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
+                   <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
         if (this.selectedElementsCount === 1) {
-          message = '<strong>Are you sure?</strong><br>All its child elements such as \'Data Classes\', \'Data Elements\', <br> \'Data Types\' and \'Terms(for terminology)\' will be deleted <span class=\'warning\'>permanently</span>.';
+          title = `Are you sure you want to delete this record?`;
         }
 
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: 'Permanent delete',
-            okBtnTitle: 'Confirm permanent deletion',
+            title,
+            okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message
           }

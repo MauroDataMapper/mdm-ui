@@ -20,7 +20,7 @@ import {Subscription} from 'rxjs';
 // @ts-ignore
 import { MatTabGroup } from '@angular/material';
 import {CodeSetResult} from '@mdm/model/codeSetModel';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {MessageService} from '@mdm/services/message.service';
 import {SharedService} from '@mdm/services/shared.service';
 import {StateService} from '@uirouter/core';
@@ -47,7 +47,7 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   rootCell: any;
 
   @ViewChild('tab', {static: false}) tabGroup: MatTabGroup;
-  constructor(private resourcesService: ResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
+  constructor(private resourcesService: MdmResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
 
   }
 

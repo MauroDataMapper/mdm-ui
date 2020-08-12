@@ -49,19 +49,19 @@ SPDX-License-Identifier: Apache-2.0
                                         </div>
                                     </mat-menu>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Reload Data Models Tree" [disabled]="levels.current === 1" (click)="reloadTree()" aria-label="Reload data models tree">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Reload Data Models Tree" [disabled]="levels.current === 1" (click)="reloadTree()" aria-label="Reload data models tree">
                                         <i class="fas fa-sync-alt"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Export DataModel(s)" (click)="changeState('datamodelsexport')" aria-label="Export data model(s)">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltip="Export DataModel(s)" (click)="changeState('datamodelsexport')" aria-label="Export data model(s)">
                                         <i class="fas fa-download"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Import a DataModel from JSON, SQL,..." (click)="changeState('import')" aria-label="Import a data model">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltip="Import a DataModel from JSON, SQL,..." (click)="changeState('import')" aria-label="Import a data model">
                                         <i class="fas fa-upload"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltipPosition="below" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [mdmShowIfRoleIsWritable] matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>
@@ -108,7 +108,7 @@ SPDX-License-Identifier: Apache-2.0
                                         [enableDrop]="true"
                                         [enableContextMenu]="true"
                                         (addFolderEvent)="onAddFolder"
-                                        (deleteFolderEvent)="onDeleteFolder"
+                                        (deleteFolderEvent)="onDeleteFolder($event)"
                                         (addDataModelEvent)="onAddDataModel"
                                         (addCodeSetEvent)="onAddCodeSet"
                                         (addChildDataClassEvent)="onAddChildDataClass"

@@ -26,7 +26,7 @@ import {
   SimpleChanges,
   ChangeDetectorRef, OnChanges, ViewChild
 } from '@angular/core';
-import {ResourcesService} from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {SecurityHandlerService} from '../services/handlers/security-handler.service';
 import {UserSettingsHandlerService} from '../services/utility/user-settings-handler.service';
 import {fromEvent, Subject} from 'rxjs';
@@ -108,7 +108,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   inSearchMode: any;
   wasInside = false;
 
-  constructor(private resources: ResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private eRef: ElementRef, private changeRef: ChangeDetectorRef) {
+  constructor(private resources: MdmResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private eRef: ElementRef, private changeRef: ChangeDetectorRef) {
 
   }
 

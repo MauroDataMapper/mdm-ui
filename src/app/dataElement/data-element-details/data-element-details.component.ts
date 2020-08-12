@@ -28,7 +28,7 @@ import {
 import { from, Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -88,7 +88,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   };
   constructor(
     private messageService: MessageService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,

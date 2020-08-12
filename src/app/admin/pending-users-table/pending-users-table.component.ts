@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
  // import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -52,7 +52,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private broadcastSvc: BroadcastService,
     private dialog: MatDialog,
     private title: Title

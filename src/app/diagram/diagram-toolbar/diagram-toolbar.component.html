@@ -25,6 +25,19 @@ SPDX-License-Identifier: Apache-2.0
           (click)="this.click('goUp')">
     <i class="fas fa-arrow-up"></i>
   </button>
+  <section>
+          <button
+          mat-stroked-button
+          type="button"
+          color="primary"
+          class="paddingless"
+          style="float: left; margin-left: 40px;"
+          matTooltip="Show Filter Tree"
+          (click)="this.click('showTreeFilter')"
+          *ngIf="isPopup">
+                  <i class="fas fa-filter"></i>
+          </button>
+  </section>
   <section layout="row" style="margin-left: 40px;">
     <button mat-stroked-button
             type="button"

@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {merge, Observable} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -63,7 +63,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageHandler: MessageHandlerService,
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private title: Title
 
   ) {

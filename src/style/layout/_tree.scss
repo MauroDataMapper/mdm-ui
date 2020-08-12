@@ -176,13 +176,6 @@ div.mat-tab-label {
   };
 }
 
-table.mat-table .mat-header-cell {
-  font-size: $defaultFontSize;
-  font-weight: 500;
-  vertical-align: middle;
-  border-bottom: 2px solid #e9ecef;
-}
-
 
 
 /* Favourites */
@@ -248,13 +241,11 @@ ul.favourites li:focus {
   small {
   margin-right: 16px;
   font-size: 90%;
-    > span {
-      margin-left: 4px;
-    }
     i {
       font-size: 17px;
-      width: 18px;
+      width: 20px;
       text-align: center;
+      margin-right: 8px;
     }
   }
 }
@@ -264,6 +255,8 @@ ul.favourites li:focus {
   border: 1px solid rgba(10, 133, 53, 0.5);
   border-radius: 5px;
   padding: 4px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .detail-icons--cta {
   float: right;
@@ -276,4 +269,15 @@ ul.favourites li:focus {
 
 .dataModelDetailsLabel {
   word-break: break-word;
+}
+
+
+div.mcSelectHolder {
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: scroll;
+  position: relative;
+  background-color: #ffffff;
+  cursor: pointer;
+  z-index: 1000;
 }

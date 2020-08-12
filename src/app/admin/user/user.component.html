@@ -25,17 +25,17 @@ SPDX-License-Identifier: Apache-2.0
 <form name="editableForm" class="mdm--form">
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
-            <mat-label>First name*</mat-label>
-            <input matInput name="firstName" [(ngModel)]="user.firstName">
-            <mat-error *ngIf="errors && errors['firstName']"> -->
-                {{errors['firstName']}}
+            <mat-label>First name</mat-label>
+            <input matInput name="firstName" [(ngModel)]="user.firstName" required>
+            <mat-error *ngIf="errors && errors['firstName']">
+              {{errors.firstName}}
             </mat-error>
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
-            <mat-label>Last name*</mat-label>
-            <input matInput name="lastName" [(ngModel)]="user.lastName">
+            <mat-label>Last name</mat-label>
+            <input matInput name="lastName" [(ngModel)]="user.lastName" required>
             <mat-error *ngIf="errors && errors['lastName']">
                 {{errors['lastName']}}
             </mat-error>
@@ -43,8 +43,8 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
-            <mat-label>Email*</mat-label>
-            <input matInput name="emailAddress" [(ngModel)]="user.emailAddress">
+            <mat-label>Email</mat-label>
+            <input matInput name="emailAddress" [(ngModel)]="user.emailAddress" required>
             <mat-error *ngIf="errors && errors['emailAddress']">
                 {{errors['emailAddress']}}
             </mat-error>
@@ -64,8 +64,8 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
-            <mat-label>Role*</mat-label>
-            <mat-select name="userRole" [(ngModel)]="user.userRole">
+            <mat-label>Choose a Role</mat-label>
+            <mat-select name="userRole" [(ngModel)]="user.userRole" required>
                 <mat-option *ngFor="let role of roles" [value]="role.value">{{role.text}}</mat-option>
             </mat-select>
             <mat-error *ngIf="errors && errors['userRole']">
@@ -74,30 +74,19 @@ SPDX-License-Identifier: Apache-2.0
         </mat-form-field>
     </div>
     <div class="mdm--form-input mb-2">
-        <mat-label>Groups*</mat-label>
-        <mdm-select
-                [width]="'100%'"
-                [multiSelect]="true"
-                [acceptTypedInput]="false"
-                [valueType]="'static'"
-                [staticValues]="allGroups"
-                [defaultValue]="user.groups"
-                [idProperty]="'id'"
-                [displayProperty]="'label'"
-                [searchProperty]="'label'"
-                (selectEvent)="onGroupSelect">
-                <ng-template #lineContent let-item>
-                    <div>{{item.label}}</div>
-                </ng-template>
-        </mdm-select>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Choose a Group</mat-label>
+        <mat-select name="groupList" (selectionChange)="onGroupSelect($event)" multiple [(ngModel)]="selectedGroups">
+          <mat-option [value]="item.id" *ngFor="let item of allGroups">{{item.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
-    <button mat-button type="button" (click)="cancel()">
+    <button mat-button type="button" (click)="cancel()" color="warn">
         Cancel
     </button>
     <button mat-flat-button color="primary" type="submit" class="custom" (click)="save()">
         <span *ngIf="user.id">Update user details</span>
         <span *ngIf="!user.id">Add user</span>
     </button>
-
 </form>

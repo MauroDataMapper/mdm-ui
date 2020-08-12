@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from '../resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from './state-handler.service';
 import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
@@ -31,7 +31,7 @@ export class SecurityHandlerService {
   in_AuthLoginRequiredCheck = false;
   constructor(
     private elementTypes: ElementTypesService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private messageService: MessageService,
     private broadcastService: BroadcastService
@@ -46,7 +46,7 @@ export class SecurityHandlerService {
     localStorage.removeItem('role');
     localStorage.removeItem('needsToResetPassword');
     localStorage.removeItem('email');
-    sessionStorage.removeItem('userSettings');
+    localStorage.removeItem('userSettings');
 
   }
 

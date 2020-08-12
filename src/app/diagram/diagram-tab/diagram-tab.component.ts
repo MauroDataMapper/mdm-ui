@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ElementRef, Inject, Input, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
 import * as _ from 'lodash';
@@ -40,7 +40,7 @@ export class DiagramTabComponent implements OnInit {
 
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
 
-  constructor(protected resourcesService: ResourcesService,
+  constructor(protected resourcesService: MdmResourcesService,
               protected messageHandler: MessageHandlerService,
               protected matDialog: MatDialog) {
     // super(resourcesService, messageHandler, matDialog);

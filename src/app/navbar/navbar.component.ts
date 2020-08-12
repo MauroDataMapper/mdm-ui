@@ -106,7 +106,7 @@ export class NavbarComponent implements OnInit {
     this.dialog.open(ForgotPasswordModalComponent, { });
   };
   register = () => {
-    this.dialog.open(RegisterModalComponent, {}).afterClosed().subscribe(user => {
+    this.dialog.open(RegisterModalComponent, {panelClass: 'register-modal'}).afterClosed().subscribe(user => {
       if (user) {
         if (user.needsToResetPassword) {
           this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.userArea.change-password'});

@@ -19,7 +19,7 @@ import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren, OnDe
 import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
 import { FolderResult } from '../model/folderModel';
 import { Subscription, forkJoin } from 'rxjs';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { StateService } from '@uirouter/core';
@@ -53,7 +53,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   catalogueItems: any;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,

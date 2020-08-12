@@ -25,7 +25,7 @@ import { FavouriteHandlerService } from '../services/handlers/favourite-handler.
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { MessageService } from '../services/message.service';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -124,7 +124,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     protected messages: MessageService,
-    protected resources: ResourcesService,
+    protected resources: MdmResourcesService,
     protected securityHandler: SecurityHandlerService,
     protected favouriteHandler: FavouriteHandlerService,
     protected folderService: FolderService,
@@ -531,9 +531,6 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   async handleDeleteFolder(fnode: FlatNode, permanent = false) {
     this.deleteFolderEvent.emit({ folder: fnode, permanent });
-    if (!permanent) {
-      fnode.deleted = true;
-    }
   }
 
   async handleAddDataClass(fnode: FlatNode) {

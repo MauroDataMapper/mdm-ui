@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ResourcesService } from '../services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { StateService } from '@uirouter/core';
@@ -47,7 +47,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
-    private resourcesService: ResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,

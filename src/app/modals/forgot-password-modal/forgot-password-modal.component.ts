@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {Component, OnInit} from '@angular/core';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {ResourcesService} from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import {MatDialogRef} from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 
@@ -30,19 +30,17 @@ export class ForgotPasswordModalComponent implements OnInit {
   username: string;
   message: string;
 
-  constructor(public broadcastService: BroadcastService, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: ResourcesService) {}
+  constructor(public broadcastService: BroadcastService, public dialogRef: MatDialogRef<ForgotPasswordModalComponent>, private securityHandler: SecurityHandlerService, private resources: MdmResourcesService) {}
 
   ngOnInit() {
     this.username = this.securityHandler.getEmailFromStorage();
   }
 
   resetPassword() {
-    this.resources.catalogueUser.get(this.username, 'resetPasswordLink').subscribe(
-      result => {
+    this.resources.catalogueUser.get(this.username, 'resetPasswordLink').subscribe(() => {
         this.message = 'success';
         this.dialogRef.close(this.username);
-      },
-      error => {
+      }, () => {
         this.message = 'error';
       }
     );
@@ -51,5 +49,9 @@ export class ForgotPasswordModalComponent implements OnInit {
   login() {
     this.dialogRef.close();
     this.broadcastService.broadcast('openLoginModalDialog');
+  }
+  close = () => {
+    this.securityHandler.loginModalDisplayed = false;
+    this.dialogRef.close();
   }
 }

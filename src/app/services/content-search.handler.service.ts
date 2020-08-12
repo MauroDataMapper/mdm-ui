@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from './resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from './validator.service';
 import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
@@ -27,7 +27,7 @@ import { merge, Observable, of as observableOf } from 'rxjs';
 })
 export class ContentSearchHandlerService {
 
-    constructor(public resources: ResourcesService, public validator: ValidatorService, public elementTypes: ElementTypesService) { }
+    constructor(public resources: MdmResourcesService, public validator: ValidatorService, public elementTypes: ElementTypesService) { }
 
     search(contextElement, searchText, limit, offset,
            domainTypes, labelOnly, dataModelTypes,

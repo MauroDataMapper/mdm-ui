@@ -40,8 +40,8 @@ SPDX-License-Identifier: Apache-2.0
     }
   }
 }
-.mdm--form-modal {
-  position: relative;
+.mdm--form-modal, .bulk-edit-modal, .bulk-delete-modal {
+  position: relative!important;
   .close-modal {
     position: absolute;
     top: 0;

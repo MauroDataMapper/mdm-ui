@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from '../resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../utility/message-handler.service';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { SecurityHandlerService } from './security-handler.service';
@@ -28,7 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class FolderHandlerService {
   constructor(
-    private resoucesService: ResourcesService,
+    private resoucesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
@@ -43,9 +43,11 @@ export class FolderHandlerService {
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Folder',
-          message:
-            'Are you sure you want to delete this Folder?<br>The Folder will be marked as deleted and will not be viewable by users except Administrators.'
+          title: `Are you sure you want to delete this Folder?`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class="marginless">This Folder will be marked as deleted and will not be viewable by users </p>
+                    <p class="marginless">except Administrators.</p>`
         }
       });
 
@@ -66,14 +68,15 @@ export class FolderHandlerService {
   askForPermanentDelete(id) {
     const promise = new Promise((resolve, reject) => {
       if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
+        reject({ message: 'Only Admins are allowed to delete records permanently!' });
       }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: 'Folder',
-          message:
-            'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Folder?'
+          title: `Permanent deletion`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Folder?`
         }
       });
 
@@ -84,15 +87,16 @@ export class FolderHandlerService {
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: 'Folder',
-            message:
-              '<strong>Are you sure?</strong><br>All its \'Data Models\' and \'Folders\' will be deleted <span class=\'warning\'>permanently</span>.'
+            title: `Confirm permanent deletion`,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<strong>Note: </strong> All its 'Data Models' and 'Folders' will be deleted <span class='warning'>permanently</span>.`
           }
         });
 
         dialog2.afterClosed().subscribe(result2 => {
           if (result2.status !== 'ok') {
-            reject(null);
+            // reject(null);
             return;
           }
           this.delete(id, true).then((result3) => {
@@ -115,19 +119,12 @@ export class FolderHandlerService {
         const queryString = permanent ? 'permanent=true' : null;
         this.resoucesService.folder.delete(id, null, queryString).subscribe(result => {
             if (permanent) {
-              this.broadcastSvc.broadcast('$updateFoldersTree', {
-                type: 'permanentDelete',
-                result
-              });
+              this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'permanentDelete', result});
             } else {
-              this.broadcastSvc.broadcast('$updateFoldersTree', {
-                type: 'softDelete',
-                result
-              });
+              this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'softDelete', result});
             }
             resolve(result);
-          },
-          error => {
+          }, error => {
             this.messageHandler.showError('There was a problem deleting the Folder.', error);
             reject(error);
           }

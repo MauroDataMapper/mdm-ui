@@ -20,7 +20,7 @@ import { FormGroup } from '@angular/forms';
 import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ClassifierStep1Component } from '../classifier-step1/classifier-step1.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -47,7 +47,7 @@ export class ClassifierMainComponent implements OnInit {
 
   constructor(
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private stateService: StateService,
     private broadcastSvc: BroadcastService,

@@ -20,15 +20,14 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SemanticLinkHandlerService } from '@mdm/services/handlers/semantic-link-handler.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import {MdmPaginatorComponent} from "@mdm/shared/mdm-paginator/mdm-paginator";
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -40,7 +39,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     public elementTypes: ElementTypesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private semanticLinkHandler: SemanticLinkHandlerService,
     private changeRef: ChangeDetectorRef,
@@ -66,7 +65,7 @@ export class ElementLinkListComponent implements AfterViewInit {
   displayedColumns: string[] = ['source', 'link', 'target', 'other'];
   loading: boolean;
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   filter: string;
   clientSide: boolean;
 
@@ -272,9 +271,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     if (record.id && record.id !== '') {
       // resources.catalogueItem.put($scope.parent.id, "semanticLinks", record.id, {resource: resource})
 
-      this.semanticLinkHandler
-        .put(this.parent, record.edit.target, record.id, record.edit.linkType)
-        .subscribe(res => {
+      this.semanticLinkHandler.put(this.parent, record.edit.target, record.id, record.edit.linkType).subscribe(res => {
           if (this.afterSave) {
             this.afterSave(resource);
           }
@@ -287,19 +284,12 @@ export class ElementLinkListComponent implements AfterViewInit {
           record.inEdit = false;
 
           this.messageHandler.showSuccess('Link updated successfully.');
-        })
-        .catch(function(error) {
-          this.messageHandler.showError(
-            'There was a problem updating the link.',
-            error
-          );
+      }, err => {
+          this.messageHandler.showError('There was a problem updating the link.', err);
         });
     } else {
       // resources.catalogueItem.post($scope.parent.id, "semanticLinks", {resource: resource})
-      this.semanticLinkHandler
-        .post(this.parent, record.edit.target, record.edit.linkType)
-        .subscribe(
-          response => {
+      this.semanticLinkHandler.post(this.parent, record.edit.target, record.edit.linkType).subscribe(response => {
             record = Object.assign({}, response);
             record.status = 'source';
 
@@ -311,12 +301,8 @@ export class ElementLinkListComponent implements AfterViewInit {
               this.messageHandler.showSuccess('Link saved successfully.');
               this.filterEvent.emit();
             }
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem saving link.',
-              error
-            );
+          }, error => {
+            this.messageHandler.showError('There was a problem saving link.', error);
           }
         );
     }

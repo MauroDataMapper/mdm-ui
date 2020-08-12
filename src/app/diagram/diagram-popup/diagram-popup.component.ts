@@ -15,42 +15,93 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, ElementRef, Inject, Input, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnInit,
+  Optional,
+  Pipe,
+  PipeTransform,
+  ViewChild,
+} from '@angular/core';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import * as SvgPanZoom from 'svg-pan-zoom';
 import * as _ from 'lodash';
 import * as joint from 'jointjs';
 import { forkJoin } from 'rxjs';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MAT_DIALOG_DEFAULT_OPTIONS,
+} from '@angular/material/dialog';
 import { BasicDiagramService } from '../services/basic-diagram.service';
 import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
+import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'mdm-diagram-popup',
-  templateUrl: './diagram-popup.component.html'
+  templateUrl: './diagram-popup.component.html',
 })
-
 export class DiagramPopupComponent implements OnInit {
-
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
   @ViewChild(DiagramToolbarComponent) toolbarComponent: DiagramToolbarComponent;
+  @ViewChild(MatSidenav) drawer: MatSidenav;
 
-  constructor(protected resourcesService: ResourcesService,
-              protected messageHandler: MessageHandlerService,
-              protected matDialog: MatDialog,
-              protected dialogRef: MatDialogRef<DiagramPopupComponent>,
-              @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
+  node: any;
+  filterList: Array<any> = [];
 
+  constructor(
+    protected resourcesService: MdmResourcesService,
+    protected messageHandler: MessageHandlerService,
+    protected matDialog: MatDialog,
+    protected dialogRef: MatDialogRef<DiagramPopupComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  ngOnInit(): void
+  {
+    this.loadTree();
   }
 
-  ngOnInit(): void {
+  private loadTree() {
+    this.node = null;
+    this.resourcesService.tree
+      .get(this.data.diagramComponent.parent.id)
+      .subscribe((result) => {
+        this.node = {
+          children: result.body,
+          isRoot: true,
+        };
+      });
   }
 
   popDown(): void {
-    this.dialogRef.close({ diagramComponent: this.diagramComponent});
+    this.clearFilterClick();
+    this.dialogRef.close({ diagramComponent: this.diagramComponent });
+  }
+
+  showFilterTree(): void {
+    this.drawer.toggle();
+    //this.diagramComponent.filter(this.data.diagramComponent.parent)
+  }
+
+  onNodeChecked(node, parent, checkedList): void {
+    this.filterList = Object.keys(checkedList);
+  }
+
+  filterClick(): void {
+    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList)
+  }
+
+  clearFilterClick(): void {
+    this.loadTree();
+    this.diagramComponent.filter(this.data.diagramComponent.parent, [])
   }
 
   toolbarClick(buttonName: string) {
@@ -58,13 +109,11 @@ export class DiagramPopupComponent implements OnInit {
       case 'popDown':
         this.popDown();
         break;
+      case 'showTreeFilter':
+        this.showFilterTree();
+        break;
       default:
         this.diagramComponent.toolbarClick(buttonName);
     }
   }
-
-
-
-
 }
-

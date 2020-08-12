@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { merge } from 'rxjs';
@@ -33,7 +33,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 export class AnnotationListComponent implements AfterViewInit {
   constructor(
     private securityHandler: SecurityHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef
   ) {}
@@ -44,7 +44,7 @@ export class AnnotationListComponent implements AfterViewInit {
   currentUser: any;
   displayedColumns: string[] = ['lastUpdated'];
   totalItemCount = 0;
-  isLoadingResults: boolean;
+  isLoadingResults = true;
   childEditor: MarkdownTextAreaComponent;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -138,18 +138,12 @@ export class AnnotationListComponent implements AfterViewInit {
       label: record.edit.label,
       description: record.edit.description
     };
-    this.resources.facets
-      .post(this.parent.id, 'annotations', { resource })
-      .subscribe(
-        result => {
+    this.resources.facets.post(this.parent.id, 'annotations', { resource }).subscribe(() => {
           this.messageHandler.showSuccess('Comment saved successfully.');
           this.reloadEvent.emit();
         },
         error => {
-          this.messageHandler.showError(
-            'There was a problem adding the comment.',
-            error
-          );
+          this.messageHandler.showError('There was a problem adding the comment.', error);
         }
       );
   };
@@ -159,23 +153,14 @@ export class AnnotationListComponent implements AfterViewInit {
       description: annotation.newChildText
     };
 
-    this.resources.facets
-      .post(this.parent.id, 'annotations/' + annotation.id + '/annotations', {
-        resource
-      })
-      .toPromise()
-      .then(
-        response => {
+    this.resources.facets.post(this.parent.id, 'annotations/' + annotation.id + '/annotations', {resource}).toPromise().then(response => {
           annotation.childAnnotations = annotation.childAnnotations || [];
           annotation.childAnnotations.push(response.body);
           annotation.newChildText = '';
           this.messageHandler.showSuccess('Comment saved successfully.');
         },
         error => {
-          this.messageHandler.showError(
-            'There was a problem saving the comment.',
-            error
-          );
+          this.messageHandler.showError('There was a problem saving the comment.', error);
           // element not found
           if (error.status === 400) {
             // viewError

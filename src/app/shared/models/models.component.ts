@@ -21,7 +21,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { ResourcesService } from '@mdm/services/resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
@@ -131,7 +131,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private validator: ValidatorService,
     private folderHandler: FolderHandlerService,
     private stateHandler: StateHandlerService,
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private title: Title,
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
@@ -405,17 +405,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.showFilters = !this.showFilters;
   };
 
-  onDeleteFolder = (event, folder, permanent) => {
-    if (!this.sharedService.isAdmin()) {
+  onDeleteFolder = (event) => {
+    if (!this.securityHandler.isAdmin()) {
       return;
     }
-    if (permanent === true) {
-      this.folderHandler.askForPermanentDelete(folder.id).then(() => {
+    if (event.permanent) {
+      this.folderHandler.askForPermanentDelete(event.folder.id).then(() => {
         this.loadFolders();
       });
     } else {
-      this.folderHandler.askForSoftDelete(folder.id).then(() => {
-        folder.deleted = true;
+      this.folderHandler.askForSoftDelete(event.folder.id).then(() => {
+        event.folder.deleted = true;
       });
     }
   };

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { ResourcesService } from '../resources.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
 import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
 
@@ -35,12 +35,12 @@ export class UserSettingsHandlerService {
     dataFlowDiagramsSetting: {}
   };
   constructor(
-    private resources: ResourcesService,
+    private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService
   ) {}
 
   getUserSettings() {
-    let settings = JSON.parse(sessionStorage.getItem('userSettings'));
+    let settings = JSON.parse(localStorage.getItem('userSettings'));
     if (!settings) {
       this.updateUserSettings(this.defaultSettings);
       settings = this.defaultSettings;
@@ -49,7 +49,7 @@ export class UserSettingsHandlerService {
   }
 
   updateUserSettings(setting) {
-    sessionStorage.setItem('userSettings', JSON.stringify(setting));
+    localStorage.setItem('userSettings', JSON.stringify(setting));
   }
 
   initUserSettings() {
@@ -73,7 +73,7 @@ export class UserSettingsHandlerService {
                 result[property] = this.defaultSettings[property];
               }
             }
-            // save them into the sessionStorage
+            // save them into the localStorage
             settings = result;
           }
           // save it locally
@@ -106,7 +106,7 @@ export class UserSettingsHandlerService {
   }
 
   removeAll() {
-    sessionStorage.removeItem('userSettings');
+    localStorage.removeItem('userSettings');
   }
 
   saveOnServer(): Observable<any> {

@@ -193,26 +193,30 @@ export class SecurityHandlerService {
 
   isCurrentSessionExpired(): any {
     return new Promise((resolve, error) => {
-      this.isAuthenticated().subscribe(
-        (result) => {
-          const res = result.body;
-          if (!res.authenticatedSession) {
-            this.removeLocalStorage();
-            resolve(true);
+      if (this.getCurrentUser()) {
+        this.isAuthenticated().subscribe(
+          (result) => {
+            const res = result.body;
+            if (!res.authenticatedSession) {
+              this.removeLocalStorage();
+              resolve(true);
+            }
+            resolve(false);
+          },
+          (err) => {
+            if (
+              err.status === 500 &&
+              err.message === 'Session has been invalidated'
+            ) {
+              resolve(true);
+              this.removeLocalStorage();
+            }
+            resolve(false);
           }
-          resolve(false);
-        },
-        (err) => {
-          if (
-            err.status === 500 &&
-            err.message === 'Session has been invalidated'
-          ) {
-            resolve(true);
-            this.removeLocalStorage();
-          }
-          resolve(false);
-        }
-      );
+        );
+      } else {
+        resolve(false);
+      }
     });
   }
 
@@ -231,8 +235,10 @@ export class SecurityHandlerService {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
-      showPermission: element.availableActions.includes('update') || this.isAdmin(),
+      showFinalise:
+        element.availableActions.includes('update') && !element.finalised,
+      showPermission:
+        element.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),

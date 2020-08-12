@@ -29,7 +29,7 @@ export class UserSettingsHandlerService {
     counts: [5, 10, 20, 50],
     expandMoreDescription: false,
     favourites: [],
-    includeModelSuperseded: false,
+    includeModelSuperseded: true,
     includeDocumentSuperseded: false,
     includeDeleted: false,
     dataFlowDiagramsSetting: {}

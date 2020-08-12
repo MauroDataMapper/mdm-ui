@@ -163,25 +163,25 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <div style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showEdit || showEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
-                                        class="paddingless dropdown-toggle"
+                                        class="paddingless"
                                         [disabled]="deleteInProgress || exporting"
                                         matTooltip="Edit"
                                         aria-label="Edit"
-                                        [matMenuTriggerFor]="editCodeSetActions">
+                                        (click)="showForm()">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
-                                <mat-menu #editCodeSetActions>
+                                <!-- <mat-menu #editCodeSetActions>
                                   <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
                                       Edit Code Set details
                                   </button>
                                   <button mat-menu-item *ngIf="showEditDescription">
                                       Edit Description only
                                   </button>
-                              </mat-menu>
+                              </mat-menu> -->
                             </div>
                             <mdm-editable-form-buttons [hidden]="!editableForm.visible"
                                                        [onCancelEdit]="onCancelEdit"

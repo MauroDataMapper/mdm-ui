@@ -39,12 +39,12 @@ SPDX-License-Identifier: Apache-2.0
                                     <mat-menu #filterMenu="matMenu" class="filterMenu">
                                         <div mat-menu-item>
                                             <mat-checkbox name="includeSupersededModels" (ngModelChange)="toggleFilters('includeSupersededModels')" [(ngModel)]="includeSupersededModels">
-                                                Include Superseded Data Models
+                                                Include Superseded
                                             </mat-checkbox>
                                         </div>
                                         <div *ngIf="isAdmin" mat-menu-item>
                                             <mat-checkbox name="showDeletedModels" (ngModelChange)="toggleFilters('showDeletedModels')" [(ngModel)]="showDeletedModels">
-                                                Show Deleted Data Models
+                                                Show Deleted
                                             </mat-checkbox>
                                         </div>
                                     </mat-menu>

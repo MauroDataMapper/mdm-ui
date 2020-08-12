@@ -50,11 +50,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
   subscriptions: Subscription;
 
   // Hard
-  includeSupersededModels = false;
+  includeModelSuperseded = false;
 
   // Soft
   showSupersededModels = false;
-  showDeletedModels = false;
+  includeDeleted = false;
 
   showFilters = false;
 
@@ -141,9 +141,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.title.setTitle('Models');
 
     if (this.sharedService.isLoggedIn()) {
-      this.includeSupersededModels = this.userSettingsHandler.get('includeSupersededModels') || false;
+      this.includeModelSuperseded = this.userSettingsHandler.get('includeModelSuperseded') || false;
       this.showSupersededModels = this.userSettingsHandler.get('showSupersededModels') || false;
-      this.showDeletedModels = this.userSettingsHandler.get('showDeletedModels') || false;
+      this.includeDeleted = this.userSettingsHandler.get('includeDeleted') || false;
     }
 
     if (
@@ -225,11 +225,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     let options: any = {};
     if (this.sharedService.isLoggedIn()) {
+      console.log(this.userSettingsHandler.get('includeModelSuperseded'));
       options = {
         queryStringParams: {
-          includeDocumentSuperseded: this.userSettingsHandler.get('includeSupersededDocModels') || false,
-          includeModelSuperseded: this.userSettingsHandler.get('showSupersededModels') || false,
-          includeDeleted: this.userSettingsHandler.get('showDeletedModels') || false
+          includeDocumentSuperseded: this.userSettingsHandler.get('includeDocumentSuperseded') || false,
+          includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
+          includeDeleted: this.userSettingsHandler.get('includeDeleted') || false
         }
       };
     }
@@ -383,10 +384,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
   toggleFilters = filerName => {
     this[filerName] = !this[filerName];
     this.reloading = true;
+    console.log(filerName);
 
     if (this.sharedService.isLoggedIn()) {
+      this.userSettingsHandler.update('includeModelSuperseded', this.includeModelSuperseded);
       this.userSettingsHandler.update('showSupersededModels', this.showSupersededModels);
-      this.userSettingsHandler.update('showDeletedModels', this.showDeletedModels);
+      this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
       this.userSettingsHandler.saveOnServer();
     }
     this.loadFolders();

@@ -39,9 +39,9 @@ export class SettingsComponent implements OnInit {
 
   countPerTable = this.userSettingsHandler.defaultSettings.countPerTable;
   expandMoreDescription = this.userSettingsHandler.defaultSettings.expandMoreDescription;
-  includeSupersededModels = this.userSettingsHandler.defaultSettings.includeSupersededModels;
-  showSupersededModels = this.userSettingsHandler.defaultSettings.showSupersededModels;
-  showDeletedModels = this.userSettingsHandler.defaultSettings.showSupersededModels;
+  includeModelSuperseded = this.userSettingsHandler.defaultSettings.includeModelSuperseded;
+  includeDocumentSuperseded = this.userSettingsHandler.defaultSettings.includeDocumentSuperseded;
+  includeDeleted = this.userSettingsHandler.defaultSettings.includeDeleted;
 
   ngOnInit() {
     this.loadSettings();
@@ -50,9 +50,10 @@ export class SettingsComponent implements OnInit {
   loadSettings = () => {
     this.countPerTable = this.userSettingsHandler.get('countPerTable') || this.countPerTable;
     this.expandMoreDescription = this.userSettingsHandler.get('expandMoreDescription') || this.expandMoreDescription;
-    this.includeSupersededModels = this.userSettingsHandler.get('includeSupersededModels') || this.includeSupersededModels;
+    this.includeModelSuperseded = this.userSettingsHandler.get('includeModelSuperseded') || this.includeModelSuperseded;
+    this.includeDocumentSuperseded = this.userSettingsHandler.get('includeDocumentSuperseded') || this.includeDocumentSuperseded;
     if (this.isAdmin()) {
-      this.showDeletedModels = this.userSettingsHandler.get('showDeletedModels') || this.showDeletedModels;
+      this.includeDeleted = this.userSettingsHandler.get('includeDeleted') || this.includeDeleted;
     }
   };
   isAdmin = () => {
@@ -62,8 +63,11 @@ export class SettingsComponent implements OnInit {
   saveSettings = () => {
     this.userSettingsHandler.update('countPerTable', this.countPerTable);
     this.userSettingsHandler.update('expandMoreDescription', this.expandMoreDescription);
-    this.userSettingsHandler.update('includeSupersededModels', this.includeSupersededModels);
-    this.userSettingsHandler.update('showDeletedModels', this.showDeletedModels);
+    this.userSettingsHandler.update('includeModelSuperseded', this.includeModelSuperseded);
+    this.userSettingsHandler.update('includeDocumentSuperseded', this.includeDocumentSuperseded);
+    if (this.isAdmin()) {
+      this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
+    }
 
     this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('User preferences saved successfully.');

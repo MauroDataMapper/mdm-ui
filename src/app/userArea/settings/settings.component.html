@@ -43,13 +43,19 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
     <div class="mb-2">
-        <mat-checkbox name="includeSupersededModels" [(ngModel)]="includeSupersededModels" labelPosition="after">
-            Include Superseded
+        <mat-checkbox name="includeModelSuperseded" [(ngModel)]="includeModelSuperseded" labelPosition="after">
+            Show Superseded Models
         </mat-checkbox>
     </div>
+    <div class="mb-2">
+        <mat-checkbox name="includeDocumentSuperseded" [(ngModel)]="includeDocumentSuperseded" labelPosition="after">
+            Show Superseded Documents
+        </mat-checkbox>
+    </div>
+
     <div class="mb-2" *ngIf="isAdmin()">
-      <mat-checkbox name="showDeletedModels" [(ngModel)]="showDeletedModels" labelPosition="after">
-          Show Deleted
+      <mat-checkbox name="includeDeleted" [(ngModel)]="includeDeleted" labelPosition="after">
+          Show Deleted Models
       </mat-checkbox>
   </div>
     <div>

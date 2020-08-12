@@ -29,9 +29,9 @@ export class UserSettingsHandlerService {
     counts: [5, 10, 20, 50],
     expandMoreDescription: false,
     favourites: [],
-    includeSupersededModels: false,
-    showSupersededModels: false,
-    showDeletedModels: false,
+    includeModelSuperseded: false,
+    includeDocumentSuperseded: false,
+    includeDeleted: false,
     dataFlowDiagramsSetting: {}
   };
   constructor(

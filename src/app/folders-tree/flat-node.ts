@@ -40,6 +40,8 @@ export interface Node {
     parentDataClass?: Node;
     dataModel?: any;
     isRoot?: boolean;
+    superseded?:boolean;
+    documentationVersion?: string;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -158,6 +160,14 @@ export class FlatNode {
 
     get code() {
         return this.node?.code;
+    }
+
+    get superseded() {
+        return this.node?.superseded;
+    }
+
+    get documentationVersion() {
+        return this.node?.documentationVersion
     }
 
 }

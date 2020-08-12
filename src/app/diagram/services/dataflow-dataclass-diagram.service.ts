@@ -24,6 +24,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
   parentId: string;
   flowId: string;
+  dataClassComponents: any = {};
 
   getDiagramContent(params: any): Observable<any> {
     // console.log('getting class diagram content');
@@ -35,25 +36,35 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
   render(data: any): void {
     const nodes: any = {};
+    const nodesMerge: any = {};
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
       });
       if (flow.sourceDataClasses.length > 1) {
-        nodes[flow.id] = flow.label;
+        nodesMerge[flow.id] = flow.label;
       }
 
       flow.targetDataClasses.forEach((dataClass: any) => {
         nodes[dataClass.id] = dataClass.label;
       });
       if (flow.targetDataClasses.length > 1) {
-        nodes[flow.id] = flow.label;
+        nodesMerge[flow.id] = flow.label;
+      }
+
+      if (flow.domainType === "DataClassComponent") {
+        this.dataClassComponents[flow.id] = flow.label;
       }
     });
-
+    
     Object.keys(nodes).forEach((key) => {
       this.addRectangleCell(key, nodes[key]);
     });
+
+    Object.keys(nodesMerge).forEach((key) => {
+      this.addSmallRectangleCell(key, nodesMerge[key]);
+    });
+
     data.body.items.forEach((flow: any) => {
       flow.sourceDataClasses.forEach((sourceDataClass: any) => {
         flow.targetDataClasses.forEach((targetDataClass: any) => {
@@ -99,20 +110,33 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   configurePaper(paper: joint.dia.Paper): void {
 
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
-      console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
-
+      
       if (cellView.model.id !== undefined && cellView.model.id !== null) {
 
         const arrMergedId: any[] = cellView.model.id.toString().split('/');
 
+        var foundDataClassComponents: any = this.dataClassComponents;
+
         if (arrMergedId.length > 0) {
-          const options = { sort: 'label', order: 'asc', all: true };
-          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
-            if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-              debugger;
-              this.changeDataClassComponent(result.body);
-            }
+          
+          //Check if this id is a DataClassComponent
+          foundDataClassComponents = Object.keys(this.dataClassComponents).filter(function (key) {
+            return foundDataClassComponents[arrMergedId[0]];
           });
+
+          if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
+            const options = { sort: 'label', order: 'asc', all: true };
+            this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
+                if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+                  this.changeDataClassComponent(result.body);
+                }
+              }),
+              (error) => {
+                console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+              };
+          } else {
+            this.changeDataClassComponent(null);
+          }
         }
       }
     });

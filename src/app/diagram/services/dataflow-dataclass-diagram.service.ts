@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable, EMPTY, Subject } from 'rxjs';
 import * as joint from 'jointjs';
 
 
@@ -24,7 +24,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
   parentId: string;
   flowId: string;
-
+  
   getDiagramContent(params: any): Observable<any> {
     // console.log('getting class diagram content');
     this.parentId = params.parent.id;
@@ -62,13 +62,13 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
           if (flow.sourceDataClasses.length > 1) {
             //link the sourceDataClass to the merged dataClassComponent 
             link = new joint.shapes.standard.Link({
-              id: flow.id + '-' + sourceDataClass.id + '-' + targetDataClass.id,
+              id: flow.id + '/' + sourceDataClass.id,
               source: { id: sourceDataClass.id },
               target: { id: flow.id }
             });
           } else {
             link = new joint.shapes.standard.Link({
-              id: flow.id + '-' + sourceDataClass.id + '-' + targetDataClass.id,
+              id: flow.id + '/' + targetDataClass.id,
               source: { id: sourceDataClass.id },
               target: { id: targetDataClass.id }
             });
@@ -83,7 +83,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       if (flow.sourceDataClasses.length > 1) {
         //link the merged dataClassComponent to the targetDataClass
         const mergedLink = new joint.shapes.standard.Link({
-          id: flow.id + '-' + flow.targetDataClasses[0].id,
+          id: flow.id + '/' + flow.targetDataClasses[0].id,
           source: { id: flow.id },
           target: { id: flow.targetDataClasses[0].id }
         });
@@ -95,9 +95,30 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
     });
   }
-
+  
   configurePaper(paper: joint.dia.Paper): void {
+
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
+      console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+
+      if (cellView.model.id !== undefined && cellView.model.id !== null) {
+        
+        let arrMergedId: any[] = cellView.model.id.split('/');
+
+        if (arrMergedId.length > 0) {
+          const options = { sort: 'label', order: 'asc', all: true };
+          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
+            if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+              debugger;
+              this.changeDataClassComponent(result.body);
+            }
+          });
+        }
+      }
+    });
+
     paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+      console.log('cell pointerdblclick ' + cellView.model.id + ' was clicked');
       const result: any = {
         flowId: this.flowId as string,
         flowComponentId: cellView.model.attributes.source.id as string,
@@ -128,4 +149,5 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     this.goUpSubject.next(result);
     this.goUpSubject.complete();
   }
+
 }

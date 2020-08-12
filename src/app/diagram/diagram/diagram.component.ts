@@ -62,6 +62,9 @@ export class DiagramComponent implements OnInit {
   flowId: string;
   flowComponentId: string;
 
+  description: string;
+  dataClassComponent: any;
+
   diagramService: BasicDiagramService;
 
   constructor(
@@ -192,6 +195,8 @@ export class DiagramComponent implements OnInit {
         this.resetPaper();
       }
     });
+    
+    this.diagramService.currentDataClassComponent.subscribe(data => this.dataClassComponent = data);
   }
 
   download(): void {

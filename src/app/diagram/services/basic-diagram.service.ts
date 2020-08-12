@@ -38,6 +38,8 @@ export abstract class BasicDiagramService {
   public graph: joint.dia.Graph;
   protected clickSubject = new Subject<any>();
   protected goUpSubject = new Subject<any>();
+  protected dataClassComponentSubject = new BehaviorSubject('');
+  public currentDataClassComponent = this.dataClassComponentSubject.asObservable();
 
   public constructor(protected resourcesService: MdmResourcesService,
                      protected messageHandler: MessageHandlerService) {
@@ -356,6 +358,11 @@ private adjustAllVertices(graph: joint.dia.Graph) {
     return this.goUpSubject;
   }
 
+  getDataClassComponentSubject(): Subject<any> {
+    return this.dataClassComponentSubject;
+  }
 
-
+  changeDataClassComponent(dataClassComponent: any) {
+    this.dataClassComponentSubject.next(dataClassComponent);
+  }
 }

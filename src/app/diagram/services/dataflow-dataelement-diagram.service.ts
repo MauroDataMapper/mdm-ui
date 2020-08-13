@@ -60,7 +60,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
           }
           classGetters.push(
             this.resourcesService.dataClass.content(dataModelId, classId, options)
-            //this.resourcesService.dataClass.get(dataModelId, null, classId, 'dataElements', options)
           );
         });
         return forkJoin(classGetters);
@@ -206,16 +205,8 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
         const arrMergedId: any[] = cellView.model.id.toString().split('/');
 
-        //var foundDataElementComponent: any = this.dataElementComponent;
-
         if (arrMergedId.length > 1) {
-
-          ////Check if this id is a DataElementComponent
-          //foundDataElementComponent = Object.keys(this.dataElementComponent).filter(function (key) {
-          //  return foundDataElementComponent[arrMergedId[1]];
-          //});
-
-          //  if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
+          
           const options = { sort: 'label', order: 'asc', all: true };
           this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1], options).subscribe(result => {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
@@ -225,9 +216,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             (error) => {
               console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
             };
-          //  } else {
-          //    this.changeDataClassComponent(null);
-          //  }
         }
       }
     });
@@ -237,8 +225,6 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       // this.drawDiagram();
       // console.log(cellView.model.attributes.source.id as string);
       // console.log(this);
-
-
     });
 
   }

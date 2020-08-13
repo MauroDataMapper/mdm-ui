@@ -35,6 +35,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -75,7 +76,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService,
     private stateHandler: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private securityHandler: SecurityHandlerService
   ) {
     this.DataClassDetails();
   }
@@ -227,7 +229,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  formBeforeSave = function() {
+  formBeforeSave = () => {
     this.error = '';
     this.editMode = false;
     this.errorMessage = '';
@@ -329,5 +331,9 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.editableForm.validationError = false;
       this.errorMessage = '';
     }
+  }
+
+  isAdmin = () => {
+    return this.securityHandler.isAdmin();
   }
 }

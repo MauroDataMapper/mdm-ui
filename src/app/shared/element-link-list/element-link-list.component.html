@@ -147,9 +147,20 @@ SPDX-License-Identifier: Apache-2.0
       There are no links in this table. You can add links by clicking the button above.
     </p>
 </div>
-<mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-</mat-card>
+<div class="item" *ngIf="isLoadingResults">
+  <table class="mdm--mat-table mdm--skeleton-table">
+    <tr>
+      <th style="width: 23%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 15%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+      <th style="width: 27%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+  </tr>
+  <tr>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+    </tr>
+  </table>
+</div>
 <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
     <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

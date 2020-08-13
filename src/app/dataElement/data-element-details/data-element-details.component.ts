@@ -35,6 +35,8 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementModel';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -92,7 +94,9 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private broadcastSvc: BroadcastService,
+    private securityHandler: SecurityHandlerService
   ) {
     this.DataElementDetails();
   }
@@ -302,7 +306,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       );
   }
 
-  formBeforeSave = function() {
+  formBeforeSave = () => {
     if (!this.validate()) {
       return;
     }
@@ -334,7 +338,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
       let dataType;
       if (!this.showNewInlineDataType) {
-        dataType = { id: this.result.dataType.id };
+        dataType = { id: this.result.dataType['id'] };
       } else {
         dataType = this.newlyAddedDataType;
       }
@@ -475,5 +479,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
   onDataTypeSelect(dataType) {
     this.result.dataType = dataType;
+  }
+  isAdmin = () => {
+    return this.securityHandler.isAdmin();
   }
 }

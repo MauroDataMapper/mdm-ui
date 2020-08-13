@@ -128,34 +128,37 @@ SPDX-License-Identifier: Apache-2.0
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: right;">
-
-
-                        <div *ngIf="result" mdmShowIfRolesWritable [result]="result"
-                            style="float: right;margin-bottom: 3px">
-                            <div style="float: right">
-                                <mdm-editable-form-buttons [hidden]="editableForm.visible" [onCancelEdit]="onCancelEdit"
-                                    [editable]="editableForm" [textLocation]="'left'" [hideDelete]="false"
-                                    [hideCancel]="false" [hideEdit]="true" (delete)="delete()"
-                                    [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                        <div *ngIf="result" style="float: right;margin-bottom: 3px" >
+                            <div style="float: right" *ngIf="isAdmin()">
+                                <mdm-editable-form-buttons [hidden]="editableForm.visible"
+                                                            [onCancelEdit]="onCancelEdit"
+                                                            [editable]="editableForm"
+                                                            [textLocation]="'left'"
+                                                            [hideDelete]="false"
+                                                            [hideCancel]="false"
+                                                            [hideEdit]="true"
+                                                            (delete)="delete()"
+                                                            [processing]="deleteInProgress">
+                                </mdm-editable-form-buttons>
                             </div>
-                            <div [hidden]="editableForm.visible || editableForm.deletePending"
-                                style="position: relative; float: right; margin-right:4px;">
-                                <button mat-stroked-button color="primary" type="button" [disabled]="deleteInProgress"
-                                    matTooltip="Edit" aria-label="Edit" (click)="showForm();">
+                            <div *ngIf="result.editable" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                                <button mat-stroked-button color="primary" type="button" [disabled]="deleteInProgress" matTooltip="Edit" aria-label="Edit" (click)="showForm();">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
-                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
-                                [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
+                                                        [onCancelEdit]="onCancelEdit"
+                                                        [editable]="editableForm"
+                                                        [textLocation]="'left'"
+                                                        [hideDelete]="true"
+                                                        [hideCancel]="false"
+                                                        [processing]="deleteInProgress">
+                            </mdm-editable-form-buttons>
                         </div>
 
 
-                        <div style="position: relative; float: right; margin-right:4px;"
-                            [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button color="primary" type="button" class="paddingless"
-                                matTooltipPosition="below" matTooltip="Search" aria-label="Search"
-                                [disabled]="processing" (click)="toggleShowSearch()">
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button mat-stroked-button color="primary" type="button" class="paddingless" matTooltipPosition="below" matTooltip="Search" aria-label="Search" [disabled]="processing" (click)="toggleShowSearch()">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>

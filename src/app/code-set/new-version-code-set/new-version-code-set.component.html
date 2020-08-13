@@ -61,9 +61,9 @@ SPDX-License-Identifier: Apache-2.0
 
     <div class="mb-2">
       <div [ngClass]="{'has-error': errors }" style="margin-bottom: 0px;">
-        <mat-checkbox [(ngModel)]="form.copyPermissions" [disabled]="processing">
+        <!-- <mat-checkbox [(ngModel)]="form.copyPermissions" [disabled]="processing">
           Copy Permissions
-        </mat-checkbox>
+        </mat-checkbox> -->
         <span class="help-block" *ngIf="errors && errors.copyPermissions"><small>{{errors.copyPermissions}}</small></span>
         <small class="block">
           If checked, all read/write permissions for users and groups of this Code will be copied to the new Codeset.

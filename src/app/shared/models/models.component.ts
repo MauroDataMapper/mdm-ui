@@ -226,11 +226,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     let options: any = {};
     if (this.sharedService.isLoggedIn()) {
-      console.log(this.userSettingsHandler.get('includeModelSuperseded'));
       options = {
         queryStringParams: {
           includeDocumentSuperseded: this.userSettingsHandler.get('includeDocumentSuperseded') || false,
-          includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
+          // includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
+          includeModelSuperseded: true,
           includeDeleted: this.userSettingsHandler.get('includeDeleted') || false
         }
       };

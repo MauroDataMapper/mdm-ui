@@ -37,11 +37,11 @@ SPDX-License-Identifier: Apache-2.0
                                         <i class="fas fa-filter" [ngClass]="{'':!showFilters, 'filterIcon':showFilters}"></i>
                                     </button>
                                     <mat-menu #filterMenu="matMenu" class="filterMenu">
-                                        <div mat-menu-item>
+                                        <!-- <div mat-menu-item>
                                             <mat-checkbox name="includeModelSuperseded" (ngModelChange)="toggleFilters('includeModelSuperseded')" [(ngModel)]="includeModelSuperseded">
                                                 Show Superseded Models
                                             </mat-checkbox>
-                                        </div>
+                                        </div> -->
                                         <div *ngIf="isAdmin" mat-menu-item>
                                             <mat-checkbox name="includeDeleted" (ngModelChange)="toggleFilters('includeDeleted')" [(ngModel)]="includeDeleted">
                                                 Show Deleted Models

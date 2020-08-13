@@ -110,10 +110,60 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     });
   }
 
-  configurePaper(paper: joint.dia.Paper): void {
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  doubleClick = (cellView: joint.dia.CellView) => {
+    const result: any = {
+      flowId: this.flowId as string,
+      flowComponentId: cellView.model.attributes.source.id as string,
+      parent: {
+        id: this.parentId
+      },
+      newMode: 'dataflow-element'
+    };
 
+    this.clickSubject.next(result);
+    this.clickSubject.complete();
+  }
+
+  singleClick = (cellView: joint.dia.CellView) => {
+    if (cellView.model.id !== undefined && cellView.model.id !== null) {
+
+      const arrMergedId: any[] = cellView.model.id.toString().split('/');
+      var foundDataClassComponents: any = this.dataClassComponents;
+
+      if (arrMergedId.length > 0) {
+        //Check if this id is a DataClassComponent
+        foundDataClassComponents = Object.keys(this.dataClassComponents).filter(function (key) {
+          return foundDataClassComponents[arrMergedId[0]];
+        });
+
+        if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
+          const options = { sort: 'label', order: 'asc', all: true };
+          this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
+              if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+                this.changeDataClassComponent(result.body);
+              }
+            }),
+            (error) => {
+              console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+            };
+        } else {
+          this.changeDataClassComponent(null);
+        }
+      }
+    }
+  }
+
+  configurePaper(paper: joint.dia.Paper): void {
+    let clicks: number = 0;
+    let doubleClick: boolean = false;
+    
     paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
-      console.log('cell pointerdblclick ' + cellView.model.id + ' was clicked');
+
+
       const result: any = {
         flowId: this.flowId as string,
         flowComponentId: cellView.model.attributes.source.id as string,
@@ -122,42 +172,30 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
         },
         newMode: 'dataflow-element'
       };
-      // console.log(result);
+      
       this.clickSubject.next(result);
       this.clickSubject.complete();
-      // console.log('next clicked: service');
     });
 
 
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
-      debugger
-      if (cellView.model.id !== undefined && cellView.model.id !== null) {
+     
+      clicks++;
+      if (clicks === 1) {
 
-        const arrMergedId: any[] = cellView.model.id.toString().split('/');
+        (async () => {
+          await this.delay(200);
 
-        var foundDataClassComponents: any = this.dataClassComponents;
-
-        if (arrMergedId.length > 0) {
-
-          //Check if this id is a DataClassComponent
-          foundDataClassComponents = Object.keys(this.dataClassComponents).filter(function (key) {
-            return foundDataClassComponents[arrMergedId[0]];
-          });
-
-          if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
-            const options = { sort: 'label', order: 'asc', all: true };
-            this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
-              if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-                this.changeDataClassComponent(result.body);
-              }
-            }),
-              (error) => {
-                console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
-              };
-          } else {
-            this.changeDataClassComponent(null);
+          // Do something after
+          clicks = 0;
+          if (!doubleClick) {
+            this.singleClick(cellView);
           }
-        }
+        })();
+      } else {
+        clicks = 0;
+        doubleClick = true;
+        this.changeDataClassComponent(null);
       }
     });
   }

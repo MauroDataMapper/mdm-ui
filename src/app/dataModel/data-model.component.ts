@@ -87,7 +87,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
       this.isEditable = this.dataModel['availableActions'].includes('update');
       this.parentId = this.dataModel.id;
 
-      await this.resourcesService.catalogueItem.listSemanticLinks('dataModels', this.dataModel.id).subscribe(response => {
+      await this.resourcesService.versionLink.list('dataModels', this.dataModel.id).subscribe(response => {
         console.log(response);
         this.semanticLinks = response.body.items;
       });

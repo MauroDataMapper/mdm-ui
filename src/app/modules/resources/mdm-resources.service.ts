@@ -42,7 +42,8 @@ import {
   MdmTreeItemResource,
   MdmEditResource,
   MdmSecurableResource,
-  MdmUserGroupsResource
+  MdmUserGroupsResource,
+  MdmVersionLinkResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -56,7 +57,7 @@ export class MdmResourcesService {
    * @param resourcesConfig Customize apiEndpoint.
    * @param restHandler Custom rest requests handler. In this case injecting rest handler that uses Angular's HttpClient.
    */
-  constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) {}
+  constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 
   classifier = new MdmClassifierResource(this.resourcesConfig, this.restHandler);
   terminology = new MdmTerminologyResource(this.resourcesConfig, this.restHandler);
@@ -83,4 +84,5 @@ export class MdmResourcesService {
   summaryMetadata = new MdmSummaryMetadataResource(this.resourcesConfig, this.restHandler);
   userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
   securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
+  versionLink = new MdmVersionLinkResource(this.resourcesConfig, this.restHandler);
 }

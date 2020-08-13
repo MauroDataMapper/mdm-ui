@@ -37,6 +37,8 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     this.flowComponentId = params.flowComponentId;
     const classGetters = [];
 
+    this.changeDataClassComponent(null);
+
     const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId);
     return (flowComponents).pipe(
       mergeMap(data => {
@@ -69,7 +71,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   render(result: any): void {
 
     this.changeDataClassComponent(null);
-    debugger;
+    
     const classAttributes: object = {};
     Object.keys(this.classes).forEach((classId) => {
       const classBreadcrumb = this.classes[classId][this.classes[classId].length - 1];

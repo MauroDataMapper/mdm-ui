@@ -28,11 +28,13 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
   parentId: string;
   flowId: string;
+  flowComponentId: string;
 
   getDiagramContent(params: any): Observable<any> {
-    
+
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
+    this.flowComponentId = params.flowComponentId;
     const classGetters = [];
 
     const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId);
@@ -47,7 +49,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             this.classes[element.dataClass] = element.breadcrumbs;
           });
         });
-        const options = {sort: 'label', order: 'asc', all: true};
+        const options = { sort: 'label', order: 'asc', all: true };
         Object.keys(this.classes).forEach((classId) => {
           const dataModelId: string = this.classes[classId][0].id;
           let parentClassId: string = null;
@@ -65,7 +67,9 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   render(result: any): void {
-    // console.log(result);
+
+    this.changeDataClassComponent(null);
+    debugger;
     const classAttributes: object = {};
     Object.keys(this.classes).forEach((classId) => {
       const classBreadcrumb = this.classes[classId][this.classes[classId].length - 1];
@@ -104,7 +108,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }*/
           }
         });
-        link1.connector('rounded', {radius: 40});
+        link1.connector('rounded', { radius: 40 });
         this.graph.addCell(link1);
       });
       flowComponent.targetDataElements.forEach((targetElement) => {
@@ -123,7 +127,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }*/
           }
         });
-        link2.connector('rounded', {radius: 40});
+        link2.connector('rounded', { radius: 40 });
         this.graph.addCell(link2);
       });
     });
@@ -166,7 +170,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }
           }
         });
-        link1.connector('rounded', {radius: 40});
+        link1.connector('rounded', { radius: 40 });
         this.graph.addCell(link1);
       });
       flowComponent.targetDataElements.forEach((targetElement) => {
@@ -185,7 +189,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }
           }
         });
-        link2.connector('rounded', {radius: 40});
+        link2.connector('rounded', { radius: 40 });
         this.graph.addCell(link2);
       });
     });
@@ -193,6 +197,39 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   configurePaper(paper: joint.dia.Paper): void {
+
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
+
+      if (cellView.model.id !== undefined && cellView.model.id !== null) {
+
+        const arrMergedId: any[] = cellView.model.id.toString().split('/');
+
+        //var foundDataElementComponent: any = this.dataElementComponent;
+
+        if (arrMergedId.length > 1) {
+
+          ////Check if this id is a DataElementComponent
+          //foundDataElementComponent = Object.keys(this.dataElementComponent).filter(function (key) {
+          //  return foundDataElementComponent[arrMergedId[1]];
+          //});
+
+          //  if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
+          const options = { sort: 'label', order: 'asc', all: true };
+          this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1], options).subscribe(result => {
+            if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+              this.changeDataClassComponent(result.body);
+            }
+          }),
+            (error) => {
+              console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+            };
+          //  } else {
+          //    this.changeDataClassComponent(null);
+          //  }
+        }
+      }
+    });
+
     paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
       // this.flowComponentId = cellView.model.attributes.source.id as string;
       // this.drawDiagram();

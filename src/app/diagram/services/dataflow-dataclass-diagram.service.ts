@@ -56,13 +56,13 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
         this.dataClassComponents[flow.id] = flow.label;
       }
     });
-    
+
     Object.keys(nodes).forEach((key) => {
       this.addRectangleCell(key, nodes[key]);
     });
 
     Object.keys(nodesMerge).forEach((key) => {
-      this.addSmallRectangleCell(key, nodesMerge[key]);
+      this.addSmallColorfulRectangleCell(key, nodesMerge[key]);
     });
 
     data.body.items.forEach((flow: any) => {
@@ -71,6 +71,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
           let link: any;
           if (flow.sourceDataClasses.length > 1) {
+            //this.addLink(flow.id + '/' + sourceDataClass.id, sourceDataClass.id, flow.id);
             // link the sourceDataClass to the merged dataClassComponent
             link = new joint.shapes.standard.Link({
               id: flow.id + '/' + sourceDataClass.id,
@@ -83,10 +84,12 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
               source: { id: sourceDataClass.id },
               target: { id: targetDataClass.id }
             });
+            //this.addLink(flow.id + '/' + targetDataClass.id, sourceDataClass.id, targetDataClass.id);
           }
 
           // link.id = flow.id as string;
           link.connector('rounded', { radius: 40 });
+          link.attr('line/stroke', this.linkColor);
           link.toBack();
           this.graph.addCell(link);
         });
@@ -109,38 +112,6 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
   configurePaper(paper: joint.dia.Paper): void {
 
-    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
-      
-      if (cellView.model.id !== undefined && cellView.model.id !== null) {
-
-        const arrMergedId: any[] = cellView.model.id.toString().split('/');
-
-        var foundDataClassComponents: any = this.dataClassComponents;
-
-        if (arrMergedId.length > 0) {
-          
-          //Check if this id is a DataClassComponent
-          foundDataClassComponents = Object.keys(this.dataClassComponents).filter(function (key) {
-            return foundDataClassComponents[arrMergedId[0]];
-          });
-
-          if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
-            const options = { sort: 'label', order: 'asc', all: true };
-            this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
-                if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-                  this.changeDataClassComponent(result.body);
-                }
-              }),
-              (error) => {
-                console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
-              };
-          } else {
-            this.changeDataClassComponent(null);
-          }
-        }
-      }
-    });
-
     paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
       console.log('cell pointerdblclick ' + cellView.model.id + ' was clicked');
       const result: any = {
@@ -155,6 +126,39 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       this.clickSubject.next(result);
       this.clickSubject.complete();
       // console.log('next clicked: service');
+    });
+
+
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
+      debugger
+      if (cellView.model.id !== undefined && cellView.model.id !== null) {
+
+        const arrMergedId: any[] = cellView.model.id.toString().split('/');
+
+        var foundDataClassComponents: any = this.dataClassComponents;
+
+        if (arrMergedId.length > 0) {
+
+          //Check if this id is a DataClassComponent
+          foundDataClassComponents = Object.keys(this.dataClassComponents).filter(function (key) {
+            return foundDataClassComponents[arrMergedId[0]];
+          });
+
+          if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
+            const options = { sort: 'label', order: 'asc', all: true };
+            this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
+              if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+                this.changeDataClassComponent(result.body);
+              }
+            }),
+              (error) => {
+                console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+              };
+          } else {
+            this.changeDataClassComponent(null);
+          }
+        }
+      }
     });
   }
 

@@ -28,7 +28,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
   private parentId: string;
 
   constructor(protected resourcesService: MdmResourcesService,
-              protected messageHandler: MessageHandlerService) {
+    protected messageHandler: MessageHandlerService) {
     super(resourcesService, messageHandler);
   }
 
@@ -54,18 +54,21 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
     data.body.items.forEach((flow) => {
       const link = new joint.shapes.standard.Link({
         id: flow.id,
-        source: {id: flow.source.id},
-        target: {id: flow.target.id},
+        source: { id: flow.source.id },
+        target: { id: flow.target.id },
       });
       link.id = flow.id as string;
-      link.connector('rounded', {radius: 40});
+      link.connector('rounded', { radius: 40 });
       link.appendLabel({
         attrs: {
           text: {
-            text: joint.util.breakText(flow.label, {width: 150}),
+            text: joint.util.breakText(flow.label, { width: 150 }),
             fill: '#222222',
             fontSize: 10,
             fontWeight: 'normal'
+          },
+          line: {
+            stroke: this.linkColor
           }
         },
         position: {

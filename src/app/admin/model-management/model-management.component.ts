@@ -187,7 +187,7 @@ export class ModelManagementComponent implements OnInit {
     }
 
     this.deleteInProgress = true;
-    this.resourcesService.dataModel.removeAll('', { body: dataModelResources }).subscribe(() => {
+    this.resourcesService.dataModel.removeAll({}, { body: dataModelResources }).subscribe(() => {
       if (permanent) {
         this.deleteSuccessMessage = `${this.selectedElementsCount} Data Model(s) deleted successfully.`;
         this.deleteInProgress = false;

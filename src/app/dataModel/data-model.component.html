@@ -43,14 +43,14 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 </div>
 <div *ngIf="!showSearch">
-    <div *ngIf="dataModel && dataModel.semanticLinks && dataModel.semanticLinks.length > 0">
+    <div *ngIf="dataModel && semanticLinks && semanticLinks.length > 0">
         <div class="mdm--shadow-block bordered">
             <div class="heading-container">
                 <h4 class="marginless">Links</h4>
             </div>
             <div class="pxy-2">
                 <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
-                                             [parent]="dataModel"
+                                             [parent]="semanticLinks"
                                              [showDescription]="true"
                                              [showNoLinksMessage]="true"
                                              [type]="'static'">

@@ -46,6 +46,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
   dataModel4Diagram: any;
   cells: any;
   rootCell: any;
+  semanticLinks: any[] = [];
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -80,10 +81,17 @@ export class DataModelComponent implements OnInit, OnDestroy {
   }
 
   dataModelDetails(id: any) {
-    this.resourcesService.dataModel.get(id).subscribe((result: { body: DataModelResult }) => {
+    this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
       this.dataModel = result.body;
+      console.log(result.body);
       this.isEditable = this.dataModel['availableActions'].includes('update');
       this.parentId = this.dataModel.id;
+
+      await this.resourcesService.catalogueItem.listSemanticLinks('dataModels', this.dataModel.id).subscribe(response => {
+        console.log(response);
+        this.semanticLinks = response.body.items;
+      });
+
       if (this.sharedService.isLoggedIn(true)) {
         this.DataModelPermissions(id);
       } else {

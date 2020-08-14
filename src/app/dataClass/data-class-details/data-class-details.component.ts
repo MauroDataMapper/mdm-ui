@@ -37,6 +37,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -80,7 +81,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private broadcastSvc: BroadcastService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private securityHandler: SecurityHandlerService
   ) {
     this.DataClassDetails();
   }
@@ -149,7 +151,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   ngAfterViewInit(): void {
     this.error = '';
-    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe((queryList: QueryList<any>) => {
       this.invokeInlineEditor();
       if (this.editMode) {
@@ -166,10 +167,9 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find((inlineEditorComponent: any) => {
+    this.editForm.find((inlineEditorComponent: any) => {
       return inlineEditorComponent.name === 'editableText';
-    }
-    );
+    });
   }
 
   DataClassDetails(): any {
@@ -207,7 +207,16 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         this.hasResult = true;
       }
       this.title.setTitle(`Data Class - ${this.result?.label}`);
+      this.watchDataClassObject();
     });
+  }
+
+  watchDataClassObject() {
+    const access: any = this.securityHandler.elementAccess(this.result);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    }
   }
 
 

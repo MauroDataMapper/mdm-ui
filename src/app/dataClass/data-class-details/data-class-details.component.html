@@ -56,8 +56,12 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="aliases" [element]="result"
-                            [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                        <mdm-element-alias [inEditMode]="editableForm.visible"
+                                           [aliases]="aliases"
+                                           [element]="result"
+                                           [editableForm]="editableForm"
+                                           [property]="'aliases'">
+                        </mdm-element-alias>
                     </td>
                 </tr>
                 <tr>
@@ -77,10 +81,8 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Multiplicity</th>
                     <td class="dataClassDetailsModelPath">
-
                         <div *ngIf="!editableForm.visible && result">
-                            <mdm-multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity">
-                            </mdm-multiplicity>
+                            <mdm-multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity"></mdm-multiplicity>
                         </div>
                         <div *ngIf="result">
                             <small *ngIf="editableForm.visible" class="block">
@@ -121,16 +123,17 @@ SPDX-License-Identifier: Apache-2.0
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
                         <mdm-element-classifications [classifications]="result.classifiers"
-                            [editableForm]="editableForm" [element]="result" [property]="'classifiers'">
+                                                     [editableForm]="editableForm"
+                                                     [element]="result"
+                                                     [property]="'classifiers'">
                         </mdm-element-classifications>
 
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" style="text-align: right;">
-                        <div *ngIf="result" mdmShowIfRolesWritable [result]="result"
-                            style="float: right;margin-bottom: 3px">
-                            <div style="float: right">
+                        <div *ngIf="result" style="float: right;margin-bottom: 3px">
+                            <div *ngIf="showDelete" style="float: right">
                               <div style="float: right;" [hidden]="editableForm.visible">
                                 <button mat-stroked-button
                                         color="warn"
@@ -143,26 +146,23 @@ SPDX-License-Identifier: Apache-2.0
                                 </button>
                               </div>
                             </div>
-                            <div *ngIf="result.editable" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button color="primary" type="button" [disabled]="deleteInProgress" matTooltip="Edit" aria-label="Edit" (click)="showForm();">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>
                             <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                        [onCancelEdit]="onCancelEdit"
-                                                        [editable]="editableForm"
-                                                        [textLocation]="'left'"
-                                                        [hideDelete]="true"
-                                                        [hideCancel]="false"
-                                                        [processing]="deleteInProgress">
+                                                       [onCancelEdit]="onCancelEdit"
+                                                       [editable]="editableForm"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="true"
+                                                       [hideCancel]="false"
+                                                       [processing]="deleteInProgress">
                             </mdm-editable-form-buttons>
                         </div>
 
-                        <div style="position: relative; float: right; margin-right:4px;"
-                            [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button color="primary" type="button" class="paddingless"
-                                matTooltipPosition="below" matTooltip="Search" aria-label="Search"
-                                [disabled]="processing" (click)="toggleShowSearch()">
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                            <button mat-stroked-button color="primary" type="button" class="paddingless" matTooltipPosition="below" matTooltip="Search" aria-label="Search" [disabled]="processing" (click)="toggleShowSearch()">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -181,6 +181,5 @@ SPDX-License-Identifier: Apache-2.0
                 </tr>
             </tbody>
         </table>
-
     </form>
 </div>

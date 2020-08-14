@@ -276,15 +276,12 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showDelete:
-        element.availableActions.includes('softDelete') ||
-        element.availableActions.includes('delete'),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
-      canAddLink:
-        element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
 
@@ -292,16 +289,12 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showDelete:
-        element.availableActions.includes('softDelete') ||
-        element.availableActions.includes('delete'),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: this.isLoggedIn(),
       canAddMetadata: this.isLoggedIn(),
-
-      canAddLink:
-        element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
 

@@ -30,6 +30,8 @@ import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-pas
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
 import { ModalService } from './modal.service';
 import { InputModalComponent } from './input-modal/input-modal.component';
+import { NewFolderModalComponent } from './new-folder-modal/new-folder-modal.component';
+import { MaterialModule } from '@mdm/modules/material/material.module';
 
 @NgModule({
   imports: [
@@ -40,14 +42,16 @@ import { InputModalComponent } from './input-modal/input-modal.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatPasswordStrengthModule
+    MatPasswordStrengthModule,
+    MaterialModule
   ],
   declarations: [
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
     ConfirmationModalComponent,
-    InputModalComponent
+    InputModalComponent,
+    NewFolderModalComponent
   ],
   providers: [
     ModalService

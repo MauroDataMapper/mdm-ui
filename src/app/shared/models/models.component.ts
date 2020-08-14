@@ -31,6 +31,7 @@ import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 
 @Component({
   selector: 'mdm-models',
@@ -288,7 +289,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   onFolderAddModal = () => {
     const promise = new Promise(() => {
-      const dialog = this.dialog.open(InputModalComponent, {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
           inputValue: this.folder,
           modalTitle: 'Create a new Folder',
@@ -323,9 +324,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.resources.folder.saveChildrenOf(parentId, { label });
+      endpoint = this.resources.folder.saveChildrenOf(parentId, label );
     } else {
-      endpoint = this.resources.folder.save({ label });
+      endpoint = this.resources.folder.save(label);
     }
     endpoint.subscribe(res => {
       const result = res.body;
@@ -341,7 +342,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
       // go to folder
       this.stateHandler.Go('Folder', { id: result.id, edit: false });
-      this.messageHandler.showSuccess(`Folder ${label} created successfully.`);
+      this.messageHandler.showSuccess(`Folder ${label.label} created successfully.`);
       this.folder = '';
       this.loadFolders();
     }, error => {
@@ -531,7 +532,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   }
 
   validateLabel = (data) => {
-    if (!data || (data && data.trim().length === 0)) {
+    if (!data || (data && data.label.trim().length === 0)) {
       return false;
     } else {
       return true;

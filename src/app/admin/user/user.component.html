@@ -62,17 +62,6 @@ SPDX-License-Identifier: Apache-2.0
             <input matInput name="jobTitle" [(ngModel)]="user.jobTitle">
         </mat-form-field>
     </div>
-    <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
-            <mat-label>Choose a Role</mat-label>
-            <mat-select name="userRole" [(ngModel)]="user.userRole" required>
-                <mat-option *ngFor="let role of roles" [value]="role.value">{{role.text}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="errors && errors['userRole']">
-                {{errors['userRole']}}
-            </mat-error>
-        </mat-form-field>
-    </div>
     <div class="mdm--form-input mb-2">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Choose a Group</mat-label>

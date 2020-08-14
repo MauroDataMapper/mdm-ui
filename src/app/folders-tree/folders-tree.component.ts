@@ -32,6 +32,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { FolderService } from './folder.service';
+import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 
 
 @Component({
@@ -449,7 +450,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   handleAddFolderModal = (fnode: FlatNode) => {
     const promise = new Promise((resolve, reject) => {
-      const dialog = this.dialog.open(InputModalComponent, {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
           inputValue: this.folder,
           modalTitle: 'Create a new Folder',

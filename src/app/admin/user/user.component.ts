@@ -89,9 +89,9 @@ export class UserComponent implements OnInit {
         });
     }
 
-    const limit = 0;
-    const offset = 0;
-    const options = this.gridService.constructOptions(limit,offset,null,"asc");
+
+    const options = this.gridService.constructOptions(null,null,"name","asc");
+    options["all"] = true;
 
     this.resourcesService.userGroups.list(options).subscribe(res => {
         this.allGroups = res.body.items;
@@ -121,10 +121,6 @@ export class UserComponent implements OnInit {
       this.errors.lastName = 'Last Name can\'t be empty!';
       isValid = false;
     }
-    if (!this.user.userRole.trim().length) {
-      this.errors.userRole = 'Role can\'t be empty!';
-      isValid = false;
-    }
     if (isValid) {
       delete this.errors;
     }
@@ -140,7 +136,6 @@ export class UserComponent implements OnInit {
       lastName: this.user.lastName,
       organisation: this.user.organisation,
       jobTitle: this.user.jobTitle,
-      userRole: this.user.userRole,
       groups: this.user.groups || []
     };
     // it's in edit mode
@@ -172,10 +167,10 @@ export class UserComponent implements OnInit {
     this.user.groups = [];
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
-        this.user.groups.push({
-          id: val.id,
-          label: val.label
-        });
+        this.user.groups.push(
+           val.id
+          //label: val.label
+        );
       }
     }
   }

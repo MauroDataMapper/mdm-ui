@@ -16,21 +16,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div id="viewport">
-  <div *ngIf="dataClassComponent" style="width: 1000px; padding: 10px;">
-    <mat-expansion-panel *ngIf="dataClassComponent" hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <h4 *ngIf="dataClassComponent">{{dataClassComponent.label}}</h4>
-        </mat-panel-title>
-        <mat-panel-description>
-          <!--Properties-->
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <div *ngIf="dataClassComponent">{{dataClassComponent.description}}</div>
-      <pre *ngIf="dataClassComponent">{{dataClassComponent.definition}}</pre>
-
-    </mat-expansion-panel>
+  <div style="width: 400px; min-width: 400px; padding: 10px;">
+    <mat-accordion>
+      <mat-expansion-panel *ngIf="dataClassComponent" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4 *ngIf="dataClassComponent">{{dataClassComponent.label}}</h4>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngIf="dataClassComponent">{{dataClassComponent.description}}</div>
+        <pre *ngIf="dataClassComponent">{{dataClassComponent.definition}}</pre>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
   <mat-card *ngIf="isLoading" style="height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.286); z-index: 10; display: flex; justify-content: center; align-items: center">
     <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>

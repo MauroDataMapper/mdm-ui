@@ -104,7 +104,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         }
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
-        this.resources.terminology.get(this.levels.currentFocusedElement.id, 'tree').subscribe(children => {
+        this.resources.tree.get('terminologies', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(children => {
           self.levels.currentFocusedElement.children = children.body;
           self.levels.currentFocusedElement.open = true;
           self.levels.currentFocusedElement.selected = true;

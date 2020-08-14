@@ -169,7 +169,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
       case 7:
         return { index: 7, name: 'links' };
       case 8:
-        return { index: 8, name: 'attachments' };
+        return { index: 8, name: 'dataflow' };
       case 9: {
         if (this.dataModel.type === 'Data Asset') {
           return { index: 9, name: 'dataflow' };

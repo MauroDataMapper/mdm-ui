@@ -24,21 +24,25 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex fxLayout="column" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50"
             fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100">
             <h4>Please select one or more element(s):</h4>
+            <!-- TODO -->
             <!-- <div class="mb-1">
                 <span class="block">Filter elements by type:</span>
                 <mat-radio-group aria-label="filterElement" class="marginless" name="filterElement" [(ngModel)]="filterElement" (ngModelChange)="onFilterChange()">
-                    <mat-radio-button value="dataModel">Data Model</mat-radio-button>
-                    <mat-radio-button value="terminology">Terminology</mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <div class="mb-1">
-                <span>Filter element by status:</span>
-                <mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus" [disabled]="filterElement === ''" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
-                    <mat-radio-button value="deleted">Mark as Deleted</mat-radio-button>
-                    <mat-radio-button value="documentSuperseded">Document Superseded</mat-radio-button>
-                    <mat-radio-button value="modelSuperseded">Model Superseded</mat-radio-button>
+                    <mat-radio-button value="dataModels">Data Model</mat-radio-button>
+                    <mat-radio-button value="terminologies">Terminology</mat-radio-button>
                 </mat-radio-group>
             </div> -->
+
+            <div class="mb-1">
+                <span>Filter element by status:</span>
+                <mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
+                    <mat-radio-button value="all" [checked]="filterStatus == 'all'">Show all Models</mat-radio-button>
+                    <mat-radio-button value="includeDeleted">Deleted Models</mat-radio-button>
+                    <!-- TODO pending changes from backend -->
+                    <!-- <mat-radio-button value="includeDocumentSuperseded">Superseded Documents</mat-radio-button> -->
+                    <mat-radio-button value="includeModelSuperseded">Superseded Models</mat-radio-button>
+                </mat-radio-group>
+            </div>
 
             <div *ngIf="!reloading">
                 <div class="treeDropDown">

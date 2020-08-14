@@ -30,7 +30,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class ModelManagementComponent implements OnInit {
   filterElement: string;
-  filterStatus: string;
+  filterStatus = 'all';
   selectedElements: Array<any>;
   selectedElementsCount = 0;
   reloading = false;
@@ -49,65 +49,41 @@ export class ModelManagementComponent implements OnInit {
   ngOnInit() {
     this.selectedElements = [];
     this.selectedElementsCount = 0;
-    this.filterStatus = '';
+    this.filterStatus = 'all';
     this.filterElement = '';
     this.loadFolders();
     this.title.setTitle('Model management');
   }
 
   onFilterChange = () => {
-    if (this.filterElement === '') {
-      this.filterStatus = '';
-    }
+    // if (this.filterElement === '') {
+    //   this.filterStatus = '';
+    // }
     this.loadFolders();
   };
 
   loadFolders = () => {
     this.reloading = true;
-
-    let options = {
+    const options = {
       queryStringParams: {
         includeDocumentSuperseded: true,
         includeModelSuperseded: true,
         includeDeleted: true,
       },
     };
-    if (this.filterStatus === null) {
-      // no op
-    } else if (this.filterStatus === 'deleted') {
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded: false,
-          includeModelSuperseded: false,
-          includeDeleted: true,
-        },
-      };
-    } else if (this.filterStatus === 'documentSuperseded') {
-      if (this.filterElement === 'dataModel') {
-        this.resourcesService.admin.documentationSupersededModels(
-          'folders',
-          'dataModels',
-          options
-        );
-      }
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded: true,
-          includeModelSuperseded: false,
-          includeDeleted: false,
-        },
-      };
-    } else if (this.filterStatus === 'modelSuperseded') {
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded: false,
-          includeModelSuperseded: true,
-          includeDeleted: false,
-        },
-      };
+    let url = this.resourcesService.tree.list('folders', options.queryStringParams);
+
+    if (this.filterStatus === 'all') {
+      url = this.resourcesService.tree.list('folders', options.queryStringParams);
+    } else if (this.filterStatus === 'includeDeleted') {
+      url = this.resourcesService.admin.deletedModels('folders', 'dataModels');
+    } else if (this.filterStatus === 'includeDocumentSuperseded') {
+      url = this.resourcesService.admin.documentationSupersededModels('folders', 'dataModels');
+    } else if (this.filterStatus === 'includeModelSuperseded') {
+      url = this.resourcesService.admin.modelSupersededModels('folders', 'dataModels');
     }
 
-    this.resourcesService.tree.list('folders', options.queryStringParams).subscribe((resp) => {
+    url.subscribe((resp) => {
       this.folders = {
         children: resp.body,
         isRoot: true,
@@ -120,8 +96,7 @@ export class ModelManagementComponent implements OnInit {
     }, (err) => {
       this.reloading = false;
       this.messageHandler.showError('There was a problem loading tree.', err);
-    }
-    );
+    });
   };
 
   markChildren = (node) => {

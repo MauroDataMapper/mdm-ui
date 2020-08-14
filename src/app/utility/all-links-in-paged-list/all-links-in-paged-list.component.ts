@@ -62,7 +62,6 @@ export class AllLinksInPagedListComponent implements OnInit {
     if (!this.parent || !this.parent.length) {
       return;
     }
-    console.log(this.parent);
 
     this.parent.forEach(link => {
       if (!this.allLinksMap[link.linkType]) {

@@ -83,12 +83,10 @@ export class DataModelComponent implements OnInit, OnDestroy {
   dataModelDetails(id: any) {
     this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
       this.dataModel = result.body;
-      console.log(result.body);
       this.isEditable = this.dataModel['availableActions'].includes('update');
       this.parentId = this.dataModel.id;
 
       await this.resourcesService.versionLink.list('dataModels', this.dataModel.id).subscribe(response => {
-        console.log(response);
         this.semanticLinks = response.body.items;
       });
 

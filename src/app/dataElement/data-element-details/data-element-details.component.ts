@@ -39,6 +39,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -99,7 +100,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private title: Title,
     private broadcastSvc: BroadcastService,
     private gridService: GridService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private securityHandler: SecurityHandlerService
   ) {
     this.DataElementDetails();
   }
@@ -190,16 +192,13 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
+    this.editForm.find((inlineEditorComponent: any) => {
+      return inlineEditorComponent.name === 'editableText';
+    });
   }
 
   DataElementDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.result = serverResult;
         this.editableForm.label = this.result.label;
         this.editableForm.description = this.result.description;
@@ -237,8 +236,15 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           this.hasResult = true;
         }
         this.title.setTitle(`Data Element - ${this.result?.label}`);
-      }
-    );
+        this.watchDataElementObject();
+      });
+  }
+  watchDataElementObject() {
+    const access: any = this.securityHandler.elementAccess(this.result);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    }
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
@@ -298,8 +304,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       this.messageHandler.showSuccess('Data Class deleted successfully.');
       this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     }, error => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
     });
   }
 

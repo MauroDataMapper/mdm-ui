@@ -72,6 +72,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rememberExpandedStates = false;
   @Input() expandOnNodeClickFor: any;
   @Input() doNotMakeSelectedBold: any;
+  @Input() filterByDomainType: DOMAIN_TYPE[];
 
   @Input() treeName = 'unnamed';
 
@@ -118,6 +119,10 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       children = node.children.filter(c => c.domainType !== DOMAIN_TYPE.DataClass);
     } else {
       children = node.children;
+    }
+
+    if (this.filterByDomainType?.length > 0) {
+      children = children.filter(c => this.filterByDomainType.includes(c.domainType));
     }
 
     return of(children);

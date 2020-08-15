@@ -26,6 +26,7 @@ import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -162,7 +163,7 @@ export class ElementSelectorComponent implements OnInit {
   loadAllDataModels() {
     this.reloading = true;
 
-    this.resourceService.tree.list('folders').subscribe((data) => {
+    this.resourceService.tree.list('folders', { domainType: DOMAIN_TYPE.DataModel }).subscribe((data) => {
       this.rootNode = {
         children: data.body,
         isRoot: true
@@ -187,7 +188,7 @@ export class ElementSelectorComponent implements OnInit {
 
   loadTerminologies = () => {
     this.reloading = true;
-    this.resourceService.terminology.get(null, null, { all: true }).subscribe(res => {
+    this.resourceService.terminology.list({ all: true }).subscribe(res => {
       if (this.data.notAllowedToSelectIds && this.data.notAllowedToSelectIds.length > 0) {
         let i = res.body.items.length - 1;
         while (i >= 0) {
@@ -448,7 +449,8 @@ export class ElementSelectorComponent implements OnInit {
         domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.get(null, 'search/' + this.formData.treeSearchText, options).subscribe(result => {
+    this.resourceService.tree.search('folders', this.formData.treeSearchText, options)
+    .subscribe(result => {
       this.reloading = false;
       this.rootNode = {
         children: result.body,

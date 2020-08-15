@@ -75,11 +75,11 @@ SPDX-License-Identifier: Apache-2.0
                     <mdm-folders-tree
                         [inSearchMode] = "formData.inSearchMode"
                         [doNotMakeSelectedBold]="true"
-                        [justShowFolders]="false"
-                        [doNotShowDataClasses]="true"
+                        [searchCriteria]="formData.treeSearchText"
+                        [filterByDomainType]="['Folder','DataModel']"
                         [expandOnNodeClickFor]="['Folder']"
                         (nodeClickEvent)="onNodeInTreeSelect($event)"
-                            [node]="rootNode"></mdm-folders-tree>
+                        [node]="rootNode"></mdm-folders-tree>
                 </div>
             </div>
             <div style="margin-top: 10px;" *ngIf="showPrevBtn">
@@ -104,6 +104,7 @@ SPDX-License-Identifier: Apache-2.0
                     <mdm-folders-tree
                         [inSearchMode]="formData.inSearchMode"
                         [doNotMakeSelectedBold]="true"
+                        [filterByDomainType]="['Folder','DataModel','DataClass']"
                         [expandOnNodeClickFor]="['Folder', 'DataModel', 'DataClass']"
                         [searchCriteria]="formData.treeSearchText"
                         (nodeClickEvent)="onNodeInTreeSelect($event)"
@@ -122,8 +123,7 @@ SPDX-License-Identifier: Apache-2.0
             <div class="treeDropDown">
                     <mdm-folders-tree
                         [doNotMakeSelectedBold]="true"
-                        [justShowFolders]="true"
-                        [doNotShowDataClasses]="true"
+                        [filterByDomainType]="['Folder']"
                         [expandOnNodeClickFor]="['Folder']"
                         (nodeClickEvent)="onNodeInTreeSelect($event)"
                         [node]="rootNode"></mdm-folders-tree>

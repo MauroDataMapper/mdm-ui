@@ -25,7 +25,8 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
   classes: object = {};
   dataFlows: any = {};
-
+  
+  selDataElementComponentId: string;
   parentId: string;
   flowId: string;
   flowComponentId: string;
@@ -37,7 +38,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     this.flowComponentId = params.flowComponentId;
     const classGetters = [];
 
-    this.changeDataClassComponent(null);
+    this.changeComponent(null);
 
     const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId);
     return (flowComponents).pipe(
@@ -69,7 +70,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
   render(result: any): void {
 
-    this.changeDataClassComponent(null);
+    this.changeComponent(null);
     
     const classAttributes: object = {};
     Object.keys(this.classes).forEach((classId) => {
@@ -206,11 +207,13 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
         const arrMergedId: any[] = cellView.model.id.toString().split('/');
 
         if (arrMergedId.length > 1) {
-          
+
+          this.selDataElementComponentId = arrMergedId[1];
+
           const options = { sort: 'label', order: 'asc', all: true };
           this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1], options).subscribe(result => {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-              this.changeDataClassComponent(result.body);
+              this.changeComponent(result.body);
             }
           }),
             (error) => {
@@ -250,4 +253,16 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     this.clickSubject.complete();
   }
 
+  updateDataElementLevel = (data) => {
+    debugger 
+    const options = { sort: 'label', order: 'asc', all: true };
+    this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe(result => {
+        if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+          this.changeComponent(result.body);
+        }
+      }),
+      (error) => {
+        this.messageHandler.showError('There was a problem updating the Data Element Component.', error);
+      };
+  }
 }

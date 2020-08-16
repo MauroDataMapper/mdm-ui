@@ -41,8 +41,8 @@ export abstract class BasicDiagramService {
   public graph: joint.dia.Graph;
   protected clickSubject = new Subject<any>();
   protected goUpSubject = new Subject<any>();
-  protected dataClassComponentSubject = new BehaviorSubject('');
-  public currentDataClassComponent = this.dataClassComponentSubject.asObservable();
+  protected dataComponentSubject = new BehaviorSubject('');
+  public currentComponent = this.dataComponentSubject.asObservable();
 
   public constructor(protected resourcesService: MdmResourcesService,
                      protected messageHandler: MessageHandlerService) {
@@ -57,6 +57,10 @@ export abstract class BasicDiagramService {
   abstract getDiagramContent(params: any): Observable<any>;
 
   abstract render(data: any): void;
+
+  abstract updateDataClassComponentLevel(data: any): void;
+
+  abstract updateDataElementLevel(data: any): void;
 
   abstract configurePaper(paper: joint.dia.Paper): void;
 
@@ -214,8 +218,7 @@ export abstract class BasicDiagramService {
       classBox.attr('rect/fontWeight', 'bold');
       cells.push(classBox);
     }
-
-    debugger 
+ 
     const classNameBox = new joint.shapes.standard.Rectangle({
       id: id + '-name',
       position,
@@ -408,11 +411,11 @@ private adjustAllVertices(graph: joint.dia.Graph) {
     return this.goUpSubject;
   }
 
-  getDataClassComponentSubject(): Subject<any> {
-    return this.dataClassComponentSubject;
+  getComponentSubject(): Subject<any> {
+    return this.dataComponentSubject;
   }
 
-  changeDataClassComponent(dataClassComponent: any) {
-    this.dataClassComponentSubject.next(dataClassComponent);
+  changeComponent(dataClassComponent: any) {
+    this.dataComponentSubject.next(dataClassComponent);
   }
 }

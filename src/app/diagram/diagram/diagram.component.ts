@@ -53,6 +53,7 @@ export class DiagramComponent implements OnInit {
   public svgPanZoom: SvgPanZoom.Instance;
   public paper: joint.dia.Paper;
 
+  isEdit: boolean;
   isLoading: boolean;
   isPopup = false;
 
@@ -196,7 +197,7 @@ export class DiagramComponent implements OnInit {
       }
     });
     
-    this.diagramService.currentDataClassComponent.subscribe(data => this.dataClassComponent = data);
+    this.diagramService.currentComponent.subscribe(data => this.dataClassComponent = data);
   }
 
   download(): void {
@@ -257,6 +258,25 @@ export class DiagramComponent implements OnInit {
       case 'resetZoom':
         this.svgPanZoom.resetZoom();
         break;
+    }
+  }
+
+  edit = () => {
+    this.isEdit = true;
+  }
+
+  save = () => {
+    switch (this.mode) {
+    case 'dataflow-class':
+      this.diagramService.updateDataClassComponentLevel(this.dataClassComponent);
+      this.isEdit = false;
+      break;
+    case 'dataflow-element':
+      this.diagramService.updateDataElementLevel(this.dataClassComponent);
+      this.isEdit = false;
+      break;
+    default:
+      break;
     }
   }
 }

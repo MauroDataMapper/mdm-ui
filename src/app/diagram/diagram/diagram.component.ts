@@ -53,7 +53,7 @@ export class DiagramComponent implements OnInit {
   public svgPanZoom: SvgPanZoom.Instance;
   public paper: joint.dia.Paper;
 
-  isEdit: boolean;
+  isEdit = false;
   isLoading: boolean;
   isPopup = false;
 
@@ -196,7 +196,7 @@ export class DiagramComponent implements OnInit {
         this.resetPaper();
       }
     });
-    
+
     this.diagramService.currentComponent.subscribe(data => this.dataClassComponent = data);
   }
 
@@ -262,7 +262,8 @@ export class DiagramComponent implements OnInit {
   }
 
   edit = () => {
-    this.isEdit = true;
+    this.isEdit = !this.isEdit;
+    // this.isSearch = !this.isSearch;
   }
 
   save = () => {

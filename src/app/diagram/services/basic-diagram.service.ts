@@ -58,11 +58,12 @@ export abstract class BasicDiagramService {
 
   abstract render(data: any): void;
 
-  abstract updateDataClassComponentLevel(data: any): void;
-
-  abstract updateDataElementLevel(data: any): void;
-
   abstract configurePaper(paper: joint.dia.Paper): void;
+
+
+  public updateDataClassComponentLevel(data: any): void {};
+
+  public updateDataElementLevel(data: any): void {};
 
   public onDrag(cellView: joint.dia.CellView, event): void {
     if (cellView instanceof joint.dia.ElementView) {

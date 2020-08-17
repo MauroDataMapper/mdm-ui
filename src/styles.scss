@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 @import "~ngx-toastr/toastr.css";
 @import "~@angular/material/theming";
 
+@import '~codemirror/lib/codemirror';
+@import '~codemirror/theme/material';
+
 $custom-typography: mat-typography-config(
   $font-family: "Nunito Sans, sans-serif",
   $body-1: mat-typography-level(17px, 26px, 500),

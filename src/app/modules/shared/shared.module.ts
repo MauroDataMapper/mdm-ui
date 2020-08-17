@@ -35,6 +35,7 @@ import { ErrorComponent } from '@mdm/errors/error.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     NgxJsonViewerModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    CodemirrorModule
   ],
   exports: [
     EditableFormButtonsComponent,
@@ -78,7 +80,8 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     ErrorComponent,
     FlexLayoutModule,
     MdmPaginatorComponent,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    CodemirrorModule
   ]
 })
 export class SharedModule {}

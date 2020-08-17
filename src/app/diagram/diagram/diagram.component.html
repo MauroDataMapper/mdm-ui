@@ -39,16 +39,18 @@ SPDX-License-Identifier: Apache-2.0
             <textarea matInput rows="4" name="description" [(ngModel)]="dataClassComponent.description"></textarea>
           </mat-form-field>
         </div>
-
         <p *ngIf="dataClassComponent" [hidden]="isEdit">{{dataClassComponent.description}}</p>
-        <div class="mdm--form-input" [hidden]="!isEdit">
+
+        <!--<div class="mdm--form-input" [hidden]="!isEdit">
           <mat-form-field appearance="outline" class="full-width paddingless">
             <mat-label>Definition</mat-label>
             <textarea matInput rows="6" name="definition" [(ngModel)]="dataClassComponent.definition"></textarea>
           </mat-form-field>
-        </div>
-
-        <pre *ngIf="dataClassComponent" [hidden]="isEdit">{{dataClassComponent.definition}}</pre>
+        </div>-->
+        <ngx-codemirror
+          [(ngModel)]="dataClassComponent.definition"
+          [options]="{lineNumbers: true,theme: 'default',mode: 'text/x-sql'}">
+        </ngx-codemirror>
         <mat-action-row style="padding-right: 24px;" [hidden]="isEdit">
           <button mat-button color="primary" type="button" [hidden]="isEdit" (click)="edit()"> <i class="fas fa-pencil-alt"></i> Edit</button>
         </mat-action-row>

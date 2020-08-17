@@ -45,7 +45,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   filter: {};
 
   records: any[] = [];
-  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'actions'];
+  displayedColumns = ['fullName', 'emailAddress', 'organisation', 'actions'];
 
   constructor(
     private messageHandler: MessageHandlerService,

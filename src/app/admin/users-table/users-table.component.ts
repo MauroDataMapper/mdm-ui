@@ -47,7 +47,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   failCount: number;
   total: number;
 
-  displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'userRole', 'groups', 'status', 'icons'];
+  displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(
@@ -79,16 +79,11 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       return [];
     })).subscribe((data) => {
       this.records = data;
+      console.log(data);
     });
   }
 
-  usersFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
-  ): Observable<any> {
+  usersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.list(options);
   }
@@ -114,8 +109,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('Reset password email sent successfully!');
     }, error => {
       this.messageHandler.showError('There was a problem sending reset password email.', error);
-    }
-    );
+    });
   }
 
   toggleDeactivate(row) {
@@ -125,8 +119,7 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       this.broadcastSvc.broadcast('pendingUserUpdated');
     }, error => {
       this.messageHandler.showError('There was a problem updating the user.', error);
-    }
-    );
+    });
   }
 
   applyFilter = () => {

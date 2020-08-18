@@ -187,7 +187,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   askForPermanentDelete(): any {
-    if (!this.showDelete) {
+    if (!this.showPermDelete) {
       return;
     }
     this.folderHandler.askForPermanentDelete(this.result.id).then(() => {

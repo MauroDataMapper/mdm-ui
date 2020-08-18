@@ -63,7 +63,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   filterName: any;
   showAddTerm: any;
 
-  constructor(private messageHandler: MessageHandlerService, private gridService:GridService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
+  constructor(private messageHandler: MessageHandlerService, private gridService: GridService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
   }
 
   ngOnInit() {
@@ -108,17 +108,17 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   }
 
   termFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.codeSet.terms(this.codeSet.id, options);
   }
 
   applyFilter = () => {
-    let filter = {};
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-      if(value !== "") {
+      if (value !== '') {
        filter[name] = value;
       }
     });
@@ -179,7 +179,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
 
     this.resources.codeSet.update(this.codeSet.id, { terms: allTermIds }).subscribe(() => {
       this.messageHandler.showSuccess('Terms added successfully.');
-      const options = this.gridService.constructOptions(40,0);
+      const options = this.gridService.constructOptions(40, 0);
 
       this.resources.codeSet.terms(this.codeSet.id, options).subscribe(data => {
         this.records = data.body.items;

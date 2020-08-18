@@ -89,7 +89,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
     private elementTypes: ElementTypesService,
-    private gridService:GridService
+    private gridService: GridService
   ) {
     this.dataSourceDataTypes = new MatTableDataSource(this.recordsDataTypes);
 
@@ -124,7 +124,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   // When sorting makes a backend calls we loose the selected datatypes.
   // We need to keep the selected ones and recheck them after aech backend call
   dataTypesFetch(pageSize, pageIndex, sortBy, sortType, filters) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourceService.dataType.list(this.model.copyFromDataModel[0].id, options);
   }

@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTableDataSource } from '@angular/material/table';
-import { MarkdownParserService } from './markdown/markdown-parser/markdown-parser.service';
 import { MessageService } from '../services/message.service';
 import { ContentSearchHandlerService } from '../services/content-search.handler.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -69,11 +68,10 @@ export class ElementSelectorComponent implements OnInit {
     public dialogRef: MatDialogRef<ElementSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resourceService: MdmResourcesService,
-    private markdownParser: MarkdownParserService,
     private messageService: MessageService,
     private contextSearchHandler: ContentSearchHandlerService,
     private cd: ChangeDetectorRef,
-    private gridService:GridService
+    private gridService: GridService
   ) { }
   pageSize = 40;
   validTypesToSelect = [];
@@ -414,7 +412,7 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
   loadAllTerms(terminology, pageSize, pageIndex) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex);
+    const options = this.gridService.constructOptions(pageSize, pageIndex);
     return this.resourceService.terminology.terms.list(terminology.id, options);
   }
   calculateDisplayedSoFar(result) {
@@ -434,7 +432,7 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
   loadAllDataTypes(dataModel, pageSize, pageIndex) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,"label","asc");
+    const options = this.gridService.constructOptions(pageSize, pageIndex, 'label', 'asc');
     return this.resourceService.dataType.list(dataModel.id, options);
   }
   searchInTree(treeSearchDomainType) {

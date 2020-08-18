@@ -75,7 +75,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private helpService: HelpDialogueHandlerService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private gridService:GridService
+    private gridService: GridService
   ) { }
 
   ngAfterViewInit() {
@@ -157,7 +157,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.catalogueItem.listMetadata(
       this.parent.domainType,

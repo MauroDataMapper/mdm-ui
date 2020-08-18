@@ -40,28 +40,19 @@ export class GridService {
     }
   };
 
-  constructOptions(pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
-  ) {
-    const options = {}
+  constructOptions(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+    const options = {};
 
-    if(pageSize)
-    {
+    if (pageSize) {
       options["max"] = pageSize;
     }
-    if(pageIndex)
-    {
+    if (pageIndex) {
       options["offset"] = pageIndex;
     }
-    if(sortBy)
-    {
+    if (sortBy) {
       options["sort"] = sortBy;
     }
-    if(sortType)
-    {
+    if (sortType) {
       options["order"] = sortType;
     }
 
@@ -70,7 +61,7 @@ export class GridService {
         options[key] = filters[key];
       });
     }
-  
-    return options; 
+
+    return options;
   }
 }

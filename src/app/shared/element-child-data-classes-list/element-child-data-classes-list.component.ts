@@ -74,7 +74,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private dialog: MatDialog,
-    private gridService:GridService
+    private gridService: GridService
   ) { }
 
   ngOnInit(): void {
@@ -137,8 +137,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
-    
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+
     if (!this.parentDataClass.id) {
       return this.resources.dataClass.list(this.parentDataModel.id, options);
     }

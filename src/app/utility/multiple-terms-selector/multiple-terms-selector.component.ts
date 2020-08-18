@@ -104,7 +104,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
     private resources: MdmResourcesService,
     private contextSearchHandler: ContentSearchHandlerService,
     private cd: ChangeDetectorRef,
-    private gridService:GridService
+    private gridService: GridService
   ) {
     this.loadTerminologies();
   }
@@ -130,7 +130,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
   loadAllTerms = (terminology, pageSize, offset) => {
     this.selectorSection.searchResultOffset = offset;
     this.loading = true;
-    const options = this.gridService.constructOptions(pageSize,offset);
+    const options = this.gridService.constructOptions(pageSize, offset);
     this.selectorSection.loading = true;
 
     this.resources.terminology.terms.list(terminology.id, options).subscribe(result => {

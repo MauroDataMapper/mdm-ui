@@ -84,7 +84,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private dialog: MatDialog,
-    private gridService:GridService
+    private gridService: GridService
   ) { }
 
   ngOnInit(): void {
@@ -192,7 +192,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   dataTypesFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.dataType.list(this.parent.id, options);
   };
 

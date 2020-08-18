@@ -44,8 +44,8 @@ export class NewFolderModalComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<InputModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private resourcesService : MdmResourcesService,
-    private gridService:GridService,
+    private resourcesService: MdmResourcesService,
+    private gridService: GridService,
     private messageHandler: MessageHandlerService
 
   ) {}
@@ -58,12 +58,12 @@ export class NewFolderModalComponent implements OnInit {
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
     this.inputValue = {
-      label:"",
+      label: '',
       groups: []
-    }
-    
-    const options = this.gridService.constructOptions(null,null,"name","asc");
-    options["all"] = true;
+    };
+
+    const options = this.gridService.constructOptions(null, null, 'name', 'asc');
+    options['all'] = true;
 
     this.resourcesService.userGroups.list(options).subscribe(res => {
         this.allGroups = res.body.items;
@@ -79,7 +79,7 @@ export class NewFolderModalComponent implements OnInit {
       if (groups.value.includes(val.id)) {
         this.inputValue.groups.push({
           id: val.id,
-          //label: val.label
+          // label: val.label
         });
       }
     }

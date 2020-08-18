@@ -116,9 +116,17 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   }
   
   doubleClick = (cellView: joint.dia.CellView) => {
+    
+    const arrMergedId: any[] = cellView.model.id.toString().split('/');
+    
+    if (arrMergedId.length > 0) {
+
+      this.selDataClassComponentId = arrMergedId[0];
+    }
+
     const result: any = {
       flowId: this.flowId as string,
-      flowComponentId: cellView.model.attributes.source.id as string,
+      flowComponentId: this.selDataClassComponentId as string,
       parent: {
         id: this.parentId
       },
@@ -130,6 +138,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   }
 
   singleClick = (cellView: joint.dia.CellView) => {
+    
     if (cellView.model.id !== undefined && cellView.model.id !== null) {
 
       const arrMergedId: any[] = cellView.model.id.toString().split('/');
@@ -165,21 +174,8 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     let doubleClick: boolean = false;
     
     paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
-
-
-      const result: any = {
-        flowId: this.flowId as string,
-        flowComponentId: cellView.model.attributes.source.id as string,
-        parent: {
-          id: this.parentId
-        },
-        newMode: 'dataflow-element'
-      };
-      
-      this.clickSubject.next(result);
-      this.clickSubject.complete();
+      this.doubleClick(cellView);
     });
-
 
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
      
@@ -187,6 +183,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       if (clicks === 1) {
 
         (async () => {
+
           await this.delay(200);
 
           // Do something after

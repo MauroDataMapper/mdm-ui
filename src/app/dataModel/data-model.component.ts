@@ -81,13 +81,21 @@ export class DataModelComponent implements OnInit, OnDestroy {
   }
 
   dataModelDetails(id: any) {
+    let arr = [];
     this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
       this.dataModel = result.body;
       this.isEditable = this.dataModel['availableActions'].includes('update');
       this.parentId = this.dataModel.id;
 
       await this.resourcesService.versionLink.list('dataModels', this.dataModel.id).subscribe(response => {
-        this.semanticLinks = response.body.items;
+        if (response.body.count > 0) {
+          arr = response.body.items;
+          for (const val in arr) {
+            if (this.dataModel.id !== arr[val].targetModel.id) {
+              this.semanticLinks.push(arr[val]);
+            }
+          }
+        }
       });
 
       if (this.sharedService.isLoggedIn(true)) {

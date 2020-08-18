@@ -43,21 +43,6 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 </div>
 <div *ngIf="!showSearch">
-    <div *ngIf="dataClass && dataClass.semanticLinks && dataClass.semanticLinks.length > 0">
-        <div class="mdm--shadow-block bordered">
-            <div class="heading-container">
-                <h4 class="marginless">Links</h4>
-            </div>
-            <div class="pxy-2">
-                <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
-                                             [parent]="dataClass"
-                                             [showDescription]="true"
-                                             [showNoLinksMessage]="true"
-                                             [type]="'static'">
-                </mdm-all-links-in-paged-list>
-            </div>
-        </div>
-    </div>
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Content">
             <ng-template matTabContent>

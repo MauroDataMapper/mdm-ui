@@ -18,6 +18,25 @@ SPDX-License-Identifier: Apache-2.0
 <div class="full-width">
     <mdm-code-set-details></mdm-code-set-details>
 </div>
+
+<div *ngIf="!showSearch">
+  <div *ngIf="codeSetModel && semanticLinks && semanticLinks.length > 0">
+      <div class="mdm--shadow-block bordered">
+          <div class="heading-container">
+              <h4 class="marginless">Links</h4>
+          </div>
+          <div class="pxy-2">
+              <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
+                                           [parent]="semanticLinks"
+                                           [showDescription]="true"
+                                           [showNoLinksMessage]="true"
+                                           [type]="'static'">
+              </mdm-all-links-in-paged-list>
+          </div>
+      </div>
+  </div>
+</div>
+
 <div>
     <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Terms">

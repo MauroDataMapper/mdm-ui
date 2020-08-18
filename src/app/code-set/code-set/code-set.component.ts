@@ -44,6 +44,7 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   dataModel4Diagram: any;
   cells: any;
   rootCell: any;
+  semanticLinks: any[] = [];
 
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   constructor(
@@ -75,13 +76,22 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   }
 
   codeSetDetails(id: any) {
-    this.resourcesService.codeSet.get(id).subscribe((result: { body: CodeSetResult }) => {
+    let arr = [];
+    this.resourcesService.codeSet.get(id).subscribe(async (result: { body: CodeSetResult }) => {
+      await this.resourcesService.versionLink.list('codeSets', id).subscribe(response => {
+        if (response.body.count > 0) {
+          arr = response.body.items;
+          for (const val in arr) {
+            if (id !== arr[val].targetModel.id) {
+              this.semanticLinks.push(arr[val]);
+            }
+          }
+        }
+      });
+
       this.codeSetModel = result.body;
       this.parentId = this.codeSetModel.id;
-      this.showExtraTabs =
-        !this.sharedService.isLoggedIn() ||
-        !this.codeSetModel.editable ||
-        this.codeSetModel.finalised;
+      this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.codeSetModel.editable || this.codeSetModel.finalised;
       if (this.sharedService.isLoggedIn(true)) {
         this.CodeSetPermissions(id);
       } else {

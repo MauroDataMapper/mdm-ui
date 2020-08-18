@@ -64,7 +64,7 @@ export class SecurityHandlerService {
         lastName: localStorage.getItem('lastName'),
         role: localStorage.getItem('role'),
         needsToResetPassword: localStorage.getItem('needsToResetPassword'),
-        isAdmin: localStorage.getItem('isAdmin'),
+        isAdmin: JSON.parse(localStorage.getItem('isAdmin')),
       };
     }
     return null;

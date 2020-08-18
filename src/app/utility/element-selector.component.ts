@@ -333,7 +333,7 @@ export class ElementSelectorComponent implements OnInit {
   }
 
   loadAllDataElements(dataClass, pageSize, pageIndex) {
-    return this.resourceService.dataElement.list(dataClass.dataModel, dataClass.id);
+    return this.resourceService.dataElement.list(dataClass.modelId, dataClass.id);
   }
   loadAllContextElements(currentContext, selectedType, pageSize, offset) {
     if (currentContext.domainType === 'DataClass' && selectedType === 'DataElement') {
@@ -350,6 +350,11 @@ export class ElementSelectorComponent implements OnInit {
         });
         this.formData.searchResult = result.items;
         this.calculateDisplayedSoFar(result);
+        if (this.dataSource.data) {
+          this.dataSource.data = this.dataSource.data.concat(rows);
+        } else {
+          this.dataSource.data = rows;
+        }
         this.loading = false;
       });
     } else if (currentContext.domainType === 'DataModel' && selectedType === 'DataType') {

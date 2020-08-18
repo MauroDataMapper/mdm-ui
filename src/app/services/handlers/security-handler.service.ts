@@ -235,38 +235,29 @@ export class SecurityHandlerService {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.finalised,
-      showFinalise:
-        element.availableActions.includes('update') && !element.finalised,
-      showPermission:
-        element.availableActions.includes('update') || this.isAdmin(),
+      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showPermission: element.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
-      canAddMetadata: this.isLoggedIn(),
+      canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink:
-        element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update') && !element.finalised,
     };
   }
 
   termAccess(element) {
     return {
-      showEdit:
-        element.availableActions.includes('update') && !element.finalised,
+      showEdit: element.availableActions.includes('update') && !element.finalised,
       showEditDescription: element.availableActions.includes('editDescription'),
-      showNewVersion:
-        element.availableActions.includes('update') && element.finalised,
-      showFinalise:
-        element.availableActions.includes('update') && !element.finalised,
-      showPermission:
-        element.availableActions.includes('update') || this.isAdmin(),
-      showDelete:
-        element.availableActions.includes('softDelete') ||
-        element.availableActions.includes('delete'),
+      showNewVersion: element.availableActions.includes('update') && element.finalised,
+      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showPermission: element.availableActions.includes('update') || this.isAdmin(),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: this.isLoggedIn(),
-      canAddMetadata: this.isLoggedIn(),
+      canAddAnnotation: element.availableActions.includes('comment'),
+      canAddMetadata: element.availableActions.includes('update'),
 
       canAddLink: element.availableActions.includes('update'),
     };
@@ -279,8 +270,9 @@ export class SecurityHandlerService {
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: this.isLoggedIn(),
-      canAddMetadata: this.isLoggedIn(),
+      canAddAnnotation: element.availableActions.includes('comment'),
+      canAddMetadata: element.availableActions.includes('update'),
+
       canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
@@ -292,8 +284,8 @@ export class SecurityHandlerService {
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: this.isLoggedIn(),
-      canAddMetadata: this.isLoggedIn(),
+      canAddAnnotation: element.availableActions.includes('comment'),
+      canAddMetadata: element.availableActions.includes('update'),
       canAddLink: element.availableActions.includes('update') && !element.finalised
     };
   }
@@ -302,16 +294,13 @@ export class SecurityHandlerService {
     return {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
-      showDelete:
-        element.availableActions.includes('softDelete') ||
-        element.availableActions.includes('delete'),
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
-      canAddAnnotation: this.isLoggedIn(),
-      canAddMetadata: this.isLoggedIn(),
+      canAddAnnotation: element.availableActions.includes('comment'),
+      canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink:
-        element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update') && !element.finalised,
     };
   }
 
@@ -319,16 +308,12 @@ export class SecurityHandlerService {
     return {
       showEdit: dataFlow.availableActions.includes('update'),
       canAddAnnotation: dataFlow.availableActions.includes('update'),
-      canAddMetadata: this.isLoggedIn(),
+      canAddMetadata: dataFlow.availableActions.includes('update')
     };
   }
 
   elementAccess(element) {
-    if (
-      element.domainType === 'DataModel' ||
-      element.domainType === 'Terminology' ||
-      element.domainType === 'CodeSet'
-    ) {
+    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet') {
       return this.dataModelAccess(element);
     }
 
@@ -357,8 +342,7 @@ export class SecurityHandlerService {
   folderAccess(folder) {
     return {
       showEdit: folder.availableActions.includes('update'),
-      showPermission:
-        folder.availableActions.includes('update') || this.isAdmin(),
+      showPermission: folder.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: folder.availableActions.includes('softDelete'),
       showPermanentDelete: folder.availableActions.includes('delete'),
     };

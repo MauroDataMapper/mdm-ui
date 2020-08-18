@@ -68,7 +68,7 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr *ngIf="showDelete || showEdit">
                     <td colspan="2" style="text-align: right;">
                         <div *ngIf="showDelete" style="float: right;" [hidden]="editableForm.visible">
                           <button mat-stroked-button

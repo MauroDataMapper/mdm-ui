@@ -46,6 +46,8 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   processing: boolean;
   failCount: number;
   total: number;
+  showDisable = false;
+  showEdit = false;
 
   displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
   records: any[] = [];
@@ -78,8 +80,16 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
       this.isLoadingResults = false;
       return [];
     })).subscribe((data) => {
+      // tslint:disable-next-line: forin
+      for (const val in data) {
+        if (data[val].availableActions.includes('update')) {
+          data[val].showEdit = true;
+        }
+        if (data[val].availableActions.includes('disable')) {
+          data[val].showDisable = true;
+        }
+      }
       this.records = data;
-      console.log(data);
     });
   }
 

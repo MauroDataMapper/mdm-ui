@@ -104,17 +104,17 @@ SPDX-License-Identifier: Apache-2.0
               <i class="fas fa-ellipsis-v"></i>
             </button>
             <mat-menu #actions="matMenu" yPosition="below" xPosition="after" class="mdm--mat-menu--actions">
-              <button mat-menu-item (click)="editUser(record)" aria-label="Edit user">
+              <button mat-menu-item (click)="editUser(record)" aria-label="Edit user" *ngIf="record.showEdit">
                 <i class="fas fa-pencil-alt" color="primary"></i> Edit user
               </button>
               <button mat-menu-item (click)="resetPassword(record)" aria-label="Reset password">
                 <i class="fas fa-key" color="primary"></i> Reset password
               </button>
               <mat-divider></mat-divider>
-              <button mat-menu-item class="warning"  *ngIf="!record.disabled" (click)="toggleDeactivate(record)" aria-label="Deactivate">
+              <button mat-menu-item class="warning"  *ngIf="!record.disabled && record.showDisable" (click)="toggleDeactivate(record)" aria-label="Deactivate">
                 <i class="fas fa-ban"></i> Deactivate
               </button>
-              <button mat-menu-item *ngIf="record.disabled" (click)="toggleDeactivate(record)" aria-label="Activate">
+              <button mat-menu-item *ngIf="record.disabled && record.showDisable" (click)="toggleDeactivate(record)" aria-label="Activate">
                 <i class="fas fa-check"></i> Activate
               </button>
             </mat-menu>

@@ -66,8 +66,8 @@ export class UserComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
     private stateHandler: StateHandlerService,
-    private gridService:GridService
-  ) {}
+    private gridService: GridService
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Admin - Add User');
@@ -77,29 +77,62 @@ export class UserComponent implements OnInit {
 
     if (this.id) {
       this.resourcesService.catalogueUser.get(this.id).subscribe(res => {
-          const user = res.body;
-          this.user = user;
-          this.title.setTitle('Admin - Edit User');
+        const user = res.body;
+        this.user = user;
+        this.title.setTitle('Admin - Edit User');
 
-          if (this.user.groups) {
-            for (const val of this.user.groups) {
-              this.selectedGroups.push(val.id);
-            }
+        if (this.user.groups) {
+          for (const val of this.user.groups) {
+            this.selectedGroups.push(val.id);
           }
-        });
+        }
+      });
     }
 
 
-    const options = this.gridService.constructOptions(null,null,"name","asc");
-    options["all"] = true;
+    const options = this.gridService.constructOptions(null, null, 'name', 'asc');
+    options['all'] = true;
 
     this.resourcesService.userGroups.list(options).subscribe(res => {
-        this.allGroups = res.body.items;
-      }, error => {
-        this.messageHandler.showError('There was a problem getting the group list', error);
-      }
+      this.allGroups = res.body.items;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the group list', error);
+    }
     );
   }
+  validateEmail = () => {
+    let isValid = true;
+    if (!this.user.emailAddress.trim().length) {
+      this.errors.emailAddress = `Email can't be empty!`;
+      isValid = false;
+    }
+
+    if (isValid) {
+      const parts = this.user.emailAddress.split('@');
+      const username = parts[0];
+      const delimiters = ['.', '-', '_'];
+      let fname = '';
+      let lname = '';
+
+      delimiters.forEach((key, val) => {
+        const partsName = username.replace(/\d+/g, '');
+        const num = partsName.indexOf(key);
+        if (num > -1) {
+          fname = partsName.substring(0, (num));
+          lname = partsName.substring(num + 1, (partsName.length));
+
+          fname = fname.toLowerCase();
+          lname = lname.toLowerCase();
+
+          fname = fname.charAt(0).toUpperCase() + fname.slice(1);
+          lname = lname.charAt(0).toUpperCase() + lname.slice(1);
+        }
+      });
+      this.user.lastName = lname;
+      this.user.firstName = fname;
+    }
+  }
+
 
   validate = () => {
     let isValid = true;
@@ -150,12 +183,12 @@ export class UserComponent implements OnInit {
     } else {
       // it's in new mode (create)
       this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
-          this.messageHandler.showSuccess('User saved successfully.');
-          this.stateHandler.Go('admin.users');
-        },
+        this.messageHandler.showSuccess('User saved successfully.');
+        this.stateHandler.Go('admin.users');
+      },
         error => {
           this.messageHandler.showError('There was a problem saving the user.', error);
-      });
+        });
     }
   };
 
@@ -168,7 +201,7 @@ export class UserComponent implements OnInit {
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
         this.user.groups.push(
-           val.id
+          val.id
           //label: val.label
         );
       }

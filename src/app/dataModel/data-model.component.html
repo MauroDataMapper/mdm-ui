@@ -139,14 +139,13 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </ng-template>
     </mat-tab>
-    <!-- TODO - DB migration -->
-    <!-- <mat-tab label="Attachments" *ngIf="showExtraTabs">
+    <mat-tab label="Attachments" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-attachment-list>
             </div>
         </ng-template>
-    </mat-tab> -->
+    </mat-tab>
     <mat-tab label="Dataflow" *ngIf="dataModel && dataModel.type === 'Data Asset'">
         <ng-template matTabContent>
             <div class="full-width">

@@ -121,7 +121,8 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
   download = record => {
-    return this.resources.facets.downloadLinkReferenceFile(this.parent.id, record.id);
+    // return this.resources.facets.downloadLinkReferenceFile(this.parent.id, record.id);
+    return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
   };
 
   delete = record => {
@@ -151,7 +152,7 @@ export class AttachmentListComponent implements AfterViewInit {
   save = (record, index) => {
     const fileName = 'File' + index;
     record.edit.formData.append('file', this.getFile(fileName));
-    this.resources.facets.attachReferenceFile(this.parent.id, record.edit.formData).subscribe(() => {
+    this.resources.catalogueItem.saveReferenceFiles(this.domainType, this.parent.id, record.edit.formData).subscribe(() => {
       this.messageHandler.showSuccess('Attachment uploaded successfully.');
       this.reloadEvent.emit();
     }, error => {

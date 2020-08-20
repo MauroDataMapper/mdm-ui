@@ -155,9 +155,10 @@ export class DataModelComponent implements OnInit, OnDestroy {
         return { index: 8, name: 'attachments' };
       case 'dataflow': {
         if (this.dataModel.type === 'Data Asset') {
-          return { index: 9, name: 'dataflow' };
+          return { index: 9, name: 'dataflows' };
+        } else {
+          return { index: 0, name: 'dataClasses' };
         }
-        return { index: 0, name: 'dataClasses' };
       }
       default:
         return { index: 0, name: 'dataClasses' };
@@ -183,7 +184,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
       case 7:
         return { index: 7, name: 'links' };
       case 8:
-        return { index: 8, name: 'dataflow' };
+        return { index: 8, name: 'attachments' };
       case 9: {
         if (this.dataModel.type === 'Data Asset') {
           return { index: 9, name: 'dataflow' };

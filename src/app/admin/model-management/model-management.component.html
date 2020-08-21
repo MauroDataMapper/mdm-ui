@@ -38,8 +38,7 @@ SPDX-License-Identifier: Apache-2.0
                 <mat-radio-group aria-label="filterStatus" class="marginless" name="filterStatus" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
                     <mat-radio-button value="all" [checked]="filterStatus == 'all'">Show all Models</mat-radio-button>
                     <mat-radio-button value="includeDeleted">Show Deleted Models</mat-radio-button>
-                    <!-- TODO pending changes from backend -->
-                    <!-- <mat-radio-button value="includeDocumentSuperseded">Superseded Documents</mat-radio-button> -->
+                    <mat-radio-button value="includeDocumentSuperseded">Show Superseded Documents</mat-radio-button>
                     <mat-radio-button value="includeModelSuperseded">Show Superseded Models</mat-radio-button>
                 </mat-radio-group>
             </div>

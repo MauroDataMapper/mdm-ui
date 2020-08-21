@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 <div class="mdm--navbar-user">
                     <div *ngIf="!isLoggedIn">
-                        <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary">Register</button> -->
+                        <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary">Register</button> TODO -->
                         <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary">Log in</button>
                     </div>
                     <div *ngIf="isLoggedIn">
@@ -199,7 +199,7 @@ SPDX-License-Identifier: Apache-2.0
         </nav>
         <div *ngIf="!isLoggedIn" class="aside-user-actions mb-2">
             <button (click)="login()" mat-flat-button class="custom" color="primary">Log in</button>
-            <!-- <button (click)="register()" mat-button class="custom" color="primary">Register an account</button> -->
+            <!-- <button (click)="register()" mat-button class="custom" color="primary">Register an account</button> TODO -->
         </div>
 
         <button *ngIf="isLoggedIn" (click)="logout()" id="navbar-logout">

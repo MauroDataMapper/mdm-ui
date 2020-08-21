@@ -96,7 +96,6 @@ header#mdm--header {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: right;
   }
   .profile-role {
     font-size: 14px;
@@ -131,6 +130,9 @@ header#mdm--header {
 }
 #mdm--navbar-mobile .mdm--navbar-user {
   display: block;
+  background: #002147;
+    color: #fff;
+    padding-bottom: 10px;
   .profile-img {
     margin: 18px auto 10px auto;
   }
@@ -222,6 +224,14 @@ a.mat-menu-item {
   .profile-img {
     text-align: center;
     margin-top: 18px;
+  }
+  .profile-img {
+    top: 10px;
+    margin-top: 0 !important;
+    position: relative;
+  }
+  hr {
+    margin-top: 0;
   }
   .aside-separator {
     margin-top: 40px;

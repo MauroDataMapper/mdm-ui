@@ -40,8 +40,9 @@ export interface Node {
     parentDataClass?: Node;
     dataModel?: any;
     isRoot?: boolean;
-    superseded?:boolean;
+    superseded?: boolean;
     documentationVersion?: string;
+    branchName?: string;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -167,7 +168,11 @@ export class FlatNode {
     }
 
     get documentationVersion() {
-        return this.node?.documentationVersion
+        return this.node?.documentationVersion;
+    }
+
+    get branchName() {
+      return this.node?.branchName;
     }
 
 }

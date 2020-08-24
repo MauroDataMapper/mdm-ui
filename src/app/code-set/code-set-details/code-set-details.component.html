@@ -59,9 +59,15 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
 
                 <div class="text-muted" *ngIf="result">
+                  <small>
+                      <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+                      <span><strong>Branch: </strong> <span class="branch-name">{{result.branchName}}</span></span>
+                  </small>
+                </div>
+                <div class="text-muted" *ngIf="result">
                     <small>
-                        <i class="fas fa-code-branch" matTooltip="Version"></i>
-                        <span><strong>Version: </strong>{{result.documentationVersion}}</span>
+                        <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+                        <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
                     </small>
                 </div>
                 <div class="text-muted" *ngIf="result">

@@ -117,6 +117,7 @@ header#mdm--header {
     font-weight: 700;
     img {
       @include size();
+      object-fit: cover;
       border-radius: 100%;
     }
   }

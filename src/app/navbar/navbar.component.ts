@@ -37,6 +37,7 @@ export class NavbarComponent implements OnInit {
   profilePictureReloadIndex = 0;
   profile: any;
   backendURL: any;
+  imgChanged: boolean;
   simpleViewSupport: any;
   current: any;
   HDFLink: any;
@@ -58,12 +59,21 @@ export class NavbarComponent implements OnInit {
       // }
     }
     this.backendURL = this.sharedService.backendURL;
+    this.imgChanged = false;
     this.HDFLink = this.sharedService.HDFLink;
     this.current = this.sharedService.current;
     this.broadcastSvc.subscribe('pendingUserUpdated', () => {
       this.getPendingUsers();
     });
+
+    this.broadcastSvc.subscribe("profileImgUndated", () => {
+      this.imgChanged = true;
+      setTimeout(() => {
+        this.imgChanged = false;
+      },1000);
+        });
   }
+  
   getPendingUsers = () => {
     this.sharedService.pendingUsersCount().subscribe(data => {
       this.pendingUsersCount = data.body.count;

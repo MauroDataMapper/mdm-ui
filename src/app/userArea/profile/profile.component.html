@@ -15,8 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<!-- TODO - DB migration -->
-<!-- <div class="mb-2 mdm--profile-block">
+<div class="mb-2 mdm--profile-block">
 	<img class="img-rounded" *ngIf="trustedUrl" style="width: 64px; height: auto; border-radius: 100%; margin-right: 10px;" [src]="trustedUrl" alt="User profile">
 	<i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help" role="help"></i>
 	<button mat-button color="primary" class="paddingless" [matMenuTriggerFor]="menuProfile" aria-label="Edit profile picture">
@@ -33,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
 			Remove image
 		</button>
 	</mat-menu>
-</div> -->
+</div>
 <mdm-img-croppie (cropImage)="imageCropped($event)" #imgCropperComp [hidden]="!isImageLoaded"></mdm-img-croppie>
 <div *ngIf="isImageLoaded" [hidden]="!isImageLoaded" class="pull-right" style="margin: 15px 0;">
 	<button mat-button color="warn" type="button" (click)="clear()">Cancel</button>

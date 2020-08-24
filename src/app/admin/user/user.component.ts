@@ -201,7 +201,7 @@ export class UserComponent implements OnInit {
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
         this.user.groups.push(
-          val.id
+          val.id 
           //label: val.label
         );
       }

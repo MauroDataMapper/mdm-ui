@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import * as SvgPanZoom from 'svg-pan-zoom';
+import SvgPanZoom from 'svg-pan-zoom';
 import * as joint from 'jointjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BasicDiagramService } from '../services/basic-diagram.service';

@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
                     <div *ngIf="isLoggedIn">
                         <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign="center center" style="width: 185px;">
                             <div class="profile-img" fxFlex="30" fxFlex.sm="100" fxFlex.xs="100">
-                                <img class="img-rounded" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image" alt="User profile">
+                                <img class="img-rounded"  *ngIf="!imgChanged" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image" alt="User profile">
                             </div>
                             <div fxFlex="60" fxFlex.sm="100" fxFlex.xs="100">
                                 <div class="profile-name">{{profile.firstName}} {{profile.lastName}}</div>
@@ -119,7 +119,7 @@ SPDX-License-Identifier: Apache-2.0
             <div *ngIf="isLoggedIn">
                 <div *ngIf="profile" class="mdm--navbar-user">
                     <div class="profile-img">
-                      <img class="img-rounded" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image" alt="User profile">
+                      <img class="img-rounded" *ngIf="!imgChanged" src="{{backendURL}}/catalogueUsers/{{profile.id}}/image" alt="User profile">
                     </div>
                     <div class="profile-details">
                         <div class="profile-name">{{profile.firstName}} {{profile.lastName}}</div>

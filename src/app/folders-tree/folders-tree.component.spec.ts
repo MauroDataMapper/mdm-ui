@@ -15,43 +15,34 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { FoldersTreeComponent } from './folders-tree.component';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FoldersTreeModule } from './folders-tree.module';
-import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { environment } from '@env/environment';
+import { MdmResourcesModule } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { MatTreeModule } from '@angular/material/tree';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FormsModule } from '@angular/forms';
-import { HighlighterPipe } from '../pipes/highlighter.pipe';
+import { FoldersTreeComponent } from './folders-tree.component';
+import { FoldersTreeModule } from './folders-tree.module';
 
 describe('mdm-folders-tree', () => {
     let component: FoldersTreeComponent;
     let fixture: ComponentFixture<FoldersTreeComponent>;
 
     beforeEach(() => {
-      // TestBed.configureTestingModule({
-      //   imports: [
-      //     FoldersTreeModule,
-
-      //     // Transitive dependencies
-      //     MatDialogModule,
-      //     HttpClientModule,
-      //     UIRouterModule.forRoot({ useHash: true }),
-      //     ToastrModule.forRoot()
-      //   ]
-      // })
-      // .compileComponents();
-
-      // TODO: Importing modules caused jest to hang. Need to investigate.
       TestBed.configureTestingModule({
-        declarations: [
-          FoldersTreeComponent
+        imports: [
+          FoldersTreeModule,
+
+          // Transitive dependencies
+          MatDialogModule,
+          HttpClientModule,
+          UIRouterModule.forRoot({ useHash: true }),
+          ToastrModule.forRoot(),
+          MdmResourcesModule.forRoot({
+            defaultHttpRequestOptions: { withCredentials: true },
+            apiEndpoint: environment.apiEndpoint
+          })
         ]
       })
       .compileComponents();

@@ -21,19 +21,13 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { of, Subscription } from 'rxjs';
-import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { MessageService } from '../services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
-import { BroadcastService } from '@mdm/services/broadcast.service';
+import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
-
+import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-folders-tree',

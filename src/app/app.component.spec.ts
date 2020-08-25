@@ -18,12 +18,49 @@ SPDX-License-Identifier: Apache-2.0
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { TestModule } from './modules/test/test.module';
+import { ProfilePictureComponent } from './shared/profile-picture/profile-picture.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ByteArrayToBase64Pipe } from './pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NavbarComponent } from './navbar/navbar.component';
+import { FooterComponent } from './shared/footer/footer.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from './modules/resources';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
+      imports: [
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatDialogModule,
+        MatBadgeModule,
+        MatToolbarModule,
+        NoopAnimationsModule,
+        MatSidenavModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {}
+        }
+      ],
       declarations: [
+        ProfilePictureComponent,
+        ByteArrayToBase64Pipe,
+        NavbarComponent,
+        FooterComponent,
         AppComponent
       ],
     }).compileComponents();

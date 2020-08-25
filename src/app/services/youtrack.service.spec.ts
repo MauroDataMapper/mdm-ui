@@ -25,16 +25,26 @@ import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.se
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('YoutrackService', () => {
   let service: YoutrackService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule,
-                UIRouterModule.forRoot({ useHash: true }),
-                ToastrModule.forRoot()],
-      providers: [ElementTypesService]});
+      imports: [
+        HttpClientModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {}
+        },
+        ElementTypesService
+      ]
+    });
     service = TestBed.inject(YoutrackService);
   });
 

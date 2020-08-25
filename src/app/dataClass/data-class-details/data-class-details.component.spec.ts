@@ -19,6 +19,29 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataClassDetailsComponent } from './data-class-details.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
+import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
+import { MultiplicityComponent } from '@mdm/shared/multiplicity/multiplicity.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { FormsModule } from '@angular/forms';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { ToastrModule } from 'ngx-toastr';
+import { UIRouterModule } from '@uirouter/angular';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('DataClassDetailsComponent', () => {
   let component: DataClassDetailsComponent;
@@ -26,8 +49,39 @@ describe('DataClassDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[TestModule],
-      declarations: [ DataClassDetailsComponent ]
+      imports:[
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatCheckboxModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        InlineTextEditComponent,
+        ElementAliasComponent,
+        MarkdownTextAreaComponent,
+        ModelPathComponent,
+        MultiplicityComponent,
+        ElementClassificationsComponent,
+        EditableFormButtonsComponent,
+        ProfilePictureComponent,
+        PropertiesDirective,
+        MarkdownDirective,
+        ByteArrayToBase64Pipe,
+        DataClassDetailsComponent
+      ]
     })
     .compileComponents();
   }));

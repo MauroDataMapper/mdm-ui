@@ -22,13 +22,25 @@ import { HttpClientModule } from '@angular/common/http';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('SharedService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [HttpClientModule,
+    imports: [
+      HttpClientModule,
       UIRouterModule.forRoot({ useHash: true }),
-      ToastrModule.forRoot()],
-    providers: [ElementTypesService]}));
+      ToastrModule.forRoot()
+    ],
+    providers: [
+      {
+        provide: MdmResourcesService,
+        useValue: {
+
+        }
+      },
+      ElementTypesService
+    ]
+  }));
 
   it('should be created', () => {
     const service: SharedService = TestBed.get(SharedService);

@@ -18,8 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { environment } from '@env/environment';
-import { MdmResourcesModule } from '@mdm/modules/resources';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { FoldersTreeComponent } from './folders-tree.component';
@@ -38,11 +37,10 @@ describe('mdm-folders-tree', () => {
           MatDialogModule,
           HttpClientModule,
           UIRouterModule.forRoot({ useHash: true }),
-          ToastrModule.forRoot(),
-          MdmResourcesModule.forRoot({
-            defaultHttpRequestOptions: { withCredentials: true },
-            apiEndpoint: environment.apiEndpoint
-          })
+          ToastrModule.forRoot()
+        ],
+        providers: [
+          { provide: MdmResourcesService, useValue: {} }
         ]
       })
       .compileComponents();

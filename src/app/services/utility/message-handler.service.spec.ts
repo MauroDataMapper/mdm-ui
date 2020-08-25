@@ -18,9 +18,14 @@ SPDX-License-Identifier: Apache-2.0
 import { TestBed } from '@angular/core/testing';
 
 import { MessageHandlerService } from './message-handler.service';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('MessageHandlerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => TestBed.configureTestingModule({
+    imports: [
+      ToastrModule.forRoot()
+    ]
+  }));
 
   it('should be created', () => {
     const service: MessageHandlerService = TestBed.get(MessageHandlerService);

@@ -478,7 +478,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     return promise;
   }
 
-  async handleAddFolder(fnode: FlatNode, label?) {
+  async handleAddFolder(fnode: FlatNode, label?: string) {
     if (this.selectedNode) {
       this.selectedNode.selected = false;
     }
@@ -617,7 +617,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     this.node.children = filteredTreeData;
     this.refreshTree();
   }
-  validateLabel = (data) => {
+  validateLabel = (data: string) => {
     if (!data || (data && data.trim().length === 0)) {
       return false;
     } else {

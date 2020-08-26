@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 50%; width: 50%; text-align: left; ">
                 <div *ngIf="!record.inEdit">
                     <div>
-                        <a href="{{download(record)}}">{{record.fileName}}</a>
+                        <a href="{{apiEndpoint}}/{{domainType}}/{{parent.id}}/referenceFiles/{{record.id}}">{{record.fileName}}</a>
                     </div>
                 </div>
                 <div *ngIf="record.isNew">

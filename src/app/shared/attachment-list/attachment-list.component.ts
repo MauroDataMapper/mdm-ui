@@ -15,7 +15,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, AfterViewInit, Input, ViewChildren, ViewChild, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  ViewChildren,
+  ViewChild,
+  ElementRef,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { merge } from 'rxjs';
@@ -23,19 +32,21 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { SharedService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-attachment-list',
   templateUrl: './attachment-list.component.html',
-  styleUrls: ['./attachment-list.component.sass']
+  styleUrls: ['./attachment-list.component.sass'],
 })
 export class AttachmentListComponent implements AfterViewInit {
   constructor(
     private changeRef: ChangeDetectorRef,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private securityHandler: SecurityHandlerService
-  ) { }
+    private securityHandler: SecurityHandlerService,
+    private sharedService: SharedService
+  ) {}
 
   @Input() parent: any;
   @Input() domainType: any;
@@ -43,7 +54,8 @@ export class AttachmentListComponent implements AfterViewInit {
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   reloadEvent = new EventEmitter<any>();
   hideFilters = true;
   displayedColumns: string[] = ['fileName', 'fileSize', 'lastUpdated', 'other'];
@@ -54,36 +66,42 @@ export class AttachmentListComponent implements AfterViewInit {
   currentUser: any;
   access: any;
   records: any[] = [];
+  apiEndpoint: any;
 
   ngAfterViewInit() {
     this.currentUser = this.securityHandler.getCurrentUser();
     this.access = this.securityHandler.elementAccess(this.parent);
+    this.apiEndpoint = this.sharedService.backendURL;
 
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
+    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
 
-      return this.attachmentFetch(
-        this.paginator.pageSize,
-        this.paginator.pageOffset,
-        this.sort.active,
-        this.sort.direction,
-        this.filter
-      );
-    }),
-      map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        return data.body.items;
-      }),
-      catchError(() => {
-        this.isLoadingResults = false;
-        return [];
-      })
-    ).subscribe(data => {
-      this.records = data;
-    });
+          return this.attachmentFetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction,
+            this.filter
+          );
+        }),
+        map((data: any) => {
+          this.totalItemCount = data.body.count;
+          this.isLoadingResults = false;
+          return data.body.items;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          return [];
+        })
+      )
+      .subscribe((data) => {
+        this.records = data;
+      });
 
     this.changeRef.detectChanges();
   }
@@ -94,7 +112,7 @@ export class AttachmentListComponent implements AfterViewInit {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
-       filter[name] = value;
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -106,7 +124,10 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
   attachmentFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    return this.resources.catalogueItem.listReferenceFiles(this.domainType, this.parent.id);
+    return this.resources.catalogueItem.listReferenceFiles(
+      this.domainType,
+      this.parent.id
+    );
   };
 
   cancelEdit = (record, index) => {
@@ -115,23 +136,34 @@ export class AttachmentListComponent implements AfterViewInit {
     }
   };
 
-  getFile = inputFileName => {
+  getFile = (inputFileName) => {
     const element: any = document.getElementById(inputFileName);
     return element && element.files ? element.files[0] : '';
   };
 
-  download = record => {
+  download = (record) => {
     // return this.resources.facets.downloadLinkReferenceFile(this.parent.id, record.id);
-    return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
+    return this.resources.catalogueItem.getReferenceFile(
+      this.domainType,
+      this.parent.id,
+      record.id)
   };
 
-  delete = record => {
-    this.resources.catalogueItem.removeReferenceFile(this.parent.domainType, this.parent.id, record.id).subscribe(() => {
-      this.messageHandler.showSuccess('Attachment deleted successfully.');
-      this.reloadEvent.emit();
-    }, error => {
-      this.messageHandler.showError('There was a problem deleting the attachment.', error);
-    });
+  delete = (record) => {
+    this.resources.catalogueItem
+      .removeReferenceFile(this.parent.domainType, this.parent.id, record.id)
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess('Attachment deleted successfully.');
+          this.reloadEvent.emit();
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem deleting the attachment.',
+            error
+          );
+        }
+      );
   };
 
   add = () => {
@@ -141,22 +173,56 @@ export class AttachmentListComponent implements AfterViewInit {
       edit: {
         id: '',
         fileName: '',
-        formData: new FormData()
+        formData: new FormData(),
       },
       inEdit: true,
-      isNew: true
+      isNew: true,
     };
     this.records = [].concat([newRecord]).concat(this.records);
   };
 
+  readFile = (file) => {};
+
   save = (record, index) => {
     const fileName = 'File' + index;
-    record.edit.formData.append('file', this.getFile(fileName));
-    this.resources.catalogueItem.saveReferenceFiles(this.domainType, this.parent.id, record.edit.formData).subscribe(() => {
-      this.messageHandler.showSuccess('Attachment uploaded successfully.');
-      this.reloadEvent.emit();
-    }, error => {
-      this.messageHandler.showError('There was a problem saving the attachment.', error);
-    });
-  }
+    const file = this.getFile(fileName);
+    let reader = new FileReader();
+
+    reader.readAsArrayBuffer(file);
+
+    let byt = this.readFile(file);
+
+    reader.onload = () => {
+      var res: any = reader.result;
+      var array : any = new Int8Array(res);
+      const fileByteArray = [];
+      for (let i = 0; i < array.length; i++) {
+         fileByteArray.push(array[i]);
+      }
+
+      const data = {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        fileContents: fileByteArray
+      };  
+
+      this.resources.catalogueItem
+        .saveReferenceFiles(this.domainType, this.parent.id, data)
+        .subscribe(
+          () => {
+            this.messageHandler.showSuccess(
+              'Attachment uploaded successfully.'
+            );
+            this.reloadEvent.emit();
+          },
+          (error) => {
+            this.messageHandler.showError(
+              'There was a problem saving the attachment.',
+              error
+            );
+          }
+        );
+    };
+  };
 }

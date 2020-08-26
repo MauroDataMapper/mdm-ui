@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div id="viewport">
-  <div style="width: 400px; min-width: 400px; padding: 10px; margin-top: 30px">
+  <div *ngIf="dataClassComponent" style="width: 400px; min-width: 400px; padding: 10px; margin-top: 30px">
     <mat-accordion>
       <mat-expansion-panel *ngIf="dataClassComponent" hideToggle>
 

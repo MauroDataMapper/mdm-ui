@@ -66,14 +66,14 @@ export class NavbarComponent implements OnInit {
       this.getPendingUsers();
     });
 
-    this.broadcastSvc.subscribe("profileImgUndated", () => {
+    this.broadcastSvc.subscribe('profileImgUndated', () => {
       this.imgChanged = true;
       setTimeout(() => {
         this.imgChanged = false;
-      },1000);
-        });
+      }, 1000);
+    });
   }
-  
+
   getPendingUsers = () => {
     this.sharedService.pendingUsersCount().subscribe(data => {
       this.pendingUsersCount = data.body.count;

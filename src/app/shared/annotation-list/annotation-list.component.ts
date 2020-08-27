@@ -95,7 +95,7 @@ export class AnnotationListComponent implements AfterViewInit {
   }
 
   annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
   }
 
@@ -151,12 +151,12 @@ export class AnnotationListComponent implements AfterViewInit {
       annotation.newChildText = '';
       this.messageHandler.showSuccess('Comment saved successfully.');
     }, error => {
-        this.messageHandler.showError('There was a problem saving the comment.', error);
-        // element not found
-        if (error.status === 400) {
-          // viewError
-        }
+      this.messageHandler.showError('There was a problem saving the comment.', error);
+      // element not found
+      if (error.status === 400) {
+        // viewError
       }
+    }
     );
   };
 

@@ -35,20 +35,20 @@ export class ExportHandlerService {
 
   exportDataModel(dataModels, exporter) {
 
-    let modelIds = [];
+    const modelIds = [];
     dataModels.forEach(dm => {
       modelIds.push(dm.id);
     });
 
-    if(modelIds.length > 1){
-      return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType : "arraybuffer" });
+    if (modelIds.length > 1) {
+      return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
     }
 
-    return this.resources.dataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version,{}, { responseType : "arraybuffer" }); 
+    return this.resources.dataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
   }
 
   exportDataModel2(dataModels, exporter) {
-    let modelIds = [];
+    const modelIds = [];
     dataModels.forEach(dm => {
       modelIds.push(dm.id);
     });

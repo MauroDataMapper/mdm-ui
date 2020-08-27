@@ -107,7 +107,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   dataElementsFetch(pageSize, pageIndex, sortBy, sortType, filters) {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     const dataClass = this.model.copyFromDataClass[0];
     return this.resources.dataElement.list(dataClass.modelId, dataClass.id, options);
   }
@@ -265,17 +265,17 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-    const options = this.gridService.constructOptions(limit,offset,"label","asc",{label:text});
+    const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', {label: text});
 
     this.pagination = {
-      limit: options["limit"],
-      offset: options["offset"]
+      limit: options['limit'],
+      offset: options['offset']
     };
 
     this.changeRef.detectChanges();
 
     if (loadAll) {
-      delete options["label"];
+      delete options['label'];
     }
 
     return this.resources.dataType.list(this.model.parentDataModel.id, options);

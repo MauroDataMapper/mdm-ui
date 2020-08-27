@@ -94,7 +94,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   }
 
   groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resourcesService.userGroups.list(options);
   }
@@ -105,7 +105,7 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
-       filter[name] = value;
+        filter[name] = value;
       }
     });
     this.filter = filter;

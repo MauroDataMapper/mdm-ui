@@ -48,7 +48,7 @@ export class PluginsComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private gridService:GridService
+    private gridService: GridService
   ) { }
 
   ngOnInit() {
@@ -71,7 +71,7 @@ export class PluginsComponent implements OnInit, AfterViewInit {
     filters?
   ) {
 
-    const options = this.gridService.constructOptions(pageSize,pageIndex,"displayName","asc",filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, 'displayName', 'asc', filters);
 
     this.resourcesService.provider.importers(options).subscribe(resp => {
       this.dataSource.data = [...this.dataSource.data, ...resp.body];

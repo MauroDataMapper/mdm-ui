@@ -46,7 +46,7 @@ export class AttachmentListComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
     private sharedService: SharedService
-  ) {}
+  ) { }
 
   @Input() parent: any;
   @Input() domainType: any;
@@ -181,23 +181,23 @@ export class AttachmentListComponent implements AfterViewInit {
     this.records = [].concat([newRecord]).concat(this.records);
   };
 
-  readFile = (file) => {};
+  readFile = (file) => { };
 
   save = (record, index) => {
     const fileName = 'File' + index;
     const file = this.getFile(fileName);
-    let reader = new FileReader();
+    const reader = new FileReader();
 
     reader.readAsArrayBuffer(file);
 
-    let byt = this.readFile(file);
+    const byt = this.readFile(file);
 
     reader.onload = () => {
-      var res: any = reader.result;
-      var array : any = new Int8Array(res);
+      const res: any = reader.result;
+      const array: any = new Int8Array(res);
       const fileByteArray = [];
       for (let i = 0; i < array.length; i++) {
-         fileByteArray.push(array[i]);
+        fileByteArray.push(array[i]);
       }
 
       const data = {
@@ -205,7 +205,7 @@ export class AttachmentListComponent implements AfterViewInit {
         fileType: file.type,
         fileSize: file.size,
         fileContents: fileByteArray
-      };  
+      };
 
       this.resources.catalogueItem
         .saveReferenceFiles(this.domainType, this.parent.id, data)

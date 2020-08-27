@@ -81,12 +81,12 @@ export class EmailsComponent implements OnInit, AfterViewInit {
       })).subscribe(data => {
         this.records = data;
 
-    });
+      });
     this.changeRef.detectChanges();
   }
 
   mailsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resourcesService.admin.emails(options);
   }
   applyFilter = () => {
@@ -95,7 +95,7 @@ export class EmailsComponent implements OnInit, AfterViewInit {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
       if (value !== '') {
-       filter[name] = value;
+        filter[name] = value;
       }
     });
     this.filter = filter;

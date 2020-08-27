@@ -61,7 +61,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     private messageHandler: MessageHandlerService,
     private resources: MdmResourcesService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ROLES = this.roles.map;
   errors: any;
@@ -74,7 +74,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   filter: any = '';
   applyFilter = this.gridService.applyFilter(this.filters);
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -115,7 +115,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   }
 
   groupMembersFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     return this.resources.catalogueUser.listInUserGroup(
       this.parent.id,
       options
@@ -126,7 +126,7 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     let isValid = true;
     this.errors = [];
     if (this.parent.name.trim().length === 0) {
-      this.errors.name = "Name can't be empty!";
+      this.errors.name = 'Name can\'t be empty!';
       isValid = false;
     }
     if (isValid) {
@@ -150,10 +150,10 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
 
   fetchUser = (text, offset, limit) => {
 
-    const options = this.gridService.constructOptions(limit,offset,"emailAddress","asc");
+    const options = this.gridService.constructOptions(limit, offset, 'emailAddress', 'asc');
     this.pagination = {
-      limit: options["limit"],
-      offset: options["offset"],
+      limit: options['limit'],
+      offset: options['offset'],
     };
     return this.resources.catalogueUser.search(options);
   };

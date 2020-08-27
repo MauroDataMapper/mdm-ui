@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
         fxLayoutAlign="flex-start center">
         <h4 class="marginless">
           Restrict user access based on group(s)
-          <span class="mdm--badge mdm--element-count">{{ dataSource.data.length }}</span>
+          <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span>
         </h4>
       </div>
       <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
@@ -130,7 +130,26 @@ SPDX-License-Identifier: Apache-2.0
     </table>
   </form>
 
-  <div class="mdm--mat-pagination">
+  <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+    <p class="marginless">There are no groups this repository.</p>
+  </div>
+
+  <div class="item" *ngIf="isLoadingResults">
+    <table class="mdm--mat-table mdm--skeleton-table">
+      <tr>
+        <th style="width: 33.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+        <th style="width: 43%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+        <th style="width: 11.5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+    </tr>
+    <tr>
+        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+        <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      </tr>
+    </table>
+</div>
+
+  <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
     <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
   </div>
 </div>

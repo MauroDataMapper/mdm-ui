@@ -39,6 +39,7 @@ export class GroupAccessNewComponent implements OnInit {
   groupsMap = {};
   editable = false;
   accessLevels = [];
+  isLoadingResults = true;
 
   folderResult: FolderResult;
   @Input() parent: any;
@@ -105,43 +106,27 @@ export class GroupAccessNewComponent implements OnInit {
         // sortBy: "emailAddress",
         order: 'asc',
       };
-      this.resourceService.userGroups.list().subscribe(
-        (data) => {
-          this.allGroups = data.body.items;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem getting the group list.',
-            error
-          );
-        }
-      );
+      this.resourceService.userGroups.list().subscribe((data) => {
+        this.allGroups = data.body.items;
+      }, (error) => {
+        this.messageHandler.showError('There was a problem getting the group list.', error);
+      });
     });
   }
 
   buildGroups = () => {
     this.groups = [];
     this.folderResult = this.messageService.getFolderPermissions();
-    this.resourceService.securableResource
-      .getGroupRoles(this.folderResult.domainType, this.folderResult.id, '')
-      .subscribe(
-        (res) => {
-          this.accessLevels = res.body.items;
-          this.resourceService.securableResource
-            .getSecurableResourceGroupRole(
-              this.folderResult.domainType,
-              this.folderResult.id,
-              ''
-            )
-            .subscribe((result) => {
-              this.groups = result.body.items;
-
-              this.totalItemCount = this.groups.length;
-              this.refreshDataSource();
-            });
-        },
-        (error) => {}
-      );
+    this.isLoadingResults = true;
+    this.resourceService.securableResource.getGroupRoles(this.folderResult.domainType, this.folderResult.id, '').subscribe((res) => {
+      this.accessLevels = res.body.items;
+      this.resourceService.securableResource.getSecurableResourceGroupRole(this.folderResult.domainType, this.folderResult.id, '').subscribe((result) => {
+        this.groups = result.body.items;
+        this.totalItemCount = result.body.count;
+        this.isLoadingResults = false;
+        this.refreshDataSource();
+      });
+    }, () => { });
   };
 
   save(row, index) {
@@ -151,23 +136,13 @@ export class GroupAccessNewComponent implements OnInit {
     const gId = row.edit.group.id;
     const levelId = row.groupLevelId.id;
 
-    this.resourceService.securableResource
-      .addUserGroupToSecurableResourceGroupRole(
-        this.folderResult.domainType,
-        mId,
-        levelId,
-        gId,
-        null
-      )
-      .subscribe(
-        (result) => {
-          this.messageHandler.showSuccess('Save Successful');
-          this.buildGroups();
-        },
-        (error) => {
-          this.messageHandler.showError('Save Error', error);
-        }
-      );
+    this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult.domainType, mId, levelId, gId, null).subscribe(() => {
+      this.messageHandler.showSuccess('Save Successful');
+      this.buildGroups();
+    },
+      (error) => {
+        this.messageHandler.showError('Save Error', error);
+      });
   }
 
   add() {
@@ -243,8 +218,8 @@ export class GroupAccessNewComponent implements OnInit {
       this.messageHandler.showSuccess('Delete Successful');
       this.buildGroups();
     },
-    (error) => {
-      this.messageHandler.showError('Error Removing', error);
-    });
+      (error) => {
+        this.messageHandler.showError('Error Removing', error);
+      });
   }
 }

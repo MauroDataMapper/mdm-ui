@@ -124,8 +124,8 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
     sortType?,
     filters?
   ): Observable<any> {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
-    return this.resources.classifier.listForCatalogueItem(this.classifiedElementType, this.parent.id, options);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    return this.resources.classifier.listCatalogueItemsFor(this.parent.id, options);
   }
 
   applyFilter = () => {

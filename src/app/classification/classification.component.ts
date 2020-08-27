@@ -75,47 +75,44 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     this.classifierDetails(this.stateService.params.id);
 
     const promises = [];
-    // promises.push(this.resourcesService.classifier.listForCatalogueItem('classifiers', this.stateService.params.id)
+    // promises.push(this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id))
       // this.resourcesService.classifier.get(
       //   this.stateService.params.id,
       //   'catalogueItems',
       //   null
       // )
     // );
-    promises.push([]
+    // promises.push([]
       // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
       // this.resourcesService.classifier.get(
       //   this.stateService.params.id,
       //   'terminologies',
       //   null
       // )
-    );
-    promises.push(
-      this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id)
-      // this.resourcesService.classifier.get(
-      //   this.stateService.params.id,
-      //   'terms',
-      //   null
-      // )
-    );
-    promises.push(
-      this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
-      // this.resourcesService.classifier.get(
-      //   this.stateService.params.id,
-      //   'codeSets',
-      //   null
-      // )
-    );
+    // );
+    // promises.push(this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id));
+      // this.resourcesService.classifier.get(this.stateService.params.id, 'terms', null)
+    // promises.push(
+    //   // this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
+    //   // this.resourcesService.classifier.get(this.stateService.params.id, 'codeSets', null)
+    // );
 
-    forkJoin(promises).subscribe((results: any) => {
-      this.catalogueItemsCount = results[0].body.count;
-      this.terminologiesCount = results[1].body.count;
-      this.termsCount = results[2].body.count;
-      this.codeSetsCount = results[3].body.count;
+    // forkJoin(promises).subscribe((results: any) => {
+    //   console.log(results);
+    //   this.catalogueItemsCount = results[0].body.count;
+    //   this.terminologiesCount = results[1].body.count;
+    //   this.termsCount = results[2].body.count;
+    //   this.codeSetsCount = results[3].body.count;
 
-      this.loading = false;
-      this.activeTab = this.getTabDetail('classifiedElements');
-    });
+    //   this.loading = false;
+    //   this.activeTab = this.getTabDetail('classifiedElements');
+    // });
+
+    // this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id).subscribe(result => {
+
+    // });
+
+
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
@@ -134,8 +131,8 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   }
 
   classifierDetails(id: any) {
-    this.resourcesService.classifier.get(id).subscribe((result: { body: FolderResult }) => {
-        this.result = result.body;
+    this.resourcesService.classifier.get(id).subscribe((response: { body: FolderResult }) => {
+        this.result = response.body;
 
         this.parentId = this.result.id;
         if (this.sharedService.isLoggedIn(true)) {

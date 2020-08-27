@@ -71,13 +71,14 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </div>
 
-        <div class="mb-2">
+        <!-- TODO - pending update from back-end
+          <div class="mb-2">
             <mat-checkbox [(ngModel)]="form.copyDataFlows" [disabled]="processing">
                 Copy DataFlows
             </mat-checkbox>
             <span class="help-block" *ngIf="errors && errors.copyDataFlows"><small>{{errors.copyDataFlows}}</small></span>
             <small class="block">If checked, all Dataflows which this Data Model is a target of, will be copied to the new Data Model version.</small>
-        </div>
+        </div> -->
     </div>
 
     <div *ngIf="versionType === 'newDocumentVersion'">

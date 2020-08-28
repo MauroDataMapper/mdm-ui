@@ -70,7 +70,7 @@ export class NewVersionCodeSetComponent implements OnInit {
       return false;
     }
 
-    if (this.versionType === 'newElementVersion') {
+    if (this.versionType === 'Fork') {
       if (this.validator.isEmpty(this.form.label)) {
         this.errors = this.errors || {};
         this.errors.label = 'Codeset name can not be empty!';
@@ -87,14 +87,14 @@ export class NewVersionCodeSetComponent implements OnInit {
       return;
     }
 
-    if (this.versionType === 'newModelVersion') { // newModelVersion
+    if (this.versionType === 'Fork') { // newModelVersion
       const resource = {
         label: this.form.label,
         copyPermissions: this.form.copyPermissions,
         copyDataFlows: this.form.copyDataFlows
       };
       this.processing = true;
-      this.resources.codeSet.newModelVersion(this.codeSet.id, resource).subscribe(response => {
+      this.resources.codeSet.newForkModel(this.codeSet.id, resource).subscribe(response => {
         this.processing = false;
         if (response) {
           this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
@@ -104,7 +104,7 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.processing = false;
         this.messageHandler.showError('There was a problem creating the new Codeset version.', error);
       });
-    } else if (this.versionType === 'newDocumentationVersion') { // newDocumentationVersion
+    } else if (this.versionType === 'Version') { // newDocumentationVersion
       const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
       this.resources.codeSet.newDocumentationVersion(this.codeSet.id, resources).subscribe(response => {
@@ -115,6 +115,24 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.processing = false;
         this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
       });
+    }else if (this.versionType === "Branch"){
+      
+      let resources = {}
+      if(this.form.label !== null)
+      {
+        resources = { branchName: this.form.label };      
+      }    
+  
+      this.processing = true;
+      this.resources.codeSet.newBranchModelVersion(this.codeSet.id, resources).subscribe(
+        response => {
+          this.processing = false;
+          this.messageHandler.showSuccess('New Branch created successfully.');
+          this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
+        }, error => {
+          this.processing = false;
+          this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
+        });
     }
   }
   cancel = () => {

@@ -43,6 +43,7 @@ export interface Node {
     superseded?: boolean;
     documentationVersion?: string;
     branchName?: string;
+    modelVersion?: string;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -173,6 +174,10 @@ export class FlatNode {
 
     get branchName() {
       return this.node?.branchName;
+    }
+
+    get modelVersion() {
+        return this.node?.modelVersion;
     }
 
 }

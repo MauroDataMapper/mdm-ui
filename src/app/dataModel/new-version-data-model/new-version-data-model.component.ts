@@ -70,7 +70,7 @@ export class NewVersionDataModelComponent implements OnInit {
     if (!this.versionType) {
       return false;
     }
-    if (this.versionType === 'newElementVersion') {
+    if (this.versionType === 'Fork') {
       if (this.validator.isEmpty(this.form.label)) {
         this.errors = this.errors || {};
         this.errors.label = 'Data Model name can not be empty!';
@@ -86,7 +86,7 @@ export class NewVersionDataModelComponent implements OnInit {
     if (!this.validate()) {
       return;
     }
-    if (this.versionType === 'newElementVersion') {
+    if (this.versionType === 'Fork') {
       const resource = {
         label: this.form.label,
         copyPermissions: this.form.copyPermissions,
@@ -94,7 +94,7 @@ export class NewVersionDataModelComponent implements OnInit {
       };
       this.processing = true;
 
-      this.resources.dataModel.newModelVersion(this.dataModel.id, resource).subscribe(response => {
+      this.resources.dataModel.newForkModel(this.dataModel.id, resource).subscribe(response => {
         this.processing = false;
         this.messageHandler.showSuccess('New Data Model version created successfully.');
         this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
@@ -103,13 +103,32 @@ export class NewVersionDataModelComponent implements OnInit {
         this.messageHandler.showError('There was a problem creating the new Data Model version.', error);
       }
       );
-    } else if (this.versionType === 'newDocumentVersion') {
+    } else if (this.versionType === 'Version') {
       const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
       this.resources.dataModel.newDocumentationVersion(this.dataModel.id, resources).subscribe(
         response => {
           this.processing = false;
           this.messageHandler.showSuccess('New Document Model version created successfully.');
+          this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
+        }, error => {
+          this.processing = false;
+          this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
+        });
+    } else if (this.versionType === "Branch"){
+      
+      let resources = {}
+      if(this.form.label !== null)
+      {
+        resources = { branchName: this.form.label };      
+      }    
+ 
+  
+      this.processing = true;
+      this.resources.dataModel.newBranchModelVersion(this.dataModel.id, resources).subscribe(
+        response => {
+          this.processing = false;
+          this.messageHandler.showSuccess('New Branch created successfully.');
           this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true });
         }, error => {
           this.processing = false;

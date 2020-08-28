@@ -29,23 +29,30 @@ SPDX-License-Identifier: Apache-2.0
         <div class="mb-2">
             <h4 class="mat-h4 marginless">Select the type of the new version that you want to create:</h4>
             <mat-radio-group  class="marginless" [(ngModel)]="versionType" (click)="versionTypeChecked()" [disabled]="processing">
-                <mat-radio-button value="newElementVersion" checked="true"><i class="fas fa-list"></i> New Data Model version</mat-radio-button>
+                <mat-radio-button value="Fork" checked="true"><i class="fas fa-list"></i> New Data Model Fork</mat-radio-button>
             </mat-radio-group>
             <small>
-                This will create a new version of
+                This will create a new <strong>Fork</strong> of
                 <mdm-element-link [parentDataModel]="{id:dataModel.id}" [element]="dataModel"></mdm-element-link>
             </small>
         </div>
 
-        <div>
+        <div class="mb-2">
             <mat-radio-group class="marginless" [(ngModel)]="versionType" (click)="versionTypeChecked()" [disabled]="processing">
-                <mat-radio-button value="newDocumentVersion"><i class="fas fa-file-alt"></i> New Document Model</mat-radio-button>
+                <mat-radio-button value="Version"><i class="fas fa-file-alt"></i> New Document Model</mat-radio-button>
             </mat-radio-group>
             <small>This will create a new <strong>Document Model</strong> for <mdm-element-link [parentDataModel]="{id:dataModel.id}" [element]="dataModel"></mdm-element-link></small>
         </div>
+
+        <div class="mb-2">
+            <mat-radio-group class="marginless" [(ngModel)]="versionType" (click)="versionTypeChecked()" [disabled]="processing">
+                <mat-radio-button value="Branch"><i class="fas fa-code-branch"></i> New Branch</mat-radio-button>
+            </mat-radio-group>
+            <small>This will create a new <strong>Branch</strong> for <mdm-element-link [parentDataModel]="{id:dataModel.id}" [element]="dataModel"></mdm-element-link></small>
+        </div>
     </div>
 
-    <div *ngIf="versionType === 'newElementVersion'">
+    <div *ngIf="versionType === 'Fork'">
         <div class="mdm--form-input mb-2">
             <h4 class="mat-h4 marginless">Additional details:</h4>
 
@@ -80,8 +87,8 @@ SPDX-License-Identifier: Apache-2.0
             <small class="block">If checked, all Dataflows which this Data Model is a target of, will be copied to the new Data Model version.</small>
         </div> -->
     </div>
-
-    <div *ngIf="versionType === 'newDocumentVersion'">
+    
+    <!-- <div *ngIf="versionType === 'Version'">
         <h4 class="mat-h4 marginless">Additional details:</h4>
         <div [ngClass]="{'has-error': errors && errors.copyPermissions}">
             <mat-checkbox [(ngModel)]="form.moveDataFlows">
@@ -92,13 +99,24 @@ SPDX-License-Identifier: Apache-2.0
         <span class="help-block" style="margin-top:0px;">
             <small>If checked, all Dataflows which this Data Model is a target of will be moved to the new Document Model.</small>
         </span>
+    </div> -->
+
+    <div *ngIf="versionType === 'Branch'">
+        <div [ngClass]="{'form-group':true, 'has-error': errors && errors.label }">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Branch name</mat-label>
+                <input matInput [(ngModel)]="form.label" [disabled]="processing">
+                <mat-hint>If no Branch name is provided <strong>main</strong> will be used</mat-hint>
+            </mat-form-field>
+            <span class="help-block warning" *ngIf="errors && errors.label" style="margin-left: 16px;"><small>{{errors.label}}</small></span>
+        </div>
     </div>
     <div *ngIf="step > 1">
         <button mat-button color="warn" (click)="cancel()" [disabled]="processing">
             Cancel
         </button>
         <button mat-flat-button color="primary" class="custom" (click)="save()" [disabled]="processing">
-            Add version
+            Add {{versionType}}
         </button>
 
         <div style="margin-top: 5px;" *ngIf="processing">

@@ -34,6 +34,7 @@ export class DataModelResult {
   readableByEveryone: boolean;
   deleted: boolean;
   branchName: string;
+  modelVersion: any;
 }
 
 export class Classifiers {

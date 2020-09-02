@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -35,7 +35,7 @@ describe('mdm-folders-tree', () => {
 
           // Transitive dependencies
           MatDialogModule,
-          HttpClientModule,
+          HttpClientTestingModule,
           UIRouterModule.forRoot({ useHash: true }),
           ToastrModule.forRoot()
         ],

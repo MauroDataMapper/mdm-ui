@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import {TestBed, async} from '@angular/core/testing';
 
 import {RestHandlerService} from './rest-handler.service';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
@@ -59,7 +60,7 @@ describe('RestHandlerService', () => {
       imports: [
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot(),
-        HttpClientModule
+        HttpClientTestingModule
       ],
       providers: [
         RestHandlerService,

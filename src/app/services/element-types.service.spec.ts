@@ -18,13 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 import { TestBed } from '@angular/core/testing';
 
 import { ElementTypesService } from './element-types.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ElementTypesService', () => {
  beforeEach(() => TestBed.configureTestingModule({
-   imports: [HttpClientModule,
+   imports: [HttpClientTestingModule,
     UIRouterModule.forRoot({ useHash: true }),
     ToastrModule.forRoot()],
     providers: [ElementTypesService]}));

@@ -18,11 +18,37 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataElementStep2Component } from './data-element-step2.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { TestModule } from '@mdm/modules/test/test.module';
-import { NgForm, FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { ElementDataTypeComponent } from '@mdm/shared/element-data-type/element-data-type.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
+import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/new-data-type-inline.component';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { McEnumerationListWithCategoryComponent } from '@mdm/utility/mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSortModule } from '@angular/material/sort';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { empty } from 'rxjs';
 
 describe('DataElementStep2Component', () => {
   let component: DataElementStep2Component;
@@ -31,12 +57,44 @@ describe('DataElementStep2Component', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot(),
-        TestModule,        
+        MatTableModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatOptionModule,
+        DragDropModule,
+        MatSelectModule,
+        MatProgressBarModule,
+        FormsModule,
+        FoldersTreeModule
+        // TestModule,
       ],
-      declarations: [DataElementStep2Component, NgForm],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        McSelectComponent,
+        MoreDescriptionComponent,
+        PropertiesDirective,
+        ElementDataTypeComponent,
+        ModelSelectorTreeComponent,
+        MdmPaginatorComponent,
+        ModelPathComponent,
+        NewDataTypeInlineComponent,
+        ElementLinkComponent,
+        McEnumerationListWithCategoryComponent,
+        ElementClassificationsComponent,
+        DataElementStep2Component
+      ],
     }).compileComponents();
   }));
 
@@ -44,7 +102,6 @@ describe('DataElementStep2Component', () => {
     fixture = TestBed.createComponent(DataElementStep2Component);
     component = fixture.componentInstance;
     component.step = { scope: { model: {} } };
-
     fixture.detectChanges();
   });
 

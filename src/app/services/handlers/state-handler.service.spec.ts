@@ -19,6 +19,7 @@ import {TestBed, ComponentFixture} from '@angular/core/testing';
 
 import {StateHandlerService} from './state-handler.service';
 import {UIRouter, StateService, StateDeclaration, StateOrName, RawParams, HrefOptions} from '@uirouter/core';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('StateHandlerService', () => {
   let spyRouter: UIRouter;
@@ -58,6 +59,9 @@ describe('StateHandlerService', () => {
      * Set up the test bed to support creation of StateHandlerService instances.
      */
     TestBed.configureTestingModule({
+      imports: [
+        ToastrModule.forRoot()
+      ],
       providers: [
         StateHandlerService,
         {provide: UIRouter, useValue: spyRouter}

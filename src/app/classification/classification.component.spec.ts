@@ -53,6 +53,11 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ClassifiedElementsListComponent } from '@mdm/shared/classified-elements-list/classified-elements-list.component';
+import { MatSortModule } from '@angular/material/sort';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 
 describe('ClassificationComponent', () => {
   let component: ClassificationComponent;
@@ -70,6 +75,7 @@ describe('ClassificationComponent', () => {
         MatTooltipModule,
         MatPaginatorModule,
         MatOptionModule,
+        MatSortModule,
         MatProgressSpinnerModule,
         MatCardModule,
         MatSelectModule,
@@ -93,12 +99,16 @@ describe('ClassificationComponent', () => {
         McSelectComponent,
         MarkdownDirective,
         AdvancedSearchBarComponent,
+        McPagedListComponent,
+        ClassifiedElementsListComponent,
         ModelSelectorTreeComponent,
         DateFromToComponent,
         ElementLinkComponent,
         ModelPathComponent,
         HistoryComponent,
         ProfilePictureComponent,
+        MoreDescriptionComponent,
+        AllLinksInPagedListComponent,
         ByteArrayToBase64Pipe,
         ClassificationComponent
       ]

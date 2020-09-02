@@ -19,8 +19,29 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeSetTermsTableComponent } from './code-set-terms-table.component';
 import { TestModule } from '@mdm/modules/test/test.module';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
+import { TableButtonsComponent } from '../table-buttons/table-buttons.component';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
+import { FormsModule } from '@angular/forms';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CodeSetTermsTableComponent', () => {
   let component: CodeSetTermsTableComponent;
@@ -28,8 +49,39 @@ describe('CodeSetTermsTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ CodeSetTermsTableComponent , MatSort, MdmPaginatorComponent]
+      imports: [
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        NoopAnimationsModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatSortModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        ProfilePictureComponent,
+        McPagedListComponent,
+        ByteArrayToBase64Pipe,
+        MultipleTermsSelectorComponent,
+        ElementLinkComponent,
+        ElementAliasComponent,
+        McSelectComponent,
+        TableButtonsComponent,
+        MdmPaginatorComponent,
+        PropertiesDirective,
+        CodeSetTermsTableComponent
+      ]
     })
     .compileComponents();
   }));

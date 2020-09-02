@@ -19,7 +19,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClassifiedElementsListComponent } from './classified-elements-list.component';
 import { ToastrModule } from 'ngx-toastr';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -32,6 +32,13 @@ import { CdkOverlayOrigin, OverlayModule, ScrollStrategyOptions } from '@angular
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PortalModule } from '@angular/cdk/portal';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
+import { MoreDescriptionComponent } from '../more-description/more-description.component';
+import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
+import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('ClassifiedElementsListComponent', () => {
   let component: ClassifiedElementsListComponent;
@@ -39,9 +46,8 @@ describe('ClassifiedElementsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [ElementTypesService],
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot(),
         MatTableModule,
@@ -49,14 +55,24 @@ describe('ClassifiedElementsListComponent', () => {
         FormsModule,
         BrowserAnimationsModule,
         PortalModule,
-        OverlayModule],
+        OverlayModule,
+        NgxSkeletonLoaderModule
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        },
+        ElementTypesService
+      ],
       declarations: [
         ClassifiedElementsListComponent,
-        MdmPaginatorComponent,
-        MatPaginator,
-        MatTooltip,
-        MatSelect,
-        CdkOverlayOrigin ]
+        ElementLinkComponent,
+        ModelPathComponent,
+        McPagedListComponent,
+        MoreDescriptionComponent,
+        AllLinksInPagedListComponent,
+        MdmPaginatorComponent
+      ]
     })
     .compileComponents();
   }));

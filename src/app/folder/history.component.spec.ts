@@ -19,6 +19,17 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryComponent } from './history.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -29,7 +40,25 @@ describe('HistoryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-      TestModule
+      // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatPaginatorModule,
+        NoopAnimationsModule,
+        MatTableModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        ProfilePictureComponent,
+        ByteArrayToBase64Pipe,
+        MdmPaginatorComponent,
+        HistoryComponent
       ]
     }).compileComponents();
   }));

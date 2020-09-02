@@ -26,7 +26,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ErrorComponent', () => {
   let component: ErrorComponent;
@@ -42,7 +42,7 @@ describe('ErrorComponent', () => {
         NgxJsonViewerModule,
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot(),
-        HttpClientModule
+        HttpClientTestingModule
       ],
       providers: [
         { provide: MdmResourcesService, useValue: {} }

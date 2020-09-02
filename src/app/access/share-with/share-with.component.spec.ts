@@ -16,8 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { ShareWithComponent } from './share-with.component';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ShareWithComponent', () => {
   let component: ShareWithComponent;
@@ -25,8 +29,21 @@ describe('ShareWithComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ ShareWithComponent ]
+      imports: [
+        // TestModule
+        MatCheckboxModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        ShareWithComponent
+      ]
     })
     .compileComponents();
   }));

@@ -19,6 +19,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataModelsExportComponent } from './data-models-export.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { FormsModule } from '@angular/forms';
+import { FilterPipe } from '@mdm/directives/filter-pipe.directive';
+import { ToastrModule } from 'ngx-toastr';
+import { UIRouterModule } from '@uirouter/angular';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MatDialogModule } from '@angular/material/dialog';
+import { empty } from 'rxjs';
 
 describe('DataModelsExportComponent', () => {
   let component: DataModelsExportComponent;
@@ -26,8 +43,40 @@ describe('DataModelsExportComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ DataModelsExportComponent ]
+      imports: [
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatProgressBarModule,
+        MatDialogModule,
+        FoldersTreeModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            session: {
+              isAuthenticated: () => empty()
+            },
+            tree: {
+              list: jest.fn()
+            }
+          }
+        }
+      ],
+      declarations: [
+        ProfilePictureComponent,
+        ByteArrayToBase64Pipe,
+        FilterPipe,
+        ModelSelectorTreeComponent,
+        DataModelsExportComponent
+      ]
     })
     .compileComponents();
   }));

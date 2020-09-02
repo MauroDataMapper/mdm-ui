@@ -19,6 +19,27 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewDataTypeInlineComponent } from './new-data-type-inline.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { McSelectComponent } from '../mc-select/mc-select.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { ElementClassificationsComponent } from '../element-classifications/element-classifications.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { ModelPathComponent } from '../model-path/model-path.component';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSortModule } from '@angular/material/sort';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
 
 describe('NewDataTypeInlineComponent', () => {
   let component: NewDataTypeInlineComponent;
@@ -26,8 +47,41 @@ describe('NewDataTypeInlineComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[TestModule],
-      declarations: [ NewDataTypeInlineComponent ]
+      imports:[
+        // TestModule
+        MatOptionModule,
+        MatSelectModule,
+        MatTableModule,
+        MatIconModule,
+        MatSortModule,
+        DragDropModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        FoldersTreeModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            terminology: {
+              list: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [
+        McEnumerationListWithCategoryComponent,
+        ModelSelectorTreeComponent,
+        McSelectComponent,
+        ModelPathComponent,
+        ElementClassificationsComponent,
+        PropertiesDirective,
+        MdmPaginatorComponent,
+        NewDataTypeInlineComponent
+      ]
     })
     .compileComponents();
   }));

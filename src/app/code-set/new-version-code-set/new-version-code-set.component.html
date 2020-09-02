@@ -44,11 +44,11 @@ SPDX-License-Identifier: Apache-2.0
         [disabled]="processing"
       >
         <mat-radio-button value="Fork" checked="true"
-          ><i class="fas fa-list"></i> New Model Version</mat-radio-button
+          ><i class="fas fa-list"></i> New Fork</mat-radio-button
         >
       </mat-radio-group>
       <small>
-        This will create a new version of
+        This will create a new fork of
         <mdm-element-link
           [parentDataModel]="{ id: codeSet.id }"
           [element]="codeSet"
@@ -64,12 +64,11 @@ SPDX-License-Identifier: Apache-2.0
         [disabled]="processing"
       >
         <mat-radio-button value="Version"
-          ><i class="fas fa-file-alt"></i> New Documentation
-          Version</mat-radio-button
+          ><i class="fas fa-file-alt"></i> New Version</mat-radio-button
         >
       </mat-radio-group>
       <small
-        >This will create a new <strong>Document Model</strong> for
+        >This will create a new version for
         <mdm-element-link
           [parentDataModel]="{ id: codeSet.id }"
           [element]="codeSet"
@@ -177,11 +176,7 @@ SPDX-License-Identifier: Apache-2.0
     >
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Branch name</mat-label>
-        <input matInput [(ngModel)]="form.label" [disabled]="processing" />
-        <mat-hint
-          >If no Branch name is provided <strong>main</strong> will be
-          used</mat-hint
-        >
+        <input matInput [(ngModel)]="form.label" [disabled]="processing" required />
       </mat-form-field>
       <span
         class="help-block warning"

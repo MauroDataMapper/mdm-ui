@@ -79,6 +79,13 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.errors.label = `The name should be different from the current version name ${this.codeSet.label}`;
       }
     }
+
+    if (this.versionType === 'Branch') {
+      if (this.validator.isEmpty(this.form.label)) {
+        this.errors = this.errors || {};
+        this.errors.label = 'Branch name can not be empty!';
+      }
+    }
     return !this.errors;
   }
 
@@ -107,18 +114,18 @@ export class NewVersionCodeSetComponent implements OnInit {
     } else if (this.versionType === 'Version') { // newDocumentationVersion
       const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
-      this.resources.codeSet.newDocumentationVersion(this.codeSet.id, resources).subscribe(response => {
+      this.resources.codeSet.newBranchModelVersion(this.codeSet.id,{}).subscribe(response => {
         this.processing = false;
-        this.messageHandler.showSuccess('New Document Model version created successfully.');
+        this.messageHandler.showSuccess('New Model version created successfully.');
         this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
       }, error => {
         this.processing = false;
-        this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
+        this.messageHandler.showError('There was a problem creating the new Model version.', error);
       });
     }else if (this.versionType === "Branch"){
       
       let resources = {}
-      if(this.form.label !== null)
+      if(this.form.label !== null && this.form.label !== "")
       {
         resources = { branchName: this.form.label };      
       }    
@@ -131,7 +138,7 @@ export class NewVersionCodeSetComponent implements OnInit {
           this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
         }, error => {
           this.processing = false;
-          this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
+          this.messageHandler.showError('There was a problem creating the new Codeset branch.', error);
         });
     }
   }

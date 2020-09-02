@@ -79,6 +79,12 @@ export class NewVersionDataModelComponent implements OnInit {
         this.errors.label = `The name should be different from the current version name ${this.dataModel.label}`;
       }
     }
+    if (this.versionType === 'Branch') {
+      if (this.validator.isEmpty(this.form.label)) {
+        this.errors = this.errors || {};
+        this.errors.label = 'Branch name can not be empty!';
+      }
+    }
     return !this.errors;
   }
 
@@ -104,9 +110,8 @@ export class NewVersionDataModelComponent implements OnInit {
       }
       );
     } else if (this.versionType === 'Version') {
-      const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
-      this.resources.dataModel.newDocumentationVersion(this.dataModel.id, resources).subscribe(
+      this.resources.dataModel.newBranchModelVersion(this.dataModel.id, {}).subscribe(
         response => {
           this.processing = false;
           this.messageHandler.showSuccess('New Document Model version created successfully.');
@@ -118,7 +123,7 @@ export class NewVersionDataModelComponent implements OnInit {
     } else if (this.versionType === "Branch"){
       
       let resources = {}
-      if(this.form.label !== null)
+      if(this.form.label !== null && this.form.label !== "")
       {
         resources = { branchName: this.form.label };      
       }    

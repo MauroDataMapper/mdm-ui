@@ -19,6 +19,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClassifierMainComponent } from './classifier-main.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { DclWrapperComponent } from '@mdm/wizards/dcl-wrapper.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { empty } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ClassifierMainComponent', () => {
   let component: ClassifierMainComponent;
@@ -26,8 +33,27 @@ describe('ClassifierMainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ ClassifierMainComponent ]
+      imports: [
+        // TestModule
+        MatStepperModule,
+        NoopAnimationsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            folder: {
+              get: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [
+        DclWrapperComponent,
+        ClassifierMainComponent
+      ]
     })
     .compileComponents();
   }));

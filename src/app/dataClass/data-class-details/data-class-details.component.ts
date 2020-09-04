@@ -35,6 +35,9 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -42,14 +45,17 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-class-details.component.sass']
 })
 export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
+  @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
+  @Input() editMode = false;
+  @Input() afterSave: any;
+
   result: DataClassResult;
   hasResult = false;
   subscription: Subscription;
   editableForm: EditableDataClass;
-  @Input() afterSave: any;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
   errorMessage = '';
   error = '';
   newMinText: any;
@@ -62,7 +68,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   exporting: boolean;
   showEditMode = false;
   processing = false;
-  @Input() editMode = false;
   aliases: any[] = [];
   max: any;
   min: any;
@@ -75,7 +80,9 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService,
     private stateHandler: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private dialog: MatDialog,
+    private securityHandler: SecurityHandlerService
   ) {
     this.DataClassDetails();
   }
@@ -144,11 +151,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   ngAfterViewInit(): void {
     this.error = '';
-    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe((queryList: QueryList<any>) => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -163,71 +167,124 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
+    this.editForm.find((inlineEditorComponent: any) => {
+      return inlineEditorComponent.name === 'editableText';
+    });
   }
 
   DataClassDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-        this.result = serverResult;
+      this.result = serverResult;
 
-        this.editableForm.description = this.result.description;
-        this.editableForm.label = this.result.label;
+      this.editableForm.description = this.result.description;
+      this.editableForm.label = this.result.label;
 
-        if (this.result.classifiers) {
-          this.result.classifiers.forEach(item => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        this.aliases = [];
-        if (this.result.aliases) {
-          this.result.aliases.forEach(item => {
-            this.aliases.push(item);
-            // this.editableForm.aliases.push(item);
-          });
-        }
-
-        if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
-          this.min = '*';
-        } else {
-          this.min = this.result.minMultiplicity;
-        }
-
-        if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
-          this.max = '*';
-        } else {
-          this.max = this.result.maxMultiplicity;
-        }
-
-        if (this.result != null) {
-          this.hasResult = true;
-        }
-        this.title.setTitle(`Data Class - ${this.result?.label}`);
+      if (this.result.classifiers) {
+        this.result.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
       }
-    );
+      this.aliases = [];
+      if (this.result.aliases) {
+        this.result.aliases.forEach(item => {
+          this.aliases.push(item);
+        });
+      }
+
+      if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
+        this.min = '*';
+      } else {
+        this.min = this.result.minMultiplicity;
+      }
+
+      if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
+        this.max = '*';
+      } else {
+        this.max = this.result.maxMultiplicity;
+      }
+
+      if (this.result != null) {
+        this.hasResult = true;
+      }
+      this.title.setTitle(`Data Class - ${this.result?.label}`);
+      this.watchDataClassObject();
+    });
   }
+
+  watchDataClassObject() {
+    const access: any = this.securityHandler.elementAccess(this.result);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    }
+  }
+
 
   ngOnDestroy() {
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
+  askForPermanentDelete() {
 
-  delete() {
-    this.resourcesService.dataClass.delete(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
-      this.messageHandler.showSuccess('Data Class deleted successfully.');
-      this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-    },
-    error => {
-      this.deleteInProgress = false;
-      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(ConfirmationModalComponent, {
+        data: {
+          title: `Permanent deletion`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Class?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Class.</p>`
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result?.status !== 'ok') {
+          return;
+        }
+        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
+          data: {
+            title: `Confirm permanent deletion`,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+          }
+        });
+
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
+            return;
+          }
+          resolve(this.delete());
+        });
+      });
     });
+
+    return promise;
   }
 
-  formBeforeSave = function() {
+  delete() {
+    if (!this.result.parentDataClass) {
+      this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.id).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class deleted successfully.');
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      });
+    } else {
+      this.resourcesService.dataClass.removeChildDataClass(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class deleted successfully.');
+        this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      });
+    }
+  }
+
+  formBeforeSave = () => {
     this.error = '';
     this.editMode = false;
     this.errorMessage = '';
@@ -241,7 +298,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       aliases.push(alias);
     });
     if (this.validateLabel(this.result.label) && this.validateMultiplicity(this.min, this.max)) {
-      if (this.min != null && this.min !== '' && this.max != null && this.max !== '' ) {
+      if (this.min != null && this.min !== '' && this.max != null && this.max !== '') {
         if (this.newMinText === '*') {
           this.newMinText = -1;
         }
@@ -259,25 +316,31 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         minMultiplicity: parseInt(this.min, 10),
         maxMultiplicity: parseInt(this.max, 10)
       };
-      this.resourcesService.dataClass.put(
-          this.result.parentDataModel,
-          this.result.parentDataClass,
-          resource.id,
-          null,
-          { resource }
-        ).subscribe(result => {
-            if (this.afterSave) {
-              this.afterSave(result);
-            }
-            this.messageHandler.showSuccess('Data Class updated successfully.');
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
-          },
-          error => {
-            this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      if (!this.result.parentDataClass) {
+        this.resourcesService.dataClass.update(this.result.parentDataModel, this.result.id, resource).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
           }
-        );
+          this.messageHandler.showSuccess('Data Class updated successfully.');
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Data Class.', error);
+        });
+      } else {
+        this.resourcesService.dataClass.updateChildDataClass(this.result.parentDataModel, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
+          }
+          this.messageHandler.showSuccess('Data Class updated successfully.');
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the Data Class.', error);
+        });
+      }
     }
   };
 
@@ -329,5 +392,9 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.editableForm.validationError = false;
       this.errorMessage = '';
     }
+  }
+
+  isAdmin = () => {
+    return this.securityHandler.isAdmin();
   }
 }

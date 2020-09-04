@@ -51,19 +51,15 @@ export class DataClassMainComponent implements AfterViewInit {
   model: any = {
     metadata: [],
     classifiers: [],
-
     parent: {},
-
     createType: 'new',
     copyFromDataModel: [],
-
     selectedDataClasses: [],
     selectedDataClassesMap: {}
   };
 
   ngAfterViewInit(): void {
     // Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    // Add 'implements AfterViewInit' to the class.
 
     this.title.setTitle('New Data Class');
 
@@ -90,7 +86,7 @@ export class DataClassMainComponent implements AfterViewInit {
     step2.invalid = true;
 
     if (this.parentDataClassId) {
-      this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).toPromise().then(result => {
+      this.resources.dataClass.getChildDataClass(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId).toPromise().then(result => {
         result.body.breadcrumbs.push(Object.assign([], result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
@@ -175,37 +171,25 @@ export class DataClassMainComponent implements AfterViewInit {
 
     let deferred;
     if (this.model.parent.domainType === 'DataClass') {
-      deferred = this.resources.dataClass.post(
-        this.model.parent.dataModel,
-        this.model.parent.id,
-        'dataClasses',
-        { resource }
-      );
+      deferred = this.resources.dataClass.addChildDataClass(this.model.parent.model, this.model.parent.id, resource);
     } else {
-      deferred = this.resources.dataModel.post(
-        this.model.parent.id,
-        'dataClasses',
-        { resource }
-      );
+      deferred = this.resources.dataClass.save(this.model.parent.id, resource);
     }
 
     deferred.subscribe(response => {
-
       this.messageHandler.showSuccess('Data Class saved successfully.');
       this.broadcastSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go(
         'dataClass',
         {
-          dataModelId: response.body.dataModel || '',
+          dataModelId: response.body.model || '',
           dataClassId: response.body.parentDataClass || '',
           id: response.body.id
         },
         { reload: true, location: true }
       );
-    },
-      error => {
-        this.messageHandler.showError('There was a problem saving the Data Class.', error);
-      }
-    );
+    }, error => {
+      this.messageHandler.showError('There was a problem saving the Data Class.', error);
+    });
   }
 }

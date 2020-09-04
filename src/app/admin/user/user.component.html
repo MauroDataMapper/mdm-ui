@@ -24,6 +24,15 @@ SPDX-License-Identifier: Apache-2.0
 
 <form name="editableForm" class="mdm--form">
     <div class="mdm--form-input">
+      <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput name="emailAddress" [(ngModel)]="user.emailAddress" required (keyup)="validateEmail()">
+          <mat-error *ngIf="errors && errors['emailAddress']">
+              {{errors['emailAddress']}}
+          </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>First name</mat-label>
             <input matInput name="firstName" [(ngModel)]="user.firstName" required>
@@ -43,15 +52,6 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput name="emailAddress" [(ngModel)]="user.emailAddress" required>
-            <mat-error *ngIf="errors && errors['emailAddress']">
-                {{errors['emailAddress']}}
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
             <mat-label>Organisation</mat-label>
             <input matInput name="organisation" [(ngModel)]="user.organisation">
         </mat-form-field>
@@ -62,22 +62,11 @@ SPDX-License-Identifier: Apache-2.0
             <input matInput name="jobTitle" [(ngModel)]="user.jobTitle">
         </mat-form-field>
     </div>
-    <div class="mdm--form-input">
-        <mat-form-field appearance="outline">
-            <mat-label>Choose a Role</mat-label>
-            <mat-select name="userRole" [(ngModel)]="user.userRole" required>
-                <mat-option *ngFor="let role of roles" [value]="role.value">{{role.text}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="errors && errors['userRole']">
-                {{errors['userRole']}}
-            </mat-error>
-        </mat-form-field>
-    </div>
     <div class="mdm--form-input mb-2">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Choose a Group</mat-label>
         <mat-select name="groupList" (selectionChange)="onGroupSelect($event)" multiple [(ngModel)]="selectedGroups">
-          <mat-option [value]="item.id" *ngFor="let item of allGroups">{{item.label}}</mat-option>
+          <mat-option [value]="item.id" *ngFor="let item of allGroups">{{item.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

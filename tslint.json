@@ -86,11 +86,11 @@
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "semicolon": [
-      true, 
-      "always", 
+      true,
+      "always",
       "ignore-bound-class-methods"
     ],
-    
+
     "template-accessibility-alt-text": true,
     "template-accessibility-elements-content": true,
     "template-accessibility-label-for": true,

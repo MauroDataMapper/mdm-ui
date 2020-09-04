@@ -25,6 +25,7 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-users-table',
@@ -36,17 +37,19 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   hideFilters = true;
-  filter: string;
   isLoadingResults: boolean;
   totalItemCount = 0;
   deleteInProgress: boolean;
   processing: boolean;
   failCount: number;
   total: number;
+  showDisable = false;
+  showEdit = false;
 
-  displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'userRole', 'groups', 'status', 'icons'];
+  displayedColumns: string[] = ['username', 'emailAddress', 'organisation', 'groups', 'status', 'icons'];
   records: any[] = [];
 
   constructor(
@@ -54,8 +57,9 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
-    private title: Title
-  ) {}
+    private title: Title,
+    private gridService: GridService
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Manage users');
@@ -66,37 +70,32 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-          this.isLoadingResults = true;
-
-          return this.usersFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
-        }), map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          return data.body.items;
-        }), catchError(() => {
-          this.isLoadingResults = false;
-          return [];
-        })).subscribe((data) => {
-        this.records = data;
-      });
+      this.isLoadingResults = true;
+      return this.usersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+    }), map((data: any) => {
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      return [];
+    })).subscribe((data) => {
+      // tslint:disable-next-line: forin
+      for (const val in data) {
+        if (data[val].availableActions.includes('update')) {
+          data[val].showEdit = true;
+        }
+        if (data[val].availableActions.includes('disable')) {
+          data[val].showDisable = true;
+        }
+      }
+      this.records = data;
+    });
   }
 
-  usersFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
-  ): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType, filters };
-
-    return this.resources.catalogueUser.get(null, null, options);
+  usersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    return this.resources.catalogueUser.list(options);
   }
 
   editUser(row) {
@@ -116,33 +115,30 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   };
 
   resetPassword(row) {
-    from(this.resources.catalogueUser.put(row.id, 'adminPasswordReset', null)).subscribe(() => {
-        this.messageHandler.showSuccess('Reset password email sent successfully!');
-      }, error => {
-        this.messageHandler.showError('There was a problem sending reset password email.', error);
-      }
-    );
+    from(this.resources.catalogueUser.adminPasswordReset(row.id, null)).subscribe(() => {
+      this.messageHandler.showSuccess('Reset password email sent successfully!');
+    }, error => {
+      this.messageHandler.showError('There was a problem sending reset password email.', error);
+    });
   }
 
   toggleDeactivate(row) {
     row.disabled = !row.disabled;
-    from(this.resources.catalogueUser.put(row.id, null, { resource: row })).subscribe(() => {
-        this.messageHandler.showSuccess('User details updated successfully.');
-        this.broadcastSvc.broadcast('pendingUserUpdated');
-      }, error => {
-        this.messageHandler.showError('There was a problem updating the user.', error);
-      }
-    );
+    from(this.resources.catalogueUser.update(row.id, row)).subscribe(() => {
+      this.messageHandler.showSuccess('User details updated successfully.');
+      this.broadcastSvc.broadcast('pendingUserUpdated');
+    }, error => {
+      this.messageHandler.showError('There was a problem updating the user.', error);
+    });
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value + '&';
+        filter[name] = value;
       }
     });
     this.filter = filter;

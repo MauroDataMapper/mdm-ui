@@ -15,7 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// @ts-ignore
 import { FolderResult, Editable } from '../model/folderModel';
 import {
   Component,
@@ -44,9 +43,11 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 @Component({
   selector: 'mdm-folder-detail',
   templateUrl: './folder-detail.component.html',
-  styleUrls: ['./folder-detail.component.css']
+  styleUrls: ['./folder-detail.component.scss']
 })
 export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() afterSave: any;
+  @Input() editMode = false;
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
@@ -55,6 +56,8 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEdit: boolean;
   showPermission: boolean;
   showDelete: boolean;
+  showPermDelete: boolean;
+  showSoftDelete: boolean;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
@@ -64,8 +67,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEditMode = false;
   processing: boolean;
 
-  @Input() afterSave: any;
-  @Input() editMode = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
@@ -82,7 +83,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private broadcastSvc: BroadcastService,
     private title: Title,
   ) {
-    // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.FolderDetails();
@@ -90,12 +90,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open(
-      'Search_Help',
-      'left' as DialogPosition,
-      null,
-      null
-    );
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
   }
 
   ngOnInit() {
@@ -127,8 +122,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -141,17 +134,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private invokeInlineEditor(): void {
-    // console.log(inlineEditorToInvoke.state);  // OUTPUT: InlineEditorState {value: "Some Value", disabled: false, editing: false, empty: false}
-    //  if (inlineEditorToInvoke) {
-    //      inlineEditorToInvoke.edit({editing: true, focus: true, select: true});
-    //  }
-    // console.log(inlineEditorToInvoke.state); // OUTPUT: InlineEditorState {value: "Some Value", disabled: false, editing: true, empty: false}
-  }
-
-  // private onInlineEditorEdit(editEvent: InlineEditorEvent): void {
-  //     console.log(editEvent); // OUTPUT: Only logs event when inlineEditor appears in template
-  // }
+  private invokeInlineEditor(): void { }
 
   FolderDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
@@ -161,12 +144,14 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
         const access: any = this.securityHandler.folderAccess(this.result);
         this.showEdit = access.showEdit;
         this.showPermission = access.showPermission;
-        this.showDelete = access.showDelete;
+        this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+        this.showPermDelete = access.showPermanentDelete;
+        this.showSoftDelete = access.showSoftDelete;
         if (this.result != null) {
           this.hasResult = true;
           this.watchFolderObject();
         }
-        this.title.setTitle(`Folder - ${this.result?.label}`);
+        this.title.setTitle('Folder - ' + this.result?.label);
       }
     );
   }
@@ -175,7 +160,9 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     const access = this.securityHandler.folderAccess(this.result);
     this.showEdit = access.showEdit;
     this.showPermission = access.showPermission;
-    this.showDelete = access.showDelete;
+    this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    this.showPermDelete = access.showPermanentDelete;
+    this.showSoftDelete = access.showSoftDelete;
   }
 
   toggleSecuritySection() {
@@ -191,26 +178,25 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showDelete) {
       return;
     }
-
     this.folderHandler.askForSoftDelete(this.result.id).then(() => {
       this.stateHandler.reload();
     });
   }
 
   askForPermanentDelete(): any {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showPermDelete) {
       return;
     }
-
     this.folderHandler.askForPermanentDelete(this.result.id).then(() => {
       this.broadcastSvc.broadcast('$reloadFoldersTree');
+      this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     });
   }
 
-  formBeforeSave = function() {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
 
@@ -221,25 +207,18 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.folder
-        .put(resource.id, null, { resource })
-        .subscribe(
-          result => {
-            if (this.afterSave) {
-              this.afterSave(result);
-            }
-            this.messageHandlerService.showSuccess('Folder updated successfully.');
-            this.editableForm.visible = false;
-            this.editForm.forEach(x => x.edit({ editing: false }));
-            this.broadcastSvc.broadcast('$reloadFoldersTree');
-          },
-          error => {
-            this.messageHandler.showError(
-              'There was a problem updating the Folder.',
-              error
-            );
+      this.resourcesService.folder.update(resource.id, resource).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
           }
-        );
+          this.messageHandlerService.showSuccess('Folder updated successfully.');
+          this.editableForm.visible = false;
+          this.editForm.forEach(x => x.edit({ editing: false }));
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.stateHandler.reload();
+        }, error => {
+          this.messageHandlerService.showError('There was a problem updating the Folder.', error);
+      });
     }
   };
 

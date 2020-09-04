@@ -37,14 +37,14 @@ SPDX-License-Identifier: Apache-2.0
                                         <i class="fas fa-filter" [ngClass]="{'':!showFilters, 'filterIcon':showFilters}"></i>
                                     </button>
                                     <mat-menu #filterMenu="matMenu" class="filterMenu">
-                                        <div mat-menu-item>
-                                            <mat-checkbox name="showSupersededModels" (ngModelChange)="toggleFilters('showSupersededModels')" [(ngModel)]="showSupersededModels">
-                                                Show Superseded Data Models
+                                        <!-- <div mat-menu-item>
+                                            <mat-checkbox name="includeModelSuperseded" (ngModelChange)="toggleFilters('includeModelSuperseded')" [(ngModel)]="includeModelSuperseded">
+                                                Show Superseded Models
                                             </mat-checkbox>
-                                        </div>
+                                        </div> -->
                                         <div *ngIf="isAdmin" mat-menu-item>
-                                            <mat-checkbox name="showDeletedModels" (ngModelChange)="toggleFilters('showDeletedModels')" [(ngModel)]="showDeletedModels">
-                                                Show Deleted Data Models
+                                            <mat-checkbox name="includeDeleted" (ngModelChange)="toggleFilters('includeDeleted')" [(ngModel)]="includeDeleted">
+                                                Show Deleted Models
                                             </mat-checkbox>
                                         </div>
                                     </mat-menu>
@@ -102,18 +102,18 @@ SPDX-License-Identifier: Apache-2.0
                                         [rememberExpandedStates]="true"
                                         [node]="filteredModels"
                                         [searchCriteria]="searchText"
-                                        (compareToEvent)="onCompareTo"
-                                        (loadModelsToCompareEvent)="loadModelsToCompare"
+                                        (compareToEvent)="onCompareTo($event)"
+                                        (loadModelsToCompareEvent)="loadModelsToCompare($event)"
                                         [enableDrag]="true"
                                         [enableDrop]="true"
                                         [enableContextMenu]="true"
-                                        (addFolderEvent)="onAddFolder"
+                                        (addFolderEvent)="onAddFolder($event)"
                                         (deleteFolderEvent)="onDeleteFolder($event)"
-                                        (addDataModelEvent)="onAddDataModel"
-                                        (addCodeSetEvent)="onAddCodeSet"
-                                        (addChildDataClassEvent)="onAddChildDataClass"
-                                        (addChildDataElementEvent)="onAddChildDataElement"
-                                        (addChildDataTypeEvent)="onAddChildDataType"
+                                        (addDataModelEvent)="onAddDataModel($event)"
+                                        (addCodeSetEvent)="onAddCodeSet($event)"
+                                        (addChildDataClassEvent)="onAddChildDataClass($event)"
+                                        (addChildDataElementEvent)="onAddChildDataElement($event)"
+                                        (addChildDataTypeEvent)="onAddChildDataType($event)"
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
                                         (nodeClickEvent)="onNodeClick($event)"></mdm-folders-tree>
                     </div>
@@ -162,7 +162,7 @@ SPDX-License-Identifier: Apache-2.0
                                     <button type="button" mat-stroked-button matTooltipPosition="below" matTooltip="Search"  (click)="filterClassifications()" aria-label="Search">
                                         <i class="fas fa-search"></i>
                                     </button>
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" mdmShowIfRolesWritable matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="addClassifier()" aria-label="Create a new classification">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltipPosition="below" matTooltip="Create a new Classification"  (click)="addClassifier()" aria-label="Create a new classification">
                                         <i class="fas fa-folder-plus"></i>
                                     </button>
                                 </span>

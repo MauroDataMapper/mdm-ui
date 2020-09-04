@@ -43,27 +43,16 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 </div>
 <div *ngIf="!showSearch">
-    <div *ngIf="dataClass && dataClass.semanticLinks && dataClass.semanticLinks.length > 0">
-        <div class="mdm--shadow-block bordered">
-            <div class="heading-container">
-                <h4 class="marginless">Links</h4>
-            </div>
-            <div class="pxy-2">
-                <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
-                                             [parent]="dataClass"
-                                             [showDescription]="true"
-                                             [showNoLinksMessage]="true"
-                                             [type]="'static'">
-                </mdm-all-links-in-paged-list>
-            </div>
-        </div>
-    </div>
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Content">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-content-table *ngIf="dataClass" [parentDataModel]="parentDataModel"
-                        [parentDataClass]="dataClass" [grandParentDataClass]="parentDataClass">
+                    <mdm-content-table *ngIf="dataClass"
+                                        [parentDataModel]="parentDataModel"
+                                        [parentDataClass]="dataClass"
+                                        [grandParentDataClass]="parentDataClass"
+                                        [isEditable]="isEditable"
+                                        >
                     </mdm-content-table>
                 </div>
             </ng-template>
@@ -71,29 +60,28 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Properties">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'">
-                    </mdm-data-set-metadata>
+                    <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'" [domainType]="'dataClasses'"></mdm-data-set-metadata>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Comments">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass"></mdm-annotation-list>
+                    <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-annotation-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Links">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass"></mdm-element-link-list>
+                    <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-element-link-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Summary" *ngIf="showExtraTabs">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass">
+                    <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'">
                     </mdm-summary-metadata-table>
                 </div>
             </ng-template>
@@ -101,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Attachments" *ngIf="showExtraTabs">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"></mdm-attachment-list>
+                    <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"  [domainType]="'dataClasses'"></mdm-attachment-list>
                 </div>
             </ng-template>
         </mat-tab>

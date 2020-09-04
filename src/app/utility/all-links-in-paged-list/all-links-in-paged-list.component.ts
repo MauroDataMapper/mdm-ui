@@ -41,18 +41,29 @@ export class AllLinksInPagedListComponent implements OnInit {
   total: any;
   loading = false;
 
-  constructor() {}
+  constructor() { }
 
-  loadLinksStatic() {
+  ngOnInit() {
+    if (!this.parent || (this.parent && this.parent.length === 0)) {
+      this.loading = false;
+      return;
+    }
+    this.loading = true;
+
+    this.loadLinksStatic();
+    this.loading = false;
+  }
+
+  loadLinksStatic = () => {
     this.linkTypes = [];
     this.allLinksMap = {};
     this.total = 0;
     this.loading = true;
-    if (!this.parent.semanticLinks) {
+    if (!this.parent || !this.parent.length) {
       return;
     }
 
-    this.parent.semanticLinks.forEach(link => {
+    this.parent.forEach(link => {
       if (!this.allLinksMap[link.linkType]) {
         this.allLinksMap[link.linkType] = {
           linkType: link.linkType,
@@ -66,20 +77,6 @@ export class AllLinksInPagedListComponent implements OnInit {
       this.total++;
     });
 
-    this.loading = false;
-  }
-
-  ngOnInit() {
-    if (
-      !this.parent.semanticLinks ||
-      (this.parent.semanticLinks && this.parent.semanticLinks.length === 0)
-    ) {
-      this.loading = false;
-      return;
-    }
-    this.loading = true;
-
-    this.loadLinksStatic();
     this.loading = false;
   }
 }

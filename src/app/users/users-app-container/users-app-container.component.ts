@@ -26,7 +26,6 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 })
 export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;
-  exporting: boolean; // TODO correct this
   pendingUsersCount = 0;
   isAdmin = this.securityHandler.isAdmin();
 

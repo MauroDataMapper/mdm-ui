@@ -45,7 +45,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   errorMessage = '';
 
   @Input() afterSave: any;
-
   @Output() refreshUserDetails: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -64,34 +63,33 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   userDetails(): any {
     // subscribe to parent component userDetails messages;
     this.subscription = this.messageService.getUserDetails().subscribe((message) => {
-        this.user = message;
-      });
+      this.user = message;
+    });
   }
 
   checkEmailExists(data: string) {
-    return this.resourcesService.catalogueUser.get(null, `userExists/${data}`, null);
+    return this.resourcesService.catalogueUser.exists(data);
   }
 
-  formBeforeSave = function() {
+  formBeforeSave =  () => {
     this.errorMessage = '';
     this.checkEmailExists(this.user.emailAddress).subscribe(() => {
       const userDetails = {
-        id: this.user.id,
         firstName: this.user.firstName,
         lastName: this.user.lastName,
         organisation: this.user.organisation,
         jobTitle: this.user.jobTitle || '',
       };
       if (this.validateInput(this.user.firstName) && this.validateInput(this.user.lastName) && this.validateInput(this.user.organisation)) {
-        this.resourcesService.catalogueUser.put(userDetails.id, null, { resource: userDetails }).subscribe(result => {
-              if (this.afterSave) {
-                this.afterSave(result);
-              }
-              this.messageHandler.showSuccess('User details updated successfully.');
-            }, error => {
-              this.messageHandler.showError('There was a problem updating the User Details.', error);
-            }
-          );
+        this.resourcesService.catalogueUser.update(this.user.id, userDetails).subscribe(result => {
+          if (this.afterSave) {
+            this.afterSave(result);
+          }
+          this.messageHandler.showSuccess('User details updated successfully.');
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the User Details.', error);
+        }
+        );
       }
     });
   };

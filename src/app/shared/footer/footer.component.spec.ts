@@ -19,6 +19,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterComponent } from './footer.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -26,8 +33,23 @@ describe('FooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[TestModule],
-      declarations: [ FooterComponent ]
+      imports:[
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        ProfilePictureComponent,
+        ByteArrayToBase64Pipe,
+        FooterComponent
+      ]
     })
     .compileComponents();
   }));

@@ -51,7 +51,9 @@ export class ImportComponent implements OnInit {
     String: 'text',
     Password: 'password',
     Boolean: 'checkbox',
-    File: 'file',
+    boolean: 'checkbox',
+    int: 'number',
+    File: 'file'
   };
 
   constructor(
@@ -68,16 +70,14 @@ export class ImportComponent implements OnInit {
     this.loadImporters();
   }
 
-  loadImporters = (multiple?) => {
-    this.resources.public.dataModelImporterPlugins(multiple).subscribe(
-      (result) => {
+  loadImporters() {
+    this.resources.dataModel.importers().subscribe(result => {
         this.importers = result.body;
-      },
-      (error) => {
+      }, error => {
         this.messageHandler.showError('Can not load importers!', error);
       }
     );
-  };
+  }
 
   loadImporterParameters = (selectedItem) => {
     if (!selectedItem) {
@@ -90,8 +90,8 @@ export class ImportComponent implements OnInit {
       selectedItem.name
     );
 
-    const action = `parameters/${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
-    this.resources.importer.get(action).subscribe((res) => {
+    const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
+    this.resources.importer.get(action).subscribe(res => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 
@@ -107,7 +107,7 @@ export class ImportComponent implements OnInit {
 
           // When the input is just a checkbox we give it 'false' as the default value
           // so don't mark it as optional, as the form will be invalid unless the user checks or unChecks the input
-          if (option.type === 'Boolean') {
+          if (option.type === 'Boolean' || option.type === 'boolean') {
             option.optional = true;
             option.value = false;
           }
@@ -159,7 +159,7 @@ export class ImportComponent implements OnInit {
     });
 
     this.resources.dataModel
-      .import(`${namespace}/${name}/${version}`, this.formData)
+      .importModels(namespace, name, version, this.formData)
       .subscribe(
         (result: any) => {
           this.importingInProgress = false;

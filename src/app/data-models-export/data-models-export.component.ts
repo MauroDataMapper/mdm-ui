@@ -21,6 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-models-export',
@@ -48,9 +49,9 @@ export class DataModelsExportComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private exportHandler: ExportHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private title: Title
   ) {
-    window.document.title = 'Data Models Export';
     this.loadExporterList();
     this.step = 1;
   }
@@ -68,21 +69,16 @@ export class DataModelsExportComponent implements OnInit {
   loadExporterList() {
     this.exportersList = [];
 
-    this.securityHandler.isValidSession().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe(result => {
       if (result.body === false) {
         return;
       }
-      this.resources.public.dataModelExporterPlugins().subscribe(
-        result2 => {
-          this.exportersList = result2.body;
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem loading exporters list.',
-            error
-          );
-        }
-      );
+
+      this.resources.dataModel.exporters().subscribe(result2 => {
+        this.exportersList = result2.body;
+      }, error => {
+        this.messageHandler.showError('There was a problem loading exporters list.', error);
+      });
     });
   }
 
@@ -92,7 +88,6 @@ export class DataModelsExportComponent implements OnInit {
     } else {
       this.selectedExporterObj = null;
     }
-    // jQuery("#exportFileDownload a").remove();
   }
 
   reset() {
@@ -110,60 +105,38 @@ export class DataModelsExportComponent implements OnInit {
   export() {
     this.exportedFileIsReady = false;
     this.processing = true;
-    this.exportHandler
-      .exportDataModel(this.selectedDataModels, this.selectedExporterObj)
-      .subscribe(
-        result => {
-          if (result != null) {
-            this.exportedFileIsReady = true;
-            this.processing = false;
-            const label =
-              this.selectedDataModels.length === 1
-                ? this.selectedDataModels[0].label
-                : 'data_models';
-            const fileName = this.exportHandler.createFileName(
-              label,
-              this.selectedExporterObj
-            );
-            const file = new Blob([result.body], {
-              type: this.selectedExporterObj.fileType
-            });
-            const link = this.exportHandler.createBlobLink(file, fileName);
-            Array.from(this.aLink.nativeElement.children).forEach(child => {
-              this.renderer.removeChild(this.aLink.nativeElement, child);
-            });
-            // remove if any link exists
-            // jQuery("#exportFileDownload a").remove();
-            // jQuery("#exportFileDownload").append(jQuery(aLink)[0]);
-            // this.aLink.nativeElement.remove();
-            // this.renderer.removeChild(this.aLink.nativeElement, );
-            this.processing = false;
-            this.renderer.appendChild(this.aLink.nativeElement, link);
-            this.messageHandler.showSuccess(
-              'Data Model(s) exported successfully.'
-            );
-          } else {
-            this.processing = false;
-            this.messageHandler.showError(
-              'There was a problem exporting the Data Model(s).',
-              ''
-            );
-          }
-        },
-        error => {
-          this.processing = false;
-          this.messageHandler.showError(
-            'There was a problem exporting the Data Model(s).',
-            error
-          );
-          // jQuery("#exportFileDownload a").remove();
-        }
-      );
+    this.exportHandler.exportDataModel(this.selectedDataModels, this.selectedExporterObj).subscribe(result => {
+      if (result != null) {
+        this.exportedFileIsReady = true;
+        this.processing = false;
+        const label = this.selectedDataModels.length === 1 ? this.selectedDataModels[0].label : 'data_models';
+        const fileName = this.exportHandler.createFileName(label, this.selectedExporterObj);
+        const file = new Blob([result.body], {
+          type: this.selectedExporterObj.fileType
+        });
+        const link = this.exportHandler.createBlobLink(file, fileName);
+        Array.from(this.aLink.nativeElement.children).forEach(child => {
+          this.renderer.removeChild(this.aLink.nativeElement, child);
+        });
+        this.processing = false;
+        this.renderer.appendChild(this.aLink.nativeElement, link);
+        this.messageHandler.showSuccess('Data Model(s) exported successfully.');
+      } else {
+        this.processing = false;
+        this.messageHandler.showError('There was a problem exporting the Data Model(s).', '');
+      }
+    }, error => {
+      this.processing = false;
+      this.messageHandler.showError('There was a problem exporting the Data Model(s).', error);
+    }
+    );
   }
 
   loadHelp = () => {
     this.helpDialogueHandler.open('Exporting_models', {});
   };
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.title.setTitle(`Data Models Export`);
+  }
 }

@@ -19,6 +19,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
+import { ToastrModule } from 'ngx-toastr';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -26,8 +34,22 @@ describe('SettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ SettingsComponent ]
+      imports: [
+        // TestModule
+        MatRadioModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        { provide: MdmResourcesService, useValue: {} }
+      ],
+      declarations: [
+        MoreDescriptionComponent,
+        SettingsComponent
+      ]
     })
     .compileComponents();
   }));

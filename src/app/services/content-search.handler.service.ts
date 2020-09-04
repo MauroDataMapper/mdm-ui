@@ -20,7 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from './validator.service';
 import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, Observable, of as observableOf, EMPTY } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +33,6 @@ export class ContentSearchHandlerService {
            domainTypes, labelOnly, dataModelTypes,
            classifiers, classifierFilter,
            lastUpdatedAfter, lastUpdatedBefore, createdAfter, createdBefore): Observable<any> {
-
         const dtIndex = domainTypes.indexOf('DataType');
         if (dtIndex !== -1) {
             domainTypes.splice(dtIndex, 1);
@@ -77,10 +76,9 @@ export class ContentSearchHandlerService {
         }
 
         if (contextElement == null) {
-            return this.resources.catalogueItem.post(null,
-                'search',
+          // TODO: not working because there is no 'all' context.
+          return this.resources.catalogueItem.search(
                 {
-                    resource: {
                         searchTerm: searchText,
                         limit,
                         offset,
@@ -95,94 +93,75 @@ export class ContentSearchHandlerService {
 
                         createdAfter,
                         createdBefore,
-                    },
 
                     pageSize: limit,
-                  //  pageIndex: offset
                    pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Folder') {
-            return this.resources.folder.post(contextElement.id, 'search',
-                {
-                    resource: {
-                        searchTerm: searchText,
-                        limit,
-                        offset,
-                        domainTypes,
-                        labelOnly,
-                        dataModelTypes,
-                        classifiers,
-                        classifierFilter,
+          return this.resources.tree.search('folders', searchText,
+              {
+                  searchTerm: searchText,
+                  limit,
+                  offset,
+                  domainTypes,
+                  labelOnly,
+                  dataModelTypes,
+                  classifiers,
+                  classifierFilter,
 
-                        lastUpdatedAfter,
-                        lastUpdatedBefore,
+                  lastUpdatedAfter,
+                  lastUpdatedBefore,
 
-                        createdAfter,
-                        createdBefore,
-                    },
+                  createdAfter,
+                  createdBefore,
 
-                    pageSize: limit,
-                    pageIndex: offset * limit
+                  pageSize: limit,
+                  pageIndex: offset * limit
 
-                });
+              });
         } else if (contextElement.domainType === 'DataModel') {
-            return this.resources.dataModel.post(contextElement.id, 'search', {
-                resource: {
-                    searchTerm: searchText,
-                    limit,
-                    offset,
-                    domainTypes,
-                    labelOnly,
-                    dataModelTypes,
+          return this.resources.dataModel.search(contextElement.id, {
+                searchTerm: searchText,
+                limit,
+                offset,
+                domainTypes,
+                labelOnly,
+                dataModelTypes,
 
-                    lastUpdatedAfter,
-                    lastUpdatedBefore,
+                lastUpdatedAfter,
+                lastUpdatedBefore,
 
-                    createdAfter,
-                    createdBefore,
-                },
-
+                createdAfter,
+                createdBefore,
                 pageSize: limit,
                 pageIndex: offset * limit
-
             });
         } else if (contextElement.domainType === 'DataClass') {
-            return this.resources.dataClass.post(contextElement.dataModel,
-                contextElement.id,
-                'search',
-                {
-                    resource: {
-                        searchTerm: searchText,
-                        limit,
-                        offset,
-                        domainTypes,
-                        labelOnly,
-                        dataModelTypes,
+            return this.resources.dataClass.search(contextElement.dataModel, contextElement.id, {
+                searchTerm: searchText,
+                limit,
+                offset,
+                domainTypes,
+                labelOnly,
+                dataModelTypes,
 
-                        lastUpdatedAfter,
-                        lastUpdatedBefore,
+                lastUpdatedAfter,
+                lastUpdatedBefore,
 
-                        createdAfter,
-                        createdBefore,
-                    },
-                    pageSize: limit,
-                    pageIndex: offset * limit
-                });
+                createdAfter,
+                createdBefore,
+                pageSize: limit,
+                pageIndex: offset * limit
+            });
         } else if (contextElement.domainType === 'Terminology') {
-            return this.resources.terminology.get(contextElement.id,
-                'terms/search',
-                {
-                    queryStringParams: {
-                        search: encodeURIComponent(searchText),
-                        limit,
-                        offset,
-                        labelOnly
-                    },
-                    options: {
-                        pageSize: limit,
-                        pageIndex: offset  * limit
-                    }
-                });
+            return this.resources.terminology.terms.search(contextElement.id, {
+                          search: encodeURIComponent(searchText),
+                          limit,
+                          offset,
+                          labelOnly,
+                          pageSize: limit,
+                          pageIndex: offset  * limit
+                      });
         }
     }
 }

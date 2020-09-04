@@ -19,10 +19,24 @@ import { TestBed } from '@angular/core/testing';
 
 import { ElementSelectorDialogueService } from './element-selector-dialogue.service';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('ElementSelectorDialogueService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports:[TestModule]
+    imports: [
+      // TestModule
+      NgxSkeletonLoaderModule,
+      MatTooltipModule,
+      MatDialogModule
+    ],
+    declarations: [
+      ProfilePictureComponent,
+      ByteArrayToBase64Pipe
+    ]
   }));
 
   it('should be created', () => {

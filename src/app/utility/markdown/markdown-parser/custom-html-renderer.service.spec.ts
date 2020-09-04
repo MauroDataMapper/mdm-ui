@@ -18,12 +18,19 @@ SPDX-License-Identifier: Apache-2.0
 import { TestBed } from '@angular/core/testing';
 
 import { CustomHtmlRendererService } from './custom-html-renderer.service';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('CustomHtmlRendererService', () => {
   let service: CustomHtmlRendererService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ]
+    });
     service = TestBed.inject(CustomHtmlRendererService);
   });
 

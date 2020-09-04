@@ -18,15 +18,18 @@ SPDX-License-Identifier: Apache-2.0
 import {TestBed, async} from '@angular/core/testing';
 
 import {RestHandlerService} from './rest-handler.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('RestHandlerService', () => {
   let errorCode = 200;
   let spyClient: HttpClient;
 
   beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    // jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
     /**
      * Create a spy for HttpClient
      */
@@ -54,6 +57,11 @@ describe('RestHandlerService', () => {
       }
     } as HttpClient;
     TestBed.configureTestingModule({
+      imports: [
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot(),
+        HttpClientTestingModule
+      ],
       providers: [
         RestHandlerService,
         {provide: HttpClient, useValue: spyClient}
@@ -104,7 +112,7 @@ describe('RestHandlerService', () => {
     const service: RestHandlerService = TestBed.inject(RestHandlerService);
     expect(service).toBeTruthy();
   });
-  
+
   //COMMENTED OUT UNTIL MOCKS CREATED
   // it('should work', async(() => {
   //   makeRequest(200, true);

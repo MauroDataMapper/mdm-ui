@@ -19,6 +19,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeSetMainComponent } from './code-set-main.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { DclWrapperComponent } from '@mdm/wizards/dcl-wrapper.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { StateService } from '@uirouter/core';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { empty } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CodeSetMainComponent', () => {
   let component: CodeSetMainComponent;
@@ -26,8 +34,33 @@ describe('CodeSetMainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ CodeSetMainComponent ]
+      imports: [
+        // TestModule
+        MatStepperModule,
+        NoopAnimationsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: StateService,
+          useValue: {
+            params: {}
+          }
+        },
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            folder: {
+              get: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [
+        DclWrapperComponent,
+        CodeSetMainComponent
+      ]
     })
     .compileComponents();
   }));

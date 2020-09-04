@@ -19,6 +19,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClassifierStep1Component } from './classifier-step1.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ClassifierStep1Component', () => {
   let component: ClassifierStep1Component;
@@ -26,8 +31,17 @@ describe('ClassifierStep1Component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ ClassifierStep1Component ]
+      imports: [
+        // TestModule
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        NoopAnimationsModule,
+        FormsModule
+      ],
+      declarations: [
+        ClassifierStep1Component
+      ]
     })
     .compileComponents();
   }));

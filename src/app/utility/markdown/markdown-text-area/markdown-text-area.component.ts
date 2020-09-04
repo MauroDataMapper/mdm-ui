@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input,   ViewChild, Output, ElementRef, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, ElementRef, EventEmitter } from '@angular/core';
 import { FolderResult } from '@mdm/model/folderModel';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
@@ -73,7 +73,6 @@ export class MarkdownTextAreaComponent implements OnInit {
     private elementDialogueService: ElementSelectorDialogueService,
     private messageService: MessageService
   ) {
-    // this.formData.description = this.editableForm["description"];
   }
 
   ngOnInit() {
@@ -94,7 +93,6 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.currentShiftKey = $event.keyCode === 16;
 
     if (this.lastWasShiftKey && this.currentShiftKey) {
-      // this.showAddElementToMarkdown();
       this.lastWasShiftKey = false;
       return;
     }

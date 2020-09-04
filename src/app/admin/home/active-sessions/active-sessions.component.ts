@@ -46,7 +46,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>();
 
   constructor(private messageHandler: MessageHandlerService, private resourcesService: MdmResourcesService) {
-    this.displayedColumns = [ 'userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
+    this.displayedColumns = ['userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
   }
 
   ngOnInit() {
@@ -61,37 +61,30 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  activeSessionsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+  activeSessionsFetch() {
     const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy: 'userEmailAddress',
-      sortType: 'asc'
+      sort: 'userEmailAddress',
+      order: 'asc'
     };
 
-    this.resourcesService.admin.get('activeSessions', options).subscribe(resp => {
-        for (const [key, value] of Object.entries(resp.body)) {
-          resp.body[key].start = new Date(resp.body[key].sessionOpened);
-          resp.body[key].last = new Date(resp.body[key].lastAccess);
-
-          this.records.push(resp.body[key]);
-        }
-        this.totalItemCount = this.records.length;
-        this.dataSource.data = this.records;
-      },
-      err => {
-        this.messageHandler.showError('There was a problem loading the active sessions.', err);
-      });
+    this.resourcesService.admin.activeSessions(options).subscribe(resp => {
+      for (const [key, value] of Object.entries(resp.body.items)) {
+        resp.body.items[key].creationDateTime = new Date(resp.body.items[key].creationDateTime);
+        resp.body.items[key].lastAccessedDateTime = new Date(resp.body.items[key].lastAccessedDateTime);
+        this.records.push(resp.body.items[key]);
+      }
+      this.totalItemCount = this.records.length;
+      this.dataSource.data = this.records;
+    }, err => {
+      this.messageHandler.showError('There was a problem loading the active sessions.', err);
+    });
   }
 
   isToday(date) {
     const today = new Date();
-
     if (today.getUTCFullYear() === date.getUTCFullYear() && today.getUTCMonth() === date.getUTCMonth() && today.getUTCDate() === date.getUTCDate()) {
       return true;
     }
-
     return false;
   }
 
@@ -102,8 +95,4 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   applyFilter = () => {
     // TODO
   };
-
-  editUser = (var1?) => {
-    // TODO
-  }
 }

@@ -19,6 +19,34 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeSetDetailsComponent } from './code-set-details.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
+import { ElementStatusComponent } from '@mdm/utility/element-status/element-status.component';
+import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
+import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
+import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('CodeSetDetailsComponent', () => {
   let component: CodeSetDetailsComponent;
@@ -26,8 +54,45 @@ describe('CodeSetDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ CodeSetDetailsComponent ]
+      imports: [
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatOptionModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {}
+        }
+      ],
+      declarations: [
+        McSelectComponent,
+        MdmPaginatorComponent,
+        EditableFormButtonsComponent,
+        ShareWithComponent,
+        GroupAccessNewComponent,
+        InlineTextEditComponent,
+        ElementStatusComponent,
+        ElementAliasComponent,
+        MarkdownTextAreaComponent,
+        ElementClassificationsComponent,
+        ProfilePictureComponent,
+        PropertiesDirective,
+        MarkdownDirective,
+        ByteArrayToBase64Pipe,
+        CodeSetDetailsComponent
+      ]
     })
     .compileComponents();
   }));

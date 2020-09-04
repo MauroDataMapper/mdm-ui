@@ -15,6 +15,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "importHelpers": true,
+    "esModuleInterop": true,
     "target": "ES5",
     "types": [
       "jest"

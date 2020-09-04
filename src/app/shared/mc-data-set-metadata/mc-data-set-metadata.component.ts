@@ -23,36 +23,37 @@ import {
   ViewChildren,
   QueryList,
   EventEmitter,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import {MessageHandlerService} from '@mdm/services/utility/message-handler.service';
-import {HelpDialogueHandlerService} from '@mdm/services/helpDialogue.service';
-import {merge } from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {MatSort} from '@angular/material/sort';
-import {MatInput} from '@angular/material/input';
-import {DialogPosition} from '@angular/material/dialog';
-import {MdmPaginatorComponent} from '../mdm-paginator/mdm-paginator';
-
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
+import { merge } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
+import { MatInput } from '@angular/material/input';
+import { DialogPosition } from '@angular/material/dialog';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-data-set-metadata',
   templateUrl: './mc-data-set-metadata.component.html',
-  styleUrls: ['./mc-data-set-metadata.component.scss']
+  styleUrls: ['./mc-data-set-metadata.component.scss'],
 })
 export class McDataSetMetadataComponent implements AfterViewInit {
-
   @Input() parent: any;
   @Input() type: any;
   @Input() metaDataItems: any;
   @Input() loadingData: any;
   @Input() clientSide: any;
   @Input() afterSave: any;
+  @Input() domainType: any;
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   @ViewChildren('filters') filters: QueryList<MatInput>;
 
   namespaces: any[];
@@ -65,70 +66,70 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   hideFilters = true;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
 
-  constructor(private resources: MdmResourcesService,
-              private securityHandler: SecurityHandlerService,
-              private messageHandler: MessageHandlerService,
-              private helpService: HelpDialogueHandlerService,
-              private changeDetectorRefs: ChangeDetectorRef) {
-
-  }
+  constructor(
+    private resources: MdmResourcesService,
+    private securityHandler: SecurityHandlerService,
+    private messageHandler: MessageHandlerService,
+    private helpService: HelpDialogueHandlerService,
+    private changeDetectorRefs: ChangeDetectorRef,
+    private gridService: GridService
+  ) { }
 
   ngAfterViewInit() {
-
     if (this.parent) {
       this.namespaces = [];
       this.metadataKeys = [];
       this.records = [];
-
       this.access = this.securityHandler.elementAccess(this.parent);
       this.changeDetectorRefs.detectChanges();
 
-
       if (this.type === 'dynamic') {
-
-        this.resources.metadata.namespaces.get().toPromise().then((result) => {
-          this.namespaces = result.body.filter((n) => n.defaultNamespace);
-
-
-          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-          this.filterEvent.subscribe(() => this.paginator.pageIndex = 0);
-          merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-            .pipe(
-              startWith({}),
-              switchMap(() => {
+        this.resources.metadata
+          .namespaces()
+          .toPromise()
+          .then((result) => {
+            this.namespaces = result.body.filter((n) => n.defaultNamespace);
+            this.sort.sortChange.subscribe(
+              () => (this.paginator.pageIndex = 0)
+            );
+            this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
+            merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
+              .pipe(
+                startWith({}),
+                switchMap(() => {
                   this.isLoadingResults = true;
                   this.changeDetectorRefs.detectChanges();
-
-                  return this.metadataFetch(this.paginator.pageSize,
+                  return this.metadataFetch(
+                    this.paginator.pageSize,
                     this.paginator.pageOffset,
                     this.sort.active,
                     this.sort.direction,
-                    this.filter);
-                }
-              ),
-              map((data: any) => {
-                this.totalItemCount = data.body.count;
-                this.isLoadingResults = false;
-                this.changeDetectorRefs.detectChanges();
-                return data.body.items;
-              }),
-              catchError(() => {
-                this.isLoadingResults = false;
-                this.changeDetectorRefs.detectChanges();
-                return [];
-              })
-            ).subscribe(data => {
-            this.records = data;
+                    this.filter
+                  );
+                }),
+                map((data: any) => {
+                  this.totalItemCount = data.body.count;
+                  this.isLoadingResults = false;
+                  this.changeDetectorRefs.detectChanges();
+                  return data.body.items;
+                }),
+                catchError(() => {
+                  this.isLoadingResults = false;
+                  this.changeDetectorRefs.detectChanges();
+                  return [];
+                })
+              )
+              .subscribe((data) => {
+                this.records = data;
+              });
           });
-        });
       }
 
       if (this.type === 'static') {
         this.loading = true;
-
         this.loadNamespaces();
         this.loadingData.onChange((newValue, oldValue, scope) => {
           if (newValue !== null && newValue !== undefined) {
@@ -140,46 +141,42 @@ export class McDataSetMetadataComponent implements AfterViewInit {
             this.showRecords();
           }
         });
-
       }
     }
   }
 
   loadNamespaces() {
-    this.resources.metadata.namespaces.get().toPromise().then((result) => {
-      this.namespaces = result.body.filter((n) => {
-        return n.defaultNamespace;
+    this.resources.metadata
+      .namespaces()
+      .toPromise()
+      .then((result) => {
+        this.namespaces = result.body.filter((n) => {
+          return n.defaultNamespace;
+        });
       });
-    });
   }
 
-
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
-
-    if (options.filters) {
-      if (options.filters.indexOf('namespace') !== -1) {
-        options.filters = options.filters.replace('namespace', 'ns');
-      }
-    }
-    return this.resources.facets.get(this.parent.id, 'metadata', options);
+    return this.resources.catalogueItem.listMetadata(
+      this.parent.domainType,
+      this.parent.id,
+      options
+    );
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+        if (name === 'namespace') {
+          filter['ns'] = value;
+        } else {
+          filter[name] = value;
+        }
       }
     });
     this.filter = filter;
@@ -187,7 +184,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   };
 
   onNamespaceSelect(select, record) {
-
     if (select) {
       record.edit.namespace = select.namespace;
       record.metadataKeys = [];
@@ -198,7 +194,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
           // create object for the keys as mcSelect2 expects objects with id
           let id = 0;
           record.metadataKeys = namespace.keys.map((key) => {
-            return {id: id++, key};
+            return { id: id++, key };
           });
           break;
         }
@@ -212,10 +208,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   onKeySelect(select, record) {
     if (select) {
       record.edit.key = select.key;
-      // it is one of the default namespaces
-      if (select.id !== -1) {
-
-      }
     } else {
       record.edit.key = '';
     }
@@ -255,8 +247,12 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         if (i === index) {
           continue;
         }
-        if (this.records[i].key.toLowerCase().trim() === record.edit.key.toLowerCase().trim() &&
-          this.records[i].namespace.toLowerCase().trim() === record.edit.namespace.toLowerCase().trim()) {
+        if (
+          this.records[i].key.toLowerCase().trim() ===
+          record.edit.key.toLowerCase().trim() &&
+          this.records[i].namespace.toLowerCase().trim() ===
+          record.edit.namespace.toLowerCase().trim()
+        ) {
           record.edit.errors.key = 'Key already exists';
           isValid = false;
         }
@@ -288,13 +284,11 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         id: '',
         namespace: '',
         key: '',
-        value: ''
+        value: '',
       },
       inEdit: true,
-      isNew: true
+      isNew: true,
     };
-
-
     this.records = [].concat([newRecord]).concat(this.records);
   }
 
@@ -306,11 +300,10 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   save(record, index) {
-
     const resource = {
       key: record.edit.key,
       value: record.edit.value,
-      namespace: record.edit.namespace
+      namespace: record.edit.namespace,
     };
 
     // if clientSide is true, it should not pass details to the server
@@ -328,29 +321,28 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
-      this.resources.facets.put(this.parent.id, 'metadata', record.id, {resource})
-        .subscribe((result) => {
-            if (this.afterSave) {
-              this.afterSave(resource);
-            }
+      this.resources.catalogueItem.updateMetadata(this.domainType, this.parent.id, record.id, resource).subscribe(() => {
+        if (this.afterSave) {
+          this.afterSave(resource);
+        }
 
-            record.namespace = resource.namespace;
-            record.key = resource.key;
-            record.value = resource.value;
-            record.inEdit = false;
-            this.messageHandler.showSuccess('Property updated successfully.');
-          },
-          (error) => {
-            // duplicate namespace + key
-            if (error.status === 422) {
-              record.edit.errors = [];
-              record.edit.errors.key = 'Key already exists';
-              return;
-            }
-            this.messageHandler.showError('There was a problem updating the property.', error);
-          });
+        record.namespace = resource.namespace;
+        record.key = resource.key;
+        record.value = resource.value;
+        record.inEdit = false;
+        this.messageHandler.showSuccess('Property updated successfully.');
+      }, (error) => {
+          // duplicate namespace + key
+          if (error.status === 422) {
+            record.edit.errors = [];
+            record.edit.errors.key = 'Key already exists';
+            return;
+          }
+          this.messageHandler.showError('There was a problem updating the property.', error);
+        }
+      );
     } else {
-      this.resources.facets.post(this.parent.id, 'metadata', {resource}).subscribe((response) => {
+      this.resources.catalogueItem.saveMetadata(this.domainType, this.parent.id, resource).subscribe((response) => {
         // after successfully saving the row, it if is a new row,then remove its newRow property
         record.id = response.body.id;
         record.namespace = response.body.namespace;
@@ -385,29 +377,26 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.metaDataItems = this.records;
       return;
     }
-    this.resources.facets.delete(this.parent.id, 'metadata', record.id)
-      .subscribe(() => {
-        if (this.type === 'static') {
-          this.records.splice($index, 1);
-          this.messageHandler.showSuccess('Property deleted successfully.');
-        } else {
-          this.records.splice($index, 1);
-          this.messageHandler.showSuccess('Property deleted successfully.');
-          this.filterEvent.emit();
-        }
-      }, (error) => {
+    this.resources.catalogueItem.removeMetadata(this.domainType, this.parent.id, record.id).subscribe(() => {
+      if (this.type === 'static') {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Property deleted successfully.');
+      } else {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Property deleted successfully.');
+        this.filterEvent.emit();
+      }
+    },
+      (error) => {
         this.messageHandler.showError('There was a problem deleting the property.', error);
       });
   }
 
-  loadHelp = function(event) {
+  loadHelp = () => {
     this.helpService.open('Editing_properties', 'right' as DialogPosition);
   };
-
 
   filterClick() {
     this.hideFilters = !this.hideFilters;
   }
-
-
 }

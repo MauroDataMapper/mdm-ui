@@ -24,6 +24,7 @@ import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-classification',
@@ -57,10 +58,9 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
-  ) {
-    // this.toaster.success('toast test');
-  }
+    private stateHandler: StateHandlerService,
+    private title: Title
+  ) { }
 
   ngOnInit() {
     if (!this.stateService.params.id) {
@@ -71,55 +71,48 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-
-    // if(this.stateService.params.edit === "true"){ //Call this if using message service.
-    //     // this.editMode = true;
-    //     this.messageService.showEditMode(true);
-    // }
-    // else
-    //     this.messageService.showEditMode(false);
-    window.document.title = 'Classifier';
+    this.title.setTitle(`Classifier`);
     this.classifierDetails(this.stateService.params.id);
 
     const promises = [];
-    promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'catalogueItems',
-        null
-      )
-    );
-    promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'terminologies',
-        null
-      )
-    );
-    promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'terms',
-        null
-      )
-    );
-    promises.push(
-      this.resourcesService.classifier.get(
-        this.stateService.params.id,
-        'codeSets',
-        null
-      )
-    );
+    // promises.push(this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id))
+      // this.resourcesService.classifier.get(
+      //   this.stateService.params.id,
+      //   'catalogueItems',
+      //   null
+      // )
+    // );
+    // promises.push([]
+      // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
+      // this.resourcesService.classifier.get(
+      //   this.stateService.params.id,
+      //   'terminologies',
+      //   null
+      // )
+    // );
+    // promises.push(this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id));
+      // this.resourcesService.classifier.get(this.stateService.params.id, 'terms', null)
+    // promises.push(
+    //   // this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
+    //   // this.resourcesService.classifier.get(this.stateService.params.id, 'codeSets', null)
+    // );
 
-    forkJoin(promises).subscribe((results: any) => {
-      this.catalogueItemsCount = results[0].body.count;
-      this.terminologiesCount = results[1].body.count;
-      this.termsCount = results[2].body.count;
-      this.codeSetsCount = results[3].body.count;
+    // forkJoin(promises).subscribe((results: any) => {
+    //   console.log(results);
+    //   this.catalogueItemsCount = results[0].body.count;
+    //   this.terminologiesCount = results[1].body.count;
+    //   this.termsCount = results[2].body.count;
+    //   this.codeSetsCount = results[3].body.count;
 
-      this.loading = false;
-      this.activeTab = this.getTabDetail('classifiedElements');
-    });
+    //   this.loading = false;
+    //   this.activeTab = this.getTabDetail('classifiedElements');
+    // });
+
+    // this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id).subscribe(result => {
+
+    // });
+
+
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
@@ -138,10 +131,8 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   }
 
   classifierDetails(id: any) {
-    this.resourcesService.classifier
-      .get(id, null, null)
-      .subscribe((result: { body: FolderResult }) => {
-        this.result = result.body;
+    this.resourcesService.classifier.get(id).subscribe((response: { body: FolderResult }) => {
+        this.result = response.body;
 
         this.parentId = this.result.id;
         if (this.sharedService.isLoggedIn(true)) {
@@ -153,9 +144,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
       });
   }
   classifierPermissions(id: any) {
-    this.resourcesService.classifier
-      .get(id, 'permissions', null)
-      .subscribe((permissions: { body: { [x: string]: any } }) => {
+    this.resourcesService.security.permissions('classifiers', id).subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach(attrname => {
           this.result[attrname] = permissions.body[attrname];
         });

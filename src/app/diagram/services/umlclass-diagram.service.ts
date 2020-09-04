@@ -37,7 +37,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.modelId = params.parent.id;
-    return this.resourcesService.hierarchy.get(this.modelId);
+    return this.resourcesService.dataModel.hierarchy(this.modelId);
   }
 
 
@@ -47,17 +47,15 @@ export class UmlClassDiagramService extends BasicDiagramService {
     this.subClassLinks = [];
     this.referenceLinks = [];
     this.addAllChildDataClasses(data.body);
-    this.allDataClasses.forEach( dataClass => {
-
+    this.allDataClasses.forEach(dataClass => {
       this.addRectangleCell(dataClass.id, '', 300, dataClass.attributes.length * 25 + 31);
     });
     this.addLinks();
     super.layoutNodes('TB');
-    this.allDataClasses.forEach( dataClass => {
+    this.allDataClasses.forEach(dataClass => {
       const oldCell = this.graph.getCell(dataClass.id) as joint.shapes.standard.Rectangle;
       this.addUmlClassCell(dataClass.id, dataClass.label, dataClass.attributes, null, oldCell);
     });
-
   }
 
   addLinks(): void {
@@ -65,35 +63,35 @@ export class UmlClassDiagramService extends BasicDiagramService {
     this.subClassLinks.forEach(subClassLink => {
       const link = new joint.shapes.standard.Link({
         id: subClassLink.source + '-' + subClassLink.target,
-        source: {id: subClassLink.source},
-        target: {id: subClassLink.target},
+        source: { id: subClassLink.source },
+        target: { id: subClassLink.target },
         attrs: {
           line: {
-            sourceMarker: {d: filledDiamond},
-            targetMarker: {d: ''}
+            sourceMarker: { d: filledDiamond },
+            targetMarker: { d: '' }
           }
         }
       });
       // link.id = flow.id as string;
       // link.attr('.marker-target', { d: 'M 40 0 L 20 10 L 0 0 L 20 -10 z', fill: 'black' });
-      link.connector('rounded', {radius: 40});
+      link.connector('rounded', { radius: 40 });
       link.toBack();
       this.graph.addCell(link);
     });
     this.referenceLinks.forEach(subClassLink => {
       const link = new joint.shapes.standard.Link({
         id: subClassLink.source + '-' + subClassLink.label,
-        source: {id: subClassLink.source},
-        target: {id: subClassLink.target},
+        source: { id: subClassLink.source },
+        target: { id: subClassLink.target },
         attrs: {
           line: {
-            sourceMarker: {d: ''},
-            targetMarker: {d: ''}
+            sourceMarker: { d: '' },
+            targetMarker: { d: '' }
           }
         }
       });
       // link.id = flow.id as string;
-      link.connector('rounded', {radius: 40});
+      link.connector('rounded', { radius: 40 });
       link.toBack();
       this.graph.addCell(link);
     });
@@ -101,32 +99,59 @@ export class UmlClassDiagramService extends BasicDiagramService {
   }
 
   addAllChildDataClasses(container: any): void {
-    container.childDataClasses.forEach( childDataClass => {
-      this.allDataClasses.push({
-        id: childDataClass.id,
-        label: childDataClass.label,
-        attributes: childDataClass.childDataElements.filter(attribute => {
-          return attribute.dataType.domainType !== 'ReferenceType';
-        })
-      });
-      if (container.domainType !== 'DataModel') {
-        this.subClassLinks.push({
-          source: container.id,
-          target: childDataClass.id
+    if (container.dataClasses) {
+      container.dataClasses.forEach(childDataClass => {
+        this.allDataClasses.push({
+          id: childDataClass.id,
+          label: childDataClass.label,
+          attributes: childDataClass.dataElements.filter(attribute => {
+            return attribute.dataType.domainType !== 'ReferenceType';
+          })
         });
-      }
-      this.addAllChildDataClasses(childDataClass);
-      childDataClass.childDataElements.filter(attribute => {
-        return attribute.dataType.domainType === 'ReferenceType';
-      }).forEach( attribute => {
-        this.referenceLinks.push({
-          source: childDataClass.id,
-          target: attribute.dataType.referenceClass.id,
-          name: attribute.label
+        if (container.domainType !== 'DataModel') {
+          this.subClassLinks.push({
+            source: container.id,
+            target: childDataClass.id
+          });
+        }
+        this.addAllChildDataClasses(childDataClass);
+        childDataClass.dataElements.filter(attribute => {
+          return attribute.dataType.domainType === 'ReferenceType';
+        }).forEach(attribute => {
+          this.referenceLinks.push({
+            source: childDataClass.id,
+            target: attribute.dataType.referenceClass.id,
+            name: attribute.label
+          });
         });
       });
-    });
-
+    } else if (container.childDataClasses) {
+      container.childDataClasses.forEach(childDataClass => {
+        this.allDataClasses.push({
+          id: childDataClass.id,
+          label: childDataClass.label,
+          attributes: childDataClass.dataElements.filter(attribute => {
+            return attribute.dataType.domainType !== 'ReferenceType';
+          })
+        });
+        if (container.domainType !== 'DataModel') {
+          this.subClassLinks.push({
+            source: container.id,
+            target: childDataClass.id
+          });
+        }
+        this.addAllChildDataClasses(childDataClass);
+        childDataClass.dataElements.filter(attribute => {
+          return attribute.dataType.domainType === 'ReferenceType';
+        }).forEach(attribute => {
+          this.referenceLinks.push({
+            source: childDataClass.id,
+            target: attribute.dataType.referenceClass.id,
+            name: attribute.label
+          });
+        });
+      });
+    }
   }
 
   layoutNodes(): void {
@@ -142,9 +167,5 @@ export class UmlClassDiagramService extends BasicDiagramService {
   }
 
   goUp(): void {
-
-
   }
-
-
 }

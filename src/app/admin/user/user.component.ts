@@ -23,6 +23,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-user',
@@ -64,8 +65,9 @@ export class UserComponent implements OnInit {
     private stateSvc: StateService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
-    private stateHandler: StateHandlerService
-  ) {}
+    private stateHandler: StateHandlerService,
+    private gridService: GridService
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Admin - Add User');
@@ -74,37 +76,63 @@ export class UserComponent implements OnInit {
     this.id = this.stateSvc.params.id;
 
     if (this.id) {
-      this.resourcesService.catalogueUser.get(this.id, null, null).subscribe(res => {
-          const user = res.body;
-          this.user = user;
-          this.title.setTitle('Admin - Edit User');
+      this.resourcesService.catalogueUser.get(this.id).subscribe(res => {
+        const user = res.body;
+        this.user = user;
+        this.title.setTitle('Admin - Edit User');
 
-          if (this.user.groups) {
-            for (const val of this.user.groups) {
-              this.selectedGroups.push(val.id);
-            }
+        if (this.user.groups) {
+          for (const val of this.user.groups) {
+            this.selectedGroups.push(val.id);
           }
-        });
+        }
+      });
     }
 
-    const limit = 0;
-    const offset = 0;
-    const options = {
-      pageSize: limit,
-      pageIndex: offset,
-      filters: null,
-      // sortBy: "label",
-      sortType: 'asc'
-    };
 
-    this.resourcesService.userGroup.get(null, null, options).subscribe(res => {
-        this.allGroups = res.body.items;
-      },
-      error => {
-        this.messageHandler.showError('There was a problem getting the group list', error);
-      }
+    const options = this.gridService.constructOptions(null, null, 'name', 'asc');
+    options['all'] = true;
+
+    this.resourcesService.userGroups.list(options).subscribe(res => {
+      this.allGroups = res.body.items;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the group list', error);
+    }
     );
   }
+  validateEmail = () => {
+    let isValid = true;
+    if (!this.user.emailAddress.trim().length) {
+      this.errors.emailAddress = `Email can't be empty!`;
+      isValid = false;
+    }
+
+    if (isValid) {
+      const parts = this.user.emailAddress.split('@');
+      const username = parts[0];
+      const delimiters = ['.', '-', '_'];
+      let fname = '';
+      let lname = '';
+
+      delimiters.forEach((key, val) => {
+        const partsName = username.replace(/\d+/g, '');
+        const num = partsName.indexOf(key);
+        if (num > -1) {
+          fname = partsName.substring(0, (num));
+          lname = partsName.substring(num + 1, (partsName.length));
+
+          fname = fname.toLowerCase();
+          lname = lname.toLowerCase();
+
+          fname = fname.charAt(0).toUpperCase() + fname.slice(1);
+          lname = lname.charAt(0).toUpperCase() + lname.slice(1);
+        }
+      });
+      this.user.lastName = lname;
+      this.user.firstName = fname;
+    }
+  }
+
 
   validate = () => {
     let isValid = true;
@@ -126,14 +154,9 @@ export class UserComponent implements OnInit {
       this.errors.lastName = 'Last Name can\'t be empty!';
       isValid = false;
     }
-    if (!this.user.userRole.trim().length) {
-      this.errors.userRole = 'Role can\'t be empty!';
-      isValid = false;
-    }
     if (isValid) {
       delete this.errors;
     }
-    console.log("validating");
     return isValid;
   };
 
@@ -146,28 +169,26 @@ export class UserComponent implements OnInit {
       lastName: this.user.lastName,
       organisation: this.user.organisation,
       jobTitle: this.user.jobTitle,
-      userRole: this.user.userRole,
       groups: this.user.groups || []
     };
     // it's in edit mode
     if (this.user.id) {
       // it's in edit mode (update)
-      this.resourcesService.catalogueUser.put(this.user.id, null, { resource }).subscribe(() => {
+      this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
         this.messageHandler.showSuccess('User updated successfully.');
         this.stateHandler.Go('admin.users');
-      },
-      error => {
+      }, error => {
         this.messageHandler.showError('There was a problem updating the user.', error);
       });
     } else {
       // it's in new mode (create)
-      this.resourcesService.catalogueUser.post(null, 'adminRegister', { resource }).subscribe(() => {
-          this.messageHandler.showSuccess('User saved successfully.');
-          this.stateHandler.Go('admin.users');
-        },
+      this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
+        this.messageHandler.showSuccess('User saved successfully.');
+        this.stateHandler.Go('admin.users');
+      },
         error => {
           this.messageHandler.showError('There was a problem saving the user.', error);
-      });
+        });
     }
   };
 
@@ -179,10 +200,10 @@ export class UserComponent implements OnInit {
     this.user.groups = [];
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
-        this.user.groups.push({
-          id: val.id,
-          label: val.label
-        });
+        this.user.groups.push(
+          val.id 
+          //label: val.label
+        );
       }
     }
   }

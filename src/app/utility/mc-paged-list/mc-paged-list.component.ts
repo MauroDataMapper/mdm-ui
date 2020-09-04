@@ -33,7 +33,6 @@ export class McPagedListComponent implements OnInit {
   @Input() mcTitle: any;
   @Output() itemsChange = new EventEmitter();
   itemValues: any;
-  // @Input() items: any;//when it's 'type=static'
   @Input()
   get items() {
     return this.itemValues;

@@ -19,6 +19,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InputModalComponent } from './input-modal.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('InputModalComponent', () => {
   let component: InputModalComponent;
@@ -26,7 +32,23 @@ describe('InputModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
+      imports: [
+        // TestModule
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatDialogModule,
+        NoopAnimationsModule,
+        FormsModule
+      ],
+      providers: [
+        {
+          provide: MatDialogRef, useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA, useValue: {}
+        }
+      ],
       declarations: [ InputModalComponent ]
     })
     .compileComponents();

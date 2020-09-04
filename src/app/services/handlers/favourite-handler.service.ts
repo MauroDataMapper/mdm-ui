@@ -15,10 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
-import {UserSettingsHandlerService} from '../utility/user-settings-handler.service';
-import {MessageHandlerService} from '../utility/message-handler.service';
-import {BroadcastService} from '../broadcast.service';
+import { Injectable } from '@angular/core';
+import { UserSettingsHandlerService } from '../utility/user-settings-handler.service';
+import { MessageHandlerService } from '../utility/message-handler.service';
+import { BroadcastService } from '../broadcast.service';
 
 
 @Injectable({
@@ -39,13 +39,13 @@ export class FavouriteHandlerService {
       }
     });
     if (!fvt) {
-      favorites.push({id: element.id, domainType: element.domainType});
+      favorites.push({ id: element.id, domainType: element.domainType });
     }
 
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(result => {
       this.messageHandler.showSuccess('Added to Favorites successfully.');
-      this.broadcastSvc.broadcast('favourites', {name: 'add', element});
+      this.broadcastSvc.broadcast('favourites', { name: 'add', element });
     }, error => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
     });
@@ -65,26 +65,15 @@ export class FavouriteHandlerService {
         return;
       }
     });
-
-    // var fvt = favorites.every(favorite =>{
-    //   return favorite.id === element.id;
-    // })
-
     return fvt ? true : false;
   }
 
   remove(element) {
-    // var deferred = $q.defer();
-
     const favorites = this.userSettingsHandler.get('favourites');
-    // var index = _.findIndex(favorites, function (favorite) {
-    //   return favorite.id === element.id;
-    // });
     const index = favorites.findIndex(favorite =>
       favorite.id === element.id
     );
     if (index === -1) {
-      // deferred.resolve(favorites);
       return;
     }
 
@@ -92,13 +81,10 @@ export class FavouriteHandlerService {
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(result => {
       this.messageHandler.showSuccess('Removed from Favorites successfully.');
-      this.broadcastSvc.broadcast('favourites', {name: 'remove', element});
-      // deferred.resolve(favorites);
+      this.broadcastSvc.broadcast('favourites', { name: 'remove', element });
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
-      // deferred.reject(favorites);
     });
-    // return deferred.promise;
   }
 
   toggle(element) {

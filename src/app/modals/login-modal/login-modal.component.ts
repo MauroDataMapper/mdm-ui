@@ -40,24 +40,23 @@ export class LoginModalComponent implements OnInit {
     this.message = '';
   }
 
-  login() {
+  async login() {
     this.message = '';
-    this.securityHandler.login(this.username, this.password).then(user => {
-        this.dialogRef.close(user);
-        this.securityHandler.loginModalDisplayed = false;
-        this.messageService.loggedInChanged(true);
-      },
-      error => {
-        this.securityHandler.loginModalDisplayed = true;
-        if (error.status === 401) {
-          this.message = 'Invalid username or password!';
-        } else if (error.status === 409) {
-          this.message = 'A user is already logged in, logout first';
-        } else if (error.status === -1) {
-          this.message = 'Unable to log in. Please try again later.';
-        }
+    try {
+      const user = await this.securityHandler.login(this.username, this.password);
+      this.dialogRef.close(user);
+      this.securityHandler.loginModalDisplayed = false;
+      this.messageService.loggedInChanged(true);
+    } catch (error) {
+      this.securityHandler.loginModalDisplayed = true;
+      if (error.status === 401) {
+        this.message = 'Invalid username or password!';
+      } else if (error.status === 409) {
+        this.message = 'A user is already logged in, logout first';
+      } else if (error.status === -1) {
+        this.message = 'Unable to log in. Please try again later.';
       }
-    );
+    }
   }
 
   forgotPassword() {

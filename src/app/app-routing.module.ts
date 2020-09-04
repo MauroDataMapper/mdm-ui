@@ -17,8 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { NgModule } from '@angular/core';
 import { AboutComponent } from './about/about.component';
-
-// import { DataModelDetailComponent } from './dataModel/data-model-detail.component';
 import { FolderComponent } from './folder/folder.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { DataModelDefaultComponent } from './utility/data-model-default.component';
@@ -34,7 +32,7 @@ import { ImportComponent } from './import/import.component';
 import { SearchComponent } from './search/search.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
-import {  UIRouterModule} from '@uirouter/angular';
+import { UIRouterModule } from '@uirouter/angular';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import { ModelsComponent } from './shared/models/models.component';
@@ -45,18 +43,16 @@ import { ClassificationComponent } from './classification/classification.compone
 import { ClassifierMainComponent } from './wizards/classifier/classifier-main/classifier-main.component';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { AppComponent } from './app.component';
-
-import { ConfigurationComponent } from './admin/configuration/configuration.component';
 import { DataModelsExportComponent } from './data-models-export/data-models-export.component';
 import { DataElementMainComponent } from './wizards/dataElement/data-element-main/data-element-main.component';
 import { DataTypeComponent } from './data-type/data-type.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-import {TermComponent} from './term/term/term.component';
+import { TermComponent } from './term/term/term.component';
 import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
-import {CodeSetMainComponent} from './wizards/codeSet/code-set-main/code-set-main.component';
-import {CodeSetComponent} from './code-set/code-set/code-set.component';
-import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-main.component';
+import { CodeSetComponent } from './code-set/code-set/code-set.component';
+import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 
 export const PagesRoutes = {
   states: [
@@ -207,17 +203,18 @@ export const PagesRoutes = {
       component: DataModelsExportComponent
     },
     {
-        name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
-        url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
-        component: DataElementMainComponent
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',
+      url: '/dataElement/new?parentDataModelId&grandParentDataClassId&parentDataClassId',
+      component: DataElementMainComponent
     },
     {
-      name : 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
       url: '/dataType/:dataModelId/:id/{tabView:string}',
-      component : DataTypeComponent,
+      component: DataTypeComponent,
       params: {
         tabView: { dynamic: true, value: null, squash: true }
-    }},
+      }
+    },
     {
       name: 'appContainer.mainApp.resetPassword',
       url: '/resetpassword?uid&token',

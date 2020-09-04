@@ -43,8 +43,7 @@ export class TerminologyDetailsComponent implements OnInit {
 
   openEditFormVal: any;
   @Output() openEditFormChanged = new EventEmitter<any>();
-  @Input()
-  get openEditForm() {
+  @Input() get openEditForm() {
     return this.openEditFormVal;
   }
   set openEditForm(val) {
@@ -81,6 +80,8 @@ export class TerminologyDetailsComponent implements OnInit {
   showNewVersion: boolean;
   showFinalise: boolean;
   showDelete: boolean;
+  showSoftDelete: boolean;
+  showPermDelete: boolean;
   errorMessage: string;
   exporting: boolean;
 
@@ -94,7 +95,9 @@ export class TerminologyDetailsComponent implements OnInit {
     this.showPermission = access.showPermission;
     this.showNewVersion = access.showNewVersion;
     this.showFinalise = access.showFinalise;
-    this.showDelete = access.showDelete;
+    this.showDelete = access.showSoftDelete || access.showPermanentDelete;
+    this.showSoftDelete = access.showSoftDelete;
+    this.showPermDelete = access.showPermanentDelete;
 
     this.editableForm.show = () => {
       this.editableForm.visible = true;
@@ -139,7 +142,7 @@ export class TerminologyDetailsComponent implements OnInit {
       })
     };
 
-    this.resources.terminology.put(resource.id, null, { resource }).subscribe(res => {
+    this.resources.terminology.update(resource.id, resource).subscribe(res => {
         const result = res.body;
 
         if (this.afterSave) {
@@ -182,29 +185,27 @@ export class TerminologyDetailsComponent implements OnInit {
     this.exportError = null;
   };
 
-  delete = (permanent?) => {
-    if (!this.sharedService.isAdminUser()) {
+  delete = (permanent) => {
+    if (!this.showDelete) {
       return;
     }
-    const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
-    this.resources.terminology.delete(this.mcTerminology.id, null, queryString).subscribe(() => {
-          if (permanent) {
-            this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
-          } else {
-            this.stateHandler.reload();
-          }
-          this.broadcastSvc.broadcast('$elementDeleted', () => {
-           // this.mcTerminology, permanent;  TODO
-          });
-        }, error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError('There was a problem deleting the Terminology.', error);
-        });
+    this.resources.terminology.remove(this.mcTerminology.id, { permanent }).subscribe(() => {
+        if (permanent) {
+          this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
+        } else {
+          this.stateHandler.reload();
+        }
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcastSvc.broadcast('$elementDeleted', () => { });
+      }, error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Terminology.', error);
+      });
   };
 
   askForSoftDelete = () => {
-    if (!this.sharedService.isAdminUser()) {
+    if (!this.showSoftDelete) {
       return;
     }
     this.dialog.open(ConfirmationModalComponent, {
@@ -217,7 +218,7 @@ export class TerminologyDetailsComponent implements OnInit {
         }
     }).afterClosed().subscribe(result => {
       if (result != null && result.status === 'ok') {
-        this.delete();
+        this.delete(false);
       } else {
         return;
       }
@@ -225,7 +226,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   askForPermanentDelete = () => {
-    if (!this.sharedService.isAdminUser()) {
+    if (!this.showPermDelete) {
       return;
     }
     this.dialog.open(ConfirmationModalComponent, {
@@ -280,15 +281,15 @@ export class TerminologyDetailsComponent implements OnInit {
           return;
         }
         this.processing = true;
-        this.resources.terminology.put(this.mcTerminology.id, 'finalise', null).subscribe(() => {
-              this.processing = false;
-              this.messageHandler.showSuccess('Terminology finalised successfully.');
-              this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
-            }, error => {
-              this.processing = false;
-              this.messageHandler.showError('There was a problem finalising the Terminology.', error);
-            }
-          );
+
+        this.resources.terminology.finalise(this.mcTerminology.id, null).subscribe(() => {
+            this.processing = false;
+            this.messageHandler.showSuccess('Terminology finalised successfully.');
+            this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
+          }, error => {
+            this.processing = false;
+            this.messageHandler.showError('There was a problem finalising the Terminology.', error);
+        });
       });
   };
 
@@ -298,16 +299,16 @@ export class TerminologyDetailsComponent implements OnInit {
 
   loadExporterList = () => {
     this.exportList = [];
-    this.securityHandler.isValidSession().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe(result => {
       if (result.body === false) {
         return;
       }
-      this.resources.public.dataModelExporterPlugins().subscribe(result2 => {
-          this.exportList = result2;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        }
-      );
+      this.resources.dataModel.exporters().subscribe(result2 => {
+        this.exportList = result2;
+      },
+      error => {
+        this.messageHandler.showError('There was a problem loading exporters list.', error);
+      });
     });
   };
 

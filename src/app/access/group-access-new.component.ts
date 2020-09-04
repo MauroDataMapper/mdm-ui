@@ -20,26 +20,26 @@ import { MessageService } from '../services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-
 import { FolderResult } from '../model/folderModel';
-import { forkJoin } from 'rxjs';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
-
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 
 @Component({
   selector: 'mdm-group-access-new',
   templateUrl: './group-access-new.component.html',
-  styleUrls: ['./group-access-new.component.sass']
+  styleUrls: ['./group-access-new.component.sass'],
 })
 export class GroupAccessNewComponent implements OnInit {
-  displayedColumns: string[] = ['user', 'read', 'write', 'edit'];
+  displayedColumns: string[] = ['user', 'access', 'edit'];
   totalItemCount = 0;
   groups = [];
   allGroups = [];
   groupsMap = {};
+  editable = false;
+  accessLevels = [];
+  isLoadingResults = true;
 
   folderResult: FolderResult;
   @Input() parent: any;
@@ -47,7 +47,8 @@ export class GroupAccessNewComponent implements OnInit {
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   // MatPaginator Output
   pageEvent: PageEvent;
 
@@ -56,7 +57,7 @@ export class GroupAccessNewComponent implements OnInit {
     Classifier: { name: 'classifier', message: 'Classifier' },
     Folder: { name: 'folder', message: 'Folder' },
     Terminology: { name: 'terminology', message: 'Terminology' },
-    CodeSet: { name: 'codeSet', message: 'CodeSet' }
+    CodeSet: { name: 'codeSet', message: 'CodeSet' },
   };
 
   constructor(
@@ -72,12 +73,14 @@ export class GroupAccessNewComponent implements OnInit {
     this.buildGroups();
     this.loadAllGroups('', 0, 0);
 
+    this.editable = this.folderResult['availableActions'].indexOf('update') !== -1;
+
     this.dataSource = new MatTableDataSource(this.groups);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor = (item, property) => {
       if (property === 'user') {
-        return item.group.label;
+        return item.group.name;
       }
       if (property === 'read') {
         return item.edit.readAccess;
@@ -90,161 +93,60 @@ export class GroupAccessNewComponent implements OnInit {
 
   loadAllGroups(text, offset, limit) {
     this.allGroups = [];
-    this.securityHandler.isValidSession().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe((result) => {
       if (result.body === false) {
         return;
       }
       limit = limit ? limit : 10;
       offset = offset ? offset : 0;
       const options = {
-        pageSize: limit,
-        pageIndex: offset,
+        max: limit,
+        offset,
         //  filters: "search=" + text,
         // sortBy: "emailAddress",
-        sortType: 'asc'
+        order: 'asc',
       };
-      this.resourceService.userGroup.get().subscribe(
-        data => {
-          this.allGroups = data.body.items;
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem getting the group list.',
-            error
-          );
-        }
-      );
+      this.resourceService.userGroups.list().subscribe((data) => {
+        this.allGroups = data.body.items;
+      }, (error) => {
+        this.messageHandler.showError('There was a problem getting the group list.', error);
+      });
     });
   }
 
-  buildGroups = function() {
+  buildGroups = () => {
     this.groups = [];
-
     this.folderResult = this.messageService.getFolderPermissions();
-    for (
-      let i = 0;
-      this.folderResult.writeableByGroups &&
-      i < this.folderResult.writeableByGroups.length;
-      i++
-    ) {
-      const group = this.folderResult.writeableByGroups[i];
-      this.groupsMap[group.label] = {
-        group,
-        readAccess: false,
-        writeAccess: true
-      };
-    }
-
-    for (
-      let i = 0;
-      this.folderResult.readableByGroups &&
-      i < this.folderResult.readableByGroups.length;
-      i++
-    ) {
-      const group = this.folderResult.readableByGroups[i];
-      if (!this.groupsMap[group.label]) {
-        this.groupsMap[group.label] = {
-          group,
-          readAccess: true,
-          writeAccess: false
-        };
-      } else {
-        this.groupsMap[group.label].readAccess = true;
-      }
-    }
-
-    for (const key in this.groupsMap) {
-      if (this.groupsMap.hasOwnProperty(key)) {
-        this.groupsMap[key].inEdit = true;
-        this.groupsMap[key].edit = {
-          group: Object.assign({}, this.groupsMap[key].group),
-          writeAccess: this.groupsMap[key].writeAccess,
-          readAccess: this.groupsMap[key].readAccess
-        };
-        this.groups.push(this.groupsMap[key]);
-      }
-    }
-
-    this.totalItemCount = this.groups.count;
+    this.isLoadingResults = true;
+    this.resourceService.securableResource.getGroupRoles(this.folderResult.domainType, this.folderResult.id, '').subscribe((res) => {
+      this.accessLevels = res.body.items;
+      this.resourceService.securableResource.getSecurableResourceGroupRole(this.folderResult.domainType, this.folderResult.id, '').subscribe((result) => {
+        this.groups = result.body.items;
+        this.totalItemCount = result.body.count;
+        this.isLoadingResults = false;
+        this.refreshDataSource();
+      });
+    }, () => { });
   };
-
-  // public getServerData($event) {
-  //     var offset = $event.pageIndex * $event.pageSize;
-  //     this.fetch($event.pageSize, offset ,$event.pageIndex, this.sort.active,this.sort.direction,null );
-  // }
-  //
-  // public getSortedData($event) {
-  //     this.fetch(this.paginator.pageSize, this.paginator.pageIndex,this.paginator.pageIndex, $event.active,$event.direction,null );
-  // }
 
   save(row, index) {
     // if nothing's changed, then return
-    if (
-      row.writeAccess === row.edit.writeAccess &&
-      row.readAccess === row.edit.readAccess
-    ) {
-      return;
-    }
-
-    const observableCol = [];
-    const name = this.supportedDomainTypes[this.parentType].name;
-    const message = this.supportedDomainTypes[this.parentType].message;
 
     const mId = this.folderResult.id;
     const gId = row.edit.group.id;
+    const levelId = row.groupLevelId.id;
 
-    if (row.readAccess && !row.edit.readAccess) {
-      observableCol.push(
-        this.resourceService[name].delete(mId, 'read/group/' + gId)
-      );
-    } else {
-      // Put WriteAccess
-      if (!row.writeAccess && row.edit.writeAccess) {
-        observableCol.push(
-          this.resourceService[name].put(mId, 'write/group/' + gId)
-        );
-      } else {
-        // Delete WriteAccess
-        if (row.writeAccess && !row.edit.writeAccess) {
-          observableCol.push(
-            this.resourceService[name].delete(mId, 'write/group/' + gId)
-          );
-        } else if (!row.readAccess && row.edit.readAccess) {
-          // Put ReadAccess
-          observableCol.push(
-            this.resourceService[name].put(mId, 'read/group/' + gId)
-          );
-        }
-      }
-    }
-
-    forkJoin(observableCol).subscribe(
-      () => {
-        // if both are false, remove the row
-        if (!row.edit.readAccess && !row.edit.writeAccess) {
-          this.groups.splice(index, 1);
-        } else {
-          row.isNew = false;
-          row.inEdit = true;
-          row.readAccess = row.edit.readAccess;
-          row.writeAccess = row.edit.writeAccess;
-          row.group = row.edit.group;
-          this.groups[index] = row;
-        }
-        this.messageHandler.showSuccess(message + ' updated successfully.');
-        this.refreshDataSource();
-      },
-      error => {
-        this.messageHandler.showError(
-          'There was a problem updating the ' + message + '.',
-          error
-        );
-      }
-    );
+    this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult.domainType, mId, levelId, gId, null).subscribe(() => {
+      this.messageHandler.showSuccess('Save Successful');
+      this.buildGroups();
+    },
+      (error) => {
+        this.messageHandler.showError('Save Error', error);
+      });
   }
 
   add() {
-    this.paginator.pageIndex = 0 ;
+    this.paginator.pageIndex = 0;
     const newRecord = {
       group: null,
       writeAccess: false,
@@ -252,10 +154,10 @@ export class GroupAccessNewComponent implements OnInit {
       edit: {
         group: null,
         writeAccess: false,
-        readAccess: false
+        readAccess: false,
       },
       inEdit: true,
-      isNew: true
+      isNew: true,
     };
     this.groups = [].concat([newRecord]).concat(this.groups);
     this.refreshDataSource();
@@ -274,6 +176,10 @@ export class GroupAccessNewComponent implements OnInit {
   onGroupSelect = (select, record) => {
     delete record.edit.errors;
     record.edit.group = select;
+  };
+
+  onGroupAccessSelect = (select, record) => {
+    record.groupLevelId = select;
   };
 
   validate(record, index) {
@@ -305,5 +211,15 @@ export class GroupAccessNewComponent implements OnInit {
     if (record.inEdit && !record.isNew) {
       this.save(record, index);
     }
+  }
+
+  deleteRecord = (record, index) => {
+    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult.domainType, this.folderResult.id, record.groupRole.id, record.userGroup.id).subscribe((res) => {
+      this.messageHandler.showSuccess('Delete Successful');
+      this.buildGroups();
+    },
+      (error) => {
+        this.messageHandler.showError('Error Removing', error);
+      });
   }
 }

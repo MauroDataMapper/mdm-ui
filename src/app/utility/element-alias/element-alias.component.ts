@@ -15,14 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {DataModelResult} from '@mdm/model/dataModelModel';
-import {DataClassResult} from '@mdm/model/dataClassModel';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { DataClassResult } from '@mdm/model/dataClassModel';
 
 @Component({
   selector: 'mdm-element-alias',
   templateUrl: './element-alias.component.html',
-  // styleUrls: ['./element-alias.component.sass']
+  styleUrls: ['./element-alias.component.sass']
 })
 export class ElementAliasComponent implements OnInit {
   @Input() aliases: any[] = [];
@@ -31,14 +30,11 @@ export class ElementAliasComponent implements OnInit {
   @Input() element: DataClassResult;
   typedAlias: string;
   @Input() inEditMode: false;
-  @ViewChild('typedAliasId', {static: false}) alias: ElementRef;
+  @ViewChild('typedAliasId', { static: false }) alias: ElementRef;
 
-  constructor() {
-  }
+  constructor() { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 
   remove(element) {
     const index = this.aliases.findIndex(alias => alias === element);
@@ -46,9 +42,7 @@ export class ElementAliasComponent implements OnInit {
       this.aliases.splice(index, 1);
       this.editableForm.aliases = this.aliases;
     }
-
   }
-
 
   add() {
     if (this.typedAlias.trim() === '') {
@@ -64,20 +58,17 @@ export class ElementAliasComponent implements OnInit {
       this.aliases = [];
     }
     this.aliases.push(this.typedAlias);
-    // this.editableForm["aliases"] = this.aliases;
     this.editableForm.aliases = this.aliases;
 
     this.typedAlias = '';
     this.alias.nativeElement.focus();
   }
 
-  keyup = function(event) {
+  keyup = (event) => {
     if (event.keyCode && event.keyCode === 13) {
       this.add();
     }
     event.preventDefault();
     return false;
   };
-
-
 }

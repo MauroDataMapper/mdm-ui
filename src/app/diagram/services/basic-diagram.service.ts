@@ -31,13 +31,18 @@ import * as _ from 'lodash';
 
 export abstract class BasicDiagramService {
 
-  darkBackground = '#b3bdc8';
+  fontColorWhite = '#ffffff';
+  darkBackground = '#4a708b';
   lightBackground = '#e0e5e9';
+  lightOrangeBackground = '#f7a900';
+  linkColor: '#949494';
 
   hierarchy: any;
   public graph: joint.dia.Graph;
   protected clickSubject = new Subject<any>();
   protected goUpSubject = new Subject<any>();
+  protected dataComponentSubject = new BehaviorSubject('');
+  public currentComponent = this.dataComponentSubject.asObservable();
 
   public constructor(protected resourcesService: MdmResourcesService,
                      protected messageHandler: MessageHandlerService) {
@@ -54,6 +59,11 @@ export abstract class BasicDiagramService {
   abstract render(data: any): void;
 
   abstract configurePaper(paper: joint.dia.Paper): void;
+
+
+  public updateDataClassComponentLevel(data: any): void { };
+
+  public updateDataElementLevel(data: any): void { };
 
   public onDrag(cellView: joint.dia.CellView, event): void {
     if (cellView instanceof joint.dia.ElementView) {
@@ -88,14 +98,17 @@ export abstract class BasicDiagramService {
   protected addCylinderCell(id: string, label: string): joint.dia.Cell {
     const cylinder = new joint.shapes.standard.Cylinder({
       id,
-      size: {width: 120, height: 80},
+      size: { width: 120, height: 80 },
     });
-    cylinder.attr('label/text', joint.util.breakText(label, {width: 110}));
+    cylinder.attr('label/text', joint.util.breakText(label, { width: 110 }));
     // cylinder.attr('label/text', label);
     cylinder.attr('label/fontWeight', 'bold');
     cylinder.attr('label/fontSize', 12);
+    cylinder.attr('label/fill', this.fontColorWhite);
     cylinder.attr('body/fill', this.darkBackground);
+    cylinder.attr('body/strokeWidth', 0);
     cylinder.attr('top/fill', this.lightBackground);
+
 
     cylinder.attr('text/ref-y', -50);
     this.graph.addCell(cylinder);
@@ -105,12 +118,16 @@ export abstract class BasicDiagramService {
   protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
-      size: {width, height}
+      size: { width, height }
     });
-    rectangle.attr('label/text', joint.util.breakText(label, {width: 110}));
+    rectangle.attr('label/text', joint.util.breakText(label, { width: 110 }));
     rectangle.attr('label/fontWeight', 'bold');
     rectangle.attr('label/fontSize', 12);
+    rectangle.attr('label/fill', this.fontColorWhite);
     rectangle.attr('body/fill', this.darkBackground);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
 
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
@@ -121,12 +138,49 @@ export abstract class BasicDiagramService {
   protected addSmallRectangleCell(id: string, label: string): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
-      size: {width: 150, height: 40}
+      size: { width: 150, height: 40 }
     });
-    rectangle.attr('label/text', joint.util.breakText(label, {width: 130}));
+    rectangle.attr('label/text', joint.util.breakText(label, { width: 130 }));
     rectangle.attr('label/fontWeight', 'bold');
     rectangle.attr('label/fontSize', 12);
     rectangle.attr('body/fill', this.lightBackground);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
+
+    // rectangle.attr('text/ref-y', -50);
+    this.graph.addCell(rectangle);
+    return rectangle;
+
+  }
+
+  protected addLink(id: string, sourceId: string, targetId: string): joint.dia.Link {
+    const link = new joint.shapes.standard.Link({
+      id: id,
+      source: { id: sourceId },
+      target: { id: targetId }
+    });
+
+    link.attr('line/stroke', this.darkBackground);
+    link.connector('rounded', { radius: 40 });
+    link.toBack();
+
+    this.graph.addCell(link);
+    return link;
+  }
+
+  protected addSmallColorfulRectangleCell(id: string, label: string): joint.dia.Cell {
+    const rectangle = new joint.shapes.standard.Rectangle({
+      id,
+      size: { width: 150, height: 40 }
+    });
+    rectangle.attr('label/text', joint.util.breakText(label, { width: 130 }));
+    rectangle.attr('label/fontWeight', 'bold');
+    rectangle.attr('label/fontSize', 12);
+    rectangle.attr('body/fill', this.lightOrangeBackground);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
 
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
@@ -139,7 +193,7 @@ export abstract class BasicDiagramService {
                             @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
     const cells: Array<joint.dia.Cell> = [];
     if (!position) {
-      position = new joint.g.Point({x: 0, y: 0});
+      position = new joint.g.Point({ x: 0, y: 0 });
     }
 
     let classBox = null;
@@ -154,7 +208,7 @@ export abstract class BasicDiagramService {
         id,
         position,
         z: 2,
-        size: {width: 300, height: attributes.length * 25 + 31},
+        size: { width: 300, height: attributes.length * 25 + 31 },
         attrs: {
           body: {
             fill: this.lightBackground,
@@ -166,20 +220,22 @@ export abstract class BasicDiagramService {
       cells.push(classBox);
     }
 
-
     const classNameBox = new joint.shapes.standard.Rectangle({
       id: id + '-name',
       position,
-      size: {width: 300, height: 30},
+      size: { width: 300, height: 30 },
       z: 1,
       attrs: {
         label: {
-          text: joint.util.breakText(label, {width: 290}),
+          text: joint.util.breakText(label, { width: 290 }),
           fontWeight: 'bold',
+          fill: this.fontColorWhite,
           fontSize: 13
         },
         body: {
-          fill: this.darkBackground
+          fill: this.darkBackground,
+          strokeWidth: 0,
+          stroke: this.darkBackground
         }
       }
     });
@@ -188,13 +244,13 @@ export abstract class BasicDiagramService {
     attributes.forEach((attribute, idx) => {
 
       const attributeBox = new joint.shapes.standard.Rectangle({
-        position: {x: position.x , y: position.y + 31 + idx * 25},
+        position: { x: position.x, y: position.y + 31 + idx * 25 },
         id: attribute.id,
-        size: {width: 300, height: 25},
+        size: { width: 300, height: 25 },
         z: 1,
         attrs: {
           label: {
-            text: joint.util.breakText(attribute.label + ' : ' + attribute.dataType.label, {width: 280}),
+            text: joint.util.breakText(attribute.label + ' : ' + attribute.dataType.label, { width: 280 }),
             fontWeight: 'normal',
             fontSize: 12,
             textAnchor: 'left',
@@ -217,16 +273,16 @@ export abstract class BasicDiagramService {
 
   }
 
-/*
-private adjustAllVertices(graph: joint.dia.Graph) {
-  graph.getCells().forEach((cell) => {
-    if (cell instanceof joint.dia.Link) {
-      this.adjustVertices(graph, cell);
-    }
-  });
+  /*
+  private adjustAllVertices(graph: joint.dia.Graph) {
+    graph.getCells().forEach((cell) => {
+      if (cell instanceof joint.dia.Link) {
+        this.adjustVertices(graph, cell);
+      }
+    });
 
-}
-*/
+  }
+  */
 
   private adjustVertices(graph: joint.dia.Graph, cell: joint.dia.Cell) {
 
@@ -356,6 +412,11 @@ private adjustAllVertices(graph: joint.dia.Graph) {
     return this.goUpSubject;
   }
 
+  getComponentSubject(): Subject<any> {
+    return this.dataComponentSubject;
+  }
 
-
+  changeComponent(dataClassComponent: any) {
+    this.dataComponentSubject.next(dataClassComponent);
+  }
 }

@@ -59,7 +59,8 @@ export class RegisterModalComponent implements OnInit {
       password: this.password,
       confirmPassword: this.confirmPassword
     };
-    this.resources.catalogueUser.post(null, null, { resource }).subscribe(() => {
+
+    this.resources.catalogueUser.save(resource).subscribe(() => {
         this.dialogRef.close();
         this.registerSuccess();
       },
@@ -69,7 +70,6 @@ export class RegisterModalComponent implements OnInit {
         if (firstError.indexOf('Property [emailAddress] of class [class ox.softeng.metadatacatalogue.core.user.CatalogueUser] with value') >= 0 && firstError.indexOf('must be unique') >= 0) {
           firstError = `The email address ${this.email} has already been registered.`;
         }
-        console.log(firstError);
         this.message = 'Error in registration: ' + firstError;
       }
     );

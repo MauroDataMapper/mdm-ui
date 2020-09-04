@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -26,8 +26,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./classifier-step1.component.sass']
 })
 export class ClassifierStep1Component implements OnInit, OnDestroy, AfterViewInit {
-  constructor(
-    private helpDialogueHandler: HelpDialogueHandlerService  ) {}
+  constructor(private helpDialogueHandler: HelpDialogueHandlerService) { }
 
   allDataModelTypes: any;
   step: any;
@@ -46,11 +45,9 @@ export class ClassifierStep1Component implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      () => {
-        this.step.invalid = this.myForm.invalid;
-      }
-    );
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(() => {
+      this.step.invalid = this.myForm.invalid;
+    });
   }
 
   loadHelp = () => {

@@ -24,6 +24,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { DataElementResult } from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'mdm-data-element',
@@ -50,7 +51,8 @@ export class DataElementComponent implements OnInit {
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
+    private stateHandler: StateHandlerService,
+    private title: Title
   ) {
     if (
       !this.stateService.params.id ||
@@ -81,50 +83,22 @@ export class DataElementComponent implements OnInit {
     }
   }
 
-   ngOnInit() {
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+  ngOnInit() {
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
-    this.showExtraTabs =
-       this.sharedService.isLoggedIn() ;
-    /// this.parentId = this.stateService.params.id;
-    // this.resourcesService.dataModel.get(this.stateService.params.id).subscribe(x => { this.dataModel = x.body });
-
-    // if(this.stateService.params.edit === "true"){ //Call this if using message service.
-    //     // this.editMode = true;
-    //     this.messageService.showEditMode(true);
-    // }
-    // else
-    //     this.messageService.showEditMode(false);
-    window.document.title = 'Data Element';
-    this.dataElementDetails(
-      this.stateService.params.dataModelId,
-      this.dataClass.id,
-      this.stateService.params.id
-    );
-    // this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-    //   this.showSecuritySection = message;
-    // });
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
-    this.afterSave = (result: { body: { id: any } }) =>
-      this.dataElementDetails(
-        this.stateService.params.dataModelId,
-        this.dataClass.id,
-        result.body.id
-      );
+    this.showExtraTabs = this.sharedService.isLoggedIn();
+    this.title.setTitle(`Data Element`);
+    this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, this.stateService.params.id);
+    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
+      this.showSearch = message;
+    });
+    this.afterSave = (result: { body: { id: any } }) => this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, result.body.id);
   }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'content':
         return { index: 0, name: 'content' };
-      // case 'dataClasses':  return {index:0, name:'dataClasses'};
-      // case 'dataElements': return {index:1, name:'dataElements'};
       case 'properties':
         return { index: 1, name: 'properties' };
       case 'comments':
@@ -135,36 +109,22 @@ export class DataElementComponent implements OnInit {
         return { index: 4, name: 'summaryMetadata' };
       case 'attachments':
         return { index: 5, name: 'attachments' };
-      // case 'history': 	 return {index:4, name:'history'     , fetchUrl:null};
-      // default: 			 return {index:0, name:'dataClasses', fetchUrl:'dataClasses'};
       default:
         return { index: 0, name: 'content' };
     }
   }
 
   dataElementDetails(dataModelId: any, dataClassId, id) {
-    this.resourcesService.dataElement
-      .get(dataModelId, dataClassId, id, null, null)
-      .subscribe((result: { body: DataElementResult }) => {
-        this.dataElement = result.body;
-        // this.dataClass.parentDataModel = dataModelId;
-        // this.dataClass.parentDataClass = parentDataClassId;
-        // this.parentDataModel = {
-        //   id: dataModelId,
-        //   editable: this.dataClass.editable,
-        //   finalised: this.dataClass.breadcrumbs[0].finalised
-        // };
-        this.messageService.FolderSendMessage(this.dataElement);
-        this.messageService.dataChanged(this.dataElement);
+    this.resourcesService.dataElement.get(dataModelId, dataClassId, id).subscribe((result: { body: DataElementResult }) => {
+      this.dataElement = result.body;
+      this.messageService.FolderSendMessage(this.dataElement);
+      this.messageService.dataChanged(this.dataElement);
 
-        if (this.dataElement) {
-          // this.tabGroup.realignInkBar();
-          this.activeTab = this.getTabDetailByName(
-            this.stateService.params.tabView
-          ).index;
-          this.tabSelected(this.activeTab);
-        }
-      });
+      if (this.dataElement) {
+        this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+        this.tabSelected(this.activeTab);
+      }
+    });
   }
 
   toggleShowSearch() {

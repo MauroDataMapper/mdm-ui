@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { Observable } from 'rxjs';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,15 +29,15 @@ export class UserSettingsHandlerService {
     counts: [5, 10, 20, 50],
     expandMoreDescription: false,
     favourites: [],
-    includeSupersededModels: false,
-    showSupersededModels: false,
-    showDeletedModels: false,
+    includeModelSuperseded: true,
+    includeDocumentSuperseded: false,
+    includeDeleted: false,
     dataFlowDiagramsSetting: {}
   };
   constructor(
     private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService
-  ) {}
+  ) { }
 
   getUserSettings() {
     let settings = JSON.parse(localStorage.getItem('userSettings'));
@@ -55,31 +55,28 @@ export class UserSettingsHandlerService {
   initUserSettings() {
 
     const promise = new Promise((resolve, reject) => {
-    this.resources.catalogueUser
-      .get(localStorage.getItem('userId'), 'userPreferences', null)
-      .subscribe(
-        res => {
-          const result = res.body;
-          let settings = null;
-          if (!result) {
-            settings = this.defaultSettings;
-          } else {
-            // check if we have added new items but they don't exists already, then add them
-            for (const property in this.defaultSettings) {
-              if (
-                this.defaultSettings.hasOwnProperty(property) &&
-                !result[property]
-              ) {
-                result[property] = this.defaultSettings[property];
-              }
+      this.resources.catalogueUser.userPreferences(localStorage.getItem('userId')).subscribe(res => {
+        const result = res.body;
+        let settings = null;
+        if (!result) {
+          settings = this.defaultSettings;
+        } else {
+          // check if we have added new items but they don't exists already, then add them
+          for (const property in this.defaultSettings) {
+            if (
+              this.defaultSettings.hasOwnProperty(property) &&
+              !result[property]
+            ) {
+              result[property] = this.defaultSettings[property];
             }
-            // save them into the localStorage
-            settings = result;
           }
-          // save it locally
-          this.updateUserSettings(settings);
-          resolve(settings);
-        },
+          // save them into the localStorage
+          settings = result;
+        }
+        // save it locally
+        this.updateUserSettings(settings);
+        resolve(settings);
+      },
         error => {
           reject(error);
         }
@@ -110,14 +107,7 @@ export class UserSettingsHandlerService {
   }
 
   saveOnServer(): Observable<any> {
-    const defaultSettings = this.getUserSettings();
-    const settingsStr = JSON.stringify(defaultSettings);
-    return this.resources.catalogueUser.put(
-      localStorage.getItem('userId'),
-      'userPreferences',
-      { resource: settingsStr, contentType: 'text/plain' }
-    );
-
+    return this.resources.catalogueUser.updateUserPreferences(localStorage.getItem('userId'), this.getUserSettings());
   }
 
   handleCountPerTable(items) {

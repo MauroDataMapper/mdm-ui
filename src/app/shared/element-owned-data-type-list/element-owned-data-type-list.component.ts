@@ -31,13 +31,13 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { merge, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-element-owned-data-type-list',
@@ -47,6 +47,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
 export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit {
   @Input() parent: any;
   @Input() type: any;
+  @Input() isEditable: any;
 
   @Input() childOwnedDataTypes: any;
 
@@ -68,8 +69,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   displayedColumns: string[];
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: any;
   deleteInProgress: boolean;
   domainType;
   dataSource: MatTableDataSource<any>;
@@ -79,11 +80,11 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
 
   constructor(
     private changeRef: ChangeDetectorRef,
-    private messageHandler: MessageHandlerService,
     private elementTypes: ElementTypesService,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private gridService: GridService
   ) { }
 
   ngOnInit(): void {
@@ -92,7 +93,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     }
-    if (this.parent.editable && !this.parent.finalised) {
+    if (this.isEditable && !this.parent.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'type', 'actions'];
     } else {
       this.displayedColumns = ['name', 'description', 'type'];
@@ -150,22 +151,19 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   }
 
   applyFilter = (filterValue?: any, filterName?) => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
-      }
-    });
+        filter[name] = value;
+       }
+      });
 
-    if (filterValue !== null && filterValue !== undefined && filterName !== null && filterName !== undefined) {
-      filter += filterName + '=' + filterValue.id + '&';
-    }
     this.filter = filter;
     this.filterEvent.emit(filter);
-  };
+
+}
 
   applyMatSelectFilter(filterValue: any, filterName) {
     this.applyFilter(filterValue, filterName);
@@ -194,15 +192,8 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   };
 
   dataTypesFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
-
-    return this.resources.dataModel.get(this.parent.id, 'dataTypes', options);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    return this.resources.dataType.list(this.parent.id, options);
   };
 
   onChecked = () => {
@@ -232,7 +223,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         dataElementIdLst.push({
           id: record.id,
           label: record.label,
-          dataModel: record.dataModel,
+          dataModel: record.model,
           domainType: 'DataType',
           type: record.domainType
         });

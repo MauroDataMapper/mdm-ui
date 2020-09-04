@@ -21,7 +21,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'mdm-data-model-default',
   templateUrl: './data-model-default.component.html',
-  // styleUrls: ['./data-model-default.component.sass']
+  styleUrls: ['./data-model-default.component.sass']
 })
 export class DataModelDefaultComponent implements OnInit {
 

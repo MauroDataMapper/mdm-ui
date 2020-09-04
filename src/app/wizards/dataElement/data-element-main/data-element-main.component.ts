@@ -49,7 +49,6 @@ export class DataElementMainComponent implements OnInit {
   parentDataModelId: any;
   grandParentDataClassId: any;
   parentDataClassId: any;
-  // allDataTypesCount : any;
   processing: any;
   isProcessComplete: any;
   finalResult = {};
@@ -75,7 +74,6 @@ export class DataElementMainComponent implements OnInit {
     newlyAddedDataType: {
       label: '',
       description: '',
-
       metadata: [],
       domainType: 'PrimitiveType',
       enumerationValues: [],
@@ -99,6 +97,7 @@ export class DataElementMainComponent implements OnInit {
       return;
     }
     this.model.parentDataModel.id = this.parentDataModelId;
+    this.model.parentDataClass.id = this.parentDataClassId;
     const step1 = new Step();
     step1.title = 'Data Element Import Method';
     step1.component = DataElementStep1Component;
@@ -112,15 +111,15 @@ export class DataElementMainComponent implements OnInit {
     step2.scope = this;
     step2.invalid = true;
 
-    this.resources.dataClass.get(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId, null, null).subscribe(result => {
-        // result.body.breadcrumbs.push(Object.assign([],result.body));
+    this.resources.dataClass.getChildDataClass(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId).subscribe(result => {
+        result.body.breadcrumbs.push(Object.assign([], result.body));
         this.model.parent = result.body;
         this.steps.push(step1);
         this.steps.push(step2);
         this.changeRef.detectChanges();
       });
 
-    this.resources.dataModel.get(this.parentDataModelId, 'dataTypes').subscribe(result => {
+    this.resources.dataType.list(this.parentDataModelId).subscribe(result => {
         this.model.allDataTypesCount = result.count;
         if (result.count === 0) {
           this.model.showNewInlineDataType = true;
@@ -154,7 +153,6 @@ export class DataElementMainComponent implements OnInit {
   fireChanged = (tab: any) => {
     for (let i = 0; i < this.steps.length; i++) {
       const step: Step = this.steps[i];
-
       if (i === tab.selectedIndex) {
         if (step.compRef) {
           if (step.compRef.instance.onLoad !== undefined) {
@@ -183,19 +181,13 @@ export class DataElementMainComponent implements OnInit {
         domainType: this.model.newlyAddedDataType.domainType,
 
         referenceDataType: {
-          id: this.model.newlyAddedDataType.referencedDataType
-            ? this.model.newlyAddedDataType.referencedDataType.id
-            : null
+          id: this.model.newlyAddedDataType.referencedDataType ? this.model.newlyAddedDataType.referencedDataType.id : null
         },
         referenceClass: {
-          id: this.model.newlyAddedDataType.referencedDataClass
-            ? this.model.newlyAddedDataType.referencedDataClass.id
-            : null
+          id: this.model.newlyAddedDataType.referencedDataClass ? this.model.newlyAddedDataType.referencedDataClass.id : null
         },
         terminology: {
-          id: this.model.newlyAddedDataType.referencedTerminology
-            ? this.model.newlyAddedDataType.referencedTerminology.id
-            : null
+          id: this.model.newlyAddedDataType.referencedTerminology ? this.model.newlyAddedDataType.referencedTerminology.id : null
         },
 
         classifiers: this.model.classifiers.map(cls => ({id: cls.id})),
@@ -213,24 +205,12 @@ export class DataElementMainComponent implements OnInit {
         }))
       };
 
-      const deferred = this.resources.dataModel.post(
-        this.parentDataModelId,
-        'dataTypes',
-        { resource: res }
-      );
-
-      deferred.subscribe(
-        response => {
+      this.resources.dataType.save(this.parentDataModelId, res).subscribe(response => {
           dataType = response.body;
           this.saveDataElement(response.body);
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem saving the Data Type.',
-            error
-          );
-        }
-      );
+        }, error => {
+          this.messageHandler.showError('There was a problem saving the Data Type.', error);
+      });
     }
   };
 
@@ -242,19 +222,13 @@ export class DataElementMainComponent implements OnInit {
       domainType: this.model.newlyAddedDataType.domainType,
 
       referenceDataType: {
-        id: this.model.newlyAddedDataType.referencedDataType
-          ? this.model.newlyAddedDataType.referencedDataType.id
-          : null
+        id: this.model.newlyAddedDataType.referencedDataType ? this.model.newlyAddedDataType.referencedDataType.id : null
       },
       referenceClass: {
-        id: this.model.newlyAddedDataType.referencedDataClass
-          ? this.model.newlyAddedDataType.referencedDataClass.id
-          : null
+        id: this.model.newlyAddedDataType.referencedDataClass ? this.model.newlyAddedDataType.referencedDataClass.id : null
       },
       terminology: {
-        id: this.model.newlyAddedDataType.referencedTerminology
-          ? this.model.newlyAddedDataType.referencedTerminology.id
-          : null
+        id: this.model.newlyAddedDataType.referencedTerminology ? this.model.newlyAddedDataType.referencedTerminology.id : null
       },
 
       classifiers: this.model.classifiers.map(cls => ({id: cls.id})),
@@ -272,23 +246,13 @@ export class DataElementMainComponent implements OnInit {
       }))
     };
 
-    const deferred = this.resources.dataModel.post(
-      this.parentDataModelId,
-      'dataTypes',
-      { resource }
-    );
-
-    deferred.subscribe(
-      response => {
+    // deferred
+    this.resources.dataType.save(this.parentDataModelId, resource).subscribe(response => {
         this.datatype = response.body;
       },
       error => {
-        this.messageHandler.showError(
-          'There was a problem saving the Data Type.',
-          error
-        );
-      }
-    );
+        this.messageHandler.showError('There was a problem saving the Data Type.', error);
+      });
   };
 
   saveDataElement = (dataType: any) => {
@@ -315,35 +279,22 @@ export class DataElementMainComponent implements OnInit {
     this.getMultiplicity(resource, 'minMultiplicity');
     this.getMultiplicity(resource, 'maxMultiplicity');
 
-    let deferred;
-    deferred = this.resources.dataClass.post(
-      this.parentDataModelId,
-      this.parentDataClassId,
-      'dataElements',
-      { resource }
-    );
-
-    deferred.subscribe(
-      response => {
+    // deferred
+    this.resources.dataElement.save(this.parentDataModelId, this.parentDataClassId, resource).subscribe(response => {
         this.messageHandler.showSuccess('Data Element saved successfully.');
 
         this.stateHandler.Go(
           'dataElement',
           {
-            dataModelId: response.body.dataModel || '',
+            dataModelId: response.body.model || '',
             dataClassId: response.body.dataClass || '',
             id: response.body.id
           },
           { reload: true, location: true }
         );
-      },
-      error => {
-        this.messageHandler.showError(
-          'There was a problem saving the Data Element.',
-          error
-        );
-      }
-    );
+      }, error => {
+        this.messageHandler.showError('There was a problem saving the Data Element.', error);
+      });
   };
 
   validateDataType() {
@@ -359,25 +310,16 @@ export class DataElementMainComponent implements OnInit {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
-    if (
-      this.model.newlyAddedDataType.domainType === 'EnumerationType' &&
-      this.model.newlyAddedDataType.enumerationValues.length === 0
-    ) {
+    if (this.model.newlyAddedDataType.domainType === 'EnumerationType' && this.model.newlyAddedDataType.enumerationValues.length === 0) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
-    if (
-      this.model.newlyAddedDataType.domainType === 'ReferenceType' &&
-      !this.model.newlyAddedDataType.referencedDataClass
-    ) {
+    if (this.model.newlyAddedDataType.domainType === 'ReferenceType' && !this.model.newlyAddedDataType.referencedDataClass) {
       isValid = false;
     }
 
     // Check if for TerminologyType, the terminology is selected
-    if (
-      this.model.newlyAddedDataType.domainType === 'TerminologyType' &&
-      !this.model.newlyAddedDataType.referencedTerminology
-    ) {
+    if (this.model.newlyAddedDataType.domainType === 'TerminologyType' && !this.model.newlyAddedDataType.referencedTerminology) {
       isValid = false;
     }
   }

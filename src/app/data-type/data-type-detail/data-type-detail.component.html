@@ -79,46 +79,44 @@ SPDX-License-Identifier: Apache-2.0
                     </td>
                 </tr>
 
-                <tr mdmShowIfRolesWritable mc-element="mcDataTypeObject">
+                <tr>
                     <td colspan="2" style="text-align: right;">
-                        <div style="float: right">
-                            <mdm-editable-form-buttons
-                                    [hideEdit]="true"
-                                    [hideDelete]="true"
-                                    [onCancelEdit]="onCancelEdit"
-                                    [editable]="editableForm"
-                                    [textLocation]="'left'">
-                            </mdm-editable-form-buttons>
-                        </div>
-                        <div style="float: right">
-                            <div  [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; margin-right:4px;">
-                                <button mat-stroked-button
-                                        color="warn"
-                                        type="button"
-                                        matTooltip="Delete"
-                                        aria-label="Delete"
-                                        class="paddingless"
-                                        (click)="askToDelete()"
-                                        *ngIf="!editableForm.visible && !editableForm.deletePending"
-                                        [disabled]="deleteInProgress">
-                                    <i class="far fa-trash-alt warning" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div style="float: right">
-                            <div *ngIf="!editableForm.visible && !editableForm.deletePending" style="position: relative; margin-right:4px;">
-                                <button mat-stroked-button
-                                        color="primary"
-                                        type="button"
-                                        matTooltip="Edit"
-                                        aria-label="Edit"
-                                        class="paddingless"
-                                        (click)="editableForm.show();"
-                                        [hidden]="editableForm.visible"
-                                        [disabled]="deleteInProgress">
-                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                                </button>
-                            </div>
+                      <div *ngIf="mcDataTypeObject">
+                          <div style="float: right">
+                              <mdm-editable-form-buttons
+                                      [hideEdit]="true"
+                                      [hideDelete]="true"
+                                      [onCancelEdit]="onCancelEdit"
+                                      [editable]="editableForm"
+                                      [textLocation]="'left'">
+                              </mdm-editable-form-buttons>
+                          </div>
+                          <div *ngIf="showDelete" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-right:4px; float: right">
+                              <button mat-stroked-button
+                                      color="warn"
+                                      type="button"
+                                      matTooltip="Delete"
+                                      aria-label="Delete"
+                                      class="paddingless"
+                                      (click)="askToDelete()"
+                                      *ngIf="!editableForm.visible && !editableForm.deletePending">
+                                  <i class="far fa-trash-alt warning" aria-hidden="true"></i>
+                              </button>
+                          </div>
+                          <div style="float: right" *ngIf="!editableForm.visible && !editableForm.deletePending && showEdit">
+                              <div style="position: relative; margin-right:4px;">
+                                  <button mat-stroked-button
+                                          color="primary"
+                                          type="button"
+                                          matTooltip="Edit"
+                                          aria-label="Edit"
+                                          class="paddingless"
+                                          (click)="editableForm.show();"
+                                          [hidden]="editableForm.visible">
+                                      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                  </button>
+                              </div>
+                          </div>
                         </div>
                     </td>
                 </tr>

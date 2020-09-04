@@ -15,29 +15,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
-import {environment} from '@env/environment';
-import {SecurityHandlerService} from './handlers/security-handler.service';
-import {Subject} from 'rxjs';
-import {ToastrService} from 'ngx-toastr';
+import { Injectable } from '@angular/core';
+import { environment } from '@env/environment';
+import { SecurityHandlerService } from './handlers/security-handler.service';
+import { Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-
-
-    backendURL = environment.apiEndpoint;
-    appVersion = environment.version;
-    appTitle = environment.appTitle;
-    youTrack = environment.youTrack;
-    wiki = environment.wiki;
-    simpleViewSupport = environment.simpleViewSupport;
-    HDFLink = environment.HDFLink;
-    isAdmin;
-    applicationOffline = new Subject<any>();
-    current;
+  backendURL = environment.apiEndpoint;
+  appVersion = environment.version;
+  appTitle = environment.appTitle;
+  youTrack = environment.youTrack;
+  wiki = environment.wiki;
+  simpleViewSupport = environment.simpleViewSupport;
+  HDFLink = environment.HDFLink;
+  isAdmin;
+  applicationOffline = new Subject<any>();
+  current;
 
   public searchCriteria: string;
 
@@ -87,7 +85,6 @@ export class SharedService {
   };
 
   pendingUsersCount = () => {
-    return this.resources.catalogueUser.get(null, 'pending', { filters: 'disabled=false' });
+    return this.resources.catalogueUser.pending({ disabled: false });
   }
-
 }

@@ -77,11 +77,11 @@ SPDX-License-Identifier: Apache-2.0
                             </button>
 
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result?.deleted">
                                     Mark as deleted
                                 </button>
-                                <button mat-menu-item (click)="askForPermanentDelete()">
-                                    Delete <span class="errorMessage">permanently</span>
+                                <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
+                                    Delete <span class="warning">permanently</span>
                                 </button>
                             </mat-menu>
                         </div>
@@ -104,7 +104,8 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button
+
+                         <button mat-stroked-button
                                     color="primary"
                                     type="button"
                                     class="paddingless"
@@ -114,7 +115,7 @@ SPDX-License-Identifier: Apache-2.0
                                     (click)="toggleShowSearch()" >
                                 <i class="fas fa-search"></i>
                             </button>
-                            <button mat-stroked-button
+                             <button mat-stroked-button
                                     color="primary"
                                     type="button"
                                     class="paddingless"

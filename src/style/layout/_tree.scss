@@ -25,6 +25,8 @@ mat-tree-node.mat-tree-node {
 
   .mat-tree-node-content {
     display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
@@ -72,6 +74,14 @@ mat-tree-node.mat-tree-node {
       line-height: 26px;
     }
   }
+
+}
+.branch-name {
+  padding: 0px 6px;
+  color: #4F575F !important;
+  border: 1px solid #b7d4ef;
+  background-color: #eaf5ff;
+  border-radius: 6px;
 }
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
@@ -151,6 +161,7 @@ div.mat-tab-label {
   background-color:#FFF;
   width:100%;
   z-index: 900;
+  min-height: 200px;
 }
 
 

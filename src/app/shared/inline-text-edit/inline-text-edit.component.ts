@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, Output,  EventEmitter, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -38,7 +38,7 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Input() styleCss: any;
   @Input() name: any;
 
-  constructor() {}
+  constructor() { }
 
   val: any;
 
@@ -49,8 +49,8 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   registerOnChange(fn: any): void {
     this.propChange = fn;
   }
-  registerOnTouched(fn: any): void {}
-  setDisabledState?(isDisabled: boolean): void {}
+  registerOnTouched(fn: any): void { }
+  setDisabledState?(isDisabled: boolean): void { }
 
   ngOnInit() {
     if (!this.inEditMode) {
@@ -59,7 +59,6 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   }
 
   set ngValue(val) {
-    // this value is updated by programmatic changes if( val !== undefined && this.val !== val){
     this.val = val;
     this.propChange(val);
   }
@@ -68,5 +67,5 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
     return this.val;
   }
 
-  propChange: any = () => {};
+  propChange: any = () => { };
 }

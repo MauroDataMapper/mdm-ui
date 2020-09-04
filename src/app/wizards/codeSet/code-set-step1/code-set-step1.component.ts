@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';
 
@@ -28,7 +28,7 @@ export class CodeSetStep1Component implements OnInit, OnDestroy, AfterViewInit {
   step: any;
   model: any;
 
-  constructor() {}
+  constructor() { }
 
   formChangesSubscription: Subscription;
   @ViewChild('myForm', { static: false }) myForm: NgForm;
@@ -43,10 +43,8 @@ export class CodeSetStep1Component implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      x => {
-        this.step.invalid = this.myForm.invalid;
-      }
-    );
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(() => {
+      this.step.invalid = this.myForm.invalid;
+    });
   }
 }

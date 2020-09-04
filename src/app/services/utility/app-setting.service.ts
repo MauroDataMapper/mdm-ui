@@ -21,22 +21,17 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AppSettingService {
-   appSettings = {};
-
-  // Provider definition
-
-  add = function(key, value) {
+  appSettings = {};
+  add = (key, value) => {
     this.appSettings[key] = value;
   };
 
-  getSettings = function() {
+  getSettings = () => {
     return this.appSettings;
   };
-  constructor() {}
+  constructor() { }
 
-    get(key) {
-      return this.appSettings[key];
-    }
-
-
+  get(key) {
+    return this.appSettings[key];
+  }
 }

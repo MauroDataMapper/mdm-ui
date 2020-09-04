@@ -32,7 +32,6 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
 
   parentDataModel: any;
   parentDataClass: any;
-
   records: any[] = [];
   isLoadingResults: boolean;
   isValid = false;
@@ -68,7 +67,7 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
   getDataElements() {
     this.data.dataElementIdLst.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -76,7 +75,7 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
           this.messageHandler.showError('There was a problem getting the Data Elements.', err);
         });
       } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -91,20 +90,16 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
     this.dialogRef.close();
   };
 
-
   closeAndRefresh = () => {
     this.dialogRef.close({ status: 'ok' });
   };
 
   saveChanges = () => {
-
     this.processing = true;
     this.isProcessComplete = false;
-
     let promise = Promise.resolve();
-
-    this.records.forEach((item: any) => {promise = promise.then(() => {
-
+    this.records.forEach((item: any) => {
+      promise = promise.then(() => {
         this.successCount++;
         this.finalResult[item.id] = {
           result: `Success`,
@@ -117,13 +112,12 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
           description: item.description
         };
         if (item.domainType === 'DataElement') {
-          return this.resources.dataElement.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
+          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).toPromise();
         }
         if (item.domainType === 'DataClass') {
-          return this.resources.dataClass.put(this.parentDataModel.id, this.parentDataClass.id, resource.id, null, { resource }).toPromise();
+          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).toPromise();
         }
       }).catch(() => {
-
         this.failCount++;
         this.finalResult[item.id] = {
           result: `Failed`,
@@ -135,14 +129,9 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
     promise.then(() => {
       this.processing = false;
       this.isProcessComplete = true;
-      //this.dialogRef.close({ status: 'ok' });
-      //this.messageHandler.showSuccess('All records have been updated successfully!');
-    }).catch(error => {
-      //this.dialogRef.close();
-     // this.messageHandler.showError('There was a problem updating these records', error);
-     this.processing = false;
-     this.isProcessComplete = true;
+    }).catch(() => {
+      this.processing = false;
+      this.isProcessComplete = true;
     });
-
   };
 }

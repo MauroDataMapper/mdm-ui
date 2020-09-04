@@ -68,19 +68,19 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
                     </td>
                 </tr>
-                <tr mdmShowIfRolesWritable>
+                <tr *ngIf="showDelete || showEdit">
                     <td colspan="2" style="text-align: right;">
-                        <div style="float: right">
-                            <mdm-editable-form-buttons [hidden]="editableForm.visible"
-                                                       [onCancelEdit]="onCancelEdit"
-                                                       [editable]="editableForm"
-                                                       [textLocation]="'left'"
-                                                       [hideDelete]="false"
-                                                       [hideCancel]="false"
-                                                       [hideEdit]="true"
-                                                       (delete)="delete()"
-                                                       [processing]="deleteInProgress">
-                            </mdm-editable-form-buttons>
+                        <div *ngIf="showDelete" style="float: right;" [hidden]="editableForm.visible">
+                          <button mat-stroked-button
+                                  color="warn"
+                                  type="button"
+                                  matTooltip="Delete"
+                                  aria-label="Delete"
+                                  class="paddingless"
+                                  [disabled]="deleteInProgress || exporting"
+                                  (click)="askForPermanentDelete()">
+                                  <i class="far fa-trash-alt warning"></i>
+                          </button>
                         </div>
 
                         <div style="float: right;margin-bottom: 3px">
@@ -106,7 +106,8 @@ SPDX-License-Identifier: Apache-2.0
                             </mdm-editable-form-buttons>
                         </div>
 
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <!-- TODO - DB migration -->
+                        <!-- <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button
                                     color="primary"
                                     type="button"
@@ -119,7 +120,7 @@ SPDX-License-Identifier: Apache-2.0
                                     [hidden]="editableForm.visible || editableForm.deletePending">
                                     <i class="fas fa-user-lock"></i>
                             </button>
-                        </div>
+                        </div> -->
                     </td>
                 </tr>
             </tbody>
@@ -127,14 +128,11 @@ SPDX-License-Identifier: Apache-2.0
     </form>
 </div>
 
-<div mdmShowIfRolesWritable *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
+<div *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
   <div style="width:100%;">
     <div class="userAccess" style="margin: 10px 0px 50px 0px">
       <mdm-share-with [mcElement]="'mcClassification'" [mcDomainType]="'Classifier'"></mdm-share-with>
       <div colspan="2">
-        <div style="margin-top: 10px">
-          <mdm-user-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-user-access-new>
-        </div>
         <div style="margin-top: 10px">
           <mdm-group-access-new [parent]="'mcClassification'" [parentType]="'Classifier'"></mdm-group-access-new>
         </div>

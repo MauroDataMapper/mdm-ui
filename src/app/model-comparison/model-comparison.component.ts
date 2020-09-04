@@ -118,7 +118,7 @@ export class ModelComparisonComponent implements OnInit {
 
     const response = await this.resources.dataModel.get(modelId).toPromise();
     const model = response.body;
-    const children = await this.resources.tree.get(model.id).toPromise();
+    const children = await this.resources.tree.get('dataModels', model.domainType, model.id).toPromise();
     model.children = children.body;
     if (model.children?.length > 0) {
       model.hasChildren = true;
@@ -316,8 +316,7 @@ export class ModelComparisonComponent implements OnInit {
     this.diffs = [];
     this.processing = true;
 
-    this.resources.dataModel
-      .get(this.sourceModel.id, 'diff/' + this.targetModel.id)
+    this.resources.dataModel.diff(this.sourceModel.id, this.targetModel.id)
       .subscribe(
         res => {
           this.processing = false;
@@ -380,7 +379,7 @@ export class ModelComparisonComponent implements OnInit {
                 return;
               }
 
-              diff[diffElement].created.forEach(el => {
+              diff[diffElement].created?.forEach(el => {
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
                 diffMap[el.id].created = true;
@@ -676,8 +675,7 @@ export class ModelComparisonComponent implements OnInit {
 
   onNodeExpand = node => {
     const obs = new Observable(sub => {
-      this.resources.tree.get(node.id).subscribe(
-        res => {
+      this.resources.tree.get('dataModels', node.domainType, node.id).subscribe(res => {
           const result = res.body;
           result.forEach(dc => {
             if (this.diffMap[dc.id]) {
@@ -687,8 +685,7 @@ export class ModelComparisonComponent implements OnInit {
             }
           });
           sub.next(result);
-        },
-        error => { }
+        }, () => { }
       );
     });
     return obs;

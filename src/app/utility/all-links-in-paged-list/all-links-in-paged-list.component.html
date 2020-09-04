@@ -25,13 +25,13 @@ SPDX-License-Identifier: Apache-2.0
         <mdm-paged-list [name]="linkType" [mcTitle]="linkType" [type]="'static'" [items]="allLinksMap[linkType].links" [pageSize]="3">
             <ng-template #pageListTemplate let-item>
                 <div class="pagedElement">
-                    <mdm-element-link [element]="item.target"
+                    <mdm-element-link [element]="item.targetModel"
                                     [showParentDataModelName]="true"
                                     [showLink]="true"
                                     [showTypeTitle]="true">
                     </mdm-element-link>
-                    <div style="padding-left: 3px;" *ngIf="showDescription && item.target.description && item.target.description.length > 0">
-                        <mdm-more-description [description]="item.source.description"></mdm-more-description>
+                    <div style="padding-left: 3px;" *ngIf="showDescription && item.targetModel.description && item.targetModel.description.length > 0">
+                        <mdm-more-description [description]="item.sourceModel.description"></mdm-more-description>
                     </div>
                 </div>
             </ng-template>

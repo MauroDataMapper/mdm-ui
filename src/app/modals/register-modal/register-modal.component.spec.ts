@@ -19,6 +19,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterModalComponent } from './register-modal.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RegisterModalComponent', () => {
   let component: RegisterModalComponent;
@@ -26,7 +35,25 @@ describe('RegisterModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
+      imports: [
+        // TestModule
+        MatFormFieldModule,
+        MatPasswordStrengthModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        MatDialogModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MatDialogRef, useValue: {}
+        },
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
       declarations: [ RegisterModalComponent ]
     })
     .compileComponents();

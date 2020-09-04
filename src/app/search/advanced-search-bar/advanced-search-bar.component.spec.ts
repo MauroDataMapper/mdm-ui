@@ -19,6 +19,27 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdvancedSearchBarComponent } from './advanced-search-bar.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { DateFromToComponent } from '../date-from-to/date-from-to.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
 
 describe('AdvancedSearchBarComponent', () => {
   let component: AdvancedSearchBarComponent;
@@ -26,8 +47,41 @@ describe('AdvancedSearchBarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ AdvancedSearchBarComponent ]
+      imports: [
+        // TestModule
+        MatPaginatorModule,
+        MatCardModule,
+        MatDatepickerModule,
+        MatProgressSpinnerModule,
+        MatSelectModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        MatOptionModule,
+        MatTableModule,
+        FoldersTreeModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            classifier: {
+              list: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [
+        MarkdownTextAreaComponent,
+        ModelPathComponent,
+        DateFromToComponent,
+        ModelSelectorTreeComponent,
+        MarkdownDirective,
+        ElementLinkComponent,
+        AdvancedSearchBarComponent
+      ]
     })
     .compileComponents();
   }));

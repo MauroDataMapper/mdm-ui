@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
     <button mat-button color="warn" type="button" (click)="this.close()" style="position: absolute; top: 8px; right: 8px;">
         <i class="fas fa-times"></i>
     </button>
-    <h3 class='modal-title text-center'>{{data.name}}</h3>
+    <h3 class='modal-title text-center'>{{data.label}}</h3>
     <p class="mb-2 text-center">{{data.description}}</p>
     <p class="mb-2 text-center" *ngIf='this.summary.summaryMetadataType==="map"'>
         <button mat-stroked-button (click)="this.dateFirst()" [disabled]="this.reportIndex == 0">
@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
     <div style="margin: 15px; height:100%">
         <div style="display: flex; flex-direction: column; flex-wrap: wrap; width: 100%; height: 100%;">
             <div style="width: 100%; height: 400px">
-                <canvas style="width: 100%; height: 400px" 
+                <canvas style="width: 100%; height: 400px"
                         baseChart
                         [datasets]="barChartData"
                         [labels]="barChartLabels"
@@ -51,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
             <div style="display: flex; flex-direction: column; max-width: 600px;" class="pt-2 mt-1">
                 <div style="align-items: top; display: flex;">
-                    <table mat-table [dataSource]="this.tableDataForTable" class="mdm--table table table-striped">
+                    <table mat-table [dataSource]="tableDataForTable" class="mdm--table table table-striped">
                         <ng-container matColumnDef="category">
                             <th mat-header-cell *matHeaderCellDef> Category </th>
                             <td mat-cell *matCellDef="let element">

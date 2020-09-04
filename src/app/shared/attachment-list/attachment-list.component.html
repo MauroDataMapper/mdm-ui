@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 50%; width: 50%; text-align: left; ">
                 <div *ngIf="!record.inEdit">
                     <div>
-                        <a href="{{download(record)}}">{{record.fileName}}</a>
+                        <a href="{{apiEndpoint}}/{{domainType}}/{{parent.id}}/referenceFiles/{{record.id}}">{{record.fileName}}</a>
                     </div>
                 </div>
                 <div *ngIf="record.isNew">
@@ -92,9 +92,20 @@ SPDX-License-Identifier: Apache-2.0
       There are no attachments in this table. You can add attachments by clicking the button above.
     </p>
 </div>
-<mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-</mat-card>
+<div class="item" *ngIf="isLoadingResults">
+  <table class="mdm--mat-table mdm--skeleton-table">
+    <tr>
+      <th style="width: 50%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 22%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+      <th style="width: 28%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+  </tr>
+  <tr>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+    </tr>
+  </table>
+</div>
 <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
     <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

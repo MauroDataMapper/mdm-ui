@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -29,6 +29,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { environment } from '@env/environment';
 import { DialogPosition } from '@angular/material/dialog';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
   selector: 'mdm-profile',
@@ -44,7 +45,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   isImageLoaded = false;
   profileImagePath: string;
   imageChangedEvent: any = '';
-  trustedUrl: SafeUrl;
+  trustedUrl: any;
   afterSave: (result: { body: { id: any } }) => void;
   backendUrl: string = environment.apiEndpoint;
 
@@ -59,7 +60,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
     private helpDialogueService: HelpDialogueHandlerService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private broadcastService: BroadcastService
   ) {
     this.currentUser = this.securityHandler.getCurrentUser();
   }
@@ -70,17 +72,13 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Get the user details data
   userDetails() {
-    this.resourcesService.catalogueUser.get(this.currentUser.id, null, null).subscribe((result: { body: UserDetailsResult }) => {
+    this.resourcesService.catalogueUser.get(this.currentUser.id).subscribe((result: { body: UserDetailsResult }) => {
       this.user = result.body;
-
       this.messageService.sendUserDetails(this.user);
-
-      // Create a trusted image URL
-      this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.backendUrl}/catalogueUsers/${this.user.id}/image?thumnail${this.imageVersion}`);
-    },
-      err => {
-        this.messageHandler.showError('There was a problem loading user details.', err);
-      });
+      this.trustedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.backendUrl + '/catalogueUsers/' + this.user.id + '/image');
+    }, err => {
+      this.messageHandler.showError('There was a problem loading user details.', err);
+    });
   }
 
   sendMessage(): void {
@@ -100,18 +98,16 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Saves the selected profile picture
   public savePicture() {
-    const imageData = { image: this.imageThumb, type: 'png' };
 
-    from(this.resourcesService.catalogueUser.put(this.user.id, 'image', { resource: imageData })).subscribe(() => {
-        this.messageHandler.showSuccess('User profile image updated successfully.');
-        this.imageVersion++;
-        this.isImageLoaded = null;
-        this.userDetails();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem updating the User Details.', error);
-      }
-    );
+    this.resourcesService.userImage.update(this.user.id, { image: this.imageThumb, type: 'image/png' }).subscribe(() => {
+      this.messageHandler.showSuccess('User profile image updated successfully.');
+      this.imageVersion++;
+      this.isImageLoaded = null;
+      this.broadcastService.broadcast('profileImgUndated')
+      this.userDetails();
+    }, error => {
+      this.messageHandler.showError('There was a problem updating the User Details.', error);
+    });
   }
 
   // When a file is selected
@@ -133,12 +129,13 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   // Remove the profile image
   public removeProfileImage() {
-    from(this.resourcesService.catalogueUser.delete(this.user.id, 'image')).subscribe(() => {
-        this.messageHandler.showSuccess('User profile image removed successfully.');
-        this.imageVersion++;
-        this.isImageLoaded = null;
-        this.userDetails();
-      },
+    this.resourcesService.userImage.remove(this.user.id).subscribe(() => {
+      this.messageHandler.showSuccess('User profile image removed successfully.');
+      this.imageVersion++;
+      this.isImageLoaded = null;
+      this.userDetails();
+      this.broadcastService.broadcast('profileImgUndated')
+    },
       error => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);
       }

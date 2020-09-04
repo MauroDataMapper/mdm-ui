@@ -24,7 +24,8 @@ import {
   ElementRef,
   EventEmitter,
   AfterViewInit,
-  OnDestroy, QueryList
+  OnDestroy,
+  QueryList,
 } from '@angular/core';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { NgForm } from '@angular/forms';
@@ -36,13 +37,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
-
 @Component({
   selector: 'mdm-data-class-step2',
   templateUrl: './data-class-step2.component.html',
-  styleUrls: ['./data-class-step2.component.sass']
+  styleUrls: ['./data-class-step2.component.sass'],
 })
-export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy {
+export class DataClassStep2Component
+  implements OnInit, AfterViewInit, OnDestroy {
   step: any;
   model: any;
   scope: any;
@@ -66,7 +67,6 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   @ViewChildren(MatSort) sort = new QueryList<MatSort>();
-
 
   filterEvent = new EventEmitter<string>();
   filter: string;
@@ -98,16 +98,15 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
-      this.validate(x);
-    });
+    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
+      (x) => {
+        this.validate(x);
+      }
+    );
   }
 
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
     if (
       this.sort !== null &&
       this.sort !== undefined &&
@@ -161,10 +160,17 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
     if (this.model.createType === 'new') {
       if (newValue) {
         // check Min/Max
-        this.multiplicityError = this.validator.validateMultiplicities(newValue.minMultiplicity, newValue.maxMultiplicity);
+        this.multiplicityError = this.validator.validateMultiplicities(
+          newValue.minMultiplicity,
+          newValue.maxMultiplicity
+        );
 
         // Check Mandatory fields
-        if (!newValue.label || newValue.label.trim().length === 0 || this.multiplicityError) {
+        if (
+          !newValue.label ||
+          newValue.label.trim().length === 0 ||
+          this.multiplicityError
+        ) {
           this.step.invalid = true;
           return;
         }
@@ -194,31 +200,30 @@ export class DataClassStep2Component implements OnInit, AfterViewInit, OnDestroy
 
     let promise = Promise.resolve();
 
-    this.model.selectedDataClasses.forEach((dc: any) => { promise = promise.then((result: any) => {
-          const link = 'dataClasses/' + dc.dataModel + '/' + dc.id;
-          this.successCount++;
-          this.finalResult[dc.id] = { result, hasError: false };
-          if (this.model.parent.domainType === 'DataClass') {
-            return this.resources.dataClass.post(this.model.parent.dataModel, this.model.parent.id, link, null).toPromise();
-          } else {
-            return this.resources.dataModel.post(this.model.parent.id, link, null).toPromise();
-          }
-        }).catch(error => {
-          this.failCount++;
-          const errorText = this.messageHandler.getErrorText(error);
-          this.finalResult[dc.id] = { result: errorText, hasError: true };
-        });
+    this.model.selectedDataClasses.forEach((dc: any) => {
+      promise = promise.then((result: any) => {
+        this.successCount++;
+        this.finalResult[dc.id] = { result, hasError: false };
+        if (this.model.parent.domainType === 'DataClass') {
+          return this.resources.dataClass.copyChildDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+        } else {
+          return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
+        }
+      }).catch((error) => {
+        this.failCount++;
+        const errorText = this.messageHandler.getErrorText(error);
+        this.finalResult[dc.id] = { result: errorText, hasError: true };
+      });
     });
 
     promise.then(() => {
       this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }).catch(() => {
-    }).finally(() => {
+    }).catch(() => { }).finally(() => {
       this.processing = false;
       this.step.submitBtnDisabled = false;
       this.isProcessComplete = true;
     });
 
     return promise;
-  }
+  };
 }

@@ -33,6 +33,8 @@ export class DataModelResult {
   semanticLinks: any[];
   readableByEveryone: boolean;
   deleted: boolean;
+  branchName: string;
+  modelVersion: any;
 }
 
 export class Classifiers {

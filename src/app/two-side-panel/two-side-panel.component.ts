@@ -24,8 +24,8 @@ import { trigger, state, transition, animate, style } from '@angular/animations'
   styleUrls: ['./two-side-panel.component.sass'],
   animations: [
     trigger('openClose', [
-      state( 'closed', style({ height: '0', opacity: '0', display: 'none' })),
-      state( 'open', style({ height: '*', opacity: '1', display: 'block' })),
+      state('closed', style({ height: '0', opacity: '0', display: 'none' })),
+      state('open', style({ height: '*', opacity: '1', display: 'block' })),
       transition('closed => open', animate('30ms ease-in')),
       transition('open => closed', animate('30ms ease-out'))
     ])
@@ -33,7 +33,7 @@ import { trigger, state, transition, animate, style } from '@angular/animations'
 })
 export class TwoSidePanelComponent implements AfterViewInit {
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2) { }
   @ViewChild('showHideLeftPane', { static: false }) showHideLeftPane;
   @ViewChild('resizableLeft', { static: false }) resizableLeft;
   @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
@@ -44,7 +44,6 @@ export class TwoSidePanelComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const width = window.innerWidth;
-    // this.windowSetup(width);
   }
 
   toggle() {
@@ -53,7 +52,6 @@ export class TwoSidePanelComponent implements AfterViewInit {
 
   hideShowLeftPane() {
     this.state = this.state === 'inactive' ? 'active' : 'inactive';
-    console.log(this.state);
     if (this.showHideLeftPane.nativeElement.className.includes('fa-chevron-up')) {
       this.renderer.removeClass(this.showHideLeftPane.nativeElement, 'fa-chevron-up');
       this.renderer.addClass(this.showHideLeftPane.nativeElement, 'fa-chevron-down');

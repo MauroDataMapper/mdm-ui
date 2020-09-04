@@ -19,6 +19,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TermRelationshipsComponent } from './term-relationships.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('TermRelationshipsComponent', () => {
   let component: TermRelationshipsComponent;
@@ -26,8 +31,22 @@ describe('TermRelationshipsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ TermRelationshipsComponent ]
+      imports: [
+        // TestModule
+        MatDialogModule,
+        MatTooltipModule
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        McPagedListComponent,
+        ElementLinkComponent,
+        McPagedListComponent,
+        TermRelationshipsComponent
+      ]
     })
     .compileComponents();
   }));

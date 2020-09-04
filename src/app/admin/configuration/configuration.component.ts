@@ -56,14 +56,10 @@ export class ConfigurationComponent implements OnInit {
   }
 
   getConfig() {
-    this.resourcesService.admin.get('properties', null).subscribe((result: { body: any }) => {
+    this.resourcesService.admin.properties().subscribe((result: { body: any }) => {
         this.properties = result.body;
-        // this.propertiesTemp = this.propertyRenamingService.renameKeys(result.body);
-        // this.properties = this.propertiesTemp;
-
         this.oldConfiguration = Object.assign({}, this.properties);
-      },
-      err => {
+      }, err => {
         this.messageHandler.showError('There was a problem getting the configuration properties.', err);
       });
   }
@@ -72,9 +68,8 @@ export class ConfigurationComponent implements OnInit {
   submitConfig() {
     this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
 
-    from(this.resourcesService.admin.post('editProperties', {resource: this.resource})).subscribe(() => {
+    from(this.resourcesService.admin.editProperties(this.resource)).subscribe(() => {
         this.messageHandler.showSuccess('Configuration properties updated successfully.');
-        // refresh the page
         this.getConfig();
       },
       error => {
@@ -113,7 +108,7 @@ export class ConfigurationComponent implements OnInit {
   rebuildIndex() {
     this.indexingStatus = 'start';
 
-    this.resourcesService.admin.post('rebuildLuceneIndexes', null).subscribe(() => {
+    this.resourcesService.admin.rebuildLuceneIndexes(null).subscribe(() => {
         this.indexingStatus = 'success';
       },
       error => {
@@ -125,7 +120,6 @@ export class ConfigurationComponent implements OnInit {
         } else {
           this.indexingStatus = 'error';
         }
-      }
-    );
+    });
   }
 }

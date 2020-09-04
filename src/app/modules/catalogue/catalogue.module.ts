@@ -30,7 +30,6 @@ import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { DataModelsExportComponent } from '@mdm/data-models-export/data-models-export.component';
-import { UserAccessNewComponent } from '@mdm/access/user-access-new.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { HistoryComponent } from '@mdm/folder/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
@@ -78,7 +77,6 @@ import { DataModelStep2Component } from '@mdm/wizards/dataModel/data-model-step2
 import { DataClassMainComponent } from '@mdm/wizards/dataClass/data-class-main/data-class-main.component';
 import { DataClassStep1Component } from '@mdm/wizards/dataClass/data-class-step1/data-class-step1.component';
 import { DataClassStep2Component } from '@mdm/wizards/dataClass/data-class-step2/data-class-step2.component';
-import { DataClassStep3Component } from '@mdm/wizards/dataClass/data-class-step3/data-class-step3.component';
 import { DataTypeMainComponent } from '@mdm/wizards/dataType/data-type-main/data-type-main.component';
 import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
@@ -103,7 +101,6 @@ import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/ne
 import { DataElementMainComponent } from '@mdm/wizards/dataElement/data-element-main/data-element-main.component';
 import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '@mdm/wizards/dataElement/data-element-step2/data-element-step2.component';
-import { DataElementStep3Component } from '@mdm/wizards/dataElement/data-element-step3/data-element-step3.component';
 import { HomeComponent } from '@mdm/home/home.component';
 import { ImportComponent } from '@mdm/import/import.component';
 import { SearchComponent } from '@mdm/search/search.component';
@@ -170,7 +167,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     AdvancedSearchBarComponent,
     ShareWithComponent,
     DataModelsExportComponent ,
-    UserAccessNewComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
@@ -224,7 +220,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataClassMainComponent,
     DataClassStep1Component,
     DataClassStep2Component,
-    DataClassStep3Component,
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
@@ -250,7 +245,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataElementMainComponent,
     DataElementStep1Component,
     DataElementStep2Component,
-    DataElementStep3Component,
     HomeComponent,
     ImportComponent,
     SearchComponent,
@@ -329,7 +323,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     SummaryMetadataPopupComponent,
     ShareWithComponent,
     DataModelsExportComponent ,
-    UserAccessNewComponent,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
@@ -378,7 +371,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataClassMainComponent,
     DataClassStep1Component,
     DataClassStep2Component,
-    DataClassStep3Component,
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
@@ -404,7 +396,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataElementMainComponent,
     DataElementStep1Component,
     DataElementStep2Component,
-    DataElementStep3Component,
     HomeComponent,
     ImportComponent,
     SearchComponent,

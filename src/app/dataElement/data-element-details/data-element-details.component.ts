@@ -25,7 +25,7 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { from, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -35,6 +35,11 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementModel';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { GridService } from '@mdm/services/grid.service';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -92,7 +97,11 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private broadcastSvc: BroadcastService,
+    private gridService: GridService,
+    private dialog: MatDialog,
+    private securityHandler: SecurityHandlerService
   ) {
     this.DataElementDetails();
   }
@@ -106,8 +115,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   ngOnInit() {
     if (this.parentDataModel) {
       this.fetchDataTypes(null, null, null, null).subscribe(result => {
-            this.dataTypes = result.body.items;
-           });
+        this.dataTypes = result.body.items;
+      });
     }
     this.editableForm = new EditableDataElement();
     this.editableForm.visible = false;
@@ -169,8 +178,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe((queryList: QueryList<any>) => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
-
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -185,16 +192,13 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
+    this.editForm.find((inlineEditorComponent: any) => {
+      return inlineEditorComponent.name === 'editableText';
+    });
   }
 
   DataElementDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      serverResult => {
+    this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
         this.result = serverResult;
         this.editableForm.label = this.result.label;
         this.editableForm.description = this.result.description;
@@ -232,77 +236,80 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           this.hasResult = true;
         }
         this.title.setTitle(`Data Element - ${this.result?.label}`);
-      }
-    );
+        this.watchDataElementObject();
+      });
+  }
+  watchDataElementObject() {
+    const access: any = this.securityHandler.elementAccess(this.result);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    }
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-    const options = {
-      pageSize: limit ? limit : 30,
-      pageIndex: offset ? offset : 0,
-      sortBy: 'label',
-      sortType: 'asc',
-      filters: 'label=' + text
-    };
+
+    const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', { label: text });
     this.pagination = {
-      limit: options.pageSize,
-      offset: options.pageIndex
+      limit: options['limit'],
+      offset: options['offset']
 
     };
-
-    return this.resourcesService.dataModel
-      .get(this.parentDataModel.id, 'dataTypes', options);
-
-    // if (loadAll) {
-    //     delete options.filters;
-    // }
-    // return this.resourcesService.dataModel
-    //   .get(this.parentDataModel.id, 'dataTypes', options)
-    //   .subscribe(result => {
-    //     this.dataTypes = result.body.items;
-    //
-    //     // count: result.count,
-    //     // limit: options.pageSize,
-    //     // offset: options.pageIndex
-    //   });
+    return this.resourcesService.dataType.list(this.parentDataModel.id, options);
   }
 
   ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
+    this.subscription.unsubscribe(); // unsubscribe to ensure no memory leaks
+  }
+  askForPermanentDelete() {
+
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(ConfirmationModalComponent, {
+        data: {
+          title: `Permanent deletion`,
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Element?</p>
+                    <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Element.</p>`
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result?.status !== 'ok') {
+          return;
+        }
+        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
+          data: {
+            title: `Confirm permanent deletion`,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+          }
+        });
+
+        dialog2.afterClosed().subscribe(result2 => {
+          if (result2.status !== 'ok') {
+            return;
+          }
+          resolve(this.delete());
+        });
+      });
+    });
+
+    return promise;
   }
 
   delete() {
-    this.resourcesService.dataClass
-      .delete(
-        this.result.parentDataModel,
-        this.result.parentDataClass,
-        this.result.id
-      )
-      .subscribe(
-        result => {
-          this.messageHandler.showSuccess('Data Class deleted successfully.');
-          this.stateHandler.Go(
-            'dataModel',
-            {
-              id: this.result.parentDataModel,
-              reload: true,
-              location: true
-            },
-            null
-          );
-        },
-        error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError(
-            'There was a problem deleting the Data Model.',
-            error
-          );
-        }
-      );
+    this.resourcesService.dataElement.remove(this.result.model, this.result.dataClass, this.result.id).subscribe(() => {
+      this.messageHandler.showSuccess('Data Class deleted successfully.');
+      this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
+    }, error => {
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+    });
   }
 
-  formBeforeSave = function() {
+  formBeforeSave() {
     if (!this.validate()) {
       return;
     }
@@ -310,7 +317,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     this.error = '';
     this.editMode = false;
     this.errorMessage = '';
-    // this.editForm.forEach(x => this.result["label"] = x.getHotState().value);
 
     const classifiers = [];
     this.editableForm.classifiers.forEach(cls => {
@@ -334,13 +340,13 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
       let dataType;
       if (!this.showNewInlineDataType) {
-        dataType = { id: this.result.dataType.id };
+        dataType = { id: this.result.dataType['id'] };
       } else {
         dataType = this.newlyAddedDataType;
       }
       const resource = {
         id: this.result.id,
-        label: this.result.label,
+        label: this.editableForm.label,
         description: this.editableForm.description,
         domainType: this.result.domainType,
         aliases,
@@ -349,33 +355,19 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         minMultiplicity: parseInt(this.min, 10),
         maxMultiplicity: parseInt(this.max, 10)
       };
-      const call = from(
-        this.resourcesService.dataElement.put(
-          this.parentDataModel.id,
-          this.parentDataClass.id,
-          resource.id,
-          null,
-          { resource }
-        )
-      ).subscribe(
-        result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
-          this.messageHandler.showSuccess('Data Element updated successfully.');
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem updating the Data Element.',
-            error
-          );
+      this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).subscribe(result => {
+        if (this.afterSave) {
+          this.afterSave(result);
         }
-      );
+        this.messageHandler.showSuccess('Data Element updated successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.editableForm.visible = false;
+        this.editForm.forEach(x => x.edit({ editing: false }));
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Element.', error);
+      });
     }
-  };
+  }
 
   validate() {
     let isValid = true;
@@ -475,5 +467,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
   onDataTypeSelect(dataType) {
     this.result.dataType = dataType;
+  }
+  isAdmin = () => {
+    return this.securityHandler.isAdmin();
   }
 }

@@ -49,7 +49,7 @@ export class MdmRestHandlerService implements IMdmRestHandler {
 
 
         return this.http.request(options.method, url, {
-            body: options.data,
+            body: options.body,
             headers: options.headers,
             withCredentials: options.withCredentials,
             observe: 'response',

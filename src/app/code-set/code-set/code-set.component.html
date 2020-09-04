@@ -18,6 +18,25 @@ SPDX-License-Identifier: Apache-2.0
 <div class="full-width">
     <mdm-code-set-details></mdm-code-set-details>
 </div>
+
+<div *ngIf="!showSearch">
+  <div *ngIf="codeSetModel && semanticLinks && semanticLinks.length > 0">
+      <div class="mdm--shadow-block bordered">
+          <div class="heading-container">
+              <h4 class="marginless">Links</h4>
+          </div>
+          <div class="pxy-2">
+              <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
+                                           [parent]="semanticLinks"
+                                           [showDescription]="true"
+                                           [showNoLinksMessage]="true"
+                                           [type]="'static'">
+              </mdm-all-links-in-paged-list>
+          </div>
+      </div>
+  </div>
+</div>
+
 <div>
     <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Terms">
@@ -31,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Properties">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-data-set-metadata *ngIf="codeSetModel" [parent]="codeSetModel" [type]="'dynamic'"></mdm-data-set-metadata>
+                    <mdm-data-set-metadata *ngIf="codeSetModel" [parent]="codeSetModel" [type]="'dynamic'" [domainType]="'codeSets'"></mdm-data-set-metadata>
                 </div>
             </ng-template>
         </mat-tab>
@@ -39,14 +58,14 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Comments">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-annotation-list *ngIf="codeSetModel" [parent]="codeSetModel"></mdm-annotation-list>
+                    <mdm-annotation-list *ngIf="codeSetModel" [parent]="codeSetModel" [domainType]="'codeSets'"></mdm-annotation-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="History">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'"></mdm-history>
+                    <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'" [domainType]="'codeSets'"></mdm-history>
                 </div>
             </ng-template>
         </mat-tab>
@@ -54,17 +73,16 @@ SPDX-License-Identifier: Apache-2.0
         <mat-tab label="Links">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-element-link-list>
+                    <mdm-element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-element-link-list>
                 </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Attachments">
             <ng-template matTabContent>
                 <div class="full-width">
-                    <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'"></mdm-attachment-list>
+                    <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-attachment-list>
                 </div>
             </ng-template>
         </mat-tab>
-
     </mat-tab-group>
 </div>

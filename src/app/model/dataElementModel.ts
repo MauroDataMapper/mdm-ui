@@ -16,10 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 export class DataElementResult {
+        // model(model: any, dataClass: any, id: string) {
+        //   throw new Error("Method not implemented.");
+        // }
         id: string;
         domainType: string;
         label: string;
-        dataModel: string;
+        model: string;
         description: string;
         breadcrumbs: Breadcrumb[];
         aliases: any[] = [];
@@ -29,8 +32,7 @@ export class DataElementResult {
         lastUpdated: Date;
         maxMultiplicity: number;
         minMultiplicity: number;
-        parentDataModel: string;
-        parentDataClass: string;
+        dataClass: string;
         finalised: boolean;
         dateFinalised: string;
         dataType: string;

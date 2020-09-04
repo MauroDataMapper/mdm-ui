@@ -24,8 +24,8 @@ import { SharedService } from '@mdm/services/shared.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '@mdm/modals/register-modal/register-modal.component';
-import {Subscription} from 'rxjs';
-import {MessageService} from '@mdm/services/message.service';
+import { Subscription } from 'rxjs';
+import { MessageService } from '@mdm/services/message.service';
 
 @Component({
   selector: 'mdm-navbar',
@@ -37,6 +37,7 @@ export class NavbarComponent implements OnInit {
   profilePictureReloadIndex = 0;
   profile: any;
   backendURL: any;
+  imgChanged: boolean;
   simpleViewSupport: any;
   current: any;
   HDFLink: any;
@@ -52,18 +53,27 @@ export class NavbarComponent implements OnInit {
       this.isLoggedIn = result;
     });
     if (this.isLoggedIn) {
-          this.profile = this.securityHandler.getCurrentUser();
-          if (this.isAdmin()) {
-            this.getPendingUsers();
-          }
-      }
+      this.profile = this.securityHandler.getCurrentUser();
+      // if (this.isAdmin()) {
+      //   this.getPendingUsers();
+      // }
+    }
     this.backendURL = this.sharedService.backendURL;
+    this.imgChanged = false;
     this.HDFLink = this.sharedService.HDFLink;
     this.current = this.sharedService.current;
     this.broadcastSvc.subscribe('pendingUserUpdated', () => {
-        this.getPendingUsers();
-      });
+      this.getPendingUsers();
+    });
+
+    this.broadcastSvc.subscribe('profileImgUndated', () => {
+      this.imgChanged = true;
+      setTimeout(() => {
+        this.imgChanged = false;
+      }, 1000);
+    });
   }
+
   getPendingUsers = () => {
     this.sharedService.pendingUsersCount().subscribe(data => {
       this.pendingUsersCount = data.body.count;
@@ -76,7 +86,7 @@ export class NavbarComponent implements OnInit {
 
 
   login = () => {
-    this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
+    this.dialog.open(LoginModalComponent, {}).afterClosed().subscribe((user) => {
       if (user) {
         if (user.needsToResetPassword) {
           this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.changePassword' });
@@ -89,10 +99,8 @@ export class NavbarComponent implements OnInit {
           this.broadcastSvc.broadcast('userLoggedIn');
           this.securityHandler.removeLatestURL();
           this.stateHandler.CurrentWindow(latestURL);
-          return;
         } else {
           this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
-          return;
         }
       }
     });
@@ -103,13 +111,13 @@ export class NavbarComponent implements OnInit {
   };
 
   forgottenPassword = () => {
-    this.dialog.open(ForgotPasswordModalComponent, { });
+    this.dialog.open(ForgotPasswordModalComponent, {});
   };
   register = () => {
-    this.dialog.open(RegisterModalComponent, {panelClass: 'register-modal'}).afterClosed().subscribe(user => {
+    this.dialog.open(RegisterModalComponent, { panelClass: 'register-modal' }).afterClosed().subscribe(user => {
       if (user) {
         if (user.needsToResetPassword) {
-          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.userArea.change-password'});
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.change-password' });
           return;
         }
         this.profile = user;
@@ -121,7 +129,7 @@ export class NavbarComponent implements OnInit {
           this.stateHandler.CurrentWindow(latestURL);
           return;
         } else {
-          this.broadcastSvc.broadcast('userLoggedIn', {goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'});
+          this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
           return;
         }
       }

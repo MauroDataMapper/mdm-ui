@@ -18,17 +18,29 @@ SPDX-License-Identifier: Apache-2.0
 import { TestBed } from '@angular/core/testing';
 
 import { SharedService } from './shared.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('SharedService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [HttpClientModule,
+    imports: [
+      HttpClientTestingModule,
       UIRouterModule.forRoot({ useHash: true }),
-      ToastrModule.forRoot()],
-    providers: [ElementTypesService]}));
+      ToastrModule.forRoot()
+    ],
+    providers: [
+      {
+        provide: MdmResourcesService,
+        useValue: {
+
+        }
+      },
+      ElementTypesService
+    ]
+  }));
 
   it('should be created', () => {
     const service: SharedService = TestBed.get(SharedService);

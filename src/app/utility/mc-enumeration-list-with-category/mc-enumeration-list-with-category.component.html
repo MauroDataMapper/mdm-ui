@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 			<span class="mdm--badge mdm--element-count">{{enumsCount}}</span>
 		</div>
 		<div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-			<div mdmShowIfRolesWritable mc-element="parent" style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="!clientSide">
+			<div style="float: right; margin-top: -2px; margin-left: 9px;" *ngIf="!clientSide">
 				<button mat-flat-button color="primary" type="button" (click)="add()">
 					<i class="fas fa-plus" aria-hidden="true"></i>
 					Add Enumeration
@@ -52,7 +52,6 @@ SPDX-License-Identifier: Apache-2.0
 
 			<div *ngIf="!record.isCategoryRow && !record.inEdit" style="float: right; cursor: move;">
 				<mat-icon cdkDragHandle>reorder</mat-icon>
-				<!--<i class="fas fa-bars sortableIcon handle"></i>-->
 			</div>
 
 			<div *ngIf="record.inEdit">
@@ -115,9 +114,8 @@ SPDX-License-Identifier: Apache-2.0
 		<th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 26%; width: 26%;" columnName="buttons">
 			<span></span>
 		</th>
-		<td mat-cell *matCellDef="let record; let i = index;" [hidden]="record.isCategoryRow"
-			style="max-width: 5%; width: 5%; text-align: center; word-wrap: break-word; overflow: hidden;">
-			<div mdmShowIfRolesWritable mc-element="parent" *ngIf="!record.isCategoryRow">
+		<td mat-cell *matCellDef="let record; let i = index;" [hidden]="record.isCategoryRow" style="max-width: 5%; width: 5%; text-align: center; word-wrap: break-word; overflow: hidden;">
+			<div *ngIf="!record.isCategoryRow">
 				<div *ngIf="!record.inEdit && !record.inDelete">
 					<button mat-button color="primary" type="button" class="paddingless" (click)="editClicked(record)">
 						<i class="fas fa-pencil-alt"></i>

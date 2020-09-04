@@ -34,6 +34,7 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -46,6 +47,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   @Input() mcDataClass: any;
   @Input() type: any;
   @Input() childDataClasses: any;
+  @Input() isEditable: any;
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -54,20 +56,16 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   processing: boolean;
   failCount: number;
   total: number;
-
   showStaticRecords: any;
-
   records: any[] = [];
-
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   deleteInProgress: boolean;
-
   checkAllCheckbox = false;
   bulkActionsVisibile = 0;
 
@@ -75,13 +73,14 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     private changeRef: ChangeDetectorRef,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private gridService: GridService
   ) { }
 
   ngOnInit(): void {
     // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     // Add 'implements OnInit' to the class.
-    if (this.parentDataModel.editable && !this.parentDataModel.finalised) {
+    if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
     } else {
       this.displayedColumns = ['name', 'description', 'multiplicity'];
@@ -91,11 +90,9 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
-
       return this.dataClassesFetch(
         this.paginator.pageSize,
         this.paginator.pageOffset,
@@ -104,15 +101,15 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         this.filter
       );
     }), map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return data.body.items;
-      }), catchError(() => {
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return [];
-      })
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return [];
+    })
     ).subscribe(data => {
       this.records = data;
     });
@@ -123,13 +120,12 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+       filter[name] = value;
       }
     });
     this.filter = filter;
@@ -141,13 +137,12 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType, filters };
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     if (!this.parentDataClass.id) {
-      return this.resources.dataModel.get(this.parentDataModel.id, 'dataClasses', options);
+      return this.resources.dataClass.list(this.parentDataModel.id, options);
     }
-
-    return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'dataClasses', options);
+    return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
   }
 
   onChecked = () => {
@@ -202,6 +197,6 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    });
+    }).catch(() => { });
   }
 }

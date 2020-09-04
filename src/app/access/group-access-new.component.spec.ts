@@ -18,6 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GroupAccessNewComponent } from './group-access-new.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { MatTableModule } from '@angular/material/table';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { FormsModule } from '@angular/forms';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GroupAccessNewComponent', () => {
   let component: GroupAccessNewComponent;
@@ -25,8 +36,34 @@ describe('GroupAccessNewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ GroupAccessNewComponent ]
+      imports: [
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTableModule,
+        MatPaginatorModule,
+        FormsModule,
+        NoopAnimationsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            securableResource: {
+              getGroupRoles: () => empty()
+            },
+            session: {
+              isAuthenticated: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [
+        McSelectComponent,
+        MdmPaginatorComponent,
+        GroupAccessNewComponent
+      ]
     })
     .compileComponents();
   }));

@@ -21,18 +21,13 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { of, Subscription } from 'rxjs';
-import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
-import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { MessageService } from '../services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
-import { BroadcastService } from '@mdm/services/broadcast.service';
+import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
-
+import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
+import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-folders-tree',
@@ -71,6 +66,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rememberExpandedStates = false;
   @Input() expandOnNodeClickFor: any;
   @Input() doNotMakeSelectedBold: any;
+  @Input() filterByDomainType: DOMAIN_TYPE[];
 
   @Input() treeName = 'unnamed';
 
@@ -119,6 +115,10 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       children = node.children;
     }
 
+    if (this.filterByDomainType?.length > 0) {
+      children = children.filter(c => this.filterByDomainType.includes(c.domainType));
+    }
+
     return of(children);
   };
 
@@ -134,7 +134,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     public dialog: MatDialog
   ) {
     this.loadFavourites();
-    this.subscriptions.add(this.messages.on('favoutires', () => {
+    this.subscriptions.add(this.messages.on('favourites', () => {
       this.loadFavourites();
     }));
 
@@ -347,20 +347,20 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       switch (node.domainType) {
         case DOMAIN_TYPE.Folder:
           if (this.justShowFolders) {
-            const folderResponse = await this.resources.folder.get(node.id, 'folders', { all: true }).toPromise();
+            const folderResponse = await this.resources.folder.get(node.id).toPromise();
             return folderResponse.body.items;
           } else {
             return node.children;
           }
         case DOMAIN_TYPE.DataModel:
         case DOMAIN_TYPE.DataClass:
-          const response = await this.resources.tree.get(node.id).toPromise();
+          const response = await this.resources.tree.get('dataClasses', node.domainType, node.id).toPromise();
           return response.body;
         case DOMAIN_TYPE.Terminology:
-          const terminologyResponse = await this.resources.terminology.get(node.id, 'tree').toPromise();
-          return terminologyResponse.body;
+          const terminologyResponse = await this.resources.terminology.terms.list(node.id, { all: true }).toPromise();
+          return terminologyResponse.body.items;
         case DOMAIN_TYPE.Term:
-          const termResponse = await this.resources.term.get(node.terminology, node.id, 'tree').toPromise();
+          const termResponse = await this.resources.terminology.terms.get(node.terminology, node.id).toPromise();
           return termResponse.body;
         default:
           return [];
@@ -377,7 +377,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   nodeChecked(child: FlatNode) {
-    const element = this.find(this.node, null, child.id);
+    const element = this.find(this.node, null, child.node.id);
 
     this.markChildren(child, child, child.checked);
 
@@ -394,7 +394,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     if (node.id === id) {
       return { node, parent };
     }
-    if (node.domainType === DOMAIN_TYPE.Folder || node.domainType === DOMAIN_TYPE.DataModel || node.domainType === DOMAIN_TYPE.DataClass || node.isRoot === true) {
+    if (node.domainType === DOMAIN_TYPE.Terminology || node.domainType === DOMAIN_TYPE.Folder || node.domainType === DOMAIN_TYPE.DataModel || node.domainType === DOMAIN_TYPE.DataClass || node.isRoot === true) {
       if (!node.children) {
         return null;
       }
@@ -449,7 +449,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   handleAddFolderModal = (fnode: FlatNode) => {
     const promise = new Promise((resolve, reject) => {
-      const dialog = this.dialog.open(InputModalComponent, {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
           inputValue: this.folder,
           modalTitle: 'Create a new Folder',
@@ -467,7 +467,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
             this.handleAddFolder(fnode, this.folder);
           } else {
             const error = 'err';
-            this.messageHandler.showError('DataModel name can not be empty', error);
+            this.messageHandler.showError('Data Model name can not be empty', error);
             return promise;
           }
         } else {
@@ -478,7 +478,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     return promise;
   }
 
-  async handleAddFolder(fnode: FlatNode, label?) {
+  async handleAddFolder(fnode: FlatNode, label?: string) {
     if (this.selectedNode) {
       this.selectedNode.selected = false;
     }
@@ -487,7 +487,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       let newNode: FlatNode;
       if (!fnode) {
         // Create new top level folder
-        result = await this.resources.folder.post(null, null, { resource: {label} }).toPromise();
+        result = await this.resources.folder.save(label).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         this.node.children.push(result.body);
 
@@ -495,7 +495,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         this.treeControl.dataNodes.push(newNode);
       } else {
         // Add new folder to existing folder
-        result = await this.resources.folder.post(fnode.id, 'folders', { resource: {label} }).toPromise();
+        result = await this.resources.folder.saveChildrenOf(fnode.id, {label}).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         if (!fnode.children) {
           fnode.children = [];
@@ -535,16 +535,16 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   async handleAddDataClass(fnode: FlatNode) {
     this.stateHandler.Go('NewDataClass', {
-      grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.parentDataClass : null,
-      parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.dataModel,
+      grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.node['parentId'] : null,
+      parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node['modelId'],
       parentDataClassId: fnode.domainType === DOMAIN_TYPE.DataModel ? null : fnode.id
     });
   }
 
   async handleAddDataElement(fnode: FlatNode) {
     this.stateHandler.Go('NewDataElement', {
-      grandParentDataClassId: fnode.parentDataClass ? fnode.parentDataClass : null,
-      parentDataModelId: fnode.dataModel,
+      grandParentDataClassId: fnode.node['parentId'] ? fnode.node['parentId'] : null,
+      parentDataModelId: fnode.node['modelId'],
       parentDataClassId: fnode.id
     });
   }
@@ -617,7 +617,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     this.node.children = filteredTreeData;
     this.refreshTree();
   }
-  validateLabel = (data) => {
+  validateLabel = (data: string) => {
     if (!data || (data && data.trim().length === 0)) {
       return false;
     } else {

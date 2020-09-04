@@ -59,9 +59,15 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
 
                 <div class="text-muted" *ngIf="result">
+                  <small>
+                      <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+                      <span><strong>Branch: </strong> <span class="branch-name">{{result.branchName}}</span></span>
+                  </small>
+                </div>
+                <div class="text-muted" *ngIf="result">
                     <small>
-                        <i class="fas fa-code-branch" matTooltip="Version"></i>
-                        <span><strong>Version: </strong>{{result.documentationVersion}}</span>
+                        <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+                        <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
                     </small>
                 </div>
                 <div class="text-muted" *ngIf="result">
@@ -84,23 +90,31 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="result?.aliases"
-                            [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                        <mdm-element-alias  [inEditMode]="editableForm.visible"
+                                            [aliases]="result?.aliases"
+                                            [editableForm]="editableForm"
+                                            [property]="'aliases'"></mdm-element-alias>
                     </td>
                 </tr>
                 <tr>
                     <td class="detailsRowHeader">Author</td>
                     <td *ngIf="result">
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="result.author"
-                            [name]="'moduleNameAuthor'" size="20" [styleCss]="'dataModelDetailsLabel'">
+                        <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                              [(ngModel)]="result.author"
+                                              [name]="'moduleNameAuthor'"
+                                              size="20"
+                                              [styleCss]="'dataModelDetailsLabel'">
                         </mdm-inline-text-edit>
                     </td>
                 </tr>
                 <tr>
                     <td class="detailsRowHeader">Organisation</td>
                     <td *ngIf="result">
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="result.organisation"
-                            [name]="'moduleNameOrganisation'" size="20" [styleCss]="'dataModelDetailsLabel'">
+                        <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                              [(ngModel)]="result.organisation"
+                                              [name]="'moduleNameOrganisation'"
+                                              size="20"
+                                              [styleCss]="'dataModelDetailsLabel'">
                         </mdm-inline-text-edit>
                     </td>
                 </tr>
@@ -108,8 +122,9 @@ SPDX-License-Identifier: Apache-2.0
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
-                                [property]="'description'">
+                            <mdm-markdown-text-area [editableForm]="editableForm"
+                                                    [element]="result"
+                                                    [property]="'description'">
                             </mdm-markdown-text-area>
                         </div>
                     </td>
@@ -118,8 +133,11 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <mdm-element-classifications [classifications]="result.classifiers" name="classifiers"
-                            [editableForm]="editableForm" [element]="result" [property]="'classifiers'">
+                        <mdm-element-classifications  [classifications]="result.classifiers"
+                                                      name="classifiers"
+                                                      [editableForm]="editableForm"
+                                                      [element]="result"
+                                                      [property]="'classifiers'">
                         </mdm-element-classifications>
 
                     </td>
@@ -128,17 +146,22 @@ SPDX-License-Identifier: Apache-2.0
                     <td colspan="2" style="text-align: right;">
                         <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
                             <div style="float: right;margin-left: 5px;">
-                                <button mat-stroked-button color="warn" type="button" matTooltip="Delete"
-                                    aria-label="Delete" class="paddingless dropdown-toggle"
-                                    [disabled]="deleteInProgress || exporting" [matMenuTriggerFor]="menu">
+                                <button mat-stroked-button
+                                        color="warn"
+                                        type="button"
+                                        matTooltip="Delete"
+                                        aria-label="Delete"
+                                        class="paddingless dropdown-toggle"
+                                        [disabled]="deleteInProgress || exporting"
+                                        [matMenuTriggerFor]="deleteCodeSetActions">
                                     <i class="far fa-trash-alt warning" aria-hidden="true"></i>
                                 </button>
 
-                                <mat-menu #menu>
-                                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                <mat-menu #deleteCodeSetActions>
+                                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result?.deleted">
                                         Mark as deleted
                                     </button>
-                                    <button mat-menu-item (click)="askForPermanentDelete()">
+                                    <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
                                         Delete <span class="errorMessage">permanently</span>
                                     </button>
                                 </mat-menu>
@@ -146,22 +169,36 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <div style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending"
-                                style="position: relative; float: right; margin-right:4px;">
+                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
                                         class="paddingless"
-                                        [disabled]="deleteInProgress || exporting || result.finalised"
+                                        [disabled]="deleteInProgress || exporting"
                                         matTooltip="Edit"
                                         aria-label="Edit"
-                                        (click)="showForm();">
+                                        (click)="showForm()">
                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                 </button>
+                                <!-- <mat-menu #editCodeSetActions>
+                                  <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                      Edit Code Set details
+                                  </button>
+                                  <button mat-menu-item *ngIf="showEditDescription">
+                                      Edit Description only
+                                  </button>
+                              </mat-menu> -->
                             </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
-                                    name="formButtons"                   mdm-element-classifications  [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
-                                [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
+                                                       [onCancelEdit]="onCancelEdit"
+                                                       name="formButtons"
+                                                       mdm-element-classifications
+                                                       [editable]="editableForm"
+                                                       [textLocation]="'left'"
+                                                       [hideDelete]="true"
+                                                       [hideCancel]="false"
+                                                       [processing]="deleteInProgress">
+                            </mdm-editable-form-buttons>
                         </div>
                         <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                             <button mat-stroked-button
@@ -178,6 +215,7 @@ SPDX-License-Identifier: Apache-2.0
 
                       <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
                         <button mat-stroked-button
+                                color="primary"
                                 type="button"
                                 class="paddingless"
                                 matTooltip="Create a New Version"
@@ -188,7 +226,8 @@ SPDX-License-Identifier: Apache-2.0
                         </button>
                       </div>
 
-                        <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;"
+                        <!-- TODO - DB migration -->
+                        <!-- <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;"
                             [hidden]="editableForm.visible || editableForm.deletePending">
                             <button mat-stroked-button color="primary" class="paddingless"
                                 (click)="toggleSecuritySection()" type="button" *ngIf="showPermission"
@@ -196,8 +235,7 @@ SPDX-License-Identifier: Apache-2.0
                                 [disabled]="deleteInProgress || processing">
                                 <i class="fas fa-user-lock"></i>
                             </button>
-
-                        </div>
+                        </div> -->
                     </td>
                 </tr>
             </tbody>
@@ -210,9 +248,6 @@ SPDX-License-Identifier: Apache-2.0
         <div class="userAccess" style="margin: 10px 0px 50px 0px">
             <mdm-share-with [mcElement]="'result'" [mcDomainType]="'CodeSet'"></mdm-share-with>
             <div>
-                <div style="margin-top: 10px">
-                    <mdm-user-access-new [parent]="'result'" [parentType]="'CodeSet'"></mdm-user-access-new>
-                </div>
                 <div style="margin-top: 10px">
                     <mdm-group-access-new [parent]="'result'" [parentType]="'CodeSet'"></mdm-group-access-new>
                 </div>

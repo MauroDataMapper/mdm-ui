@@ -38,27 +38,23 @@ export class DataTypeMainComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private title: Title,
     private changeRef: ChangeDetectorRef
-  ) {}
+  ) { }
   parentDataModelId: any;
   steps: Step[] = [];
   processing: any;
   isProcessComplete: any;
-
   model = {
     createType: 'new',
     copyFromDataModel: [],
     isValid: false,
-
     parent: {
       id: '',
     },
     parentDataModel: { id: '' },
-
     label: '',
     description: '',
     organisation: '',
     domainType: 'PrimitiveType',
-
     metadata: [],
     enumerationValues: [],
     classifiers: [],
@@ -90,14 +86,14 @@ export class DataTypeMainComponent implements OnInit {
     step2.invalid = true;
 
     this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
-        result.body.breadcrumbs = [];
-        result.body.breadcrumbs.push(Object.assign({}, result.body));
-        this.model.parent = result.body;
+      result.body.breadcrumbs = [];
+      result.body.breadcrumbs.push(Object.assign({}, result.body));
+      this.model.parent = result.body;
 
-        this.steps.push(step1);
-        this.steps.push(step2);
-        this.changeRef.detectChanges();
-      });
+      this.steps.push(step1);
+      this.steps.push(step2);
+      this.changeRef.detectChanges();
+    });
 
     this.title.setTitle(`New Data Type`);
   }
@@ -117,7 +113,6 @@ export class DataTypeMainComponent implements OnInit {
   fireChanged = (tab: any) => {
     for (let i = 0; i < this.steps.length; i++) {
       const step: Step = this.steps[i];
-
       if (i === tab.selectedIndex) {
         if (step.compRef) {
           if (step.compRef.instance.onLoad !== undefined) {
@@ -139,19 +134,13 @@ export class DataTypeMainComponent implements OnInit {
       domainType: this.model.domainType,
 
       referenceDataType: {
-        id: this.model.referencedDataType
-          ? this.model.referencedDataType.id
-          : null
+        id: this.model.referencedDataType ? this.model.referencedDataType.id : null
       },
       referenceClass: {
-        id: this.model.referencedDataClass
-          ? this.model.referencedDataClass.id
-          : null
+        id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null
       },
       terminology: {
-        id: this.model.referencedTerminology
-          ? this.model.referencedTerminology.id
-          : null
+        id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null
       },
 
       classifiers: this.model.classifiers.map((cls) => {
@@ -172,29 +161,17 @@ export class DataTypeMainComponent implements OnInit {
         };
       })
     };
-
-    const deferred = this.resources.dataModel.post(
-      this.model.parent.id,
-      'dataTypes',
-      { resource }
-    );
-
-    deferred.subscribe(
-      response => {
-        this.messageHandler.showSuccess('Data Type saved successfully.');
-
-        this.stateHandler.Go(
-          'DataType',
-          { dataModelId: response.body.dataModel, id: response.body.id },
-          { reload: true, location: true }
-        );
-      }, error => {
-        this.messageHandler.showError(
-          'There was a problem saving the Data Type.',
-          error
-        );
-      }
-    );
+    const deferred = this.resources.dataType.save(this.model.parent.id, resource);
+    deferred.subscribe(response => {
+      this.messageHandler.showSuccess('Data Type saved successfully.');
+      this.stateHandler.Go(
+        'DataType',
+        { dataModelId: response.body.model, id: response.body.id },
+        { reload: true, location: true }
+      );
+    }, error => {
+      this.messageHandler.showError('There was a problem saving the Data Type.', error);
+    });
   }
 
   saveCopiedDataTypes = () => {

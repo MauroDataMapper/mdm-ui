@@ -19,7 +19,6 @@ import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../utility/message-handler.service';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
-import { SecurityHandlerService } from './security-handler.service';
 import { BroadcastService } from '../broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -31,15 +30,11 @@ export class FolderHandlerService {
     private resoucesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
-    private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService
   ) {}
 
   askForSoftDelete(id) {
     const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
-      }
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
@@ -55,11 +50,7 @@ export class FolderHandlerService {
         if (result?.status !== 'ok') {
           return promise;
         }
-        this.delete(id, false).then(result2 => {
-            resolve(result2);
-          }).catch((error) => {
-            reject(error);
-          });
+        this.delete(id, false);
       });
     });
     return promise;
@@ -67,10 +58,6 @@ export class FolderHandlerService {
 
   askForPermanentDelete(id) {
     const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'Only Admins are allowed to delete records permanently!' });
-      }
-
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
           title: `Permanent deletion`,
@@ -82,7 +69,6 @@ export class FolderHandlerService {
 
       dialog.afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
-          // reject(null); Commented by AS as it was throwing error
           return;
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
@@ -96,14 +82,9 @@ export class FolderHandlerService {
 
         dialog2.afterClosed().subscribe(result2 => {
           if (result2.status !== 'ok') {
-            // reject(null);
             return;
           }
-          this.delete(id, true).then((result3) => {
-              resolve(result3);
-            }).catch((error) => {
-              reject(error);
-            });
+          resolve(this.delete(id, true));
         });
       });
     });
@@ -111,26 +92,14 @@ export class FolderHandlerService {
     return promise;
   }
 
-  delete(id, permanent) {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
-      } else {
-        const queryString = permanent ? 'permanent=true' : null;
-        this.resoucesService.folder.delete(id, null, queryString).subscribe(result => {
-            if (permanent) {
-              this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'permanentDelete', result});
-            } else {
-              this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'softDelete', result});
-            }
-            resolve(result);
-          }, error => {
-            this.messageHandler.showError('There was a problem deleting the Folder.', error);
-            reject(error);
-          }
-        );
-      }
+  delete(id, permanent = false) {
+    return new Promise((resolve, reject) => {
+        this.resoucesService.folder.remove(id, { permanent }).subscribe((result) => {
+          this.messageHandler.showSuccess('Successfully Deleted Folder');
+          resolve();
+        }, error => {
+          this.messageHandler.showError('There was a problem deleting the Folder.', error);
+        });
     });
-    return promise;
   }
 }

@@ -40,7 +40,7 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    if (this.summary.summaryMetadataType === 'number') {
+    if (this.summary.summaryMetadataType.toLowerCase() === 'number') {
       this.summaryMetadataReports.forEach((report) => {
         this.tableDataForTable.push({
           keyColor: null,
@@ -53,10 +53,10 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
 
   drawBarChart(): void {
     super.drawBarChart();
-    if (this.summary.summaryMetadataType === 'map') {
+    if (this.summary.summaryMetadataType.toLowerCase() === 'map') {
       this.tableDataForTable = [];
-      Object.keys(this.selectedReport.reportValue).forEach( (x, idx) => {
-        this.tableDataForTable.push({keyColor: this.chartColors[0].backgroundColor[idx], category: x, value: this.selectedReport.reportValue[x]});
+      Object.keys(this.selectedReport.reportValue).forEach((x, idx) => {
+        this.tableDataForTable.push({ keyColor: this.chartColors[0].backgroundColor[idx], category: x, value: this.selectedReport.reportValue[x] });
       });
     }
   }

@@ -21,12 +21,9 @@ import { MatDatepicker } from '@angular/material/datepicker';
 @Component({
   selector: 'mdm-date-from-to',
   templateUrl: './date-from-to.component.html'
-  // providers: [
-  //   //  { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-  // ]
 })
 export class DateFromToComponent implements OnInit {
-  constructor() {}
+  constructor() { }
   @Output() selectEvent = new EventEmitter<DateEventInfo>();
 
   @ViewChild('dp1', { static: false }) datePicker1: MatDatepicker<Date>;
@@ -37,7 +34,6 @@ export class DateFromToComponent implements OnInit {
   oldVal: any;
 
   date1Options = {
-    // dateDisabled: disabled,
     formatYear: 'yy',
     maxDate: null,
     minDate: null,
@@ -48,7 +44,6 @@ export class DateFromToComponent implements OnInit {
   };
 
   date2Options = {
-    // dateDisabled: disabled,
     formatYear: 'yy',
     maxDate: null,
     minDate: null,
@@ -58,7 +53,7 @@ export class DateFromToComponent implements OnInit {
     showButtonBar: false
   };
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   datePicker1Changed(newValue, oldValue): any {
     // init for the first time, so NO Action
@@ -82,7 +77,6 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
-      // this.onSelect(this.dtFrom, newValue);
       this.selectEvent.emit(new DateEventInfo(this.dtFrom, newValue));
     }
 

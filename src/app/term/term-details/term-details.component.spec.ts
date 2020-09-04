@@ -19,6 +19,26 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TermDetailsComponent } from './term-details.component';
 import { TestModule } from '@mdm/modules/test/test.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MarkdownDirective } from '@mdm/directives/markdown.directive';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('TermDetailsComponent', () => {
   let component: TermDetailsComponent;
@@ -26,8 +46,37 @@ describe('TermDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ TermDetailsComponent ]
+      imports: [
+        // TestModule
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {}
+        }
+      ],
+      declarations: [
+        ProfilePictureComponent,
+        ElementAliasComponent,
+        ElementLinkComponent,
+        InlineTextEditComponent,
+        MarkdownTextAreaComponent,
+        PropertiesDirective,
+        ElementClassificationsComponent,
+        MarkdownDirective,
+        ByteArrayToBase64Pipe,
+        TermDetailsComponent
+      ]
     })
     .compileComponents();
   }));

@@ -157,7 +157,7 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
-
+import { MergedModelsComponent } from '@mdm/merged-models/merged-models.component';
 
 @NgModule({
   declarations: [
@@ -289,7 +289,8 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
-    BulkDeleteModalComponent
+    BulkDeleteModalComponent,
+    MergedModelsComponent
   ],
   imports: [
     AdminModule,
@@ -440,7 +441,8 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
-    BulkDeleteModalComponent
+    BulkDeleteModalComponent,
+    MergedModelsComponent
   ]
 })
 export class CatalogueModule { }

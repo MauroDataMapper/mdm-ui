@@ -107,7 +107,7 @@ SPDX-License-Identifier: Apache-2.0
           <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
           <i style="font-size: 10px;" class="fas fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>
         <!-- </div> -->
-        <small *ngIf="node.branchName && node.branchName !== 'main'" class="ml-1 text-muted">
+        <small *ngIf="node.branchName" class="ml-1 text-muted">
           <span> | </span>
           <i class="fas fa-code-branch"></i>
           {{node.branchName}}

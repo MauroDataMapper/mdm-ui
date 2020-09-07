@@ -42,7 +42,6 @@ export class ModelComparisonComponent implements OnInit {
 
   sourceModel: any;
   targetModel: any;
-  mergedModel: any;
 
   form = {
     dataTypeFilter: null,
@@ -309,7 +308,6 @@ export class ModelComparisonComponent implements OnInit {
   };
 
   runDiff = () => {
-    debugger;
     if (!this.sourceModel || !this.targetModel) {
       return;
     }
@@ -325,7 +323,6 @@ export class ModelComparisonComponent implements OnInit {
           const result = res.body;
 
           const diffMap = {};
-          this.mergedModel = this.sourceModel;
 
           // Run for DataModel
           result.diffs.forEach(diff => {

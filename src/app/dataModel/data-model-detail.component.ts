@@ -444,6 +444,15 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     );
   }
 
+  merge = () => {
+    this.stateHandler.NewWindow('modelsmerging',
+      {
+        sourceId: this.result.id,
+        targetId: null
+      },
+      null);
+  }
+
   export(exporter) {
     this.exportError = null;
     this.processing = true;

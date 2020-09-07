@@ -157,6 +157,7 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
 import { MergedModelsComponent } from '@mdm/merged-models/merged-models.component';
 
 @NgModule({
@@ -290,6 +291,7 @@ import { MergedModelsComponent } from '@mdm/merged-models/merged-models.componen
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
+    ModelMergingComponent,
     MergedModelsComponent
   ],
   imports: [
@@ -442,6 +444,7 @@ import { MergedModelsComponent } from '@mdm/merged-models/merged-models.componen
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
+    ModelMergingComponent,
     MergedModelsComponent
   ]
 })

@@ -262,11 +262,11 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           fnode.children = data;
 
           // Manually construct the FlatNodes and insert into the tree's dataNodes array
-          const newNodes = fnode.children.map((c: any) => {
+          const newNodes = fnode.children?.map((c: any) => {
             return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
           });
 
-          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, ...newNodes);
+          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, ...(newNodes || []));
         }
         this.treeControl.expand(fnode);
       }
@@ -357,7 +357,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           const response = await this.resources.tree.get('dataClasses', node.domainType, node.id).toPromise();
           return response.body;
         case DOMAIN_TYPE.Terminology:
-          const terminologyResponse = await this.resources.terminology.terms.list(node.id, { all: true }).toPromise();
+          const terminologyResponse = await this.resources.terminology.terms.tree(node.id).toPromise();
           return terminologyResponse.body.items;
         case DOMAIN_TYPE.Term:
           const termResponse = await this.resources.terminology.terms.get(node.terminology, node.id).toPromise();

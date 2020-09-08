@@ -259,7 +259,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       edit: false,
       dataModelId: node.modelId,
       dataClassId: node.parentId || '',
-      terminologyId: node.model
+      terminologyId: node.modelId || node.model
     });
   };
 

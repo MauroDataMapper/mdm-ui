@@ -44,6 +44,7 @@ export interface Node {
     documentationVersion?: string;
     branchName?: string;
     modelVersion?: string;
+    modelId?: string;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -56,6 +57,10 @@ export class FlatNode {
     get id() {
         return this.node?.id;
     }
+
+    get modelId() {
+      return this.node?.modelId;
+  }
 
     get label() {
         return this.node?.label;

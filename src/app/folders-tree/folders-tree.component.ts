@@ -358,9 +358,9 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           return response.body;
         case DOMAIN_TYPE.Terminology:
           const terminologyResponse = await this.resources.terminology.terms.tree(node.id).toPromise();
-          return terminologyResponse.body.items;
+          return terminologyResponse.body;
         case DOMAIN_TYPE.Term:
-          const termResponse = await this.resources.terminology.terms.get(node.terminology, node.id).toPromise();
+          const termResponse = await this.resources.terminology.terms.tree(node.modelId, node.id).toPromise();
           return termResponse.body;
         default:
           return [];

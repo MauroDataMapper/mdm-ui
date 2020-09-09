@@ -347,20 +347,22 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       switch (node.domainType) {
         case DOMAIN_TYPE.Folder:
           if (this.justShowFolders) {
-            const folderResponse = await this.resources.folder.get(node.id).toPromise();
-            return folderResponse.body.items;
+            const folderResponse = await this.resources.tree.get('folders', 'folders', node.id).toPromise();
+            return folderResponse.body;
           } else {
             return node.children;
           }
         case DOMAIN_TYPE.DataModel:
+          const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
+          return dataModelResponse.body;
         case DOMAIN_TYPE.DataClass:
-          const response = await this.resources.tree.get('dataClasses', node.domainType, node.id).toPromise();
-          return response.body;
+          const dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
+          return dataClassResponse.body;
         case DOMAIN_TYPE.Terminology:
-          const terminologyResponse = await this.resources.terminology.terms.tree(node.id).toPromise();
+          const terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
           return terminologyResponse.body;
         case DOMAIN_TYPE.Term:
-          const termResponse = await this.resources.terminology.terms.tree(node.modelId, node.id).toPromise();
+          const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
           return termResponse.body;
         default:
           return [];

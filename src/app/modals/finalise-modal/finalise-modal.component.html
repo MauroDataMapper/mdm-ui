@@ -1,0 +1,58 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<form role="form">
+    <div class="modal-header">
+      <h4 class="modal-title marginless">{{ title }}</h4>
+    </div>
+    <div class="modal-body">
+      <span [innerHtml]="message"></span>
+      <mat-form-field appearance="fill">
+        <mat-label>Version Type</mat-label>
+        <mat-select name="versionList" (ngModelChange)="onVersionChange()" [(value)]="data.versionList" [(ngModel)]="data.versionList"  [disabled]="data.versionNumber">
+          <mat-option
+            name="value"
+            *ngFor="let version of versions"
+            [value]="version.value"           
+          >
+            {{ version.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span> Or </span>
+      <mat-form-field appearance="fill">
+        <mat-label>Version No</mat-label>
+        <input name="version" [disabled]="data.versionList" matInput (ngModelChange)="onVersionChange()" [(ngModel)]="data.versionNumber" />
+      </mat-form-field>
+    </div>
+    <div class="modal-footer" style="padding: 10px">
+      <button
+        mat-button
+        color="warn"
+        *ngIf="cancelShown"
+        class="mr-1"
+        type="button"
+        (click)="close()"
+      >
+        {{ cancelTitle }}
+      </button>
+      <button mat-flat-button color="{{ btnType }}" [disabled]="isSubmitDisabled" type="button" (click)="ok()">
+        {{ okTitle }}
+      </button>
+    </div>
+  </form>
+  

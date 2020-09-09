@@ -32,6 +32,7 @@ import { ModalService } from './modal.service';
 import { InputModalComponent } from './input-modal/input-modal.component';
 import { NewFolderModalComponent } from './new-folder-modal/new-folder-modal.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
+import { FinaliseModalComponent } from './finalise-modal/finalise-modal.component';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { MaterialModule } from '@mdm/modules/material/material.module';
     ForgotPasswordModalComponent,
     ConfirmationModalComponent,
     InputModalComponent,
-    NewFolderModalComponent
+    NewFolderModalComponent,
+    FinaliseModalComponent
   ],
   providers: [
     ModalService

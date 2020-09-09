@@ -46,6 +46,7 @@ import { ExportHandlerService } from '../services/handlers/export-handler.servic
 import { BroadcastService } from '../services/broadcast.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -401,7 +402,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   finalise() {
     const promise = new Promise(() => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+      const dialog = this.dialog.open(FinaliseModalComponent, {
         data: {
           title: 'Are you sure you want to finalise this Data Model?',
           okBtnTitle: 'Finalise model',
@@ -417,7 +418,17 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         }
         this.processing = true;
 
-        this.resourcesService.dataModel.finalise(this.result.id, null).subscribe(() => {
+        let data = {};
+
+        if(result.data.versionList !== undefined)
+        {
+          data["versionChangeType"] = result.data.versionList;
+        }
+        else{
+          data["version"] = result.data.versionNumber;
+        }   
+
+        this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
           this.processing = false;
           this.messageHandler.showSuccess('Data Model finalised successfully.');
           this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });

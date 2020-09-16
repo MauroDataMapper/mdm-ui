@@ -46,15 +46,14 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
         <mat-tab label="Content">
             <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-content-table *ngIf="dataClass"
-                                        [parentDataModel]="parentDataModel"
-                                        [parentDataClass]="dataClass"
-                                        [grandParentDataClass]="parentDataClass"
-                                        [isEditable]="isEditable"
-                                        >
-                    </mdm-content-table>
-                </div>
+              <div class="full-width">
+                <mdm-content *ngIf="dataClass"
+                                   [parentDataModel]="parentDataModel"
+                                   [parentDataClass]="dataClass"
+                                   [grandParentDataClass]="parentDataClass"
+                                   [isEditable]="isEditable">
+                </mdm-content>
+              </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Properties">

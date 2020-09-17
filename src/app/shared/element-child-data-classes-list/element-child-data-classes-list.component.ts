@@ -141,7 +141,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-
+    sortBy = 'idx';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     if (!this.parentDataClass.id) {

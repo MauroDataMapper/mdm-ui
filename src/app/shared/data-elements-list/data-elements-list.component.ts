@@ -103,23 +103,15 @@ export class DataElementsListComponent implements AfterViewInit  {
 
   // Drag and drop
   dropDataElements(event: CdkDragDrop<any[]>) {
-    
+
     moveItemInArray(this.dataElementRecords, event.previousIndex, event.currentIndex);
-
-    let prevRec = this.dataElementRecords[event.currentIndex];
-
-    if (prevRec === undefined) {
-      return;
-    }
-
+    
     this.updateDataElementsOrder(event.item, event.currentIndex);
 
     this.table.renderRows();
   }
 
   updateDataElementsOrder = (item, newPosition) => {
-    
-
     const resource = {
       id: item.data.id,
       index: newPosition
@@ -173,8 +165,7 @@ export class DataElementsListComponent implements AfterViewInit  {
   };
 
   dataElementsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    
-
+    sortBy = 'idx';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     return this.resources.dataElement.list(this.parentDataModel.id, this.parentDataClass.id, options);

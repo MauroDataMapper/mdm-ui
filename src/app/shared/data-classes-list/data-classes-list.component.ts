@@ -118,8 +118,6 @@ export class DataClassesListComponent implements AfterViewInit {
   }
 
   updateDataClassesOrder = (item, newPosition) => {
-    
-
     const resource = {
       id: item.data.id,
       index: newPosition
@@ -173,8 +171,7 @@ export class DataClassesListComponent implements AfterViewInit {
   };
   
   dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-     
-   
+    sortBy = 'idx';
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
     
     return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);

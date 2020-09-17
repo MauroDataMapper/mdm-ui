@@ -15,44 +15,44 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<form role="form">
-    <div class="modal-header">
-      <h4 class="modal-title marginless">{{ title }}</h4>
-    </div>
-    <div class="modal-body">
+<h4 mat-dialog-title>
+  {{ title }}
+</h4>
+<hr>
+<mat-dialog-content class="mat-typography">
+  <div class="full-width">
+    <form role="form" class="mb-2">
       <span [innerHtml]="message"></span>
-      <mat-form-field appearance="fill">
-        <mat-label>Version Type</mat-label>
-        <mat-select name="versionList" (ngModelChange)="onVersionChange()" [(value)]="data.versionList" [(ngModel)]="data.versionList"  [disabled]="data.versionNumber">
-          <mat-option
-            name="value"
-            *ngFor="let version of versions"
-            [value]="version.value"           
-          >
-            {{ version.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <span> Or </span>
-      <mat-form-field appearance="fill">
-        <mat-label>Version No</mat-label>
-        <input name="version" [disabled]="data.versionList" matInput (ngModelChange)="onVersionChange()" [(ngModel)]="data.versionNumber" />
-      </mat-form-field>
-    </div>
-    <div class="modal-footer" style="padding: 10px">
-      <button
-        mat-button
-        color="warn"
-        *ngIf="cancelShown"
-        class="mr-1"
-        type="button"
-        (click)="close()"
-      >
-        {{ cancelTitle }}
-      </button>
-      <button mat-flat-button color="{{ btnType }}" [disabled]="isSubmitDisabled" type="button" (click)="ok()">
-        {{ okTitle }}
-      </button>
-    </div>
-  </form>
-  
+      <mat-radio-group name="versionList" [(value)]="data.versionList" [(ngModel)]="data.versionList" (ngModelChange)="onVersionChange()" class="mb-0">
+        <mat-radio-button value="Major" [checked]="data.versionList == 'Major'">Major <small><i>(default)</i></small></mat-radio-button>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted">Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i> <strong>  2</strong>.0.0 </small></div>
+        <mat-radio-button value="Minor" [checked]="data.versionList == 'Minor'">Minor</mat-radio-button>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted">Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.<strong>1</strong>.0 </small></div>
+        <mat-radio-button value="Patch" [checked]="data.versionList == 'Patch'">Patch</mat-radio-button>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted">Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.0.<strong>1</strong> </small></div>
+        <mat-radio-button value="Custom" [checked]="data.versionList == 'Custom'">Custom version</mat-radio-button>
+        <div style="margin-left: 29px;"><small class="text-muted">Define your custom version </small></div>
+      </mat-radio-group>
+
+      <div [ngClass]="{'is-hidden':!showCustomVersion}" style="margin-left: 29px">
+        <mat-form-field appearance="outline" class="paddingless">
+          <mat-label>Version number</mat-label>
+          <input matInput name="version" [(ngModel)]="version" />
+        </mat-form-field>
+      </div>
+    </form>
+
+    <p class='marginless'><strong>Note:</strong> Once you finalise this record, you can not edit it anymore!</p>
+    <p>However, you can create new version of it.</p>
+  </div>
+  <hr class="marginless">
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pt-2 pb-2">
+  <hr>
+  <button mat-button color="warn" *ngIf="cancelShown" class="mr-1" type="button" (click)="close()">
+    {{ cancelTitle }}
+  </button>
+  <button mat-flat-button color="{{ btnType }}" type="button" (click)="ok()">
+    {{ okTitle }}
+  </button>
+</mat-dialog-actions>

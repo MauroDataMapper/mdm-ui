@@ -29,6 +29,7 @@ import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confi
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
+import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -268,21 +269,27 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   finalise = () => {
-    this.dialog.open(ConfirmationModalComponent, {
+    this.dialog.open(FinaliseModalComponent, {
         data: {
-          title: 'Are you sure you want to finalise this Terminology?',
+          title: 'Finalise Terminology',
           okBtnTitle: 'Finalise Terminology',
           btnType: 'accent',
-          message: `<p class='marginless'>Once you finalise a Terminology, you can not edit it anymore!</p>
-                    <p class='marginless'>but you can create new version of it.</p>`
+          message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+                    <p>to be finalised with: </p>`
         }
       }).afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
           return;
         }
         this.processing = true;
+        const data = {};
+        if (result.data.versionList !== 'Custom') {
+          data['versionChangeType'] = result.data.versionList;
+        } else {
+          data['version'] = result.data.versionNumber;
+        }
 
-        this.resources.terminology.finalise(this.mcTerminology.id, null).subscribe(() => {
+        this.resources.terminology.finalise(this.mcTerminology.id, data).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Terminology finalised successfully.');
             this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });

@@ -404,11 +404,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(FinaliseModalComponent, {
         data: {
-          title: 'Are you sure you want to finalise this Data Model?',
-          okBtnTitle: 'Finalise model',
+          title: 'Finalise Data Model',
+          okBtnTitle: 'Finalise Data Model',
           btnType: 'accent',
-          message: `<p class='marginless'>Once you finalise a Data Model, you can not edit it anymore!</p>
-                    <p class='marginless'>but you can create new version of it.</p>`
+          message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+                    <p>to be finalised with: </p>`
         }
       });
 
@@ -417,16 +417,12 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           return promise;
         }
         this.processing = true;
-
-        let data = {};
-
-        if(result.data.versionList !== undefined)
-        {
-          data["versionChangeType"] = result.data.versionList;
+        const data = {};
+        if (result.data.versionList !== 'Custom') {
+          data['versionChangeType'] = result.data.versionList;
+        } else {
+          data['version'] = result.data.versionNumber;
         }
-        else{
-          data["version"] = result.data.versionNumber;
-        }   
 
         this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
           this.processing = false;

@@ -43,6 +43,7 @@ import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confi
 import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -388,15 +389,15 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   finalise() {
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
 
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+      const dialog = this.dialog.open(FinaliseModalComponent, {
           data: {
-            title: 'Are you sure you want to finalise this Code Set ?',
+            title: 'Finalise Code Set',
             okBtnTitle: 'Finalise Code Set',
             btnType: 'accent',
-            message: `<p class='marginless'>Once you finalise a Code Set, you can not edit it anymore! </p>
-                      <p class='marginless'>but you can create new version of it.</p>`
+            message: `<p class='marginless'>Please select the version you would like this Code Set</p>
+                      <p>to be finalised with: </p>`
           }
         });
 
@@ -405,7 +406,14 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           return promise;
         }
         this.processing = true;
-        this.resourcesService.codeSet.finalise(this.result.id).subscribe(() => {
+        const data = {};
+        if (result.data.versionList !== 'Custom') {
+          data['versionChangeType'] = result.data.versionList;
+        } else {
+          data['version'] = result.data.versionNumber;
+        }
+
+        this.resourcesService.codeSet.finalise(this.result.id, data).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});

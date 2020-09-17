@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -33,16 +33,13 @@ export class FinaliseModalComponent implements OnInit {
   cancelTitle: string;
   cancelShown: boolean;
   btnType: string;
-  isSubmitDisabled = true;
-
-  versions: Array<any> = [
-    {name: 'Major', value: 'MAJOR'},
-    {name: 'Minor', value: 'MINOR'},
-    {name: 'Patch', value: 'PATCH'}
-  ];
+  defaultVersion = 'Major';
+  showCustomVersion = false;
+  version = '';
 
   constructor(private dialogRef: MatDialogRef<FinaliseModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { 
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private changeRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -53,23 +50,28 @@ export class FinaliseModalComponent implements OnInit {
     this.message = this.data.message;
     this.password = '';
     this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
+    this.data.versionList = this.defaultVersion;
+    this.changeRef.detectChanges();
   }
 
-  onVersionChange()
-  {
-    this.isSubmitDisabled = (this.data.versionNumber === "underfined" && this.data.versionList === "underfined" && this.data.versionNumber === "")
+  onVersionChange() {
+    if (this.data.versionList === 'Custom') {
+      this.showCustomVersion = !this.showCustomVersion;
+    } else {
+      this.showCustomVersion = false;
+    }
   }
 
   ok() {
-    this.dialogRef.close({ status: 'ok' ,  data : this.data });
+    if (this.data.versionList === 'Custom') {
+      this.data.versionNumber = this.version;
+    }
+    this.dialogRef.close({ status: 'ok', data: this.data });
   }
-
   cancel() {
     this.dialogRef.close({ status: 'cancel' });
   }
-
   close() {
     this.dialogRef.close({ status: 'close' });
   }
-
 }

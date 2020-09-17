@@ -17,47 +17,241 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="container">
   <div class="row">
-    <span>Outstanding Conflicts: 0</span>
+    <span>Outstanding Conflicts: {{outstandingErrors}}</span>
   </div>
   <div class="row">
-    <div *ngIf="sourceModel" class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="min-height: 375px; text-align: center;">
-      <button mat-flat-button color="primary" class="" type="button" style="margin: 25px auto;" matToolTip="Swap" aria-label="Swap" (click)="swap()">
-        Use {{sourceModel.branchName}} branch
+    <div
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+      style="text-align: center"
+    >
+      <button
+        mat-flat-button
+        *ngIf="sourceModel"
+        color="primary"
+        type="button"
+        style="margin: 25px auto"
+        matToolTip="Use Source Branch"
+        aria-label="Use Source Branch"
+      >
+        Use {{ sourceModel.branchName }} branch
       </button>
-      <div class="leftTree" *ngIf="sourceModel" style="height: 100%; border: 1px solid #DDD; overflow: scroll;">
-        <mdm-folders-tree [node]="{children: [sourceModel]}"
-                          treeName="left"
-                          [initialExpandedPaths]="[sourceModel?.id]"
-                          isComparisonTree=true
-                          [showCheckboxFor]="['DataClass']"
-                          [propagateCheckbox]="true"
-                          (nodeClickEvent)="onNodeClick($event)">
-        </mdm-folders-tree>
-      </div>
     </div>
-
-    <div *ngIf="mergedModel" class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="text-align: center;">
-      <button mat-flat-button color="primary" class="" type="button" style="margin: 25px auto;" matToolTip="Swap" aria-label="Swap" (click)="swap()">
-      Apply Changes
+    <div
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+      style="text-align: center"
+    >
+      <button
+        mat-flat-button
+        color="primary"
+        style="text-align: center"
+        type="button"
+        style="margin: 25px auto"
+        matToolTip="Commit Changes"
+        aria-label="Commit Changes"
+        (click)="onCommitChanges()"
+      >
+        Commit Changes
       </button>
-      <mdm-merged-models [mergedModel]="mergedModel"></mdm-merged-models>
     </div>
-
-    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="float: right;" style="text-align: center;">
-    <button *ngIf="targetModel"  mat-flat-button color="primary" class="" type="button" style="margin: 25px auto;" matToolTip="Swap" aria-label="Swap" (click)="swap()">
-      Use Main branch
-    </button>
-
-    <div *ngIf="targetModel" style="height: 100%;border: 1px solid #DDD;overflow: scroll;">
-      <mdm-folders-tree [node]="{children: [targetModel]}"
-                        treeName="right"
-                        [initialExpandedPaths]="[targetModel?.id]"
-                        isComparisonTree=true
-                        [showCheckboxFor]="['DataClass']"
-                        [propagateCheckbox]="true"
-                        (nodeClickEvent)="onNodeClick($event)">
-      </mdm-folders-tree>
+    <div
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+      style="text-align: center"
+    >
+      <button
+        *ngIf="targetModel"
+        mat-flat-button
+        color="primary"
+        style="text-align: center"
+        type="button"
+        style="margin: 25px auto"
+        matToolTip="Use Target Branch"
+        aria-label="Use Target Branch"
+        (click)="useTarget()"
+      >
+        Use {{ targetModel.branchName }} branch
+      </button>
     </div>
   </div>
+  <div class="row">
+    <mdm-folders-tree
+      [node]="{ children: [sourceModel] }"
+      treeName="left"
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12;"
+      [initialExpandedPaths]="[sourceModel?.id]"
+      isComparisonTree="true"
+      [propagateCheckbox]="true"
+      style="border: 1px solid #ddd; overflow: scroll"
+      (nodeClickEvent)="onNodeClick()"
+    >
+    </mdm-folders-tree>
+    
+    <div  class="col-lg-4 col-md-4 col-sm-12 col-xs-12"></div>
+
+
+
+    <mdm-folders-tree
+      *ngIf="targetModel"
+      [node]="{ children: [targetModel] }"
+      treeName="right"
+      [initialExpandedPaths]="[targetModel?.id]"
+      isComparisonTree="true"
+      [propagateCheckbox]="true"
+      (nodeClickEvent)="onNodeClick()"
+      style="border: 1px solid #ddd; overflow: scroll"
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+    >
+    </mdm-folders-tree>
+  </div>
+  <div class="row" style="margin-top: 10px">
+    <div
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+      style="min-height: 375px; text-align: center"
+    >
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+            <th style="cursor: pointer">Diffs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diff of diffsSource.properties">
+            <td
+              style="min-width: 18px; width: 18px"
+              [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}"
+            >
+            &nbsp;<mat-checkbox (change)="onAcceptPress(diff,'source')" [(ngModel)]="diff.accept"></mat-checkbox>&nbsp;
+            </td>
+            <td style="text-align: left; word-wrap: break-word">
+              <strong style="font-style: italic">{{ diff.title }}:</strong>
+              <div>
+                <span style="border-bottom: 1px dashed #000">{{
+                  diff.right
+                }}</span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let diff of diffsSource.dataClasses">
+            <td
+              style="min-width: 18px; width: 18px"
+              [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}"
+            >
+              &nbsp;<mat-checkbox (change)="onAcceptPress(diff,'source')" [(ngModel)]="diff.accept"></mat-checkbox>&nbsp;
+            </td>
+            <td style="text-align: left; word-wrap: break-word">
+              <strong style="font-style: italic">Data Classes:</strong>
+              <div>
+                <span style="border-bottom: 1px dashed #000">{{
+                  diff.label
+                }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+      style="text-align: center"
+    >
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+            <th style="cursor: pointer">Diffs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diff of diffsMerged.properties">
+            <td
+              style="min-width: 18px; width: 18px"
+              [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}"
+            >
+              &nbsp;&nbsp;&nbsp;
+            </td>
+            <td style="text-align: left; word-wrap: break-word">
+              <strong style="font-style: italic">{{ diff.title }}:</strong>
+              <div>
+                <span style="border-bottom: 1px dashed #000">{{
+                  diff.right
+                }}</span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let diff of diffsMerged.dataClasses">
+            <td
+              style="min-width: 18px; width: 18px"
+              [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}"
+            >
+            &nbsp;&nbsp;&nbsp;
+            </td>
+            <td style="text-align: left; word-wrap: break-word">
+              <strong style="font-style: italic">Data Classes:</strong>
+              <div>
+                <span style="border-bottom: 1px dashed #000">{{
+                  diff.label
+                }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
+      style="float: right"
+      style="text-align: center"
+    >
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+            <th style="cursor: pointer">Diffs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diff of diffsTarget.properties">
+            <td
+              style="min-width: 18px; width: 18px"
+              [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}"
+            >
+            &nbsp;<mat-checkbox (change)="onAcceptPress(diff,'target')" [(ngModel)]="diff.accept"></mat-checkbox>&nbsp;
+            </td>
+            <td style="text-align: left; word-wrap: break-word">
+              <strong style="font-style: italic">{{ diff.title }}:</strong>
+              <div>
+                <span style="border-bottom: 1px dashed #000">{{
+                  diff.right
+                }}</span>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let diff of diffsTarget.dataClasses">
+            <td
+              style="min-width: 18px; width: 18px"
+              [ngClass]="{'comparisonRow':true, 'deleted':diff.deleted, 'modified':diff.modified, 'created':diff.created}"
+            >
+              &nbsp;<mat-checkbox (change)="onAcceptPress(diff,'target')" [(ngModel)]="diff.accept"></mat-checkbox>&nbsp;
+            </td>
+            <td style="text-align: left; word-wrap: break-word">
+              <strong style="font-style: italic">Data Classes:</strong>
+              <div>
+                <span style="border-bottom: 1px dashed #000">{{
+                  diff.label
+                }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <div style="width: 100%">
+        <div *ngIf="diffs?.metadata && diffs?.metadata?.length > 0">
+          <mdm-metadata-compare
+            [diffColumnWidth]="35"
+            [diffs]="diffs.metadata"
+          ></mdm-metadata-compare>
+        </div>
+      </div> -->
+    </div>
   </div>
 </div>

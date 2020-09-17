@@ -33,6 +33,7 @@ import { InputModalComponent } from './input-modal/input-modal.component';
 import { NewFolderModalComponent } from './new-folder-modal/new-folder-modal.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FinaliseModalComponent } from './finalise-modal/finalise-modal.component';
+import { CheckInModalComponent } from './check-in-modal/check-in-modal.component';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { FinaliseModalComponent } from './finalise-modal/finalise-modal.componen
     ConfirmationModalComponent,
     InputModalComponent,
     NewFolderModalComponent,
-    FinaliseModalComponent
+    FinaliseModalComponent,
+    CheckInModalComponent
   ],
   providers: [
     ModalService

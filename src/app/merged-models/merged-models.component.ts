@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'mdm-merged-models',
@@ -24,11 +24,16 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class MergedModelsComponent implements OnInit {
 
+  @Output() onNodeClickedEvent = new EventEmitter<any>(); 
+
   @Input() mergedModel:any;
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  onNodeClick = node => { }
+  onNodeClick = (node, tree) => {
+    this.onNodeClickedEvent.emit([node,tree])
+  }
+
 }

@@ -26,7 +26,7 @@
     "@angular/router": "^9.1.7",
     "@ctrl/ngx-codemirror": "^4.0.0",
     "@fortawesome/fontawesome-free": "^5.13.0",
-    "@maurodatamapper/mdm-resources": "github:MauroDataMapper/mdm-resources#4.1.15-SNAPSHOT",
+    "@maurodatamapper/mdm-resources": "github:MauroDataMapper/mdm-resources#4.1.16-SNAPSHOT",
     "@uirouter/angular": "^6.0.1",
     "@uirouter/core": "^6.0.5",
     "@uirouter/rx": "^0.6.5",

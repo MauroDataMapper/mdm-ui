@@ -390,30 +390,30 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
   finalise() {
     const promise = new Promise(() => {
-
-      const dialog = this.dialog.open(FinaliseModalComponent, {
-          data: {
-            title: 'Finalise Code Set',
-            okBtnTitle: 'Finalise Code Set',
-            btnType: 'accent',
-            message: `<p class='marginless'>Please select the version you would like this Code Set</p>
-                      <p>to be finalised with: </p>`
-          }
+      this.resourcesService.codeSet.latestModelVersion(this.result.id).subscribe(response => {
+        const dialog = this.dialog.open(FinaliseModalComponent, {
+            data: {
+              title: 'Finalise Code Set',
+              modelVersion: response.body.modelVersion,
+              okBtnTitle: 'Finalise Code Set',
+              btnType: 'accent',
+              message: `<p class='marginless'>Please select the version you would like this Code Set</p>
+                        <p>to be finalised with: </p>`
+            }
         });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return promise;
-        }
-        this.processing = true;
-        const data = {};
-        if (result.data.versionList !== 'Custom') {
-          data['versionChangeType'] = result.data.versionList;
-        } else {
-          data['version'] = result.data.versionNumber;
-        }
-
-        this.resourcesService.codeSet.finalise(this.result.id, data).subscribe(() => {
+        dialog.afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return promise;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
+          this.resourcesService.codeSet.finalise(this.result.id, data).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
@@ -421,7 +421,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
             this.processing = false;
             this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
           });
-
+        });
       });
     });
     return promise;

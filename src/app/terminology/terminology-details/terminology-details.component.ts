@@ -269,33 +269,36 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   finalise = () => {
-    this.dialog.open(FinaliseModalComponent, {
-        data: {
-          title: 'Finalise Terminology',
-          okBtnTitle: 'Finalise Terminology',
-          btnType: 'accent',
-          message: `<p class='marginless'>Please select the version you would like this Data Model</p>
-                    <p>to be finalised with: </p>`
-        }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
-        }
-        this.processing = true;
-        const data = {};
-        if (result.data.versionList !== 'Custom') {
-          data['versionChangeType'] = result.data.versionList;
-        } else {
-          data['version'] = result.data.versionNumber;
-        }
+    this.resources.terminology.latestModelVersion(this.mcTerminology.id).subscribe(response => {
+      this.dialog.open(FinaliseModalComponent, {
+          data: {
+            title: 'Finalise Terminology',
+            modelVersion: response.body.modelVersion,
+            okBtnTitle: 'Finalise Terminology',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+                      <p>to be finalised with: </p>`
+          }
+        }).afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
 
-        this.resources.terminology.finalise(this.mcTerminology.id, data).subscribe(() => {
-            this.processing = false;
-            this.messageHandler.showSuccess('Terminology finalised successfully.');
-            this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
-          }, error => {
-            this.processing = false;
-            this.messageHandler.showError('There was a problem finalising the Terminology.', error);
+          this.resources.terminology.finalise(this.mcTerminology.id, data).subscribe(() => {
+              this.processing = false;
+              this.messageHandler.showSuccess('Terminology finalised successfully.');
+              this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
+            }, error => {
+              this.processing = false;
+              this.messageHandler.showError('There was a problem finalising the Terminology.', error);
+          });
         });
       });
   };

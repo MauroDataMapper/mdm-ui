@@ -402,35 +402,37 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   finalise() {
     const promise = new Promise(() => {
-      const dialog = this.dialog.open(FinaliseModalComponent, {
-        data: {
-          title: 'Finalise Data Model',
-          okBtnTitle: 'Finalise Data Model',
-          btnType: 'accent',
-          message: `<p class='marginless'>Please select the version you would like this Data Model</p>
-                    <p>to be finalised with: </p>`
-        }
-      });
+      this.resourcesService.dataModel.latestModelVersion(this.result.id).subscribe(response => {
+        const dialog = this.dialog.open(FinaliseModalComponent, {
+          data: {
+            modelVersion: response.body.modelVersion,
+            title: 'Finalise Data Model',
+            okBtnTitle: 'Finalise Data Model',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+                      <p>to be finalised with: </p>`
+          }
+        });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return promise;
-        }
-        this.processing = true;
-        const data = {};
-        if (result.data.versionList !== 'Custom') {
-          data['versionChangeType'] = result.data.versionList;
-        } else {
-          data['version'] = result.data.versionNumber;
-        }
-
-        this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
-          this.processing = false;
-          this.messageHandler.showSuccess('Data Model finalised successfully.');
-          this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });
-        }, error => {
-          this.processing = false;
-          this.messageHandler.showError('There was a problem finalising the Data Model.', error);
+        dialog.afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return promise;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
+          this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
+            this.processing = false;
+            this.messageHandler.showSuccess('Data Model finalised successfully.');
+            this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });
+          }, error => {
+            this.processing = false;
+            this.messageHandler.showError('There was a problem finalising the Data Model.', error);
+          });
         });
       });
     });

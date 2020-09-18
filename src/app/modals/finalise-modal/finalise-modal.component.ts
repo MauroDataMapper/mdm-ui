@@ -36,6 +36,10 @@ export class FinaliseModalComponent implements OnInit {
   defaultVersion = 'Major';
   showCustomVersion = false;
   version = '';
+  versionMajor = '';
+  versionMinor = '';
+  versionPatch = '';
+  currentVersion = '0.0.0';
 
   constructor(private dialogRef: MatDialogRef<FinaliseModalComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -50,8 +54,22 @@ export class FinaliseModalComponent implements OnInit {
     this.message = this.data.message;
     this.password = '';
     this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
-    this.data.versionList = this.defaultVersion;
     this.changeRef.detectChanges();
+
+    this.currentVersion = this.data.modelVersion;
+    const nameSplit = this.currentVersion.split('.');
+    if (nameSplit.length === 3) {
+      this.data.versionList = this.defaultVersion;
+      this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0]) + 1}</strong>.${nameSplit[1]}.0`;
+      this.versionMinor = `The 'Minor' option will finalise the model with version ${parseInt(nameSplit[0])}.<strong>${parseInt(nameSplit[1]) + 1}</strong>.0`;
+      this.versionPatch = `The 'Patch' option will finalise the model with version ${parseInt(nameSplit[0])}.${parseInt(nameSplit[1])}.<strong>${parseInt(nameSplit[2]) + 1}</strong>`;
+    } else {
+      this.data.versionList = 'Custom';
+      this.showCustomVersion = true;
+      this.versionMajor = `Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i> <strong>  2</strong>.0.0`;
+      this.versionMinor = `Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.<strong>1</strong>.0`;
+      this.versionPatch = `Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.0.<strong>1</strong>`;
+    }
   }
 
   onVersionChange() {

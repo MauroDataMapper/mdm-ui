@@ -60,7 +60,7 @@ export class FinaliseModalComponent implements OnInit {
     const nameSplit = this.currentVersion.split('.');
     if (nameSplit.length === 3) {
       this.data.versionList = this.defaultVersion;
-      this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0]) + 1}</strong>.${nameSplit[1]}.0`;
+      this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0]) + 1}</strong>.0.0`;
       this.versionMinor = `The 'Minor' option will finalise the model with version ${parseInt(nameSplit[0])}.<strong>${parseInt(nameSplit[1]) + 1}</strong>.0`;
       this.versionPatch = `The 'Patch' option will finalise the model with version ${parseInt(nameSplit[0])}.${parseInt(nameSplit[1])}.<strong>${parseInt(nameSplit[2]) + 1}</strong>`;
     } else {

@@ -323,7 +323,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };
-        return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.modelId, dc.dataClass, dc.id, null).toPromise();
+        return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.model, dc.dataClass, dc.id, null).toPromise();
       }).catch(error => {
         this.failCount++;
         const errorText = this.messageHandler.getErrorText(error);

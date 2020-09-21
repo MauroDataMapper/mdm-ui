@@ -57,11 +57,11 @@ SPDX-License-Identifier: Apache-2.0
                                         <i class="fas fa-download"></i>
                                     </button>
 
-                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="importMenu" matTooltip="Import a DataModel from JSON, SQL,..." aria-label="Import a data model">
+                                    <button type="button" mat-stroked-button *ngIf="isLoggedIn()" (click)="changeState('import')" matTooltip="Import a DataModel from JSON, SQL,..." aria-label="Import a data model">
                                         <i class="fas fa-upload"></i>
                                     </button>
 
-                                    <mat-menu #importMenu="matMenu" class="filterMenu">
+                                    <!-- <mat-menu #importMenu="matMenu" class="filterMenu">
                                       <button mat-menu-item *ngIf="isLoggedIn()">
                                         <i class="fas fa-book"></i> Import Terminologies
                                       </button>
@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0
                                       <button mat-menu-item *ngIf="isLoggedIn()">
                                         <i class="fas fa-code"></i> Import Reference Data Models
                                       </button>
-                                    </mat-menu>
+                                    </mat-menu> -->
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">
                                         <i class="fas fa-folder-plus"></i>

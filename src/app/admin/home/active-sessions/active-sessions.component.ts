@@ -40,13 +40,17 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   displayedColumns: string[];
+  displayedColumnsUnauthorised: string[];
   records: any[] = [];
+  unauthorised: any[] = [];
+  unauthorisedCount = 0;
   totalItemCount = 0;
   hideFilters = true;
   dataSource = new MatTableDataSource<any>();
 
   constructor(private messageHandler: MessageHandlerService, private resourcesService: MdmResourcesService) {
     this.displayedColumns = ['userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
+    this.displayedColumnsUnauthorised = ['userEmailAddress', 'userName', 'userOrganisation', 'start', 'lastAccess'];
   }
 
   ngOnInit() {
@@ -71,9 +75,16 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
       for (const [key, value] of Object.entries(resp.body.items)) {
         resp.body.items[key].creationDateTime = new Date(resp.body.items[key].creationDateTime);
         resp.body.items[key].lastAccessedDateTime = new Date(resp.body.items[key].lastAccessedDateTime);
-        this.records.push(resp.body.items[key]);
+        if (resp.body.countAuthorised > 0) {
+          this.records.push(resp.body.items[key]);
+        }
+
+        if (resp.body.countUnauthorised > 0) {
+          this.unauthorised.push(resp.body.items[key]);
+        }
       }
-      this.totalItemCount = this.records.length;
+      this.totalItemCount = resp.body.countAuthorised;
+      this.unauthorisedCount = resp.body.countUnauthorised;
       this.dataSource.data = this.records;
     }, err => {
       this.messageHandler.showError('There was a problem loading the active sessions.', err);

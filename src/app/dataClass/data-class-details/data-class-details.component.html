@@ -133,8 +133,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td colspan="2" style="text-align: right;">
                         <div *ngIf="result" style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showDelete" style="float: right">
-                              <div style="float: right;" [hidden]="editableForm.visible">
+                            <div *ngIf="showDelete" style="float: right" [hidden]="editableForm.visible">
                                 <button mat-stroked-button
                                         color="warn"
                                         type="button"
@@ -144,10 +143,9 @@ SPDX-License-Identifier: Apache-2.0
                                         (click)="askForPermanentDelete()">
                                         <i class="far fa-trash-alt warning"></i>
                                 </button>
-                              </div>
                             </div>
                             <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                                <button mat-stroked-button color="primary" type="button" [disabled]="deleteInProgress" matTooltip="Edit" aria-label="Edit" (click)="showForm();">
+                                <button mat-stroked-button color="primary" type="button" matTooltip="Edit" aria-label="Edit" (click)="showForm();">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
                             </div>

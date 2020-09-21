@@ -235,14 +235,14 @@ export class SecurityHandlerService {
       showEdit: element.availableActions.includes('update'),
       showEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showFinalise: element.availableActions.includes('finalise'),
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update'),
     };
   }
 
@@ -251,7 +251,7 @@ export class SecurityHandlerService {
       showEdit: element.availableActions.includes('update') && !element.finalised,
       showEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.availableActions.includes('update') && element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showFinalise: element.availableActions.includes('finalise'),
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
@@ -273,7 +273,7 @@ export class SecurityHandlerService {
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink: element.availableActions.includes('update')
     };
   }
 
@@ -286,7 +286,7 @@ export class SecurityHandlerService {
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink: element.availableActions.includes('update')
     };
   }
 
@@ -300,20 +300,20 @@ export class SecurityHandlerService {
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update'),
     };
   }
 
   datFlowAccess(dataFlow) {
     return {
       showEdit: dataFlow.availableActions.includes('update'),
-      canAddAnnotation: dataFlow.availableActions.includes('update'),
+      canAddAnnotation: dataFlow.availableActions.includes('comment'),
       canAddMetadata: dataFlow.availableActions.includes('update')
     };
   }
 
   elementAccess(element) {
-    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet') {
+    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceData') {
       return this.dataModelAccess(element);
     }
 

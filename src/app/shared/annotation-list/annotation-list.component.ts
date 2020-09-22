@@ -57,14 +57,15 @@ export class AnnotationListComponent implements AfterViewInit {
   }
 
   reloadEvent = new EventEmitter<string>();
-
   records: any[];
+  canAddAnnotation = false;
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     this.access = this.securityHandler.elementAccess(this.parent);
+    this.canAddAnnotation = this.access.canAddAnnotation;
     this.changeRef.detectChanges();
     this.currentUser = this.securityHandler.getCurrentUser();
 

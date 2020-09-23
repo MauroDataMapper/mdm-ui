@@ -112,7 +112,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
   }
 
   DataModelPermissions(id: any) {
-    this.resourcesService.security.permissions(DOMAIN_TYPE.DataModel, id).subscribe((permissions: { body: { [x: string]: any } }) => {
+    this.resourcesService.security.permissions('dataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach(attrname => {
         this.dataModel[attrname] = permissions.body[attrname];
       });

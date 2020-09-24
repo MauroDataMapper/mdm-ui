@@ -113,6 +113,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         prevRec = this.displayItems[nextIndex];
         if (prevRec && prevRec.isCategoryRow) {
           newCategory = prevRec.category;
+          break;
         }
       }
     }
@@ -191,6 +192,9 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       (result[currentValue[key]] = result[currentValue[key]] || []).push(
         currentValue
       );
+      //Order by index
+      result[currentValue[key]].sort((x,y) => x.index - y.index)
+
       // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
       return result;
     }, {}); // empty object is the initial value for result object
@@ -217,6 +221,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     let categoryNames = [];
     let categories = [];
     categories = this.groupBy(this.allRecords, 'category');
+
 
     let hasEmptyCategory = false;
 
@@ -263,6 +268,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     const start = this.pageSize * this.currentPage;
     let e = 0;
     let skippedCategories = 0;
+
+  
     for (let i = 0; i < allRecordsWithGroups.length; i++) {
       if (i < start + skippedCategories) {
         if (allRecordsWithGroups[i].isCategoryRow) {

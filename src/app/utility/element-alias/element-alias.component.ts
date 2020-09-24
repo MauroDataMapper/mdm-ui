@@ -25,6 +25,7 @@ import { DataClassResult } from '@mdm/model/dataClassModel';
 })
 export class ElementAliasComponent implements OnInit {
   @Input() aliases: any[] = [];
+  @Input() readOnly = true;
   @Input() editableForm: any;
   @Input() property: string;
   @Input() element: DataClassResult;

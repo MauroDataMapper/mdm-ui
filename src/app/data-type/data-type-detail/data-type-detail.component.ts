@@ -50,6 +50,9 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
 
   showDelete: boolean;
   showEdit: boolean;
+  canEditDescription = true;
+  showEditDescription = false;
+
   constructor(
     private dialog: MatDialog,
     private sharedService: SharedService,
@@ -125,6 +128,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+      this.canEditDescription = access.canEditDescription;
     }
   }
 
@@ -134,14 +138,25 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       aliases.push(alias);
     });
 
-    const resource = {
-      id: this.mcDataTypeObject.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description,
-      aliases,
-      domainType: this.mcDataTypeObject.domainType,
-      classifiers: this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }))
-    };
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.mcDataTypeObject.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        aliases,
+        domainType: this.mcDataTypeObject.domainType,
+        classifiers: this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }))
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.mcDataTypeObject.id,
+        description: this.editableForm.description || ''
+      };
+    }
+
     this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res) => {
       const result = res.body;
       if (this.afterSave) {
@@ -163,12 +178,18 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
 
   openEditClicked = formName => {
     if (this.openEditForm) {
+      this.showEditDescription = false;
       this.openEditForm(formName);
     }
   };
+  showForm() {
+    this.showEditDescription = false;
+    this.editableForm.show();
+  }
 
   onCancelEdit = () => {
     this.mcDataTypeObject.editAliases = Object.assign([], this.mcDataTypeObject.aliases);
+    this.showEditDescription = false;
     this.changeRef.detectChanges();
   };
 
@@ -221,4 +242,9 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       });
     });
   };
+
+  showDescription = () => {
+    this.showEditDescription = true;
+    this.editableForm.show();
+  }
 }

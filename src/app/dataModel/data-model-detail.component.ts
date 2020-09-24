@@ -86,6 +86,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   download: any;
   downloadLink: any;
   urlText: any;
+  canEditDescription = true;
+  showEditDescription = false;
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
@@ -171,8 +173,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.editForm.forEach(x => x.edit({
           editing: true,
           focus: x._name === 'moduleName' ? true : false
-        })
-        );
+        }));
         this.showForm();
       }
     });
@@ -229,6 +230,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       this.showNewVersion = access.showNewVersion;
       this.showSoftDelete = access.showSoftDelete;
       this.showPermDelete = access.showPermanentDelete;
+      this.canEditDescription = access.canEditDescription;
     }
     this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
   }
@@ -345,20 +347,30 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-    const resource = {
-      id: this.result.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description,
-      author: this.editableForm.author,
-      organisation: this.editableForm.organisation,
-      type: this.result.type,
-      domainType: this.result.domainType,
-      aliases,
-      classifiers
-    };
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.result.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.result.type,
+        domainType: this.result.domainType,
+        aliases,
+        classifiers
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.result.id,
+        description: this.editableForm.description || ''
+      };
+    }
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.dataModel.update(resource.id, resource).subscribe(result => {
+      this.resourcesService.dataModel.update(this.result.id, resource).subscribe(result => {
         if (this.afterSave) {
           this.afterSave(result);
         }
@@ -382,12 +394,14 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showForm() {
+    this.showEditDescription = false;
     this.editableForm.show();
   }
 
   onCancelEdit() {
     this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   loadHelp() {
@@ -499,5 +513,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       this.editableForm.validationError = false;
       this.errorMessage = '';
     }
+  }
+
+  showDescription = () => {
+    this.showEditDescription = true;
+    this.editableForm.show();
   }
 }

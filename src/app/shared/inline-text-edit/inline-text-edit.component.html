@@ -15,5 +15,5 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<span *ngIf="!inEditMode" [ngClass]="styleCss">{{val}}</span>
-<span *ngIf="inEditMode"><input type="text" [(ngModel)]="ngValue" [name]="name" class="outlined-input form-control" [ngClass]="styleCss"/></span>
+<span *ngIf="!inEditMode || readOnly" [ngClass]="styleCss">{{val}}</span>
+<span *ngIf="inEditMode && !readOnly"><input type="text" [(ngModel)]="ngValue" [name]="name" class="outlined-input form-control" [ngClass]="styleCss"/></span>

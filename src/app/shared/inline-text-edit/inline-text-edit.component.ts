@@ -34,6 +34,7 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Output() editableFormChanged = new EventEmitter<any>();
 
   @Input() inEditMode: boolean;
+  @Input() readOnly = true;
   @Input() isRequired: boolean;
   @Input() styleCss: any;
   @Input() name: any;

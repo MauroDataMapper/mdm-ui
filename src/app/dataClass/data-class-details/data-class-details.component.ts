@@ -72,6 +72,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   max: any;
   min: any;
   exportError: any;
+  canEditDescription = true;
+  showEditDescription = false;
 
   constructor(
     private messageService: MessageService,
@@ -216,6 +218,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+      this.canEditDescription = access.canEditDescription;
     }
   }
 
@@ -307,15 +310,26 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.max = -1;
         }
       }
-      const resource = {
-        id: this.result.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description,
-        aliases,
-        classifiers,
-        minMultiplicity: parseInt(this.min, 10),
-        maxMultiplicity: parseInt(this.max, 10)
-      };
+      let resource = {};
+      if (!this.showEditDescription) {
+        resource = {
+          id: this.result.id,
+          label: this.editableForm.label,
+          description: this.editableForm.description,
+          aliases,
+          classifiers,
+          minMultiplicity: parseInt(this.min, 10),
+          maxMultiplicity: parseInt(this.max, 10)
+        };
+      }
+
+      if (this.showEditDescription) {
+        resource = {
+          id: this.result.id,
+          description: this.editableForm.description || ''
+        };
+      }
+
       if (!this.result.parentDataClass) {
         this.resourcesService.dataClass.update(this.result.parentDataModel, this.result.id, resource).subscribe(result => {
           if (this.afterSave) {
@@ -376,6 +390,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   showForm() {
+    this.showEditDescription = false;
     this.editableForm.show();
   }
 
@@ -383,6 +398,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.errorMessage = '';
     this.error = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   onLabelChange(value: any) {
@@ -396,5 +412,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   isAdmin = () => {
     return this.securityHandler.isAdmin();
+  }
+
+  showDescription = () => {
+    this.showEditDescription = true;
+    this.editableForm.show();
   }
 }

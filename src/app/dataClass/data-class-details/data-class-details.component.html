@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
                     <h4 class="inline-block marginless">
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
+                        <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
                             [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
                     </h4>
                 </div>
@@ -56,7 +56,8 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <mdm-element-alias [inEditMode]="editableForm.visible"
+                        <mdm-element-alias [readOnly]='showEditDescription'
+                                           [inEditMode]="editableForm.visible"
                                            [aliases]="aliases"
                                            [element]="result"
                                            [editableForm]="editableForm"
@@ -81,22 +82,23 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Multiplicity</th>
                     <td class="dataClassDetailsModelPath">
-                        <div *ngIf="!editableForm.visible && result">
+                        <div *ngIf="(!editableForm.visible && result) || (editableForm.visible && showEditDescription)">
                             <mdm-multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity"></mdm-multiplicity>
                         </div>
-                        <div *ngIf="result">
-                            <small *ngIf="editableForm.visible" class="block">
-                                Please enter <strong>*</strong> for unbound multiplicity.
-                            </small>
+                        <div *ngIf="result && !showEditDescription">
                             <div style="float: left;">
                                 <div *ngIf="editableForm.visible">
-                                    Min
-                                    <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                  <div *ngIf="editableForm.visible" style="padding-left: 8px">Min</div>
+                                    <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                                          [inEditMode]="editableForm.visible"
                                                           [(ngModel)]="min"
                                                           [styleCss]="'dataModelDetailsLabel'"
                                                           name="moduleNameMinText" size="20"
                                                           size="5">
                                     </mdm-inline-text-edit>
+                                    <small class="block">
+                                      Use numbers only
+                                    </small>
                                 </div>
                                 <span *ngIf="!editableForm.visible && (result.minMultiplicity && result.minMultiplicity == 0)">..</span>
                                 <span *ngIf="editableForm.visible" style="padding-right: 10px"></span>
@@ -105,12 +107,15 @@ SPDX-License-Identifier: Apache-2.0
                             <div style="float: left;margin-right: 13px;">
                                 <div *ngIf="editableForm.visible" style="padding-left: 6px">
                                     Max
-                                    <mdm-inline-text-edit [inEditMode]="editableForm.visible"
+                                    <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                                          [inEditMode]="editableForm.visible"
                                                           [(ngModel)]="max"
                                                           [styleCss]="'dataModelDetailsLabel'"
-                                                          name="moduleNameMaxText" size="20"
-                                                          size="5">
+                                                          name="moduleNameMaxText">
                                     </mdm-inline-text-edit>
+                                    <small class="block">
+                                      User numbers or <strong>*</strong> for unbound multiplicity
+                                    </small>
                                 </div>
                             </div>
                             <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
@@ -122,7 +127,8 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <mdm-element-classifications [classifications]="result.classifiers"
+                        <mdm-element-classifications [readOnly]='showEditDescription'
+                                                     [classifications]="result.classifiers"
                                                      [editableForm]="editableForm"
                                                      [element]="result"
                                                      [property]="'classifiers'">
@@ -137,17 +143,33 @@ SPDX-License-Identifier: Apache-2.0
                                 <button mat-stroked-button
                                         color="warn"
                                         type="button"
-                                        matTooltip="Delete"
-                                        aria-label="Delete"
+                                        matTooltip="Delete Data Class"
+                                        aria-label="Delete Data Class"
                                         class="paddingless"
                                         (click)="askForPermanentDelete()">
                                         <i class="far fa-trash-alt warning"></i>
                                 </button>
                             </div>
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                                <button mat-stroked-button color="primary" type="button" matTooltip="Edit" aria-label="Edit" (click)="showForm();">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
+                            <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                              <button mat-stroked-button
+                                      color="primary"
+                                      type="button"
+                                      class="paddingless dropdown-toggle warning"
+                                      matTooltip="Edit Data Class"
+                                      aria-label="Edit Data Class"
+                                      [matMenuTriggerFor]="editMenu"
+                                      [hidden]="editableForm.visible">
+                                  <i class="fas fa-pencil-alt"></i>
+                              </button>
+
+                              <mat-menu #editMenu>
+                                  <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                      Edit Data Class details
+                                  </button>
+                                  <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                                      Edit Description only
+                                  </button>
+                              </mat-menu>
                             </div>
                             <mdm-editable-form-buttons [hidden]="!editableForm.visible"
                                                        [onCancelEdit]="onCancelEdit"

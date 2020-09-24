@@ -233,7 +233,7 @@ export class SecurityHandlerService {
   dataModelAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.finalised,
       showFinalise: element.availableActions.includes('finalise'),
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
@@ -249,7 +249,7 @@ export class SecurityHandlerService {
   termAccess(element) {
     return {
       showEdit: element.availableActions.includes('update') && !element.finalised,
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.availableActions.includes('update') && element.finalised,
       showFinalise: element.availableActions.includes('finalise'),
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
@@ -266,7 +266,7 @@ export class SecurityHandlerService {
   dataElementAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
@@ -280,7 +280,7 @@ export class SecurityHandlerService {
   dataClassAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
@@ -293,7 +293,7 @@ export class SecurityHandlerService {
   dataTypeAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),

@@ -31,6 +31,7 @@ import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor }
 export class ElementClassificationsComponent implements OnInit {
 
   @Input() editableForm: any;
+  @Input() readOnly = true;
 
   classificationsVal: any[];
   @Output() classificationsChanged = new EventEmitter<any[]>();

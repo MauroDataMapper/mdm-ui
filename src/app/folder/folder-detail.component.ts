@@ -67,7 +67,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEditMode = false;
   processing: boolean;
 
-
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 

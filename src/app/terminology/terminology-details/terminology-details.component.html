@@ -87,8 +87,7 @@ SPDX-License-Identifier: Apache-2.0
                   <tr>
                       <td class="detailsRowHeader">Aliases</td>
                       <td>
-                          <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="editableForm?.aliases">
-                          </mdm-element-alias>
+                          <mdm-element-alias [readOnly]="true" [inEditMode]="editableForm.visible" [aliases]="editableForm?.aliases"></mdm-element-alias>
                       </td>
                   </tr>
                   <tr>
@@ -111,7 +110,7 @@ SPDX-License-Identifier: Apache-2.0
                   <tr>
                       <td class="detailsRowHeader">Classifications</td>
                       <td>
-                          <mdm-element-classifications [classifications]="mcTerminology.classifiers"
+                          <mdm-element-classifications [readOnly]='true' [classifications]="mcTerminology.classifiers"
                                                         [editableForm]="editableForm">
                           </mdm-element-classifications>
                       </td>

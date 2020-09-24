@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
                         <span class="dataModelTypeIcon">
                             <i matTooltip="Folder" class="fas fa-folder"></i>
                         </span>
-                        <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
+                        <mdm-inline-text-edit [readOnly]="false" [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
                     </h4>
                     <span class="inline-block">
                         <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
@@ -68,8 +68,8 @@ SPDX-License-Identifier: Apache-2.0
                             <button mat-stroked-button
                                     color="warn"
                                     type="button"
-                                    matTooltip="Delete"
-                                    aria-label="Delete"
+                                    matTooltip="Delete Folder"
+                                    aria-label="Delete Folder"
                                     class="paddingless dropdown-toggle"
                                     [disabled]="deleteInProgress || exporting"
                                     [matMenuTriggerFor]="menu">
@@ -92,8 +92,8 @@ SPDX-License-Identifier: Apache-2.0
                                         color="primary"
                                         type="button"
                                         [disabled]="deleteInProgress || exporting || result.finalised"
-                                        matTooltip="Edit"
-                                        aria-label="Edit"
+                                        matTooltip="Edit Folder"
+                                        aria-label="Edit Folder"
                                         (click)="showForm();">
                                         <i class="fas fa-pencil-alt"></i>
                                 </button>

@@ -31,8 +31,12 @@ SPDX-License-Identifier: Apache-2.0
                         <span class="dataModelTypeIcon" *ngIf="result?.type === 'Data Asset'">
                             <i matTooltip="Data Asset" class="fas fa-database"></i>
                         </span>
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
-                            [name]="'moduleName'" size="20" [styleCss]="'dataModelDetailsLabel'">
+                        <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                              [inEditMode]="editableForm.visible"
+                                              [(ngModel)]="editableForm.label"
+                                              [name]="'moduleName'"
+                                              size="20"
+                                              [styleCss]="'dataModelDetailsLabel'">
                         </mdm-inline-text-edit>
                     </h4>
                     <span class="inline-block" *ngIf="result?.deleted">
@@ -100,7 +104,8 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
-                        <mdm-element-alias [inEditMode]="editableForm.visible"
+                        <mdm-element-alias [readOnly]='showEditDescription'
+                                           [inEditMode]="editableForm.visible"
                                            [aliases]="result?.aliases"
                                            [editableForm]="editableForm"
                                            [property]="'aliases'"></mdm-element-alias>
@@ -109,24 +114,31 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Author</td>
                     <td *ngIf="result">
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.author"
-                            class="dataModelDetailsLabel" name="moduleNameAuthor"></mdm-inline-text-edit>
+
+                        <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                              [inEditMode]="editableForm.visible"
+                                              [(ngModel)]="editableForm.author"
+                                              class="dataModelDetailsLabel"
+                                              name="moduleNameAuthor"></mdm-inline-text-edit>
                     </td>
                 </tr>
                 <tr>
                     <td class="detailsRowHeader">Organisation</td>
                     <td *ngIf="result">
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible"
-                            [(ngModel)]="editableForm.organisation" class="dataModelDetailsLabel"
-                            name="moduleNameOrganisation" size="20"></mdm-inline-text-edit>
+                        <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                              [inEditMode]="editableForm.visible"
+                                              [(ngModel)]="editableForm.organisation" class="dataModelDetailsLabel"
+                                              name="moduleNameOrganisation"
+                                              size="20"></mdm-inline-text-edit>
                     </td>
                 </tr>
                 <tr>
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result"
-                                [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-markdown-text-area [editableForm]="editableForm"
+                                                    [element]="result"
+                                                    [property]="'description'"></mdm-markdown-text-area>
                         </div>
                     </td>
                 </tr>
@@ -139,9 +151,13 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="result">
-                        <mdm-element-classifications [classifications]="result.classifiers"
-                            [editableForm]="editableForm" [element]="result" [property]="'classifiers'">
+                        <mdm-element-classifications [readOnly]='showEditDescription'
+                                                     [classifications]="result.classifiers"
+                                                     [editableForm]="editableForm"
+                                                     [element]="result"
+                                                     [property]="'classifiers'">
                         </mdm-element-classifications>
+
                     </td>
                 </tr>
                 <tr>
@@ -150,8 +166,8 @@ SPDX-License-Identifier: Apache-2.0
                             <button mat-stroked-button
                                     type="button"
                                     color="warn"
-                                    matTooltip="Delete"
-                                    aria-label="Delete"
+                                    matTooltip="Delete Data Model"
+                                    aria-label="Delete Data Model"
                                     class="paddingless dropdown-toggle warning"
                                     [disabled]="deleteInProgress || exporting"
                                     [matMenuTriggerFor]="menu">
@@ -169,18 +185,28 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <div style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
+                            <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
                                 <button mat-stroked-button
                                         color="primary"
                                         type="button"
-                                        class="paddingless"
-                                        [disabled]="deleteInProgress || exporting || result.finalised"
-                                        matTooltip="Edit"
-                                        aria-label="Edit"
-                                        (click)="showForm();">
+                                        class="paddingless dropdown-toggle warning"
+                                        [disabled]="deleteInProgress || exporting"
+                                        matTooltip="Edit Data Model"
+                                        aria-label="Edit Data Model"
+                                        [matMenuTriggerFor]="editMenu">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
+
+                                <mat-menu #editMenu>
+                                    <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                        Edit Data Model details
+                                    </button>
+                                    <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                                        Edit Description only
+                                    </button>
+                                </mat-menu>
                             </div>
+
                             <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
                                 [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
                                 [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>

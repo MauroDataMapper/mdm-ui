@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <div style="padding: 0px 0px 10px 10px;" *ngIf="model.dataType">
             <h4 class="marginless">Classifications</h4>
-            <mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
+            <mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}"></mdm-element-classifications>
         </div>
     </form>
 

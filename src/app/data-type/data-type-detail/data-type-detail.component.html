@@ -19,7 +19,11 @@ SPDX-License-Identifier: Apache-2.0
     <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
         <div class="panel-body">
             <h4 class="marginless">
-                <mdm-inline-text-edit [(ngModel)]="editableForm.label" name="labelName" [inEditMode]="editableForm.visible" [styleCss]="'dataTypeDetailsLabel'"></mdm-inline-text-edit>
+                <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                      [(ngModel)]="editableForm.label"
+                                      name="labelName"
+                                      [inEditMode]="editableForm.visible"
+                                      [styleCss]="'dataTypeDetailsLabel'"></mdm-inline-text-edit>
             </h4>
             <div class="detail-icons">
                 <div class="text-muted">
@@ -42,10 +46,10 @@ SPDX-License-Identifier: Apache-2.0
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div *ngIf="!editableForm.visible" style="max-width: 100%;">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                            <mdm-element-alias [readOnly]='showEditDescription' [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                         <div *ngIf="editableForm.visible" style="max-width: 50%;">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
+                            <mdm-element-alias [readOnly]='showEditDescription' [inEditMode]="editableForm.visible" [aliases]="mcDataTypeObject?.aliases" [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                     </td>
                 </tr>
@@ -75,7 +79,9 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Classifications</th>
                     <td>
-                        <mdm-element-classifications [classifications]="mcDataTypeObject.classifiers" [editableForm]="editableForm"></mdm-element-classifications>
+                        <mdm-element-classifications  [readOnly]='showEditDescription'
+                                                      [classifications]="mcDataTypeObject.classifiers"
+                                                      [editableForm]="editableForm"></mdm-element-classifications>
                     </td>
                 </tr>
 
@@ -91,31 +97,38 @@ SPDX-License-Identifier: Apache-2.0
                                       [textLocation]="'left'">
                               </mdm-editable-form-buttons>
                           </div>
-                          <div *ngIf="showDelete" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-right:4px; float: right">
+                          <div *ngIf="showDelete" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-right:4px; margin-left: 4px; float: right">
                               <button mat-stroked-button
                                       color="warn"
                                       type="button"
-                                      matTooltip="Delete"
-                                      aria-label="Delete"
+                                      matTooltip="Delete Data Type"
+                                      aria-label="Delete Data Type"
                                       class="paddingless"
                                       (click)="askToDelete()"
                                       *ngIf="!editableForm.visible && !editableForm.deletePending">
                                   <i class="far fa-trash-alt warning" aria-hidden="true"></i>
                               </button>
                           </div>
-                          <div style="float: right" *ngIf="!editableForm.visible && !editableForm.deletePending && showEdit">
-                              <div style="position: relative; margin-right:4px;">
-                                  <button mat-stroked-button
-                                          color="primary"
-                                          type="button"
-                                          matTooltip="Edit"
-                                          aria-label="Edit"
-                                          class="paddingless"
-                                          (click)="editableForm.show();"
-                                          [hidden]="editableForm.visible">
-                                      <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                                  </button>
-                              </div>
+                          <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
+                            <button mat-stroked-button
+                                    color="primary"
+                                    type="button"
+                                    class="paddingless dropdown-toggle warning"
+                                    matTooltip="Edit Data Type"
+                                    aria-label="Edit Data Type"
+                                    [matMenuTriggerFor]="editMenu"
+                                    [hidden]="editableForm.visible">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+
+                            <mat-menu #editMenu>
+                                <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                    Edit Data Type details
+                                </button>
+                                <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                                    Edit Description only
+                                </button>
+                            </mat-menu>
                           </div>
                         </div>
                     </td>

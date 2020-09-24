@@ -91,6 +91,10 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     referencedDataClass: '',
     referencedTerminology: ''
   };
+
+  canEditDescription = true;
+  showEditDescription = false;
+
   constructor(
     private messageService: MessageService,
     private resourcesService: MdmResourcesService,
@@ -199,51 +203,46 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
 
   DataElementDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-        this.result = serverResult;
-        this.editableForm.label = this.result.label;
-        this.editableForm.description = this.result.description;
-        if (this.result.classifiers) {
-          this.result.classifiers.forEach(item => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        this.aliases = [];
-        if (this.result.aliases) {
-          this.result.aliases.forEach(item => {
-            this.aliases.push(item);
-          });
-        }
+      this.result = serverResult;
+      this.editableForm.label = this.result.label;
+      this.editableForm.description = this.result.description;
+      if (this.result.classifiers) {
+        this.result.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+      this.aliases = [];
+      if (this.result.aliases) {
+        this.result.aliases.forEach(item => {
+          this.aliases.push(item);
+        });
+      }
 
-        if (
-          this.result.minMultiplicity &&
-          this.result.minMultiplicity === -1
-        ) {
-          this.min = '*';
-        } else {
-          this.min = this.result.minMultiplicity;
-        }
+      if (this.result.minMultiplicity && this.result.minMultiplicity === -1) {
+        this.min = '*';
+      } else {
+        this.min = this.result.minMultiplicity;
+      }
 
-        if (
-          this.result.maxMultiplicity &&
-          this.result.maxMultiplicity === -1
-        ) {
-          this.max = '*';
-        } else {
-          this.max = this.result.maxMultiplicity;
-        }
+      if (this.result.maxMultiplicity && this.result.maxMultiplicity === -1) {
+        this.max = '*';
+      } else {
+        this.max = this.result.maxMultiplicity;
+      }
 
-        if (this.result != null) {
-          this.hasResult = true;
-        }
-        this.title.setTitle(`Data Element - ${this.result?.label}`);
-        this.watchDataElementObject();
-      });
+      if (this.result != null) {
+        this.hasResult = true;
+      }
+      this.title.setTitle(`Data Element - ${this.result?.label}`);
+      this.watchDataElementObject();
+    });
   }
   watchDataElementObject() {
     const access: any = this.securityHandler.elementAccess(this.result);
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+      this.canEditDescription = access.canEditDescription;
     }
   }
 
@@ -344,18 +343,28 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       } else {
         dataType = this.newlyAddedDataType;
       }
-      const resource = {
-        id: this.result.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description,
-        domainType: this.result.domainType,
-        aliases,
-        dataType,
-        classifiers,
-        minMultiplicity: parseInt(this.min, 10),
-        maxMultiplicity: parseInt(this.max, 10)
-      };
-      this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).subscribe(result => {
+      let resource = {};
+      if (!this.showEditDescription) {
+        resource = {
+          id: this.result.id,
+          label: this.editableForm.label,
+          description: this.editableForm.description || '',
+          domainType: this.result.domainType,
+          aliases,
+          dataType,
+          classifiers,
+          minMultiplicity: parseInt(this.min, 10),
+          maxMultiplicity: parseInt(this.max, 10)
+        };
+      }
+
+      if (this.showEditDescription) {
+        resource = {
+          id: this.result.id,
+          description: this.editableForm.description || ''
+        };
+      }
+      this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(result => {
         if (this.afterSave) {
           this.afterSave(result);
         }
@@ -375,40 +384,27 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     if (!this.showNewInlineDataType) {
       return true;
     }
-    if (
-      !this.newlyAddedDataType.label ||
-      this.newlyAddedDataType.label.trim().length === 0
-    ) {
+    if (!this.newlyAddedDataType.label || this.newlyAddedDataType.label.trim().length === 0) {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
-    if (
-      this.newlyAddedDataType.domainType === 'EnumerationType' &&
-      this.newlyAddedDataType.enumerationValues.length === 0
-    ) {
+    if (this.newlyAddedDataType.domainType === 'EnumerationType' && this.newlyAddedDataType.enumerationValues.length === 0) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
-    if (
-      this.newlyAddedDataType.domainType === 'ReferenceType' &&
-      !this.newlyAddedDataType.referencedDataClass
-    ) {
+    if (this.newlyAddedDataType.domainType === 'ReferenceType' && !this.newlyAddedDataType.referencedDataClass) {
       isValid = false;
     }
 
     // Check if for TerminologyType, the terminology is selected
-    if (
-      this.newlyAddedDataType.domainType === 'TerminologyType' &&
-      !this.newlyAddedDataType.referencedTerminology
-    ) {
+    if (this.newlyAddedDataType.domainType === 'TerminologyType' && !this.newlyAddedDataType.referencedTerminology) {
       isValid = false;
     }
 
     this.isValid = isValid;
     if (!this.isValid) {
       this.dataTypeErrors = '';
-      this.dataTypeErrors =
-        'Please fill in all required values for the new Data Type';
+      this.dataTypeErrors = 'Please fill in all required values for the new Data Type';
       return false;
     } else {
       return true;
@@ -447,6 +443,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   showForm() {
+    this.showEditDescription = false;
     this.editableForm.show();
   }
 
@@ -454,6 +451,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     this.errorMessage = '';
     this.error = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   onLabelChange(value: any) {
@@ -470,5 +468,10 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
   isAdmin = () => {
     return this.securityHandler.isAdmin();
+  }
+
+  showDescription = () => {
+    this.showEditDescription = true;
+    this.editableForm.show();
   }
 }

@@ -49,7 +49,8 @@ SPDX-License-Identifier: Apache-2.0
             <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
         </mat-form-field>
     </div>
-    <mdm-element-classifications name="classifiers"
+    <mdm-element-classifications [readOnly]="false"
+                                 name="classifiers"
                                  (classificationsChanged)="model.classifiers = $event"
                                  [editableForm]="{visible :true}"
                                  class="mb-2"></mdm-element-classifications>

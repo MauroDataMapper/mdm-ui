@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
                     <td class="detailsRowHeader">Aliases</td>
                     <td>
                         <div style="width:50%" *ngIf="mcTerm">
-                            <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="mcTerm.aliases"
+                            <mdm-element-alias [readOnly]="true" [inEditMode]="editableForm.visible" [aliases]="mcTerm.aliases"
                                 [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
                         </div>
                     </td>
@@ -75,7 +75,7 @@ SPDX-License-Identifier: Apache-2.0
                         <span *ngIf="mcTerm.terminology">
                             <small><span *ngIf="!mcTerm.terminology.finalised" class="badge badge-warning ml-1">Draft</span></small>
                             <small><span *ngIf="mcTerm.terminology.finalised" class="badge badge-success ml-1">Finalised</span> </small>
-                            
+
                         </span>
                         <mdm-element-link [element]="mcTerm.terminology" [showLink]="true" [newWindow]="false"></mdm-element-link>
                     </td>
@@ -92,7 +92,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">URL</td>
                     <td *ngIf="mcTerm?.url">
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="mcTerm.url"
+                        <mdm-inline-text-edit [readOnly]="true" [inEditMode]="editableForm.visible" [(ngModel)]="mcTerm.url"
                             [name]="'moduleNameUrl'" size="20" [styleCss]="'dataModelDetailsLabel'">
                         </mdm-inline-text-edit>
                     </td>
@@ -102,7 +102,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <td class="detailsRowHeader">Classifications</td>
                     <td *ngIf="mcTerm?.classifiers">
-                        <mdm-element-classifications [classifications]="mcTerm.classifiers"
+                        <mdm-element-classifications [readOnly]='true' [classifications]="mcTerm.classifiers"
                             [editableForm]="editableForm" [element]="mcTerm" [property]="'classifiers'">
                         </mdm-element-classifications>
 

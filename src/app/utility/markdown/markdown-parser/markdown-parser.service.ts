@@ -18,6 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import marked from 'marked/lib/marked';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { BroadcastService } from '@mdm/services/broadcast.service';
 import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
 import { CustomHtmlRendererService } from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
 import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
@@ -30,10 +32,16 @@ export class MarkdownParserService {
   constructor(private elementTypes: ElementTypesService,
     private tokenizer: CustomTokenizerService,
     private customHtmlRendererService: CustomHtmlRendererService,
-    private customTextRendererService: CustomTextRendererService) {
+    private customTextRendererService: CustomTextRendererService,
+    private resourcesService: MdmResourcesService,
+    private broadcastSvc: BroadcastService) {
   }
 
   public parse(source, renderType) {
+
+    //Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
+    source = source.replace(/\s+(?=[^(\)]*\))/g, "^");
+
     let renderer: marked.Renderer = this.customHtmlRendererService;
     if (renderType === 'text') {
       renderer = this.customTextRendererService;
@@ -51,7 +59,7 @@ export class MarkdownParserService {
     }
   }
 
-  public createMarkdownLink(element) {
+  public async createMarkdownLink(element) {
     const baseTypes = this.elementTypes.getTypes();
 
     const dataTypeNames = this.elementTypes
@@ -60,23 +68,12 @@ export class MarkdownParserService {
         return dt.id;
       });
 
-    let str = `[${element.label}](MC|${baseTypes.find(x => x.id === element.domainType).markdown}|`;
-
-    if (element.domainType === 'Folder') {
-      str += element.id;
+    let parentId = null;
+    if (element.domainType === 'DataClass') {
+      parentId = element.modelId;
     }
-
-    if (element.domainType === 'Classifier') {
-      str += element.id;
-    }
-
-    if (element.domainType === 'DataModel') {
-      str += element.id;
-    }
-
-    let dataModelId = element.dataModel;
-    if (!dataModelId && element.breadcrumbs) {
-      dataModelId = element.breadcrumbs[0].id;
+    if (!parentId && element.breadcrumbs) {
+      parentId = element.breadcrumbs[0].id;
     }
 
     let parentDataClassId = null;
@@ -89,34 +86,77 @@ export class MarkdownParserService {
         element.breadcrumbs[element.breadcrumbs.length - 1].id;
     }
 
+    let str = '';
+    if (element.domainType === 'DataClass') {
+      const dataModelName = await this.getDataModelName(parentId);
+      const dataClassName = await this.getDataClassName(parentId, element.id);
+      str = `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${dataClassName}`;
+    }
+
+    if (element.domainType === 'Folder') {
+      const folderName = await this.getFolderName(element.id);
+      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${folderName}`;
+    }
+
+    if (element.domainType === 'DataModel') {
+      const dataModelName = await this.getDataModelName(element.id);
+      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${dataModelName}`;
+    }
+
     if (element.domainType === 'DataType' || dataTypeNames.indexOf(element.domainType) !== -1) {
-      str += `${dataModelId}|{element.id}`;
-    }
-
-    if (element.domainType === 'EnumerationValue') {
-      str += `${dataModelId}|${element.dataType}`;
-    }
-
-    if (element.domainType === 'DataClass' && !parentDataClassId) {
-      str += `${dataModelId}|${element.id}`;
-    }
-
-    if (element.domainType === 'DataClass' && parentDataClassId) {
-      str += `${dataModelId}|${parentDataClassId}|${element.id}`;
+      const dataModelName = await this.getDataModelName(parentId);
+      const dataTypeName = await this.getDataTypeName(parentId, element.id);
+      str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${dataTypeName}`;
     }
 
     if (element.domainType === 'DataElement') {
-      str += `${dataModelId}|${parentDataClassId}|${element.id}`;
-    }
-
-    if (element.domainType === 'Terminology') {
-      str += element.id;
+      const dataClassName = await this.getDataClassName(parentId, parentDataClassId);
+      const dataElementName = await this.getDataElementName(parentId, parentDataClassId, element.id);
+      str += `[${element.label}](dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${dataElementName}`;
     }
 
     if (element.domainType === 'Term') {
-      str += `${element.terminology}|${element.id}`;
+      const terminologyName = await this.getTerminologyName(parentId);
+      const termName = await this.getTermName(parentId, element.id);
+      str += `[${element.label}](te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${termName}`;
     }
+
     str += ')';
     return str;
+  }
+
+  private async getDataModelName(id: any) {
+    const response = await this.resourcesService.dataModel.get(id).toPromise();
+    return response.body.label;
+  }
+
+  private async getTerminologyName(id: any) {
+    const response = await this.resourcesService.terminology.get(id).toPromise();
+    return response.body.label;
+  }
+
+  private async getTermName(terminologyId: any, id: any) {
+    const response = await this.resourcesService.term.get(terminologyId, id).toPromise();
+    return response.body.label;
+  }
+
+  private async getFolderName(id: any) {
+    const response = await this.resourcesService.folder.get(id).toPromise();
+    return response.body.label;
+  }
+
+  private async getDataTypeName(dataModelId: any, id: any) {
+    const response = await this.resourcesService.dataType.get(dataModelId, id).toPromise();
+    return response.body.label;
+  }
+
+  private async getDataElementName(dataModelId: any, dataClassId: any, id: any) {
+    const response = await this.resourcesService.dataElement.get(dataModelId, dataClassId, id).toPromise();
+    return response.body.label;
+  }
+
+  private async getDataClassName(dataModelId: any, id: any) {
+    const response = await this.resourcesService.dataClass.get(dataModelId, id).toPromise();
+    return response.body.label;
   }
 }

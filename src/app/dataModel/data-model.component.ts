@@ -87,6 +87,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
     let arr = [];
     this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
       this.dataModel = result.body;
+
+      id = result.body.id;
+
       this.isEditable = this.dataModel['availableActions'].includes('update');
       this.parentId = this.dataModel.id;
 

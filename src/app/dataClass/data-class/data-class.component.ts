@@ -25,13 +25,14 @@ import { DataClassResult } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-class',
   templateUrl: './data-class.component.html',
   styleUrls: ['./data-class.component.sass']
 })
-export class DataClassComponent implements OnInit {
+export class DataClassComponent extends BaseComponent implements OnInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassResult;
   showSecuritySection: boolean;
@@ -54,11 +55,12 @@ export class DataClassComponent implements OnInit {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title
-  ) {}
+  ) {
+    super();
+  }
 
-  ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id || !this.stateService.params.dataModelId) {
+  async ngOnInit() {
+    if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
@@ -114,6 +116,11 @@ export class DataClassComponent implements OnInit {
   dataClassDetails(dataModelId: any, parentDataClassId, id) {
     this.resourcesService.dataClass.getChildDataClass(dataModelId, parentDataClassId, id).subscribe((result: { body: DataClassResult }) => {
         this.dataClass = result.body;
+
+        //Get the GUIDs, because we may have path instead of GUID
+        parentDataClassId = result.body.id;
+        dataModelId = result.body.model;
+
         this.dataClass.parentDataModel = dataModelId;
         this.dataClass.parentDataClass = parentDataClassId;
         this.parentDataModel = {

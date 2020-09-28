@@ -24,13 +24,14 @@ import { Subscription } from 'rxjs';
 import { SharedService } from '../services/shared.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-folder',
   templateUrl: './folder.component.html',
   styleUrls: ['./folder.component.css'],
 })
-export class FolderComponent implements OnInit, OnDestroy {
+export class FolderComponent extends BaseComponent implements OnInit, OnDestroy {
   result: FolderResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -47,11 +48,12 @@ export class FolderComponent implements OnInit, OnDestroy {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    if (this.isGuid(this.stateService.params.id) && !this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }

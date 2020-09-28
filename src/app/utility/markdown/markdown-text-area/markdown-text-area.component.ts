@@ -108,23 +108,22 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.messageService.elementSelector.subscribe(data => {
       this.selectedElement = data;
       if (this.selectedElement != null) {
-        const markdownLink = this.markdownParser.createMarkdownLink(
-          this.selectedElement
-        );
-        if (this.editableTextArea) {
-          const startPos = this.editableTextArea.nativeElement.selectionStart;
-          this.editableTextArea.nativeElement.focus();
+        this.markdownParser.createMarkdownLink(this.selectedElement).then(result => {
+          if (this.editableTextArea) {
+            const startPos = this.editableTextArea.nativeElement.selectionStart;
+            this.editableTextArea.nativeElement.focus();
 
-          this.editableTextArea.nativeElement.value = `${this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart)} ${markdownLink} ${this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length)}`;
+            this.editableTextArea.nativeElement.value = this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart) + ' ' + result + ' ' + this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length);
 
-          this.editableTextArea.nativeElement.selectionStart = startPos;
-          this.editableTextArea.nativeElement.focus();
-          if (this.editableForm) {
-            this.editableForm.description = this.editableTextArea.nativeElement.value;
-          } else {
-            this.description = this.editableTextArea.nativeElement.value;
+            this.editableTextArea.nativeElement.selectionStart = startPos;
+            this.editableTextArea.nativeElement.focus();
+            if (this.editableForm) {
+              this.editableForm.description = this.editableTextArea.nativeElement.value;
+            } else {
+              this.description = this.editableTextArea.nativeElement.value;
+            }
           }
-        }
+        });
       }
     });
   }

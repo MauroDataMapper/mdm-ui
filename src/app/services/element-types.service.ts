@@ -22,119 +22,119 @@ import { StateHandlerService } from './handlers/state-handler.service';
 export class ElementTypesService {
 
 
-  private semanticLinkTypes: any = {
-    Refines: { title: 'Refines', editable: true },
-    'Does Not Refine': { title: 'Does Not Refine', editable: true },
+    private semanticLinkTypes: any = {
+        Refines: { title: 'Refines', editable: true },
+        'Does Not Refine': { title: 'Does Not Refine', editable: true },
 
-    'Is From': { title: 'Is From', editable: false },
-    'Superseded By': { title: 'Superseded By', editable: false },
-    'New Version Of': { title: 'New Version Of', editable: false }
-  };
+        'Is From': { title: 'Is From', editable: false },
+        'Superseded By': { title: 'Superseded By', editable: false },
+        'New Version Of': { title: 'New Version Of', editable: false }
+    };
 
-  private allTypes: Type[] = [
-    { id: 'Folder', link: 'folder', title: 'Folder', markdown: 'FD', isBase: true },
-    { id: 'DataModel', link: 'dataModel', title: 'DataModel', markdown: 'DM', isBase: true, classifiable: true },
-    {
-      id: 'DataSet',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'Database',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'DataStandard',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'Form',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'Message',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'Report',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'Workflow',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'DM',
-      classifiable: true
-    },
-    {
-      id: 'DataClass',
-      link: 'dataClass',
-      title: 'DataClass',
-      markdown: 'DC',
-      baseTitle: 'DataClass',
-      isBase: true,
-      classifiable: true
-    },
-    {
-      id: 'DataElement',
-      link: 'dataElement',
-      title: 'DataElement',
-      markdown: 'DE',
-      baseTitle: 'DataElement',
-      isBase: true,
-      classifiable: true
-    },
-    { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'DT', isBase: true, classifiable: true },
-    {
-      id: 'EnumerationType',
-      link: 'dataType',
-      title: 'DataType (Enum)',
-      baseTitle: 'DataType',
-      markdown: 'DT',
-      displayLabel: 'Enumeration',
-      classifiable: true
-    },
-    {
-      id: 'PrimitiveType',
-      link: 'dataType',
-      title: 'DataType (Primitive)',
-      baseTitle: 'DataType',
-      markdown: 'DT',
-      displayLabel: 'Primitive',
-      classifiable: true
-    },
-    {
-      id: 'ReferenceType',
-      link: 'dataType',
-      title: 'DataType (Reference)',
-      baseTitle: 'DataType',
-      markdown: 'DT',
-      displayLabel: 'Reference',
-      classifiable: true
+    private allTypes: Type[] = [
+        { id: 'Folder', link: 'folder', title: 'Folder', markdown: 'fd', isBase: true },
+        { id: 'DataModel', link: 'dataModel', title: 'DataModel', markdown: 'dm', isBase: true, classifiable: true },
+        {
+            id: 'DataSet',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'Database',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'DataStandard',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'Form',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'Message',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'Report',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'Workflow',
+            link: 'dataModel',
+            title: 'DataModel',
+            baseTitle: 'DataModel',
+            markdown: 'dm',
+            classifiable: true
+        },
+        {
+            id: 'DataClass',
+            link: 'dataClass',
+            title: 'DataClass',
+            markdown: 'dc',
+            baseTitle: 'DataClass',
+            isBase: true,
+            classifiable: true
+        },
+        {
+            id: 'DataElement',
+            link: 'dataElement',
+            title: 'DataElement',
+            markdown: 'de',
+            baseTitle: 'DataElement',
+            isBase: true,
+            classifiable: true
+        },
+        { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true },
+        {
+            id: 'EnumerationType',
+            link: 'dataType',
+            title: 'DataType (Enum)',
+            baseTitle: 'DataType',
+            markdown: 'dt',
+            displayLabel: 'Enumeration',
+            classifiable: true
+        },
+        {
+            id: 'PrimitiveType',
+            link: 'dataType',
+            title: 'DataType (Primitive)',
+            baseTitle: 'DataType',
+            markdown: 'dt',
+            displayLabel: 'Primitive',
+            classifiable: true
+        },
+        {
+            id: 'ReferenceType',
+            link: 'dataType',
+            title: 'DataType (Reference)',
+            baseTitle: 'DataType',
+            markdown: 'dt',
+            displayLabel: 'Reference',
+            classifiable: true
     },
     {
       id: 'ModelDataType',
@@ -151,7 +151,7 @@ export class ElementTypesService {
       link: 'dataType(HIDDEN)',
       title: 'DataType (Terminology)',
       baseTitle: 'DataType(HIDDEN)',
-      markdown: 'DT',
+            markdown: 'dt',
       displayLabel: 'Terminology',
       classifiable: true
     },
@@ -160,7 +160,7 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'EnumerationValue',
       baseTitle: 'CatalogueItem',
-      markdown: 'EV',
+            markdown: 'ev',
       isBase: true
     },
     {
@@ -168,17 +168,17 @@ export class ElementTypesService {
       link: 'terminology',
       title: 'Terminology',
       baseTitle: 'Terminology',
-      markdown: 'TG',
+            markdown: 'te',
       isBase: true
     },
-    { id: 'Term', link: 'term', title: 'Term', baseTitle: 'Term', markdown: 'TM', isBase: true },
-    { id: 'CodeSet', link: 'codeSet', title: 'CodeSet', baseTitle: 'CodeSet', markdown: 'CT', isBase: true },
+        { id: 'Term', link: 'term', title: 'Term', baseTitle: 'Term', markdown: 'tm', isBase: true },
+        { id: 'CodeSet', link: 'codeSet', title: 'CodeSet', baseTitle: 'CodeSet', markdown: 'cs', isBase: true },
     {
       id: 'Classifier',
       link: 'classification',
       title: 'Classifier',
       resourceName: 'classifier',
-      markdown: 'CS',
+            markdown: 'cs',
       isBase: true
     },
   ];
@@ -189,7 +189,7 @@ export class ElementTypesService {
       link: 'dataModel',
       title: 'DataModel',
       resourceName: 'dataModel',
-      markdown: 'DM',
+            markdown: 'dm',
       classifiable: true
     },
     DataClass: {
@@ -197,7 +197,7 @@ export class ElementTypesService {
       link: 'dataClass',
       title: 'DataClass',
       resourceName: 'dataClass',
-      markdown: 'DC',
+            markdown: 'dc',
       classifiable: true
     },
     DataElement: {
@@ -205,7 +205,7 @@ export class ElementTypesService {
       link: 'dataElement',
       title: 'DataElement',
       resourceName: 'dataElement',
-      markdown: 'DE',
+            markdown: 'de',
       classifiable: true
     },
     DataType: {
@@ -213,7 +213,7 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'DataType',
       resourceName: 'dataType',
-      markdown: 'DT',
+            markdown: 'dt',
       classifiable: true
     },
 
@@ -222,7 +222,7 @@ export class ElementTypesService {
       link: 'classifier',
       title: 'Classifier',
       resourceName: 'classifier',
-      markdown: 'CS'
+            markdown: 'cs'
     },
 
     Terminology: {
@@ -230,16 +230,16 @@ export class ElementTypesService {
       link: 'terminology',
       title: 'Terminology',
       resourceName: 'terminology',
-      markdown: 'TG',
+            markdown: 'te',
       classifiable: true
     },
-    Term: { id: 'Term', link: 'term', title: 'Term', resourceName: 'term', markdown: 'TM', classifiable: true },
+        Term: { id: 'Term', link: 'term', title: 'Term', resourceName: 'term', markdown: 'tm', classifiable: true },
     CodeSet: {
       id: 'CodeSet',
       link: 'codeSet',
       title: 'CodeSet',
       resourceName: 'codeSet',
-      markdown: 'CT',
+            markdown: 'cs',
       classifiable: true
     },
 
@@ -248,7 +248,7 @@ export class ElementTypesService {
       link: 'folder',
       title: 'Folder',
       resourceName: 'folder',
-      markdown: 'FD',
+            markdown: 'fd',
       classifiable: true
     },
 
@@ -257,7 +257,7 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'EnumerationValue',
       baseTitle: 'CatalogueItem',
-      markdown: 'EV',
+            markdown: 'ev',
       isBase: true
     },
 
@@ -282,19 +282,19 @@ export class ElementTypesService {
     return this.allTypes;
   }
 
-  getAllDataTypesArray() {
-    const dataTypes = this.allTypes.filter(f => f.baseTitle === 'DataType');
-    return dataTypes;
-  }
+    getAllDataTypesArray() {
+        const dataTypes = this.allTypes.filter(f => f.baseTitle === 'DataType');
+        return dataTypes;
+    }
 
-  getAllDataTypesMap() {
-    const dataTypes = this.getAllDataTypesArray();
-    const dtMap = {};
-    dataTypes.forEach((dt) => {
-      dtMap[dt.id] = dt;
-    });
-    return dtMap;
-  }
+    getAllDataTypesMap() {
+        const dataTypes = this.getAllDataTypesArray();
+        const dtMap = {};
+        dataTypes.forEach((dt) => {
+            dtMap[dt.id] = dt;
+        });
+        return dtMap;
+    }
 
   getTypesForBaseTypeArray(baseType) {
     const array = [];
@@ -332,8 +332,8 @@ export class ElementTypesService {
 
   getLinkUrl(element, mode?) {
     if (!element || !element.id) {
-      return '';
-    }
+            return '';
+        }
 
     const types = this.getTypes();
     let parentDataModel = null;
@@ -382,7 +382,7 @@ export class ElementTypesService {
           dataModelId: parentDataModel,
         });
     }
-
+        }
     return this.stateHandler.getURL('appContainer.mainApp.twoSidePanel.catalogue.' + types.find(x => x.id === element.domainType).link,
       {
         id: element.id,
@@ -393,7 +393,6 @@ export class ElementTypesService {
         mode
       });
   }
-}
 
 export class Type {
   id: string;

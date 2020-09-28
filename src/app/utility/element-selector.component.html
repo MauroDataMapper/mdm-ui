@@ -22,38 +22,39 @@ SPDX-License-Identifier: Apache-2.0
             <div style="margin-top: 10px;" *ngIf="formData.step === 0">
                 What type of element are you looking for?
                 <div style="margin-top: 10px;">
-                    <ul class="list-group" style="cursor: pointer;">
-                        <li class="list-group-item" *ngIf="validTypesToSelect?.includes('Folder')">
-                            <div (click)="onElementTypeSelect('Folder')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataType')">
-                            <div (click)="onElementTypeSelect('DataType')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataType'"> Data Type
-                            </div>
-                        </li>
+                  <ul class="list-group" style="cursor: pointer;">
+                    <!--Not supported for now-->
+                    <!--<li class="list-group-item" *ngIf="validTypesToSelect.includes('Folder')">
+                      <div (click)="onElementTypeSelect('Folder')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
+                      </div>
+                    </li>-->
+                    <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataType')">
+                      <div (click)="onElementTypeSelect('DataType')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataType'"> Data Type
+                      </div>
+                    </li>
                         <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataModel')">
-                            <div (click)="onElementTypeSelect('DataModel')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataModel'"> Data Model
-                            </div>
-                        </li>
+                      <div (click)="onElementTypeSelect('DataModel')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataModel'"> Data Model
+                      </div>
+                    </li>
                         <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataClass')">
-                            <div (click)="onElementTypeSelect('DataClass')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class
-                            </div>
-                        </li>
+                      <div (click)="onElementTypeSelect('DataClass')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class
+                      </div>
+                    </li>
                         <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataElement')">
-                            <div (click)="onElementTypeSelect('DataElement')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element
-                            </div>
-                        </li>
+                      <div (click)="onElementTypeSelect('DataElement')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element
+                      </div>
+                    </li>
                         <li class="list-group-item" *ngIf="validTypesToSelect?.includes('Term')">
-                            <div (click)="onElementTypeSelect('Term')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Term'"> Term
-                            </div>
-                        </li>
-                    </ul>
+                      <div (click)="onElementTypeSelect('Term')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Term'"> Term
+                      </div>
+                    </li>
+                  </ul>
                 </div>
             </div>
         </div>
@@ -109,8 +110,8 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </div>
         </div>
-
-        <div *ngIf="formData.selectedType == 'Folder'">
+        <!--Not supported for now-->
+        <!--<div *ngIf="formData.selectedType == 'Folder'">
             <div style="margin-bottom: 10px;margin-left: 5px;">
                 Please select a Folder:
             </div>
@@ -122,7 +123,7 @@ SPDX-License-Identifier: Apache-2.0
                         (nodeClickEvent)="onNodeInTreeSelect($event)"
                         [node]="rootNode"></mdm-folders-tree>
             </div>
-        </div>
+        </div>-->
 
         <div *ngIf="formData.selectedType === 'Term'">
             <div>Please select a Term:</div>
@@ -220,8 +221,8 @@ SPDX-License-Identifier: Apache-2.0
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row mat-table-row-select" [class.expanded]="expandedElement == row" (mouseover)="expandedElement = row" (click)="onTermSelect(row.element)"></mat-row>
-                <mat-row class="mat-table-row-select" (click)="onTermSelect(row.element)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden"></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row mat-table-row-select" [class.expanded]="expandedElement == row" (mouseover)="expandedElement = row" (click)="onTermSelect(row)"></mat-row>
+                <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden"></mat-row>
               </mat-table>
             </div>
 
@@ -283,8 +284,8 @@ SPDX-License-Identifier: Apache-2.0
                                 class="element-row mat-table-row-select"
                                 [class.expanded]="expandedElement == row"
                                 (mouseover)="expandedElement = row"
-                                (click)="onTermSelect(row.element)"></mat-row>
-                    <mat-row class="mat-table-row-select" (click)="onTermSelect(row.element)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                                (click)="onTermSelect(row)"></mat-row>
+                    <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
                                 [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
                                 style="overflow: hidden">
                     </mat-row>

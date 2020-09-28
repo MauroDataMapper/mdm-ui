@@ -72,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <div style="clear: both;">
-            <span mdmMarkdown [markdown]="editableForm[property]"*ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
+            <span mdmMarkdown [markdown]="editableForm[property]" *ngIf="editableForm.visible && formData.showMarkDownPreview"></span>
             <span mdmMarkdown [markdown]="element[property]" *ngIf="!editableForm.visible"></span>
         </div>
     </div>

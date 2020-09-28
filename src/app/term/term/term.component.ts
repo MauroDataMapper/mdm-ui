@@ -86,11 +86,9 @@ export class TermComponent implements OnInit {
 
   termDetails = (id: string) => {
     const terms = [];
-    // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
-    // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, id));
-    terms.push(this.resources.catalogueItem.listSemanticLinks('terms', id));
+    terms.push(this.resources.terminology.get(this.stateService.params.id));
+    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
+    terms.push(this.resources.catalogueItem.listSemanticLinks('terms', this.stateService.params.id));
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;

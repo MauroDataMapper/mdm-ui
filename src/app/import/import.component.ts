@@ -22,6 +22,7 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
+import { StateService } from '@uirouter/core/';
 
 @Component({
   selector: 'mdm-import',
@@ -55,6 +56,7 @@ export class ImportComponent implements OnInit {
     int: 'number',
     File: 'file'
   };
+  importType: any;
 
   constructor(
     private title: Title,
@@ -62,21 +64,39 @@ export class ImportComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService
+    private broadcastSvc: BroadcastService,
+    private stateService: StateService
   ) {}
 
   ngOnInit() {
+    this.importType = this.stateService.params.importType;
     this.title.setTitle('Import');
     this.loadImporters();
   }
 
   loadImporters() {
-    this.resources.dataModel.importers().subscribe(result => {
+    if (this.importType === 'dataModels') {
+      this.resources.dataModel.importers().subscribe(result => {
         this.importers = result.body;
+        console.log(this.importers);
       }, error => {
         this.messageHandler.showError('Can not load importers!', error);
-      }
-    );
+      });
+    } else if (this.importType === 'terminologies') {
+      this.resources.terminology.importers().subscribe(result => {
+          this.importers = result.body;
+          console.log(this.importers);
+        }, error => {
+          this.messageHandler.showError('Can not load importers!', error);
+        });
+      } else if (this.importType === 'codeSets') {
+        this.resources.codeSet.importers().subscribe(result => {
+            this.importers = result.body;
+            console.log(this.importers);
+        }, error => {
+          this.messageHandler.showError('Can not load importers!', error);
+      });
+    }
   }
 
   loadImporterParameters = (selectedItem) => {
@@ -158,10 +178,7 @@ export class ImportComponent implements OnInit {
       });
     });
 
-    this.resources.dataModel
-      .importModels(namespace, name, version, this.formData)
-      .subscribe(
-        (result: any) => {
+    this.resources.dataModel.importModels(namespace, name, version, this.formData).subscribe((result: any) => {
           this.importingInProgress = false;
           this.importCompleted = true;
           this.importResult = result;
@@ -180,8 +197,7 @@ export class ImportComponent implements OnInit {
               { reload: true, location: true }
             );
           }
-        },
-        (error) => {
+        }, (error) => {
           if (error.status === 422) {
             this.importHasError = true;
             if (error.error.validationErrors) {

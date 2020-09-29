@@ -418,9 +418,13 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadClassifiers();
   };
 
-  changeState = (newState, newWindow?) => {
+  changeState = (newState, importType?, newWindow?) => {
     if (newWindow) {
       this.stateHandler.NewWindow(newState);
+      return;
+    }
+    if (importType) {
+      this.stateHandler.Go(newState, {importType});
       return;
     }
     this.stateHandler.Go(newState);

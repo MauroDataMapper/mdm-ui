@@ -157,7 +157,7 @@ export const PagesRoutes = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.import',
-      url: '/import',
+      url: '/import/:importType',
       component: ImportComponent
     },
     {

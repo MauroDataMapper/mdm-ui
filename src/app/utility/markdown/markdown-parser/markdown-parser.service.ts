@@ -89,37 +89,36 @@ export class MarkdownParserService {
     let str = '';
     if (element.domainType === 'DataClass') {
       const dataModelName = await this.getDataModelName(parentId);
-      const dataClassName = await this.getDataClassName(parentId, element.id);
-      str = `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${dataClassName}`;
-    }
-
-    if (element.domainType === 'Folder') {
-      const folderName = await this.getFolderName(element.id);
-      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${folderName}`;
+      str = `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
     if (element.domainType === 'DataModel') {
-      const dataModelName = await this.getDataModelName(element.id);
-      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${dataModelName}`;
+      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
     if (element.domainType === 'DataType' || dataTypeNames.indexOf(element.domainType) !== -1) {
       const dataModelName = await this.getDataModelName(parentId);
-      const dataTypeName = await this.getDataTypeName(parentId, element.id);
-      str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${dataTypeName}`;
+      str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
     if (element.domainType === 'DataElement') {
       const dataClassName = await this.getDataClassName(parentId, parentDataClassId);
-      const dataElementName = await this.getDataElementName(parentId, parentDataClassId, element.id);
-      str += `[${element.label}](dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${dataElementName}`;
+      str += `[${element.label}](dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
     if (element.domainType === 'Term') {
       const terminologyName = await this.getTerminologyName(parentId);
-      const termName = await this.getTermName(parentId, element.id);
-      str += `[${element.label}](te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${termName}`;
+      str += `[${element.label}](te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
+
+    if (element.domainType === 'CodeSet') {
+      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+    }
+
+    // Not supported at the moment. Keeping for further use.
+    //if (element.domainType === 'Folder') {
+    //  str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+    //}
 
     str += ')';
     return str;
@@ -134,27 +133,7 @@ export class MarkdownParserService {
     const response = await this.resourcesService.terminology.get(id).toPromise();
     return response.body.label;
   }
-
-  private async getTermName(terminologyId: any, id: any) {
-    const response = await this.resourcesService.term.get(terminologyId, id).toPromise();
-    return response.body.label;
-  }
-
-  private async getFolderName(id: any) {
-    const response = await this.resourcesService.folder.get(id).toPromise();
-    return response.body.label;
-  }
-
-  private async getDataTypeName(dataModelId: any, id: any) {
-    const response = await this.resourcesService.dataType.get(dataModelId, id).toPromise();
-    return response.body.label;
-  }
-
-  private async getDataElementName(dataModelId: any, dataClassId: any, id: any) {
-    const response = await this.resourcesService.dataElement.get(dataModelId, dataClassId, id).toPromise();
-    return response.body.label;
-  }
-
+  
   private async getDataClassName(dataModelId: any, id: any) {
     const response = await this.resourcesService.dataClass.get(dataModelId, id).toPromise();
     return response.body.label;

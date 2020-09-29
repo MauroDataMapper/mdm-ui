@@ -82,22 +82,26 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   codeSetDetails(id: any) {
     let arr = [];
     this.resourcesService.codeSet.get(id).subscribe(async (result: { body: CodeSetResult }) => {
-      await this.resourcesService.versionLink.list('codeSets', id).subscribe(response => {
+
+      //Get the guid
+      this.codeSetModel = result.body;
+      this.parentId = this.codeSetModel.id;
+      
+      await this.resourcesService.versionLink.list('codeSets', this.parentId).subscribe(response => {
         if (response.body.count > 0) {
           arr = response.body.items;
           for (const val in arr) {
-            if (id !== arr[val].targetModel.id) {
+            if (this.parentId !== arr[val].targetModel.id) {
               this.semanticLinks.push(arr[val]);
             }
           }
         }
       });
 
-      this.codeSetModel = result.body;
-      this.parentId = this.codeSetModel.id;
+      
       this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.codeSetModel.editable || this.codeSetModel.finalised;
       if (this.sharedService.isLoggedIn(true)) {
-        this.CodeSetPermissions(id);
+        this.CodeSetPermissions(this.parentId);
       } else {
         this.messageService.FolderSendMessage(this.codeSetModel);
         this.messageService.dataChanged(this.codeSetModel);

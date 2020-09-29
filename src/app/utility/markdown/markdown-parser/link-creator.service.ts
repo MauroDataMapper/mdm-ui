@@ -129,5 +129,13 @@ export class LinkCreatorService {
       };
       return this.elementTypes.getLinkUrl(mcElement);
     }
+
+    if (elementType === 'cs') {
+      mcElement = {
+        id: href,
+        domainType: 'CodeSet'
+      };
+      return this.elementTypes.getLinkUrl(mcElement);
+    }
   }
 }

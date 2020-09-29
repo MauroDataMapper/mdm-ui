@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
     </textarea>
     <div style="float: right; margin-bottom: 10px;" *ngIf="inEditMode">
         <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="top: 3px; position: relative;">
-            Show Markdown Preview
+            Preview Markdown
         </mat-checkbox>
         <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px;">
             <i class="fas fa-plus"></i>
@@ -58,7 +58,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <div style="float: right; margin-bottom: 10px;" *ngIf="editableForm.visible">
             <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="position: relative;">
-                Show Markdown Preview
+              Preview Markdown
             </mat-checkbox>
             <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px;">
                 <i class="fas fa-plus"></i>
@@ -67,8 +67,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div *ngIf="!hideHelpText">
             <div style="float: left; margin-top: 8px; margin-right: 15px;" *ngIf="inEditMode || editableForm.visible">
-                <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">
-                    GitHub Markdown guide</a>
+                <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">GitHub Markdown guide</a>
             </div>
         </div>
 

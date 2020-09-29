@@ -27,7 +27,7 @@ export class ElementSelectorDialogueService {
 
   open(validTypesToSelect, notAllowedToSelectIds) {
     if (!validTypesToSelect || (validTypesToSelect && validTypesToSelect.length === 0)) {
-      validTypesToSelect = ['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement', 'Term'];
+      validTypesToSelect = ['CodeSet', 'DataModel', 'DataClass', 'DataType', 'DataElement', 'Term'];
     }
 
     const dg = this.dialog.open(ElementSelectorComponent, {

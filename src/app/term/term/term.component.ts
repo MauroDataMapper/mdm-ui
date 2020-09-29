@@ -84,18 +84,19 @@ export class TermComponent implements OnInit {
     this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
   }
 
-  termDetails = (id: string) => {
+  termDetails = async id => {
     const terms = [];
-    terms.push(this.resources.terminology.get(this.stateService.params.id));
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
 
+    terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
+    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;
       this.term = results[1].body;
 
-      terms.push(this.resources.catalogueItem.listSemanticLinks('terms', this.term.id /*this.stateService.params.id*/));
-      this.term.semanticLinks = results[2].body.items;
+      this.resources.catalogueItem.listSemanticLinks(DOMAIN_TYPE.Term, this.term.id).subscribe(resp => {
+        this.term.semanticLinks = resp.body.items;
+      });
 
       this.term.finalised = this.terminology.finalised;
       this.term.editable = this.terminology.editable;

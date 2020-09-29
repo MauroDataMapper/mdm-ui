@@ -115,7 +115,7 @@ export class LinkCreatorService {
 
     if (elementType === 'tm') {
       mcElement = {
-        terminology: terminologyName,
+        terminology: 'te:' + terminologyName,
         id: href,
         domainType: 'Term'
       };

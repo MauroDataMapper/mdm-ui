@@ -88,11 +88,13 @@ export class TermComponent implements OnInit {
     const terms = [];
     terms.push(this.resources.terminology.get(this.stateService.params.id));
     terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
-    terms.push(this.resources.catalogueItem.listSemanticLinks('terms', this.stateService.params.id));
+
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;
       this.term = results[1].body;
+
+      terms.push(this.resources.catalogueItem.listSemanticLinks('terms', this.term.id /*this.stateService.params.id*/));
       this.term.semanticLinks = results[2].body.items;
 
       this.term.finalised = this.terminology.finalised;

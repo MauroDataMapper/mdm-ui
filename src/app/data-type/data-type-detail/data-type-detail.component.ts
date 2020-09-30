@@ -52,6 +52,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   showEdit: boolean;
   canEditDescription = true;
   showEditDescription = false;
+  terminology: any;
 
   constructor(
     private dialog: MatDialog,
@@ -114,6 +115,12 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   };
 
   ngAfterViewInit(): void {
+    if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'Terminology') {
+      this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+        this.terminology = result.body;
+      });
+    }
+
     this.editForm.changes.subscribe(() => {
       this.editForm.forEach(x =>
         x.edit({

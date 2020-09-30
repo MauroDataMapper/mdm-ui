@@ -42,14 +42,8 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive" >
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="source">
-            <th mat-header-cell *matHeaderCellDef [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="name">
-                <span [hidden]="!hideFilters">Source</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Source</mat-label>
-                        <input #filters matInput name="source" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
+            <th mat-header-cell *matHeaderCellDef [disabled]="!hideFilters" style="max-width: 25%; width: 25%;" columnName="name">
+                Source
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left;">
                 <div>
@@ -67,12 +61,12 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="link">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header='linkType' [disabled]="!hideFilters" style="cursor: pointer; max-width: 15%; width: 15%;" columnName="name">
                 <span [hidden]="!hideFilters">Link</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
                         <mat-label>Link</mat-label>
-                        <input #filters matInput name="link" (keyup)="applyFilter()">
+                        <input #filters matInput name="linkType" (keyup)="applyFilter()">
                     </mat-form-field>
                 </div>
             </th>
@@ -90,14 +84,8 @@ SPDX-License-Identifier: Apache-2.0
             </td>
         </ng-container>
         <ng-container matColumnDef="target">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header="target.label" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="name">
-                <span [hidden]="!hideFilters">Target</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Target</mat-label>
-                        <input #filters matInput name="target" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
+            <th mat-header-cell *matHeaderCellDef [disabled]="!hideFilters" style="max-width: 22%; width: 22%;" columnName="name">
+                Target
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left;">
                 <div>

@@ -464,6 +464,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       null);
   }
 
+  showMergeGraph = () => {
+    this.stateHandler.Go('modelsmerginggraph', { modelType: 'dataModel', modelId: this.result.id });
+  }
+
   export(exporter) {
     this.exportError = null;
     this.processing = true;

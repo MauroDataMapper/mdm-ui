@@ -32,6 +32,7 @@ import { BasicDiagramService } from '../services/basic-diagram.service';
 import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DataflowDataclassDiagramService } from '../services/dataflow-dataclass-diagram.service';
 import { DataflowDataelementDiagramService } from '../services/dataflow-dataelement-diagram.service';
+import { ModelsMergingDiagramService } from '../services/models-merging-diagram.service';
 import { DownloadService } from '@mdm/utility/download.service';
 import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
 
@@ -78,6 +79,7 @@ export class DiagramComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+
     if (this.diagramComponent) {
       this.diagramService = this.diagramComponent.diagramService;
     } else {
@@ -88,6 +90,7 @@ export class DiagramComponent implements OnInit {
   }
 
   initializeDiagramService(params): void {
+    debugger;
     switch (this.mode) {
       case 'dataflow-model':
         this.diagramService = new DataflowDatamodelDiagramService(
@@ -113,17 +116,65 @@ export class DiagramComponent implements OnInit {
           this.messageHandler
         );
         break;
+      case 'model-merging-graph':
+        this.diagramService = new ModelsMergingDiagramService(
+          this.resourcesService,
+          this.messageHandler);
+        break;
     }
 
-    const observable = this.diagramService.getDiagramContent(params);
-    observable.subscribe((data) => {
+    //Mock the test data
+    //if (this.mode === 'model-merging-graph') {
+    //  let data: any = [];
+
+    //  //data.push({ 'id': '1', 'label': 'Complex Test DataModel', 'branch': 'main', 'newVersion': false, 'newBranch': false, 'fork': false, 'targets': [2], 'description': 'branching' });
+
+    //  data.push({
+    //    'id': '1', 'label': 'Complex Test DataModel', 'branch': 'main', 'newVersion': false, 'newBranch': false, 'fork': false, 'targets': [
+    //      {
+    //        'id': 2,
+    //        'description': 'new branch'
+    //      },
+    //      {
+    //        'id': 3,
+    //        'description': 'new branch'
+    //      },
+    //      {
+    //        'id': 4,
+    //        'description': ''
+    //      },
+    //      {
+    //        'id': 6,
+    //        'description': 'new version'
+    //      },
+    //      {
+    //        'id': 7,
+    //        'description': 'fork'
+    //      }
+    //    ]
+    //  });
+    //  data.push({ 'id': '2', 'label': 'Complex Test DataModel change 1', 'branch': 'branch1', 'newVersion': false, 'newBranch': true, 'fork': false, 'targets': [{ 'id': 4, 'description': 'merge back to main branch' }] });
+    //  data.push({ 'id': '3', 'label': 'Complex Test DataModel change 2', 'branch': 'branch2', 'newVersion': false, 'newBranch': true, 'fork': false, 'targets': [{ 'id': 5, 'description': 'merge back to main branch' }]  });
+    //  data.push({ 'id': '4', 'label': 'Complex Test DataModel change 1', 'branch': 'main', 'newVersion': false, 'newBranch': false, 'fork': false, 'targets': [{ 'id': 5, 'description': '' }] });
+    //  data.push({ 'id': '5', 'label': 'Complex Test DataModel change 2', 'branch': 'main', 'newVersion': false, 'newBranch': false, 'fork': false, 'targets': [] });
+    //  data.push({ 'id': '6', 'label': 'Complex Test DataModel new version', 'branch': 'main', 'version': '2.0.0', 'newVersion': true, 'newBranch': false, 'fork': false, 'targets': [] });
+    //  data.push({ 'id': '7', 'label': 'New data model fork', 'branch': 'main', 'newVersion': false, 'newBranch': false, 'fork': true, 'targets': [] });
+    //  debugger 
+    //  // The diagram service is responsible for the graph
+    //  this.diagramService.render_old(data);
+    //  //this.diagramService.layoutNodes();
+    //} else {
+      const observable = this.diagramService.getDiagramContent(params);
+      observable.subscribe((data) => {
         // The diagram service is responsible for the graph
         this.diagramService.render(data);
         this.diagramService.layoutNodes();
-      }, (error) => {
-        this.messageHandler.showError('There was a problem getting the model hierarchy.', error);
-      }
-    );
+      },
+        (error) => {
+          this.messageHandler.showError('There was a problem getting the model hierarchy.', error);
+        }
+      );
+   //}
   }
 
   resetPaper(): void {
@@ -177,8 +228,8 @@ export class DiagramComponent implements OnInit {
     });
 
     this.paper.on('cell:pointerup blank:pointerup', (cellView: joint.dia.CellView, event) => {
-        this.svgPanZoom.disablePan();
-        this.diagramService.onDrag(cellView, event);
+      this.svgPanZoom.disablePan();
+      this.diagramService.onDrag(cellView, event);
     });
 
     this.diagramService.getClickSubject().subscribe((result) => {
@@ -268,16 +319,16 @@ export class DiagramComponent implements OnInit {
 
   save = () => {
     switch (this.mode) {
-    case 'dataflow-class':
-      this.diagramService.updateDataClassComponentLevel(this.dataClassComponent);
-      this.isEdit = false;
-      break;
-    case 'dataflow-element':
-      this.diagramService.updateDataElementLevel(this.dataClassComponent);
-      this.isEdit = false;
-      break;
-    default:
-      break;
+      case 'dataflow-class':
+        this.diagramService.updateDataClassComponentLevel(this.dataClassComponent);
+        this.isEdit = false;
+        break;
+      case 'dataflow-element':
+        this.diagramService.updateDataElementLevel(this.dataClassComponent);
+        this.isEdit = false;
+        break;
+      default:
+        break;
     }
   }
 }

@@ -35,6 +35,7 @@ export abstract class BasicDiagramService {
   darkBackground = '#4a708b';
   lightBackground = '#e0e5e9';
   lightOrangeBackground = '#f7a900';
+  shadedOrange = '#fec994';
   linkColor: '#949494';
 
   hierarchy: any;
@@ -57,6 +58,7 @@ export abstract class BasicDiagramService {
   abstract getDiagramContent(params: any): Observable<any>;
 
   abstract render(data: any): void;
+  abstract render_old(data: any): void;
 
   abstract configurePaper(paper: joint.dia.Paper): void;
 
@@ -75,6 +77,7 @@ export abstract class BasicDiagramService {
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
     let nodeSep = 100;
     let rankSep = 400;
+    debugger 
     if (rankDir === 'TB') {
       nodeSep = 100;
       rankSep = 250;
@@ -115,12 +118,12 @@ export abstract class BasicDiagramService {
     return cylinder;
   }
 
-  protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80): joint.dia.Cell {
+  protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
       size: { width, height }
     });
-    rectangle.attr('label/text', joint.util.breakText(label, { width: 110 }));
+    rectangle.attr('label/text', joint.util.breakText(label, { width: textWidth }));
     rectangle.attr('label/fontWeight', 'bold');
     rectangle.attr('label/fontSize', 12);
     rectangle.attr('label/fill', this.fontColorWhite);
@@ -132,9 +135,26 @@ export abstract class BasicDiagramService {
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
     return rectangle;
-
   }
 
+  protected addColoredRectangleCell(textColor: string, rectangleColor: string, id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
+    const rectangle = new joint.shapes.standard.Rectangle({
+      id,
+      size: { width, height }
+    });
+    rectangle.attr('label/text', joint.util.breakText(label, { width: textWidth }));
+    rectangle.attr('label/fontWeight', 'bold');
+    rectangle.attr('label/fontSize', 12);
+    rectangle.attr('label/fill', textColor);
+    rectangle.attr('body/fill', rectangleColor);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
+
+    this.graph.addCell(rectangle);
+    return rectangle;
+  }
+  
   protected addSmallRectangleCell(id: string, label: string): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,

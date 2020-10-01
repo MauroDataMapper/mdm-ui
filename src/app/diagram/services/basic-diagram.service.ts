@@ -77,7 +77,7 @@ export abstract class BasicDiagramService {
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
     let nodeSep = 100;
     let rankSep = 400;
-    debugger 
+      
     if (rankDir === 'TB') {
       nodeSep = 100;
       rankSep = 250;

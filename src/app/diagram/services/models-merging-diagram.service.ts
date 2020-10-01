@@ -38,12 +38,10 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
   shadedOrange = '#fec994';
 
   getDiagramContent(params: any): Observable<any> {
-    debugger;
     return this.resourcesService.dataModel.modelVersionTree(params.parent.id);
   }
 
   render(result: any): void {
-    debugger;
     this.changeComponent(null);
 
     result.body.forEach((item: any) => {
@@ -59,7 +57,10 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
       if (!item.newBranchModelVersion && !item.newDocumentationVersion && !item.newFork) {
         this.addColoredRectangleCell(this.fontColorWhite, this.lightOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
       }
+    });
 
+    //Adding the links in a separate loop, because it won't find the target otherwise
+    result.body.forEach((item: any) => {
       let link: any;
       item.targets.forEach(itmTarget => {
         link = new joint.shapes.standard.Link({
@@ -74,13 +75,10 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
             }
           }]
         });
-     
+
         this.graph.addCell(link);
       });
     });
-
-    //Bottom-to-top layout
-    super.layoutNodes('BT');
   }
 
   render_old(result: any): void {

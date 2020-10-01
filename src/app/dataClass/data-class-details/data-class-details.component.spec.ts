@@ -49,7 +49,7 @@ describe('DataClassDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
+      imports: [
         // TestModule
         NgxSkeletonLoaderModule,
         MatTooltipModule,

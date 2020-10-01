@@ -192,8 +192,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       (result[currentValue[key]] = result[currentValue[key]] || []).push(
         currentValue
       );
-      //Order by index
-      result[currentValue[key]].sort((x,y) => x.index - y.index)
+      // Order by index
+      result[currentValue[key]].sort((x, y) => x.index - y.index);
 
       // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
       return result;
@@ -269,7 +269,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     let e = 0;
     let skippedCategories = 0;
 
-  
+
     for (let i = 0; i < allRecordsWithGroups.length; i++) {
       if (i < start + skippedCategories) {
         if (allRecordsWithGroups[i].isCategoryRow) {

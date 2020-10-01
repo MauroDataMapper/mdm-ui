@@ -23,7 +23,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 export class GridService {
   @Output() reloadEvent = new EventEmitter<any>();
 
-  constructor() {}
+  constructor() { }
 
   applyFilter = (filters: any[]) => {
     const filter = {};
@@ -34,7 +34,7 @@ export class GridService {
 
         if (value !== '') {
           filter[name] = value;
-         }
+        }
       });
       this.reloadEvent.emit(filter);
     }
@@ -44,16 +44,16 @@ export class GridService {
     const options = {};
 
     if (pageSize) {
-      options["max"] = pageSize;
+      options['max'] = pageSize;
     }
     if (pageIndex) {
-      options["offset"] = pageIndex;
+      options['offset'] = pageIndex;
     }
     if (sortBy) {
-      options["sort"] = sortBy;
+      options['sort'] = sortBy;
     }
     if (sortType) {
-      options["order"] = sortType;
+      options['order'] = sortType;
     }
 
     if (filters) {

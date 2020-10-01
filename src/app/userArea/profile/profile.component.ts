@@ -103,7 +103,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
       this.isImageLoaded = null;
-      this.broadcastService.broadcast('profileImgUndated')
+      this.broadcastService.broadcast('profileImgUndated');
       this.userDetails();
     }, error => {
       this.messageHandler.showError('There was a problem updating the User Details.', error);
@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.imageVersion++;
       this.isImageLoaded = null;
       this.userDetails();
-      this.broadcastService.broadcast('profileImgUndated')
+      this.broadcastService.broadcast('profileImgUndated');
     },
       error => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);

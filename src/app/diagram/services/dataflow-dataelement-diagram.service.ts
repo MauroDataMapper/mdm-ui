@@ -25,7 +25,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
   classes: object = {};
   dataFlows: any = {};
-  
+
   selDataElementComponentId: string;
   parentId: string;
   flowId: string;
@@ -71,7 +71,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   render(result: any): void {
 
     this.changeComponent(null);
-    
+
     const classAttributes: object = {};
     Object.keys(this.classes).forEach((classId) => {
       const classBreadcrumb = this.classes[classId][this.classes[classId].length - 1];
@@ -215,10 +215,9 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
               this.changeComponent(result.body);
             }
-          }),
-            (error) => {
-              console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
-            };
+          }, () => {
+            console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+          });
         }
       }
     });
@@ -254,15 +253,13 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   updateDataElementLevel = (data) => {
-    debugger 
     const options = { sort: 'label', order: 'asc', all: true };
     this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe(result => {
-        if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-          this.changeComponent(result.body);
-        }
-      }),
-      (error) => {
-        this.messageHandler.showError('There was a problem updating the Data Element Component.', error);
-      };
+      if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+        this.changeComponent(result.body);
+      }
+    }, (error) => {
+      this.messageHandler.showError('There was a problem updating the Data Element Component.', error);
+    });
   }
 }

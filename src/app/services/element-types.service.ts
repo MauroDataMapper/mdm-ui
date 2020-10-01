@@ -389,7 +389,7 @@ export class ElementTypesService {
                 id: element.id,
                 dataModelId: parentDataModel,
                 dataClassId: parentDataClass,
-                terminologyId: terminologyId,
+                terminologyId,
                 domainType: element.domainType,
                 mode
             });

@@ -73,7 +73,7 @@ export class ModulesComponent implements OnInit, AfterViewInit {
 
   modulesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
 
-    const options = this.gridService.constructOptions(pageSize,pageIndex,'name','asc',filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, 'name', 'asc', filters);
 
     this.resourcesService.admin.modules(options).subscribe(resp => {
       this.records = resp.body;

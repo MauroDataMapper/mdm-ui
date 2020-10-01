@@ -114,7 +114,7 @@ export class NewVersionCodeSetComponent implements OnInit {
     } else if (this.versionType === 'Version') { // newDocumentationVersion
       const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
-      this.resources.codeSet.newBranchModelVersion(this.codeSet.id,{}).subscribe(response => {
+      this.resources.codeSet.newBranchModelVersion(this.codeSet.id, {}).subscribe(response => {
         this.processing = false;
         this.messageHandler.showSuccess('New Model version created successfully.');
         this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
@@ -122,14 +122,13 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.processing = false;
         this.messageHandler.showError('There was a problem creating the new Model version.', error);
       });
-    }else if (this.versionType === "Branch"){
-      
+    } else if (this.versionType === 'Branch') {
+
       let resources = {}
-      if(this.form.label !== null && this.form.label !== "")
-      {
-        resources = { branchName: this.form.label };      
-      }    
-  
+      if (this.form.label !== null && this.form.label !== '') {
+        resources = { branchName: this.form.label };
+      }
+
       this.processing = true;
       this.resources.codeSet.newBranchModelVersion(this.codeSet.id, resources).subscribe(
         response => {

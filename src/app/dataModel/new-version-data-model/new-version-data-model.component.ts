@@ -120,15 +120,14 @@ export class NewVersionDataModelComponent implements OnInit {
           this.processing = false;
           this.messageHandler.showError('There was a problem creating the new Document Model version.', error);
         });
-    } else if (this.versionType === "Branch"){
-      
+    } else if (this.versionType === 'Branch') {
+
       let resources = {}
-      if(this.form.label !== null && this.form.label !== "")
-      {
-        resources = { branchName: this.form.label };      
-      }    
- 
-  
+      if (this.form.label !== null && this.form.label !== '') {
+        resources = { branchName: this.form.label };
+      }
+
+
       this.processing = true;
       this.resources.dataModel.newBranchModelVersion(this.dataModel.id, resources).subscribe(
         response => {

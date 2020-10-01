@@ -51,7 +51,7 @@ describe('ContentTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
+      imports: [
         // TestModule
         NgxSkeletonLoaderModule,
         MatTooltipModule,
@@ -89,13 +89,13 @@ describe('ContentTableComponent', () => {
         ContentTableComponent
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContentTableComponent);
     component = fixture.componentInstance;
-    component.parentDataModel = {editable:true,finalised:false};
+    component.parentDataModel = { editable: true, finalised: false };
     fixture.detectChanges();
   });
 

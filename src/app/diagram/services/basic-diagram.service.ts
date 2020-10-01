@@ -61,9 +61,9 @@ export abstract class BasicDiagramService {
   abstract configurePaper(paper: joint.dia.Paper): void;
 
 
-  public updateDataClassComponentLevel(data: any): void { };
+  public updateDataClassComponentLevel(data: any): void { }
 
-  public updateDataElementLevel(data: any): void { };
+  public updateDataElementLevel(data: any): void { }
 
   public onDrag(cellView: joint.dia.CellView, event): void {
     if (cellView instanceof joint.dia.ElementView) {
@@ -156,7 +156,7 @@ export abstract class BasicDiagramService {
 
   protected addLink(id: string, sourceId: string, targetId: string): joint.dia.Link {
     const link = new joint.shapes.standard.Link({
-      id: id,
+      id,
       source: { id: sourceId },
       target: { id: targetId }
     });

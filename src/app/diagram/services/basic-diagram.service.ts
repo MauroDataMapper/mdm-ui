@@ -58,8 +58,7 @@ export abstract class BasicDiagramService {
   abstract getDiagramContent(params: any): Observable<any>;
 
   abstract render(data: any): void;
-  abstract render_old(data: any): void;
-
+  
   abstract configurePaper(paper: joint.dia.Paper): void;
 
 

@@ -90,8 +90,6 @@ export class DiagramComponent implements OnInit {
   }
 
   initializeDiagramService(params): void {
-    let layoutMode = '';
-
     switch (this.mode) {
       case 'dataflow-model':
         this.diagramService = new DataflowDatamodelDiagramService(
@@ -118,9 +116,6 @@ export class DiagramComponent implements OnInit {
         );
         break;
       case 'model-merging-graph':
-        //Bottom-to-top layout
-        layoutMode = 'BT';
-
         this.diagramService = new ModelsMergingDiagramService(
           this.resourcesService,
           this.messageHandler);
@@ -130,7 +125,12 @@ export class DiagramComponent implements OnInit {
     observable.subscribe((data) => {
       // The diagram service is responsible for the graph
       this.diagramService.render(data);
-      this.diagramService.layoutNodes(layoutMode);
+      if (this.mode === 'model-merging-graph') {
+        //Bottom-to-top layout
+        this.diagramService.layoutNodes("BT");
+      } else {
+        this.diagramService.layoutNodes();
+      }
     },
       (error) => {
         this.messageHandler.showError('There was a problem getting the model hierarchy.', error);

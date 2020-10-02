@@ -81,46 +81,6 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
     });
   }
 
-  render_old(result: any): void {
-
-    this.changeComponent(null);
-
-    result.forEach((item: any) => {
-      if (item.fork) {
-        this.addRectangleCell(item.modelId, item.label + '\n\n' + item.branch + ' branch', 300, 100, 288);
-      }
-      if (item.newVersion) {
-        this.addColoredRectangleCell(this.darkBlue, this.shadedOrange, item.modelId, `${item.label} \n\n Version ${item.version} \n\n ${item.branch} branch`, 300, 100, 288);
-      }
-      if (item.newBranch) {
-        this.addColoredRectangleCell(this.darkBlue, this.shadedOrange, item.modelId, `${item.label} \n\n ${item.branch} branch`, 300, 100, 288);
-      }
-      if (!item.newBranch && !item.newVersion && !item.fork) {
-        this.addColoredRectangleCell(this.fontColorWhite, this.lightOrange, item.modelId, `${item.label} \n\n ${item.branch} branch`, 300, 100, 288);
-      }
-
-      let link: any;
-      item.targets.forEach(itmTarget => {
-        link = new joint.shapes.standard.Link({
-          id: item.modelId + '_' + itmTarget.modelId,
-          source: { id: item.modelId },
-          target: { id: itmTarget.modelId },
-          labels: [{
-            attrs: { text: { text: itmTarget.description } },
-            position: {
-              offset: 35,
-              distance: 0.5
-            }
-          }]
-        });
-        this.graph.addCell(link);
-      });
-    });
-
-    //Bottom-to-top layout
-    super.layoutNodes('BT');
-  }
-
   configurePaper(paper: joint.dia.Paper): void {
 
     paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {

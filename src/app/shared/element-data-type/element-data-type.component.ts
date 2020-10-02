@@ -82,7 +82,7 @@ export class ElementDataTypeComponent implements OnInit {
       this.link = this.elementTypes.getLinkUrl(this.elementDataType);
     }
 
-    if (this.elementDataType.enumerationValues !== null) {
+    if (this.elementDataType.enumerationValues) {
       if (
         this.elementDataType &&
         this.elementDataType.domainType === 'EnumerationType'

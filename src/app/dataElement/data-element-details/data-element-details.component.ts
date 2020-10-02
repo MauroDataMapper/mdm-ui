@@ -117,12 +117,11 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnInit() {
-    // TODO  - check if this is actually used?
-    // if (this.parentDataModel) {
-    //   this.fetchDataTypes(null, null, null, null).subscribe(result => {
-    //     this.dataTypes = result.body.items;
-    //   });
-    // }
+    if (this.parentDataModel) {
+      this.fetchDataTypes(null, null, null, null).subscribe(result => {
+        this.dataTypes = result.body.items;
+      });
+    }
     this.editableForm = new EditableDataElement();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;

@@ -45,6 +45,7 @@ export class DataElementComponent extends BaseComponent implements OnInit {
   activeTab: any;
   dataClass = { id: null };
   dataModel = { id: null };
+  isDataLoaded = false;
 
 
   constructor(
@@ -82,6 +83,7 @@ export class DataElementComponent extends BaseComponent implements OnInit {
       this.editMode = true;
     }
   }
+
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -130,6 +132,8 @@ export class DataElementComponent extends BaseComponent implements OnInit {
         this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
         this.tabSelected(this.activeTab);
       }
+
+      this.isDataLoaded = true;
     });
   }
 

@@ -19,7 +19,7 @@ export class DataClassResult {
   id: string;
   domainType: string;
   label: string;
-  dataModel: string;
+  model: string;
   breadcrumbs: Breadcrumb[];
   aliases: any[] = [];
   semanticLinks: SemanticLink[];

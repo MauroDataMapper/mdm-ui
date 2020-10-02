@@ -102,8 +102,9 @@ export class MarkdownParserService {
     }
 
     if (element.domainType === 'DataElement') {
+      const dataModelName = await this.getDataModelName(parentId);
       const dataClassName = await this.getDataClassName(parentId, parentDataClassId);
-      str += `[${element.label}](dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+      str += `[${element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
     if (element.domainType === 'Term') {

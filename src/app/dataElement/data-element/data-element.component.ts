@@ -123,7 +123,7 @@ export class DataElementComponent extends BaseComponent implements OnInit {
       this.dataElementOutput = result.body;
 
       this.dataModel.id = result.body.model;
-      this.dataClass.id = result.body.breadcrumbs.length > 1 ? result.body.breadcrumbs[1] : null;
+      this.dataClass.id = result.body.dataClass;
 
       this.messageService.FolderSendMessage(this.dataElementOutput);
       this.messageService.dataChanged(this.dataElementOutput);

@@ -117,7 +117,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnInit() {
-    if (this.parentDataModel) {
+    if (this.parentDataModel && this.parentDataModel.id) {
       this.fetchDataTypes(null, null, null, null).subscribe(result => {
         this.dataTypes = result.body.items;
       });

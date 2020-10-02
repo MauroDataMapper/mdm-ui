@@ -15,11 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="full-width" *ngIf ="isDataLoaded">
-    <mdm-data-element-details [parentDataModel] = "dataModel"
-                              [parentDataClass] = "dataClass"
-                              [afterSave]="afterSave">
-    </mdm-data-element-details>
+<div class="full-width" *ngIf ="dataModel">
+    <mdm-data-element-details [parentDataModel] = "dataModel" [parentDataClass] = "dataClass" [afterSave]="afterSave"></mdm-data-element-details>
 </div>
 <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
     <mat-tab label="Properties">

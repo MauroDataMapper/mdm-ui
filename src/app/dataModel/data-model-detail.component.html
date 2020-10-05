@@ -279,11 +279,13 @@ SPDX-License-Identifier: Apache-2.0
                       type="button"
                       color="primary"
                       class="paddingless dropdown-toggle"
-                      [matMenuTriggerFor]="menu">
+                      matTooltip="Merge"
+                      aria-label="Merge"
+                      [matMenuTriggerFor]="mergeMenu">
                 <i class="fas fa-code-branch"></i>
               </button>
 
-              <mat-menu #menu>
+              <mat-menu #mergeMenu>
                 <button mat-menu-item (click)="merge()">
                   Merge Model
                 </button>

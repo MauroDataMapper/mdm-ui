@@ -33,7 +33,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
   parentId: string;
 
   //Color codes for the diagram shapes
-  darkBlue = '#4a708b';
+  fontColorBlack = '#000000';
   lightOrange = '#f7a900';
   shadedOrange = '#fec994';
 
@@ -49,13 +49,13 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
         this.addRectangleCell(item.modelId, item.label + '\n\n' + item.branchName + ' branch', 300, 100, 288);
       }
       if (item.newDocumentationVersion) {
-        this.addColoredRectangleCell(this.darkBlue, this.shadedOrange, item.modelId, `${item.label} \n\n Version ${item.version} \n\n ${item.branchName} branch`, 300, 100, 288);
+        this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.modelId, `${item.label} \n\n Version ${item.version} \n\n ${item.branchName} branch`, 300, 100, 288);
       }
       if (item.newBranchModelVersion) {
-        this.addColoredRectangleCell(this.darkBlue, this.shadedOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
+        this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
       }
       if (!item.newBranchModelVersion && !item.newDocumentationVersion && !item.newFork) {
-        this.addColoredRectangleCell(this.fontColorWhite, this.lightOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
+        this.addColoredRectangleCell(this.fontColorBlack, this.lightOrange, item.modelId, `${item.label} \n\n ${item.branchName} branch`, 300, 100, 288);
       }
     });
 

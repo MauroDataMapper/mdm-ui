@@ -16,11 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div #diagramToolbar style="width: 100%; height: 2.5em; margin: 0.5em 0; border-bottom: 1px solid rgb(221, 221, 221)">
-  <button mat-stroked-button
+  <button mat-stroked-button *ngIf="canMoveUp"
           type="button"
           color="primary"
           class="paddingless"
-          style="float: left; margin-left: 4px;"
+          style="float: left; margin-right: 40px;"
           matTooltip="Move up a level of hierarchy"
           (click)="this.click('goUp')">
     <i class="fas fa-arrow-up"></i>
@@ -31,19 +31,19 @@ SPDX-License-Identifier: Apache-2.0
           type="button"
           color="primary"
           class="paddingless"
-          style="float: left; margin-left: 40px;"
+          style="float: left;"
           matTooltip="Show Filter Tree"
           (click)="this.click('showTreeFilter')"
           *ngIf="isPopup">
                   <i class="fas fa-filter"></i>
           </button>
   </section>
-  <section layout="row" style="margin-left: 40px;">
+  <section layout="row" style="margin-left: 4px;">
     <button mat-stroked-button
             type="button"
             color="primary"
             class="paddingless"
-            style="float: left; margin-left: 40px;"
+            style="float: left; margin-left: 0px;"
             matTooltip="Zoom in"
             (click)="this.click('zoomIn')">
       <i class="fas fa-plus"></i>

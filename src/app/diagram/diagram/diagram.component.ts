@@ -15,25 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  ElementRef,
-  Inject,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import SvgPanZoom from 'svg-pan-zoom';
+import { DownloadService } from '@mdm/utility/download.service';
 import * as joint from 'jointjs';
-import { MatDialog } from '@angular/material/dialog';
+import SvgPanZoom from 'svg-pan-zoom';
 import { BasicDiagramService } from '../services/basic-diagram.service';
-import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DataflowDataclassDiagramService } from '../services/dataflow-dataclass-diagram.service';
 import { DataflowDataelementDiagramService } from '../services/dataflow-dataelement-diagram.service';
+import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { ModelsMergingDiagramService } from '../services/models-merging-diagram.service';
-import { DownloadService } from '@mdm/utility/download.service';
 import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
 
 @Component({
@@ -57,6 +50,7 @@ export class DiagramComponent implements OnInit {
   isEdit = false;
   isLoading: boolean;
   isPopup = false;
+
 
   initPan: SvgPanZoom.Point;
   initZoom: number;
@@ -123,7 +117,7 @@ export class DiagramComponent implements OnInit {
     }
     const observable = this.diagramService.getDiagramContent(params);
     observable.subscribe((data) => {
-      // The diagram service is responsible for the graph
+        // The diagram service is responsible for the graph
       this.diagramService.render(data);
       if (this.mode === 'model-merging-graph') {
         //Bottom-to-top layout
@@ -234,7 +228,7 @@ export class DiagramComponent implements OnInit {
     return this.diagramService.canGoUp();
   }
 
-  filter(parent: any, filterList: Array<any>): void {
+  filter(parent: any, filterList: Array<any>, mode: string): void {
     const params = { parent };
     this.diagramService.getDiagramContent(params).subscribe((data) => {
       const filteredClasses: Array<any> = [];
@@ -248,7 +242,14 @@ export class DiagramComponent implements OnInit {
         data.body.childDataClasses = filteredClasses;
       }
       this.diagramService.render(data);
-      this.diagramService.layoutNodes();
+
+      if (mode === 'model-merging-graph') {
+        //Bottom-to-top layout
+        this.diagramService.layoutNodes("BT");
+      } else {
+        this.diagramService.layoutNodes();
+      }
+      
       this.resetPaper();
     });
   }

@@ -37,6 +37,8 @@ export class DiagramTabComponent implements OnInit {
 
   @Input() mode: string;
   @Input() parent: string;
+  @Input() isPopup: boolean;
+  @Input() canMoveUp: boolean;
 
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
 
@@ -46,7 +48,6 @@ export class DiagramTabComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   popUp(): void {

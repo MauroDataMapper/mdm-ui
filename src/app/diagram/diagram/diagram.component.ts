@@ -15,24 +15,18 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  ElementRef,
-  Inject,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import SvgPanZoom from 'svg-pan-zoom';
+import { DownloadService } from '@mdm/utility/download.service';
 import * as joint from 'jointjs';
-import { MatDialog } from '@angular/material/dialog';
+import SvgPanZoom from 'svg-pan-zoom';
 import { BasicDiagramService } from '../services/basic-diagram.service';
-import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DataflowDataclassDiagramService } from '../services/dataflow-dataclass-diagram.service';
 import { DataflowDataelementDiagramService } from '../services/dataflow-dataelement-diagram.service';
-import { DownloadService } from '@mdm/utility/download.service';
+import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
+import { ModelsMergingDiagramService } from '../services/models-merging-diagram.service';
 import { UmlClassDiagramService } from '../services/umlclass-diagram.service';
 
 @Component({
@@ -57,6 +51,7 @@ export class DiagramComponent implements OnInit {
   isLoading: boolean;
   isPopup = false;
 
+
   initPan: SvgPanZoom.Point;
   initZoom: number;
 
@@ -78,6 +73,7 @@ export class DiagramComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+
     if (this.diagramComponent) {
       this.diagramService = this.diagramComponent.diagramService;
     } else {
@@ -113,14 +109,24 @@ export class DiagramComponent implements OnInit {
           this.messageHandler
         );
         break;
+      case 'model-merging-graph':
+        this.diagramService = new ModelsMergingDiagramService(
+          this.resourcesService,
+          this.messageHandler);
+        break;
     }
-
     const observable = this.diagramService.getDiagramContent(params);
     observable.subscribe((data) => {
         // The diagram service is responsible for the graph
-        this.diagramService.render(data);
+      this.diagramService.render(data);
+      if (this.mode === 'model-merging-graph') {
+        //Bottom-to-top layout
+        this.diagramService.layoutNodes("BT");
+      } else {
         this.diagramService.layoutNodes();
-      }, (error) => {
+      }
+    },
+      (error) => {
         this.messageHandler.showError('There was a problem getting the model hierarchy.', error);
       }
     );
@@ -177,8 +183,8 @@ export class DiagramComponent implements OnInit {
     });
 
     this.paper.on('cell:pointerup blank:pointerup', (cellView: joint.dia.CellView, event) => {
-        this.svgPanZoom.disablePan();
-        this.diagramService.onDrag(cellView, event);
+      this.svgPanZoom.disablePan();
+      this.diagramService.onDrag(cellView, event);
     });
 
     this.diagramService.getClickSubject().subscribe((result) => {
@@ -222,7 +228,7 @@ export class DiagramComponent implements OnInit {
     return this.diagramService.canGoUp();
   }
 
-  filter(parent: any, filterList: Array<any>): void {
+  filter(parent: any, filterList: Array<any>, mode: string): void {
     const params = { parent };
     this.diagramService.getDiagramContent(params).subscribe((data) => {
       const filteredClasses: Array<any> = [];
@@ -236,7 +242,14 @@ export class DiagramComponent implements OnInit {
         data.body.childDataClasses = filteredClasses;
       }
       this.diagramService.render(data);
-      this.diagramService.layoutNodes();
+
+      if (mode === 'model-merging-graph') {
+        //Bottom-to-top layout
+        this.diagramService.layoutNodes("BT");
+      } else {
+        this.diagramService.layoutNodes();
+      }
+      
       this.resetPaper();
     });
   }
@@ -268,16 +281,16 @@ export class DiagramComponent implements OnInit {
 
   save = () => {
     switch (this.mode) {
-    case 'dataflow-class':
-      this.diagramService.updateDataClassComponentLevel(this.dataClassComponent);
-      this.isEdit = false;
-      break;
-    case 'dataflow-element':
-      this.diagramService.updateDataElementLevel(this.dataClassComponent);
-      this.isEdit = false;
-      break;
-    default:
-      break;
+      case 'dataflow-class':
+        this.diagramService.updateDataClassComponentLevel(this.dataClassComponent);
+        this.isEdit = false;
+        break;
+      case 'dataflow-element':
+        this.diagramService.updateDataElementLevel(this.dataClassComponent);
+        this.isEdit = false;
+        break;
+      default:
+        break;
     }
   }
 }

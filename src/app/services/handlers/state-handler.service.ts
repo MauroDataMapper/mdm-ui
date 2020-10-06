@@ -55,7 +55,7 @@ export class StateHandlerService {
                 newversiondatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
                 newversionterminology: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
                 newversioncodeset: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
-
+                modelsmerginggraph: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
                 'admin.user': 'appContainer.adminArea.user',
                 'admin.users': 'appContainer.adminArea.users',
 

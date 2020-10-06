@@ -254,7 +254,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   updateDataElementLevel = (data) => {
-    debugger 
+     
     const options = { sort: 'label', order: 'asc', all: true };
     this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe(result => {
         if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {

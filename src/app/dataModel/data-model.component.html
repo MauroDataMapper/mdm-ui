@@ -128,7 +128,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Diagram">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-diagram-tab [parent]="dataModel"  [mode]="'umlclass'"></mdm-diagram-tab>
+                <mdm-diagram-tab [parent]="dataModel"  [mode]="'umlclass'" [canMoveUp]="true"></mdm-diagram-tab>
             </div>
         </ng-template>
     </mat-tab>
@@ -149,7 +149,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Dataflow" *ngIf="dataModel && dataModel.type === 'Data Asset'">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'"></mdm-diagram-tab>
+                <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'" [canMoveUp]="true"></mdm-diagram-tab>
             </div>
         </ng-template>
     </mat-tab>

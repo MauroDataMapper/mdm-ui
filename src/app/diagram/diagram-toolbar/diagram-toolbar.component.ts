@@ -49,12 +49,12 @@ export class DiagramToolbarComponent implements OnInit {
   @Output() toolbarClick = new EventEmitter<string>();
 
   @Input() isPopup: boolean;
+  @Input() canMoveUp: boolean;
 
   constructor() {
   }
 
   ngOnInit(): void {
-
   }
 
   click(buttonName: string): void {

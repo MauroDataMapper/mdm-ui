@@ -54,6 +54,8 @@ import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-m
 import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
+import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
+
 
 export const PagesRoutes = {
   states: [
@@ -241,6 +243,11 @@ export const PagesRoutes = {
       name: 'appContainer.mainApp.modelsMerging',
       url: '/modelsMerging/:sourceId/:targetId',
       component: ModelMergingComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
+      url: '/modelsMergingGraph/:modelType/:modelId',
+      component: ModelsMergingGraphComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',

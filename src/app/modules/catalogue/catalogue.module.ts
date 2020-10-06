@@ -159,6 +159,8 @@ import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-mo
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
 import { MergedModelsComponent } from '@mdm/merged-models/merged-models.component';
+import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
+import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 
 @NgModule({
   declarations: [
@@ -292,7 +294,9 @@ import { MergedModelsComponent } from '@mdm/merged-models/merged-models.componen
     BulkEditModalComponent,
     BulkDeleteModalComponent,
     ModelMergingComponent,
-    MergedModelsComponent
+    MergedModelsComponent,
+    ModelsMergingGraphComponent,
+    VersioningGraphModalComponent
   ],
   imports: [
     AdminModule,
@@ -445,7 +449,9 @@ import { MergedModelsComponent } from '@mdm/merged-models/merged-models.componen
     BulkEditModalComponent,
     BulkDeleteModalComponent,
     ModelMergingComponent,
-    MergedModelsComponent
+    MergedModelsComponent,
+    ModelsMergingGraphComponent,
+    VersioningGraphModalComponent
   ]
 })
 export class CatalogueModule { }

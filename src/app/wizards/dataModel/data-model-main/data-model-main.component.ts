@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { DataModelStep1Component } from '../data-model-step1/data-model-step1.component';
 import { DataModelStep2Component } from '../data-model-step2/data-model-step2.component';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -43,8 +42,6 @@ export class DataModelMainComponent implements OnInit {
     private title: Title
   ) { }
   isLinear = false;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentFolderId: any;

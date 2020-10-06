@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Step } from '@mdm/model/stepModel';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -33,8 +32,6 @@ import { Title } from '@angular/platform-browser';
 })
 export class ClassifierMainComponent implements OnInit {
   isLinear = false;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentFolderId: any;

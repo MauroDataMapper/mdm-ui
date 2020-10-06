@@ -21,7 +21,6 @@ import { DataModelResult } from '@mdm/model/dataModelModel';
 import { forEach } from '@uirouter/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'mdm-element-classifications',
@@ -56,11 +55,10 @@ export class ElementClassificationsComponent implements OnInit {
   };
   allClassifications: any;
   selectedClassification = [];
-  constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService, private fb: FormBuilder) { }
+  constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService) { }
 
   ngOnInit() {
     this.getAllClassifications();
-
     if (!this.editableForm.visible) {
       if (this.newWindow) {
         this.target = '_blank';
@@ -73,10 +71,7 @@ export class ElementClassificationsComponent implements OnInit {
         });
       }
     } else {
-
       this.formData.classifiers = this.editableForm.classifiers;
-
-
     }
 
   }
@@ -88,20 +83,16 @@ export class ElementClassificationsComponent implements OnInit {
         this.classifications.forEach((classification) => {
           const selected = this.allClassifications.find(c => c.id === classification.id);
           selectedList.push(selected);
-        }
-        );
+        });
         this.selectedClassification = selectedList;
         this.formData.classifiers = selectedList;
         this.editableForm.classifiers = selectedList;
       }
     });
-
   }
-
   onModelChanged() {
     this.formData.classifiers = this.selectedClassification;
     this.editableForm.classifiers = this.selectedClassification;
     this.classifications = this.selectedClassification;
   }
-
 }

@@ -246,6 +246,11 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           Each extended path follow the pattern `<level0 node>/<level1 node>/.../<target node>.
           When the path is split, the index will correspond to the level.
       */
+      if(expandedPath === null)
+      {
+        continue;
+      }
+
       const path: string[] = expandedPath.split('/');
 
       // Skip if parent path not in expandedPaths.

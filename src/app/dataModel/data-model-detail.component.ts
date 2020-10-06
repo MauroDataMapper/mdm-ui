@@ -154,7 +154,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-        this.showSecuritySection = message;
+      this.showSecuritySection = message;
     });
   }
 
@@ -261,8 +261,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.stateHandler.reload();
       }
     }, error => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
     });
   }
 
@@ -419,15 +419,13 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         }
         this.processing = true;
 
-        let data = {};
+        const data = {};
 
-        if(result.data.versionList !== undefined)
-        {
-          data["versionChangeType"] = result.data.versionList;
+        if (result.data.versionList !== undefined) {
+          data['versionChangeType'] = result.data.versionList;
+        } else {
+          data['version'] = result.data.versionNumber;
         }
-        else{
-          data["version"] = result.data.versionNumber;
-        }   
 
         this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
           this.processing = false;
@@ -466,23 +464,23 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showMergeGraph = () => {
-    
-   const promise = new Promise((resolve, reject) => {
-     const dialog = this.dialog.open(VersioningGraphModalComponent, {
-       data: { parentDataModel: this.result.id },
-       panelClass: 'versioning-graph-modal'
-     });
 
-     dialog.afterClosed().subscribe((result) => {
-       if (result != null && result.status === 'ok') {
-         resolve();
-       } else {
-         reject();
-       }
-     });
-   });
-   promise.then(() => {
-   }).catch(() => { });
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(VersioningGraphModalComponent, {
+        data: { parentDataModel: this.result.id },
+        panelClass: 'versioning-graph-modal'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result != null && result.status === 'ok') {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+    promise.then(() => {
+    }).catch(() => { });
   }
 
   export(exporter) {

@@ -18,11 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModelSelectorTreeComponent } from './model-selector-tree.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +37,6 @@ describe('ModelSelectorTreeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         FormsModule,
         FoldersTreeModule,

@@ -73,7 +73,8 @@ export class DownloadService {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     svg.parentElement.append(canvas);
-    const img = new Image();
+    // const img = new Image();
+    const img = new Image() as HTMLImageElement;
     svg.parentElement.append(img);
     img.setAttribute('style', 'display: block');
     img.width = width * (scale + 1);
@@ -90,6 +91,16 @@ export class DownloadService {
       img.remove();
     }, {once: true});
     img.src = url;
+
+    // var img1 = new Image(); // Image constructor
+    // img1.src = 'image1.png';
+    // img1.alt = 'alt';
+    // document.body.appendChild(img1);
+
+    // var img2 = document.createElement('img'); // Use DOM HTMLImageElement
+    // img2.src = 'image2.jpg';
+    // img2.alt = 'alt text';
+    // document.body.appendChild(img2);
   }
 
 }

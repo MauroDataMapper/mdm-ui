@@ -28,6 +28,7 @@ export class FolderResult {
   lastUpdated: any;
   parentDataModel: string;
   parentDataClass: string;
+  availableActions: any[];
 }
 
 export class SearchResult {

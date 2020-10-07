@@ -125,7 +125,7 @@ export class ElementSelectorComponent implements OnInit {
   }
   configureValidTypes(validTypesToSelect: any[]) {
     this.validTypesToSelect = validTypesToSelect;
-    if (validTypesToSelect.length === 1) {
+    if (this.validTypesToSelect?.length === 1) {
       this.showPrevBtn = false;
       this.onElementTypeSelect(validTypesToSelect[0]);
     } else {

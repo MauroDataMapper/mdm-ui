@@ -91,14 +91,12 @@ export class SecurityHandlerService {
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-  async login(username, password) {
+  async login(resource) {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
-    const resource = { username, password };
+    // const resource = { username, password };
     const response = await this.resources.security.login(resource).toPromise();
-    const admin = await this.resources.session
-      .isApplicationAdministration()
-      .toPromise();
+    const admin = await this.resources.session.isApplicationAdministration().toPromise();
     const adminResult = admin.body;
     const result = response.body;
     const currentUser = {
@@ -145,7 +143,7 @@ export class SecurityHandlerService {
   }
 
   isAuthenticated() {
-    return this.resources.session.isAuthenticated();
+    return this.resources.session?.isAuthenticated();
   }
 
   isLoggedIn() {

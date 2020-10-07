@@ -493,17 +493,19 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe(result => {
-      if (result.body === false) {
-        return;
-      }
+    if (this.securityHandler.isAuthenticated()) {
+      this.securityHandler.isAuthenticated().subscribe(result => {
+        if (result.body === false) {
+          return;
+        }
 
-      this.resourcesService.dataModel.exporters().subscribe(res => {
-        this.exportList = res.body;
-      }, error => {
-        this.messageHandler.showError('There was a problem loading exporters list.', error);
+        this.resourcesService.dataModel.exporters().subscribe(res => {
+          this.exportList = res.body;
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
+        });
       });
-    });
+    }
   }
 
   onLabelChange(value: any) {

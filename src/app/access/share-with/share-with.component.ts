@@ -36,14 +36,14 @@ export class ShareWithComponent implements OnInit {
     private messageService: MessageService,
     private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService
-  ) {}
+  ) { }
 
   supportedDomainTypes = {
     DataModel: { name: 'dataModel', message: 'Data Model' },
     Classifier: { name: 'classifier', message: 'Classifier' },
     Folder: { name: 'folder', message: 'Folder' },
     Terminology: { name: 'terminology', message: 'Terminology' },
-    CodeSet: {name: 'codeSet', message: 'CodeSet' }
+    CodeSet: { name: 'codeSet', message: 'CodeSet' }
   };
 
   readableByEveryone: false;
@@ -55,89 +55,49 @@ export class ShareWithComponent implements OnInit {
 
   ngOnInit() {
     this.folderResult = this.messageService.getFolderPermissions();
-    this.readableByEveryone = this.folderResult.readableByEveryone;
-    this.readableByAuthenticated = this.folderResult.readableByAuthenticated;
+    this.readableByEveryone = this.folderResult?.readableByEveryone;
+    this.readableByAuthenticated = this.folderResult?.readableByAuthenticated;
     this.type = this.supportedDomainTypes[this.mcDomainType];
-    this.domainType = this.type.name;
-    this.message = this.type.message;
+    this.domainType = this.type?.name;
+    this.message = this.type?.message;
   }
 
   shareReadWithEveryoneChanged = () => {
     if (this.readableByEveryone) {
-      this.resourcesService[this.domainType]
-        .updateReadByEveryone(this.folderResult.id)
-        .subscribe(
-          (result) => {
-            this.folderResult = result.body;
-            this.messageHandler.showSuccess(
-              this.message + ' updated successfully.'
-            );
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the ' + this.message + '.',
-              error
-            );
-          }
-        );
+      this.resourcesService[this.domainType].updateReadByEveryone(this.folderResult?.id).subscribe((result) => {
+        this.folderResult = result.body;
+        this.messageHandler.showSuccess(`${this.message} updated successfully.`);
+      }, (error) => {
+        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+      });
     } else if (!this.readableByEveryone) {
-      this.resourcesService[this.domainType]
-        .removeReadByEveryone(this.folderResult.id)
-        .subscribe(
-          (result) => {
-            this.folderResult = result.body;
-            this.messageService.dataChanged(this.folderResult);
-            this.messageHandler.showSuccess(
-              this.message + ' updated successfully.'
-            );
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the ' + this.message + '.',
-              error
-            );
-          }
-        );
+      this.resourcesService[this.domainType].removeReadByEveryone(this.folderResult?.id).subscribe((result) => {
+        this.folderResult = result.body;
+        this.messageService.dataChanged(this.folderResult);
+        this.messageHandler.showSuccess(`${this.message} updated successfully.`);
+      }, (error) => {
+        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+      });
     }
   };
 
   shareReadWithAuthenticatedChanged = () => {
     if (this.readableByAuthenticated) {
-      this.resourcesService[this.domainType]
-        .updateReadByAuthenticated(this.folderResult.id)
-        .subscribe(
-          (serverResult) => {
-            this.folderResult = serverResult.body;
-            this.messageService.dataChanged(this.folderResult);
-            this.messageHandler.showSuccess(
-              this.message + ' updated successfully.'
-            );
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the ' + this.message + '.',
-              error
-            );
-          }
-        );
+      this.resourcesService[this.domainType].updateReadByAuthenticated(this.folderResult.id).subscribe((serverResult) => {
+        this.folderResult = serverResult.body;
+        this.messageService.dataChanged(this.folderResult);
+        this.messageHandler.showSuccess(`${this.message} updated successfully.`);
+      }, (error) => {
+        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+      });
     } else if (!this.readableByAuthenticated) {
-      this.resourcesService[this.domainType]
-        .removeReadByAuthenticated(this.folderResult.id)
-        .subscribe(
-          (serverResult) => {
-            this.folderResult = serverResult.body;
-            this.messageService.dataChanged(this.folderResult);
-            this.messageHandler.showSuccess(
-              this.message + ' updated successfully.'
-            );
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem updating the ' + this.message + '.',
-              error
-            );
-          }
-        );
+      this.resourcesService[this.domainType].removeReadByAuthenticated(this.folderResult.id).subscribe((serverResult) => {
+        this.folderResult = serverResult.body;
+        this.messageService.dataChanged(this.folderResult);
+        this.messageHandler.showSuccess(`${this.message} updated successfully.`);
+      }, (error) => {
+        this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);
+      });
     }
   };
 }

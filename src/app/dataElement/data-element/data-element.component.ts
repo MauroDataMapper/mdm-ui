@@ -32,7 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-element.component.sass']
 })
 export class DataElementComponent implements OnInit {
-  dataElement: DataElementResult;
+  dataElementOutput: DataElementResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -114,17 +114,19 @@ export class DataElementComponent implements OnInit {
     }
   }
 
-  dataElementDetails(dataModelId: any, dataClassId, id) {
-    this.resourcesService.dataElement.get(dataModelId, dataClassId, id).subscribe((result: { body: DataElementResult }) => {
-      this.dataElement = result.body;
-      this.messageService.FolderSendMessage(this.dataElement);
-      this.messageService.dataChanged(this.dataElement);
+  dataElementDetails(dataModelId: any, dataClassId: string, id: string) {
+    if (this.resourcesService.dataElement) {
+      this.resourcesService.dataElement.get(dataModelId, dataClassId, id).subscribe((result: { body: DataElementResult }) => {
+        this.dataElementOutput = result.body;
+        this.messageService.FolderSendMessage(this.dataElementOutput);
+        this.messageService.dataChanged(this.dataElementOutput);
 
-      if (this.dataElement) {
-        this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
-        this.tabSelected(this.activeTab);
-      }
-    });
+        if (this.dataElementOutput) {
+          this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+          this.tabSelected(this.activeTab);
+        }
+      });
+    }
   }
 
   toggleShowSearch() {

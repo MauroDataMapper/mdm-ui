@@ -497,7 +497,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
         this.treeControl.dataNodes.push(newNode);
       } else {
         // Add new folder to existing folder
-        result = await this.resources.folder.saveChildrenOf(fnode.id, {label}).toPromise();
+        result = await this.resources.folder.saveChildrenOf(fnode.id, label).toPromise();
         result.body.domainType = DOMAIN_TYPE.Folder;
         if (!fnode.children) {
           fnode.children = [];
@@ -620,11 +620,11 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     this.refreshTree();
   }
   validateLabel = (data: string) => {
-    if (!data || (data && data.trim().length === 0)) {
-      return false;
-    } else {
-      return true;
-    }
+      if (data) {
+          return true;
+      } else {
+          return false;
+      }
   }
 }
 

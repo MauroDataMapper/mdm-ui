@@ -25,35 +25,35 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Properties">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-data-set-metadata *ngIf="dataElement" [parent]="dataElement" [type]="'dynamic'" [domainType]="'dataElements'"></mdm-data-set-metadata>
+                <mdm-data-set-metadata *ngIf="dataElementOutput" [parent]="dataElementOutput" [type]="'dynamic'" [domainType]="'dataElements'"></mdm-data-set-metadata>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Comments">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-annotation-list *ngIf="dataElement" [parent]="dataElement" [domainType]="'dataElements'"></mdm-annotation-list>
+                <mdm-annotation-list *ngIf="dataElementOutput" [parent]="dataElementOutput" [domainType]="'dataElements'"></mdm-annotation-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Links">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-element-link-list *ngIf="dataElement" [parent]="dataElement" [domainType]="'dataElements'"></mdm-element-link-list>
+                <mdm-element-link-list *ngIf="dataElementOutput" [parent]="dataElementOutput" [domainType]="'dataElements'"></mdm-element-link-list>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Summary" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-summary-metadata-table *ngIf="dataElement" [parent]="dataElement" [domainType]="'dataElements'"></mdm-summary-metadata-table>
+                <mdm-summary-metadata-table *ngIf="dataElementOutput" [parent]="dataElementOutput" [domainType]="'dataElements'"></mdm-summary-metadata-table>
             </div>
         </ng-template>
     </mat-tab>
     <mat-tab label="Attachments" *ngIf="showExtraTabs">
         <ng-template matTabContent>
             <div class="full-width">
-                <mdm-attachment-list *ngIf="dataElement" [parent]="dataElement" [domainType]="'dataElements'"></mdm-attachment-list>
+                <mdm-attachment-list *ngIf="dataElementOutput" [parent]="dataElementOutput" [domainType]="'dataElements'"></mdm-attachment-list>
             </div>
         </ng-template>
     </mat-tab>

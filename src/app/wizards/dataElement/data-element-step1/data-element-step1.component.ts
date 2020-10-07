@@ -23,7 +23,12 @@ import {Component,  OnInit} from '@angular/core';
   styleUrls: ['./data-element-step1.component.sass']
 })
 export class DataElementStep1Component implements OnInit {
-  step: any;
+  step = {
+      invalid: true,
+      scope: {
+          model: ''
+      }
+  };
   modelVal: any;
 
   get model() {
@@ -35,19 +40,15 @@ export class DataElementStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor() {
-  }
+  constructor() { }
 
   validate = () => {
-    if (!this.model.createType) {
+    if (!this.model?.createType) {
       this.step.invalid = true;
       return;
     }
 
-    if (
-      this.model.createType === 'copy' &&
-      this.model.copyFromDataClass.length === 0
-    ) {
+    if (this.model?.createType === 'copy' && this.model?.copyFromDataClass.length === 0) {
       this.step.invalid = true;
       return;
     }
@@ -56,7 +57,7 @@ export class DataElementStep1Component implements OnInit {
   };
 
   ngOnInit() {
-    this.model = this.step.scope.model;
+    this.model = this.step?.scope.model;
   }
 
   onSelect = dataClass => {

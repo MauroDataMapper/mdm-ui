@@ -30,7 +30,6 @@ describe('ShareWithComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         MatCheckboxModule,
         FormsModule,
         UIRouterModule.forRoot({ useHash: true }),
@@ -44,8 +43,7 @@ describe('ShareWithComponent', () => {
       declarations: [
         ShareWithComponent
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -48,7 +48,9 @@ export class MarkdownParserService {
       breaks: true,
     });
 
-    return marked(source);
+    if (source) {
+      return marked(source);
+    }
   }
 
   public createMarkdownLink(element) {

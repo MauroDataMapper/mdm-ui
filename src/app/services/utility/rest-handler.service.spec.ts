@@ -113,7 +113,7 @@ describe('RestHandlerService', () => {
     expect(service).toBeTruthy();
   });
 
-  //COMMENTED OUT UNTIL MOCKS CREATED
+  // COMMENTED OUT UNTIL MOCKS CREATED
   // it('should work', async(() => {
   //   makeRequest(200, true);
   //   // expect(spyLink.broadcast).not.toHaveBeenCalled();

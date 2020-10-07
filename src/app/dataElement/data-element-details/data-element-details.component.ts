@@ -117,11 +117,12 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnInit() {
-    if (this.parentDataModel) {
-      this.fetchDataTypes(null, null, null, null).subscribe(result => {
-        this.dataTypes = result.body.items;
-      });
-    }
+    // TODO  - check if this is actually used?
+    // if (this.parentDataModel) {
+    //   this.fetchDataTypes(null, null, null, null).subscribe(result => {
+    //     this.dataTypes = result.body.items;
+    //   });
+    // }
     this.editableForm = new EditableDataElement();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -247,14 +248,14 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-
-    const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', { label: text });
-    this.pagination = {
-      limit: options['limit'],
-      offset: options['offset']
-
-    };
-    return this.resourcesService.dataType.list(this.parentDataModel.id, options);
+    if (this.resourcesService.dataType) {
+      const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', { label: text });
+      this.pagination = {
+        limit: options['limit'],
+        offset: options['offset']
+      };
+      return this.resourcesService.dataType.list(this.parentDataModel.id, options);
+    }
   }
 
   ngOnDestroy() {

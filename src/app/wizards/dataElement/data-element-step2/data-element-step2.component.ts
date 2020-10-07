@@ -101,7 +101,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
+    this.formChangesSubscription = this.myForm?.form.valueChanges.subscribe(x => {
       this.validate(x);
     });
   }

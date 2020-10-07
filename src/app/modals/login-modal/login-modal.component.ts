@@ -15,35 +15,54 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit} from '@angular/core';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
-import { MatDialogRef} from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import {MessageService} from '@mdm/services/message.service';
+import { MessageService } from '@mdm/services/message.service';
+import { LoginModel } from './loginModel';
 
 @Component({
   selector: 'mdm-login-modal',
   templateUrl: './login-modal.component.html',
-  styleUrls: ['./login-modal.component.sass']
+  styleUrls: ['./login-modal.component.sass'],
 })
 export class LoginModalComponent implements OnInit {
-  username: string;
-  password: string;
-  message: string;
+  username = '';
+  password = '';
+  message = '';
+  resource: LoginModel = {
+    username: this.username,
+    password: this.password
+  };
 
-  constructor(private broadcastService: BroadcastService, public dialogRef: MatDialogRef<LoginModalComponent>, private securityHandler: SecurityHandlerService, private messageService: MessageService) {}
+  constructor(
+    private broadcastService: BroadcastService,
+    public dialogRef: MatDialogRef<LoginModalComponent>,
+    private securityHandler: SecurityHandlerService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
-    const un = this.securityHandler.getEmailFromStorage();
-    this.username = un === 'undefined' ? '' : un;
-    this.password = '';
-    this.message = '';
+    const un = this.securityHandler?.getEmailFromStorage();
+    this.username = un === undefined ? '' : un;
+    this.resource = {
+      username: this.username,
+      password: this.password
+    };
   }
 
   async login() {
     this.message = '';
+    if (this.username) {
+
+    }
     try {
-      const user = await this.securityHandler.login(this.username, this.password);
+      this.resource = {
+        username: this.username,
+        password: this.password
+      }
+      const user = await this.securityHandler.login(this.resource);
       this.dialogRef.close(user);
       this.securityHandler.loginModalDisplayed = false;
       this.messageService.loggedInChanged(true);
@@ -71,5 +90,5 @@ export class LoginModalComponent implements OnInit {
   close = () => {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();
-  }
+  };
 }

@@ -40,8 +40,9 @@ export class FinaliseModalComponent implements OnInit {
   versionMinor = '';
   versionPatch = '';
   currentVersion = '0.0.0';
+  modelVersion = '0.0.0';
 
-  constructor(private dialogRef: MatDialogRef<FinaliseModalComponent>,
+  constructor(public dialogRef: MatDialogRef<FinaliseModalComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private changeRef: ChangeDetectorRef) {
   }
@@ -50,6 +51,7 @@ export class FinaliseModalComponent implements OnInit {
     this.okTitle = this.data.okBtnTitle ? this.data.okBtnTitle : 'OK';
     this.btnType = this.data.btnType ? this.data.btnType : 'primary';
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
+    this.modelVersion = this.data.modelVersion ? this.data.modelVersion : '0.0.0'
     this.title = this.data.title;
     this.message = this.data.message;
     this.password = '';
@@ -57,7 +59,7 @@ export class FinaliseModalComponent implements OnInit {
     this.changeRef.detectChanges();
 
     this.currentVersion = this.data.modelVersion;
-    const nameSplit = this.currentVersion.split('.');
+    const nameSplit = this.modelVersion.split('.');
     if (nameSplit.length === 3) {
       this.data.versionList = this.defaultVersion;
       this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0]) + 1}</strong>.0.0`;

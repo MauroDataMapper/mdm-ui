@@ -73,7 +73,7 @@ export class GroupAccessNewComponent implements OnInit {
     this.buildGroups();
     this.loadAllGroups('', 0, 0);
 
-    this.editable = this.folderResult['availableActions'].indexOf('update') !== -1;
+    this.editable = this.folderResult?.availableActions.indexOf('update') !== -1;
 
     this.dataSource = new MatTableDataSource(this.groups);
     this.dataSource.sort = this.sort;
@@ -118,9 +118,9 @@ export class GroupAccessNewComponent implements OnInit {
     this.groups = [];
     this.folderResult = this.messageService.getFolderPermissions();
     this.isLoadingResults = true;
-    this.resourceService.securableResource.getGroupRoles(this.folderResult.domainType, this.folderResult.id, '').subscribe((res) => {
+    this.resourceService.securableResource.getGroupRoles(this.folderResult?.domainType, this.folderResult?.id, '').subscribe((res) => {
       this.accessLevels = res.body.items;
-      this.resourceService.securableResource.getSecurableResourceGroupRole(this.folderResult.domainType, this.folderResult.id, '').subscribe((result) => {
+      this.resourceService.securableResource.getSecurableResourceGroupRole(this.folderResult?.domainType, this.folderResult?.id, '').subscribe((result) => {
         this.groups = result.body.items;
         this.totalItemCount = result.body.count;
         this.isLoadingResults = false;
@@ -136,7 +136,7 @@ export class GroupAccessNewComponent implements OnInit {
     const gId = row.edit.group.id;
     const levelId = row.groupLevelId.id;
 
-    this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult.domainType, mId, levelId, gId, null).subscribe(() => {
+    this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult?.domainType, mId, levelId, gId, null).subscribe(() => {
       this.messageHandler.showSuccess('Save Successful');
       this.buildGroups();
     },
@@ -214,7 +214,7 @@ export class GroupAccessNewComponent implements OnInit {
   }
 
   deleteRecord = (record, index) => {
-    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult.domainType, this.folderResult.id, record.groupRole.id, record.userGroup.id).subscribe((res) => {
+    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult?.domainType, this.folderResult?.id, record.groupRole.id, record.userGroup.id).subscribe((res) => {
       this.messageHandler.showSuccess('Delete Successful');
       this.buildGroups();
     },

@@ -69,17 +69,19 @@ export class DataModelsExportComponent implements OnInit {
   loadExporterList() {
     this.exportersList = [];
 
-    this.securityHandler.isAuthenticated().subscribe(result => {
-      if (result.body === false) {
-        return;
-      }
+    if (this.securityHandler.isAuthenticated()) {
+      this.securityHandler.isAuthenticated().subscribe(result => {
+        if (result.body === false) {
+          return;
+        }
 
-      this.resources.dataModel.exporters().subscribe(result2 => {
-        this.exportersList = result2.body;
-      }, error => {
-        this.messageHandler.showError('There was a problem loading exporters list.', error);
+        this.resources.dataModel.exporters().subscribe(result2 => {
+          this.exportersList = result2.body;
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
+        });
       });
-    });
+    }
   }
 
   exporterChanged() {

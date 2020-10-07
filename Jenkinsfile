@@ -55,11 +55,6 @@ pipeline {
             sh 'ng lint'
           }
         }
-        post {
-          always {
-            recordIssues tool: tsLint(pattern: 'checkstyle-result.xml'), enabledForFailure: true
-          }
-        }
       }
     }
 

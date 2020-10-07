@@ -37,7 +37,7 @@ pipeline {
       steps {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-            sh 'ng test --coverage --silent'
+            sh 'ng test --coverage'
           }
         }
       }
@@ -51,15 +51,7 @@ pipeline {
     stage('Lint') {
       steps {
         nvm('') {
-          catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-            sh 'ng lint --format=checkstyle > checkstyle-result.xml'
-          }
-        }
-        post {
-          always {
-            recordIssues tool: tsLint(pattern: 'checkstyle-result.xml'),
-                         enabledForFailure: true
-          }
+            sh 'ng lint'
         }
       }
     }

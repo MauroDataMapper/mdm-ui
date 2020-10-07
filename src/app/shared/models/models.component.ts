@@ -307,7 +307,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.onAddFolder(null, null, this.folder);
           } else {
             const error = 'err';
-            this.messageHandler.showError('DataModel name can not be empty', error);
+            this.messageHandler.showError('Folder name can not be empty', error);
             return promise;
           }
         } else {
@@ -523,9 +523,51 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadFolders(true);
   };
 
-  addClassifier = () => {
-    this.stateHandler.Go('newclassification');
-  };
+  onAddClassifier = () => {
+    const promise = new Promise(() => {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
+        data: {
+          inputValue: '',
+          modalTitle: 'Create a new Classifier',
+          okBtn: 'Add Classifier',
+          btnType: 'primary',
+          inputLabel: 'Classifier name',
+          message: 'Please enter the name of your Classifier.'
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result) {
+          if (this.validateLabel(result)) {
+            const resource = {
+              label: result.label,
+            };
+            this.resources.classifier.save(resource).subscribe(response => {
+                this.messageHandler.showSuccess('Classifier saved successfully.');
+                this.stateHandler.Go('classification',
+                  {
+                    id: response.body.id
+                  },
+                  { reload: true, location: true }
+                );
+                this.broadcastSvc.broadcast('$reloadClassifiers');
+              }, error => {
+                this.messageHandler.showError('There was a problem saving the Classifier.', error);
+              });
+
+          } else {
+            const error = 'err';
+            this.messageHandler.showError('Classification name can not be empty', error);
+            return promise;
+          }
+        } else {
+          return promise;
+        }
+      });
+    });
+    return promise;
+  }
+
 
   private onFavioureClick(node) {
     this.stateHandler.Go(node.domainType, {

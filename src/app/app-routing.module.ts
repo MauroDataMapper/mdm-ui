@@ -40,7 +40,6 @@ import { DataModelComponent } from './dataModel/data-model.component';
 import { DataClassComponent } from './dataClass/data-class/data-class.component';
 import { DataElementComponent } from './dataElement/data-element/data-element.component';
 import { ClassificationComponent } from './classification/classification.component';
-import { ClassifierMainComponent } from './wizards/classifier/classifier-main/classifier-main.component';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { AppComponent } from './app.component';
 import { DataModelsExportComponent } from './data-models-export/data-models-export.component';
@@ -191,11 +190,6 @@ export const PagesRoutes = {
       params: {
         tabView: ''
       }
-    },
-    {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
-      url: '/classifier/new?parentId',
-      component: ClassifierMainComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport',

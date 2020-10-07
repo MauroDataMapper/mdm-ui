@@ -106,8 +106,6 @@ import { ImportComponent } from '@mdm/import/import.component';
 import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
-import { ClassifierMainComponent } from '@mdm/wizards/classifier/classifier-main/classifier-main.component';
-import { ClassifierStep1Component } from '@mdm/wizards/classifier/classifier-step1/classifier-step1.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
@@ -136,7 +134,6 @@ import { TermRelationshipsComponent } from '@mdm/utility/term-relationships/term
 import { LinkSuggestionComponent } from '@mdm/link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from '@mdm/model-comparison/model-comparison.component';
 import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-set-main.component';
-import { CodeSetStep1Component } from '@mdm/wizards/codeSet/code-set-step1/code-set-step1.component';
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
@@ -250,8 +247,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
-    ClassifierMainComponent,
-    ClassifierStep1Component,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -282,7 +277,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     LinkSuggestionComponent,
     ModelComparisonComponent,
     CodeSetMainComponent,
-    CodeSetStep1Component,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
@@ -401,8 +395,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
-    ClassifierMainComponent,
-    ClassifierStep1Component,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -433,7 +425,6 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     LinkSuggestionComponent,
     ModelComparisonComponent,
     CodeSetMainComponent,
-    CodeSetStep1Component,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,

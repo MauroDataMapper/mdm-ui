@@ -19,7 +19,6 @@ export * from './validator.service';
 export * from './grid.service';
 export * from './youtrack.service';
 export * from './mctable.service';
-export * from './resources.service';
 export * from './highlight.service';
 export * from './element-selector-dialogue.service';
 export * from './element-types.service';

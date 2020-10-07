@@ -53,6 +53,7 @@ export class DataModelMainComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle(`New Data Model`);
+    // tslint:disable-next-line: deprecation
     this.parentFolderId = this.stateService.params.parentFolderId;
     this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
       result.domainType = 'Folder';

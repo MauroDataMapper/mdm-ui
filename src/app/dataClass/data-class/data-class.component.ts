@@ -57,30 +57,38 @@ export class DataClassComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id || !this.stateService.params.dataModelId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.parentDataClass = { id: this.stateService.params.dataClassId };
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
 
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn() ;
 
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
     this.title.setTitle(`Data Class`);
+    // tslint:disable-next-line: deprecation
     this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
         this.showSearch = message;
     });
     this.afterSave = (result: { body: { id: any } }) =>
+    // tslint:disable-next-line: deprecation
       this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, result.body.id);
   }
 
@@ -118,9 +126,8 @@ export class DataClassComponent implements OnInit {
 
         if (this.dataClass) {
           this.tabGroup.realignInkBar();
-          this.activeTab = this.getTabDetailByName(
-            this.stateService.params.tabView
-          ).index;
+          // tslint:disable-next-line: deprecation
+          this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
           this.tabSelected(this.activeTab);
         }
       });

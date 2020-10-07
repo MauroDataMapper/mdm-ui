@@ -50,8 +50,9 @@ export class CodeSetMainComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+      // tslint:disable-next-line: deprecation
         this.model.parentFolderId = this.stateService.params.parentFolderId;
-        if (!this.stateService.params.parentFolderId) {
+        if (!this.model.parentFolderId) {
             this.stateHandler.NotFound({ location: false });
         }
         this.title.setTitle(`New Code Set`);

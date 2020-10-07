@@ -50,6 +50,7 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     this.getConfig();
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');

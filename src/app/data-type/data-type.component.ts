@@ -49,8 +49,11 @@ export class DataTypeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.id = this.stateService.params.id;
+    // tslint:disable-next-line: deprecation
     this.dataModelId = this.stateService.params.dataModelId;
+    // tslint:disable-next-line: deprecation
     this.tabView = this.stateService.params.tabView;
 
     if (!this.id || !this.dataModelId) {

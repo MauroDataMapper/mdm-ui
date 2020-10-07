@@ -268,13 +268,16 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', {label: text});
 
     this.pagination = {
+      // tslint:disable-next-line: no-string-literal
       limit: options['limit'],
+      // tslint:disable-next-line: no-string-literal
       offset: options['offset']
     };
 
     this.changeRef.detectChanges();
 
     if (loadAll) {
+      // tslint:disable-next-line: no-string-literal
       delete options['label'];
     }
 

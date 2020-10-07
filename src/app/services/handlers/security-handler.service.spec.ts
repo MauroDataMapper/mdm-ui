@@ -40,7 +40,7 @@ describe('SecurityHandlerService', () => {
   }));
 
   it('should be created', () => {
-    const service: SecurityHandlerService = TestBed.get(SecurityHandlerService);
+    const service: SecurityHandlerService = TestBed.inject(SecurityHandlerService);
     expect(service).toBeTruthy();
   });
 });

@@ -65,6 +65,7 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.parentDataModelId = this.stateService.params.parentDataModelId;
 
     if (!this.parentDataModelId) {
@@ -138,7 +139,7 @@ export class DataTypeMainComponent implements OnInit {
           return { id: cls.id };
         }),
         description: this.model.description
-      }
+      };
     } else {
       resource = {
         label: this.model.label,

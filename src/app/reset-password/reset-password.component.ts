@@ -49,7 +49,9 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle('Reset Password');
+    // tslint:disable-next-line: deprecation
     this.uid = this.stateService.params.uid;
+    // tslint:disable-next-line: deprecation
     this.token = this.stateService.params.token;
 
     if (!this.uid || !this.token || this.sharedService.isLoggedIn()) {

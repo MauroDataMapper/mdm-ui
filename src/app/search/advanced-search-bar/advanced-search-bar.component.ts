@@ -94,13 +94,14 @@ export class AdvancedSearchBarComponent implements OnInit {
   constructor(
     private helpDialogueService: HelpDialogueHandlerService,
     private contextSearchHandler: ContentSearchHandlerService,
-    private resouces: MdmResourcesService
+    private resources: MdmResourcesService
   ) { }
 
   ngOnInit() {
     this.advancedSearch = false;
 
-    this.resouces.classifier.list().subscribe(result => {
+
+    this.resources.classifier.list().subscribe(result => {
       this.classifications = result.body.items;
     });
 

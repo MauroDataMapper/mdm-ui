@@ -56,6 +56,7 @@ describe('CodeSetMainComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             folder: {
+              // tslint:disable-next-line: deprecation
               get: () => empty()
             }
           }

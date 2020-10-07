@@ -51,9 +51,11 @@ describe('GroupAccessNewComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             securableResource: {
+              // tslint:disable-next-line: deprecation
               getGroupRoles: () => empty()
             },
             session: {
+              // tslint:disable-next-line: deprecation
               isAuthenticated: () => empty()
             }
           }

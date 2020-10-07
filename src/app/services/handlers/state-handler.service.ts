@@ -79,8 +79,8 @@ export class StateHandlerService {
         };
 
     handleSimpleView(name, params) {
-        if ((params && params.mode === 'advancedView') ||
-            (['appContainer.simpleApp.result', 'appContainer.simpleApp.element'].indexOf(this.router.stateService.current.toString()) === -1)) {
+      // tslint:disable-next-line: deprecation
+        if ((params && params.mode === 'advancedView') || (['appContainer.simpleApp.result', 'appContainer.simpleApp.element'].indexOf(this.router.stateService.current.toString()) === -1)) {
             return name;
         }
 

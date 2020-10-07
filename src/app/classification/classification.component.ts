@@ -63,15 +63,18 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
     this.title.setTitle(`Classifier`);
+    // tslint:disable-next-line: deprecation
     this.classifierDetails(this.stateService.params.id);
 
     const promises = [];
@@ -124,9 +127,9 @@ export class ClassificationComponent implements OnInit, OnDestroy {
         this.showSearch = message;
       }
     );
-    this.afterSave = (result: { body: { id: any } }) =>
-      this.classifierDetails(result.body.id);
+    this.afterSave = (result: { body: { id: any } }) => this.classifierDetails(result.body.id);
 
+      // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
   }
 

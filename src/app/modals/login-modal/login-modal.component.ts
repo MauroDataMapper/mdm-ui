@@ -61,7 +61,7 @@ export class LoginModalComponent implements OnInit {
       this.resource = {
         username: this.username,
         password: this.password
-      }
+      };
       const user = await this.securityHandler.login(this.resource);
       this.dialogRef.close(user);
       this.securityHandler.loginModalDisplayed = false;

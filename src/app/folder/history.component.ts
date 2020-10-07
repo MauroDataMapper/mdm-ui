@@ -109,7 +109,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     if (filters) {
       Object.keys(filters).map(key => {
         this.options[key] = filters[key];
-      })
+      });
     }
 
     this.elementMap = this.elementTypeService.getBaseWithUserTypes();

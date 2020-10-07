@@ -47,6 +47,7 @@ export class TerminologyComponent implements OnInit {
   editForm = null;
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     const id = this.stateService.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
@@ -59,6 +60,7 @@ export class TerminologyComponent implements OnInit {
       const data = result.body;
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
+      // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
   }
@@ -110,6 +112,7 @@ export class TerminologyComponent implements OnInit {
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
+      // tslint:disable-next-line: deprecation
       this.resources.dataModel.get(this.stateService.params.id, this.activeTab.fetchUrl).then(data => {
         this[this.activeTab.name] = data || [];
         this.loadingData = false;

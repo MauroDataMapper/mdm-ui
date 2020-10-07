@@ -73,6 +73,7 @@ export class UserComponent implements OnInit {
     this.title.setTitle('Admin - Add User');
     this.roles = this.role.notPendingArray;
 
+    // tslint:disable-next-line: deprecation
     this.id = this.stateSvc.params.id;
 
     if (this.id) {
@@ -201,8 +202,8 @@ export class UserComponent implements OnInit {
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
         this.user.groups.push(
-          val.id 
-          //label: val.label
+          val.id
+          // label: val.label
         );
       }
     }

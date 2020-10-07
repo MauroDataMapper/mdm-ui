@@ -36,6 +36,7 @@ describe('NewFolderModalComponent', () => {
           useValue: {
             userGroups: {
               list: () => {
+                // tslint:disable-next-line: deprecation
                 return empty();
               }
             }

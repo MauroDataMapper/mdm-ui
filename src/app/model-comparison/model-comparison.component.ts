@@ -57,7 +57,9 @@ export class ModelComparisonComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    // tslint:disable-next-line: deprecation
     const sourceId = this.stateService.params.sourceId;
+    // tslint:disable-next-line: deprecation
     const targetId = this.stateService.params.targetId;
 
     if (sourceId) {
@@ -542,6 +544,7 @@ export class ModelComparisonComponent implements OnInit {
                 }
 
                 // Run for Element
+                // tslint:disable-next-line: no-shadowed-variable
                 el.diffs.forEach(diff => {
                   if (diff.label) {
                     this.findDiffProps(

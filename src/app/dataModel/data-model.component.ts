@@ -60,18 +60,23 @@ export class DataModelComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
 
     this.title.setTitle('Data Model');
+
+    // tslint:disable-next-line: deprecation
     this.dataModelDetails(this.stateService.params.id);
 
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
@@ -106,6 +111,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
       }
 
       this.tabGroup.realignInkBar();
+      // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
       this.tabSelected(this.activeTab);
     });

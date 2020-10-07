@@ -27,7 +27,7 @@ describe('InlineTextEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
+      imports: [
         CommonModule,
         FormsModule
       ],

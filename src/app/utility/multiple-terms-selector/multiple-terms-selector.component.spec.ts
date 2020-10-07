@@ -51,6 +51,7 @@ describe('MultipleTermsSelectorComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             terminology: {
+              // tslint:disable-next-line: deprecation
               list: () => empty()
             }
           }

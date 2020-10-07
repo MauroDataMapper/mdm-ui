@@ -83,6 +83,7 @@ export class ResourcesService {
   //     }
   // }
 
+  // tslint:disable: no-use-before-declare
   classifier: Classifier = new Classifier(this);
   terminology: Terminology = new Terminology(this);
   term: Term = new Term(this);
@@ -620,6 +621,7 @@ class MetaData {
   constructor(private resourcesService: ResourcesService) {
   }
 
+  // tslint:disable-next-line: no-use-before-declare
   namespaces: Namespaces = new Namespaces(this.resourcesService);
 }
 

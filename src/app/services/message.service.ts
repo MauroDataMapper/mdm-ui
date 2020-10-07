@@ -24,19 +24,19 @@ import {Observable, Subject} from 'rxjs';
 export class MessageService implements OnDestroy {
 
   get lastError(): any {
-    return this._lastError;
+    return this.lastErrorVar;
   }
 
   set lastError(value: any) {
-    this._lastError = value;
+    this.lastErrorVar = value;
   }
 
   get errorMessage(): {} {
-    return this._errorMessage;
+    return this.errorMessageVar;
   }
 
   set errorMessage(value: {}) {
-    this._errorMessage = value;
+    this.errorMessageVar = value;
   }
 
   isUserGroupAccess = false;
@@ -44,8 +44,8 @@ export class MessageService implements OnDestroy {
   isShareReadWithEveryone = false;
   isEditMode = false;
 
-  private _lastError = {};
-  private _errorMessage = {};
+  private lastErrorVar = {};
+  private errorMessageVar = {};
 
   @Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 

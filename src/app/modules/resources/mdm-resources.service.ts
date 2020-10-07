@@ -86,5 +86,5 @@ export class MdmResourcesService {
   userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
   securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
   versionLink = new MdmVersionLinkResource(this.resourcesConfig, this.restHandler);
-  userImage = new MdmUserImageFileResource(this.resourcesConfig, this.restHandler); 
+  userImage = new MdmUserImageFileResource(this.resourcesConfig, this.restHandler);
 }

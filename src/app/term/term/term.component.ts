@@ -68,15 +68,19 @@ export class TermComponent implements OnInit {
   editForm = null;
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
     this.title.setTitle('Term');
+    // tslint:disable-next-line: deprecation
     this.termDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
@@ -86,8 +90,11 @@ export class TermComponent implements OnInit {
 
   termDetails = async id => {
     const terms = [];
+    // tslint:disable-next-line: deprecation
     terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
+    // tslint:disable-next-line: deprecation
     terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
+    // tslint:disable-next-line: deprecation
     terms.push(this.resources.catalogueItem.listSemanticLinks('terms', this.stateService.params.id));
 
     forkJoin(terms).subscribe((results: any) => {
@@ -101,6 +108,7 @@ export class TermComponent implements OnInit {
       this.term.classifiers = this.term.classifiers || [];
       this.term.terminology = this.terminology;
       this.activeTab = this.getTabDetailByName(
+        // tslint:disable-next-line: deprecation
         this.stateService.params.tabView
       );
       this.result = this.term;
@@ -110,9 +118,8 @@ export class TermComponent implements OnInit {
       this.changeRef.detectChanges();
     });
 
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+    // tslint:disable-next-line: deprecation
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
     this.tabSelected(this.activeTab);
   };
 

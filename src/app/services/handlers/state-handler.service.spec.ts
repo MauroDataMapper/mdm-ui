@@ -53,6 +53,7 @@ describe('StateHandlerService', () => {
     /**
      * Allow tests to control the result by setting currentText.
      */
+    // tslint:disable-next-line: deprecation
     spyRouter.stateService.current.toString = jasmine.createSpy('toString()').and.callFake(() => currentText);
 
     /**

@@ -142,28 +142,16 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
   download = (record) => {
-    // return this.resources.facets.downloadLinkReferenceFile(this.parent.id, record.id);
-    return this.resources.catalogueItem.getReferenceFile(
-      this.domainType,
-      this.parent.id,
-      record.id)
+    return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
   };
 
   delete = (record) => {
-    this.resources.catalogueItem
-      .removeReferenceFile(this.parent.domainType, this.parent.id, record.id)
-      .subscribe(
-        () => {
-          this.messageHandler.showSuccess('Attachment deleted successfully.');
-          this.reloadEvent.emit();
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem deleting the attachment.',
-            error
-          );
-        }
-      );
+    this.resources.catalogueItem.removeReferenceFile(this.parent.domainType, this.parent.id, record.id).subscribe(() => {
+      this.messageHandler.showSuccess('Attachment deleted successfully.');
+      this.reloadEvent.emit();
+    }, (error) => {
+      this.messageHandler.showError('There was a problem deleting the attachment.', error);
+    });
   };
 
   add = () => {
@@ -196,6 +184,8 @@ export class AttachmentListComponent implements AfterViewInit {
       const res: any = reader.result;
       const array: any = new Int8Array(res);
       const fileByteArray = [];
+
+      // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < array.length; i++) {
         fileByteArray.push(array[i]);
       }

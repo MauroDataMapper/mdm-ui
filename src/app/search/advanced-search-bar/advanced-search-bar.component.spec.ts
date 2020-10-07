@@ -68,6 +68,7 @@ describe('AdvancedSearchBarComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             classifier: {
+              // tslint:disable-next-line: deprecation
               list: () => empty()
             }
           }

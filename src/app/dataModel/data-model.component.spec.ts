@@ -79,6 +79,7 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs/internal/observable/empty';
 
 describe('DataModelComponent', () => {
   let component: DataModelComponent;
@@ -113,7 +114,16 @@ describe('DataModelComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, useValue: {}
+          provide: MdmResourcesService,
+          useValue: {
+            session: {
+              // tslint:disable-next-line: deprecation
+              isAuthenticated: () => empty()
+            },
+            tree: {
+              list: jest.fn()
+            }
+          }
         }
       ],
       declarations: [

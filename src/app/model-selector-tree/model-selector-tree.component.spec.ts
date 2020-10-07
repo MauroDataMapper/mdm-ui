@@ -49,6 +49,7 @@ describe('ModelSelectorTreeComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             tree: {
+              // tslint:disable-next-line: deprecation
               list: (domainType: any, options: any) => empty()
             }
           }

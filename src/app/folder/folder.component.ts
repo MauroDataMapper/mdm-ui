@@ -50,15 +50,18 @@ export class FolderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
     this.title.setTitle(`Folder`);
+    // tslint:disable-next-line: deprecation
     this.folderDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;
@@ -68,6 +71,7 @@ export class FolderComponent implements OnInit, OnDestroy {
     });
     this.afterSave = (result: { body: { id: any } }) => this.folderDetails(result.body.id);
 
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
   }
 

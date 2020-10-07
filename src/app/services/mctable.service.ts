@@ -46,9 +46,9 @@ export class MctableService {
   private loadingBehaviorSubject = new BehaviorSubject<boolean>(true);
   private searchSubject = new Subject<void>();
   result: any;
-  private _total$ = new BehaviorSubject<number>(0);
+  private total = new BehaviorSubject<number>(0);
 
-  private _state: State = {
+  private statePage: State = {
     page: 1,
     pageSize: 4,
     searchTerm: '',
@@ -58,13 +58,13 @@ export class MctableService {
 
   constructor(private resourcesService: MdmResourcesService) {
     if (this.result !== null && this.result !== undefined) {
-      this._total$.next(this.result.count);
+      this.total.next(this.result.count);
     }
     this.searchSubject.next();
   }
 
   get total$() {
-    return this._total$.asObservable();
+    return this.total.asObservable();
   }
 
   get loading() {
@@ -72,7 +72,7 @@ export class MctableService {
   }
 
   get page() {
-    return this._state.page;
+    return this.statePage.page;
   }
 
   set page(page: number) {
@@ -80,7 +80,7 @@ export class MctableService {
   }
 
   get pageSize() {
-    return this._state.pageSize;
+    return this.statePage.pageSize;
   }
 
   set pageSize(pageSize: number) {
@@ -88,7 +88,7 @@ export class MctableService {
   }
 
   get searchTerm() {
-    return this._state.searchTerm;
+    return this.statePage.searchTerm;
   }
 
   set searchTerm(searchTerm: string) {
@@ -104,7 +104,7 @@ export class MctableService {
   }
 
   private _set(patch: Partial<State>) {
-    Object.assign(this._state, patch);
+    Object.assign(this.statePage, patch);
     this.searchSubject.next();
   }
 

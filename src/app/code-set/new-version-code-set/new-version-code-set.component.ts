@@ -49,11 +49,15 @@ export class NewVersionCodeSetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.title.setTitle(`New Version`);
+
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.codeSetId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    this.title.setTitle(`New Version`);
+
+    // tslint:disable-next-line: deprecation
     this.resources.codeSet.get(this.stateService.params.codeSetId).subscribe(response => {
       this.codeSet = response.body;
     });
@@ -124,7 +128,7 @@ export class NewVersionCodeSetComponent implements OnInit {
       });
     } else if (this.versionType === 'Branch') {
 
-      let resources = {}
+      let resources = {};
       if (this.form.label !== null && this.form.label !== '') {
         resources = { branchName: this.form.label };
       }

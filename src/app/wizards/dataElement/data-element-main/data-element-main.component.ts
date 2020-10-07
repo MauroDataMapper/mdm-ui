@@ -88,8 +88,11 @@ export class DataElementMainComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle(`New Data Element`);
+    // tslint:disable-next-line: deprecation
     this.parentDataModelId = this.stateService.params.parentDataModelId;
+    // tslint:disable-next-line: deprecation
     this.grandParentDataClassId = this.stateService.params.grandParentDataClassId;
+    // tslint:disable-next-line: deprecation
     this.parentDataClassId = this.stateService.params.parentDataClassId;
 
     if (!this.parentDataModelId) {

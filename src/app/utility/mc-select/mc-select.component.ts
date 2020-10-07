@@ -34,7 +34,6 @@ import {
 import { ValidatorService } from '@mdm/services/validator.service';
 import { DOCUMENT } from '@angular/common';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'mdm-select',

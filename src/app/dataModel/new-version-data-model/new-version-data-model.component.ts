@@ -51,11 +51,13 @@ export class NewVersionDataModelComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle(`New Data Model Version`);
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.dataModelId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     this.resources.dataModel.get(this.stateService.params.dataModelId).subscribe(response => {
       this.dataModel = response.body;
     });
@@ -122,7 +124,7 @@ export class NewVersionDataModelComponent implements OnInit {
         });
     } else if (this.versionType === 'Branch') {
 
-      let resources = {}
+      let resources = {};
       if (this.form.label !== null && this.form.label !== '') {
         resources = { branchName: this.form.label };
       }

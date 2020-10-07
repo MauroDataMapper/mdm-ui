@@ -55,6 +55,7 @@ describe('DataModelsExportComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             session: {
+              // tslint:disable-next-line: deprecation
               isAuthenticated: () => empty()
             },
             tree: {

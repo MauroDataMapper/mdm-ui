@@ -28,7 +28,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
   private parentId: string;
 
   constructor(protected resourcesService: MdmResourcesService,
-    protected messageHandler: MessageHandlerService) {
+              protected messageHandler: MessageHandlerService) {
     super(resourcesService, messageHandler);
   }
 

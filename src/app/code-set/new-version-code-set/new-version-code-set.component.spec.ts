@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewVersionCodeSetComponent } from './new-version-code-set.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -37,8 +36,7 @@ describe('NewVersionCodeSetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
-        // TestModule
+      imports: [
         MatRadioModule,
         MatFormFieldModule,
         MatTooltipModule,

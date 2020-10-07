@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NewDataTypeInlineComponent } from './new-data-type-inline.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { McEnumerationListWithCategoryComponent } from '../mc-enumeration-list-with-category/mc-enumeration-list-with-category.component';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { McSelectComponent } from '../mc-select/mc-select.component';
@@ -39,7 +37,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { empty } from 'rxjs';
+import { empty } from 'rxjs/internal/observable/empty';
 
 describe('NewDataTypeInlineComponent', () => {
   let component: NewDataTypeInlineComponent;
@@ -47,8 +45,7 @@ describe('NewDataTypeInlineComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
-        // TestModule
+      imports: [
         MatOptionModule,
         MatSelectModule,
         MatTableModule,
@@ -67,6 +64,7 @@ describe('NewDataTypeInlineComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             terminology: {
+              // tslint:disable-next-line: deprecation
               list: () => empty()
             }
           }

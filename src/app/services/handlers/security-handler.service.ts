@@ -28,6 +28,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 })
 export class SecurityHandlerService {
   loginModalDisplayed = false;
+  // tslint:disable-next-line: variable-name
   in_AuthLoginRequiredCheck = false;
 
   constructor(
@@ -143,7 +144,7 @@ export class SecurityHandlerService {
   }
 
   isAuthenticated() {
-    return this.resources.session?.isAuthenticated();
+    return this.resources.session.isAuthenticated();
   }
 
   isLoggedIn() {

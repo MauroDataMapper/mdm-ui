@@ -54,44 +54,42 @@ export class DataElementComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private title: Title
   ) {
-    if (
-      !this.stateService.params.id ||
-      !this.stateService.params.dataModelId ||
-      !this.stateService.params.dataClassId
-    ) {
+    // tslint:disable-next-line: deprecation
+    if (!this.stateService.params.id || !this.stateService.params.dataModelId || !this.stateService.params.dataClassId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    if (
-      this.stateService.params.id &&
-      this.stateService.params.dataModelId &&
-      this.stateService.params.dataModelId.trim() !== ''
-    ) {
+
+    // tslint:disable-next-line: deprecation
+    if (this.stateService.params.id && this.stateService.params.dataModelId && this.stateService.params.dataModelId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.dataModel = { id: this.stateService.params.dataModelId };
     }
 
-    if (
-      this.stateService.params.id &&
-      this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() !== ''
-    ) {
+    // tslint:disable-next-line: deprecation
+    if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.dataClass = { id: this.stateService.params.dataClassId };
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
   }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle(`Data Element`);
+    // tslint:disable-next-line: deprecation
     this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
+    // tslint:disable-next-line: deprecation
     this.afterSave = (result: { body: { id: any } }) => this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, result.body.id);
   }
 
@@ -122,6 +120,7 @@ export class DataElementComponent implements OnInit {
         this.messageService.dataChanged(this.dataElementOutput);
 
         if (this.dataElementOutput) {
+          // tslint:disable-next-line: deprecation
           this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
           this.tabSelected(this.activeTab);
         }

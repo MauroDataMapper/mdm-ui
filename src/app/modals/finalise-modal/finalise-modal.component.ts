@@ -51,7 +51,7 @@ export class FinaliseModalComponent implements OnInit {
     this.okTitle = this.data.okBtnTitle ? this.data.okBtnTitle : 'OK';
     this.btnType = this.data.btnType ? this.data.btnType : 'primary';
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
-    this.modelVersion = this.data.modelVersion ? this.data.modelVersion : '0.0.0'
+    this.modelVersion = this.data.modelVersion ? this.data.modelVersion : '0.0.0';
     this.title = this.data.title;
     this.message = this.data.message;
     this.password = '';
@@ -62,9 +62,9 @@ export class FinaliseModalComponent implements OnInit {
     const nameSplit = this.modelVersion.split('.');
     if (nameSplit.length === 3) {
       this.data.versionList = this.defaultVersion;
-      this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0]) + 1}</strong>.0.0`;
-      this.versionMinor = `The 'Minor' option will finalise the model with version ${parseInt(nameSplit[0])}.<strong>${parseInt(nameSplit[1]) + 1}</strong>.0`;
-      this.versionPatch = `The 'Patch' option will finalise the model with version ${parseInt(nameSplit[0])}.${parseInt(nameSplit[1])}.<strong>${parseInt(nameSplit[2]) + 1}</strong>`;
+      this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0], 10) + 1}</strong>.0.0`;
+      this.versionMinor = `The 'Minor' option will finalise the model with version ${parseInt(nameSplit[0], 10)}.<strong>${parseInt(nameSplit[1], 10) + 1}</strong>.0`;
+      this.versionPatch = `The 'Patch' option will finalise the model with version ${parseInt(nameSplit[0], 10)}.${parseInt(nameSplit[1], 10)}.<strong>${parseInt(nameSplit[2], 10) + 1}</strong>`;
     } else {
       this.data.versionList = 'Custom';
       this.showCustomVersion = true;

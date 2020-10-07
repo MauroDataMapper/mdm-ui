@@ -62,6 +62,7 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
+      // tslint:disable-next-line: no-use-before-declare
       this.selectEvent.emit(new DateEventInfo(newValue, this.dtTo));
     }
 
@@ -77,6 +78,7 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
+      // tslint:disable-next-line: no-use-before-declare
       this.selectEvent.emit(new DateEventInfo(this.dtFrom, newValue));
     }
 

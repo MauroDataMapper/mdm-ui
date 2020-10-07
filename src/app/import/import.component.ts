@@ -69,6 +69,7 @@ export class ImportComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.importType = this.stateService.params.importType;
     this.title.setTitle('Import');
     this.loadImporters();

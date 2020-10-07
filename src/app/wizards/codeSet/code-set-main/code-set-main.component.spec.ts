@@ -18,15 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeSetMainComponent } from './code-set-main.component';
-import { TestModule } from '@mdm/modules/test/test.module';
-import { DclWrapperComponent } from '@mdm/wizards/dcl-wrapper.component';
-import { MatStepperModule } from '@angular/material/stepper';
 import { StateService } from '@uirouter/core';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { empty } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
 
 describe('CodeSetMainComponent', () => {
   let component: CodeSetMainComponent;
@@ -35,11 +37,13 @@ describe('CodeSetMainComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
-        MatStepperModule,
         NoopAnimationsModule,
         UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        MatButtonModule
       ],
       providers: [
         {
@@ -58,7 +62,6 @@ describe('CodeSetMainComponent', () => {
         }
       ],
       declarations: [
-        DclWrapperComponent,
         CodeSetMainComponent
       ]
     })

@@ -31,5 +31,8 @@ module.exports = {
   watchPathIgnorePatterns: [
     'test-report/',
     'junit.xml'
+  ],
+  transformIgnorePatterns: [
+    "node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)"
   ]
 }

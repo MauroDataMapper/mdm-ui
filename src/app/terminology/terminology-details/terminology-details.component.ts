@@ -169,7 +169,7 @@ export class TerminologyDetailsComponent implements OnInit {
     this.processing = true;
     this.exportedFileIsReady = false;
 
-    this.exportHandler.exportDataModel([this.mcTerminology], exporter).subscribe(res => {
+    this.exportHandler.exportDataModel([this.mcTerminology], exporter, 'terminologies').subscribe(res => {
           const result = res.body;
           this.exportedFileIsReady = true;
 

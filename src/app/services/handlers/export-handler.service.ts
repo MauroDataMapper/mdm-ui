@@ -34,33 +34,33 @@ export class ExportHandlerService {
     return `${label.trim().toLowerCase().split(' ').join('_')}_${res}.${extension}`;
   }
 
-  exportDataModel(dataModels, exporter) {
+  exportDataModel(dataModels, exporter, type) {
 
     const modelIds = [];
     dataModels.forEach(dm => {
       modelIds.push(dm.id);
     });
 
-    if (modelIds.length > 1) {
-      return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
+    if (type === 'dataModels') {
+      if (modelIds.length > 1) {
+        return this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
+      }
+      return this.resources.dataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
     }
 
-    return this.resources.dataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
-  }
+    if (type === 'terminologies') {
+      if (modelIds.length > 1) {
+        return this.resources.terminology.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
+      }
+      return this.resources.terminology.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
+    }
 
-  exportDataModel2(dataModels, exporter) {
-    const modelIds = [];
-    dataModels.forEach(dm => {
-      modelIds.push(dm.id);
-    });
-    this.resources.dataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds).subscribe(fileBlob => {
-      const label = dataModels.length === 1 ? dataModels[0].label : 'data_model_export';
-      const fileName = this.createFileName(label, exporter);
-      return ({ fileBlob, fileName });
-    }, error => {
-      return error;
-    });
-    return null;
+    if (type === 'codeSets') {
+      if (modelIds.length > 1) {
+        return this.resources.codeSet.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
+      }
+      return this.resources.codeSet.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
+    }
   }
 
   createBlobLink(blob, fileName) {

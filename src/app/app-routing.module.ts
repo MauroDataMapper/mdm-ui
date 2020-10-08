@@ -28,7 +28,7 @@ import { DataModelMainComponent } from './wizards/dataModel/data-model-main/data
 import { DataClassMainComponent } from './wizards/dataClass/data-class-main/data-class-main.component';
 import { DataTypeMainComponent } from './wizards/dataType/data-type-main/data-type-main.component';
 import { HomeComponent } from './home/home.component';
-import { ImportComponent } from './import/import.component';
+import { ImportModelsComponent } from './import-models/import-models.component';
 import { SearchComponent } from './search/search.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
@@ -42,7 +42,7 @@ import { DataElementComponent } from './dataElement/data-element/data-element.co
 import { ClassificationComponent } from './classification/classification.component';
 import { AppContainerComponent } from './app-container/app-container.component';
 import { AppComponent } from './app.component';
-import { DataModelsExportComponent } from './data-models-export/data-models-export.component';
+import { ExportModelsComponent } from './export-models/export-models.component';
 import { DataElementMainComponent } from './wizards/dataElement/data-element-main/data-element-main.component';
 import { DataTypeComponent } from './data-type/data-type.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
@@ -155,11 +155,6 @@ export const PagesRoutes = {
       component: HomeComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.import',
-      url: '/import/:importType',
-      component: ImportComponent
-    },
-    {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.search',
       url: '/search',
       component: SearchComponent
@@ -192,9 +187,14 @@ export const PagesRoutes = {
       }
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport',
-      url: '/dataModelsExport',
-      component: DataModelsExportComponent
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.import',
+      url: '/import/:importType',
+      component: ImportModelsComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.export',
+      url: '/export/:exportType',
+      component: ExportModelsComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataElement',

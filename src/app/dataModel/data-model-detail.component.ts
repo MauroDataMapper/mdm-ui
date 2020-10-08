@@ -461,7 +461,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.exportError = null;
     this.processing = true;
     this.exportedFileIsReady = false;
-    this.exportHandler.exportDataModel([this.result], exporter).subscribe(result => {
+    this.exportHandler.exportDataModel([this.result], exporter, 'dataModels').subscribe(result => {
       if (result != null) {
         this.exportedFileIsReady = true;
         const label = [this.result].length === 1 ? [this.result][0].label : 'data_models';

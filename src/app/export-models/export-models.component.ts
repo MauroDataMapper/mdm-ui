@@ -22,13 +22,14 @@ import { ExportHandlerService } from '../services/handlers/export-handler.servic
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
+import { StateService } from '@uirouter/core/';
 
 @Component({
   selector: 'mdm-data-models-export',
-  templateUrl: './data-models-export.component.html',
-  styleUrls: ['./data-models-export.component.scss']
+  templateUrl: './export-models.component.html',
+  styleUrls: ['./export-models.component.scss']
 })
-export class DataModelsExportComponent implements OnInit {
+export class ExportModelsComponent implements OnInit {
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
   step: any;
   selectedDataModels: any;
@@ -42,6 +43,7 @@ export class DataModelsExportComponent implements OnInit {
   processing = false;
   exportersList = [];
   exportedFileIsReady: any;
+  exportType: any;
   constructor(
     private changeDedRef: ChangeDetectorRef,
     private securityHandler: SecurityHandlerService,
@@ -50,10 +52,16 @@ export class DataModelsExportComponent implements OnInit {
     private exportHandler: ExportHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
     private renderer: Renderer2,
-    private title: Title
+    private title: Title,
+    private stateService: StateService
   ) {
+  }
+
+  ngOnInit() {
+    this.exportType = this.stateService.params.exportType ? this.stateService.params.exportType : 'dataModels';
     this.loadExporterList();
     this.step = 1;
+    this.title.setTitle(`Export Models`);
   }
 
   onSelect = select => {
@@ -73,11 +81,25 @@ export class DataModelsExportComponent implements OnInit {
         return;
       }
 
-      this.resources.dataModel.exporters().subscribe(result2 => {
-        this.exportersList = result2.body;
-      }, error => {
-        this.messageHandler.showError('There was a problem loading exporters list.', error);
-      });
+      if (this.exportType === 'dataModels') {
+        this.resources.dataModel.exporters().subscribe(result2 => {
+          this.exportersList = result2.body;
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
+        });
+      } else if (this.exportType === 'terminologies') {
+        this.resources.terminology.exporters().subscribe(result2 => {
+          this.exportersList = result2.body;
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
+        });
+      } else if (this.exportType === 'codeSets') {
+        this.resources.codeSet.exporters().subscribe(result2 => {
+          this.exportersList = result2.body;
+        }, error => {
+          this.messageHandler.showError('There was a problem loading exporters list.', error);
+        });
+      }
     });
   }
 
@@ -101,14 +123,14 @@ export class DataModelsExportComponent implements OnInit {
     });
   }
 
-  export() {
+  export = () => {
     this.exportedFileIsReady = false;
     this.processing = true;
-    this.exportHandler.exportDataModel(this.selectedDataModels, this.selectedExporterObj).subscribe(result => {
+    this.exportHandler.exportDataModel(this.selectedDataModels, this.selectedExporterObj, this.exportType).subscribe(result => {
       if (result != null) {
         this.exportedFileIsReady = true;
         this.processing = false;
-        const label = this.selectedDataModels.length === 1 ? this.selectedDataModels[0].label : 'data_models';
+        const label = this.selectedDataModels.length === 1 ? this.selectedDataModels[0].label : this.exportType;
         const fileName = this.exportHandler.createFileName(label, this.selectedExporterObj);
         const file = new Blob([result.body], {
           type: this.selectedExporterObj.fileType
@@ -134,8 +156,4 @@ export class DataModelsExportComponent implements OnInit {
   loadHelp = () => {
     this.helpDialogueHandler.open('Exporting_models');
   };
-
-  ngOnInit() {
-    this.title.setTitle('Data Models Export');
-  }
 }

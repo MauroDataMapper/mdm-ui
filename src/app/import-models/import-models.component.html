@@ -70,10 +70,7 @@ SPDX-License-Identifier: Apache-2.0
 
                 <div class="import-text" *ngIf="option.type === 'Text'">
                     <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
-                        <textarea [(ngModel)]="option.value"
-                        name="{{option.name}}"
-                        [required]="option.optional == false"
-                        rows="5" class="form-control outlined-input"></textarea>
+                        <textarea [(ngModel)]="option.value" name="{{option.name}}" [required]="option.optional == false" rows="5" class="form-control outlined-input"></textarea>
                     </div>
                 </div>
 
@@ -88,9 +85,7 @@ SPDX-License-Identifier: Apache-2.0
 
                         <div *ngIf="formOptionsMap[option.type] != 'checkbox' && formOptionsMap[option.type] != 'file'">
                             <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
-                            <input type="{{formOptionsMap[option.type]}}" name="{{option.name}}" [(ngModel)]="option.value"
-                                [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}"
-                                [required]="option.optional === false">
+                            <input type="{{formOptionsMap[option.type]}}" name="{{option.name}}" [(ngModel)]="option.value" [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}" [required]="option.optional === false">
                         </div>
                         <div *ngIf="formOptionsMap[option.type] === 'file'">
                             <input type="{{formOptionsMap[option.type]}}"

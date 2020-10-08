@@ -16,19 +16,25 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <h4 class="marginless">Data Model(s) Export </h4>
+    <h4 *ngIf="exportType === 'dataModels'">Export Data Models </h4>
+    <h4 *ngIf="exportType === 'codeSets'">Export Code Set </h4>
+    <h4 *ngIf="exportType === 'referenceModels'">Export Reference Model </h4>
+    <h4 *ngIf="exportType === 'terminologies'">Export Terminologies </h4>
     <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i>
 </div>
 
 <div class="mt-2 mb-2">
-    <h4 class="marginless">Select your Data Model(s):</h4>
+    <h4 *ngIf="exportType === 'dataModels'" class="marginless">Select your Data Model(s):</h4>
+    <h4 *ngIf="exportType === 'codeSets'" class="marginless">Select your Code Set(s):</h4>
+    <h4 *ngIf="exportType === 'referenceModels'" class="marginless">Select your Reference Model(s):</h4>
+    <h4 *ngIf="exportType === 'terminologies'" class="marginless">Select your Terminology:</h4>
         <mdm-model-selector-tree [(ngModel)]="selectedDataModels"
                                 [onSelect]="onSelect"
                                 [multiple]="true"
                                 ngDefaultControl
                                 name="selectedDataModels"
-                                [treeSearchDomainType]="'DataModel'"
-                                [accepts]="['DataModel']"
+                                [treeSearchDomainType]="'DataModel, Terminology'"
+                                [accepts]="['DataModel', 'Terminology']"
                                 [defaultElements]="selectedDataModels"
                                 [placeholder]="'Select Data Model...'"
                                 (ngModelChange)="selectedDataModels = $event">

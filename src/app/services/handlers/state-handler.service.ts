@@ -63,7 +63,7 @@ export class StateHandlerService {
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
         modelscomparison: 'appContainer.mainApp.modelsComparison',
         linksuggestion: 'appContainer.mainApp.linkSuggestion',
-        datamodelsexport: 'appContainer.mainApp.twoSidePanel.catalogue.dataModelsExport',
+                export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
         import: 'appContainer.mainApp.twoSidePanel.catalogue.import',
 
         simpleviewhome: 'appContainer.simpleApp.home',

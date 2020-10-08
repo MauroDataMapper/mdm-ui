@@ -29,7 +29,7 @@ import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
-import { DataModelsExportComponent } from '@mdm/data-models-export/data-models-export.component';
+import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { HistoryComponent } from '@mdm/folder/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
@@ -102,7 +102,7 @@ import { DataElementMainComponent } from '@mdm/wizards/dataElement/data-element-
 import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '@mdm/wizards/dataElement/data-element-step2/data-element-step2.component';
 import { HomeComponent } from '@mdm/home/home.component';
-import { ImportComponent } from '@mdm/import/import.component';
+import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
 import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
@@ -163,7 +163,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     ShareWithComponent,
-    DataModelsExportComponent ,
+    ExportModelsComponent ,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
@@ -243,7 +243,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataElementStep1Component,
     DataElementStep2Component,
     HomeComponent,
-    ImportComponent,
+    ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
@@ -316,7 +316,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
     ShareWithComponent,
-    DataModelsExportComponent ,
+    ExportModelsComponent ,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
@@ -391,7 +391,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataElementStep1Component,
     DataElementStep2Component,
     HomeComponent,
-    ImportComponent,
+    ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,

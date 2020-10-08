@@ -26,10 +26,10 @@ import { StateService } from '@uirouter/core/';
 
 @Component({
   selector: 'mdm-import',
-  templateUrl: './import.component.html',
-  styleUrls: ['./import.component.sass'],
+  templateUrl: './import-models.component.html',
+  styleUrls: ['./import-models.component.sass'],
 })
-export class ImportComponent implements OnInit {
+export class ImportModelsComponent implements OnInit {
   importers: any;
   importHasError: boolean;
   importErrors: any;
@@ -73,6 +73,7 @@ export class ImportComponent implements OnInit {
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
+    this.importType = this.stateService.params.importType ? this.stateService.params.importType : 'dataModels';
     this.importType = this.stateService.params.importType;
     this.title.setTitle('Import');
     this.loadImporters();
@@ -82,21 +83,18 @@ export class ImportComponent implements OnInit {
     if (this.importType === 'dataModels') {
       this.resources.dataModel.importers().subscribe(result => {
         this.importers = result.body;
-        console.log(this.importers);
       }, error => {
         this.messageHandler.showError('Can not load importers!', error);
       });
     } else if (this.importType === 'terminologies') {
       this.resources.terminology.importers().subscribe(result => {
           this.importers = result.body;
-          console.log(this.importers);
         }, error => {
           this.messageHandler.showError('Can not load importers!', error);
         });
       } else if (this.importType === 'codeSets') {
         this.resources.codeSet.importers().subscribe(result => {
             this.importers = result.body;
-            console.log(this.importers);
         }, error => {
           this.messageHandler.showError('Can not load importers!', error);
       });
@@ -110,9 +108,7 @@ export class ImportComponent implements OnInit {
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
-      selectedItem.name
-    );
+    this.importerHelp = this.helpDialogueHandler.getImporterHelp(selectedItem.name);
 
     const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
     this.resources.importer.get(action).subscribe(res => {

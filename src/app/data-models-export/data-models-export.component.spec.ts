@@ -54,12 +54,13 @@ describe('DataModelsExportComponent', () => {
         {
           provide: MdmResourcesService,
           useValue: {
-            session: {
-              // tslint:disable-next-line: deprecation
-              isAuthenticated: () => empty()
-            },
+            // tslint:disable-next-line: deprecation
+            session: { isAuthenticated: () => empty() },
             tree: {
-              list: jest.fn()
+              // tslint:disable-next-line: deprecation
+              list: (domainType: any, options: any) => empty(),
+              // tslint:disable-next-line: deprecation
+              get: (domainType: any, options: any) => empty()
             }
           }
         }

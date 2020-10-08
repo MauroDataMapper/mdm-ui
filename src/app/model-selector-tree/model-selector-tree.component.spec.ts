@@ -50,7 +50,9 @@ describe('ModelSelectorTreeComponent', () => {
           useValue: {
             tree: {
               // tslint:disable-next-line: deprecation
-              list: (domainType: any, options: any) => empty()
+              list: (domainType: any, options: any) => empty(),
+              // tslint:disable-next-line: deprecation
+              get: (domainType: any, options: any) => empty()
             }
           }
         },

@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { McDataSetMetadataComponent } from './mc-data-set-metadata.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -46,7 +44,6 @@ describe('McDataSetMetadataComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         MatFormFieldModule,
         MatPaginatorModule,

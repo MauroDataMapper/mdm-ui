@@ -155,7 +155,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-        this.showSecuritySection = message;
+      this.showSecuritySection = message;
     });
   }
 
@@ -262,8 +262,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.stateHandler.reload();
       }
     }, error => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
     });
   }
 
@@ -493,19 +493,17 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   loadExporterList() {
     this.exportList = [];
-    if (this.securityHandler.isAuthenticated()) {
-      this.securityHandler.isAuthenticated().subscribe(result => {
-        if (result.body === false) {
-          return;
-        }
+    this.securityHandler.isAuthenticated().subscribe(result => {
+      if (result.body === false) {
+        return;
+      }
 
-        this.resourcesService.dataModel.exporters().subscribe(res => {
-          this.exportList = res.body;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        });
+      this.resourcesService.dataModel.exporters().subscribe(res => {
+        this.exportList = res.body;
+      }, error => {
+        this.messageHandler.showError('There was a problem loading exporters list.', error);
       });
-    }
+    });
   }
 
   onLabelChange(value: any) {

@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MultipleTermsSelectorComponent } from './multiple-terms-selector.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
 import { ElementLinkComponent } from '../element-link/element-link.component';
 import { MatTableModule } from '@angular/material/table';
@@ -38,7 +37,6 @@ describe('MultipleTermsSelectorComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         MatTableModule,
         MatCheckboxModule,
         MatTooltipModule,

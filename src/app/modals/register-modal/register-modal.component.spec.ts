@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterModalComponent } from './register-modal.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +35,6 @@ describe('RegisterModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         MatFormFieldModule,
         MatPasswordStrengthModule,
         MatInputModule,

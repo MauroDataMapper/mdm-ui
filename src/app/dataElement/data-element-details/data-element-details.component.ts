@@ -248,14 +248,12 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   fetchDataTypes = (text, loadAll, offset, limit) => {
-    if (this.resourcesService.dataType) {
-      const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', { label: text });
-      this.pagination = {
-        limit: options['limit'],
-        offset: options['offset']
-      };
-      return this.resourcesService.dataType.list(this.parentDataModel.id, options);
-    }
+    const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', { label: text });
+    this.pagination = {
+      limit: options['limit'],
+      offset: options['offset']
+    };
+    return this.resourcesService.dataType.list(this.parentDataModel.id, options);
   }
 
   ngOnDestroy() {

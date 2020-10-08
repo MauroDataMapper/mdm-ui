@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div *ngIf="editableForm.visible && !readOnly" style="clear: both;">
     <mat-form-field appearance="outline" class="mdm--input mb-2 full-width">
-        <mat-select multiple placeholder="Classifications" name="classification" [(ngModel)]="selectedClassification" (ngModelChange)="onModelChanged()">
+        <mat-select multiple placeholder="Classifications" name="selectedClassification" [(ngModel)]="selectedClassification" (ngModelChange)="onModelChanged()">
             <mat-option *ngFor="let classification of allClassifications" [value]="classification">{{classification.label}}</mat-option>
         </mat-select>
     </mat-form-field>

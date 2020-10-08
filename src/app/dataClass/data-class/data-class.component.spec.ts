@@ -79,7 +79,6 @@ describe('DataClassComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         MatTooltipModule,
         MatTabsModule,

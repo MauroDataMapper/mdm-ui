@@ -248,21 +248,19 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
       method = this.resources.tree.get('folders', 'dataModel', id, options);
     }
 
-    if (method) {
-      method.subscribe(data => {
-        this.loading = false;
-        this.rootNode = {
-          children: data.body,
-          isRoot: true
-        };
-        this.filteredRootNode = this.rootNode;
-        if (this.defaultCheckedMap && this.markChildren) {
-          this.markChildren(this.filteredRootNode);
-        }
-      }, () => {
-        this.loading = false;
-      });
-    }
+    method.subscribe(data => {
+      this.loading = false;
+      this.rootNode = {
+        children: data.body,
+        isRoot: true
+      };
+      this.filteredRootNode = this.rootNode;
+      if (this.defaultCheckedMap && this.markChildren) {
+        this.markChildren(this.filteredRootNode);
+      }
+    }, () => {
+      this.loading = false;
+    });
   }
 
   remove(event, element) {

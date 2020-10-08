@@ -35,10 +35,8 @@ describe('NewFolderModalComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             userGroups: {
-              list: () => {
-                // tslint:disable-next-line: deprecation
-                return empty();
-              }
+              // tslint:disable-next-line: deprecation
+              list: () => empty()
             }
           }
         }

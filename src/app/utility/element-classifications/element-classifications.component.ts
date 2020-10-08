@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { FolderResult } from '@mdm/model/folderModel';
 import { DataModelResult } from '@mdm/model/dataModelModel';
-import { forEach } from '@uirouter/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 

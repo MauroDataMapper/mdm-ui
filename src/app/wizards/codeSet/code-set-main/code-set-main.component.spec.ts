@@ -29,6 +29,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
+import { MatSelectModule } from '@angular/material/select';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
+import { MatTableModule } from '@angular/material/table';
+import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 
 describe('CodeSetMainComponent', () => {
   let component: CodeSetMainComponent;
@@ -43,7 +48,9 @@ describe('CodeSetMainComponent', () => {
         MatFormFieldModule,
         MatInputModule,
         FormsModule,
-        MatButtonModule
+        MatButtonModule,
+        MatSelectModule,
+        MatTableModule
       ],
       providers: [
         {
@@ -55,18 +62,23 @@ describe('CodeSetMainComponent', () => {
         {
           provide: MdmResourcesService,
           useValue: {
-            folder: {
-              // tslint:disable-next-line: deprecation
-              get: () => empty()
-            }
+            // tslint:disable-next-line: deprecation
+            folder: { get: () => empty() },
+            // tslint:disable-next-line: deprecation
+            classifier: { list: () => empty() },
+            // tslint:disable-next-line: deprecation
+            terminology: { list: () => empty() }
           }
-        }
+        },
       ],
       declarations: [
-        CodeSetMainComponent
+        CodeSetMainComponent,
+        ElementClassificationsComponent,
+        ElementLinkComponent,
+        MultipleTermsSelectorComponent,
+        McSelectComponent
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

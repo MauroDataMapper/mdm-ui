@@ -54,9 +54,6 @@ export class LoginModalComponent implements OnInit {
 
   async login() {
     this.message = '';
-    if (this.username) {
-
-    }
     try {
       this.resource = {
         username: this.username,

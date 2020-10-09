@@ -162,34 +162,34 @@ export class UserComponent implements OnInit {
   };
 
   save = () => {
-    this.validate();
-
-    const resource = {
-      emailAddress: this.user.emailAddress,
-      firstName: this.user.firstName,
-      lastName: this.user.lastName,
-      organisation: this.user.organisation,
-      jobTitle: this.user.jobTitle,
-      groups: this.user.groups || []
-    };
-    // it's in edit mode
-    if (this.user.id) {
-      // it's in edit mode (update)
-      this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
-        this.messageHandler.showSuccess('User updated successfully.');
-        this.stateHandler.Go('admin.users');
-      }, error => {
-        this.messageHandler.showError('There was a problem updating the user.', error);
-      });
-    } else {
-      // it's in new mode (create)
-      this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
-        this.messageHandler.showSuccess('User saved successfully.');
-        this.stateHandler.Go('admin.users');
-      },
-        error => {
-          this.messageHandler.showError('There was a problem saving the user.', error);
+    if (this.validate()) {
+      const resource = {
+        emailAddress: this.user.emailAddress,
+        firstName: this.user.firstName,
+        lastName: this.user.lastName,
+        organisation: this.user.organisation,
+        jobTitle: this.user.jobTitle,
+        groups: this.user.groups || []
+      };
+      // it's in edit mode
+      if (this.user.id) {
+        // it's in edit mode (update)
+        this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
+          this.messageHandler.showSuccess('User updated successfully.');
+          this.stateHandler.Go('admin.users');
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the user.', error);
         });
+      } else {
+        // it's in new mode (create)
+        this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
+          this.messageHandler.showSuccess('User saved successfully.');
+          this.stateHandler.Go('admin.users');
+        },
+          error => {
+            this.messageHandler.showError('There was a problem saving the user.', error);
+          });
+      }
     }
   };
 

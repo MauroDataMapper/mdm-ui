@@ -27,11 +27,29 @@ import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BroadcastService } from '@mdm/services';
 
 
 describe('LoginModalComponent', () => {
   let component: LoginModalComponent;
   let fixture: ComponentFixture<LoginModalComponent>;
+  // tslint:disable: prefer-const
+  let broadcastServiceMock: BroadcastService;
+  let dialogRefMock;
+  let securityHandler;
+  let messageServiceMock;
+  let validatorServiceMock;
+
+  beforeEach(() => {
+    component = new LoginModalComponent(
+      broadcastServiceMock,
+      dialogRefMock,
+      securityHandler,
+      messageServiceMock,
+      validatorServiceMock
+    );
+    component.ngOnInit();
+  });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -54,8 +72,7 @@ describe('LoginModalComponent', () => {
         ByteArrayToBase64Pipe,
         LoginModalComponent
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -66,5 +83,59 @@ describe('LoginModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('Test: ngOnInit', () => {
+    it('should initialize the form', () => {
+      const res = {
+        username: '',
+        password: ''
+      };
+      expect(component.resource).toEqual(res);
+    });
+  });
+
+
+  describe('Test: Login form', () => {
+    it('Test: Login form SHOULD submit the login form', () => {
+      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
+      component.username = 'email@email.com';
+      component.password = 'password';
+      component.login();
+      expect(generateSpy).toHaveBeenCalled();
+    });
+
+    it('Test: Login form SHOULD NOT submit the login form (1)', () => {
+      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
+      component.username = '';
+      component.password = '';
+      component.login();
+      expect(generateSpy).not.toHaveBeenCalled();
+    });
+
+    it('Test: Login form SHOULD NOT submit the login form (2)', () => {
+      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
+      component.username = 'abc';
+      component.password = 'abc';
+      component.login();
+      expect(generateSpy).not.toHaveBeenCalled();
+    });
+
+
+    it('Test: Login form SHOULD NOT submit the login form (3)', () => {
+      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
+      component.username = 'email@email.com';
+      component.password = '';
+      component.login();
+      expect(generateSpy).not.toHaveBeenCalled();
+    });
+
+    it('Test: Login form SHOULD NOT submit the login form (4)', () => {
+      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
+      component.username = '';
+      component.password = 'password';
+      component.login();
+      expect(generateSpy).not.toHaveBeenCalled();
+    });
   });
 });

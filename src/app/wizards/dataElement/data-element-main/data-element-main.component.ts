@@ -36,14 +36,6 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-element-main.component.sass']
 })
 export class DataElementMainComponent implements OnInit {
-  constructor(
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private changeRef: ChangeDetectorRef,
-    private title: Title
-  ) {}
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentDataModelId: any;
@@ -86,8 +78,17 @@ export class DataElementMainComponent implements OnInit {
     isProcessComplete : false
   };
 
+  constructor(
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private changeRef: ChangeDetectorRef,
+    private title: Title
+  ) {}
+
   ngOnInit() {
-    this.title.setTitle(`New Data Element`);
+    this.title.setTitle('New Data Element');
     // tslint:disable-next-line: deprecation
     this.parentDataModelId = this.stateService.params.parentDataModelId;
     // tslint:disable-next-line: deprecation
@@ -323,6 +324,7 @@ export class DataElementMainComponent implements OnInit {
 
     // Check if for TerminologyType, the terminology is selected
     if (this.model.newlyAddedDataType.domainType === 'TerminologyType' && !this.model.newlyAddedDataType.referencedTerminology) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       isValid = false;
     }
   }

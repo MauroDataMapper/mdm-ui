@@ -112,8 +112,8 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  askForSoftApproval = (row) => {
-    const promise = new Promise((resolve, reject) => {
+  askForSoftApproval = (row: { firstName: string; lastName: string }) => {
+    const promise = new Promise(() => {
       const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
@@ -126,15 +126,15 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
 
       dialog.afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
-          return promise;
+          return;
         }
         this.approveUser(row);
       });
     });
     return promise;
-  }
-  askForSoftRejection = (row) => {
-    const promise = new Promise((resolve, reject) => {
+  };
+  askForSoftRejection = (row: { firstName: string; lastName: string }) => {
+    const promise = new Promise(() => {
       const message = `Are you sure you want to reject <em><strong>${row.firstName} ${row.lastName}</strong></em>?
                       <br> <strong>Note:</strong> Rejected users will not be removed;
                       <br> Instead they will be <span class='warning'>disabled</span>`;
@@ -149,13 +149,13 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
 
       dialog.afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
-          return promise;
+          return;
         }
         this.rejectUser(row);
       });
     });
     return promise;
-  }
+  };
 
   approveUser = (row) => {
     this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {

@@ -103,5 +103,5 @@ export class ResetPasswordComponent implements OnInit {
           this.confirmed = false;
         }
       );
-  }
+  };
 }

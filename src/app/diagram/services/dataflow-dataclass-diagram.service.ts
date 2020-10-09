@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { Observable, EMPTY, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import * as joint from 'jointjs';
 
 
@@ -75,13 +75,13 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
             // this.addLink(flow.id + '/' + sourceDataClass.id, sourceDataClass.id, flow.id);
             // link the sourceDataClass to the merged dataClassComponent
             link = new joint.shapes.standard.Link({
-              id: flow.id + '/' + sourceDataClass.id,
+              id: `${flow.id}/${sourceDataClass.id}`,
               source: { id: sourceDataClass.id },
               target: { id: flow.id }
             });
           } else {
             link = new joint.shapes.standard.Link({
-              id: flow.id + '/' + targetDataClass.id,
+              id: `${flow.id}/${targetDataClass.id}`,
               source: { id: sourceDataClass.id },
               target: { id: targetDataClass.id }
             });
@@ -98,7 +98,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       if (flow.sourceDataClasses.length > 1) {
         // link the merged dataClassComponent to the targetDataClass
         const mergedLink = new joint.shapes.standard.Link({
-          id: flow.id + '/' + flow.targetDataClasses[0].id,
+          id: `${flow.id}/${flow.targetDataClasses[0].id}`,
           source: { id: flow.id },
           target: { id: flow.targetDataClasses[0].id }
         });
@@ -125,8 +125,8 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     }
 
     const result: any = {
-      flowId: this.flowId as string,
-      flowComponentId: this.selDataClassComponentId as string,
+      flowId: this.flowId,
+      flowComponentId: this.selDataClassComponentId,
       parent: {
         id: this.parentId
       },
@@ -135,7 +135,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
     this.clickSubject.next(result);
     this.clickSubject.complete();
-  }
+  };
 
   singleClick = (cellView: joint.dia.CellView) => {
 
@@ -148,7 +148,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
         this.selDataClassComponentId = arrMergedId[0];
         // Check if this id is a DataClassComponent
-        foundDataClassComponents = Object.keys(this.dataClassComponents).filter((key) => {
+        foundDataClassComponents = Object.keys(this.dataClassComponents).filter(() => {
           return foundDataClassComponents[arrMergedId[0]];
         });
 
@@ -158,23 +158,23 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
             if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
               this.changeComponent(result.body);
             }
-          }, () => { });
+          });
         } else {
           this.changeComponent(null);
         }
       }
     }
-  }
+  };
 
   configurePaper(paper: joint.dia.Paper): void {
     let clicks = 0;
     let doubleClick = false;
 
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView) => {
       this.doubleClick(cellView);
     });
 
-    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView) => {
 
       clicks++;
       if (clicks === 1) {
@@ -222,5 +222,5 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Data Class Component.', error);
     });
-  }
+  };
 }

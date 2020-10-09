@@ -30,7 +30,8 @@ export class ExportHandlerService {
     const rightNow = new Date();
     const res = rightNow.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '');
     // remove space from dataModelLabel and replace all spaces with _ and also add date/time and extension
-    return label.trim().toLowerCase().split(' ').join('_') + '_' + res + '.' + extension;
+    // return label.trim().toLowerCase().split(' ').join('_') + '_' + res + '.' + extension;
+    return `${label.trim().toLowerCase().split(' ').join('_')}_${res}.${extension}`;
   }
 
   exportDataModel(dataModels, exporter) {

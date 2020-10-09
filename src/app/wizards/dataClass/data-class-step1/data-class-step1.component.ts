@@ -46,7 +46,6 @@ export class DataClassStep1Component implements OnInit {
     this.validate();
   };
 
-  onLoad() {}
 
   validate = () => {
 
@@ -66,5 +65,5 @@ export class DataClassStep1Component implements OnInit {
   selectCreateType = createType => {
     this.model.createType = createType;
     this.validate();
-  }
+  };
 }

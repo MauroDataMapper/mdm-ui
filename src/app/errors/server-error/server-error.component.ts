@@ -21,7 +21,6 @@ import {ClipboardService} from 'ngx-clipboard';
 import {YoutrackService} from '@mdm/services/youtrack.service';
 import {SharedService} from '@mdm/services/shared.service';
 import {ErrorComponent} from '../error.component';
-const columns: string[] = ['field', 'value'];
 @Component({
     selector: 'mdm-server-error',
     templateUrl: '../error.component.html',

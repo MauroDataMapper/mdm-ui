@@ -22,8 +22,7 @@ import { Injectable } from '@angular/core';
 })
 export class DownloadService {
 
-  constructor() {
-  }
+  constructor() {}
 
   /* Canvas Download */
 

@@ -188,6 +188,7 @@ export class FlatNode {
 
 }
 
+// eslint-disable-next-line no-shadow
 export enum DOMAIN_TYPE {
     Folder = 'Folder',
     DataModel = 'DataModel',

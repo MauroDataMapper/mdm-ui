@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
                 class="form-control outlined-input"
                 [(ngModel)]="formData.filterCriteria"
                 placeholder="Search favourite items..."
-                (keyup)="onSearchInputKeyDown($event)">
+                (keyup)="onSearchInputKeyDown()">
         <span class="tree-top-actions">
             <button mat-stroked-button type="button" matTooltipPosition="below" matTooltip="Search"  (click)="search()" aria-label="Search">
                 <i class="fas fa-search"></i>

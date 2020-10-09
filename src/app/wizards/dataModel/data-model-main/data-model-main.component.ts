@@ -32,15 +32,6 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-model-main.component.sass']
 })
 export class DataModelMainComponent implements OnInit {
-
-  constructor(
-    private broadcastSvc: BroadcastService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private stateService: StateService,
-    private title: Title
-  ) { }
   isLinear = false;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
@@ -50,9 +41,17 @@ export class DataModelMainComponent implements OnInit {
     metadata: [],
     classifiers: []
   };
+  constructor(
+    private broadcastSvc: BroadcastService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateService: StateService,
+    private title: Title
+  ) { }
 
   ngOnInit() {
-    this.title.setTitle(`New Data Model`);
+    this.title.setTitle('New Data Model');
     // tslint:disable-next-line: deprecation
     this.parentFolderId = this.stateService.params.parentFolderId;
     this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
@@ -108,12 +107,12 @@ export class DataModelMainComponent implements OnInit {
       resource.dialect = this.model.dialect;
     }
 
-    let queryStringParams = null;
-    if (this.model.selectedDataTypeProvider) {
-      queryStringParams = {
-        defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
-      };
-    }
+    // let queryStringParams = null;
+    // if (this.model.selectedDataTypeProvider) {
+    //   queryStringParams = {
+    //     defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
+    //   };
+    // }
 
     this.resources.dataModel.addToFolder(this.parentFolderId, resource).subscribe(response => {
       this.messageHandler.showSuccess('Data Model saved successfully.');
@@ -123,5 +122,5 @@ export class DataModelMainComponent implements OnInit {
       error => {
         this.messageHandler.showError('There was a problem saving the Data Model.', error);
       });
-  }
+  };
 }

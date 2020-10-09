@@ -139,5 +139,5 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
 
   add = () => {
     this.stateHandlerService.Go('admin.group', { id: null }, null);
-  }
+  };
 }

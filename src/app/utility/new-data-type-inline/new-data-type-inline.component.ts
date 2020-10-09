@@ -32,7 +32,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   @Input() parentDataModel;
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
-  formDataTypeChangesSubscription: Subscription;
+
   @ViewChild('myFormNewDataType', { static: false }) myFormNewDataType: NgForm;
   @Input() model: any = {
     label: '',
@@ -43,6 +43,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   };
 
   @Input() parentScopeHandler;
+  formDataTypeChangesSubscription: Subscription;
   allDataTypes;
   isValid = false;
   reloading = false;
@@ -142,7 +143,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     );
   }
 
-  onTerminologySelect(terminology: any, record: any) {
+  onTerminologySelect(terminology: any) {
     this.model.referencedTerminology = terminology;
     this.model.terminology = terminology;
     this.validate();
@@ -153,5 +154,5 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     this.model.enumerationValues = newEnumList;
     this.validate();
     this.sendValidationStatus();
-  }
+  };
 }

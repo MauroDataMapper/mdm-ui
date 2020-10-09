@@ -78,5 +78,5 @@ export class AllLinksInPagedListComponent implements OnInit {
     });
 
     this.loading = false;
-  }
+  };
 }

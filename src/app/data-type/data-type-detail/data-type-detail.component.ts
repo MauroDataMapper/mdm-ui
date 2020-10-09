@@ -48,6 +48,11 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   @Input() hideEditButton: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
 
+  allDataTypes = this.elementTypes.getAllDataTypesArray();
+  allDataTypesMap = this.elementTypes.getAllDataTypesMap();
+  editableForm: EditableDataModel;
+  errorMessage: any;
+
   showDelete: boolean;
   showEdit: boolean;
   canEditDescription = true;
@@ -66,10 +71,6 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     private securityHandler: SecurityHandlerService
   ) { }
 
-  allDataTypes = this.elementTypes.getAllDataTypesArray();
-  allDataTypesMap = this.elementTypes.getAllDataTypesMap();
-  editableForm: EditableDataModel;
-  errorMessage: any;
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -82,7 +83,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     this.editableForm.show = () => {
       this.editForm.forEach(x => x.edit({
         editing: true,
-        focus: x._name === 'moduleName' ? true : false,
+        focus: x.name === 'moduleName' ? true : false,
       }));
       this.editableForm.visible = true;
     };
@@ -125,7 +126,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       this.editForm.forEach(x =>
         x.edit({
           editing: true,
-          focus: x._name === 'moduleName' ? true : false,
+          focus: x.name === 'moduleName' ? true : false,
         })
       );
     });
@@ -220,7 +221,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       const result = res.body;
       const dataElementsCount = result.count;
 
-      let message = `<p class='marginless'>Are you sure you want to <span class='warning'>permanently</span> delete this Data Type?</p>`;
+      let message = '<p class=\'marginless\'>Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Type?</p>';
       if (dataElementsCount > 0) {
         message += `<p>All it's Data Elements <strong>(${dataElementsCount})</strong> will be deleted <span class='warning'>permanently</span> as well:</p>`;
 
@@ -253,5 +254,5 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   showDescription = () => {
     this.showEditDescription = true;
     this.editableForm.show();
-  }
+  };
 }

@@ -24,7 +24,6 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -32,16 +31,11 @@ import { GridService } from '@mdm/services/grid.service';
   styleUrls: ['./annotation-list.component.sass']
 })
 export class AnnotationListComponent implements AfterViewInit {
-  constructor(
-    private securityHandler: SecurityHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private changeRef: ChangeDetectorRef,
-    private gridService: GridService
-  ) { }
-
   @Input() parent: any;
   @Input() domainType: any;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild('childEditor', { static: false })
 
   access: any;
   currentUser: any;
@@ -49,16 +43,21 @@ export class AnnotationListComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   childEditor: MarkdownTextAreaComponent;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  @ViewChild('childEditor', { static: false })
-  set content(content: MarkdownTextAreaComponent) {
-    this.childEditor = content;
-  }
-
   reloadEvent = new EventEmitter<string>();
   records: any[];
   canAddAnnotation = false;
+
+  constructor(
+    private securityHandler: SecurityHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private changeRef: ChangeDetectorRef,
+  ) { }
+
+
+  set content(content: MarkdownTextAreaComponent) {
+    this.childEditor = content;
+  }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -73,12 +72,7 @@ export class AnnotationListComponent implements AfterViewInit {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
 
-      return this.annotationFetch(
-        this.paginator.pageSize,
-        this.paginator.pageOffset,
-        this.sort.active,
-        this.sort.direction
-      );
+      return this.annotationFetch();
     }), map((data: any) => {
       this.totalItemCount = data.body.count;
       this.isLoadingResults = false;
@@ -95,8 +89,9 @@ export class AnnotationListComponent implements AfterViewInit {
     this.changeRef.detectChanges();
   }
 
-  annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+  // annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+  // const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+  annotationFetch() {
     return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
   }
 
@@ -128,7 +123,7 @@ export class AnnotationListComponent implements AfterViewInit {
     }
   };
 
-  saveParent = (record, index) => {
+  saveParent = (record) => {
     const resource = {
       label: record.edit.label,
       description: record.edit.description
@@ -168,5 +163,5 @@ export class AnnotationListComponent implements AfterViewInit {
       annotation.newChildText = '';
       annotation.show = true;
     }
-  }
+  };
 }

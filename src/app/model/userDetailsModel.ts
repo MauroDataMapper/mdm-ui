@@ -42,5 +42,6 @@ export class EditableUserDetails {
 
   cancel() {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save(parent: any) {}
 }

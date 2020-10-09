@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 
 @Directive({

@@ -50,7 +50,7 @@ export class NewVersionDataModelComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.title.setTitle(`New Data Model Version`);
+    this.title.setTitle('New Data Model Version');
     // tslint:disable-next-line: deprecation
     if (!this.stateService.params.dataModelId) {
       this.stateHandler.NotFound({ location: false });

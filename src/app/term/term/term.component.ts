@@ -19,8 +19,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  Inject,
-  forwardRef,
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
@@ -32,7 +30,6 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { TermResult } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -41,16 +38,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./term.component.scss']
 })
 export class TermComponent implements OnInit {
-  constructor(
-    private resources: MdmResourcesService,
-    private messageService: MessageService,
-    private sharedService: SharedService,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private broadcast: BroadcastService,
-    private changeRef: ChangeDetectorRef,
-    private title: Title
-  ) { }
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology = null;
   term: TermResult;
   showSecuritySection: boolean;
@@ -63,9 +51,18 @@ export class TermComponent implements OnInit {
   activeTab: any;
   result: TermResult;
   hasResult = false;
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   showEditForm = false;
   editForm = null;
+  constructor(
+    private resources: MdmResourcesService,
+    private messageService: MessageService,
+    private sharedService: SharedService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private broadcast: BroadcastService,
+    private changeRef: ChangeDetectorRef,
+    private title: Title
+  ) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -80,22 +77,20 @@ export class TermComponent implements OnInit {
     // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
     this.title.setTitle('Term');
-    // tslint:disable-next-line: deprecation
-    this.termDetails(this.stateService.params.id);
+    this.termDetails(this.parentId);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
     this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
   }
 
-  termDetails = async id => {
+  termDetails = (id: string) => {
     const terms = [];
     // tslint:disable-next-line: deprecation
     terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
     // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
-    // tslint:disable-next-line: deprecation
-    terms.push(this.resources.catalogueItem.listSemanticLinks('terms', this.stateService.params.id));
+    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, id));
+    terms.push(this.resources.catalogueItem.listSemanticLinks('terms', id));
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;

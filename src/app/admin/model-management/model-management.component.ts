@@ -135,18 +135,59 @@ export class ModelManagementComponent implements OnInit {
     this.deleteSuccessMessage = null;
   };
 
-  private removeChildren(node: any) {
-    if (node.hasChildren && node.children) {
-      let i = 0;
-      while (i < node.children.length) {
-        const childIdx = this.selectedElements.findIndex((y) => y.node.id === node.children[i].id);
-        if (childIdx >= 0) {
-          this.selectedElements.splice(childIdx, 1);
-          this.selectedElementsCount--;
-        }
-        i++;
+  askForPermanentDelete() {
+    const promise = new Promise((resolve, reject) => {
+      if (!this.securityHandler.isAdmin()) {
+        reject({ message: 'Only Admins are allowed to delete records!' });
       }
-    }
+
+      let message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete these records?';
+      if (this.selectedElementsCount === 1) {
+        message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this record?';
+      }
+
+      const dialog = this.dialog.open(ConfirmationModalComponent, {
+        data: {
+          title: 'Delete permanently',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message,
+        },
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result?.status !== 'ok') {
+          return;
+        }
+
+        let title = 'Are you sure you want to delete these records?';
+        message = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
+                   <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
+        if (this.selectedElementsCount === 1) {
+          title = 'Are you sure you want to delete this record?';
+        }
+
+        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
+          data: {
+            title,
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message,
+          },
+        });
+
+        dialog2.afterClosed().subscribe((res) => {
+          if (res?.status !== 'ok') {
+            reject(null);
+            return;
+          }
+
+          this.delete(true);
+        });
+      });
+    });
+
+    return promise;
   }
 
   delete(permanent?) {
@@ -210,7 +251,7 @@ export class ModelManagementComponent implements OnInit {
 
       dialog.afterClosed().subscribe((result) => {
         if (result?.status !== 'ok') {
-          return promise;
+          return;
         }
 
         this.delete(false);
@@ -219,58 +260,17 @@ export class ModelManagementComponent implements OnInit {
     return promise;
   }
 
-  askForPermanentDelete() {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'Only Admins are allowed to delete records!' });
-      }
-
-      let message = `Are you sure you want to <span class='warning'>permanently</span> delete these records?`;
-      if (this.selectedElementsCount === 1) {
-        message = `Are you sure you want to <span class='warning'>permanently</span> delete this record?`;
-      }
-
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: 'Delete permanently',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message,
-        },
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result?.status !== 'ok') {
-          return;
+  private removeChildren(node: any) {
+    if (node.hasChildren && node.children) {
+      let i = 0;
+      while (i < node.children.length) {
+        const childIdx = this.selectedElements.findIndex((y) => y.node.id === node.children[i].id);
+        if (childIdx >= 0) {
+          this.selectedElements.splice(childIdx, 1);
+          this.selectedElementsCount--;
         }
-
-        let title = `Are you sure you want to delete these records?`;
-        message = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
-                   <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
-        if (this.selectedElementsCount === 1) {
-          title = `Are you sure you want to delete this record?`;
-        }
-
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title,
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message,
-          },
-        });
-
-        dialog2.afterClosed().subscribe((res) => {
-          if (res?.status !== 'ok') {
-            reject(null);
-            return;
-          }
-
-          this.delete(true);
-        });
-      });
-    });
-
-    return promise;
+        i++;
+      }
+    }
   }
 }

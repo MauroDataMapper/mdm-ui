@@ -48,6 +48,8 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
@@ -67,8 +69,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   showEditMode = false;
   processing: boolean;
 
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -89,7 +89,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
   }
 
   ngOnInit() {
@@ -120,7 +120,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe(() => {
-      this.invokeInlineEditor();
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
@@ -133,7 +132,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private invokeInlineEditor(): void { }
 
   FolderDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {

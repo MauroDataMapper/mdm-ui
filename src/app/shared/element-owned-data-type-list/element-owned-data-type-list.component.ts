@@ -29,7 +29,7 @@ import {
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { merge, forkJoin } from 'rxjs';
+import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatInput } from '@angular/material/input';
 import { MatSort } from '@angular/material/sort';
@@ -150,7 +150,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     }
   }
 
-  applyFilter = (filterValue?: any, filterName?) => {
+  applyFilter = () => {
     const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
@@ -163,10 +163,10 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     this.filter = filter;
     this.filterEvent.emit(filter);
 
-}
+};
 
-  applyMatSelectFilter(filterValue: any, filterName) {
-    this.applyFilter(filterValue, filterName);
+  applyMatSelectFilter() {
+    this.applyFilter();
   }
 
   openEdit = dataType => {
@@ -199,7 +199,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
     this.listChecked();
-  }
+  };
   listChecked = () => {
     let count = 0;
     for (const value of Object.values(this.records)) {
@@ -208,13 +208,13 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       }
     }
     this.bulkActionsVisibile = count;
-  }
+  };
   toggleCheckbox = (record) => {
     this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisibile = 0;
     record.checked = true;
     this.bulkDelete();
-  }
+  };
 
   bulkDelete = () => {
     const dataElementIdLst = [];
@@ -249,7 +249,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    }).catch(() => { });
+    }).catch(() => console.warn('error'));
   };
 
   refreshDataSource() {

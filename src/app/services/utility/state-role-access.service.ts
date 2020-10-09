@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Injectable, forwardRef, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SecurityHandlerService } from '../handlers/security-handler.service';
 
 @Injectable({
@@ -64,12 +64,12 @@ export class StateRoleAccessService {
 
     // if it is NOT a public resource, then check if user has enough access
 
-    //// if the user is not logged in then return false
+    /// / if the user is not logged in then return false
     if (!this.securityHandler.isLoggedIn()) {
       return false;
     }
 
-    ////// if this user is logged In but its role does NOT exist in valid role for this resource
+    /// /// if this user is logged In but its role does NOT exist in valid role for this resource
     if (this.securityHandler.isLoggedIn()) {
       return true;
     }

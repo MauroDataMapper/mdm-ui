@@ -148,14 +148,14 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
     this.listChecked();
-  }
+  };
 
   toggleDelete = (record) => {
     this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisibile = 0;
     record.checked = true;
     this.bulkDelete();
-  }
+  };
 
   listChecked = () => {
     let count = 0;
@@ -165,7 +165,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       }
     }
     this.bulkActionsVisibile = count;
-  }
+  };
 
   bulkDelete = () => {
     const dataElementIdLst = [];
@@ -197,6 +197,6 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    }).catch(() => { });
-  }
+    }).catch(() => console.warn('error'));
+  };
 }

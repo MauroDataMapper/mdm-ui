@@ -56,6 +56,7 @@ export class ModelComparisonComponent implements OnInit {
     private changeDetector: ChangeDetectorRef
   ) { }
 
+  /* eslint-disable no-shadow */
   async ngOnInit() {
     // tslint:disable-next-line: deprecation
     const sourceId = this.stateService.params.sourceId;
@@ -164,7 +165,7 @@ export class ModelComparisonComponent implements OnInit {
     if (!breadcrumbs) {
       return;
     }
-    breadcrumbs.forEach((element, index) => {
+    breadcrumbs.forEach((element) => {
       this.initDiff(element.id, diffMap);
 
       // Not deleted & Not modified -> modified
@@ -688,8 +689,7 @@ export class ModelComparisonComponent implements OnInit {
             }
           });
           sub.next(result);
-        }, () => { }
-      );
+        });
     });
     return obs;
   };
@@ -790,5 +790,5 @@ export class ModelComparisonComponent implements OnInit {
       }
       );
     }
-  }
+  };
 }

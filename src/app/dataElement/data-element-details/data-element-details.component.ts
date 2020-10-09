@@ -47,16 +47,17 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
   styleUrls: ['./data-element-details.component.sass']
 })
 export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-  result: DataElementResult;
-  hasResult = false;
-  subscription: Subscription;
-  editableForm: EditableDataElement;
   @Input() afterSave: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
   @Input() parentDataModel;
   @Input() parentDataClass;
+  @Input() editMode = false;
+  result: DataElementResult;
+  hasResult = false;
+  subscription: Subscription;
+  editableForm: EditableDataElement;
   pagination: McSelectPagination;
   errorMessage = '';
   error = '';
@@ -72,7 +73,6 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   showEditMode = false;
   processing = false;
   exportError: any;
-  @Input() editMode = false;
   aliases: any[] = [];
   max: any;
   min: any;
@@ -131,7 +131,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       this.editForm.forEach(x =>
         x.edit({
           editing: true,
-          focus: x._name === 'moduleName' ? true : false
+          focus: x.name === 'moduleName' ? true : false
         })
       );
       this.editableForm.visible = true;
@@ -181,24 +181,18 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   ngAfterViewInit(): void {
     this.error = '';
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+    this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
             editing: true,
-            focus: x._name === 'moduleName' ? true : false
+            focus: x.name === 'moduleName' ? true : false
           })
         );
 
         this.showForm();
       }
-    });
-  }
-
-  private invokeInlineEditor(): void {
-    this.editForm.find((inlineEditorComponent: any) => {
-      return inlineEditorComponent.name === 'editableText';
     });
   }
 
@@ -254,17 +248,17 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       offset: options['offset']
     };
     return this.resourcesService.dataType.list(this.parentDataModel.id, options);
-  }
+  };
 
   ngOnDestroy() {
     this.subscription.unsubscribe(); // unsubscribe to ensure no memory leaks
   }
   askForPermanentDelete() {
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve) => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Permanent deletion`,
+          title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Element?</p>
@@ -278,10 +272,10 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Confirm permanent deletion`,
+            title: 'Confirm permanent deletion',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+            message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
           }
         });
 
@@ -413,11 +407,11 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   validateMultiplicity(minVal, maxVal) {
     let min = '';
     if (minVal != null && minVal !== undefined) {
-      min = minVal + '';
+      min = `${minVal}`;
     }
     let max = '';
     if (maxVal != null && maxVal !== undefined) {
-      max = maxVal + '';
+      max = `${maxVal}`;
     }
 
     const errorMessage = this.validator.validateMultiplicities(min, max);
@@ -467,10 +461,16 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
   isAdmin = () => {
     return this.securityHandler.isAdmin();
-  }
+  };
 
   showDescription = () => {
     this.showEditDescription = true;
     this.editableForm.show();
+  };
+
+  private invokeInlineEditor(): void {
+    this.editForm.find((inlineEditorComponent: any) => {
+      return inlineEditorComponent.name === 'editableText';
+    });
   }
 }

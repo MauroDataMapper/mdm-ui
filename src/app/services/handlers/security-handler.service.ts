@@ -191,7 +191,7 @@ export class SecurityHandlerService {
   }
 
   isCurrentSessionExpired(): any {
-    return new Promise((resolve, error) => {
+    return new Promise((resolve) => {
       if (this.getCurrentUser()) {
         this.isAuthenticated().subscribe(
           (result) => {

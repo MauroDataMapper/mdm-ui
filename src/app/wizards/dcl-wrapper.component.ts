@@ -16,15 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  NgModule,
   Output,
   Component,
-  Compiler,
   ViewContainerRef,
   ViewChild,
   Input,
-  ComponentRef,
-  ComponentFactory,
   ComponentFactoryResolver,
   ChangeDetectorRef,
   EventEmitter, OnChanges, AfterViewInit, OnDestroy
@@ -33,15 +29,15 @@ import {
 // Helper component to add dynamic components
 @Component({
   selector: 'mdm-dcl-wrapper',
-  template: `<div #target></div>`
+  template: '<div #target></div>'
 })
 export class DclWrapperComponent implements OnChanges, AfterViewInit, OnDestroy {
+  @Output() stepChanged = new EventEmitter<any>();
   @ViewChild('target', { read: ViewContainerRef, static: false }) target;
   @Input() type;
   stepVal: any;
-  @Output() stepChanged = new EventEmitter<any>();
   @Input()
-  get step() {
+  get step(): any {
     return this.stepVal;
   }
   set step(val) {

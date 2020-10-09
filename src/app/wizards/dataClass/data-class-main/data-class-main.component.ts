@@ -32,16 +32,6 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
   styleUrls: ['./data-class-main.component.sass']
 })
 export class DataClassMainComponent implements AfterViewInit {
-
-  constructor(
-    private title: Title,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
-    private changeRef: ChangeDetectorRef,
-  ) { }
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentDataModelId: any;
@@ -57,6 +47,16 @@ export class DataClassMainComponent implements AfterViewInit {
     selectedDataClasses: [],
     selectedDataClassesMap: {}
   };
+  constructor(
+    private title: Title,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private broadcastSvc: BroadcastService,
+    private changeRef: ChangeDetectorRef,
+  ) { }
+
 
   ngAfterViewInit(): void {
     // Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -194,5 +194,5 @@ export class DataClassMainComponent implements AfterViewInit {
     }, error => {
       this.messageHandler.showError('There was a problem saving the Data Class.', error);
     });
-  }
+  };
 }

@@ -68,9 +68,9 @@ export class FinaliseModalComponent implements OnInit {
     } else {
       this.data.versionList = 'Custom';
       this.showCustomVersion = true;
-      this.versionMajor = `Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i> <strong>  2</strong>.0.0`;
-      this.versionMinor = `Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.<strong>1</strong>.0`;
-      this.versionPatch = `Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.0.<strong>1</strong>`;
+      this.versionMajor = 'Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i> <strong>  2</strong>.0.0';
+      this.versionMinor = 'Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.<strong>1</strong>.0';
+      this.versionPatch = 'Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.0.<strong>1</strong>';
     }
   }
 

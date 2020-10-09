@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../services/shared.service';
 import { Title } from '@angular/platform-browser';
 
@@ -26,12 +26,11 @@ import { Title } from '@angular/platform-browser';
 })
 export class AboutComponent implements OnInit {
 
-  constructor(private shared: SharedService, private title: Title) {
-    this.appVersion = shared.appVersion;
-  }
-
   public appVersion: string;
+  constructor(private shared: SharedService, private title: Title) { }
+
   ngOnInit() {
+    this.appVersion = this.shared.appVersion;
     this.title.setTitle('About');
   }
 }

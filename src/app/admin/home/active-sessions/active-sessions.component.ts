@@ -72,7 +72,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
     };
 
     this.resourcesService.admin.activeSessions(options).subscribe(resp => {
-      for (const [key, value] of Object.entries(resp.body.items)) {
+      for (const [key] of Object.entries(resp.body.items)) {
         resp.body.items[key].creationDateTime = new Date(resp.body.items[key].creationDateTime);
         resp.body.items[key].lastAccessedDateTime = new Date(resp.body.items[key].lastAccessedDateTime);
         if (resp.body.countAuthorised > 0) {

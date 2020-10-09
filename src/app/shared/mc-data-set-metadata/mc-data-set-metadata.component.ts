@@ -33,7 +33,6 @@ import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MatInput } from '@angular/material/input';
-import { DialogPosition } from '@angular/material/dialog';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 
@@ -131,12 +130,12 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       if (this.type === 'static') {
         this.loading = true;
         this.loadNamespaces();
-        this.loadingData.onChange((newValue, oldValue, scope) => {
+        this.loadingData.onChange((newValue) => {
           if (newValue !== null && newValue !== undefined) {
             this.loading = newValue;
           }
         });
-        this.metaDataItems.onChange((newValue, oldValue, scope) => {
+        this.metaDataItems.onChange((newValue) => {
           if (newValue !== null && newValue !== undefined) {
             this.showRecords();
           }
@@ -213,7 +212,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     }
   }
 
-  onEdit(record, index) {
+  onEdit(record) {
     // now fill the 'metadataKeys'
     for (const namespace of this.namespaces) {
       if (namespace.namespace === record.namespace) {
@@ -393,7 +392,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   loadHelp = () => {
-    this.helpService.open('Editing_properties', 'right' as DialogPosition);
+    this.helpService.open('Editing_properties');
   };
 
   filterClick() {

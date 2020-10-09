@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren, OnDestroy} from '@angular/core';
 import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
 import { FolderResult } from '../model/folderModel';
-import { Subscription, forkJoin } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
@@ -73,11 +73,11 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    this.title.setTitle(`Classifier`);
+    this.title.setTitle('Classifier');
     // tslint:disable-next-line: deprecation
     this.classifierDetails(this.stateService.params.id);
 
-    const promises = [];
+    // const promises = [];
     // promises.push(this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id))
       // this.resourcesService.classifier.get(
       //   this.stateService.params.id,
@@ -169,7 +169,7 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   }
 
   tabSelected(itemsName) {
-    const tab = this.getTabDetail(itemsName);
+    this.getTabDetail(itemsName);
     // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
   }
 

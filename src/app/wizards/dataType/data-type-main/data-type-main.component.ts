@@ -31,14 +31,6 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-type-main.component.sass'],
 })
 export class DataTypeMainComponent implements OnInit {
-  constructor(
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private title: Title,
-    private changeRef: ChangeDetectorRef
-  ) { }
   parentDataModelId: any;
   steps: Step[] = [];
   processing: any;
@@ -63,6 +55,14 @@ export class DataTypeMainComponent implements OnInit {
     referencedDataClass: { id: '' },
     isProcessComplete: false,
   };
+  constructor(
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private title: Title,
+    private changeRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -96,7 +96,7 @@ export class DataTypeMainComponent implements OnInit {
       this.changeRef.detectChanges();
     });
 
-    this.title.setTitle(`New Data Type`);
+    this.title.setTitle('New Data Type');
   }
 
   cancelWizard() {

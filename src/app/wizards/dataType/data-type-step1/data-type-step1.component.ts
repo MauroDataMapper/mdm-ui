@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component,  OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'mdm-data-type-step1',
@@ -35,14 +35,13 @@ export class DataTypeStep1Component implements OnInit {
     this.validate();
   }
 
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() {
     this.model = this.step.scope.model;
   }
 
- validate = () => {
+  validate = () => {
     if (!this.model.createType) {
       this.step.invalid = true;
       return;

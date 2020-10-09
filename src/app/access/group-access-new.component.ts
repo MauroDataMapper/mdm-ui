@@ -32,6 +32,11 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
   styleUrls: ['./group-access-new.component.sass'],
 })
 export class GroupAccessNewComponent implements OnInit {
+  @Input() parent: any;
+  @Input() parentType: any;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
   displayedColumns: string[] = ['user', 'access', 'edit'];
   totalItemCount = 0;
   groups = [];
@@ -42,13 +47,8 @@ export class GroupAccessNewComponent implements OnInit {
   isLoadingResults = true;
 
   folderResult: FolderResult;
-  @Input() parent: any;
-  @Input() parentType: any;
 
   dataSource: MatTableDataSource<any>;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true })
-  paginator: MdmPaginatorComponent;
   // MatPaginator Output
   pageEvent: PageEvent;
 
@@ -99,13 +99,6 @@ export class GroupAccessNewComponent implements OnInit {
       }
       limit = limit ? limit : 10;
       offset = offset ? offset : 0;
-      const options = {
-        max: limit,
-        offset,
-        //  filters: "search=" + text,
-        // sortBy: "emailAddress",
-        order: 'asc',
-      };
       this.resourceService.userGroups.list().subscribe((data) => {
         this.allGroups = data.body.items;
       }, (error) => {
@@ -126,12 +119,10 @@ export class GroupAccessNewComponent implements OnInit {
         this.isLoadingResults = false;
         this.refreshDataSource();
       });
-    }, () => { });
+    });
   };
 
-  save(row, index) {
-    // if nothing's changed, then return
-
+  save(row) {
     const mId = this.folderResult.id;
     const gId = row.edit.group.id;
     const levelId = row.groupLevelId.id;
@@ -139,10 +130,9 @@ export class GroupAccessNewComponent implements OnInit {
     this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult?.domainType, mId, levelId, gId, null).subscribe(() => {
       this.messageHandler.showSuccess('Save Successful');
       this.buildGroups();
-    },
-      (error) => {
-        this.messageHandler.showError('Save Error', error);
-      });
+    }, (error) => {
+      this.messageHandler.showError('Save Error', error);
+    });
   }
 
   add() {
@@ -182,7 +172,7 @@ export class GroupAccessNewComponent implements OnInit {
     record.groupLevelId = select;
   };
 
-  validate(record, index) {
+  validate(record) {
     let isValid = true;
     record.edit.errors = [];
     if (!record.edit.group) {
@@ -195,31 +185,30 @@ export class GroupAccessNewComponent implements OnInit {
     return isValid;
   }
 
-  readAccessChecked(record, index) {
+  readAccessChecked(record) {
     if (record.edit.readAccess === false) {
       record.edit.writeAccess = false;
     }
     if (record.inEdit && !record.isNew) {
-      this.save(record, index);
+      this.save(record);
     }
   }
 
-  writeAccessChecked(record, index) {
+  writeAccessChecked(record) {
     if (record.edit.writeAccess === true) {
       record.edit.readAccess = true;
     }
     if (record.inEdit && !record.isNew) {
-      this.save(record, index);
+      this.save(record);
     }
   }
 
-  deleteRecord = (record, index) => {
-    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult?.domainType, this.folderResult?.id, record.groupRole.id, record.userGroup.id).subscribe((res) => {
+  deleteRecord = (record) => {
+    this.resourceService.securableResource.removeUserGroupFromSecurableResourceGroupRole(this.folderResult?.domainType, this.folderResult?.id, record.groupRole.id, record.userGroup.id).subscribe(() => {
       this.messageHandler.showSuccess('Delete Successful');
       this.buildGroups();
-    },
-      (error) => {
-        this.messageHandler.showError('Error Removing', error);
-      });
-  }
+    }, (error) => {
+      this.messageHandler.showError('Error Removing', error);
+    });
+  };
 }

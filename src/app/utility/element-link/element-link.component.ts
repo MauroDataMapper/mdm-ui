@@ -33,8 +33,8 @@ export class ElementLinkComponent implements OnInit {
   @Input() showHref = true;
   @Input() showParentDataModelName: boolean;
   @Input() showLink = true;
-  elementVal: any;
   @Output() selectedElementsChange = new EventEmitter<any[]>();
+  elementVal: any;
 
   linkUrl: string;
 
@@ -67,12 +67,12 @@ export class ElementLinkComponent implements OnInit {
     this.linkUrl = this.elementTypes.getLinkUrl(this.element);
 
     if (!this.hideVersionNumber) {
-      this.versionNumber = this.element?.documentationVersion ? 'Documentation Version: ' + this.element.documentationVersion : '';
+      this.versionNumber = this.element?.documentationVersion ? `Documentation Version: ${this.element.documentationVersion}` : '';
     }
 
     this.label = this.element?.label || this.element?.definition;
     if (this.element?.domainType === 'Term' && !this.justShowCodeForTerm) {
-      this.label = this.element.code + ' : ' + this.element.definition;
+      this.label = `${this.element.code} : ${this.element.definition}`;
     }
     if (this.element?.domainType === 'Term' && this.justShowCodeForTerm) {
       this.label = this.element.code;
@@ -84,7 +84,7 @@ export class ElementLinkComponent implements OnInit {
 
     if (this.showParentDataModelName && this.element?.domainType !== 'DataModel' && this.element?.domainType !== 'Term' && this.element?.domainType !== 'Terminology') {
       const parentDM = this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0 ? this.element?.breadcrumbs[0] : null;
-      this.label = parentDM?.label ? (parentDM?.label + ' : ' + this.label) : this.label;
+      this.label = parentDM?.label ? (`${parentDM?.label} : ${this.label}`) : this.label;
       if (this.label === 'undefined : undefined') {
         this.label = '';
       }

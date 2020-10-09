@@ -19,7 +19,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnInit,
   ViewChild,
   Output,
   EventEmitter,
@@ -37,10 +36,14 @@ import { GridService } from '@mdm/services/grid.service';
   templateUrl: './multiple-terms-selector.component.html',
   styleUrls: ['./multiple-terms-selector.component.scss']
 })
-export class MultipleTermsSelectorComponent implements OnInit {
+export class MultipleTermsSelectorComponent {
+  @Input() hideAddButton = true;
+  @Output() selectedTermsChange = new EventEmitter<any[]>();
+  @Input() onAddButtonClick: any;
+  @ViewChild('searchInputTerms', { static: true })
+  dataSource = new MatTableDataSource();
   pageSize = 40;
   displayedColumns: string[] = ['label'];
-  @Input() hideAddButton = true;
   selectorSection = {
     terminologies: [],
     selectedTerminology: null,
@@ -58,16 +61,13 @@ export class MultipleTermsSelectorComponent implements OnInit {
     loading: false
   };
   loading = false;
-  @Output() selectedTermsChange = new EventEmitter<any[]>();
-  @Input() onAddButtonClick: any;
-  dataSource = new MatTableDataSource();
-  @ViewChild('searchInputTerms', { static: true })
+
   searchInputTerms: ElementRef;
   currentRecord: number;
   totalItemCount = 0;
   isProcessing = false;
-  private searchControlInput: ElementRef;
   selectedItems: any;
+  private searchControlInput: ElementRef;
   @Input()
   get selectedTerms() {
     return this.selectedItems;
@@ -87,7 +87,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
           filter(res => res.length >= 0),
           debounceTime(500),
           distinctUntilChanged()
-        ).subscribe((text: string) => {
+        ).subscribe(() => {
           this.dataSource = new MatTableDataSource<any>(null);
           this.loading = false;
           this.totalItemCount = 0;
@@ -114,7 +114,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
       this.selectorSection.terminologies = data.body.items;
     });
   };
-  onTerminologySelect = (terminology: any, record: any) => {
+  onTerminologySelect = (terminology: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
     this.selectorSection.selectedTerminology = terminology;
     if (terminology != null) {
@@ -197,7 +197,7 @@ export class MultipleTermsSelectorComponent implements OnInit {
           this.loading = false;
         }
 
-      }, error => {
+      }, () => {
         this.loading = false;
         this.isProcessing = false;
       });
@@ -295,8 +295,4 @@ export class MultipleTermsSelectorComponent implements OnInit {
       this.onAddButtonClick(terms);
     }
   };
-
-  ngOnInit() {
-
-  }
 }

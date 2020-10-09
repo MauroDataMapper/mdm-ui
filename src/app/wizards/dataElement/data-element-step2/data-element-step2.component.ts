@@ -44,7 +44,10 @@ import { GridService } from '@mdm/services/grid.service';
   styleUrls: ['./data-element-step2.component.sass']
 })
 export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestroy {
-
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: any;
   multiplicityError: any;
@@ -62,11 +65,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   finalResult = {};
   failCount = 0;
   successCount = 0;
-
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   formChangesSubscription: Subscription;
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+
+
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
   dataSourceDataElements = new MatTableDataSource<any>();
   filterEvent = new EventEmitter<any>();
@@ -77,7 +78,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   dataSource: any;
   displayedColumnsDataTypes: string[];
   displayedColumnsSelectedDataTypes: string[];
-  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+
   recordsDataElements: any[] = [];
   isAllChecked = true;
   checkAllCheckbox = false;
@@ -300,7 +301,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   validationStatusEmitter($event) {
     this.step.invalid = JSON.parse($event);
@@ -342,5 +343,5 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       this.processing = false;
       this.isProcessComplete = true;
     });
-  }
+  };
 }

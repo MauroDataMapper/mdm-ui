@@ -60,7 +60,7 @@ export class FolderComponent implements OnInit, OnDestroy {
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    this.title.setTitle(`Folder`);
+    this.title.setTitle('Folder');
     // tslint:disable-next-line: deprecation
     this.folderDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {

@@ -47,6 +47,7 @@ export class MessageService implements OnDestroy {
   private lastErrorVar = {};
   private errorMessageVar = {};
 
+  /* eslint-disable @typescript-eslint/member-ordering */
   @Output() changeUserGroupAccess: EventEmitter<boolean> = new EventEmitter();
 
   @Output() changeSearch: EventEmitter<boolean> = new EventEmitter();
@@ -181,6 +182,7 @@ export class MessageService implements OnDestroy {
 
   /**
    * Get the named subject
+   *
    * @param subject name of subject to get
    */
   getSubject(subject) {

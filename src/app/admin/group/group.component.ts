@@ -49,7 +49,7 @@ export class GroupComponent implements OnInit {
     // tslint:disable-next-line: deprecation
     this.groupId = this.stateService.params.id;
     if (this.groupId) {
-      this.title.setTitle(`Group - Edit Group`);
+      this.title.setTitle('Group - Edit Group');
       this.resources.userGroups.get(this.groupId).subscribe(result => {
         this.group = result.body;
       });
@@ -63,7 +63,7 @@ export class GroupComponent implements OnInit {
 
   onUpdateGroupMembers = groupMembers => { // triggered when the Members table is updated
     this.group.groupMembers = groupMembers;
-  }
+  };
 
   validate = () => {
     let isValid = true;
@@ -102,5 +102,5 @@ export class GroupComponent implements OnInit {
 
   cancel = () => {
     this.stateHandler.Go('admin.groups');
-  }
+  };
 }

@@ -32,6 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-element.component.sass']
 })
 export class DataElementComponent implements OnInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataElementOutput: DataElementResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -44,7 +45,6 @@ export class DataElementComponent implements OnInit {
   dataClass = { id: null };
   dataModel = { id: null };
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -83,7 +83,7 @@ export class DataElementComponent implements OnInit {
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
-    this.title.setTitle(`Data Element`);
+    this.title.setTitle('Data Element');
     // tslint:disable-next-line: deprecation
     this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {

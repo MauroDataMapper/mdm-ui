@@ -81,7 +81,7 @@ SPDX-License-Identifier: Apache-2.0
 					<span [hidden]="!hideFilters">Type</span>
 					<div [hidden]="hideFilters">
 						<mat-label>Type</mat-label>
-						<mat-select [(value)]="model.domainType" name="domainType" [(ngModel)]="model.domainType" [ngModelOptions]="{standalone: true}" (ngModelChange)="applyMatSelectFilter($event, 'domainType')">
+						<mat-select [(value)]="model.domainType" name="domainType" [(ngModel)]="model.domainType" [ngModelOptions]="{standalone: true}" (ngModelChange)="applyMatSelectFilter()">
 							<mat-option></mat-option>
 							<mat-option [value]="dt" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
 						</mat-select>

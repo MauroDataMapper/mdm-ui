@@ -28,7 +28,7 @@ import {
   AfterViewInit, OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription, Observable, merge } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -46,12 +46,16 @@ import { GridService } from '@mdm/services/grid.service';
 })
 export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy {
   @Input() parent;
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
 
   successCount: number;
   failCount = 0;
   totalItemCount = 0;
   totalSelectedItemsCount: number;
-  filter: {};
+  filter: object;
   step: any;
   model: any;
   scope: any;
@@ -76,10 +80,6 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   parentScopeHandler: any;
   filterEvent = new EventEmitter<any>();
 
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
-  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   pageSize = 20;
   pageSizeOptions = [5, 10, 20, 50];
 
@@ -298,7 +298,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   };
 
   // Gets the selected value of a dropdown and adds it to the filter string
-  applyMatSelectFilter(filterValue: any, filterName) {
+  applyMatSelectFilter() {
     this.applyFilter();
   }
 
@@ -335,5 +335,5 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
       this.step.isProcessComplete = true;
       this.model.isProcessComplete = true;
     });
-  }
+  };
 }

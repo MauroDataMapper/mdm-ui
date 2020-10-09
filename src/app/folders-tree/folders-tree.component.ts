@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { HttpResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { of, Subscription } from 'rxjs';
@@ -34,7 +34,7 @@ import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateH
   templateUrl: './folders-tree.component.html',
   styleUrls: ['./folders-tree.component.scss']
 })
-export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
+export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   @Input() node: any;
   @Input() searchCriteria: string;
@@ -78,7 +78,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
   contextMenuPosition = { x: '0', y: '0' };
 
-  favourites: { [x: string]: any; };
+  favourites: { [x: string]: any };
   subscriptions: Subscription = new Subscription();
   selectedNode = null; // Control highlighting
   checkedList = this.defaultCheckedMap || {};
@@ -89,38 +89,19 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
   treeControl: FlatTreeControl<FlatNode>;
 
+    /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
+    dataSource: MatTreeFlatDataSource<Node, FlatNode>;
+
+    folder = '';
+
   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
   protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
 
-  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-  dataSource: MatTreeFlatDataSource<Node, FlatNode>;
-
-  folder = '';
   /**
    * Get the children for the given node from source data.
    *
    * Defined as property to retain reference to `this`.
    */
-  private getChildren = (node: Node) => {
-    if (!node.children) {
-      return [];
-    }
-
-    let children = [];
-    if (this.justShowFolders && node.children) {
-      children = node.children.filter(c => c.domainType === DOMAIN_TYPE.Folder);
-    } else if (this.doNotShowDataClasses && node.children) {
-      children = node.children.filter(c => c.domainType !== DOMAIN_TYPE.DataClass);
-    } else {
-      children = node.children;
-    }
-
-    if (this.filterByDomainType?.length > 0) {
-      children = children.filter(c => this.filterByDomainType.includes(c.domainType));
-    }
-
-    return of(children);
-  };
 
   constructor(
     protected messages: MessageService,
@@ -144,14 +125,11 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       (node: FlatNode) => node?.hasChildren || node?.hasChildFolders,
       this.getChildren);
 
-    this.treeControl = new FlatTreeControl(
-      (node: FlatNode) => node.level,
-      (node: FlatNode) => node.hasChildren || node.hasChildFolders);
+    this.treeControl = new FlatTreeControl((node: FlatNode) => node.level, (node: FlatNode) => node.hasChildren || node.hasChildFolders);
 
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener, []);
   }
 
-  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.node) {
@@ -227,84 +205,6 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     return `fa-sm ${node.deleted ? 'deleted-folder' : ''}`;
   }
 
-  private async refreshTree() {
-    this.dataSource.data = this.node.children;
-
-    if (this.rememberExpandedStates) {
-      // Init extended paths
-      if (!this.expandedPaths || this.expandedPaths.length === 0) {
-        const storePaths = JSON.parse(localStorage.getItem('expandedPaths'));
-        this.expandedPaths = storePaths ? storePaths : [];
-      }
-    }
-
-    for (const expandedPath of this.expandedPaths) {
-      /*
-          `mat-tree` requires the ancesters to be expanded first.
-          dataNodes: Flatten nodes
-
-          Each extended path follow the pattern `<level0 node>/<level1 node>/.../<target node>.
-          When the path is split, the index will correspond to the level.
-      */
-      const path: string[] = expandedPath.split('/');
-
-      // Skip if parent path not in expandedPaths.
-      if (!this.pathExists(path)) {
-        continue;
-      }
-
-      for (let j = 0; j < path.length; j++) {
-        const fnode = this.treeControl.dataNodes.find(dn => this.treeControl.getLevel(dn) === j && dn.id === path[j]);
-
-        // Load children if they are not available
-        if (this.hasChild(-1, fnode) && !fnode?.children) {
-          const data = await this.expand(fnode.node);
-          fnode.children = data;
-
-          // Manually construct the FlatNodes and insert into the tree's dataNodes array
-          const newNodes = fnode.children?.map((c: any) => {
-            return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
-          });
-
-          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, ...(newNodes || []));
-        }
-        this.treeControl.expand(fnode);
-      }
-    }
-  }
-
-  private pathExists(path: string[]) {
-    if (path.length > 1) {
-      const currentPathExists = this.expandedPaths.includes(path.join('/'));
-      if (currentPathExists) {
-        return this.pathExists(path.slice(0, path.length - 1));
-      } else {
-        // No need to go further if current path does not exists.
-        return false;
-      }
-    } else if (path.length === 1) {
-      return this.expandedPaths.includes(path[0]);
-    } else {
-      return false;
-    }
-  }
-
-  /**
-   * Construct absolute path from root to given tree node.
-   */
-  private getExpandedPaths(fnode: FlatNode) {
-    if (this.treeControl.getLevel(fnode) > 0) {
-      const index = this.treeControl.dataNodes.indexOf(fnode) - 1;
-      for (let i = index; i >= 0; i--) {
-        const dn = this.treeControl.dataNodes[i];
-        if (this.treeControl.getLevel(dn) < this.treeControl.getLevel(fnode)) {
-          return `${this.getExpandedPaths(dn)}/${fnode.id}`;
-        }
-      }
-    } else {
-      return fnode.id;
-    }
-  }
 
   /** Asynchronously expand sub-tree */
   async toggleChildren(flatNode: FlatNode) {
@@ -434,8 +334,8 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.contextMenuPosition.x = event.clientX + 'px';
-    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenuPosition.x = `${event.clientX}px`;
+    this.contextMenuPosition.y = `${event.clientY}px`;
     this.contextMenuTrigger.menuData = { node: fnode };
     this.contextMenuTrigger.openMenu();
 
@@ -450,7 +350,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   handleAddFolderModal = (fnode: FlatNode) => {
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
       const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
           inputValue: this.folder,
@@ -470,15 +370,15 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
           } else {
             const error = 'err';
             this.messageHandler.showError('Data Model name can not be empty', error);
-            return promise;
+            return;
           }
         } else {
-          return promise;
+          return;
         }
       });
     });
     return promise;
-  }
+  };
 
   async handleAddFolder(fnode: FlatNode, label?: string) {
     if (this.selectedNode) {
@@ -523,19 +423,19 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  async handleAddDataModel(fnode: FlatNode) {
+  handleAddDataModel(fnode: FlatNode) {
     this.stateHandler.Go('NewDataModel', { parentFolderId: fnode.id });
   }
 
-  async handleAddCodeSet(fnode: FlatNode) {
+  handleAddCodeSet(fnode: FlatNode) {
     this.stateHandler.Go('NewCodeSet', { parentFolderId: fnode.id });
   }
 
-  async handleDeleteFolder(fnode: FlatNode, permanent = false) {
+  handleDeleteFolder(fnode: FlatNode, permanent = false) {
     this.deleteFolderEvent.emit({ folder: fnode, permanent });
   }
 
-  async handleAddDataClass(fnode: FlatNode) {
+  handleAddDataClass(fnode: FlatNode) {
     this.stateHandler.Go('NewDataClass', {
       grandParentDataClassId: fnode.domainType === DOMAIN_TYPE.DataClass ? fnode.node.parentId : null,
       parentDataModelId: fnode.domainType === DOMAIN_TYPE.DataModel ? fnode.id : fnode.node.modelId,
@@ -543,7 +443,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  async handleAddDataElement(fnode: FlatNode) {
+  handleAddDataElement(fnode: FlatNode) {
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: fnode.node.parentId ? fnode.node.parentId : null,
       parentDataModelId: fnode.node.modelId,
@@ -551,7 +451,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  async handleAddDataType(fnode: FlatNode) {
+  handleAddDataType(fnode: FlatNode) {
     this.stateHandler.Go('NewDataType', { parentDataModelId: fnode.id });
   }
 
@@ -601,7 +501,7 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
     const filteredTreeData: Node[] = sourceNodes.filter(d => d.label.toLocaleLowerCase().includes(filterText.toLocaleLowerCase()));
 
     filteredTreeData.forEach(ftd => {
-      let str = (ftd.label as string);
+      let str = (ftd.label);
       while (str.lastIndexOf('.') > -1) {
         const index = str.lastIndexOf('.');
         str = str.substring(0, index);
@@ -625,6 +525,106 @@ export class FoldersTreeComponent implements OnInit, OnChanges, OnDestroy {
       } else {
           return false;
       }
+  };
+
+  private getChildren = (node: Node) => {
+    if (!node.children) {
+      return [];
+    }
+
+    let children = [];
+    if (this.justShowFolders && node.children) {
+      children = node.children.filter(c => c.domainType === DOMAIN_TYPE.Folder);
+    } else if (this.doNotShowDataClasses && node.children) {
+      children = node.children.filter(c => c.domainType !== DOMAIN_TYPE.DataClass);
+    } else {
+      children = node.children;
+    }
+
+    if (this.filterByDomainType?.length > 0) {
+      children = children.filter(c => this.filterByDomainType.includes(c.domainType));
+    }
+
+    return of(children);
+  };
+
+  private async refreshTree() {
+    this.dataSource.data = this.node.children;
+
+    if (this.rememberExpandedStates) {
+      // Init extended paths
+      if (!this.expandedPaths || this.expandedPaths.length === 0) {
+        const storePaths = JSON.parse(localStorage.getItem('expandedPaths'));
+        this.expandedPaths = storePaths ? storePaths : [];
+      }
+    }
+
+    for (const expandedPath of this.expandedPaths) {
+      /*
+          `mat-tree` requires the ancesters to be expanded first.
+          dataNodes: Flatten nodes
+
+          Each extended path follow the pattern `<level0 node>/<level1 node>/.../<target node>.
+          When the path is split, the index will correspond to the level.
+      */
+      const path: string[] = expandedPath.split('/');
+
+      // Skip if parent path not in expandedPaths.
+      if (!this.pathExists(path)) {
+        continue;
+      }
+
+      for (let j = 0; j < path.length; j++) {
+        const fnode = this.treeControl.dataNodes.find(dn => this.treeControl.getLevel(dn) === j && dn.id === path[j]);
+
+        // Load children if they are not available
+        if (this.hasChild(-1, fnode) && !fnode?.children) {
+          const data = await this.expand(fnode.node);
+          fnode.children = data;
+
+          // Manually construct the FlatNodes and insert into the tree's dataNodes array
+          const newNodes = fnode.children?.map((c: any) => {
+            return new FlatNode(c, this.treeControl.getLevel(fnode) + 1);
+          });
+
+          this.treeControl.dataNodes.splice(this.treeControl.dataNodes.indexOf(fnode) + 1, 0, ...(newNodes || []));
+        }
+        this.treeControl.expand(fnode);
+      }
+    }
+  }
+
+  private pathExists(path: string[]) {
+    if (path.length > 1) {
+      const currentPathExists = this.expandedPaths.includes(path.join('/'));
+      if (currentPathExists) {
+        return this.pathExists(path.slice(0, path.length - 1));
+      } else {
+        // No need to go further if current path does not exists.
+        return false;
+      }
+    } else if (path.length === 1) {
+      return this.expandedPaths.includes(path[0]);
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Construct absolute path from root to given tree node.
+   */
+  private getExpandedPaths(fnode: FlatNode) {
+    if (this.treeControl.getLevel(fnode) > 0) {
+      const index = this.treeControl.dataNodes.indexOf(fnode) - 1;
+      for (let i = index; i >= 0; i--) {
+        const dn = this.treeControl.dataNodes[i];
+        if (this.treeControl.getLevel(dn) < this.treeControl.getLevel(fnode)) {
+          return `${this.getExpandedPaths(dn)}/${fnode.id}`;
+        }
+      }
+    } else {
+      return fnode.id;
+    }
   }
 }
 

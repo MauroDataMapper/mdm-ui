@@ -100,7 +100,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     if (prevRec.isCategoryRow) {
       newPostion = nextRec.index;
     } else {
-      newPostion = prevRec.index + 1;
+      newPostion = parseInt(prevRec.index, 10) + 1;
     }
 
     let newCategory = null;

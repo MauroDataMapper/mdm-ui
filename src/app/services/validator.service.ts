@@ -15,21 +15,21 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidatorService {
 
-  constructor() {
-  }
+  constructor() { }
 
   index(obj, i) {
     return obj[i];
   }
 
   getProperty(obj, str) {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     return str.split('.').reduce(this.index, obj);
   }
 
@@ -138,13 +138,11 @@ export class ValidatorService {
   }
 
   guid() {
+    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
     function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
 
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 }

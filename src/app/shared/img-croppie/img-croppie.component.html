@@ -24,16 +24,13 @@ SPDX-License-Identifier: Apache-2.0
 	<div class="row" style="margin-top: 5%;">
 		<div class="text-center col-md-3">
 			<!--<h5>Crop Image</h5>-->
-			<image-cropper 
-				[imageChangedEvent]="imageChangedEvent" 
-				[maintainAspectRatio]="true" 
+			<image-cropper
+				[imageChangedEvent]="imageChangedEvent"
+				[maintainAspectRatio]="true"
 				[aspectRatio]="4 / 4"
-				[resizeToWidth]="256" 
-				format="png" 
-				(imageCropped)="imageCropped($event)" 
-				(imageLoaded)="imageLoaded()"
-				(cropperReady)="cropperReady()" 
-				(loadImageFailed)="loadImageFailed()"></image-cropper>
+				[resizeToWidth]="256"
+				format="png"
+				(imageCropped)="imageCropped($event)"></image-cropper>
 		</div>
 		<div class="text-center col-md-2">
 			<!--<h5>Preview</h5>-->

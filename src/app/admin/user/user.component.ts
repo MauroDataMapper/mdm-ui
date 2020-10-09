@@ -104,7 +104,7 @@ export class UserComponent implements OnInit {
   validateEmail = () => {
     let isValid = true;
     if (!this.user.emailAddress.trim().length) {
-      this.errors.emailAddress = `Email can't be empty!`;
+      this.errors.emailAddress = 'Email can\'t be empty!';
       isValid = false;
     }
 
@@ -115,7 +115,7 @@ export class UserComponent implements OnInit {
       let fname = '';
       let lname = '';
 
-      delimiters.forEach((key, val) => {
+      delimiters.forEach((key) => {
         const partsName = username.replace(/\d+/g, '');
         const num = partsName.indexOf(key);
         if (num > -1) {
@@ -132,7 +132,7 @@ export class UserComponent implements OnInit {
       this.user.lastName = lname;
       this.user.firstName = fname;
     }
-  }
+  };
 
 
   validate = () => {
@@ -207,5 +207,5 @@ export class UserComponent implements OnInit {
         );
       }
     }
-  }
+  };
 }

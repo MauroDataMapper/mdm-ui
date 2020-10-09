@@ -29,7 +29,6 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 
@@ -79,7 +78,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloadTree();
     },
     focusedElement: (node?) => {
-      const self = this;
       if (node) {
         this.levels.currentFocusedElement = node;
       }
@@ -89,32 +87,32 @@ export class ModelsComponent implements OnInit, OnDestroy {
       if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
         this.resources.tree.get('dataModels', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(result => {
           const children = result.body;
-          self.levels.currentFocusedElement.children = children;
-          self.levels.currentFocusedElement.open = true;
-          self.levels.currentFocusedElement.selected = true;
+          this.levels.currentFocusedElement.children = children;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
           const curModel = {
-            children: [self.levels.currentFocusedElement],
+            children: [this.levels.currentFocusedElement],
             isRoot: true
           };
           this.filteredModels = Object.assign({}, curModel);
           this.reloading = false;
-          self.levels.current = 1;
+          this.levels.current = 1;
         }, () => {
           this.reloading = false;
         }
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
         this.resources.tree.get('terminologies', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(children => {
-          self.levels.currentFocusedElement.children = children.body;
-          self.levels.currentFocusedElement.open = true;
-          self.levels.currentFocusedElement.selected = true;
+          this.levels.currentFocusedElement.children = children.body;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
           const curElement = {
-            children: [self.levels.currentFocusedElement],
+            children: [this.levels.currentFocusedElement],
             isRoot: true
           };
           this.filteredModels = Object.assign({}, curElement);
           this.reloading = false;
-          self.levels.current = 1;
+          this.levels.current = 1;
         }, () => {
           this.reloading = false;
         }
@@ -271,7 +269,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.levels.focusedElement(node);
   };
 
-  onCompareTo = (source) => {
+  onCompareTo = () => {
     // this.stateHandler.NewWindow('modelscomparison', { sourceId: source.id, targetId: target ? target.id : null });
   };
 
@@ -308,15 +306,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
           } else {
             const error = 'err';
             this.messageHandler.showError('Folder name can not be empty', error);
-            return promise;
+            return;
           }
         } else {
-          return promise;
+          return;
         }
       });
     });
     return promise;
-  }
+  };
   onAddFolder = (event?, folder?, label?) => {
     let parentId;
     if (folder) {
@@ -558,16 +556,23 @@ export class ModelsComponent implements OnInit, OnDestroy {
           } else {
             const error = 'err';
             this.messageHandler.showError('Classification name can not be empty', error);
-            return promise;
+            return;
           }
         } else {
-          return promise;
+          return;
         }
       });
     });
     return promise;
-  }
+  };
 
+  validateLabel = (data) => {
+    if (!data || (data && data.label.trim().length === 0)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   private onFavioureClick(node) {
     this.stateHandler.Go(node.domainType, {
@@ -577,11 +582,4 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   }
 
-  validateLabel = (data) => {
-    if (!data || (data && data.label.trim().length === 0)) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 }

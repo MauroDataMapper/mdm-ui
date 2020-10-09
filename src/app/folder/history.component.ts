@@ -32,23 +32,22 @@ import { GridService } from '../services/grid.service';
 })
 
 export class HistoryComponent implements OnInit, AfterViewInit {
-
-  public result: SearchResult;
-  public dataSetResult: any[];
-  displayedColumns: string[] = ['createdBy', 'dateCreated', 'description'];
-  totalItemCount = 0;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  options;
-  elementMap: any[];
   @Input() parent: any;
   @Input() parentType: string;
   @Input() parentId: string;
   @Input() domainType: string;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  public result: SearchResult;
+  public dataSetResult: any[];
+  options;
+  displayedColumns: string[] = ['createdBy', 'dateCreated', 'description'];
+  totalItemCount = 0;
+  elementMap: any[];
   parentVal;
   parentTypeVal;
   parentIdVal;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
   isLoadingResults = true;
 
   records: any[] = [];
@@ -113,14 +112,14 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     }
 
     this.elementMap = this.elementTypeService.getBaseWithUserTypes();
-    let resource = this.elementMap.find(x => x.id === this.parentType);
+    // let resource = this.elementMap.find(x => x.id === this.parentType);
 
-    for (const type in this.elementMap) {
-      if (this.elementMap[type].id === this.parentTypeVal) {
-        resource = this.elementMap[type];
-        break;
-      }
-    }
+    // for (const type in this.elementMap) {
+    //   if (this.elementMap[type].id === this.parentTypeVal) {
+    //     resource = this.elementMap[type];
+    //     break;
+    //   }
+    // }
 
     if (this.parentId) {
       return this.resourcesService.edit.status(this.domainType, this.parentId);

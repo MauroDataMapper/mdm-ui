@@ -15,18 +15,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mdm-multiplicity',
   templateUrl: './multiplicity.component.html',
   styleUrls: ['./multiplicity.component.sass']
 })
-export class MultiplicityComponent implements OnInit {
+export class MultiplicityComponent {
   @Input() min: any;
   @Input() max: any;
 
   constructor() {}
-
-  ngOnInit() {}
 }

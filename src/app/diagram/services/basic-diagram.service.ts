@@ -22,13 +22,14 @@ import dagre from 'dagre';
 import graphlib from 'graphlib';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { LayoutConfigOptions } from '@angular/flex-layout';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
 })
 
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export abstract class BasicDiagramService {
 
   fontColorWhite = '#ffffff';
@@ -45,7 +46,7 @@ export abstract class BasicDiagramService {
   public currentComponent = this.dataComponentSubject.asObservable();
 
   public constructor(protected resourcesService: MdmResourcesService,
-                     protected messageHandler: MessageHandlerService) {
+    protected messageHandler: MessageHandlerService) {
 
     this.graph = new joint.dia.Graph();
   }
@@ -65,9 +66,9 @@ export abstract class BasicDiagramService {
 
   public updateDataElementLevel(data: any): void { }
 
-  public onDrag(cellView: joint.dia.CellView, event): void {
+  public onDrag(cellView: joint.dia.CellView): void {
     if (cellView instanceof joint.dia.ElementView) {
-      this.adjustVertices(this.graph, (cellView as joint.dia.ElementView).model);
+      this.adjustVertices(this.graph, (cellView).model);
     }
 
   }
@@ -189,8 +190,8 @@ export abstract class BasicDiagramService {
   }
 
   protected addUmlClassCell(id: string, label: string, attributes: Array<any>,
-                            @Optional() position: joint.g.Point = null,
-                            @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
+    @Optional() position: joint.g.Point = null,
+    @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
     const cells: Array<joint.dia.Cell> = [];
     if (!position) {
       position = new joint.g.Point({ x: 0, y: 0 });
@@ -250,7 +251,7 @@ export abstract class BasicDiagramService {
         z: 1,
         attrs: {
           label: {
-            text: joint.util.breakText(attribute.label + ' : ' + attribute.dataType.label, { width: 280 }),
+            text: joint.util.breakText(`${attribute.label} : ${attribute.dataType.label}`, { width: 280 }),
             fontWeight: 'normal',
             fontSize: 12,
             textAnchor: 'left',
@@ -365,12 +366,12 @@ export abstract class BasicDiagramService {
 
         // constant
         // the maximum distance between two sibling links
-        const GAP = 30;
+        const gap = 30;
 
         siblings.forEach((sibling, index) => {
 
           // we want offset values to be calculated as 0, 20, 20, 40, 40, 60, 60 ...
-          let offset = GAP * Math.ceil(index / 2);
+          let offset = gap * Math.ceil(index / 2);
 
           // place the vertices at points which are `offset` pixels perpendicularly away
           // from the first link
@@ -387,7 +388,7 @@ export abstract class BasicDiagramService {
           // to assure symmetry, if there is an even number of siblings
           // shift all vertices leftward perpendicularly away from the centerline
           if ((numSiblings % 2) === 0) {
-            offset -= ((GAP / 2) * sign);
+            offset -= ((gap / 2) * sign);
           }
 
           // make reverse links count the same as non-reverse

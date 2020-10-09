@@ -55,7 +55,7 @@ export class CodeSetMainComponent implements OnInit {
         if (!this.model.parentFolderId) {
             this.stateHandler.NotFound({ location: false });
         }
-        this.title.setTitle(`New Code Set`);
+        this.title.setTitle('New Code Set');
     }
 
     save = () => {

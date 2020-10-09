@@ -49,9 +49,12 @@ export class ImportComponent implements OnInit {
 
   formOptionsMap = {
     Integer: 'number',
+    // eslint-disable-next-line id-blacklist
     String: 'text',
     Password: 'password',
+    // eslint-disable-next-line id-blacklist
     Boolean: 'checkbox',
+    // eslint-disable-next-line id-blacklist
     boolean: 'checkbox',
     int: 'number',
     File: 'file'
@@ -219,14 +222,14 @@ export class ImportComponent implements OnInit {
   };
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Importing_models', {});
+    this.helpDialogueHandler.open('Importing_models');
   };
 
   loadImporterHelp = () => {
-    this.helpDialogueHandler.open(this.importerHelp, {});
+    this.helpDialogueHandler.open(this.importerHelp);
   };
 
-  checkIf(value: any, option: any) {
+  checkIf() {
     // open the devtools and go to the view...code execution will stop here!
     // ..code to be checked... `value` can be inspected now along with all of the other component attributes
   }

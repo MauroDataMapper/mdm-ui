@@ -15,12 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
-import {ElementTypesService} from '@mdm/services/element-types.service';
+import { Injectable } from '@angular/core';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 import marked from 'marked/lib/marked';
-import {CustomTokenizerService} from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
-import {CustomHtmlRendererService} from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
-import {CustomTextRendererService} from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
+import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
+import { CustomHtmlRendererService } from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
+import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,12 +28,10 @@ import {CustomTextRendererService} from '@mdm/utility/markdown/markdown-parser/c
 export class MarkdownParserService {
 
   constructor(private elementTypes: ElementTypesService,
-              private tokenizer: CustomTokenizerService,
-              private customHtmlRendererService: CustomHtmlRendererService,
-              private customTextRendererService: CustomTextRendererService) {
+    private tokenizer: CustomTokenizerService,
+    private customHtmlRendererService: CustomHtmlRendererService,
+    private customTextRendererService: CustomTextRendererService) {
   }
-
-
 
   public parse(source, renderType) {
     let renderer: marked.Renderer = this.customHtmlRendererService;
@@ -41,7 +39,7 @@ export class MarkdownParserService {
       renderer = this.customTextRendererService;
     }
 
-    marked.use({tokenizer: this.tokenizer as any});
+    marked.use({ tokenizer: this.tokenizer as any });
     marked.setOptions({
       renderer,
       gfm: true,
@@ -92,23 +90,23 @@ export class MarkdownParserService {
     }
 
     if (element.domainType === 'DataType' || dataTypeNames.indexOf(element.domainType) !== -1) {
-      str += dataModelId + '|' + element.id;
+      str += `${dataModelId}|{element.id}`;
     }
 
     if (element.domainType === 'EnumerationValue') {
-      str += dataModelId + '|' + element.dataType;
+      str += `${dataModelId}|${element.dataType}`;
     }
 
     if (element.domainType === 'DataClass' && !parentDataClassId) {
-      str += dataModelId + '|' + element.id;
+      str += `${dataModelId}|${element.id}`;
     }
 
     if (element.domainType === 'DataClass' && parentDataClassId) {
-      str += dataModelId + '|' + parentDataClassId + '|' + element.id;
+      str += `${dataModelId}|${parentDataClassId}|${element.id}`;
     }
 
     if (element.domainType === 'DataElement') {
-      str += dataModelId + '|' + parentDataClassId + '|' + element.id;
+      str += `${dataModelId}|${parentDataClassId}|${element.id}`;
     }
 
     if (element.domainType === 'Terminology') {
@@ -116,12 +114,9 @@ export class MarkdownParserService {
     }
 
     if (element.domainType === 'Term') {
-      str += element.terminology + '|' + element.id;
+      str += `${element.terminology}|${element.id}`;
     }
-
     str += ')';
     return str;
   }
-
-
 }

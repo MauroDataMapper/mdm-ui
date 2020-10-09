@@ -15,14 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'mdm-table-buttons',
   templateUrl: './table-buttons.component.html',
   styleUrls: ['./table-buttons.component.sass']
 })
-export class TableButtonsComponent implements OnInit {
+export class TableButtonsComponent {
   @Input() record: any;
   @Input() index: any;
   @Input() hideDelete: boolean;
@@ -38,7 +38,6 @@ export class TableButtonsComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
 
   saveClicked(record, index) {
     if (!this.validate) {
@@ -68,11 +67,11 @@ export class TableButtonsComponent implements OnInit {
     }
   }
 
-  deleteClicked(record, index) {
+  deleteClicked(record) {
     record.inDelete = true;
   }
 
-  deleteCancelled(record, index) {
+  deleteCancelled(record) {
     record.inDelete = undefined;
   }
 

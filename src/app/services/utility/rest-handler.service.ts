@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { StateHandlerService } from '../handlers/state-handler.service';
 import { BroadcastService } from '../broadcast.service';
 import { MessageService } from '../message.service';

@@ -24,7 +24,6 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { DataModelResult } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { Title } from '@angular/platform-browser';
 
 @Component({

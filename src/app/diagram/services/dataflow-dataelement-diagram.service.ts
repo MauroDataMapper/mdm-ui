@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { Observable, EMPTY, forkJoin } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import * as joint from 'jointjs';
 import { mergeMap } from 'rxjs/operators';
 
@@ -55,10 +55,10 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
         const options = { sort: 'label', order: 'asc', all: true };
         Object.keys(this.classes).forEach((classId) => {
           const dataModelId: string = this.classes[classId][0].id;
-          let parentClassId: string = null;
-          if (this.classes[classId].length > 2) {
-            parentClassId = this.classes[classId][this.classes[classId].length - 2].id;
-          }
+          // let parentClassId: string = null;
+          // if (this.classes[classId].length > 2) {
+          //   parentClassId = this.classes[classId][this.classes[classId].length - 2].id;
+          // }
           classGetters.push(
             this.resourcesService.dataClass.content(dataModelId, classId, options)
           );
@@ -95,17 +95,17 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
         const link1 = new joint.shapes.standard.Link({
-          id: sourceElement.id + '/' + flowComponent.id,
+          id: `${sourceElement.id}/${flowComponent.id}`,
           source: {
             // id: sourceElement.id,
             id: sourceElement.dataClass,
-            /*anchor: {
+            /* anchor: {
               name: 'right'
             }*/
           },
           target: {
             id: flowComponent.id,
-            /*anchor: {
+            /* anchor: {
               name: 'left'
             }*/
           }
@@ -115,16 +115,16 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       });
       flowComponent.targetDataElements.forEach((targetElement) => {
         const link2 = new joint.shapes.standard.Link({
-          id: targetElement.id + '/' + flowComponent.id,
+          id: `${targetElement.id}/${flowComponent.id}`,
           source: {
             id: flowComponent.id,
-            /*anchor: {
+            /* anchor: {
               name: 'right'
             }*/
           },
           target: {
             id: targetElement.dataClass,
-            /*anchor: {
+            /* anchor: {
               name: 'left'
             }*/
           }
@@ -143,7 +143,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       this.graph.removeCells([rectCell]);
 
       // console.log((this.graph.getCell(classId) as joint.dia.Element).position());
-      const umlClassCell = this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text'), classAttributes[classId], new joint.g.Point({
+      this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text'), classAttributes[classId], new joint.g.Point({
         x: oldPosition.x,
         y: oldPosition.y
       }), null);
@@ -157,7 +157,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
         const link1 = new joint.shapes.standard.Link({
-          id: sourceElement.id + '/' + flowComponent.id,
+          id: `${sourceElement.id}/${flowComponent.id}`,
           source: {
             id: sourceElement.id,
             // id: sourceElement.dataClass,
@@ -177,7 +177,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       });
       flowComponent.targetDataElements.forEach((targetElement) => {
         const link2 = new joint.shapes.standard.Link({
-          id: targetElement.id + '/' + flowComponent.id,
+          id: `${targetElement.id}/${flowComponent.id}`,
           source: {
             id: flowComponent.id,
             anchor: {
@@ -200,7 +200,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
   configurePaper(paper: joint.dia.Paper): void {
 
-    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView) => {
 
       if (cellView.model.id !== undefined && cellView.model.id !== null) {
 
@@ -216,13 +216,13 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
               this.changeComponent(result.body);
             }
           }, () => {
-            console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
+            console.log(`cell pointerclick ${cellView.model.id} was clicked`);
           });
         }
       }
     });
 
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('link:pointerdblclick', () => {
       // this.flowComponentId = cellView.model.attributes.source.id as string;
       // this.drawDiagram();
       // console.log(cellView.model.attributes.source.id as string);
@@ -261,5 +261,5 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     }, (error) => {
       this.messageHandler.showError('There was a problem updating the Data Element Component.', error);
     });
-  }
+  };
 }

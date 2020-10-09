@@ -32,6 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-class.component.sass']
 })
 export class DataClassComponent implements OnInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -45,7 +46,6 @@ export class DataClassComponent implements OnInit {
   parentDataModel = {};
   isEditable: boolean;
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -56,7 +56,7 @@ export class DataClassComponent implements OnInit {
     private title: Title
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id || !this.stateService.params.dataModelId) {
       this.stateHandler.NotFound({ location: false });
@@ -81,7 +81,7 @@ export class DataClassComponent implements OnInit {
 
     // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
-    this.title.setTitle(`Data Class`);
+    this.title.setTitle('Data Class');
     // tslint:disable-next-line: deprecation
     this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {

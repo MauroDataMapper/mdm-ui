@@ -29,14 +29,6 @@ import { McSelectPagination } from '../utility/mc-select/mc-select.component';
   styleUrls: ['./terminology.component.sass']
 })
 export class TerminologyComponent implements OnInit {
-  constructor(
-    private stateHandler: StateHandlerService,
-    private stateService: StateService,
-    private title: Title,
-    private resources: MdmResourcesService,
-    private broadcastSvc: BroadcastService
-  ) { }
-
   terminology: any;
   diagram: any;
   activeTab: any;
@@ -45,6 +37,14 @@ export class TerminologyComponent implements OnInit {
   pagination: McSelectPagination;
   showEditForm = false;
   editForm = null;
+  constructor(
+    private stateHandler: StateHandlerService,
+    private stateService: StateService,
+    private title: Title,
+    private resources: MdmResourcesService,
+    private broadcastSvc: BroadcastService
+  ) { }
+
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -144,5 +144,5 @@ export class TerminologyComponent implements OnInit {
 
   onTermSelect = term => {
     this.stateHandler.NewWindow('term', { terminologyId: term.terminology, id: term.id }, null);
-  }
+  };
 }

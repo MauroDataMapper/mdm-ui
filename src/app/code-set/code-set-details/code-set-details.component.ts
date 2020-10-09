@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  AfterViewInit,
   Component,
   ContentChildren,
   ElementRef,
@@ -50,7 +49,7 @@ import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-moda
   templateUrl: './code-set-details.component.html',
   styleUrls: ['./code-set-details.component.scss']
 })
-export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CodeSetDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
   @ViewChildren('editableText') editForm: QueryList<any>;
@@ -111,7 +110,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public showAddElementToMarkdown() { // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
   }
 
   ngOnInit() {
@@ -123,7 +122,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.editableForm.show = () => {
       this.editForm.forEach(x => x.edit({
         editing: true,
-        focus: x._name === 'moduleName' ? true : false
+        focus: x.name === 'moduleName' ? true : false
       }));
       this.editableForm.visible = true;
     };
@@ -151,8 +150,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       this.showSecuritySection = message;
     });
   }
-
-  ngAfterViewInit(): void { }
 
   CodeSetDetails(): any {
 
@@ -246,7 +243,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     if (!this.showSoftDelete) {
       return;
     }
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
 
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
@@ -265,7 +262,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
           this.delete(false);
           this.processing = false;
         } else {
-          return promise;
+          return;
         }
       });
     });
@@ -276,14 +273,14 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent,
         {
           data: {
             title: 'Delete permanently',
             okBtnTitle: 'Yes, delete',
             btnType: 'warn',
-            message: `Are you sure you want to <span class='warning'>permanently</span> delete this Code Set?`
+            message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
           }
         });
 
@@ -293,10 +290,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Are you sure you want to delete this Code Set?`,
+            title: 'Are you sure you want to delete this Code Set?',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message: `<strong>Note: </strong>It will be deleted <span class='warning'>permanently</span>.`
+            message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
           }
         });
 
@@ -394,7 +391,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Edit_model_details', { my: 'right top', at: 'bottom' } as DialogPosition);
+    this.helpDialogueService.open('Edit_model_details');
   }
 
   toggleFavourite() {
@@ -419,7 +416,7 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
 
         dialog.afterClosed().subscribe(result => {
           if (result?.status !== 'ok') {
-            return promise;
+            return;
           }
           this.processing = true;
           const data = {};
@@ -461,5 +458,5 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   showDescription = () => {
     this.showEditDescription = true;
     this.editableForm.show();
-  }
+  };
 }

@@ -21,7 +21,7 @@ import { DataElementStep2Component } from './data-element-step2.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';

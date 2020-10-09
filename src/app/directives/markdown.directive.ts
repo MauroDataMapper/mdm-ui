@@ -22,10 +22,20 @@ import { MarkdownParserService } from '../utility/markdown/markdown-parser/markd
   selector: '[mdmMarkdown]'
 })
 export class MarkdownDirective implements OnInit {
-  private markdownInternal: any;
-
   @Input() renderType: any;
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  @Input('markdown')
+  set markdown(markdown: any) {
+    if (this.markdownInternal === markdown) { return; }
+
+    this.markdownInternal = markdown;
+    this.renderMarkdown();
+  }
+  get markdown(): any {
+    return this.markdownInternal;
+  }
+  private markdownInternal: any;
   constructor(
     private markdownParser: MarkdownParserService,
     private el: ElementRef,
@@ -36,17 +46,7 @@ export class MarkdownDirective implements OnInit {
     this.renderMarkdown();
   }
 
-  get markdown(): any {
-    return this.markdownInternal;
-  }
 
-  @Input('markdown')
-  set markdown(markdown: any) {
-    if (this.markdownInternal === markdown) { return; }
-
-    this.markdownInternal = markdown;
-    this.renderMarkdown();
-  }
 
   private renderMarkdown() {
     if (this.markdown) {

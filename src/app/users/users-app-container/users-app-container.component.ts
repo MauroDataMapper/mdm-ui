@@ -41,5 +41,5 @@ export class UsersAppContainerComponent implements OnInit {
 
   logout = () => {
     this.sharedService.logout();
-  }
+  };
 }

@@ -29,6 +29,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-models-export.component.scss']
 })
 export class DataModelsExportComponent implements OnInit {
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
   step: any;
   selectedDataModels: any;
   showExport = null;
@@ -41,7 +42,6 @@ export class DataModelsExportComponent implements OnInit {
   processing = false;
   exportersList = [];
   exportedFileIsReady: any;
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
   constructor(
     private changeDedRef: ChangeDetectorRef,
     private securityHandler: SecurityHandlerService,
@@ -132,10 +132,10 @@ export class DataModelsExportComponent implements OnInit {
   }
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Exporting_models', {});
+    this.helpDialogueHandler.open('Exporting_models');
   };
 
   ngOnInit() {
-    this.title.setTitle(`Data Models Export`);
+    this.title.setTitle('Data Models Export');
   }
 }

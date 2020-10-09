@@ -39,11 +39,30 @@ import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-moda
 export class TerminologyDetailsComponent implements OnInit {
   @Input() mcTerminology: any;
   @Input() hideEditButton: boolean;
-
   @Output() afterSave = new EventEmitter<any>();
+  @Output() openEditFormChanged = new EventEmitter<any>();
 
   openEditFormVal: any;
-  @Output() openEditFormChanged = new EventEmitter<any>();
+  securitySection = false;
+  processing = false;
+  exportError = null;
+  exportList = [];
+  isAdminUser = this.sharedService.isAdminUser();
+  isLoggedIn = this.securityHandler.isLoggedIn();
+  exportedFileIsReady = false;
+  addedToFavourite = false;
+  deleteInProgress = false;
+  editableForm: EditableDataModel;
+  showEdit: boolean;
+  showPermission: boolean;
+  showNewVersion: boolean;
+  showFinalise: boolean;
+  showDelete: boolean;
+  showSoftDelete: boolean;
+  showPermDelete: boolean;
+  errorMessage: string;
+  exporting: boolean;
+
   @Input() get openEditForm() {
     return this.openEditFormVal;
   }
@@ -66,25 +85,6 @@ export class TerminologyDetailsComponent implements OnInit {
     private title: Title
   ) {}
 
-  securitySection = false;
-  processing = false;
-  exportError = null;
-  exportList = [];
-  isAdminUser = this.sharedService.isAdminUser();
-  isLoggedIn = this.securityHandler.isLoggedIn();
-  exportedFileIsReady = false;
-  addedToFavourite = false;
-  deleteInProgress = false;
-  editableForm: EditableDataModel;
-  showEdit: boolean;
-  showPermission: boolean;
-  showNewVersion: boolean;
-  showFinalise: boolean;
-  showDelete: boolean;
-  showSoftDelete: boolean;
-  showPermDelete: boolean;
-  errorMessage: string;
-  exporting: boolean;
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -198,7 +198,7 @@ export class TerminologyDetailsComponent implements OnInit {
           this.stateHandler.reload();
         }
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.broadcastSvc.broadcast('$elementDeleted', () => { });
+        this.broadcastSvc.broadcast('$elementDeleted');
       }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting the Terminology.', error);
@@ -211,7 +211,7 @@ export class TerminologyDetailsComponent implements OnInit {
     }
     this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Are you sure you want to delete this Terminology?`,
+          title: 'Are you sure you want to delete this Terminology?',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p class="marginless">This Terminology will be marked as deleted and will not be viewable by users </p>
@@ -235,7 +235,7 @@ export class TerminologyDetailsComponent implements OnInit {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Terminology?`
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
         }
       }).afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
@@ -243,10 +243,10 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.dialog.open(ConfirmationModalComponent, {
             data: {
-              title: `Confirm permanent deletion`,
+              title: 'Confirm permanent deletion',
               okBtnTitle: 'Confirm deletion',
               btnType: 'warn',
-              message: `<strong>Note: </strong>All its 'Terms' will be deleted <span class='warning'>permanently</span>.`
+              message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
             }
           }).afterClosed().subscribe(result2 => {
             if (result2 != null && result.status === 'ok') {
@@ -329,7 +329,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Terminology_details', {});
+    this.helpDialogueHandler.open('Terminology_details');
   };
 
   showForm() {

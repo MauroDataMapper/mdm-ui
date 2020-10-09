@@ -19,7 +19,6 @@ import {
   Component,
   OnInit,
   Input,
-  ChangeDetectorRef,
   ViewChild,
   ViewChildren,
   ElementRef,
@@ -45,13 +44,13 @@ export class LinkSuggestionComponent implements OnInit {
   @Input() sourceDataModelId: any;
   @Input() targetDataModelId: any;
 
-  datasource = new MatTableDataSource();
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  datasource = new MatTableDataSource();
   doNotSuggest: any;
 
   model = {

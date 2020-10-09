@@ -25,13 +25,6 @@ import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/mar
   styleUrls: ['./more-description.component.sass']
 })
 export class MoreDescriptionComponent implements OnInit {
-  constructor(
-    userSettingsHandler: UserSettingsHandlerService,
-    private markdownParser: MarkdownParserService
-  ) {
-    this.showMore = userSettingsHandler.get('expandMoreDescription');
-  }
-
   @Input() description: string;
   @Input() length: any;
 
@@ -39,6 +32,12 @@ export class MoreDescriptionComponent implements OnInit {
   showMore = false;
   shortDesc: string;
   fullDesc: string;
+  constructor(
+    userSettingsHandler: UserSettingsHandlerService,
+    private markdownParser: MarkdownParserService
+  ) {
+    this.showMore = userSettingsHandler.get('expandMoreDescription');
+  }
 
   ngOnInit() {
     if (this.length !== undefined) {
@@ -59,7 +58,7 @@ export class MoreDescriptionComponent implements OnInit {
       let subStr = desc.substring(0, this.maxLength);
       const lastIndexOf = subStr.lastIndexOf(' ');
       subStr = subStr.substring(0, lastIndexOf);
-      return subStr + '...';
+      return `${subStr}...`;
     } else {
       return desc;
     }

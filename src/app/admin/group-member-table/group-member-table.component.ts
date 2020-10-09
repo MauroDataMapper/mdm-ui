@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   Component,
-  OnInit,
   Input,
   ViewChildren,
   ElementRef,
@@ -38,14 +37,14 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTable } from '@angular/material/table';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
-import { DialogPosition, MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-group-member-table',
   templateUrl: './group-member-table.component.html',
   styleUrls: ['./group-member-table.component.scss'],
 })
-export class GroupMemberTableComponent implements OnInit, AfterViewInit {
+export class GroupMemberTableComponent implements AfterViewInit {
   @Input() parent: any;
   @Output() childEvent = new EventEmitter<any>();
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -53,15 +52,6 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
-
-  constructor(
-    private roles: ROLES,
-    private changeRef: ChangeDetectorRef,
-    private gridService: GridService,
-    private messageHandler: MessageHandlerService,
-    private resources: MdmResourcesService,
-    private dialog: MatDialog
-  ) { }
 
   ROLES = this.roles.map;
   errors: any;
@@ -74,7 +64,15 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
   filter: any = '';
   applyFilter = this.gridService.applyFilter(this.filters);
 
-  ngOnInit() { }
+  constructor(
+    private roles: ROLES,
+    private changeRef: ChangeDetectorRef,
+    private gridService: GridService,
+    private messageHandler: MessageHandlerService,
+    private resources: MdmResourcesService,
+    private dialog: MatDialog
+  ) { }
+
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -206,11 +204,11 @@ export class GroupMemberTableComponent implements OnInit, AfterViewInit {
     record.deletePending = true;
   };
 
-  askForDelete = (record) => {
+  askForDelete = (record: { firstName: string; lastName: string }) => {
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Are you sure?`,
+          title: 'Are you sure?',
           okBtnTitle: 'Yes, remove',
           btnType: 'warn',
           message: `<p class="marginless"> <strong>Note:</strong> You are removing <strong>${record.firstName} ${record.lastName}</strong> from this group`,

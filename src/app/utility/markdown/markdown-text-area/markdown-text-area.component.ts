@@ -28,7 +28,15 @@ import { MessageService } from '@mdm/services/message.service';
 })
 export class MarkdownTextAreaComponent implements OnInit {
   @Output() descriptionChange = new EventEmitter<string>();
-
+  @Input() inEditMode: boolean;
+  @Input() hideHelpText: boolean;
+  @Input() editableForm: any;
+  @Input() rows: number;
+  @Input() property: string;
+  @Input() element: FolderResult;
+  @ViewChild('editableTextArea', { static: false })
+  editableTextArea: ElementRef;
+  @ViewChild('editableText', { static: true }) editForm: any;
   descriptionVal: string;
 
   @Input()
@@ -46,19 +54,7 @@ export class MarkdownTextAreaComponent implements OnInit {
     this.descriptionChange.emit(this.descriptionVal);
   }
 
-  @Input() inEditMode: boolean;
-  @Input() hideHelpText: boolean;
-  @Input() editableForm: any;
-  @Input() rows: number;
-  @Input() property: string;
-  @Input() element: FolderResult;
   elementDialogue;
-
-  @ViewChild('editableTextArea', { static: false })
-  editableTextArea: ElementRef;
-
-  @ViewChild('editableText', { static: true }) editForm: any;
-
   lastWasShiftKey: any;
   formData: any = {
     showMarkDownPreview: Boolean,
@@ -105,7 +101,7 @@ export class MarkdownTextAreaComponent implements OnInit {
   }
 
   public showAddElementToMarkdown() {
-    this.elementDialogue = this.elementDialogueService.open([], [], null, null);
+    this.elementDialogue = this.elementDialogueService.open([], []);
   }
 
   public elementSelected() {
@@ -119,7 +115,7 @@ export class MarkdownTextAreaComponent implements OnInit {
           const startPos = this.editableTextArea.nativeElement.selectionStart;
           this.editableTextArea.nativeElement.focus();
 
-          this.editableTextArea.nativeElement.value = this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart) + ' ' + markdownLink + ' ' + this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length);
+          this.editableTextArea.nativeElement.value = `${this.editableTextArea.nativeElement.value.substr(0, this.editableTextArea.nativeElement.selectionStart)} ${markdownLink} ${this.editableTextArea.nativeElement.value.substr(this.editableTextArea.nativeElement.selectionStart, this.editableTextArea.nativeElement.value.length)}`;
 
           this.editableTextArea.nativeElement.selectionStart = startPos;
           this.editableTextArea.nativeElement.focus();

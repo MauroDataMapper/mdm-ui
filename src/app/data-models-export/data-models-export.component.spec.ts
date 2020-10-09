@@ -58,9 +58,9 @@ describe('DataModelsExportComponent', () => {
             session: { isAuthenticated: () => empty() },
             tree: {
               // tslint:disable-next-line: deprecation
-              list: (domainType: any, options: any) => empty(),
+              list: () => empty(),
               // tslint:disable-next-line: deprecation
-              get: (domainType: any, options: any) => empty()
+              get: () => empty()
             }
           }
         }

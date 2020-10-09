@@ -50,7 +50,7 @@ export class ElementSelectorComponent implements OnInit {
         }),
         filter(res => res.length >= 0),
         debounceTime(500),
-        distinctUntilChanged()).subscribe((text: string) => {
+        distinctUntilChanged()).subscribe(() => {
 
           this.dataSource = new MatTableDataSource<any>(null);
           this.loading = false;
@@ -64,15 +64,6 @@ export class ElementSelectorComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  constructor(
-    public dialogRef: MatDialogRef<ElementSelectorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private resourceService: MdmResourcesService,
-    private messageService: MessageService,
-    private contextSearchHandler: ContentSearchHandlerService,
-    private cd: ChangeDetectorRef,
-    private gridService: GridService
-  ) { }
   pageSize = 40;
   validTypesToSelect = [];
   public searchInput: string;
@@ -106,8 +97,18 @@ export class ElementSelectorComponent implements OnInit {
   expandedElement: any;
   rootNode: any;
   reloading = false;
-
   private searchControlInput: ElementRef;
+
+  constructor(
+    public dialogRef: MatDialogRef<ElementSelectorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private resourceService: MdmResourcesService,
+    private messageService: MessageService,
+    private contextSearchHandler: ContentSearchHandlerService,
+    private cd: ChangeDetectorRef,
+    private gridService: GridService
+  ) { }
+
   isExpansionDetailRow = (i: number, row: object) => row.hasOwnProperty('detailRow');
 
   closeHelp(): void {
@@ -208,7 +209,7 @@ export class ElementSelectorComponent implements OnInit {
     });
   };
 
-  onTerminologySelect = (terminology: any, record: any) => {
+  onTerminologySelect = (terminology: any) => {
     this.dataSource = new MatTableDataSource<any>(null);
     if (terminology != null) {
       this.formData.currentContext = this.terminologies.find((data: any) => data.label === terminology.label);
@@ -332,14 +333,14 @@ export class ElementSelectorComponent implements OnInit {
     }
   }
 
-  loadAllDataElements(dataClass, pageSize, pageIndex) {
+  loadAllDataElements(dataClass) {
     return this.resourceService.dataElement.list(dataClass.modelId, dataClass.id);
   }
   loadAllContextElements(currentContext, selectedType, pageSize, offset) {
     if (currentContext.domainType === 'DataClass' && selectedType === 'DataElement') {
       this.loading = true;
       this.formData.searchResultOffset = offset;
-      this.loadAllDataElements(currentContext, pageSize, offset).subscribe((result) => {
+      this.loadAllDataElements(currentContext).subscribe((result) => {
         const rows = [];
         result.body.items.forEach(element => {
           if (element.hasOwnProperty('breadcrumbs')) {
@@ -449,11 +450,10 @@ export class ElementSelectorComponent implements OnInit {
     this.formData.inSearchMode = true;
     this.reloading = true;
     const options = {
-        domainType: treeSearchDomainType
+      domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.search('folders', this.formData.treeSearchText, options)
-    .subscribe(result => {
+    this.resourceService.tree.search('folders', this.formData.treeSearchText, options).subscribe(result => {
       this.reloading = false;
       this.rootNode = {
         children: result.body,

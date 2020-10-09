@@ -43,7 +43,7 @@ export class FavouriteHandlerService {
     }
 
     this.userSettingsHandler.update('favourites', favorites);
-    this.userSettingsHandler.saveOnServer().subscribe(result => {
+    this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('Added to Favorites successfully.');
       this.broadcastSvc.broadcast('favourites', { name: 'add', element });
     }, error => {
@@ -79,7 +79,7 @@ export class FavouriteHandlerService {
 
     favorites.splice(index, 1);
     this.userSettingsHandler.update('favourites', favorites);
-    this.userSettingsHandler.saveOnServer().subscribe(result => {
+    this.userSettingsHandler.saveOnServer().subscribe(() => {
       this.messageHandler.showSuccess('Removed from Favorites successfully.');
       this.broadcastSvc.broadcast('favourites', { name: 'remove', element });
     }, (error) => {

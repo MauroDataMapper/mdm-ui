@@ -116,7 +116,7 @@ export class ConfigurationComponent implements OnInit {
         if (error.status === 418) {
           this.indexingStatus = 'success';
           if (error.error && error.error.timeTaken) {
-            this.indexingTime = 'in ' + error.error.timeTaken;
+            this.indexingTime = `in ${error.error.timeTaken}`;
           }
         } else {
           this.indexingStatus = 'error';

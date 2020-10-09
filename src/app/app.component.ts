@@ -31,6 +31,10 @@ export class AppComponent implements OnInit {
     private userIdle: UserIdleService,
     private sharedService: SharedService
   ) {}
+  @HostListener('window:mousemove', ['$event'])
+  onMouseMove() {
+    this.userIdle.resetTimer();
+  }
 
   ngOnInit() {
     // Start watching for user inactivity.
@@ -41,16 +45,10 @@ export class AppComponent implements OnInit {
     this.userIdle.onTimeout().subscribe(() => {
       const now: any = new Date();
       if (now - lastDigestRun > 300000) {// 5 min
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.sharedService.handleExpiredSession(), this.userIdle.resetTimer();
-
       }
       lastDigestRun = now;
-
     });
-  }
-
-  @HostListener('window:mousemove', ['$event'])
-  onMouseMove(e) {
-    this.userIdle.resetTimer();
   }
 }

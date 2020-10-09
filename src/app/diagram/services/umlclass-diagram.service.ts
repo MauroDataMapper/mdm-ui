@@ -16,11 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import * as joint from 'jointjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { DataflowDataclassDiagramService } from './dataflow-dataclass-diagram.service';
 
 
 export class UmlClassDiagramService extends BasicDiagramService {
@@ -62,7 +61,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
     const filledDiamond = 'M 40 0 L 20 10 L 0 0 L 20 -10 z';
     this.subClassLinks.forEach(subClassLink => {
       const link = new joint.shapes.standard.Link({
-        id: subClassLink.source + '-' + subClassLink.target,
+        id: `${subClassLink.source}-${subClassLink.target}`,
         source: { id: subClassLink.source },
         target: { id: subClassLink.target },
         attrs: {
@@ -80,7 +79,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
     });
     this.referenceLinks.forEach(subClassLink => {
       const link = new joint.shapes.standard.Link({
-        id: subClassLink.source + '-' + subClassLink.label,
+        id: `${subClassLink.source}-${subClassLink.label}`,
         source: { id: subClassLink.source },
         target: { id: subClassLink.target },
         attrs: {
@@ -159,7 +158,7 @@ export class UmlClassDiagramService extends BasicDiagramService {
   }
 
 
-  configurePaper(paper: joint.dia.Paper): void {
+  configurePaper(): void {
 
   }
   canGoUp(): boolean {

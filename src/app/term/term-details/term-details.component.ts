@@ -34,7 +34,6 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { SharedService } from '@mdm/services/shared.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -46,6 +45,23 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
   styleUrls: ['./term-details.component.scss']
 })
 export class TermDetailsComponent implements OnInit, AfterViewInit {
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+  @Input() afterSave: any;
+  @Input() editMode = false;
+  @Input() mcTerminology: any;
+  @Input() hideEditButton: any;
+  @Input() openEditForm: any;
+
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
+  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
+  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
+
+  download: any;
+  downloadLink: any;
+  urlText: any;
+
+  mcTerm: TermResult;
   securitySection = false;
   processing = false;
   exportError = null;
@@ -69,22 +85,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
   showNewVersion = false;
   compareToList = [];
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  download: any;
-  downloadLink: any;
-  urlText: any;
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  mcTerm: TermResult;
-  @Input() mcTerminology: any;
-  @Input() hideEditButton: any;
-  @Input() openEditForm: any;
 
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   constructor(
     private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
@@ -191,7 +192,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+    this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
 
       if (this.editMode) {
@@ -242,14 +243,6 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     );
   };
 
-  private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
-  }
-
   showForm() {
     this.editableForm.show();
   }
@@ -261,9 +254,13 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Term_details', {
-      my: 'right top',
-      at: 'bottom'
-    } as DialogPosition);
+    this.helpDialogueService.open('Term_details');
+  }
+
+  private invokeInlineEditor(): void {
+    this.editForm.find((inlineEditorComponent: any) => {
+        return inlineEditorComponent.name === 'editableText';
+      }
+    );
   }
 }

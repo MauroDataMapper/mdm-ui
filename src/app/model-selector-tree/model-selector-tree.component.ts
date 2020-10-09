@@ -29,7 +29,7 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
-import { fromEvent, Subject } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 @Component({
@@ -38,26 +38,36 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
   styleUrls: ['./model-selector-tree.component.sass']
 })
 export class ModelSelectorTreeComponent implements OnInit, OnChanges {
-
   @Input() root: any;
   @Output() rootChange = new EventEmitter<any>();
-
   @Input() defaultElements: any;
-
   @Input() defaultCheckedMap: any;
-
   @Input() onSelect: any;
   @Output() selectChange = new EventEmitter<any>();
-
   @Input() onCheck: any;
+  @Input() isRequired: any;
+  @Input() showValidationError: any;
+  @Input() doNotShowDataClasses: any;
+  @Input() doNotShowTerms: any;
+  @Input() justShowFolders: any;
+  @Input() placeholder: any;
+  @Output() placeholderChange = new EventEmitter<any>();
+  @Input() accepts: any;
+  @Input() treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
+  @Input() readOnlySearchInput: any;
+  @Input() multiple: any;
+  @Input() processing: any;
+  @Input() hideSelectedElements: any;
+  @Input() alwaysShowTree: any = false;
+  @Input() showCheckboxFor: any; // ['DataClass','DataModel','Folder']"
+  @Input() propagateCheckbox: any;
+  @Input() usedInModalDialogue: any;
+  @Input() doNotApplySettingsFilter: any;
   @Output() checkChange = new EventEmitter<any>();
+  @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
   searchInputTreeControl: ElementRef;
-
   selectedElementsVal: any;
-  @Output() ngModelChange = new EventEmitter<any>();
-
-
   @Input()
   get ngModel() {
     return this.selectedElements;
@@ -73,28 +83,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.ngModelChange.emit(this.selectedElementsVal);
   }
 
-
-  @Input() isRequired: any;
-  @Input() showValidationError: any;
-  @Input() doNotShowDataClasses: any;
-  @Input() doNotShowTerms: any;
-  @Input() justShowFolders: any;
-
-  @Input() placeholder: any;
-  @Output() placeholderChange = new EventEmitter<any>();
-
-  @Input() accepts: any;
-  @Input() treeSearchDomainType: any; // "Folder" or "DataClass" or "DataModel" use as DomainType=xxx when searching in tree/search?domainType=DataModel
-  @Input() readOnlySearchInput: any;
-  @Input() multiple: any;
-  @Input() processing: any;
-  @Input() hideSelectedElements: any;
-  @Input() alwaysShowTree: any = false;
-  @Input() showCheckboxFor: any; // ['DataClass','DataModel','Folder']"
-  @Input() propagateCheckbox: any;
-  @Input() usedInModalDialogue: any;
-  @Input() doNotApplySettingsFilter: any;
-
   showTree: any;
   placeholderStr: string;
   loading: boolean;
@@ -107,7 +95,24 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   inSearchMode: any;
   wasInside = false;
 
-  constructor(private resources: MdmResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private eRef: ElementRef, private changeRef: ChangeDetectorRef) {
+  @HostListener('click')
+  clickInside() {
+    this.wasInside = true;
+  }
+
+  @HostListener('document:click')
+  clickout() {
+    if (!this.wasInside) {
+      this.showTree = false;
+    }
+    if (this.alwaysShowTree) {
+      this.showTree = true;
+    }
+    this.wasInside = false;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  constructor(private resources: MdmResourcesService, private securityHandler: SecurityHandlerService, private userSettingsHandler: UserSettingsHandlerService, private changeRef: ChangeDetectorRef) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -324,21 +329,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     this.showTree = !this.showTree;
   }
 
-  @HostListener('click')
-  clickInside() {
-    this.wasInside = true;
-  }
 
-  @HostListener('document:click')
-  clickout() {
-    if (!this.wasInside) {
-      this.showTree = false;
-    }
-    if (this.alwaysShowTree) {
-      this.showTree = true;
-    }
-    this.wasInside = false;
-  }
 
   onNodeClick = (node) => {
     this.click(node);
@@ -410,5 +401,5 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   };
 
   // TODO
-  onAddFolder = (var1) => { };
+  onAddFolder = () => { };
 }

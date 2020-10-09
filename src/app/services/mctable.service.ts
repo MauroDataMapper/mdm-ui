@@ -16,15 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
 export type SortDirection = 'asc' | 'desc' | '';
-
-interface SearchResult {
-  countries: [];
-  total: number;
-}
 
 interface State {
   page: number;
@@ -34,18 +29,14 @@ interface State {
   sortDirection: SortDirection;
 }
 
-function compare(v1, v2) {
-  return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class MctableService {
+  result: any;
   private resultSubject = new Subject<any>();
   private loadingBehaviorSubject = new BehaviorSubject<boolean>(true);
   private searchSubject = new Subject<void>();
-  result: any;
   private total = new BehaviorSubject<number>(0);
 
   private statePage: State = {
@@ -102,12 +93,6 @@ export class MctableService {
   set sortDirection(sortDirection: SortDirection) {
     this._set({ sortDirection });
   }
-
-  private _set(patch: Partial<State>) {
-    Object.assign(this.statePage, patch);
-    this.searchSubject.next();
-  }
-
   ResultSendMessage(message: any) {
     this.resultSubject.next(message);
     this.result = message;
@@ -117,4 +102,8 @@ export class MctableService {
     return this.resultSubject.asObservable();
   }
 
+  private _set(patch: Partial<State>) {
+    Object.assign(this.statePage, patch);
+    this.searchSubject.next();
+  }
 }

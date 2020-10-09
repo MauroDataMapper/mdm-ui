@@ -1,10 +1,8 @@
-import {Inject, Injectable} from '@angular/core';
-import {ValidatorService} from '@mdm/services/validator.service';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TestService {
-
-  constructor(private validatorService: ValidatorService) { }
+  constructor() { }
 }

@@ -25,7 +25,7 @@ export class LinkCreatorService {
 
   constructor(private elementTypes: ElementTypesService) { }
 
-  public createLink(href, title, text) {
+  public createLink(href) {
     const elements = href.split('|');
     const elementType = elements[1];
     let mcElement = {};

@@ -135,7 +135,7 @@ export class DataClassStep2Component
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
     for (const id in this.model.selectedDataClassesMap) {
-      if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataClassesMap, 'id')) {
         const element = this.model.selectedDataClassesMap[id];
         this.model.selectedDataClasses.push(element.node);
       }

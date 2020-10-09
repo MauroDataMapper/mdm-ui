@@ -109,7 +109,7 @@ export class ElementSelectorComponent implements OnInit {
     private gridService: GridService
   ) { }
 
-  isExpansionDetailRow = (i: number, row: object) => row.hasOwnProperty('detailRow');
+  isExpansionDetailRow = (i: number, row: object) => Object.prototype.hasOwnProperty.call(row, 'detailRow');
 
   closeHelp(): void {
     this.dialogRef.close();
@@ -231,10 +231,11 @@ export class ElementSelectorComponent implements OnInit {
     const buffer = 200;
     const limit = tableScrollHeight - tableViewHeight - buffer;
     if (scrollLocation > limit && limit > 0) {
-      const requiredNum = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length + this.pageSize;
+      // eslint-disable-next-line no-prototype-builtins
+      const requiredNum = this.dataSource.data.filter(x => !Object.prototype.hasOwnProperty.call(x, 'detailRow')).length + this.pageSize;
       if ((this.totalItemCount + this.pageSize) > requiredNum && this.isProcessing === false) {
         this.isProcessing = true;
-        this.fetch(this.pageSize, this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length, true);
+        this.fetch(this.pageSize, this.dataSource.data.filter(x => !Object.prototype.hasOwnProperty.call(x, 'detailRow')).length, true);
       }
     }
   }
@@ -300,7 +301,7 @@ export class ElementSelectorComponent implements OnInit {
         const rows = [];
         this.loading = false;
         res.body.items.forEach(element => {
-          if (element.hasOwnProperty('breadcrumbs')) {
+          if (Object.prototype.hasOwnProperty.call(element, 'breadcrumbs')) {
             rows.push(element, { detailRow: true, element });
           } else {
             rows.push(element);
@@ -317,14 +318,14 @@ export class ElementSelectorComponent implements OnInit {
             this.dataSource = new MatTableDataSource<any>(rows);
           }
           this.totalItemCount = res.body.count;
-          this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
+          this.currentRecord = this.dataSource.data.filter(x => !Object.prototype.hasOwnProperty.call(x, 'detailRow')).length;
           this.dataSource._updateChangeSubscription();
           this.noData = false;
           this.isProcessing = false;
         } else {
           this.isProcessing = true;
           this.dataSource = new MatTableDataSource<any>(rows);
-          this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
+          this.currentRecord = this.dataSource.data.filter(x => !Object.prototype.hasOwnProperty.call(x, 'detailRow')).length;
           this.totalItemCount = res.body.count;
           this.noData = false;
           this.isProcessing = false;
@@ -343,7 +344,7 @@ export class ElementSelectorComponent implements OnInit {
       this.loadAllDataElements(currentContext).subscribe((result) => {
         const rows = [];
         result.body.items.forEach(element => {
-          if (element.hasOwnProperty('breadcrumbs')) {
+          if (Object.prototype.hasOwnProperty.call(element, 'breadcrumbs')) {
             rows.push(element, { detailRow: true, element });
           } else {
             rows.push(element);
@@ -365,7 +366,7 @@ export class ElementSelectorComponent implements OnInit {
         const rows = [];
 
         result.body.items.forEach(element => {
-          if (element.hasOwnProperty('breadcrumbs')) {
+          if (Object.prototype.hasOwnProperty.call(element, 'breadcrumbs')) {
             rows.push(element, { detailRow: true, element });
           } else {
             rows.push(element);
@@ -380,7 +381,7 @@ export class ElementSelectorComponent implements OnInit {
           this.dataSource.data = this.termsList;
         }
         this.totalItemCount = result.body.count;
-        this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
+        this.currentRecord = this.dataSource.data.filter(x => !Object.prototype.hasOwnProperty.call(x, 'detailRow')).length;
         this.dataSource._updateChangeSubscription();
         this.noData = false;
         this.isProcessing = false;
@@ -395,7 +396,7 @@ export class ElementSelectorComponent implements OnInit {
         this.isProcessing = true;
         const rows = [];
         result.body.items.forEach(element => {
-          if (element.hasOwnProperty('breadcrumbs')) {
+          if (Object.prototype.hasOwnProperty.call(element, 'breadcrumbs')) {
             rows.push(element, { detailRow: true, element });
           } else {
             rows.push(element);
@@ -409,7 +410,7 @@ export class ElementSelectorComponent implements OnInit {
         } else {
           this.dataSource.data = this.termsList;
         }
-        this.currentRecord = this.dataSource.data.filter(x => !x.hasOwnProperty('detailRow')).length;
+        this.currentRecord = this.dataSource.data.filter(x => !Object.prototype.hasOwnProperty.call(x, 'detailRow')).length;
         this.dataSource._updateChangeSubscription();
         this.noData = false;
         this.isProcessing = false;

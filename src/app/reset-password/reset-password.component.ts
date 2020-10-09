@@ -45,7 +45,7 @@ export class ResetPasswordComponent implements OnInit {
     private resources: MdmResourcesService,
     private stateService: StateService,
     private sharedService: SharedService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Reset Password');
@@ -95,13 +95,12 @@ export class ResetPasswordComponent implements OnInit {
     this.processing = true;
 
     this.resources.catalogueUser.changePassword(this.uid, resource).subscribe(() => {
-          this.message = 'success';
-          this.stateHandler.Go('home');
-        }, () => {
-          this.message = 'error';
-          this.processing = false;
-          this.confirmed = false;
-        }
-      );
+      this.message = 'success';
+      this.stateHandler.Go('home');
+    }, () => {
+      this.message = 'error';
+      this.processing = false;
+      this.confirmed = false;
+    });
   };
 }

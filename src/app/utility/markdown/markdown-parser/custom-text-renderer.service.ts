@@ -79,6 +79,7 @@ export class CustomTextRendererService extends marked.Renderer {
 
   // &#63; to ? helper
   public htmlEscapeToText(text) {
+    // eslint-disable-next-line no-useless-escape
     return text.replace(/\&\#[0-9]*;|&amp;/g, (escapeCode) => {
       if (escapeCode.match(/amp/)) {
         return '&';

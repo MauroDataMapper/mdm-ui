@@ -38,14 +38,13 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
   encapsulation: ViewEncapsulation.None
 })
 export class UserDetailsComponent implements OnInit, OnDestroy {
+  @Input() afterSave: any;
+  @Output() refreshUserDetails: EventEmitter<any> = new EventEmitter();
   user: UserDetailsResult;
   public: false;
   subscription: Subscription;
   isWritable: boolean;
   errorMessage = '';
-
-  @Input() afterSave: any;
-  @Output() refreshUserDetails: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private resourcesService: MdmResourcesService,

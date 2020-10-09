@@ -46,7 +46,7 @@ export class CustomHtmlRendererService extends marked.Renderer {
   };
 
   table = (header, body) => {
-    return `<table class=\'table table-bordered\'> ${header} ${body}</table>`;
+    return `<table class='table table-bordered'> ${header} ${body}</table>`;
   };
 
 

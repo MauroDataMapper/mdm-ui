@@ -243,6 +243,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   async expand(node: Node) {
+    let dataModelResponse;
+    let dataClassResponse;
+    let terminologyResponse;
+    let termResponse;
     try {
       switch (node.domainType) {
         case DOMAIN_TYPE.Folder:
@@ -253,16 +257,16 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             return node.children;
           }
         case DOMAIN_TYPE.DataModel:
-          const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
+          dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
           return dataModelResponse.body;
         case DOMAIN_TYPE.DataClass:
-          const dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
+          dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
           return dataClassResponse.body;
         case DOMAIN_TYPE.Terminology:
-          const terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
+          terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
           return terminologyResponse.body;
         case DOMAIN_TYPE.Term:
-          const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
+          termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
           return termResponse.body;
         default:
           return [];

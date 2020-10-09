@@ -213,7 +213,7 @@ export class ContentTableComponent implements AfterViewInit {
     });
     promise.then(() => {
       this.records.forEach(x => (x.checked = false));
-      this.records = this.records;
+      // this.records = this.records;
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
@@ -246,7 +246,7 @@ export class ContentTableComponent implements AfterViewInit {
     });
     promise.then(() => {
       this.records.forEach(x => (x.checked = false));
-      this.records = this.records;
+      // this.records = this.records;
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();

@@ -245,7 +245,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
     });
     promise.then(() => {
       this.records.forEach(x => (x.checked = false));
-      this.records = this.records;
+      // this.records = this.records;
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();

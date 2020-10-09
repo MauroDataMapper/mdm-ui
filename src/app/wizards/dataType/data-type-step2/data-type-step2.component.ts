@@ -207,7 +207,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   createSelectedArray = () => {
     this.model.selectedDataTypes = [];
     for (const id in this.model.selectedDataTypesMap) {
-      if (this.model.selectedDataTypesMap.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataTypesMap, 'id')) {
         const element = this.model.selectedDataTypesMap[id];
         this.model.selectedDataTypes.push(element.node);
       }

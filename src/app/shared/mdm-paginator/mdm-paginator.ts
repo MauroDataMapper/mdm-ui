@@ -20,7 +20,7 @@ import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'mdm-paginator',
-  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]=\'length\' showFirstLastButtons (page)="changed($event)"></mat-paginator>'
+  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="length" showFirstLastButtons (page)="changed($event)"> </mat-paginator>'
 })
 export class MdmPaginatorComponent extends MatPaginator implements OnInit {
   pageSize = 20;

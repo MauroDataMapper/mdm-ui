@@ -32,6 +32,13 @@ pipeline {
       }
     }
 
+    stage('Clear tests') {
+      steps {
+        nvm('') {
+          sh 'npx jest --clearCache'
+        }
+      }
+    }
 
     stage('Test') {
       steps {

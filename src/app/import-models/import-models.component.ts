@@ -69,7 +69,7 @@ export class ImportModelsComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
     private stateService: StateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -88,15 +88,15 @@ export class ImportModelsComponent implements OnInit {
       });
     } else if (this.importType === 'terminologies') {
       this.resources.terminology.importers().subscribe(result => {
-          this.importers = result.body;
-        }, error => {
-          this.messageHandler.showError('Can not load importers!', error);
-        });
-      } else if (this.importType === 'codeSets') {
-        this.resources.codeSet.importers().subscribe(result => {
-            this.importers = result.body;
-        }, error => {
-          this.messageHandler.showError('Can not load importers!', error);
+        this.importers = result.body;
+      }, error => {
+        this.messageHandler.showError('Can not load importers!', error);
+      });
+    } else if (this.importType === 'codeSets') {
+      this.resources.codeSet.importers().subscribe(result => {
+        this.importers = result.body;
+      }, error => {
+        this.messageHandler.showError('Can not load importers!', error);
       });
     }
   }
@@ -178,38 +178,46 @@ export class ImportModelsComponent implements OnInit {
       });
     });
 
-    this.resources.dataModel.importModels(namespace, name, version, this.formData).subscribe((result: any) => {
-          this.importingInProgress = false;
-          this.importCompleted = true;
-          this.importResult = result;
-          this.importHasError = false;
-          this.importErrors = [];
+    let method = this.resources.dataModel.importModels(namespace, name, version, this.formData);
+    if (this.importType === 'terminologies') {
+      method = this.resources.terminology.importModels(namespace, name, version, this.formData);
+    }
 
-          this.messageHandler.showSuccess(
-            'Data Model(s) imported successfully'
+    method.subscribe((result: any) => {
+      this.importingInProgress = false;
+      this.importCompleted = true;
+      this.importResult = result;
+      this.importHasError = false;
+      this.importErrors = [];
+      this.messageHandler.showSuccess('Models imported successfully!');
+      this.broadcastSvc.broadcast('$reloadDataModels');
+      if (result && result.body.count === 1) {
+        if (this.importType === 'dataModels') {
+          this.stateHandler.Go(
+            'datamodel',
+            { id: result.body.items[0].id },
+            { reload: true, location: true }
           );
-          this.broadcastSvc.broadcast('$reloadDataModels');
-
-          if (result && result.body.count === 1) {
-            this.stateHandler.Go(
-              'datamodel',
-              { id: result.body.items[0].id },
-              { reload: true, location: true }
-            );
-          }
-        }, (error) => {
-          if (error.status === 422) {
-            this.importHasError = true;
-            if (error.error.validationErrors) {
-              this.importErrors = error.error.validationErrors.errors;
-            } else if (error.error.errors) {
-              this.importErrors = error.error.errors;
-            }
-          }
-          this.importingInProgress = false;
-          this.messageHandler.showError('Error in import process', '');
+        } else if (this.importType === 'terminologies') {
+          this.stateHandler.Go(
+            'terminology',
+            { id: result.body.items[0].id },
+            { reload: true, location: true }
+          );
         }
-      );
+      }
+    }, (error) => {
+      if (error.status === 422) {
+        this.importHasError = true;
+        if (error.error.validationErrors) {
+          this.importErrors = error.error.validationErrors.errors;
+        } else if (error.error.errors) {
+          this.importErrors = error.error.errors;
+        }
+      }
+      this.importingInProgress = false;
+      this.messageHandler.showError('Error in import process', '');
+    });
   };
 
   getFile = (paramName) => {

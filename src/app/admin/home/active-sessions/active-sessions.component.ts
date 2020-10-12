@@ -86,6 +86,7 @@ export class ActiveSessionsComponent implements OnInit, AfterViewInit {
       this.totalItemCount = resp.body.countAuthorised;
       this.unauthorisedCount = resp.body.countUnauthorised;
       this.dataSource.data = this.records;
+      console.log(this.records);
     }, err => {
       this.messageHandler.showError('There was a problem loading the active sessions.', err);
     });

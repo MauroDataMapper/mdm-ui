@@ -24,8 +24,11 @@ import { SummaryMetadataChartComponent } from '../summary-metadata-chart/summary
   templateUrl: './summary-metadata-popup.component.html',
   styleUrls: ['./summary-metadata-popup.component.scss'],
 })
-export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
-  implements OnInit {
+export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent implements OnInit {
+  public tableDataForTable = [];
+
+  public reportIndex: number;
+
   constructor(
     protected dialogRef: MatDialogRef<SummaryMetadataPopupComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
@@ -34,9 +37,7 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
     this.summary = data;
   }
 
-  public tableDataForTable = [];
 
-  public reportIndex: number;
 
   ngOnInit(): void {
     super.ngOnInit();

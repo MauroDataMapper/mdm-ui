@@ -43,6 +43,9 @@ import { GridService } from '@mdm/services/grid.service';
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   @Input() codeSet: any;
   @Input() type: any; // static, dynamic
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   clientSide: any; // if true, it should NOT pass values to the serve in save/update/delete
   hideFilters = true;
   displayedColumns: string[];
@@ -54,9 +57,6 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   deleteInProgress: boolean;
   records: any[] = [];
   access: any;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   baseTypes: any;
   classifiableBaseTypes: any;
   filterValue: any;

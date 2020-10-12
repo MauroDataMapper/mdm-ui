@@ -29,22 +29,24 @@ export class ElementClassificationsComponent implements OnInit {
 
   @Input() editableForm: any;
   @Input() readOnly = true;
+  @Input() inEditMode: boolean;
+  @Input() property: string;
+  @Input() element: DataModelResult;
+  @Input() newWindow = false;
 
-  classificationsVal: any[];
   @Output() classificationsChanged = new EventEmitter<any[]>();
   @Input() get classifications() {
     return this.classificationsVal;
   }
+
   set classifications(val) {
 
     this.classificationsVal = val;
     this.classificationsChanged.emit(this.classificationsVal);
   }
 
-  @Input() inEditMode: boolean;
-  @Input() property: string;
-  @Input() element: DataModelResult;
-  @Input() newWindow = false;
+  classificationsVal: any[];
+
   target: string;
   lastWasShiftKey: any;
   formData: any = {

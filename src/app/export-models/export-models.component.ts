@@ -61,7 +61,7 @@ export class ExportModelsComponent implements OnInit {
     this.exportType = this.stateService.params.exportType ? this.stateService.params.exportType : 'dataModels';
     this.loadExporterList();
     this.step = 1;
-    this.title.setTitle(`Export Models`);
+    this.title.setTitle('Export Models');
   }
 
   onSelect = select => {
@@ -151,7 +151,7 @@ export class ExportModelsComponent implements OnInit {
       this.messageHandler.showError('There was a problem exporting the Data Model(s).', error);
     }
     );
-  }
+  };
 
   loadHelp = () => {
     this.helpDialogueHandler.open('Exporting_models');

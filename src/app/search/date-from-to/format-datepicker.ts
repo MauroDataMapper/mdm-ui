@@ -31,6 +31,7 @@ export class AppDateAdapter extends NativeDateAdapter {
     return date.toDateString();
   }
 }
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const APP_DATE_FORMATS: MatDateFormats = {
   parse: {
     dateInput: { month: 'short', year: 'numeric', day: 'numeric' }

@@ -27,16 +27,11 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
   styleUrls: ['./share-with.component.sass'],
 })
 export class ShareWithComponent implements OnInit {
+  @Input() mcElement: string;
+  @Input() mcDomainType: string;
   folderResult: any;
   subscription: Subscription;
   type;
-  // @Input() folderResult: FolderResult;
-
-  constructor(
-    private messageService: MessageService,
-    private resourcesService: MdmResourcesService,
-    private messageHandler: MessageHandlerService
-  ) { }
 
   supportedDomainTypes = {
     DataModel: { name: 'dataModel', message: 'Data Model' },
@@ -48,10 +43,15 @@ export class ShareWithComponent implements OnInit {
 
   readableByEveryone: false;
   readableByAuthenticated: false;
-  @Input() mcElement: string;
-  @Input() mcDomainType: string;
+
   message = 'Permission';
   domainType: string;
+
+  constructor(
+    private messageService: MessageService,
+    private resourcesService: MdmResourcesService,
+    private messageHandler: MessageHandlerService
+  ) { }
 
   ngOnInit() {
     this.folderResult = this.messageService.getFolderPermissions();

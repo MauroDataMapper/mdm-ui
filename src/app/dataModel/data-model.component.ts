@@ -32,6 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-model.component.scss']
 })
 export class DataModelComponent implements OnInit, OnDestroy {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataModel: DataModelResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -46,8 +47,6 @@ export class DataModelComponent implements OnInit, OnDestroy {
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
-
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
     private resourcesService: MdmResourcesService,

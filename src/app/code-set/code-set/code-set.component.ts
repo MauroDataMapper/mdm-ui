@@ -32,6 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./code-set.component.scss'],
 })
 export class CodeSetComponent implements OnInit, OnDestroy {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   codeSetModel: CodeSetResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -46,7 +47,6 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   rootCell: any;
   semanticLinks: any[] = [];
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,

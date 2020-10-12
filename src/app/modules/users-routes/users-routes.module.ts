@@ -23,7 +23,7 @@ import { UsersAppContainerComponent } from '@mdm/users/users-app-container/users
 import { UIRouterModule } from '@uirouter/angular';
 import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-password.component';
 
-export const PagesRoutes = {
+export const pageRoutes = {
   states: [
     {
       name: 'appContainer.userArea',
@@ -50,7 +50,7 @@ export const PagesRoutes = {
 
 @NgModule({
   declarations: [],
-  imports: [UIRouterModule.forChild({ states: PagesRoutes.states })],
+  imports: [UIRouterModule.forChild({ states: pageRoutes.states })],
   providers: [
     {
       provide: LocationStrategy,

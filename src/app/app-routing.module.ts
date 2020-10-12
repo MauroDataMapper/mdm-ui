@@ -53,7 +53,7 @@ import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-m
 import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 
-export const PagesRoutes = {
+export const pageRoutes = {
   states: [
     {
       name: 'appContainer',
@@ -253,7 +253,7 @@ export const PagesRoutes = {
 };
 
 @NgModule({
-  imports: [UIRouterModule.forChild({ states: PagesRoutes.states })],
+  imports: [UIRouterModule.forChild({ states: pageRoutes.states })],
   providers: [
     {
       provide: LocationStrategy,

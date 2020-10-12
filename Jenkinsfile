@@ -25,7 +25,6 @@ pipeline {
     stage('Install') {
       steps {
         nvm('') {
-          sh 'mvn clean test'
           sh 'npm install -g npm-check'
           sh 'npm install -g @angular/cli'
           sh 'npm ci'
@@ -37,7 +36,7 @@ pipeline {
       steps {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-            sh 'ng test --coverage'
+            sh 'ng test'
           }
         }
       }
@@ -79,7 +78,7 @@ pipeline {
       publishHTML([
         allowMissing         : true,
         alwaysLinkToLastBuild: true,
-        keepAll              : true,
+        keepAll              : false,
         reportDir            : 'test-report',
         reportFiles          : 'index.html',
         reportName           : 'Test Report',

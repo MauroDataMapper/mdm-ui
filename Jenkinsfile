@@ -52,7 +52,7 @@ pipeline {
       steps {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-            sh 'ng lint'
+            sh 'npm run eslint'
           }
         }
       }

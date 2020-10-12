@@ -1,0 +1,336 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="panel panel-default mdm--shadow-block">
+  <form editable-form name="form" onaftersave="onAfterSave()" disable-submit-on-enter>
+      <div class="panel-body">
+          <div *ngIf="result">
+              <div [ngClass]="{ 'has-error': errorMessage != ''}" class="data-model-header">
+                  <div class="detail-icons--cta">
+                      <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
+                      <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
+                  </div>
+                  <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
+                      <span class="dataModelTypeIcon">
+                        <i matTooltip="Reference Data" class="fas fa-file-contract"></i>
+                      </span>
+                      <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                            [inEditMode]="editableForm.visible"
+                                            [(ngModel)]="editableForm.label"
+                                            [name]="'moduleName'"
+                                            size="20"
+                                            [styleCss]="'dataModelDetailsLabel'">
+                      </mdm-inline-text-edit>
+                  </h4>
+                  <span class="inline-block" *ngIf="result?.deleted">
+                      <small class="warning"> | Deleted</small>
+                  </span>
+                  <mdm-element-status [result]="result"></mdm-element-status>
+              </div>
+              <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+                  <span class="help-block">{{errorMessage}}</span>
+              </div>
+          </div>
+
+          <div class="detail-icons">
+              <div class="text-muted" *ngIf="result?.type === 'Data Asset' || result?.type === 'Data Standard'">
+                  <small class="block">
+                      <div>
+                          <i class="fas fa-cube" matTooltip="Item type"></i>
+                          <strong>Item type: </strong>
+                          <span class="item-type" *ngIf="result?.type === 'Data Asset'">Data Asset</span>
+                          <span class="item-type" *ngIf="result?.type === 'Data Standard'">Data Standard</span>
+                      </div>
+                  </small>
+              </div>
+              <div class="text-muted" *ngIf="result?.readableByEveryone">
+                  <small>
+                      <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
+                      <span><strong>Availability: </strong>Publicly Readable</span>
+                  </small>
+              </div>
+              <div class="text-muted" *ngIf="result">
+                <small>
+                    <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+                    <span><strong>Branch: </strong> <span class="branch-name">{{result.branchName}}</span></span>
+                </small>
+              </div>
+              <div class="text-muted" *ngIf="result">
+                  <small>
+                      <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+                      <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
+                  </small>
+              </div>
+              <div class="text-muted" *ngIf="result?.modelVersion">
+                  <small>
+                      <i matTooltip="Model Version" class="fas fa-file-alt"></i>
+                      <span><strong>Model Version: </strong>{{result.modelVersion}}</span>
+                  </small>
+              </div>
+              <div class="text-muted" *ngIf="result">
+                  <small>
+                      <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                      <span><strong>Last update: </strong>{{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                  </small>
+              </div>
+              <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
+                  <small>
+                      <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
+                      <span><strong>Finalised on: </strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                  </small>
+              </div>
+          </div>
+      </div>
+
+      <table class="table table-bordered mdm--table-fixed">
+          <tbody>
+              <tr>
+                  <td class="detailsRowHeader">Aliases</td>
+                  <td>
+                      <mdm-element-alias [readOnly]='showEditDescription'
+                                         [inEditMode]="editableForm.visible"
+                                         [aliases]="result?.aliases"
+                                         [editableForm]="editableForm"
+                                         [property]="'aliases'"></mdm-element-alias>
+                  </td>
+              </tr>
+              <tr>
+                  <td class="detailsRowHeader">Author</td>
+                  <td *ngIf="result">
+
+                      <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                            [inEditMode]="editableForm.visible"
+                                            [(ngModel)]="editableForm.author"
+                                            class="dataModelDetailsLabel"
+                                            name="moduleNameAuthor"></mdm-inline-text-edit>
+                  </td>
+              </tr>
+              <tr>
+                  <td class="detailsRowHeader">Organisation</td>
+                  <td *ngIf="result">
+                      <mdm-inline-text-edit [readOnly]='showEditDescription'
+                                            [inEditMode]="editableForm.visible"
+                                            [(ngModel)]="editableForm.organisation" class="dataModelDetailsLabel"
+                                            name="moduleNameOrganisation"
+                                            size="20"></mdm-inline-text-edit>
+                  </td>
+              </tr>
+              <tr>
+                  <td class="detailsRowHeader">Description</td>
+                  <td class="elementDetailDescription">
+                      <div *ngIf="hasResult">
+                          <mdm-markdown-text-area [editableForm]="editableForm"
+                                                  [element]="result"
+                                                  [property]="'description'"></mdm-markdown-text-area>
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                  <td class="detailsRowHeader">Type</td>
+                  <td *ngIf="result">
+                      <span [innerHTML]="result.type"></span>
+                  </td>
+              </tr>
+              <tr>
+                  <td class="detailsRowHeader">Classifications</td>
+                  <td *ngIf="result">
+                      <mdm-element-classifications [readOnly]='showEditDescription'
+                                                   [classifications]="result.classifiers"
+                                                   [editableForm]="editableForm"
+                                                   [element]="result"
+                                                   [property]="'classifiers'">
+                      </mdm-element-classifications>
+
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="2" style="text-align: right;">
+                      <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
+                          <button mat-stroked-button
+                                  type="button"
+                                  color="warn"
+                                  matTooltip="Delete Data Model"
+                                  aria-label="Delete Data Model"
+                                  class="paddingless dropdown-toggle warning"
+                                  [disabled]="deleteInProgress || exporting"
+                                  [matMenuTriggerFor]="menu">
+                              <i class="far fa-trash-alt"></i>
+                          </button>
+
+                          <mat-menu #menu>
+                              <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
+                                  Mark as deleted
+                              </button>
+                              <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
+                                  Delete <span class="warning">permanently</span>
+                              </button>
+                          </mat-menu>
+                      </div>
+
+                      <div style="float: right;margin-bottom: 3px">
+                          <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
+                              <button mat-stroked-button
+                                      color="primary"
+                                      type="button"
+                                      class="paddingless dropdown-toggle warning"
+                                      [disabled]="deleteInProgress || exporting"
+                                      matTooltip="Edit Data Model"
+                                      aria-label="Edit Data Model"
+                                      [matMenuTriggerFor]="editMenu">
+                                  <i class="fas fa-pencil-alt"></i>
+                              </button>
+
+                              <mat-menu #editMenu>
+                                  <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                      Edit Data Model details
+                                  </button>
+                                  <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                                      Edit Description only
+                                  </button>
+                              </mat-menu>
+                          </div>
+
+                          <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
+                              [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
+                              [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                      </div>
+
+                      <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                          <button mat-stroked-button
+                                  color="accent"
+                                  type="button"
+                                  class="paddingless"
+                                  (click)="finalise()"
+                                  matTooltip="Finalise"
+                                  aria-label="Finalise"
+                                  [disabled]="deleteInProgress || processing">
+                              <i class="fas fa-check-circle" aria-hidden="true"></i>
+                          </button>
+                      </div>
+
+                      <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                          <button mat-stroked-button
+                                  color="primary"
+                                  type="button"
+                                  class="paddingless"
+                                  (click)="toggleSecuritySection()"
+                                  matTooltip="User & Group Access"
+                                  aria-label="User & Group Access"
+                                  [disabled]="deleteInProgress || processing">
+                              <i class="fas fa-user-lock"></i>
+                          </button>
+                      </div>
+
+                      <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                          <button mat-stroked-button
+                                  color="primary"
+                                  type="button"
+                                  class="paddingless"
+                                  matTooltip="Create a New Version"
+                                  aria-label="Create a New Version"
+                                  [disabled]="deleteInProgress || processing"
+                                  (click)="newVersion()">
+                              <i class="fas fa-copy"></i>
+                          </button>
+                      </div>
+
+                      <div *ngIf="isAdminUser && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
+                          <button mat-stroked-button
+                                  color="primary"
+                                  type="button"
+                                  matTooltip="Compare"
+                                  aria-label="Compare"
+                                  class="paddingless dropdown-toggle"
+                                  [disabled]="deleteInProgress || processing"
+                                  [matMenuTriggerFor]="compareMenu">
+                              <i class="fas fa-balance-scale-right" aria-hidden="true"></i>
+                          </button>
+                          <mat-menu #compareMenu="matMenu">
+                              <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
+                                  Compare to another Data Model
+                              </button>
+                              <div *ngIf="compareToList && compareToList.length > 0" class="divider"></div>
+                              <div *ngIf="compareToList && compareToList.length > 0">
+                                  <div *ngFor="let el of compareToList">
+                                      <button mat-menu-item (click)="compare(el)">
+                                          <a>{{el.label}} <span style="font-style: italic; font-size: 12px;">{{el.documentationVersion}}</span></a>
+                                      </button>
+                                  </div>
+                              </div>
+                          </mat-menu>
+                      </div>
+
+                      <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
+                          <button mat-stroked-button
+                                  color="primary"
+                                  type="button"
+                                  *ngIf="isLoggedIn"
+                                  class="paddingless dropdown-toggle"
+                                  [disabled]="processing || deleteInProgress"
+                                  [matMenuTriggerFor]="exporterList"
+                                  matTooltip="Export as JSON, XML,..."
+                                  aria-label="Export as JSON, XML,...">
+                              <i class="fas fa-download"></i>
+                          </button>
+                          <mat-menu #exporterList="matMenu">
+                              <div *ngIf="exportList && exportList.length > 0">
+                                  <div *ngFor="let exporter of exportList">
+                                      <button type="button" mat-menu-item (click)="export(exporter)">
+                                          {{exporter.displayName}}
+                                      </button>
+                                  </div>
+                              </div>
+                          </mat-menu>
+                      </div>
+                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                          <button mat-stroked-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
+                              <i class="fas fa-search"></i>
+                          </button>
+                      </div>
+                      <div style="position: relative; float: right; margin-right:8px;">
+                          <div id="exportFileDownload" #aLink></div>
+                      </div>
+                      <div style="clear: both;" *ngIf="processing">
+                          <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
+                      </div>
+                      <div style="text-align: left" *ngIf="exportError">
+                          <div style="padding-top: 25px;">
+                              <div class="alert alert-danger">
+                                  <strong>Error!</strong> {{exportError}}
+                              </div>
+                          </div>
+                      </div>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </form>
+</div>
+
+<div *ngIf="showSecuritySection">
+
+  <div style="width:100%;">
+      <div class="userAccess" style="margin: 10px 0px 50px 0px">
+          <mdm-share-with [mcElement]="'dataModel'" [mcDomainType]="'DataModel'"></mdm-share-with>
+          <div colspan="2">
+              <div style="margin-top: 10px">
+                  <mdm-group-access-new [parent]="'dataModel'" [parentType]="'DataModel'"></mdm-group-access-new>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

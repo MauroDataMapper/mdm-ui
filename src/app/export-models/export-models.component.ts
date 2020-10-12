@@ -58,6 +58,7 @@ export class ExportModelsComponent implements OnInit {
   }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.exportType = this.stateService.params.exportType ? this.stateService.params.exportType : 'dataModels';
     this.loadExporterList();
     this.step = 1;

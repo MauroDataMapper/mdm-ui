@@ -37,6 +37,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import { ModelsComponent } from './shared/models/models.component';
 import { DataModelComponent } from './dataModel/data-model.component';
+import { ReferenceDataComponent } from './referenceData/reference-data.component';
 import { DataClassComponent } from './dataClass/data-class/data-class.component';
 import { DataElementComponent } from './dataElement/data-element/data-element.component';
 import { ClassificationComponent } from './classification/classification.component';
@@ -132,6 +133,12 @@ export const pageRoutes = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
       url: '/dataModelNew/new?parentFolderId',
       component: DataModelMainComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
+      url: '/ReferenceDataModel/:id/{tabView:string}',
+      component: ReferenceDataComponent,
+      params: { tabView: { dynamic: true, value: null, squash: true } }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',

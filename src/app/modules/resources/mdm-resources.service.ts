@@ -44,7 +44,8 @@ import {
   MdmSecurableResource,
   MdmUserGroupsResource,
   MdmVersionLinkResource,
-  MdmUserImageFileResource
+  MdmUserImageFileResource,
+  MdmReferenceDataModelResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -86,6 +87,7 @@ export class MdmResourcesService {
   securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
   versionLink = new MdmVersionLinkResource(this.resourcesConfig, this.restHandler);
   userImage = new MdmUserImageFileResource(this.resourcesConfig, this.restHandler);
+  referenceDataModel = new MdmReferenceDataModelResource(this.resourcesConfig, this.restHandler);
 
   constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 }

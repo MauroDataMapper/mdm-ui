@@ -230,6 +230,7 @@ export class SecurityHandlerService {
   }
 
   dataModelAccess(element) {
+    console.log(element);
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -312,7 +313,7 @@ export class SecurityHandlerService {
   }
 
   elementAccess(element) {
-    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceData') {
+    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceDataModel') {
       return this.dataModelAccess(element);
     }
 

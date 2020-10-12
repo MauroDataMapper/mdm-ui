@@ -25,17 +25,10 @@ pipeline {
     stage('Install') {
       steps {
         nvm('') {
+          sh 'mvn clean test'
           sh 'npm install -g npm-check'
           sh 'npm install -g @angular/cli'
           sh 'npm ci'
-        }
-      }
-    }
-
-    stage('Clear tests') {
-      steps {
-        nvm('') {
-          sh 'npx jest --clearCache'
         }
       }
     }

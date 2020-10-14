@@ -86,19 +86,11 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.changeDetectorRefs.detectChanges();
 
       if (this.type === 'dynamic') {
-        this.resources.metadata
-          .namespaces()
-          .toPromise()
-          .then((result) => {
+        this.resources.metadata.namespaces().toPromise().then((result) => {
             this.namespaces = result.body.filter((n) => n.defaultNamespace);
-            this.sort.sortChange.subscribe(
-              () => (this.paginator.pageIndex = 0)
-            );
+            this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
             this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-            merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-              .pipe(
-                startWith({}),
-                switchMap(() => {
+            merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
                   this.isLoadingResults = true;
                   this.changeDetectorRefs.detectChanges();
                   return this.metadataFetch(
@@ -120,8 +112,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
                   this.changeDetectorRefs.detectChanges();
                   return [];
                 })
-              )
-              .subscribe((data) => {
+              ).subscribe((data) => {
                 this.records = data;
               });
           });
@@ -145,10 +136,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   loadNamespaces() {
-    this.resources.metadata
-      .namespaces()
-      .toPromise()
-      .then((result) => {
+    this.resources.metadata.namespaces().toPromise().then((result) => {
         this.namespaces = result.body.filter((n) => {
           return n.defaultNamespace;
         });
@@ -157,12 +145,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
-
-    return this.resources.catalogueItem.listMetadata(
-      this.parent.domainType,
-      this.parent.id,
-      options
-    );
+    return this.resources.catalogueItem.listMetadata(this.domainType, this.parent.id, options);
   }
 
   applyFilter = () => {

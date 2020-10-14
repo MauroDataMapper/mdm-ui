@@ -108,6 +108,14 @@ export class ElementTypesService {
       isBase: true,
       classifiable: true
     },
+    {
+      id: 'ReferenceDataElement',
+      link: 'dataElement',
+      title: 'DataElement (ReferenceDataElement)',
+      baseTitle: 'DataElement',
+      markdown: 'DE',
+      classifiable: true
+    },
     { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true },
     {
       id: 'EnumerationType',
@@ -124,6 +132,15 @@ export class ElementTypesService {
       title: 'DataType (Primitive)',
       baseTitle: 'DataType',
       markdown: 'dt',
+      displayLabel: 'Primitive',
+      classifiable: true
+    },
+    {
+      id: 'ReferencePrimitiveType',
+      link: 'dataType',
+      title: 'DataType (ReferencePrimitiveType)',
+      baseTitle: 'DataType',
+      markdown: 'DT',
       displayLabel: 'Primitive',
       classifiable: true
     },

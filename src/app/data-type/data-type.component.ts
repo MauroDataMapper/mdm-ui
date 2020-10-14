@@ -79,12 +79,10 @@ export class DataTypeComponent extends BaseComponent implements OnInit {
       this.dataType.classifiers = this.dataType.classifiers || [];
       this.loadingData = false;
       this.activeTab = this.getTabDetail(this.tabView);
-      this.showExtraTabs =
-        !this.sharedService.isLoggedIn() || !this.dataType.editable;
+      this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.dataType.editable;
     }, () => {
       this.loadingData = false;
-    }
-    );
+    });
   }
 
   tabSelected = itemsName => {

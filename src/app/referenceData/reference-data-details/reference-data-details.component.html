@@ -181,47 +181,6 @@ SPDX-License-Identifier: Apache-2.0
                           </mat-menu>
                       </div>
 
-                      <div style="float: right;margin-bottom: 3px">
-                          <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
-                              <button mat-stroked-button
-                                      color="primary"
-                                      type="button"
-                                      class="paddingless dropdown-toggle warning"
-                                      [disabled]="deleteInProgress || exporting"
-                                      matTooltip="Edit Data Model"
-                                      aria-label="Edit Data Model"
-                                      [matMenuTriggerFor]="editMenu">
-                                  <i class="fas fa-pencil-alt"></i>
-                              </button>
-
-                              <mat-menu #editMenu>
-                                  <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
-                                      Edit Data Model details
-                                  </button>
-                                  <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
-                                      Edit Description only
-                                  </button>
-                              </mat-menu>
-                          </div>
-
-                          <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
-                              [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
-                              [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
-                      </div>
-
-                      <div *ngIf="showFinalise && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                          <button mat-stroked-button
-                                  color="accent"
-                                  type="button"
-                                  class="paddingless"
-                                  (click)="finalise()"
-                                  matTooltip="Finalise"
-                                  aria-label="Finalise"
-                                  [disabled]="deleteInProgress || processing">
-                              <i class="fas fa-check-circle" aria-hidden="true"></i>
-                          </button>
-                      </div>
-
                       <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                           <button mat-stroked-button
                                   color="primary"
@@ -235,46 +194,8 @@ SPDX-License-Identifier: Apache-2.0
                           </button>
                       </div>
 
-                      <div *ngIf="showNewVersion && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                          <button mat-stroked-button
-                                  color="primary"
-                                  type="button"
-                                  class="paddingless"
-                                  matTooltip="Create a New Version"
-                                  aria-label="Create a New Version"
-                                  [disabled]="deleteInProgress || processing"
-                                  (click)="newVersion()">
-                              <i class="fas fa-copy"></i>
-                          </button>
-                      </div>
-
-                      <div *ngIf="isAdminUser && !editableForm.visible && !editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                          <button mat-stroked-button
-                                  color="primary"
-                                  type="button"
-                                  matTooltip="Compare"
-                                  aria-label="Compare"
-                                  class="paddingless dropdown-toggle"
-                                  [disabled]="deleteInProgress || processing"
-                                  [matMenuTriggerFor]="compareMenu">
-                              <i class="fas fa-balance-scale-right" aria-hidden="true"></i>
-                          </button>
-                          <mat-menu #compareMenu="matMenu">
-                              <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
-                                  Compare to another Data Model
-                              </button>
-                              <div *ngIf="compareToList && compareToList.length > 0" class="divider"></div>
-                              <div *ngIf="compareToList && compareToList.length > 0">
-                                  <div *ngFor="let el of compareToList">
-                                      <button mat-menu-item (click)="compare(el)">
-                                          <a>{{el.label}} <span style="font-style: italic; font-size: 12px;">{{el.documentationVersion}}</span></a>
-                                      </button>
-                                  </div>
-                              </div>
-                          </mat-menu>
-                      </div>
-
-                      <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
+                      <!-- TODO - pending update from back-end
+                        <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
                           <button mat-stroked-button
                                   color="primary"
                                   type="button"
@@ -295,12 +216,12 @@ SPDX-License-Identifier: Apache-2.0
                                   </div>
                               </div>
                           </mat-menu>
-                      </div>
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                          <button mat-stroked-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
-                              <i class="fas fa-search"></i>
-                          </button>
-                      </div>
+                      </div> -->
+                      <!-- <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                        <button mat-stroked-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                      </div> -->
                       <div style="position: relative; float: right; margin-right:8px;">
                           <div id="exportFileDownload" #aLink></div>
                       </div>
@@ -322,13 +243,12 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <div *ngIf="showSecuritySection">
-
   <div style="width:100%;">
       <div class="userAccess" style="margin: 10px 0px 50px 0px">
-          <mdm-share-with [mcElement]="'dataModel'" [mcDomainType]="'DataModel'"></mdm-share-with>
+          <mdm-share-with [mcElement]="'referenceDataModel'" [mcDomainType]="'referenceDataModel'"></mdm-share-with>
           <div colspan="2">
               <div style="margin-top: 10px">
-                  <mdm-group-access-new [parent]="'dataModel'" [parentType]="'DataModel'"></mdm-group-access-new>
+                  <mdm-group-access-new [parent]="'referenceDataModel'" [parentType]="'referenceDataModel'"></mdm-group-access-new>
               </div>
           </div>
       </div>

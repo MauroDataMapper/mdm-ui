@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
             <h4 class="marginless">Comments</h4>
         </div>
         <div *ngIf="canAddAnnotation" fxFlex fxLayout="row" fxFlex="60" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.canAddAnnotation" class="mt-1">
+            <button mat-flat-button color="primary" type="button" (click)="add()" class="mt-1">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Add Comment
             </button>

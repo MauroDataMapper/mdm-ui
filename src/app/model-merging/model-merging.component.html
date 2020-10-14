@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="container" *ngIf="diffMap">
-  
   <div class="row">
     <mdm-folders-tree
       [node]="{ children: [sourceModel] }"
@@ -111,7 +110,7 @@ SPDX-License-Identifier: Apache-2.0
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="diffs.properties && diffs.properties.length > 0" >
+          <tr *ngIf="diffs.properties && diffs.properties.length > 0">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -131,7 +130,7 @@ SPDX-License-Identifier: Apache-2.0
                     }"
                   >
                     &nbsp;<mat-checkbox
-                      (change)="onAcceptPress(diff, 'source',  'property')"
+                      (change)="onAcceptPress(diff, 'source', 'property')"
                       [(ngModel)]="diff.acceptSource"
                     ></mat-checkbox
                     >&nbsp;
@@ -141,16 +140,17 @@ SPDX-License-Identifier: Apache-2.0
                       >{{ diff.title }}:</strong
                     >
                     <div>
-                      <span style="border-bottom: 1px dashed #000">{{
-                        diff.right
-                      }}</span>
+                      <span
+                        [innerHTML]="diff.right"
+                        style="border-bottom: 1px dashed #000"
+                      ></span>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </tr>
-          <tr  *ngIf="diffs.dataElements && diffs.dataElements.length > 0" >
+          <tr *ngIf="diffs.dataElements && diffs.dataElements.length > 0">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -187,7 +187,7 @@ SPDX-License-Identifier: Apache-2.0
               </tbody>
             </table>
           </tr>
-          <tr *ngIf="diffs.dataClasses  && diffs.dataClasses.length > 0">
+          <tr *ngIf="diffs.dataClasses && diffs.dataClasses.length > 0">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -207,7 +207,7 @@ SPDX-License-Identifier: Apache-2.0
                     }"
                   >
                     &nbsp;<mat-checkbox
-                      (change)="onAcceptPress(diff, 'source','dataClass')"
+                      (change)="onAcceptPress(diff, 'source', 'dataClass')"
                       [(ngModel)]="diff.acceptSource"
                     ></mat-checkbox
                     >&nbsp;
@@ -232,257 +232,276 @@ SPDX-License-Identifier: Apache-2.0
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
       style="text-align: center"
     >
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th style="cursor: pointer">Diffs</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="diffsMerged.properties && diffsMerged.properties.length > 0">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Properties</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffsMerged.properties ">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic"
-                    >{{ diff.title }}:</strong
-                  >
-                  <div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="cursor: pointer">Diffs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngIf="diffsMerged.properties && diffsMerged.properties.length > 0"
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Properties</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffsMerged.properties">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  ></td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic"
+                      >{{ diff.title }}:</strong
+                    >
+                    <div>
+                      <span
+                        *ngIf="diff.acceptSource && !diff.acceptTarget"
+                        style="border-bottom: 1px dashed #000"
+                        [innerHTML]="diff.right"
+                      ></span>
 
-                    <span *ngIf="diff.acceptSource" style="border-bottom: 1px dashed #000">{{
-                      diff.right
-                    }}</span>
+                      <span
+                        *ngIf="diff.acceptTarget  && !diff.acceptSource"
+                        style="border-bottom: 1px dashed #000"
+                        [innerHTML]="diff.left"
+                      ></span>
 
-                    <span *ngIf="diff.acceptTarget" style="border-bottom: 1px dashed #000">{{
-                      diff.left
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
-        <tr *ngIf="diffsMerged.dataElements && diffsMerged.dataElements.length > 0">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Elements</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffsMerged.dataElements">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >           
-                
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic">Label:</strong>
-            
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.label
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
-        <tr *ngIf="diffsMerged.dataClasses && diffsMerged.dataClasses.length > 0">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Data Classes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffsMerged.dataClasses">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >     
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic">Data Class:</strong>
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.label
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
-      </tbody>
-    </table>
+                      
+                      <span
+                        *ngIf="diff.acceptTarget && diff.acceptSource"
+                        style="border-bottom: 1px dashed #000"
+                        [innerHTML]="diff.left"
+                      ></span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr
+            *ngIf="
+              diffsMerged.dataElements && diffsMerged.dataElements.length > 0
+            "
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Elements</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffsMerged.dataElements">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  ></td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Label:</strong>
+
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr
+            *ngIf="
+              diffsMerged.dataClasses && diffsMerged.dataClasses.length > 0
+            "
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Data Classes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffsMerged.dataClasses">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  ></td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Data Class:</strong>
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
       style="float: right"
       style="text-align: center"
     >
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th style="cursor: pointer">Diffs</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="diffs.properties  && diffs.properties.length > 0">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Properties</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffs.properties">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >
-                  &nbsp;<mat-checkbox
-                    (change)="onAcceptPress(diff, 'target', 'property')"
-                    [(ngModel)]="diff.acceptTarget"
-                  ></mat-checkbox
-                  >&nbsp;
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic"
-                    >{{ diff.title }}:</strong
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="cursor: pointer">Diffs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="diffs.properties && diffs.properties.length > 0">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Properties</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.properties">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
                   >
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.left
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
-        <tr *ngIf="diffs.filteredDataElements && diffs.filteredDataElements.length > 0">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Elements</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffs.filteredDataElements">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >
-                  &nbsp;<mat-checkbox
-                    (change)="onAcceptPress(diff, 'target', 'dataElement')"
-                    [(ngModel)]="diff.acceptTarget"
-                  ></mat-checkbox
-                  >&nbsp;
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic">Label:</strong>
-            
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.label
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
-        <tr *ngFor="let diff of diffs.filteredDataClasses  && diffs.filteredDataClasses.length > 0">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Data Classes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffs.filteredDataClasses">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >
-                  &nbsp;<mat-checkbox
-                    (change)="onAcceptPress(diff, 'target','dataClass')"
-                    [(ngModel)]="diff.acceptTarget"
-                  ></mat-checkbox
-                  >&nbsp;
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic">Data Class:</strong>
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.label
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
-      </tbody>
-    </table>
-      <!-- <div style="width: 100%">
-        <div *ngIf="diffs?.metadata && diffs?.metadata?.length > 0">
-          <mdm-metadata-compare
-            [diffColumnWidth]="35"
-            [diffs]="diffs.metadata"
-          ></mdm-metadata-compare>
-        </div>
-      </div> -->
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'target', 'property')"
+                      [(ngModel)]="diff.acceptTarget"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic"
+                      >{{ diff.title }}:</strong
+                    >
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.left
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr
+            *ngIf="
+              diffs.filteredDataElements &&
+              diffs.filteredDataElements.length > 0
+            "
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Elements</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.filteredDataElements">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  >
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'target', 'dataElement')"
+                      [(ngModel)]="diff.acceptTarget"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Label:</strong>
+
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr
+            *ngFor="
+              let diff of diffs.filteredDataClasses &&
+                diffs.filteredDataClasses.length > 0
+            "
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Data Classes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.filteredDataClasses">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  >
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'target', 'dataClass')"
+                      [(ngModel)]="diff.acceptTarget"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Data Class:</strong>
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+

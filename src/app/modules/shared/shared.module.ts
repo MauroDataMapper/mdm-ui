@@ -36,6 +36,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { NgxTextDiffModule } from 'ngx-text-diff/lib/ngx-text-diff.module';
+import { SafePipe } from '@mdm/pipes/safe.pipe';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
     MetadataCompareComponent,
     EnumerationCompareComponent,
     ErrorComponent,
-    MdmPaginatorComponent
+    MdmPaginatorComponent,
+    SafePipe
   ],
   imports: [
     CommonModule,
@@ -81,7 +84,8 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
     FlexLayoutModule,
     MdmPaginatorComponent,
     NgxSkeletonLoaderModule,
-    CodemirrorModule
+    CodemirrorModule,
+    SafePipe
   ]
 })
 export class SharedModule {}

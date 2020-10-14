@@ -161,6 +161,7 @@ import { ModelMergingComponent } from '@mdm/model-merging/model-merging.componen
 import { MergedModelsComponent } from '@mdm/merged-models/merged-models.component';
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { NgxTextDiffModule } from 'ngx-text-diff';
 
 @NgModule({
   declarations: [
@@ -311,6 +312,7 @@ import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-moda
     HttpClientModule,
     ImageCropperModule,
     ReactiveFormsModule,
+    NgxTextDiffModule,
     SharedModule,
     ToastrModule.forRoot({
       timeOut: 30000,

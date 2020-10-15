@@ -31,7 +31,7 @@ import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/adva
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';

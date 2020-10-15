@@ -17,18 +17,18 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren, ChangeDetectorRef } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SearchResult } from '../model/folderModel';
-import { ElementTypesService } from '../services/element-types.service';
+import { SearchResult } from '@mdm/model/folderModel';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MatSort } from '@angular/material/sort';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { MdmPaginatorComponent } from '../shared/mdm-paginator/mdm-paginator';
-import { GridService } from '../services/grid.service';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-history',
   templateUrl: './history.component.html',
-  styleUrls: ['./history.component.sass']
+  styleUrls: ['./history.component.scss']
 })
 
 export class HistoryComponent implements OnInit, AfterViewInit {

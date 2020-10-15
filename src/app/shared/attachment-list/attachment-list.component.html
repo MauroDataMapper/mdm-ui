@@ -79,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0
             <td *matHeaderCellDef style="width: 70px;" columnName="other"></td>
             <td *matCellDef="let record;  let i = index " mat-cell style="width: 70px; text-align: left;">
                 <div *ngIf="access && access.showEdit">
-                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0])" (delete)="delete($event[0])" [hideEdit]="true"></mdm-table-buttons>
+                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[1])" (delete)="delete($event[0])" [hideEdit]="true"></mdm-table-buttons>
                 </div>
             </td>
         </ng-container>

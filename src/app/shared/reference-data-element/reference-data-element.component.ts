@@ -69,12 +69,10 @@ export class ReferenceDataElementComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
      this.listReferenceDataElements().subscribe(resp => {
       this.records = resp.body.items;
       this.totalItemCount = resp.body.count;
       this.isLoadingResults = false;
-      console.log(resp.body);
     });
   }
 
@@ -135,9 +133,5 @@ export class ReferenceDataElementComponent implements OnInit, AfterViewInit {
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
     }).catch(() => console.warn('error'));
-  };
-
-  addReferenceElement = () => {
-
   };
 }

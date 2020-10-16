@@ -24,24 +24,7 @@ SPDX-License-Identifier: Apache-2.0
               <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
           </h4>
       </div>
-      <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-          <!-- <div *ngIf="isEditable && !parent.finalised" class="mt-1">
-              <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="referenceElementBulkActions" *ngIf="bulkActionsVisibile > 0">
-                Bulk actions
-                <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
-            </button>
-            <mat-menu #referenceElementBulkActions="matMenu" class="mdm--mat-menu--actions">
-                <button mat-menu-item class="warning" (click)="bulkDelete()">
-                    <i class="far fa-trash-alt"></i> Delete selected rows
-                </button>
-            </mat-menu>
-
-            <button mat-flat-button color="primary" type="button" class="ml-1" (click)="addReferenceElement()">
-                <i class="fas fa-plus" aria-hidden="true"></i>
-                Add Element
-            </button>
-          </div> -->
-      </div>
+      <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center"> </div>
   </div>
 </div>
 <div class="table-responsive">
@@ -107,18 +90,14 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <!-- <th style="width: 3%;" *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th> -->
       <th style="width: 25%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
       <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
       <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-      <!-- <td style="width: 10%;" *ngIf="isEditable && !parent.finalised"></td> -->
   </tr>
   <tr>
-      <!-- <td *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'100%'}"></ngx-skeleton-loader></td> -->
       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <!-- <td style="display: flex; justify-content: flex-end" *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '10px'}"></ngx-skeleton-loader></td> -->
     </tr>
   </table>
 </div>

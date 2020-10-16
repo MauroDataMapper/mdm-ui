@@ -21,7 +21,6 @@ SPDX-License-Identifier: Apache-2.0
           <div *ngIf="result">
               <div [ngClass]="{ 'has-error': errorMessage != ''}" class="data-model-header">
                   <div class="detail-icons--cta">
-                      <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
                       <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
                   </div>
                   <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">

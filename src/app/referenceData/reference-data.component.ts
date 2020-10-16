@@ -132,14 +132,16 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
         return { index: 0, name: 'elements' };
       case 'types':
         return { index: 1, name: 'types' };
+      case 'values':
+        return { index: 2, name: 'values' };
       case 'properties':
-        return { index: 2, name: 'properties' };
+        return { index: 3, name: 'properties' };
       case 'comments':
-        return { index: 3, name: 'comments' };
+        return { index: 4, name: 'comments' };
       case 'history':
-        return { index: 4, name: 'history' };
+        return { index: 5, name: 'history' };
       case 'attachments':
-        return { index: 5, name: 'attachments' };
+        return { index: 6, name: 'attachments' };
       default:
         return { index: 0, name: 'elements' };
     }
@@ -152,13 +154,15 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
       case 1:
         return { index: 1, name: 'types' };
       case 2:
-        return { index: 2, name: 'properties' };
+        return { index: 2, name: 'values' };
       case 3:
-        return { index: 3, name: 'comments' };
+        return { index: 3, name: 'properties' };
       case 4:
-        return { index: 4, name: 'history' };
+        return { index: 4, name: 'comments' };
       case 5:
-        return { index: 5, name: 'attachments' };
+        return { index: 5, name: 'history' };
+      case 6:
+        return { index: 6, name: 'attachments' };
       default:
         return { index: 0, name: 'elements' };
     }

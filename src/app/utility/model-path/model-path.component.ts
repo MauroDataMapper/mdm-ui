@@ -43,12 +43,16 @@ export class ModelPathComponent implements OnInit {
         this.updatedPath = [];
         if (this.path) {
         this.path.forEach((p, index) => {
-            if (index === 0) {
-                p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'DataModel' });
-            } else if (index === 1) {
-                p.link = this.elementTypes.getLinkUrl({ id: p.id, model: this.path[0].id, domainType: 'DataClass' });
+            if(p.domainType === 'ReferenceDataModel') {
+                p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'ReferenceDataModel' });
             } else {
-                p.link = this.elementTypes.getLinkUrl({ id: p.id, model: this.path[0].id, parentDataClass: this.path[index - 1].id, domainType: 'DataClass' });
+              if (index === 0) {
+                  p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'DataModel' });
+              } else if (index === 1) {
+                  p.link = this.elementTypes.getLinkUrl({ id: p.id, model: this.path[0].id, domainType: 'DataClass' });
+              } else {
+                  p.link = this.elementTypes.getLinkUrl({ id: p.id, model: this.path[0].id, parentDataClass: this.path[index - 1].id, domainType: 'DataClass' });
+              }
             }
             this.updatedPath.push(p);
         });

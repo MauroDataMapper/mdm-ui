@@ -45,7 +45,6 @@ import { ExportHandlerService } from '@mdm/services/handlers/export-handler.serv
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 
 @Component({
   selector: 'mdm-reference-data-details',
@@ -393,67 +392,10 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
     this.showEditDescription = false;
   }
 
-  loadHelp() {
-    this.helpDialogueService.open('Edit_model_details');
-  }
-
   toggleFavourite() {
     if (this.favouriteHandler.toggle(this.result)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
     }
-  }
-
-  finalise() {
-    const promise = new Promise(() => {
-      this.resourcesService.referenceDataModel.latestModelVersion(this.result.id).subscribe(response => {
-        const dialog = this.dialog.open(FinaliseModalComponent, {
-          data: {
-            modelVersion: response.body.modelVersion,
-            title: 'Finalise Data Model',
-            okBtnTitle: 'Finalise Data Model',
-            btnType: 'accent',
-            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
-                      <p>to be finalised with: </p>`
-          }
-        });
-
-        dialog.afterClosed().subscribe(result => {
-          if (result?.status !== 'ok') {
-            return;
-          }
-          this.processing = true;
-          const data = {};
-          if (result.data.versionList !== 'Custom') {
-            data['versionChangeType'] = result.data.versionList;
-          } else {
-            data['version'] = result.data.versionNumber;
-          }
-          this.resourcesService.referenceDataModel.finalise(this.result.id, data).subscribe(() => {
-            this.processing = false;
-            this.messageHandler.showSuccess('Data Model finalised successfully.');
-            this.stateHandler.Go('referencedatamodel', { id: this.result.id }, { reload: true });
-          }, error => {
-            this.processing = false;
-            this.messageHandler.showError('There was a problem finalising the Data Model.', error);
-          });
-        });
-      });
-    });
-    return promise;
-  }
-
-  newVersion() {
-    this.stateHandler.Go('newVersionDataModel', { dataModelId: this.result.id }, { location: true });
-  }
-
-  compare(dataModel = null) {
-    this.stateHandler.NewWindow('modelscomparison',
-      {
-        sourceId: this.result.id,
-        targetId: dataModel ? dataModel.id : null
-      },
-      null
-    );
   }
 
   export(exporter) {

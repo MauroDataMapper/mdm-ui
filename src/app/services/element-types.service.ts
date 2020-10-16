@@ -32,8 +32,29 @@ export class ElementTypesService {
   };
 
   private allTypes: Type[] = [
-    { id: 'Folder', link: 'folder', title: 'Folder', markdown: 'fd', isBase: true },
-    { id: 'DataModel', link: 'dataModel', title: 'DataModel', markdown: 'dm', isBase: true, classifiable: true },
+    {
+      id: 'Folder',
+      link: 'folder',
+      title: 'Folder',
+      markdown: 'fd',
+      isBase: true
+    },
+    {
+      id: 'DataModel',
+      link: 'dataModel',
+      title: 'DataModel',
+      markdown: 'dm',
+      isBase: true,
+      classifiable: true
+    },
+    {
+      id: 'ReferenceDataModel',
+      link: 'ReferenceDataModel',
+      title: 'ReferenceDataModel',
+      resourceName: 'ReferenceDataModel',
+      markdown: 'RDM',
+      classifiable: true
+    },
     {
       id: 'DataSet',
       link: 'dataModel',
@@ -207,6 +228,14 @@ export class ElementTypesService {
       title: 'DataModel',
       resourceName: 'dataModel',
       markdown: 'dm',
+      classifiable: true
+    },
+    ReferenceDataModel: {
+      id: 'ReferenceDataModel',
+      link: 'ReferenceDataModel',
+      title: 'ReferenceDataModel',
+      resourceName: 'ReferenceDataModel',
+      markdown: 'RDM',
       classifiable: true
     },
     DataClass: {

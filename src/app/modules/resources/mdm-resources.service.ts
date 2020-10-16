@@ -47,7 +47,8 @@ import {
   MdmUserImageFileResource,
   MdmReferenceDataModelResource,
   MdmReferenceDataElementResource,
-  MdmReferenceDataTypeResource
+  MdmReferenceDataTypeResource,
+  MdmReferenceDataValueResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -92,6 +93,7 @@ export class MdmResourcesService {
   referenceDataModel = new MdmReferenceDataModelResource(this.resourcesConfig, this.restHandler);
   referenceDataElement = new MdmReferenceDataElementResource(this.resourcesConfig, this.restHandler);
   referenceDataType = new MdmReferenceDataTypeResource(this.resourcesConfig, this.restHandler);
+  referenceDataValue = new MdmReferenceDataValueResource(this.resourcesConfig, this.restHandler);
 
   constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 }

@@ -230,7 +230,6 @@ export class SecurityHandlerService {
   }
 
   dataModelAccess(element) {
-    console.log(element);
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),

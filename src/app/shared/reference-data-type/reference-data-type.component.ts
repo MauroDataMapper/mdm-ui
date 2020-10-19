@@ -69,17 +69,16 @@ export class ReferenceDataTypeComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.listReferenceDataTypes().subscribe(resp => {
+    this.listReferenceDataTypes(this.parent?.id).subscribe(resp => {
       this.records = resp.body.items;
       this.totalItemCount = resp.body.count;
       this.isLoadingResults = false;
-      console.log(resp.body);
     });
   }
 
-  listReferenceDataTypes() {
-    return this.resources.referenceDataType.list(this.parent.id);
-  }
+  listReferenceDataTypes = (id) => {
+    return this.resources.referenceDataType.list(id);
+  };
 
 
   onChecked = () => {

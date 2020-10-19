@@ -68,7 +68,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.parentTypeVal = this.parentType;
-    this.parentIdVal = this.parentId ? this.parentId : this.parent.id;
+    this.parentIdVal = this.parentId ? this.parentId : this.parent?.id;
     this.parentVal = this.parent;
 
   }
@@ -124,7 +124,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     if (this.parentId) {
       return this.resourcesService.edit.status(this.domainType, this.parentId);
     } else {
-      return this.resourcesService.edit.status(this.domainType, this.parent.id, this.options);
+      return this.resourcesService.edit.status(this.domainType, this.parent?.id, this.options);
     }
   }
 }

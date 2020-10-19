@@ -19,17 +19,46 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryComponent } from './history.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ HistoryComponent ]
-    })
-    .compileComponents();
-  }));
+   TestBed.configureTestingModule({
+     imports: [
+       NgxSkeletonLoaderModule,
+       MatTooltipModule,
+       MatPaginatorModule,
+       NoopAnimationsModule,
+       MatTableModule,
+       UIRouterModule.forRoot({ useHash: true }),
+       ToastrModule.forRoot()
+     ],
+     providers: [
+       {
+         provide: MdmResourcesService, useValue: {}
+       }
+     ],
+     declarations: [
+       ProfilePictureComponent,
+       ByteArrayToBase64Pipe,
+       MdmPaginatorComponent,
+       HistoryComponent
+     ]
+   }).compileComponents();
+ }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HistoryComponent);

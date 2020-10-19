@@ -158,11 +158,11 @@ export class ElementTypesService {
     },
     {
       id: 'ReferencePrimitiveType',
-      link: 'dataType',
-      title: 'DataType (ReferencePrimitiveType)',
-      baseTitle: 'DataType',
-      markdown: 'DT',
-      displayLabel: 'Primitive',
+      link: 'referenceDataType',
+      title: 'DataType (Reference Data Type)',
+      baseTitle: 'Reference Data Type',
+      markdown: 'RDT',
+      displayLabel: 'Reference Data Type',
       classifiable: true
     },
     {
@@ -184,13 +184,30 @@ export class ElementTypesService {
       classifiable: true
     },
     {
-      // TODO remove (HIDDEN) once backend is fixed
       id: 'TerminologyType',
-      link: 'dataType(HIDDEN)',
+      link: 'dataType',
       title: 'DataType (Terminology)',
-      baseTitle: 'DataType(HIDDEN)',
+      baseTitle: 'DataType',
       markdown: 'dt',
       displayLabel: 'Terminology',
+      classifiable: true
+    },
+    {
+      id: 'CodeSetType',
+      link: 'codeSet',
+      title: 'CodeSet',
+      baseTitle: 'DataType',
+      markdown: 'DT',
+      displayLabel: 'Code Set',
+      classifiable: true
+    },
+    {
+      id: 'ReferenceDataModelType',
+      link: 'referenceDataModel',
+      title: 'ReferenceDataModel',
+      baseTitle: 'DataType',
+      markdown: 'DT',
+      displayLabel: 'Reference Data Model',
       classifiable: true
     },
     {

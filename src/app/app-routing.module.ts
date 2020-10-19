@@ -136,7 +136,7 @@ export const pageRoutes = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
-      url: '/ReferenceDataModel/:id/{tabView:string}',
+      url: '/referenceDataModel/:id/{tabView:string}',
       component: ReferenceDataComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
     },

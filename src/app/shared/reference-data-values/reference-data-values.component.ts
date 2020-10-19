@@ -55,13 +55,13 @@ export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    merge(this.paginator.page).pipe(startWith({}), switchMap(() => {
+    merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
 
       return this.listReferenceDataValues(
-        this.paginator.pageSize,
-        this.paginator.pageOffset
+        this.paginator?.pageSize,
+        this.paginator?.pageOffset
       );
     }),
       map((data: any) => {

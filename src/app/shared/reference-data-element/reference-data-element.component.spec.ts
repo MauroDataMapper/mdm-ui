@@ -18,6 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReferenceDataElementComponent } from './reference-data-element.component';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { empty } from 'rxjs';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ReferenceDataElementComponent', () => {
   let component: ReferenceDataElementComponent;
@@ -25,7 +34,29 @@ describe('ReferenceDataElementComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReferenceDataElementComponent ]
+       imports: [
+         MatPaginatorModule,
+         MatDialogModule,
+         NgxSkeletonLoaderModule,
+         MatTableModule,
+         MatSortModule,
+         NoopAnimationsModule
+       ],
+      providers: [
+         {
+           provide: MdmResourcesService,
+           useValue: {
+            referenceDataElement: {
+               // tslint:disable-next-line: deprecation
+               list: () => empty()
+             }
+           }
+         }
+       ],
+      declarations: [
+         ReferenceDataElementComponent,
+         MdmPaginatorComponent
+      ]
     })
     .compileComponents();
   }));

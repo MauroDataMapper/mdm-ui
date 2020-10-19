@@ -129,17 +129,26 @@ export class DataTypeMainComponent implements OnInit {
 
   saveNewDataType() {
     let resource = {};
-    if (this.model.domainType === 'ModelDataType') {
+    if (this.model.domainType === 'TerminologyType' || this.model.domainType === 'CodeSetType' || this.model.domainType === 'ReferenceDataModelType') {
       resource = {
-        domainType: this.model.domainType,
+        domainType: 'ModelDataType',
         label: this.model.label,
         modelResourceId: this.model.referencedTerminology ? this.model.referencedTerminology.id : null,
-        modelResourceDomainType: 'Terminology',
+        modelResourceDomainType: '',
         classifiers: this.model.classifiers.map((cls) => {
           return { id: cls.id };
         }),
         description: this.model.description
       };
+      if (this.model.domainType === 'TerminologyType') {
+         resource['modelResourceDomainType'] = 'Terminology';
+      }
+      else if (this.model.domainType === 'CodeSetType') {
+         resource['modelResourceDomainType'] = 'CodeSet';
+      }
+      else if (this.model.domainType === 'ReferenceDataModelType') {
+         resource['modelResourceDomainType'] = 'ReferenceDataModel';
+      }
     } else {
       resource = {
         label: this.model.label,

@@ -29,6 +29,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { ReferenceDataDetailsComponent } from './reference-data-details/reference-data-details.component';
 import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ReferenceDataModelsComponent', () => {
   let component: ReferenceDataComponent;
@@ -40,6 +42,8 @@ describe('ReferenceDataModelsComponent', () => {
         MatDialogModule,
         MatMenuModule,
         MatTooltipModule,
+        MatTabsModule,
+        NoopAnimationsModule,
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot()
       ],

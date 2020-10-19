@@ -64,10 +64,7 @@ export class AnnotationListComponent implements AfterViewInit {
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     this.access = this.securityHandler.elementAccess(this.parent);
-    console.log(this.access);
-    console.log(this.parent);
     this.canAddAnnotation = this.access.canAddAnnotation;
-    console.log(this.canAddAnnotation);
     this.changeRef.detectChanges();
     this.currentUser = this.securityHandler.getCurrentUser();
 

@@ -37,11 +37,7 @@ export class ReferenceDataElementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-  allDataTypes: any;
-  allDataTypesMap: any;
-  loading = false;
   records: any[] = [];
-  total: number;
   processing = false;
   failCount: number;
   hideFilters = true;
@@ -69,16 +65,16 @@ export class ReferenceDataElementComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-     this.listReferenceDataElements().subscribe(resp => {
+     this.listReferenceDataElements(this.parent?.id).subscribe(resp => {
       this.records = resp.body.items;
       this.totalItemCount = resp.body.count;
       this.isLoadingResults = false;
     });
   }
 
-  listReferenceDataElements() {
-    return this.resources.referenceDataElement.list(this.parent.id);
-  }
+  listReferenceDataElements = id => {
+    return this.resources.referenceDataElement.list(id);
+  };
 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));

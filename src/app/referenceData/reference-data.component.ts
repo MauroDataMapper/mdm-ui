@@ -37,7 +37,6 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
   referenceModel: ReferenceModelResult;
   showSecuritySection: boolean;
   subscription: Subscription;
-  showSearch = false;
   parentId: string;
   editMode = false;
   isEditable: boolean;

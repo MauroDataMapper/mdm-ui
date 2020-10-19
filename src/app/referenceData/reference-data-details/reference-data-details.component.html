@@ -208,7 +208,7 @@ SPDX-License-Identifier: Apache-2.0
                             [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                     </div>
 
-                      <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                      <!-- <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                           <button mat-stroked-button
                                   color="primary"
                                   type="button"
@@ -219,7 +219,7 @@ SPDX-License-Identifier: Apache-2.0
                                   [disabled]="deleteInProgress || processing">
                               <i class="fas fa-user-lock"></i>
                           </button>
-                      </div>
+                      </div> -->
 
                       <!-- TODO - pending update from back-end
                         <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">

@@ -46,11 +46,12 @@ SPDX-License-Identifier: Apache-2.0
               Name
           </th>
           <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
-              <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link>
+               {{ record.label }}
+              <!-- <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link> -->
           </td>
       </ng-container>
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 40%;width: 40%;" columnName="description">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 40%;width: 40%;" columnName="description">
             Description
         </th>
         <td mat-cell *matCellDef="let record">
@@ -60,7 +61,7 @@ SPDX-License-Identifier: Apache-2.0
         </td>
       </ng-container>
       <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType" sortable="true" filterable="true">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 25%;width: 25%;" columnName="domainType">
           Type
         </th>
         <td mat-cell *matCellDef="let record">

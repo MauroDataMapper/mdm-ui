@@ -74,7 +74,6 @@ export class ImportModelsComponent implements OnInit {
   ngOnInit() {
     // tslint:disable-next-line: deprecation
     this.importType = this.stateService.params.importType ? this.stateService.params.importType : 'dataModels';
-    this.importType = this.stateService.params.importType;
     this.title.setTitle('Import');
     this.loadImporters();
   }

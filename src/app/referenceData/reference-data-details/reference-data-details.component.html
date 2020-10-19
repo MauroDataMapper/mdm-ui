@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form editable-form name="form" onaftersave="onAfterSave()" disable-submit-on-enter>
+  <form editable-form name="form" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
       <div class="panel-body">
           <div *ngIf="result">
               <div [ngClass]="{ 'has-error': errorMessage != ''}" class="data-model-header">
@@ -179,6 +179,34 @@ SPDX-License-Identifier: Apache-2.0
                               </button>
                           </mat-menu>
                       </div>
+
+                      <div style="float: right;margin-bottom: 3px">
+                        <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
+                            <button mat-stroked-button
+                                    color="primary"
+                                    type="button"
+                                    class="paddingless dropdown-toggle warning"
+                                    [disabled]="deleteInProgress || exporting"
+                                    matTooltip="Edit Data Reference"
+                                    aria-label="Edit Data Reference"
+                                    [matMenuTriggerFor]="editMenu">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+
+                            <mat-menu #editMenu>
+                                <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                    Edit Data Reference details
+                                </button>
+                                <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                                    Edit Description only
+                                </button>
+                            </mat-menu>
+                        </div>
+
+                        <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
+                            [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
+                            [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
+                    </div>
 
                       <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                           <button mat-stroked-button

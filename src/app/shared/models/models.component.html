@@ -67,9 +67,9 @@ SPDX-License-Identifier: Apache-2.0
                                       <!-- <button mat-menu-item (click)="changeState('export','codeSets')">
                                         <i class="fas fa-list dataModelTypeIcon marginless"></i> Export Code Sets
                                       </button> -->
-                                      <!-- <button mat-menu-item (click)="changeState('export','referenceModels')">
+                                      <button mat-menu-item (click)="changeState('export','referenceDataModels')">
                                         <i class="fas fa-code"></i> Export Reference Data Models
-                                      </button> -->
+                                      </button>
                                     </mat-menu>
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="importMenu" matTooltip="Import Models" aria-label="Import Models">
@@ -86,9 +86,9 @@ SPDX-License-Identifier: Apache-2.0
                                       <!-- <button mat-menu-item (click)="changeState('import','codeSets')">
                                         <i class="fas fa-list dataModelTypeIcon marginless"></i> Import Code Sets
                                       </button> -->
-                                      <!-- <button mat-menu-item (click)="changeState('import','referenceModels')">
-                                        <i class="fas fa-code"></i> Import Reference Data Models
-                                      </button> -->
+                                      <button mat-menu-item (click)="changeState('import','referenceDataModels')">
+                                        <i class="fas fa-code dataModelTypeIcon marginless"></i> Import CSV files
+                                      </button>
                                     </mat-menu>
 
                                     <button type="button" mat-stroked-button *ngIf="isLoggedIn()" matTooltip="Create a new Folder" [disabled]="levels.current === 1" (click)="onFolderAddModal()" aria-label="Create a new Folder">

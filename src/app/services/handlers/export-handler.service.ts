@@ -61,6 +61,13 @@ export class ExportHandlerService {
       }
       return this.resources.codeSet.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
     }
+
+    if (type === 'referenceDataModels') {
+      if (modelIds.length > 1) {
+        return this.resources.referenceDataModel.exportModels(exporter.namespace, exporter.name, exporter.version, modelIds, { responseType: 'arraybuffer' });
+      }
+      return this.resources.referenceDataModel.exportModel(modelIds[0], exporter.namespace, exporter.name, exporter.version, {}, { responseType: 'arraybuffer' });
+    }
   }
 
   createBlobLink(blob, fileName) {

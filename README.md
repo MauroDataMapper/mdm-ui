@@ -8,7 +8,7 @@ Web front-end for the Mauro Data Mapper
 
 ### Run the application (in Dev mode)
 - To start the application in Dev, run `ng serve` -> while you are still inside the mdm-ui folder. This will compile the Angular code
-- After the terminal finishes compiling,  open up in your browser and navigate to  http://localhost:4200
+- After the terminal finishes compiling,  open up your browser and navigate to  http://localhost:4200
 
 
 ### Build the application for production

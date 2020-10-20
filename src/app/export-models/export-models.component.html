@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="mt-2 mb-2">
     <h4 *ngIf="exportType === 'dataModels'" class="marginless">Select your Data Model(s):</h4>
     <h4 *ngIf="exportType === 'codeSets'" class="marginless">Select your Code Set(s):</h4>
-    <h4 *ngIf="exportType === 'referenceModels'" class="marginless">Select your Reference Model(s):</h4>
+    <h4 *ngIf="exportType === 'referenceDataModels'" class="marginless">Select your Reference Model(s):</h4>
     <h4 *ngIf="exportType === 'terminologies'" class="marginless">Select your Terminology:</h4>
         <mdm-model-selector-tree [(ngModel)]="selectedDataModels"
                                 [onSelect]="onSelect"

@@ -100,7 +100,13 @@ export class ExportModelsComponent implements OnInit {
         }, error => {
           this.messageHandler.showError('There was a problem loading exporters list.', error);
         });
-      }
+      } else if (this.exportType === 'referenceDataModels') {
+         this.resources.referenceDataModel.exporters().subscribe(result2 => {
+           this.exportersList = result2.body;
+         }, error => {
+           this.messageHandler.showError('There was a problem loading exporters list.', error);
+         });
+       }
     });
   }
 

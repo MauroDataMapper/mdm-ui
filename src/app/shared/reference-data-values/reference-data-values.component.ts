@@ -51,7 +51,7 @@ export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.displayedColumns = ['name', 'code'];
+   //  this.displayedColumns = ['name', 'code'];
   }
 
   ngAfterViewInit() {
@@ -76,6 +76,12 @@ export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
       })
     ).subscribe(values => {
       this.records = values;
+      const arr = [];
+      // tslint:disable-next-line: forin
+      for (const val in values[0].columns) {
+         arr.push(values[0].columns[val].referenceDataElement.label);
+      }
+      this.displayedColumns = arr;
     });
   }
 

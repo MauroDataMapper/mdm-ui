@@ -343,11 +343,13 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       }
 
       if (this.validateLabel(this.result.label)) {
-         this.resourcesService.referenceDataModel.update(this.result.id, resource).subscribe(result => {
+         this.resourcesService.referenceDataModel.update(this.result.id, resource).subscribe(res => {
             if (this.afterSave) {
-               this.afterSave(result);
+               this.afterSave(res);
             }
-            this.messageHandler.showSuccess('Data Model updated successfully.');
+            this.result.description = res.body.description;
+            this.ReferenceModelDetails();
+            this.messageHandler.showSuccess('Reference Data Model updated successfully.');
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
             this.broadcastSvc.broadcast('$reloadFoldersTree');

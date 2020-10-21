@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -41,6 +41,7 @@ export class TerminologyDetailsComponent implements OnInit {
   @Input() hideEditButton: boolean;
   @Output() afterSave = new EventEmitter<any>();
   @Output() openEditFormChanged = new EventEmitter<any>();
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
 
   openEditFormVal: any;
   securitySection = false;
@@ -82,7 +83,8 @@ export class TerminologyDetailsComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
-    private title: Title
+    private title: Title,
+    private renderer: Renderer2
   ) {}
 
 
@@ -164,23 +166,29 @@ export class TerminologyDetailsComponent implements OnInit {
     this.securitySection = !this.securitySection;
   };
 
-  export = exporter => {
+  export(exporter) {
     this.exportError = null;
     this.processing = true;
     this.exportedFileIsReady = false;
+    this.exportHandler.exportDataModel([this.mcTerminology], exporter, 'terminologies').subscribe(result => {
+      if (result != null) {
+        this.exportedFileIsReady = true;
+        const label = [this.mcTerminology].length === 1 ? [this.mcTerminology][0].label : 'data_models';
+        const fileName = this.exportHandler.createFileName(label, exporter);
+        const file = new Blob([result.body], { type: exporter.fileType });
+        const link = this.exportHandler.createBlobLink(file, fileName);
 
-    this.exportHandler.exportDataModel([this.mcTerminology], exporter, 'terminologies').subscribe(res => {
-          const result = res.body;
-          this.exportedFileIsReady = true;
-
-          this.exportHandler.createBlobLink(result.fileBlob, result.fileName);
-          this.processing = false;
-        }, () => {
-          this.processing = false;
-          this.exportError = 'An error occurred when processing the request.';
-        }
-      );
-  };
+        this.processing = false;
+        this.renderer.appendChild(this.aLink.nativeElement, link);
+      } else {
+        this.processing = false;
+        this.messageHandler.showError('There was a problem exporting the Data Model.', '');
+      }
+    }, error => {
+      this.processing = false;
+      this.messageHandler.showError('There was a problem exporting the Data Model.', error);
+    });
+  }
 
   resetExportError = () => {
     this.exportError = null;
@@ -313,8 +321,8 @@ export class TerminologyDetailsComponent implements OnInit {
       if (result.body === false) {
         return;
       }
-      this.resources.dataModel.exporters().subscribe(result2 => {
-        this.exportList = result2;
+      this.resources.terminology.exporters().subscribe(result2 => {
+        this.exportList = result2.body;
       },
       error => {
         this.messageHandler.showError('There was a problem loading exporters list.', error);

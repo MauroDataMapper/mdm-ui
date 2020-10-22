@@ -180,6 +180,8 @@ export class ImportModelsComponent implements OnInit {
     let method = this.resources.dataModel.importModels(namespace, name, version, this.formData);
     if (this.importType === 'terminologies') {
       method = this.resources.terminology.importModels(namespace, name, version, this.formData);
+    } else if (this.importType === 'codeSets') {
+      method = this.resources.codeSet.importModels(namespace, name, version, this.formData);
     }
 
     method.subscribe((result: any) => {

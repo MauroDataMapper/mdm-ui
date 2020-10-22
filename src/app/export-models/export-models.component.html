@@ -33,10 +33,10 @@ SPDX-License-Identifier: Apache-2.0
                                 [multiple]="true"
                                 ngDefaultControl
                                 name="selectedDataModels"
-                                [treeSearchDomainType]="'DataModel, Terminology'"
-                                [accepts]="['DataModel', 'Terminology']"
+                                [treeSearchDomainType]="'DataModel, Terminology, CodeSet'"
+                                [accepts]="['DataModel', 'Terminology', 'CodeSet']"
                                 [defaultElements]="selectedDataModels"
-                                [placeholder]="'Select Data Model...'"
+                                [placeholder]="'Select a Model...'"
                                 (ngModelChange)="selectedDataModels = $event">
         </mdm-model-selector-tree>
 </div>

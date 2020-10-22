@@ -30,17 +30,17 @@ import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser
 export class MarkdownParserService {
 
   constructor(private elementTypes: ElementTypesService,
-              private tokenizer: CustomTokenizerService,
-              private customHtmlRendererService: CustomHtmlRendererService,
-              private customTextRendererService: CustomTextRendererService,
-              private resourcesService: MdmResourcesService,
-              private broadcastSvc: BroadcastService) {
+    private tokenizer: CustomTokenizerService,
+    private customHtmlRendererService: CustomHtmlRendererService,
+    private customTextRendererService: CustomTextRendererService,
+    private resourcesService: MdmResourcesService,
+    private broadcastSvc: BroadcastService) {
   }
 
   public parse(source, renderType) {
 
     // Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
-    source = source?.replace(/\s+(?=[^(\)]*\))/g, '^');
+    source = source.replace(/\s+(?=[^(\)]*\))/g, '^');
 
     let renderer: marked.Renderer = this.customHtmlRendererService;
     if (renderType === 'text') {
@@ -62,11 +62,9 @@ export class MarkdownParserService {
   public async createMarkdownLink(element) {
     const baseTypes = this.elementTypes.getTypes();
 
-    const dataTypeNames = this.elementTypes
-      .getTypesForBaseTypeArray('DataType')
-      .map((dt) => {
-        return dt.id;
-      });
+    const dataTypeNames = this.elementTypes.getTypesForBaseTypeArray('DataType').map((dt) => {
+      return dt.id;
+    });
 
     let parentId = null;
     if (element.domainType === 'DataClass') {
@@ -82,8 +80,7 @@ export class MarkdownParserService {
     } else if (element.dataClass) {
       parentDataClassId = element.dataClass;
     } else if (element.breadcrumbs) {
-      parentDataClassId =
-        element.breadcrumbs[element.breadcrumbs.length - 1].id;
+      parentDataClassId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
     }
 
     let str = '';
@@ -96,15 +93,32 @@ export class MarkdownParserService {
       str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
-    if (element.domainType === 'DataType' || dataTypeNames.indexOf(element.domainType) !== -1) {
-      const dataModelName = await this.getDataModelName(parentId);
-      str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+    if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
+      let dataModelName = '';
+      if (!parentId) {
+        parentId = element.element.model;
+        dataModelName = await this.getDataModelName(parentId);
+        str += `[${element.element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
+      } else {
+        dataModelName = await this.getDataModelName(parentId);
+        str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+      }
     }
 
-    if (element.domainType === 'DataElement') {
-      const dataModelName = await this.getDataModelName(parentId);
-      const dataClassName = await this.getDataClassName(parentId, parentDataClassId);
-      str += `[${element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+    if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
+      let dataModelName = '';
+      let dataClassName = '';
+      if (!parentId) {
+        parentId = element.element.model;
+        parentDataClassId = element.element.dataClass;
+        dataModelName = await this.getDataModelName(parentId);
+        dataClassName = await this.getDataClassName(parentId, parentDataClassId);
+        str += `[${element.element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
+      } else {
+        dataModelName = await this.getDataModelName(parentId);
+        dataClassName = await this.getDataClassName(parentId, parentDataClassId);
+        str += `[${element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+      }
     }
 
     if (element.domainType === 'Term') {

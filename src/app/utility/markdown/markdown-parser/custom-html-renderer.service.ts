@@ -40,7 +40,8 @@ export class CustomHtmlRendererService extends marked.Renderer {
   };
 
   // just reduce header tags for one level
-  heading = (text, level, rawtext) => {
+  heading = (text, level) => {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     const l = level + 1;
     return `<h${l}>${text}</h${l}>`;
   };
@@ -48,6 +49,4 @@ export class CustomHtmlRendererService extends marked.Renderer {
   table = (header, body) => {
     return `<table class='table table-bordered'> ${header} ${body}</table>`;
   };
-
-
 }

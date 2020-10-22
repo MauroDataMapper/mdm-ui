@@ -70,6 +70,7 @@ import { DataClassComponent } from './data-class.component';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
 
 
 describe('DataClassComponent', () => {
@@ -104,7 +105,13 @@ describe('DataClassComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, useValue: {}
+          provide: MdmResourcesService,
+          useValue: {
+            dataClass: {
+              // tslint:disable-next-line: deprecation
+              getChildDataClass: () => empty()
+            }
+          }
         }
       ],
       declarations: [

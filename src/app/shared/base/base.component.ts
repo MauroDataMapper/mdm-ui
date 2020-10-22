@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'mdm-base',
@@ -27,10 +27,11 @@ export class BaseComponent {
   constructor() { }
 
   protected isGuid = (stringToTest) => {
-    if (stringToTest[0] === "{") {
+    if (stringToTest && stringToTest[0] === '{') {
       stringToTest = stringToTest.substring(1, stringToTest.length - 1);
     }
-    var regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/gi;
+    // eslint-disable-next-line
+    const regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/gi;
     return regexGuid.test(stringToTest);
-  }
+  };
 }

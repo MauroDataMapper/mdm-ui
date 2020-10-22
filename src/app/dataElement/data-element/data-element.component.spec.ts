@@ -64,6 +64,8 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { BaseComponent } from '@mdm/shared/base/base.component';
+import { empty } from 'rxjs';
 
 
 describe('DataElementComponent', () => {
@@ -94,8 +96,17 @@ describe('DataElementComponent', () => {
         ToastrModule.forRoot()
       ],
       providers: [
-        { provide: MdmResourcesService, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            dataElement: {
+              // tslint:disable-next-line: deprecation
+              get: () => empty()
+            }
+          }
+        }
       ],
       declarations: [
         DataElementDetailsComponent,
@@ -126,7 +137,8 @@ describe('DataElementComponent', () => {
         ElementLinkListComponent,
         SummaryMetadataTableComponent,
         AttachmentListComponent,
-        DataElementComponent
+        DataElementComponent,
+        BaseComponent
       ]
     })
     .compileComponents();

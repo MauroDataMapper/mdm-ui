@@ -29,12 +29,12 @@ SPDX-License-Identifier: Apache-2.0
                       <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
                     </div>
                     </li>-->
-                    <li class="list-group-item" *ngIf="validTypesToSelect.includes('CodeSet')">
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('CodeSet')">
                       <div (click)="onElementTypeSelect('CodeSet')">
                         <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'CodeSet'"> Code Set
                       </div>
                     </li>
-                    <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataType')">
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataType')">
                       <div (click)="onElementTypeSelect('DataType')">
                         <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataType'"> Data Type
                       </div>

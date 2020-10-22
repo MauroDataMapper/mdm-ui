@@ -226,6 +226,7 @@
         "no-underscore-dangle": "off", //could be warn
         "no-unsafe-finally": "error",
         "no-unused-labels": "error",
+        "no-useless-escape": "off",
         "no-var": "error",
         "object-shorthand": "error",
         "one-var": [

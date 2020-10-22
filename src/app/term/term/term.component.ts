@@ -85,11 +85,13 @@ export class TermComponent implements OnInit {
     this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
   }
 
-  termDetails = async id => {
+  termDetails = id => {
     const terms = [];
 
+    // tslint:disable-next-line: deprecation
     terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
+    // tslint:disable-next-line: deprecation
+    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, id));
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;

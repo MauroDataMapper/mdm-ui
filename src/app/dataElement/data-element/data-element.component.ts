@@ -57,11 +57,8 @@ export class DataElementComponent extends BaseComponent implements OnInit {
     private title: Title
   ) {
     super();
-    if (this.isGuid(this.stateService.params.id) &&
-      (!this.stateService.params.id ||
-      !this.stateService.params.dataModelId ||
-      !this.stateService.params.dataClassId)
-    ) {
+    // tslint:disable-next-line: deprecation
+    if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId || !this.stateService.params.dataClassId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
@@ -96,7 +93,7 @@ export class DataElementComponent extends BaseComponent implements OnInit {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElementOutput.id);
+    this.afterSave = () => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElementOutput.id);
   }
 
   getTabDetailByName(tabName) {
@@ -129,6 +126,7 @@ export class DataElementComponent extends BaseComponent implements OnInit {
       this.messageService.dataChanged(this.dataElementOutput);
 
       if (this.dataElementOutput) {
+        // tslint:disable-next-line: deprecation
         this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
         this.tabSelected(this.activeTab);
       }

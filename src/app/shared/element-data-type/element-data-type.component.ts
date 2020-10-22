@@ -59,7 +59,6 @@ export class ElementDataTypeComponent implements OnInit {
 
 
   ngOnInit() {
-    debugger;
     if (this.elementDataType !== null && this.elementDataType !== undefined) {
       let parentDataModelId = this.mcParentDataModel
         ? this.mcParentDataModel.id

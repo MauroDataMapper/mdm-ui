@@ -26,24 +26,25 @@ export class LinkCreatorService {
 
   constructor(private elementTypes: ElementTypesService, private broadcastSvc: BroadcastService) { }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public createLink(href, title, text) {
     href = href.split('^').join(' ');
 
-    let elementType = "";
-    //let elementName = "";
+    let elementType = '';
+    // let elementName = "";
     const elements = href.split('|');
 
     let dataModelName = '';
     let dataClassName = '';
-    //let dataTypeName = '';
-    //let dataElementName = '';
+    // let dataTypeName = '';
+    // let dataElementName = '';
     let terminologyName = '';
-    //let codeSetName = '';
+    // let codeSetName = '';
     elements.forEach(item => {
-      let itmElements = item.split(':');
+      const itmElements = item.split(':');
       if (elements.indexOf(item) === elements.length - 1) {
         elementType = itmElements[0];
-        //elementName = itmElements[1];
+        // elementName = itmElements[1];
       }
       if (itmElements.length > 0) {
         if (itmElements[0] === 'dm') {
@@ -52,18 +53,18 @@ export class LinkCreatorService {
         if (itmElements[0] === 'dc') {
           dataClassName = itmElements[1];
         }
-        //if (itmElements[0] === 'dt') {
+        // if (itmElements[0] === 'dt') {
         //  dataTypeName = itmElements[1];
-        //}
-        //if (itmElements[0] === 'de') {
+        // }
+        // if (itmElements[0] === 'de') {
         //  dataElementName = itmElements[1];
-        //}
+        // }
         if (itmElements[0] === 'te') {
           terminologyName = itmElements[1];
         }
-        //if (itmElements[0] === 'cs') {
+        // if (itmElements[0] === 'cs') {
         //  codeSetName = itmElements[1];
-        //}
+        // }
       }
     });
 

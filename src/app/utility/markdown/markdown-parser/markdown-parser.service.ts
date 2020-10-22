@@ -30,17 +30,17 @@ import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser
 export class MarkdownParserService {
 
   constructor(private elementTypes: ElementTypesService,
-    private tokenizer: CustomTokenizerService,
-    private customHtmlRendererService: CustomHtmlRendererService,
-    private customTextRendererService: CustomTextRendererService,
-    private resourcesService: MdmResourcesService,
-    private broadcastSvc: BroadcastService) {
+              private tokenizer: CustomTokenizerService,
+              private customHtmlRendererService: CustomHtmlRendererService,
+              private customTextRendererService: CustomTextRendererService,
+              private resourcesService: MdmResourcesService,
+              private broadcastSvc: BroadcastService) {
   }
 
   public parse(source, renderType) {
 
-    //Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
-    source = source.replace(/\s+(?=[^(\)]*\))/g, "^");
+    // Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
+    source = source?.replace(/\s+(?=[^(\)]*\))/g, '^');
 
     let renderer: marked.Renderer = this.customHtmlRendererService;
     if (renderType === 'text') {
@@ -117,9 +117,9 @@ export class MarkdownParserService {
     }
 
     // Not supported at the moment. Keeping for further use.
-    //if (element.domainType === 'Folder') {
+    // if (element.domainType === 'Folder') {
     //  str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
-    //}
+    // }
 
     str += ')';
     return str;
@@ -134,7 +134,7 @@ export class MarkdownParserService {
     const response = await this.resourcesService.terminology.get(id).toPromise();
     return response.body.label;
   }
-  
+
   private async getDataClassName(dataModelId: any, id: any) {
     const response = await this.resourcesService.dataClass.get(dataModelId, id).toPromise();
     return response.body.label;

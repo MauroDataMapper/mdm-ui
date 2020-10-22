@@ -58,7 +58,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit {
     this.dataModelId = this.stateService.params.dataModelId;
     // tslint:disable-next-line: deprecation
     this.tabView = this.stateService.params.tabView;
-    
+
     if (this.isGuid(this.id) && (!this.id || !this.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -67,7 +67,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit {
     this.title.setTitle('Data Type');
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
-    
+
     this.resource.dataType.get(this.dataModelId, this.id).subscribe(result => {
       const data = result.body;
 

@@ -59,7 +59,8 @@ export class DataClassComponent extends BaseComponent implements OnInit {
     super();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -117,7 +118,7 @@ export class DataClassComponent extends BaseComponent implements OnInit {
     this.resourcesService.dataClass.getChildDataClass(dataModelId, parentDataClassId, id).subscribe((result: { body: DataClassResult }) => {
         this.dataClass = result.body;
 
-        //Get the GUIDs, because we may have path instead of GUID
+        // Get the GUIDs, because we may have path instead of GUID
         parentDataClassId = result.body.id;
         dataModelId = result.body.model;
 
@@ -127,7 +128,7 @@ export class DataClassComponent extends BaseComponent implements OnInit {
           id: dataModelId,
           finalised: this.dataClass.breadcrumbs[0].finalised
         };
-        this.isEditable = this.dataClass['availableActions'].includes('update');
+        this.isEditable = this.dataClass['availableActions']?.includes('update');
         this.messageService.FolderSendMessage(this.dataClass);
         this.messageService.dataChanged(this.dataClass);
 

@@ -83,10 +83,10 @@ export class CodeSetComponent implements OnInit, OnDestroy {
     let arr = [];
     this.resourcesService.codeSet.get(id).subscribe(async (result: { body: CodeSetResult }) => {
 
-      //Get the guid
+      // Get the guid
       this.codeSetModel = result.body;
       this.parentId = this.codeSetModel.id;
-      
+
       await this.resourcesService.versionLink.list('codeSets', this.parentId).subscribe(response => {
         if (response.body.count > 0) {
           arr = response.body.items;
@@ -98,7 +98,7 @@ export class CodeSetComponent implements OnInit, OnDestroy {
         }
       });
 
-      
+
       this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.codeSetModel.editable || this.codeSetModel.finalised;
       if (this.sharedService.isLoggedIn(true)) {
         this.CodeSetPermissions(this.parentId);

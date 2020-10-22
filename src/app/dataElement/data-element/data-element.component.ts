@@ -96,7 +96,7 @@ export class DataElementComponent extends BaseComponent implements OnInit {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElement.id);
+    this.afterSave = (result: { body: { id: any } }) => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElementOutput.id);
   }
 
   getTabDetailByName(tabName) {

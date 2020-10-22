@@ -31,6 +31,7 @@ import { TermResult } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-term',

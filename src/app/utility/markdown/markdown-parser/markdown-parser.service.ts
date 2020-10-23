@@ -40,7 +40,7 @@ export class MarkdownParserService {
   public parse(source, renderType) {
 
     // Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
-    source = source.replace(/\s+(?=[^(\)]*\))/g, '^');
+    source = source?.replace(/\s+(?=[^(\)]*\))/g, '^');
 
     let renderer: marked.Renderer = this.customHtmlRendererService;
     if (renderType === 'text') {

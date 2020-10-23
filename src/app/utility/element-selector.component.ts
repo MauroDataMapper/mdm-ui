@@ -25,7 +25,6 @@ import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -135,7 +134,7 @@ export class ElementSelectorComponent implements OnInit {
   }
 
   reLoad() {
-    if (['DataModel', 'DataClass'].indexOf(this.formData.selectedType) !== -1) {
+    if (['DataModel', 'DataClass', 'CodeSet'].indexOf(this.formData.selectedType) !== -1) {
       this.loadAllDataModels();
     }
 
@@ -162,7 +161,7 @@ export class ElementSelectorComponent implements OnInit {
   loadAllDataModels() {
     this.reloading = true;
 
-    this.resourceService.tree.list('folders', { domainType: DOMAIN_TYPE.DataModel }).subscribe((data) => {
+    this.resourceService.tree.list('folders', { domainType: 'dataModels' }).subscribe((data) => {
       this.rootNode = {
         children: data.body,
         isRoot: true

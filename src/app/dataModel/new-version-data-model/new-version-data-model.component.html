@@ -68,13 +68,15 @@ SPDX-License-Identifier: Apache-2.0
 
         <div class="mb-2">
             <div [ngClass]="{'has-error': errors }" style="margin-bottom: 0px;">
-                <!-- <mat-checkbox [(ngModel)]="form.copyPermissions" [disabled]="processing">
+                <!-- TODO - pending update from back-end
+                  <mat-checkbox [(ngModel)]="form.copyPermissions" [disabled]="processing">
                     Copy Permissions
-                </mat-checkbox> -->
+                </mat-checkbox>
                 <span class="help-block" *ngIf="errors && errors.copyPermissions"><small>{{errors.copyPermissions}}</small></span>
                 <small class="block">
                     If checked, all read/write permissions for users and groups of this Data Model will be copied to the new Data Model.
                 </small>
+                -->
             </div>
         </div>
 
@@ -87,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0
             <small class="block">If checked, all Dataflows which this Data Model is a target of, will be copied to the new Data Model version.</small>
         </div> -->
     </div>
-    
+
     <!-- <div *ngIf="versionType === 'Version'">
         <h4 class="mat-h4 marginless">Additional details:</h4>
         <div [ngClass]="{'has-error': errors && errors.copyPermissions}">
@@ -108,7 +110,7 @@ SPDX-License-Identifier: Apache-2.0
                 <input matInput [(ngModel)]="form.label" [disabled]="processing" required>
                      </mat-form-field>
             <span class="help-block warning" *ngIf="errors && errors.label" style="margin-left: 16px;"><small>{{errors.label}}</small></span>
-        </div>  
+        </div>
 
     </div>
     <div *ngIf="step > 1">

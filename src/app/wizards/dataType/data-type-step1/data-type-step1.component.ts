@@ -66,7 +66,4 @@ export class DataTypeStep1Component implements OnInit {
     this.validate();
   };
 
-  loadHelp = () => {
-    // TODO
-  };
 }

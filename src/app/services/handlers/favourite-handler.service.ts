@@ -44,7 +44,7 @@ export class FavouriteHandlerService {
 
     this.userSettingsHandler.update('favourites', favorites);
     this.userSettingsHandler.saveOnServer().subscribe(() => {
-      this.messageHandler.showSuccess('Added to Favorites successfully.');
+      this.messageHandler.showSuccess(`${element.domainType} added to Favorites successfully.`);
       this.broadcastSvc.broadcast('favourites', { name: 'add', element });
     }, error => {
       this.messageHandler.showError('There was a problem updating the Favorites.', error);
@@ -107,5 +107,4 @@ export class FavouriteHandlerService {
 
     return processFinish;
   }
-
 }

@@ -205,6 +205,12 @@ export class ImportModelsComponent implements OnInit {
             { id: result.body.items[0].id },
             { reload: true, location: true }
           );
+        } else if (this.importType === 'codeSets') {
+          this.stateHandler.Go(
+            'codeset',
+            { id: result.body.items[0].id },
+            { reload: true, location: true }
+          );
         }
       }
     }, (error) => {

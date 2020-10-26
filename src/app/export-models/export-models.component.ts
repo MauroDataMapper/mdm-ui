@@ -141,14 +141,14 @@ export class ExportModelsComponent implements OnInit {
         });
         this.processing = false;
         this.renderer.appendChild(this.aLink.nativeElement, link);
-        this.messageHandler.showSuccess('Data Model(s) exported successfully.');
+        this.messageHandler.showSuccess('Model(s) exported successfully.');
       } else {
         this.processing = false;
-        this.messageHandler.showError('There was a problem exporting the Data Model(s).', '');
+        this.messageHandler.showError('There was a problem exporting the Model(s).', '');
       }
     }, error => {
       this.processing = false;
-      this.messageHandler.showError('There was a problem exporting the Data Model(s).', error);
+      this.messageHandler.showError('There was a problem exporting the Model(s).', error);
     }
     );
   };

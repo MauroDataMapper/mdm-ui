@@ -44,7 +44,7 @@ import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirm
 import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
-import { DialogPosition, MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 
@@ -109,18 +109,19 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
     private title: Title
-  ) {
+  ) { }
+  public showAddElementToMarkdown() {
+    // Remove from here & put in markdown
+    this.elementDialogueService.open('Search_Help', null);
+  }
+
+  ngOnInit() {
+
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.loadExporterList();
     this.DataModelDetails();
-  }
-  public showAddElementToMarkdown() {
-    // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
-  }
 
-  ngOnInit() {
     this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -325,7 +326,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     return promise;
   }
 
-  formBeforeSave = () => {
+  formBeforeSave = async () => {
     this.editMode = false;
     this.errorMessage = '';
 
@@ -360,12 +361,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.dataModel.update(this.result.id, resource).subscribe(result => {
-        if (this.afterSave) {
-          this.afterSave(result);
-        }
+      await this.resourcesService.dataModel.update(this.result.id, resource).subscribe(res => {
         this.messageHandler.showSuccess('Data Model updated successfully.');
         this.editableForm.visible = false;
+        this.result.description = res.body.description;
         this.editForm.forEach(x => x.edit({ editing: false }));
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {

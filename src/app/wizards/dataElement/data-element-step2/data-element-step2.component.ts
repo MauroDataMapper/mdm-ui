@@ -44,7 +44,10 @@ import { GridService } from '@mdm/services/grid.service';
   styleUrls: ['./data-element-step2.component.sass']
 })
 export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestroy {
-
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: any;
   multiplicityError: any;
@@ -62,11 +65,9 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   finalResult = {};
   failCount = 0;
   successCount = 0;
-
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
   formChangesSubscription: Subscription;
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+
+
   dataSourceSelectedDataElements = new MatTableDataSource<any>();
   dataSourceDataElements = new MatTableDataSource<any>();
   filterEvent = new EventEmitter<any>();
@@ -77,7 +78,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   dataSource: any;
   displayedColumnsDataTypes: string[];
   displayedColumnsSelectedDataTypes: string[];
-  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
+
   recordsDataElements: any[] = [];
   isAllChecked = true;
   checkAllCheckbox = false;
@@ -101,7 +102,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   }
 
   ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(x => {
+    this.formChangesSubscription = this.myForm?.form.valueChanges.subscribe(x => {
       this.validate(x);
     });
   }
@@ -226,7 +227,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
     for (const id in this.model.selectedDataClassesMap) {
-      if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataClassesMap, 'id')) {
         const element = this.model.selectedDataClassesMap[id];
         this.model.selectedDataClasses.push(element.node);
       }
@@ -268,13 +269,16 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     const options = this.gridService.constructOptions(limit, offset, 'label', 'asc', {label: text});
 
     this.pagination = {
+      // tslint:disable-next-line: no-string-literal
       limit: options['limit'],
+      // tslint:disable-next-line: no-string-literal
       offset: options['offset']
     };
 
     this.changeRef.detectChanges();
 
     if (loadAll) {
+      // tslint:disable-next-line: no-string-literal
       delete options['label'];
     }
 
@@ -297,7 +301,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  }
+  };
 
   validationStatusEmitter($event) {
     this.step.invalid = JSON.parse($event);
@@ -323,7 +327,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       promise = promise.then((result: any) => {
         this.successCount++;
         this.finalResult[dc.id] = { result, hasError: false };
-        return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.modelId, dc.dataClass, dc.id, null).toPromise();
+        return this.resources.dataElement.copyDataElement(this.model.parentDataModel.id, this.model.parentDataClass.id, dc.model, dc.dataClass, dc.id, null).toPromise();
       }).catch(error => {
         this.failCount++;
         const errorText = this.messageHandler.getErrorText(error);
@@ -339,5 +343,5 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
       this.processing = false;
       this.isProcessComplete = true;
     });
-  }
+  };
 }

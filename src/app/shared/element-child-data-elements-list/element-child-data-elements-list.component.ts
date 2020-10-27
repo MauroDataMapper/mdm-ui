@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   Component,
-  OnInit,
   Input,
   Output,
   EventEmitter,
@@ -39,14 +38,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
   templateUrl: './element-child-data-elements-list.component.html',
   styleUrls: ['./element-child-data-elements-list.component.scss']
 })
-export class ElementChildDataElementsListComponent implements OnInit, AfterViewInit {
-  constructor(
-    private gridSvc: GridService,
-    private changeRef: ChangeDetectorRef,
-    private resources: MdmResourcesService,
-    private gridService: GridService
-  ) { }
-
+export class ElementChildDataElementsListComponent implements AfterViewInit {
   @Input() parentDataModel: any;
   @Input() parentDataClass: any;
   @Input() parentDataType: any;
@@ -70,7 +62,13 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
   hideFilters = true;
   displayedColumns = ['name', 'description', 'multiplicity'];
 
-  ngOnInit() { }
+  constructor(
+    private gridSvc: GridService,
+    private changeRef: ChangeDetectorRef,
+    private resources: MdmResourcesService,
+    private gridService: GridService
+  ) { }
+
 
   ngAfterViewInit() {
     if (this.type === 'dynamic') {
@@ -117,7 +115,7 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
   }
 
   dataElementsFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    const options = this.gridService.constructOptions(pageSize,pageIndex,sortBy,sortType,filters);
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
     if (this.parentDataModel && this.parentDataClass) {
       return this.resources.dataElement.list(this.parentDataModel.id, this.parentDataClass.id, options);
@@ -139,5 +137,5 @@ export class ElementChildDataElementsListComponent implements OnInit, AfterViewI
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 }

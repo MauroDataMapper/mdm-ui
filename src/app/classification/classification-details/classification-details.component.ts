@@ -97,9 +97,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     // Remove from here & put in markdown
     this.elementDialogueService.open(
       'Search_Help',
-      'left' as DialogPosition,
-      null,
-      null
+      'left' as DialogPosition
     );
   }
 
@@ -112,7 +110,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
       this.editForm.forEach(x =>
         x.edit({
           editing: true,
-          focus: x._name === 'moduleName' ? true : false
+          focus: x.name === 'moduleName' ? true : false
         })
       );
       this.editableForm.visible = true;
@@ -136,7 +134,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
 
   ngAfterViewInit(): void {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+    this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
       // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
 
@@ -144,20 +142,12 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
         this.editForm.forEach(x =>
           x.edit({
             editing: true,
-            focus: x._name === 'moduleName' ? true : false
+            focus: x.name === 'moduleName' ? true : false
           })
         );
         this.showForm();
       }
     });
-  }
-
-  private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
   }
 
   ClassifierDetails(): any {
@@ -216,10 +206,10 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve) => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Permanent deletion`,
+          title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Classifier?</p>
@@ -233,10 +223,10 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Confirm permanent deletion`,
+            title: 'Confirm permanent deletion',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+            message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
           }
         });
 
@@ -271,9 +261,8 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
         this.editableForm.visible = false;
         this.editForm.forEach(x => x.edit({ editing: false }));
       }, error => {
-          this.messageHandler.showError('There was a problem updating the Classifier.', error);
-        }
-      );
+        this.messageHandler.showError('There was a problem updating the Classifier.', error);
+      });
     }
   };
 
@@ -304,13 +293,19 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   }
 
   delete() {
-    this.resourcesService.classifier.remove(this.result.id).subscribe(result => {
+    this.resourcesService.classifier.remove(this.result.id).subscribe(() => {
       this.messageHandler.showSuccess('Classifier deleted successfully.');
       this.broadcaseSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
     }, error => {
-        this.messageHandler.showError('There was a problem deleting this Classification.', error);
-      }
+      this.messageHandler.showError('There was a problem deleting this Classification.', error);
+    }
     );
+  }
+
+  private invokeInlineEditor(): void {
+    this.editForm.find((inlineEditorComponent: any) => {
+      return inlineEditorComponent.name === 'editableText';
+    });
   }
 }

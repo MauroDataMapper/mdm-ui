@@ -16,11 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { BehaviorSubject, Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 import * as joint from 'jointjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { DataflowDataclassDiagramService } from './dataflow-dataclass-diagram.service';
 
 
 export class DataflowDatamodelDiagramService extends BasicDiagramService {
@@ -28,7 +27,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
   private parentId: string;
 
   constructor(protected resourcesService: MdmResourcesService,
-    protected messageHandler: MessageHandlerService) {
+              protected messageHandler: MessageHandlerService) {
     super(resourcesService, messageHandler);
   }
 
@@ -81,7 +80,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
   }
 
   configurePaper(paper: joint.dia.Paper): void {
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView) => {
       // console.log('clicked');
       const result: any = {
         flowId: cellView.model.id as string,

@@ -21,8 +21,7 @@ import { DataElementStep2Component } from './data-element-step2.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { TestModule } from '@mdm/modules/test/test.module';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { ElementClassificationsComponent } from '@mdm/utility/element-classifications/element-classifications.component';
@@ -48,7 +47,6 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { empty } from 'rxjs';
 
 describe('DataElementStep2Component', () => {
   let component: DataElementStep2Component;
@@ -74,7 +72,6 @@ describe('DataElementStep2Component', () => {
         MatProgressBarModule,
         FormsModule,
         FoldersTreeModule
-        // TestModule,
       ],
       providers: [
         {

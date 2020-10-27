@@ -72,6 +72,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   max: any;
   min: any;
   exportError: any;
+  canEditDescription = true;
+  showEditDescription = false;
 
   constructor(
     private messageService: MessageService,
@@ -96,7 +98,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.editForm.forEach(x =>
         x.edit({
           editing: true,
-          focus: x._name === 'moduleName' ? true : false
+          focus: x.name === 'moduleName' ? true : false
         })
       );
       this.editableForm.visible = true;
@@ -142,22 +144,17 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     };
   }
 
-  private setEditableForm() {
-    this.editableForm.description = this.result.description;
-    this.editableForm.label = this.result.label;
-    this.min = this.result.minMultiplicity;
-    this.max = this.result.maxMultiplicity;
-  }
+
 
   ngAfterViewInit(): void {
     this.error = '';
-    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+    this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
       if (this.editMode) {
         this.editForm.forEach(x =>
           x.edit({
             editing: true,
-            focus: x._name === 'moduleName' ? true : false
+            focus: x.name === 'moduleName' ? true : false
           })
         );
 
@@ -166,11 +163,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
-  private invokeInlineEditor(): void {
-    this.editForm.find((inlineEditorComponent: any) => {
-      return inlineEditorComponent.name === 'editableText';
-    });
-  }
 
   DataClassDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
@@ -216,6 +208,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     if (access !== undefined) {
       this.showEdit = access.showEdit;
       this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+      this.canEditDescription = access.canEditDescription;
     }
   }
 
@@ -226,10 +219,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
   askForPermanentDelete() {
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve) => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Permanent deletion`,
+          title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Class?</p>
@@ -243,10 +236,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Confirm permanent deletion`,
+            title: 'Confirm permanent deletion',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message: `<strong>Note: </strong> All its contents will be deleted <span class='warning'>permanently</span>.`
+            message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
           }
         });
 
@@ -307,16 +300,27 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.max = -1;
         }
       }
-      const resource = {
-        id: this.result.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description,
-        aliases,
-        classifiers,
-        minMultiplicity: parseInt(this.min, 10),
-        maxMultiplicity: parseInt(this.max, 10)
-      };
-      if (!this.result.parentDataClass) {
+      let resource = {};
+      if (!this.showEditDescription) {
+        resource = {
+          id: this.result.id,
+          label: this.editableForm.label,
+          description: this.editableForm.description,
+          aliases,
+          classifiers,
+          minMultiplicity: parseInt(this.min, 10),
+          maxMultiplicity: parseInt(this.max, 10)
+        };
+      }
+
+      if (this.showEditDescription) {
+        resource = {
+          id: this.result.id,
+          description: this.editableForm.description || ''
+        };
+      }
+
+      if (!this.result.parentDataClass || this.result.parentDataClass === this.result.id) {
         this.resourcesService.dataClass.update(this.result.parentDataModel, this.result.id, resource).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
@@ -347,11 +351,11 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   validateMultiplicity(minVal, maxVal) {
     let min = '';
     if (minVal != null && minVal !== undefined) {
-      min = minVal + '';
+      min = `${minVal}`;
     }
     let max = '';
     if (maxVal != null && maxVal !== undefined) {
-      max = maxVal + '';
+      max = `${maxVal}`;
     }
 
     const errorMessage = this.validator.validateMultiplicities(min, max);
@@ -376,6 +380,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   showForm() {
+    this.showEditDescription = false;
     this.editableForm.show();
   }
 
@@ -383,6 +388,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.errorMessage = '';
     this.error = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   onLabelChange(value: any) {
@@ -396,5 +402,23 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   isAdmin = () => {
     return this.securityHandler.isAdmin();
+  };
+
+  showDescription = () => {
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  private setEditableForm() {
+    this.editableForm.description = this.result.description;
+    this.editableForm.label = this.result.label;
+    this.min = this.result.minMultiplicity;
+    this.max = this.result.maxMultiplicity;
+  }
+
+  private invokeInlineEditor(): void {
+    this.editForm.find((inlineEditorComponent: any) => {
+      return inlineEditorComponent.name === 'editableText';
+    });
   }
 }

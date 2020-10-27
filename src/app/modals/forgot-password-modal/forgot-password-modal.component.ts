@@ -52,5 +52,5 @@ export class ForgotPasswordModalComponent implements OnInit {
   close = () => {
     this.securityHandler.loginModalDisplayed = false;
     this.dialogRef.close();
-  }
+  };
 }

@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { TestModule } from './modules/test/test.module';
 import { ProfilePictureComponent } from './shared/profile-picture/profile-picture.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ByteArrayToBase64Pipe } from './pipes/byte-array-to-base64.pipe';
@@ -38,7 +37,6 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         MatTooltipModule,
         MatMenuModule,
@@ -72,7 +70,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'mdm-ui'`, () => {
+  it('should have as title \'mdm-ui\'', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('mdm-ui');

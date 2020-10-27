@@ -109,7 +109,7 @@ SPDX-License-Identifier: Apache-2.0
         <td mat-header-cell *matHeaderCellDef></td>
         <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
           <div *ngIf="!record.isNew">
-            <button mat-icon-button color="warn" (click)="deleteRecord(record, i)" type="button" aria-label="Cancel edit">
+            <button mat-icon-button color="warn" (click)="deleteRecord(record)" type="button" aria-label="Cancel edit">
               <i class="far fa-trash-alt"></i>
             </button>
           </div>
@@ -118,7 +118,7 @@ SPDX-License-Identifier: Apache-2.0
               <button mat-icon-button color="warn" *ngIf="record.inEdit" (click)="cancelEdit(record, i)" type="button" aria-label="Cancel edit">
                 <i class="fas fa-times"></i>
               </button>
-              <button mat-stroked-button color="accent" *ngIf="record.inEdit" (click)="save(record, i)" type="button" aria-label="Save record">
+              <button mat-stroked-button color="accent" *ngIf="record.inEdit" (click)="save(record)" type="button" aria-label="Save record">
                 <i class="fas fa-check"></i>
               </button>
             </div>

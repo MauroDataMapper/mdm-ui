@@ -67,6 +67,10 @@ import { ChartsModule } from 'ng2-charts';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { DataClassDetailsComponent } from '../data-class-details/data-class-details.component';
 import { DataClassComponent } from './data-class.component';
+import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
 
 
 describe('DataClassComponent', () => {
@@ -76,7 +80,6 @@ describe('DataClassComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         MatTooltipModule,
         MatTabsModule,
@@ -96,7 +99,20 @@ describe('DataClassComponent', () => {
         MatSortModule,
         FoldersTreeModule,
         ChartsModule,
-        FormsModule
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            dataClass: {
+              // tslint:disable-next-line: deprecation
+              getChildDataClass: () => empty()
+            }
+          }
+        }
       ],
       declarations: [
         ProfilePictureComponent,

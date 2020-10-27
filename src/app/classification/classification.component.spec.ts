@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClassificationComponent } from './classification.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ClassificationDetailsComponent } from './classification-details/classification-details.component';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
@@ -66,7 +65,6 @@ describe('ClassificationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         FormsModule,
         DragDropModule,

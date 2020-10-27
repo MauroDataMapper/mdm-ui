@@ -15,12 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
-import {ElementTypesService} from '@mdm/services/element-types.service';
+import { Injectable } from '@angular/core';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 import marked from 'marked/lib/marked';
-import {CustomTokenizerService} from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
-import {CustomHtmlRendererService} from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
-import {CustomTextRendererService} from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { CustomTokenizerService } from '@mdm/utility/markdown/markdown-parser/custom-tokenizer.service';
+import { CustomHtmlRendererService } from '@mdm/utility/markdown/markdown-parser/custom-html-renderer.service';
+import { CustomTextRendererService } from '@mdm/utility/markdown/markdown-parser/custom-text-renderer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,55 +30,48 @@ import {CustomTextRendererService} from '@mdm/utility/markdown/markdown-parser/c
 export class MarkdownParserService {
 
   constructor(private elementTypes: ElementTypesService,
-              private tokenizer: CustomTokenizerService,
-              private customHtmlRendererService: CustomHtmlRendererService,
-              private customTextRendererService: CustomTextRendererService) {
+    private tokenizer: CustomTokenizerService,
+    private customHtmlRendererService: CustomHtmlRendererService,
+    private customTextRendererService: CustomTextRendererService,
+    private resourcesService: MdmResourcesService,
+    private broadcastSvc: BroadcastService) {
   }
 
-
-
   public parse(source, renderType) {
+
+    // Find only the text within brackets and replace the empty spaces with a special char ^ in order to be able to parse the markdown link
+    source = source.replace(/\s+(?=[^(\)]*\))/g, '^');
+
     let renderer: marked.Renderer = this.customHtmlRendererService;
     if (renderType === 'text') {
       renderer = this.customTextRendererService;
     }
 
-    marked.use({tokenizer: this.tokenizer as any});
+    marked.use({ tokenizer: this.tokenizer as any });
     marked.setOptions({
       renderer,
       gfm: true,
       breaks: true,
     });
 
-    return marked(source);
+    if (source) {
+      return marked(source);
+    }
   }
 
-  public createMarkdownLink(element) {
+  public async createMarkdownLink(element) {
     const baseTypes = this.elementTypes.getTypes();
 
-    const dataTypeNames = this.elementTypes
-      .getTypesForBaseTypeArray('DataType')
-      .map((dt) => {
-        return dt.id;
-      });
+    const dataTypeNames = this.elementTypes.getTypesForBaseTypeArray('DataType').map((dt) => {
+      return dt.id;
+    });
 
-    let str = `[${element.label}](MC|${baseTypes.find(x => x.id === element.domainType).markdown}|`;
-
-    if (element.domainType === 'Folder') {
-      str += element.id;
+    let parentId = null;
+    if (element.domainType === 'DataClass') {
+      parentId = element.modelId;
     }
-
-    if (element.domainType === 'Classifier') {
-      str += element.id;
-    }
-
-    if (element.domainType === 'DataModel') {
-      str += element.id;
-    }
-
-    let dataModelId = element.dataModel;
-    if (!dataModelId && element.breadcrumbs) {
-      dataModelId = element.breadcrumbs[0].id;
+    if (!parentId && element.breadcrumbs) {
+      parentId = element.breadcrumbs[0].id;
     }
 
     let parentDataClassId = null;
@@ -85,41 +80,77 @@ export class MarkdownParserService {
     } else if (element.dataClass) {
       parentDataClassId = element.dataClass;
     } else if (element.breadcrumbs) {
-      parentDataClassId =
-        element.breadcrumbs[element.breadcrumbs.length - 1].id;
+      parentDataClassId = element.breadcrumbs[element.breadcrumbs.length - 1].id;
     }
 
-    if (element.domainType === 'DataType' || dataTypeNames.indexOf(element.domainType) !== -1) {
-      str += dataModelId + '|' + element.id;
+    let str = '';
+    if (element.domainType === 'DataClass') {
+      const dataModelName = await this.getDataModelName(parentId);
+      str = `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
-    if (element.domainType === 'EnumerationValue') {
-      str += dataModelId + '|' + element.dataType;
+    if (element.domainType === 'DataModel') {
+      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
 
-    if (element.domainType === 'DataClass' && !parentDataClassId) {
-      str += dataModelId + '|' + element.id;
+    if (element.domainType === 'DataType' || dataTypeNames.includes(element.element?.domainType)) {
+      let dataModelName = '';
+      if (!parentId) {
+        parentId = element.element.model;
+        dataModelName = await this.getDataModelName(parentId);
+        str += `[${element.element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
+      } else {
+        dataModelName = await this.getDataModelName(parentId);
+        str += `[${element.label}](dm:${dataModelName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+      }
     }
 
-    if (element.domainType === 'DataClass' && parentDataClassId) {
-      str += dataModelId + '|' + parentDataClassId + '|' + element.id;
-    }
-
-    if (element.domainType === 'DataElement') {
-      str += dataModelId + '|' + parentDataClassId + '|' + element.id;
-    }
-
-    if (element.domainType === 'Terminology') {
-      str += element.id;
+    if (element.domainType === 'DataElement' || element.element?.domainType === 'DataElement') {
+      let dataModelName = '';
+      let dataClassName = '';
+      if (!parentId) {
+        parentId = element.element.model;
+        parentDataClassId = element.element.dataClass;
+        dataModelName = await this.getDataModelName(parentId);
+        dataClassName = await this.getDataClassName(parentId, parentDataClassId);
+        str += `[${element.element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.element.domainType).markdown}:${element.element.label}`;
+      } else {
+        dataModelName = await this.getDataModelName(parentId);
+        dataClassName = await this.getDataClassName(parentId, parentDataClassId);
+        str += `[${element.label}](dm:${dataModelName}|dc:${dataClassName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+      }
     }
 
     if (element.domainType === 'Term') {
-      str += element.terminology + '|' + element.id;
+      const terminologyName = await this.getTerminologyName(parentId);
+      str += `[${element.label}](te:${terminologyName}|${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
     }
+
+    if (element.domainType === 'CodeSet') {
+      str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+    }
+
+    // Not supported at the moment. Keeping for further use.
+    // if (element.domainType === 'Folder') {
+    //  str = `[${element.label}](${baseTypes.find(x => x.id === element.domainType).markdown}:${element.label}`;
+    // }
 
     str += ')';
     return str;
   }
 
+  private async getDataModelName(id: any) {
+    const response = await this.resourcesService.dataModel.get(id).toPromise();
+    return response.body.label;
+  }
 
+  private async getTerminologyName(id: any) {
+    const response = await this.resourcesService.terminology.get(id).toPromise();
+    return response.body.label;
+  }
+
+  private async getDataClassName(dataModelId: any, id: any) {
+    const response = await this.resourcesService.dataClass.get(dataModelId, id).toPromise();
+    return response.body.label;
+  }
 }

@@ -39,15 +39,15 @@ export class AdminAppContainerComponent implements OnInit {
   }
   isAdmin = () => {
     return this.securityHandler.isAdmin();
-  }
+  };
 
   getPendingUsers = () => {
     this.sharedService.pendingUsersCount().subscribe(data => {
       this.pendingUsersCount = data.body.count;
     });
-  }
+  };
 
   logout = () => {
     this.sharedService.logout();
-  }
+  };
 }

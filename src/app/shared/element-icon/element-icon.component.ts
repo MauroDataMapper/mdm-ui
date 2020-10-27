@@ -15,17 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mdm-element-icon',
   templateUrl: './element-icon.component.html',
   styleUrls: ['./element-icon.component.sass']
 })
-export class ElementIconComponent implements OnInit {
+export class ElementIconComponent {
   @Input() element: any;
 
-  constructor() {}
-
-  ngOnInit() {}
+  constructor() { }
 }

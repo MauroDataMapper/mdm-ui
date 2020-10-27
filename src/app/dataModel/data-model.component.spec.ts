@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DataModelComponent } from './data-model.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { DataModelDetailComponent } from './data-model-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
@@ -81,6 +79,7 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs/internal/observable/empty';
 
 describe('DataModelComponent', () => {
   let component: DataModelComponent;
@@ -89,7 +88,6 @@ describe('DataModelComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         MatTabsModule,
         MatDividerModule,
         MatMenuModule,
@@ -116,7 +114,16 @@ describe('DataModelComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, useValue: {}
+          provide: MdmResourcesService,
+          useValue: {
+            session: {
+              // tslint:disable-next-line: deprecation
+              isAuthenticated: () => empty()
+            },
+            tree: {
+              list: jest.fn()
+            }
+          }
         }
       ],
       declarations: [

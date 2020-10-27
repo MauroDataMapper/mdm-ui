@@ -60,6 +60,12 @@ import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 import { ChartsModule } from 'ng2-charts';
 import { FileSizePipe } from '@mdm/directives/file-size.pipe';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { BaseComponent } from '@mdm/shared/base/base.component';
+import { empty } from 'rxjs';
 
 
 describe('DataElementComponent', () => {
@@ -69,7 +75,6 @@ describe('DataElementComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         MatTabsModule,
         MatProgressBarModule,
@@ -85,7 +90,23 @@ describe('DataElementComponent', () => {
         ChartsModule,
         MatFormFieldModule,
         MatTableModule,
-        FormsModule
+        FormsModule,
+        MatDialogModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            dataElement: {
+              // tslint:disable-next-line: deprecation
+              get: () => empty()
+            }
+          }
+        }
       ],
       declarations: [
         DataElementDetailsComponent,
@@ -116,7 +137,8 @@ describe('DataElementComponent', () => {
         ElementLinkListComponent,
         SummaryMetadataTableComponent,
         AttachmentListComponent,
-        DataElementComponent
+        DataElementComponent,
+        BaseComponent
       ]
     })
     .compileComponents();

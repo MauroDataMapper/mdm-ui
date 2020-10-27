@@ -28,7 +28,7 @@ describe('MessageHandlerService', () => {
   }));
 
   it('should be created', () => {
-    const service: MessageHandlerService = TestBed.get(MessageHandlerService);
+    const service: MessageHandlerService = TestBed.inject(MessageHandlerService);
     expect(service).toBeTruthy();
   });
 });

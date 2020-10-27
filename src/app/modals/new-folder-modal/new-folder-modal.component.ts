@@ -34,7 +34,7 @@ export class NewFolderModalComponent implements OnInit {
   okBtn: string;
   cancelBtn: string;
   btnType: string;
-  inputValue: { label: string, groups: any[]};
+  inputValue: { label: string; groups: any[]};
   modalTitle: string;
   message: string;
   inputLabel: string;
@@ -83,6 +83,6 @@ export class NewFolderModalComponent implements OnInit {
         });
       }
     }
-  }
+  };
 
 }

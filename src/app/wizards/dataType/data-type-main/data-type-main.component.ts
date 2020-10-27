@@ -31,14 +31,6 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-type-main.component.sass'],
 })
 export class DataTypeMainComponent implements OnInit {
-  constructor(
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private title: Title,
-    private changeRef: ChangeDetectorRef
-  ) { }
   parentDataModelId: any;
   steps: Step[] = [];
   processing: any;
@@ -63,8 +55,17 @@ export class DataTypeMainComponent implements OnInit {
     referencedDataClass: { id: '' },
     isProcessComplete: false,
   };
+  constructor(
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private title: Title,
+    private changeRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.parentDataModelId = this.stateService.params.parentDataModelId;
 
     if (!this.parentDataModelId) {
@@ -95,7 +96,7 @@ export class DataTypeMainComponent implements OnInit {
       this.changeRef.detectChanges();
     });
 
-    this.title.setTitle(`New Data Type`);
+    this.title.setTitle('New Data Type');
   }
 
   cancelWizard() {
@@ -127,42 +128,54 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-    const resource = {
-      label: this.model.label,
-      description: this.model.description,
-      organisation: this.model.organisation,
-      domainType: this.model.domainType,
+    let resource = {};
+    if (this.model.domainType === 'ModelDataType') {
+      resource = {
+        domainType: this.model.domainType,
+        label: this.model.label,
+        modelResourceId: this.model.referencedTerminology ? this.model.referencedTerminology.id : null,
+        modelResourceDomainType: 'Terminology',
+        classifiers: this.model.classifiers.map((cls) => {
+          return { id: cls.id };
+        }),
+        description: this.model.description
+      };
+    } else {
+      resource = {
+        label: this.model.label,
+        description: this.model.description,
+        organisation: this.model.organisation,
+        domainType: this.model.domainType,
+        referenceDataType: {
+          id: this.model.referencedDataType ? this.model.referencedDataType.id : null
+        },
+        referenceClass: {
+          id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null
+        },
+        terminology: {
+          id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null
+        },
 
-      referenceDataType: {
-        id: this.model.referencedDataType ? this.model.referencedDataType.id : null
-      },
-      referenceClass: {
-        id: this.model.referencedDataClass ? this.model.referencedDataClass.id : null
-      },
-      terminology: {
-        id: this.model.referencedTerminology ? this.model.referencedTerminology.id : null
-      },
-
-      classifiers: this.model.classifiers.map((cls) => {
-        return { id: cls.id };
-      }),
-      enumerationValues: this.model.enumerationValues.map((m) => {
-        return {
-          key: m.key,
-          value: m.value,
-          category: m.category
-        };
-      }),
-      metadata: this.model.metadata.map((m) => {
-        return {
-          key: m.key,
-          value: m.value,
-          namespace: m.namespace
-        };
-      })
-    };
-    const deferred = this.resources.dataType.save(this.model.parent.id, resource);
-    deferred.subscribe(response => {
+        classifiers: this.model.classifiers.map((cls) => {
+          return { id: cls.id };
+        }),
+        enumerationValues: this.model.enumerationValues.map((m) => {
+          return {
+            key: m.key,
+            value: m.value,
+            category: m.category
+          };
+        }),
+        metadata: this.model.metadata.map((m) => {
+          return {
+            key: m.key,
+            value: m.value,
+            namespace: m.namespace
+          };
+        })
+      };
+    }
+    this.resources.dataType.save(this.model.parent.id, resource).subscribe(response => {
       this.messageHandler.showSuccess('Data Type saved successfully.');
       this.stateHandler.Go(
         'DataType',

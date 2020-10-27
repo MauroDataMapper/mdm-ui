@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -29,6 +29,7 @@ import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confi
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
+import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -38,33 +39,11 @@ import { Title } from '@angular/platform-browser';
 export class TerminologyDetailsComponent implements OnInit {
   @Input() mcTerminology: any;
   @Input() hideEditButton: boolean;
-
   @Output() afterSave = new EventEmitter<any>();
+  @Output() openEditFormChanged = new EventEmitter<any>();
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
 
   openEditFormVal: any;
-  @Output() openEditFormChanged = new EventEmitter<any>();
-  @Input() get openEditForm() {
-    return this.openEditFormVal;
-  }
-  set openEditForm(val) {
-    this.openEditFormVal = val;
-    this.openEditFormChanged.emit(this.openEditFormVal);
-  }
-
-  constructor(
-    private sharedService: SharedService,
-    private helpDialogueHandler: HelpDialogueHandlerService,
-    private dialog: MatDialog,
-    private messageHandler: MessageHandlerService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private exportHandler: ExportHandlerService,
-    private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService,
-    private favouriteHandler: FavouriteHandlerService,
-    private title: Title
-  ) {}
-
   securitySection = false;
   processing = false;
   exportError = null;
@@ -84,6 +63,30 @@ export class TerminologyDetailsComponent implements OnInit {
   showPermDelete: boolean;
   errorMessage: string;
   exporting: boolean;
+
+  @Input() get openEditForm() {
+    return this.openEditFormVal;
+  }
+  set openEditForm(val) {
+    this.openEditFormVal = val;
+    this.openEditFormChanged.emit(this.openEditFormVal);
+  }
+
+  constructor(
+    private sharedService: SharedService,
+    private helpDialogueHandler: HelpDialogueHandlerService,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private exportHandler: ExportHandlerService,
+    private securityHandler: SecurityHandlerService,
+    private broadcastSvc: BroadcastService,
+    private favouriteHandler: FavouriteHandlerService,
+    private title: Title,
+    private renderer: Renderer2
+  ) {}
+
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -163,23 +166,29 @@ export class TerminologyDetailsComponent implements OnInit {
     this.securitySection = !this.securitySection;
   };
 
-  export = exporter => {
+  export(exporter) {
     this.exportError = null;
     this.processing = true;
     this.exportedFileIsReady = false;
+    this.exportHandler.exportDataModel([this.mcTerminology], exporter, 'terminologies').subscribe(result => {
+      if (result != null) {
+        this.exportedFileIsReady = true;
+        const label = [this.mcTerminology].length === 1 ? [this.mcTerminology][0].label : 'data_models';
+        const fileName = this.exportHandler.createFileName(label, exporter);
+        const file = new Blob([result.body], { type: exporter.fileType });
+        const link = this.exportHandler.createBlobLink(file, fileName);
 
-    this.exportHandler.exportDataModel([this.mcTerminology], exporter).subscribe(res => {
-          const result = res.body;
-          this.exportedFileIsReady = true;
-
-          this.exportHandler.createBlobLink(result.fileBlob, result.fileName);
-          this.processing = false;
-        }, () => {
-          this.processing = false;
-          this.exportError = 'An error occurred when processing the request.';
-        }
-      );
-  };
+        this.processing = false;
+        this.renderer.appendChild(this.aLink.nativeElement, link);
+      } else {
+        this.processing = false;
+        this.messageHandler.showError('There was a problem exporting the Data Model.', '');
+      }
+    }, error => {
+      this.processing = false;
+      this.messageHandler.showError('There was a problem exporting the Data Model.', error);
+    });
+  }
 
   resetExportError = () => {
     this.exportError = null;
@@ -197,7 +206,7 @@ export class TerminologyDetailsComponent implements OnInit {
           this.stateHandler.reload();
         }
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.broadcastSvc.broadcast('$elementDeleted', () => { });
+        this.broadcastSvc.broadcast('$elementDeleted');
       }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting the Terminology.', error);
@@ -210,7 +219,7 @@ export class TerminologyDetailsComponent implements OnInit {
     }
     this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Are you sure you want to delete this Terminology?`,
+          title: 'Are you sure you want to delete this Terminology?',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p class="marginless">This Terminology will be marked as deleted and will not be viewable by users </p>
@@ -234,7 +243,7 @@ export class TerminologyDetailsComponent implements OnInit {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Terminology?`
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
         }
       }).afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
@@ -242,10 +251,10 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.dialog.open(ConfirmationModalComponent, {
             data: {
-              title: `Confirm permanent deletion`,
+              title: 'Confirm permanent deletion',
               okBtnTitle: 'Confirm deletion',
               btnType: 'warn',
-              message: `<strong>Note: </strong>All its 'Terms' will be deleted <span class='warning'>permanently</span>.`
+              message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
             }
           }).afterClosed().subscribe(result2 => {
             if (result2 != null && result.status === 'ok') {
@@ -268,27 +277,36 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   finalise = () => {
-    this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: 'Are you sure you want to finalise this Terminology?',
-          okBtnTitle: 'Finalise Terminology',
-          btnType: 'accent',
-          message: `<p class='marginless'>Once you finalise a Terminology, you can not edit it anymore!</p>
-                    <p class='marginless'>but you can create new version of it.</p>`
-        }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
-        }
-        this.processing = true;
+    this.resources.terminology.latestModelVersion(this.mcTerminology.id).subscribe(response => {
+      this.dialog.open(FinaliseModalComponent, {
+          data: {
+            title: 'Finalise Terminology',
+            modelVersion: response.body.modelVersion,
+            okBtnTitle: 'Finalise Terminology',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+                      <p>to be finalised with: </p>`
+          }
+        }).afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
 
-        this.resources.terminology.finalise(this.mcTerminology.id, null).subscribe(() => {
-            this.processing = false;
-            this.messageHandler.showSuccess('Terminology finalised successfully.');
-            this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
-          }, error => {
-            this.processing = false;
-            this.messageHandler.showError('There was a problem finalising the Terminology.', error);
+          this.resources.terminology.finalise(this.mcTerminology.id, data).subscribe(() => {
+              this.processing = false;
+              this.messageHandler.showSuccess('Terminology finalised successfully.');
+              this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
+            }, error => {
+              this.processing = false;
+              this.messageHandler.showError('There was a problem finalising the Terminology.', error);
+          });
         });
       });
   };
@@ -303,8 +321,8 @@ export class TerminologyDetailsComponent implements OnInit {
       if (result.body === false) {
         return;
       }
-      this.resources.dataModel.exporters().subscribe(result2 => {
-        this.exportList = result2;
+      this.resources.terminology.exporters().subscribe(result2 => {
+        this.exportList = result2.body;
       },
       error => {
         this.messageHandler.showError('There was a problem loading exporters list.', error);
@@ -319,7 +337,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Terminology_details', {});
+    this.helpDialogueHandler.open('Terminology_details');
   };
 
   showForm() {

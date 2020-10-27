@@ -19,8 +19,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  Inject,
-  forwardRef,
   ChangeDetectorRef
 } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
@@ -32,8 +30,8 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { TermResult } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { Title } from '@angular/platform-browser';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-term',
@@ -41,16 +39,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./term.component.scss']
 })
 export class TermComponent implements OnInit {
-  constructor(
-    private resources: MdmResourcesService,
-    private messageService: MessageService,
-    private sharedService: SharedService,
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private broadcast: BroadcastService,
-    private changeRef: ChangeDetectorRef,
-    private title: Title
-  ) { }
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology = null;
   term: TermResult;
   showSecuritySection: boolean;
@@ -63,37 +52,54 @@ export class TermComponent implements OnInit {
   activeTab: any;
   result: TermResult;
   hasResult = false;
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   showEditForm = false;
   editForm = null;
+  constructor(
+    private resources: MdmResourcesService,
+    private messageService: MessageService,
+    private sharedService: SharedService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private broadcast: BroadcastService,
+    private changeRef: ChangeDetectorRef,
+    private title: Title
+  ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
     this.title.setTitle('Term');
-    this.termDetails(this.stateService.params.id);
+    this.termDetails(this.parentId);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
     this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
   }
 
-  termDetails = async id => {
+  termDetails = id => {
     const terms = [];
+
+    // tslint:disable-next-line: deprecation
     terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, this.stateService.params.id));
-    terms.push(this.resources.catalogueItem.listSemanticLinks(DOMAIN_TYPE.Term, this.stateService.params.id));
+    // tslint:disable-next-line: deprecation
+    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, id));
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;
       this.term = results[1].body;
-      this.term.semanticLinks = results[2].body.items;
+
+      this.resources.catalogueItem.listSemanticLinks(DOMAIN_TYPE.Term, this.term.id).subscribe(resp => {
+        this.term.semanticLinks = resp.body.items;
+      });
 
       this.term.finalised = this.terminology.finalised;
       this.term.editable = this.terminology.editable;
@@ -101,6 +107,7 @@ export class TermComponent implements OnInit {
       this.term.classifiers = this.term.classifiers || [];
       this.term.terminology = this.terminology;
       this.activeTab = this.getTabDetailByName(
+        // tslint:disable-next-line: deprecation
         this.stateService.params.tabView
       );
       this.result = this.term;
@@ -110,9 +117,8 @@ export class TermComponent implements OnInit {
       this.changeRef.detectChanges();
     });
 
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+    // tslint:disable-next-line: deprecation
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
     this.tabSelected(this.activeTab);
   };
 

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -27,7 +27,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
   templateUrl: './bulk-delete-modal.component.html',
   styleUrls: ['./bulk-delete-modal.component.scss'],
 })
-export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
+export class BulkDeleteModalComponent implements AfterViewInit {
   parentDataModel: any;
   parentDataClass: any;
   records: any[] = [];
@@ -46,8 +46,6 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
     private broadcastSvc: BroadcastService,
     private changeRef: ChangeDetectorRef,
   ) { }
-
-  ngOnInit(): void { }
 
   ngAfterViewInit() {
     this.parentDataModel = this.data.parentDataModel;
@@ -83,7 +81,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
       }
     });
     this.changeRef.detectChanges();
-  }
+  };
 
   closeAndRefresh = () => {
     this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -99,7 +97,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
       promise = promise.then(() => {
         this.successCount++;
         this.finalResult[item.id] = {
-          result: `Success`,
+          result: 'Success',
           hasError: false
         };
         if (item.domainType === 'DataClass') {
@@ -114,7 +112,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
       }).catch(() => {
         this.failCount++;
         this.finalResult[item.id] = {
-          result: `Failed`,
+          result: 'Failed',
           hasError: true
         };
       });

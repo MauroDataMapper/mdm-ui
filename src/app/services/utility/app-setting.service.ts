@@ -22,6 +22,7 @@ import { Injectable } from '@angular/core';
 })
 export class AppSettingService {
   appSettings = {};
+  constructor() { }
   add = (key, value) => {
     this.appSettings[key] = value;
   };
@@ -29,7 +30,6 @@ export class AppSettingService {
   getSettings = () => {
     return this.appSettings;
   };
-  constructor() { }
 
   get(key) {
     return this.appSettings[key];

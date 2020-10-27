@@ -15,12 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {TestBed, ComponentFixture} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {StateHandlerService} from './state-handler.service';
-import {UIRouter, StateService, StateDeclaration, StateOrName, RawParams, HrefOptions} from '@uirouter/core';
+import { StateHandlerService } from './state-handler.service';
+import { UIRouter, StateService, StateDeclaration } from '@uirouter/core';
 import { ToastrModule } from 'ngx-toastr';
 
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
 describe('StateHandlerService', () => {
   let spyRouter: UIRouter;
   let currentText = '';   // What the spyRouter.stateService.current.toString() returns.
@@ -33,7 +35,7 @@ describe('StateHandlerService', () => {
       stateService: {
         reload() {
         },
-        href(name: string, params): string {
+        href(name) {
           return name;
         },
         current: {
@@ -47,12 +49,13 @@ describe('StateHandlerService', () => {
      * Calls to the routers href() always return the value of the stateOrName
      * giving a predictable value to be checked in the test.
      */
-    spyOn(spyRouter.stateService, 'href').and.callFake((stateOrName, params) => {
+    spyOn(spyRouter.stateService, 'href').and.callFake((stateOrName) => {
       return stateOrName.toString();
     });
     /**
      * Allow tests to control the result by setting currentText.
      */
+    // tslint:disable-next-line: deprecation
     spyRouter.stateService.current.toString = jasmine.createSpy('toString()').and.callFake(() => currentText);
 
     /**
@@ -64,7 +67,7 @@ describe('StateHandlerService', () => {
       ],
       providers: [
         StateHandlerService,
-        {provide: UIRouter, useValue: spyRouter}
+        { provide: UIRouter, useValue: spyRouter }
       ]
     }).compileComponents();
   });

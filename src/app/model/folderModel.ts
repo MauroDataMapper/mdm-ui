@@ -28,6 +28,7 @@ export class FolderResult {
   lastUpdated: any;
   parentDataModel: string;
   parentDataClass: string;
+  availableActions: any[];
 }
 
 export class SearchResult {
@@ -51,8 +52,6 @@ export class HistoryPropertiesModel {
 }
 
 export class Editable {
-  constructor() {}
-
   deletePending: boolean;
   label: string;
   description: string;
@@ -60,7 +59,8 @@ export class Editable {
   waiting: boolean;
   validationError: boolean;
 
+  constructor() {}
   show() {}
   cancel() {}
-  save(parent: any) {}
+  save() {}
 }

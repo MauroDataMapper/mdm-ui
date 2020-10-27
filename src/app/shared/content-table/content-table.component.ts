@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, ViewChildren, ViewChild, AfterViewInit, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { merge, Observable, forkJoin } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
@@ -37,11 +37,11 @@ export class ContentTableComponent implements AfterViewInit {
   @Input() parentDataClass: any;
   @Input() loadingData: any;
   @Input() isEditable: any;
-  checkAllCheckbox = false;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
+  checkAllCheckbox = false;
   processing: boolean;
   failCount: number;
   total: number;
@@ -122,7 +122,7 @@ export class ContentTableComponent implements AfterViewInit {
 
   refreshGrid = () => {
     this.filterEvent.emit();
-  }
+  };
 
   applyFilter = () => {
     const filter = {};
@@ -162,20 +162,20 @@ export class ContentTableComponent implements AfterViewInit {
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
     this.listChecked();
-  }
+  };
 
   toggleDelete = (record) => {
     this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisibile = 0;
     record.checked = true;
     this.bulkEdit();
-  }
+  };
   toggleEdit = (record) => {
     this.records.forEach(x => (x.checked = false));
     this.bulkActionsVisibile = 0;
     record.checked = true;
     this.bulkDelete();
-  }
+  };
 
   listChecked = () => {
     let count = 0;
@@ -185,7 +185,7 @@ export class ContentTableComponent implements AfterViewInit {
       }
     }
     this.bulkActionsVisibile = count;
-  }
+  };
 
   bulkEdit = () => {
     const dataElementIdLst = [];
@@ -213,12 +213,12 @@ export class ContentTableComponent implements AfterViewInit {
     });
     promise.then(() => {
       this.records.forEach(x => (x.checked = false));
-      this.records = this.records;
+      // this.records = this.records;
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    }).catch(() => { });
-  }
+    }).catch(() =>  console.warn('error') );
+  };
 
   bulkDelete = () => {
     const dataElementIdLst = [];
@@ -246,10 +246,10 @@ export class ContentTableComponent implements AfterViewInit {
     });
     promise.then(() => {
       this.records.forEach(x => (x.checked = false));
-      this.records = this.records;
+      // this.records = this.records;
       this.checkAllCheckbox = false;
       this.bulkActionsVisibile = 0;
       this.filterEvent.emit();
-    }).catch(() => { });
+    }).catch(() => console.log('error'));
   };
 }

@@ -19,14 +19,12 @@ import { Injectable } from '@angular/core';
 import { HelpDialogComponent } from '../search/help-dialog/help-dialog.component';
 import { environment } from '@env/environment';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HelpDialogueHandlerService {
-  constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {}
-
   dialogueMaps: any = {
     Adding_a_data_class: 'Adding_a_data_class',
     Adding_comments: 'Adding_comments',
@@ -58,11 +56,13 @@ export class HelpDialogueHandlerService {
     ExcelDataModelImporterService: 'Importing_DataModels_Using_Excel'
   };
 
+  constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {}
+
   getImporterHelp(importerName: string) {
     return this.importerMaps[importerName];
   }
 
-  open(name: string, position: DialogPosition): void {
+  open(name: string): void {
     if (!this.dialogueMaps[name]) {
       return;
     }
@@ -71,7 +71,7 @@ export class HelpDialogueHandlerService {
     if (wikiLink && wikiLink[wikiLink.length - 1] === '/') {
       wikiLink = wikiLink.substr(0, name.length - 1);
     }
-    wikiLink = wikiLink + '/index.php?title=' + this.dialogueMaps[name];
+    wikiLink = `${wikiLink}/index.php?title=${this.dialogueMaps[name]}`;
     const contentWikiLink: any = wikiLink + '&action=render';
 
     const safeWikiLink: any = this.sanitizer.bypassSecurityTrustResourceUrl(contentWikiLink);

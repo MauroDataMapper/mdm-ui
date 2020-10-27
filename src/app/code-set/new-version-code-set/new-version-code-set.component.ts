@@ -49,11 +49,15 @@ export class NewVersionCodeSetComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.title.setTitle('New Version');
+
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.codeSetId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    this.title.setTitle(`New Version`);
+
+    // tslint:disable-next-line: deprecation
     this.resources.codeSet.get(this.stateService.params.codeSetId).subscribe(response => {
       this.codeSet = response.body;
     });
@@ -76,7 +80,7 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.errors.label = 'Codeset name can not be empty!';
       } else if (this.form.label.trim().toLowerCase() === this.codeSet.label.trim().toLowerCase()) {
         this.errors = this.errors || {};
-        this.errors.label = `The name should be different from the current version name ${this.codeSet.label}`;
+        this.errors.label = 'The name should be different comparing to the current version';
       }
     }
 
@@ -112,9 +116,9 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.messageHandler.showError('There was a problem creating the new Codeset version.', error);
       });
     } else if (this.versionType === 'Version') { // newDocumentationVersion
-      const resources = { moveDataFlows: this.form.moveDataFlows };
+      // const resources = { moveDataFlows: this.form.moveDataFlows };
       this.processing = true;
-      this.resources.codeSet.newBranchModelVersion(this.codeSet.id,{}).subscribe(response => {
+      this.resources.codeSet.newBranchModelVersion(this.codeSet.id, {}).subscribe(response => {
         this.processing = false;
         this.messageHandler.showSuccess('New Model version created successfully.');
         this.stateHandler.Go('codeset', { id: response.body.id }, { reload: true });
@@ -122,14 +126,13 @@ export class NewVersionCodeSetComponent implements OnInit {
         this.processing = false;
         this.messageHandler.showError('There was a problem creating the new Model version.', error);
       });
-    }else if (this.versionType === "Branch"){
-      
-      let resources = {}
-      if(this.form.label !== null && this.form.label !== "")
-      {
-        resources = { branchName: this.form.label };      
-      }    
-  
+    } else if (this.versionType === 'Branch') {
+
+      let resources = {};
+      if (this.form.label !== null && this.form.label !== '') {
+        resources = { branchName: this.form.label };
+      }
+
       this.processing = true;
       this.resources.codeSet.newBranchModelVersion(this.codeSet.id, resources).subscribe(
         response => {

@@ -47,11 +47,11 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
   @Input() grandParentDataClass: any;
   @Input() parentDataClass: any;
   @Input() loadingData: any;
-  checkAllCheckbox = false;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
+  checkAllCheckbox = false;
   processing: boolean;
   failCount: number;
   total: number;
@@ -135,12 +135,12 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
       const value = x.nativeElement.value;
 
       if (value !== '') {
-        filter += name + '=' + value + '&';
+        filter += `${name}=${value}&`;
       }
     });
 
     if (this.filterValue !== null && this.filterValue !== undefined && this.filterName !== null && this.filterName !== undefined) {
-      filter += this.filterName + '=' + this.filterValue + '&';
+      filter += `${this.filterName}=${this.filterValue}&`;
     }
     this.filter = filter.substring(0, filter.length - 1);
     this.filterEvent.emit(filter);
@@ -154,5 +154,5 @@ export class ClassifiedElementsListComponent implements OnInit, AfterViewInit {
 
   filterClick = () => {
     this.hideFilters = !this.hideFilters;
-  }
+  };
 }

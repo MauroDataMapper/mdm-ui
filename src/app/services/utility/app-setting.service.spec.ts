@@ -23,7 +23,7 @@ describe('AppSettingService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: AppSettingService = TestBed.get(AppSettingService);
+    const service: AppSettingService = TestBed.inject(AppSettingService);
     expect(service).toBeTruthy();
   });
 });

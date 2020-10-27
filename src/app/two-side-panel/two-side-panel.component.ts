@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, AfterViewInit, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ViewChild, Renderer2 } from '@angular/core';
 import { trigger, state, transition, animate, style } from '@angular/animations';
 
 @Component({
@@ -31,9 +31,7 @@ import { trigger, state, transition, animate, style } from '@angular/animations'
     ])
   ]
 })
-export class TwoSidePanelComponent implements AfterViewInit {
-
-  constructor(private renderer: Renderer2) { }
+export class TwoSidePanelComponent {
   @ViewChild('showHideLeftPane', { static: false }) showHideLeftPane;
   @ViewChild('resizableLeft', { static: false }) resizableLeft;
   @ViewChild('showHidePaneText', { static: false }) showHidePaneText;
@@ -42,9 +40,8 @@ export class TwoSidePanelComponent implements AfterViewInit {
   state = 'inactive';
   isOpen = true;
 
-  ngAfterViewInit() {
-    const width = window.innerWidth;
-  }
+  constructor(private renderer: Renderer2) { }
+
 
   toggle() {
     this.isOpen = !this.isOpen;

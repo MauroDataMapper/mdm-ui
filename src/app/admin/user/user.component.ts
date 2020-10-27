@@ -73,6 +73,7 @@ export class UserComponent implements OnInit {
     this.title.setTitle('Admin - Add User');
     this.roles = this.role.notPendingArray;
 
+    // tslint:disable-next-line: deprecation
     this.id = this.stateSvc.params.id;
 
     if (this.id) {
@@ -103,7 +104,7 @@ export class UserComponent implements OnInit {
   validateEmail = () => {
     let isValid = true;
     if (!this.user.emailAddress.trim().length) {
-      this.errors.emailAddress = `Email can't be empty!`;
+      this.errors.emailAddress = 'Email can\'t be empty!';
       isValid = false;
     }
 
@@ -114,7 +115,7 @@ export class UserComponent implements OnInit {
       let fname = '';
       let lname = '';
 
-      delimiters.forEach((key, val) => {
+      delimiters.forEach((key) => {
         const partsName = username.replace(/\d+/g, '');
         const num = partsName.indexOf(key);
         if (num > -1) {
@@ -131,7 +132,7 @@ export class UserComponent implements OnInit {
       this.user.lastName = lname;
       this.user.firstName = fname;
     }
-  }
+  };
 
 
   validate = () => {
@@ -161,34 +162,34 @@ export class UserComponent implements OnInit {
   };
 
   save = () => {
-    this.validate();
-
-    const resource = {
-      emailAddress: this.user.emailAddress,
-      firstName: this.user.firstName,
-      lastName: this.user.lastName,
-      organisation: this.user.organisation,
-      jobTitle: this.user.jobTitle,
-      groups: this.user.groups || []
-    };
-    // it's in edit mode
-    if (this.user.id) {
-      // it's in edit mode (update)
-      this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
-        this.messageHandler.showSuccess('User updated successfully.');
-        this.stateHandler.Go('admin.users');
-      }, error => {
-        this.messageHandler.showError('There was a problem updating the user.', error);
-      });
-    } else {
-      // it's in new mode (create)
-      this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
-        this.messageHandler.showSuccess('User saved successfully.');
-        this.stateHandler.Go('admin.users');
-      },
-        error => {
-          this.messageHandler.showError('There was a problem saving the user.', error);
+    if (this.validate()) {
+      const resource = {
+        emailAddress: this.user.emailAddress,
+        firstName: this.user.firstName,
+        lastName: this.user.lastName,
+        organisation: this.user.organisation,
+        jobTitle: this.user.jobTitle,
+        groups: this.user.groups || []
+      };
+      // it's in edit mode
+      if (this.user.id) {
+        // it's in edit mode (update)
+        this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
+          this.messageHandler.showSuccess('User updated successfully.');
+          this.stateHandler.Go('admin.users');
+        }, error => {
+          this.messageHandler.showError('There was a problem updating the user.', error);
         });
+      } else {
+        // it's in new mode (create)
+        this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
+          this.messageHandler.showSuccess('User saved successfully.');
+          this.stateHandler.Go('admin.users');
+        },
+          error => {
+            this.messageHandler.showError('There was a problem saving the user.', error);
+          });
+      }
     }
   };
 
@@ -201,10 +202,10 @@ export class UserComponent implements OnInit {
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
         this.user.groups.push(
-          val.id 
-          //label: val.label
+          val.id
+          // label: val.label
         );
       }
     }
-  }
+  };
 }

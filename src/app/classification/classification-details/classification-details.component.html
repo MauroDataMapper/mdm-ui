@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
                     <span class="dataModelTypeIcon">
                         <i matTooltip="Classifier" class="fas fa-tag"></i>
                     </span>
-                        <mdm-inline-text-edit [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" (input)="onLabelChange($event.target.value)" size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
+                        <mdm-inline-text-edit [readOnly]="false" [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" (input)="onLabelChange($event.target.value)" size="20" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
                   </h4>
                   <span class="inline-block">
                     <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
@@ -74,8 +74,8 @@ SPDX-License-Identifier: Apache-2.0
                           <button mat-stroked-button
                                   color="warn"
                                   type="button"
-                                  matTooltip="Delete"
-                                  aria-label="Delete"
+                                  matTooltip="Delete Classification"
+                                  aria-label="Delete Classification"
                                   class="paddingless"
                                   [disabled]="deleteInProgress || exporting"
                                   (click)="askForPermanentDelete()">
@@ -90,8 +90,8 @@ SPDX-License-Identifier: Apache-2.0
                                         type="button"
                                         class="paddingless"
                                         [disabled]="deleteInProgress || exporting || result.finalised"
-                                        matTooltip="Edit"
-                                        aria-label="Edit"
+                                        matTooltip="Edit Classification"
+                                        aria-label="Edit Classification"
                                         (click)="showForm();">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>

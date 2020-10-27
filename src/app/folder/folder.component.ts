@@ -24,13 +24,14 @@ import { Subscription } from 'rxjs';
 import { SharedService } from '../services/shared.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-folder',
   templateUrl: './folder.component.html',
   styleUrls: ['./folder.component.css'],
 })
-export class FolderComponent implements OnInit, OnDestroy {
+export class FolderComponent extends BaseComponent implements OnInit, OnDestroy {
   result: FolderResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -47,18 +48,22 @@ export class FolderComponent implements OnInit, OnDestroy {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit() {
-    if (!this.stateService.params.id) {
+    if (this.isGuid(this.stateService.params.id) && !this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    this.title.setTitle(`Folder`);
+    this.title.setTitle('Folder');
+    // tslint:disable-next-line: deprecation
     this.folderDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;
@@ -68,6 +73,7 @@ export class FolderComponent implements OnInit, OnDestroy {
     });
     this.afterSave = (result: { body: { id: any } }) => this.folderDetails(result.body.id);
 
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
   }
 

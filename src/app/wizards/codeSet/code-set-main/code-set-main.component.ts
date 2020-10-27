@@ -21,80 +21,61 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { Step } from '@mdm/model/stepModel';
-import { CodeSetStep1Component } from '../code-set-step1/code-set-step1.component';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'mdm-code-set-main',
-  templateUrl: './code-set-main.component.html',
-  styleUrls: ['./code-set-main.component.scss'],
+    selector: 'mdm-code-set-main',
+    templateUrl: './code-set-main.component.html',
+    styleUrls: ['./code-set-main.component.scss'],
 })
 export class CodeSetMainComponent implements OnInit {
-  savingInProgress = false;
-  steps: Step[] = [];
-  model = {
-    label: '',
-    author: '',
-    organisation: '',
-    description: '',
-    classifiers: [],
-    parentFolderId: null,
-    parentFolder: null,
+    savingInProgress = false;
+    model = {
+        label: '',
+        author: '',
+        organisation: '',
+        description: '',
+        classifiers: [],
+        parentFolderId: null,
+        parentFolder: null,
+        terms: [],
+    };
+    constructor(
+        private stateService: StateService,
+        private stateHandler: StateHandlerService,
+        private resources: MdmResourcesService,
+        private messageHandler: MessageHandlerService,
+        private broadcastSvc: BroadcastService,
+        private title: Title
+    ) { }
 
-    terms: [],
-  };
-  constructor(
-    private stateService: StateService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService,
-    private title: Title
-  ) {
-    this.model.parentFolderId = this.stateService.params.parentFolderId;
-    if (!this.stateService.params.parentFolderId) {
-      this.stateHandler.NotFound({ location: false });
+    ngOnInit() {
+      // tslint:disable-next-line: deprecation
+        this.model.parentFolderId = this.stateService.params.parentFolderId;
+        if (!this.model.parentFolderId) {
+            this.stateHandler.NotFound({ location: false });
+        }
+        this.title.setTitle('New Code Set');
     }
 
-    this.resources.folder.get(this.model.parentFolderId).toPromise().then((result) => {
-      result.domainType = 'Folder';
-      this.model.parentFolder = result.body;
-      const step1 = new Step();
-      step1.title = 'Code Set Details';
-      step1.component = CodeSetStep1Component;
-      step1.scope = this;
-      step1.hasForm = true;
-
-      this.steps.push(step1);
-    }).catch((error) => {
-      this.messageHandler.showError('There was a problem loading the Folder.', error);
-    });
-  }
-
-  cancelWizard = () => {
-    this.stateHandler.GoPrevious();
-  };
-  save = () => {
-    const resource = {
-      label: this.model.label,
-      author: this.model.author,
-      organisation: this.model.organisation,
-      description: this.model.description,
-      classifiers: this.model.classifiers,
-      folder: this.model.parentFolderId,
-
-      terms: this.model.terms,
+    save = () => {
+        if (this.model.label && this.model.author && this.model.organisation && this.model.terms.length > 0) {
+            const resource = {
+                label: this.model.label,
+                author: this.model.author,
+                organisation: this.model.organisation,
+                description: this.model.description,
+                classifiers: this.model.classifiers,
+                folder: this.model.parentFolderId,
+                terms: this.model.terms
+            };
+            this.resources.folder.addCondeSets(this.model.parentFolderId, resource).subscribe(result => {
+                this.messageHandler.showSuccess('Code Set created successfully.');
+                this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
+                this.broadcastSvc.broadcast('$reloadFoldersTree');
+            }, (error) => {
+                this.messageHandler.showError('There was a problem creating the Code Set.', error);
+            });
+        }
     };
-    this.resources.folder.addCondeSets(this.model.parentFolderId, resource).toPromise().then((result) => {
-      this.messageHandler.showSuccess('Code Set created successfully.');
-      this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }).catch((error) => {
-      this.messageHandler.showError('There was a problem creating the Code Set.', error);
-    });
-  };
-  ngOnInit() {
-    this.title.setTitle(`New Code Set`);
-  }
 }

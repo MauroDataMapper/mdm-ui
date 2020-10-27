@@ -22,13 +22,14 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
+import { StateService } from '@uirouter/core/';
 
 @Component({
   selector: 'mdm-import',
-  templateUrl: './import.component.html',
-  styleUrls: ['./import.component.sass'],
+  templateUrl: './import-models.component.html',
+  styleUrls: ['./import-models.component.sass'],
 })
-export class ImportComponent implements OnInit {
+export class ImportModelsComponent implements OnInit {
   importers: any;
   importHasError: boolean;
   importErrors: any;
@@ -48,13 +49,17 @@ export class ImportComponent implements OnInit {
 
   formOptionsMap = {
     Integer: 'number',
+    // eslint-disable-next-line id-blacklist
     String: 'text',
     Password: 'password',
+    // eslint-disable-next-line id-blacklist
     Boolean: 'checkbox',
+    // eslint-disable-next-line id-blacklist
     boolean: 'checkbox',
     int: 'number',
     File: 'file'
   };
+  importType: any;
 
   constructor(
     private title: Title,
@@ -62,21 +67,37 @@ export class ImportComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private helpDialogueHandler: HelpDialogueHandlerService,
     private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService
-  ) {}
+    private broadcastSvc: BroadcastService,
+    private stateService: StateService
+  ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
+    this.importType = this.stateService.params.importType ? this.stateService.params.importType : 'dataModels';
     this.title.setTitle('Import');
     this.loadImporters();
   }
 
   loadImporters() {
-    this.resources.dataModel.importers().subscribe(result => {
+    if (this.importType === 'dataModels') {
+      this.resources.dataModel.importers().subscribe(result => {
         this.importers = result.body;
       }, error => {
         this.messageHandler.showError('Can not load importers!', error);
-      }
-    );
+      });
+    } else if (this.importType === 'terminologies') {
+      this.resources.terminology.importers().subscribe(result => {
+        this.importers = result.body;
+      }, error => {
+        this.messageHandler.showError('Can not load importers!', error);
+      });
+    } else if (this.importType === 'codeSets') {
+      this.resources.codeSet.importers().subscribe(result => {
+        this.importers = result.body;
+      }, error => {
+        this.messageHandler.showError('Can not load importers!', error);
+      });
+    }
   }
 
   loadImporterParameters = (selectedItem) => {
@@ -86,9 +107,7 @@ export class ImportComponent implements OnInit {
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
-      selectedItem.name
-    );
+    this.importerHelp = this.helpDialogueHandler.getImporterHelp(selectedItem.name);
 
     const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
     this.resources.importer.get(action).subscribe(res => {
@@ -158,42 +177,46 @@ export class ImportComponent implements OnInit {
       });
     });
 
-    this.resources.dataModel
-      .importModels(namespace, name, version, this.formData)
-      .subscribe(
-        (result: any) => {
-          this.importingInProgress = false;
-          this.importCompleted = true;
-          this.importResult = result;
-          this.importHasError = false;
-          this.importErrors = [];
+    let method = this.resources.dataModel.importModels(namespace, name, version, this.formData);
+    if (this.importType === 'terminologies') {
+      method = this.resources.terminology.importModels(namespace, name, version, this.formData);
+    }
 
-          this.messageHandler.showSuccess(
-            'Data Model(s) imported successfully'
+    method.subscribe((result: any) => {
+      this.importingInProgress = false;
+      this.importCompleted = true;
+      this.importResult = result;
+      this.importHasError = false;
+      this.importErrors = [];
+      this.messageHandler.showSuccess('Models imported successfully!');
+      this.broadcastSvc.broadcast('$reloadDataModels');
+      if (result && result.body.count === 1) {
+        if (this.importType === 'dataModels') {
+          this.stateHandler.Go(
+            'datamodel',
+            { id: result.body.items[0].id },
+            { reload: true, location: true }
           );
-          this.broadcastSvc.broadcast('$reloadDataModels');
-
-          if (result && result.body.count === 1) {
-            this.stateHandler.Go(
-              'datamodel',
-              { id: result.body.items[0].id },
-              { reload: true, location: true }
-            );
-          }
-        },
-        (error) => {
-          if (error.status === 422) {
-            this.importHasError = true;
-            if (error.error.validationErrors) {
-              this.importErrors = error.error.validationErrors.errors;
-            } else if (error.error.errors) {
-              this.importErrors = error.error.errors;
-            }
-          }
-          this.importingInProgress = false;
-          this.messageHandler.showError('Error in import process', '');
+        } else if (this.importType === 'terminologies') {
+          this.stateHandler.Go(
+            'terminology',
+            { id: result.body.items[0].id },
+            { reload: true, location: true }
+          );
         }
-      );
+      }
+    }, (error) => {
+      if (error.status === 422) {
+        this.importHasError = true;
+        if (error.error.validationErrors) {
+          this.importErrors = error.error.validationErrors.errors;
+        } else if (error.error.errors) {
+          this.importErrors = error.error.errors;
+        }
+      }
+      this.importingInProgress = false;
+      this.messageHandler.showError('Error in import process', '');
+    });
   };
 
   getFile = (paramName) => {
@@ -202,14 +225,14 @@ export class ImportComponent implements OnInit {
   };
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Importing_models', {});
+    this.helpDialogueHandler.open('Importing_models');
   };
 
   loadImporterHelp = () => {
-    this.helpDialogueHandler.open(this.importerHelp, {});
+    this.helpDialogueHandler.open(this.importerHelp);
   };
 
-  checkIf(value: any, option: any) {
+  checkIf() {
     // open the devtools and go to the view...code execution will stop here!
     // ..code to be checked... `value` can be inspected now along with all of the other component attributes
   }

@@ -16,18 +16,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, Input, Inject, AfterViewInit, EventEmitter } from '@angular/core';
+import { Component, Input, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'mdm-bulk-edit',
   templateUrl: './bulk-edit-modal.component.html',
   styleUrls: ['./bulk-edit-modal.component.scss'],
 })
-export class BulkEditModalComponent implements OnInit, AfterViewInit {
+export class BulkEditModalComponent implements AfterViewInit {
   @Input() afterSave: any;
 
   parentDataModel: any;
@@ -52,7 +51,6 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
     private messageHandler: MessageHandlerService
   ) { }
 
-  ngOnInit(): void { }
 
   ngAfterViewInit() {
     this.parentDataModel = this.data.parentDataModel;
@@ -102,7 +100,7 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
       promise = promise.then(() => {
         this.successCount++;
         this.finalResult[item.id] = {
-          result: `Success`,
+          result: 'Success',
           hasError: false
         };
 
@@ -120,7 +118,7 @@ export class BulkEditModalComponent implements OnInit, AfterViewInit {
       }).catch(() => {
         this.failCount++;
         this.finalResult[item.id] = {
-          result: `Failed`,
+          result: 'Failed',
           hasError: true
         };
       });

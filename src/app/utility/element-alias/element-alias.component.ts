@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { DataClassResult } from '@mdm/model/dataClassModel';
 
 @Component({
@@ -23,18 +23,18 @@ import { DataClassResult } from '@mdm/model/dataClassModel';
   templateUrl: './element-alias.component.html',
   styleUrls: ['./element-alias.component.sass']
 })
-export class ElementAliasComponent implements OnInit {
+export class ElementAliasComponent {
   @Input() aliases: any[] = [];
+  @Input() readOnly = true;
   @Input() editableForm: any;
   @Input() property: string;
   @Input() element: DataClassResult;
-  typedAlias: string;
   @Input() inEditMode: false;
   @ViewChild('typedAliasId', { static: false }) alias: ElementRef;
+  typedAlias: string;
 
   constructor() { }
 
-  ngOnInit() { }
 
   remove(element) {
     const index = this.aliases.findIndex(alias => alias === element);

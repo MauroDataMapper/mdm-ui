@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<form ngNativeValidate #myForm="ngForm" class="full-width">
-  <div class="mdm--form-input">
-      <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Label</mat-label>
-          <input matInput type="text" name="label" [(ngModel)]="model.label" required="required" />
-      </mat-form-field>
-  </div>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Description</mat-label>
-    <textarea matInput name="description" [(ngModel)]="model.description"></textarea>
-  </mat-form-field>
-</form>
+*/
+export class LoginModel {
+  username: string;
+  password: string;
+}

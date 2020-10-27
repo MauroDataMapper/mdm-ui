@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { DialogPosition } from '@angular/material/dialog';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
@@ -29,6 +28,11 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
+  countPerTable = this.userSettingsHandler.defaultSettings.countPerTable;
+  expandMoreDescription = this.userSettingsHandler.defaultSettings.expandMoreDescription;
+  includeModelSuperseded = this.userSettingsHandler.defaultSettings.includeModelSuperseded;
+  includeDocumentSuperseded = this.userSettingsHandler.defaultSettings.includeDocumentSuperseded;
+  includeDeleted = this.userSettingsHandler.defaultSettings.includeDeleted;
   constructor(
     private messageHandler: MessageHandlerService,
     private helpDialogueService: HelpDialogueHandlerService,
@@ -36,12 +40,6 @@ export class SettingsComponent implements OnInit {
     private title: Title,
     private securityHandler: SecurityHandlerService
   ) { }
-
-  countPerTable = this.userSettingsHandler.defaultSettings.countPerTable;
-  expandMoreDescription = this.userSettingsHandler.defaultSettings.expandMoreDescription;
-  includeModelSuperseded = this.userSettingsHandler.defaultSettings.includeModelSuperseded;
-  includeDocumentSuperseded = this.userSettingsHandler.defaultSettings.includeDocumentSuperseded;
-  includeDeleted = this.userSettingsHandler.defaultSettings.includeDeleted;
 
   ngOnInit() {
     this.loadSettings();
@@ -58,7 +56,7 @@ export class SettingsComponent implements OnInit {
   };
   isAdmin = () => {
     return this.securityHandler.isAdmin();
-  }
+  };
 
   saveSettings = () => {
     this.userSettingsHandler.update('countPerTable', this.countPerTable);
@@ -77,9 +75,6 @@ export class SettingsComponent implements OnInit {
     );
   };
   loadHelp = () => {
-    this.helpDialogueService.open('Preferences', {
-      my: 'right top',
-      at: 'bottom',
-    } as DialogPosition);
-  }
+    this.helpDialogueService.open('Preferences');
+  };
 }

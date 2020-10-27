@@ -26,10 +26,13 @@ module.exports = {
   reporters: [
     'default',
     'jest-junit',
-    ['jest-html-reporter', { 'pageTitle': 'Test Report' }]
+    ['jest-html-reporter', { pageTitle: 'Test Report' }]
   ],
   watchPathIgnorePatterns: [
     'test-report/',
     'junit.xml'
+  ],
+  transformIgnorePatterns: [
+    'node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic)' // Ignore files inside node_modules folder
   ]
-}
+};

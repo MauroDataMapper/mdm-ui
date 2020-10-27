@@ -44,6 +44,8 @@ export interface Node {
     documentationVersion?: string;
     branchName?: string;
     modelVersion?: string;
+    modelId?: string;
+    parentId?: string;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -56,6 +58,10 @@ export class FlatNode {
     get id() {
         return this.node?.id;
     }
+
+    get modelId() {
+      return this.node?.modelId;
+  }
 
     get label() {
         return this.node?.label;
@@ -182,6 +188,7 @@ export class FlatNode {
 
 }
 
+// eslint-disable-next-line no-shadow
 export enum DOMAIN_TYPE {
     Folder = 'Folder',
     DataModel = 'DataModel',

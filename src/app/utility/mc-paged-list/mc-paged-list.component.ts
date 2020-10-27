@@ -32,6 +32,7 @@ export class McPagedListComponent implements OnInit {
   @Input() name: any;
   @Input() mcTitle: any;
   @Output() itemsChange = new EventEmitter();
+  @Input() pageSize: any;
   itemValues: any;
   @Input()
   get items() {
@@ -48,7 +49,7 @@ export class McPagedListComponent implements OnInit {
     this.ngOnInit();
   }
   fetchMethod: any; // when it's 'type=dynamic'
-  @Input() pageSize: any;
+
   editBtnTooltip: any;
   editBtnText: any;
 
@@ -84,7 +85,8 @@ export class McPagedListComponent implements OnInit {
     if (this.type === 'static') {
       const tempValues = [];
       const start = this.pageSize * this.currentPage;
-      for (let i = start; i < start + this.pageSize && i < this.total; i++) {
+
+      for (let i = start; i < start + parseInt(this.pageSize, 10) && i < this.total; i++) {
         tempValues.push(this.displayItems[i]);
       }
       this.displayValues = tempValues;
@@ -149,5 +151,5 @@ export class McPagedListComponent implements OnInit {
     } else {
       this.fetchData();
     }
-  }
+  };
 }

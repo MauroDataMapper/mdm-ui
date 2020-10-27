@@ -43,7 +43,7 @@ describe('SharedService', () => {
   }));
 
   it('should be created', () => {
-    const service: SharedService = TestBed.get(SharedService);
+    const service: SharedService = TestBed.inject(SharedService);
     expect(service).toBeTruthy();
   });
 });

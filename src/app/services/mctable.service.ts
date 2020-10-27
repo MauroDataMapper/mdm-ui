@@ -16,15 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
 export type SortDirection = 'asc' | 'desc' | '';
-
-interface SearchResult {
-  countries: [];
-  total: number;
-}
 
 interface State {
   page: number;
@@ -34,21 +29,17 @@ interface State {
   sortDirection: SortDirection;
 }
 
-function compare(v1, v2) {
-  return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class MctableService {
+  result: any;
   private resultSubject = new Subject<any>();
   private loadingBehaviorSubject = new BehaviorSubject<boolean>(true);
   private searchSubject = new Subject<void>();
-  result: any;
-  private _total$ = new BehaviorSubject<number>(0);
+  private total = new BehaviorSubject<number>(0);
 
-  private _state: State = {
+  private statePage: State = {
     page: 1,
     pageSize: 4,
     searchTerm: '',
@@ -58,13 +49,13 @@ export class MctableService {
 
   constructor(private resourcesService: MdmResourcesService) {
     if (this.result !== null && this.result !== undefined) {
-      this._total$.next(this.result.count);
+      this.total.next(this.result.count);
     }
     this.searchSubject.next();
   }
 
   get total$() {
-    return this._total$.asObservable();
+    return this.total.asObservable();
   }
 
   get loading() {
@@ -72,7 +63,7 @@ export class MctableService {
   }
 
   get page() {
-    return this._state.page;
+    return this.statePage.page;
   }
 
   set page(page: number) {
@@ -80,7 +71,7 @@ export class MctableService {
   }
 
   get pageSize() {
-    return this._state.pageSize;
+    return this.statePage.pageSize;
   }
 
   set pageSize(pageSize: number) {
@@ -88,7 +79,7 @@ export class MctableService {
   }
 
   get searchTerm() {
-    return this._state.searchTerm;
+    return this.statePage.searchTerm;
   }
 
   set searchTerm(searchTerm: string) {
@@ -102,12 +93,6 @@ export class MctableService {
   set sortDirection(sortDirection: SortDirection) {
     this._set({ sortDirection });
   }
-
-  private _set(patch: Partial<State>) {
-    Object.assign(this._state, patch);
-    this.searchSubject.next();
-  }
-
   ResultSendMessage(message: any) {
     this.resultSubject.next(message);
     this.result = message;
@@ -117,4 +102,8 @@ export class MctableService {
     return this.resultSubject.asObservable();
   }
 
+  private _set(patch: Partial<State>) {
+    Object.assign(this.statePage, patch);
+    this.searchSubject.next();
+  }
 }

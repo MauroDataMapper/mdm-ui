@@ -41,7 +41,7 @@ export class MessageHandlerService {
         this.ngToast.success(message);
     }
 
-    showWarning(message, timeout, className) {
+    showWarning(message) {
         this.ngToast.warning(message);
     }
 

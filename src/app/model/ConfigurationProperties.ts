@@ -36,7 +36,3 @@ export class ConfigurationPropertiesResult {
   emailFromName: string;
   siteUrl: string;
 }
-
-class EditableConfigurationProperties {
-
-}

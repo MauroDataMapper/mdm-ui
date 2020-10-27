@@ -32,6 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./code-set.component.scss'],
 })
 export class CodeSetComponent implements OnInit, OnDestroy {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   codeSetModel: CodeSetResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -46,7 +47,6 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   rootCell: any;
   semanticLinks: any[] = [];
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
@@ -57,16 +57,20 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
 
     this.title.setTitle('Code Set');
+    // tslint:disable-next-line: deprecation
     this.codeSetDetails(this.stateService.params.id);
 
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
@@ -78,28 +82,33 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   codeSetDetails(id: any) {
     let arr = [];
     this.resourcesService.codeSet.get(id).subscribe(async (result: { body: CodeSetResult }) => {
-      await this.resourcesService.versionLink.list('codeSets', id).subscribe(response => {
+
+      // Get the guid
+      this.codeSetModel = result.body;
+      this.parentId = this.codeSetModel.id;
+
+      await this.resourcesService.versionLink.list('codeSets', this.parentId).subscribe(response => {
         if (response.body.count > 0) {
           arr = response.body.items;
           for (const val in arr) {
-            if (id !== arr[val].targetModel.id) {
+            if (this.parentId !== arr[val].targetModel.id) {
               this.semanticLinks.push(arr[val]);
             }
           }
         }
       });
 
-      this.codeSetModel = result.body;
-      this.parentId = this.codeSetModel.id;
+
       this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.codeSetModel.editable || this.codeSetModel.finalised;
       if (this.sharedService.isLoggedIn(true)) {
-        this.CodeSetPermissions(id);
+        this.CodeSetPermissions(this.parentId);
       } else {
         this.messageService.FolderSendMessage(this.codeSetModel);
         this.messageService.dataChanged(this.codeSetModel);
       }
 
       this.tabGroup.realignInkBar();
+      // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
       this.tabSelected(this.activeTab);
     });

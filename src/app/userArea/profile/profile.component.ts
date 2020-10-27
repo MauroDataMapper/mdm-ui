@@ -24,11 +24,9 @@ import { SharedService } from '@mdm/services/shared.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageService } from '@mdm/services/message.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
-import { from } from 'rxjs';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from '@env/environment';
-import { DialogPosition } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
@@ -37,6 +35,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
   styleUrls: ['./profile.component.sass']
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
+  @ViewChild('imgCropperComp', { static: true }) imgCropperComp;
   user: UserDetailsResult;
   currentUser: any;
   imageVersion = 1;
@@ -49,7 +48,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   afterSave: (result: { body: { id: any } }) => void;
   backendUrl: string = environment.apiEndpoint;
 
-  @ViewChild('imgCropperComp', { static: true }) imgCropperComp;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -103,7 +101,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messageHandler.showSuccess('User profile image updated successfully.');
       this.imageVersion++;
       this.isImageLoaded = null;
-      this.broadcastService.broadcast('profileImgUndated')
+      this.broadcastService.broadcast('profileImgUndated');
       this.userDetails();
     }, error => {
       this.messageHandler.showError('There was a problem updating the User Details.', error);
@@ -121,7 +119,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   readThis(inputValue: any): void {
     const file: File = inputValue.files[0];
     const myReader: FileReader = new FileReader();
-    myReader.onloadend = e => {
+    myReader.onloadend = () => {
       this.imageSource = myReader.result;
     };
     myReader.readAsDataURL(file);
@@ -134,7 +132,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.imageVersion++;
       this.isImageLoaded = null;
       this.userDetails();
-      this.broadcastService.broadcast('profileImgUndated')
+      this.broadcastService.broadcast('profileImgUndated');
     },
       error => {
         this.messageHandler.showError('There was a problem removing the user profile image.', error);
@@ -148,6 +146,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('User_profile', { my: 'right top', at: 'bottom' } as DialogPosition);
+    this.helpDialogueService.open('User_profile');
   }
 }

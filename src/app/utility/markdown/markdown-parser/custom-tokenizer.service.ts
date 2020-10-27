@@ -16,18 +16,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import marked from 'marked/lib/marked';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomTokenizerService {
-
-  constructor() {
-  }
-
   // to stop the IDE complaining about unknown variable
   rules: any;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() { }
 
   html(html) {
     const cap = this.rules.block.html.exec(html);
@@ -41,5 +38,4 @@ export class CustomTokenizerService {
       };
     }
   }
-
 }

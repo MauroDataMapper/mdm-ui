@@ -23,7 +23,6 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { SemanticLinkHandlerService } from '@mdm/services/handlers/semantic-link-handler.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -36,18 +35,6 @@ import { GridService } from '@mdm/services/grid.service';
   styleUrls: ['./element-link-list.component.sass']
 })
 export class ElementLinkListComponent implements AfterViewInit {
-  constructor(
-    public elementTypes: ElementTypesService,
-    private securityHandler: SecurityHandlerService,
-    private messageHandler: MessageHandlerService,
-    private resources: MdmResourcesService,
-    private stateHandler: StateHandlerService,
-    private semanticLinkHandler: SemanticLinkHandlerService,
-    private changeRef: ChangeDetectorRef,
-    private elementSelector: ElementSelectorDialogueService,
-    private gridService: GridService
-  ) { }
-
   @Input() parent: any;
   @Input() searchCriteria: any;
   @Input() type: any;
@@ -78,6 +65,18 @@ export class ElementLinkListComponent implements AfterViewInit {
   records: any[] = [];
 
   access: any;
+
+  constructor(
+    public elementTypes: ElementTypesService,
+    private securityHandler: SecurityHandlerService,
+    private messageHandler: MessageHandlerService,
+    private resources: MdmResourcesService,
+    private stateHandler: StateHandlerService,
+    private changeRef: ChangeDetectorRef,
+    private elementSelector: ElementSelectorDialogueService,
+    private gridService: GridService
+  ) { }
+
 
   ngAfterViewInit() {
     this.access = this.securityHandler.elementAccess(this.parent);
@@ -205,8 +204,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     return;
   };
 
-  onEdit = (record, index) => { };
-
+  onEdit = () => { };
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
@@ -214,7 +212,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     }
   };
 
-  validate = (record, index) => {
+  validate = (record) => {
     let isValid = true;
     record.edit.errors = [];
 
@@ -245,7 +243,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         linkType: record.edit.linkType,
       };
 
-      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(res => {
+      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(() => {
         if (this.afterSave) {
           this.afterSave(resource);
         }
@@ -319,7 +317,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       domainTypes = ['Term', 'DataType'];
     }
 
-    this.elementSelector.open(domainTypes, notAllowedToSelectIds, 'Element Selector', null).afterClosed().subscribe(selectedElement => {
+    this.elementSelector.open(domainTypes, notAllowedToSelectIds).afterClosed().subscribe(selectedElement => {
       if (!selectedElement) {
         return;
       }
@@ -330,5 +328,5 @@ export class ElementLinkListComponent implements AfterViewInit {
       }
     });
     this.changeRef.detectChanges();
-  }
+  };
 }

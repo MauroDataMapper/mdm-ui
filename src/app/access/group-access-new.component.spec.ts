@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GroupAccessNewComponent } from './group-access-new.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { MatTableModule } from '@angular/material/table';
 import { McSelectComponent } from '@mdm/utility/mc-select/mc-select.component';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -37,7 +36,6 @@ describe('GroupAccessNewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         NgxSkeletonLoaderModule,
         MatTableModule,
         MatPaginatorModule,
@@ -51,9 +49,11 @@ describe('GroupAccessNewComponent', () => {
           provide: MdmResourcesService,
           useValue: {
             securableResource: {
+              // tslint:disable-next-line: deprecation
               getGroupRoles: () => empty()
             },
             session: {
+              // tslint:disable-next-line: deprecation
               isAuthenticated: () => empty()
             }
           }

@@ -34,11 +34,11 @@ export class FolderHandlerService {
   ) {}
 
   askForSoftDelete(id) {
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise(() => {
 
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Are you sure you want to delete this Folder?`,
+          title: 'Are you sure you want to delete this Folder?',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p class="marginless">This Folder will be marked as deleted and will not be viewable by users </p>
@@ -48,7 +48,7 @@ export class FolderHandlerService {
 
       dialog.afterClosed().subscribe(result => {
         if (result?.status !== 'ok') {
-          return promise;
+          return;
         }
         this.delete(id, false);
       });
@@ -57,13 +57,13 @@ export class FolderHandlerService {
   }
 
   askForPermanentDelete(id) {
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve) => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Permanent deletion`,
+          title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Folder?`
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Folder?'
         }
       });
 
@@ -73,10 +73,10 @@ export class FolderHandlerService {
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Confirm permanent deletion`,
+            title: 'Confirm permanent deletion',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
-            message: `<strong>Note: </strong> All its 'Data Models' and 'Folders' will be deleted <span class='warning'>permanently</span>.`
+            message: '<strong>Note: </strong> All its \'Data Models\' and \'Folders\' will be deleted <span class=\'warning\'>permanently</span>.'
           }
         });
 
@@ -93,8 +93,8 @@ export class FolderHandlerService {
   }
 
   delete(id, permanent = false) {
-    return new Promise((resolve, reject) => {
-        this.resoucesService.folder.remove(id, { permanent }).subscribe((result) => {
+    return new Promise((resolve) => {
+        this.resoucesService.folder.remove(id, { permanent }).subscribe(() => {
           this.messageHandler.showSuccess('Successfully Deleted Folder');
           resolve();
         }, error => {

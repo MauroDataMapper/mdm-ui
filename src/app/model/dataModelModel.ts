@@ -44,8 +44,6 @@ export class Classifiers {
 }
 
 export class EditableDataModel {
-  constructor() {}
-
   deletePending: boolean;
   label: string;
   description: string;
@@ -56,10 +54,12 @@ export class EditableDataModel {
   author: any;
   organisation: any;
   validationError: boolean;
+  constructor() { }
 
-  show() {}
-  cancel() {}
-  save(parent: any) {}
+  show() { }
+  cancel() { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  save(parent: any) { }
 }
 
 export class Categories {

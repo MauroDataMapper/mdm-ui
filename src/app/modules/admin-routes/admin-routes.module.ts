@@ -28,7 +28,7 @@ import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.c
 import { UIRouterModule } from '@uirouter/angular';
 import { GroupComponent } from '@mdm/admin/group/group.component';
 
-export const PagesRoutes = {
+export const pageRoutes = {
   states: [
     {
       name: 'appContainer.adminArea',
@@ -88,6 +88,6 @@ export const PagesRoutes = {
 
 @NgModule({
   declarations: [],
-  imports: [UIRouterModule.forChild({ states: PagesRoutes.states })]
+  imports: [UIRouterModule.forChild({ states: pageRoutes.states })]
 })
 export class AdminRoutesModule {}

@@ -32,23 +32,22 @@ import { GridService } from '../services/grid.service';
 })
 
 export class HistoryComponent implements OnInit, AfterViewInit {
-
-  public result: SearchResult;
-  public dataSetResult: any[];
-  displayedColumns: string[] = ['createdBy', 'dateCreated', 'description'];
-  totalItemCount = 0;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  options;
-  elementMap: any[];
   @Input() parent: any;
   @Input() parentType: string;
   @Input() parentId: string;
   @Input() domainType: string;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  public result: SearchResult;
+  public dataSetResult: any[];
+  options;
+  displayedColumns: string[] = ['createdBy', 'dateCreated', 'description'];
+  totalItemCount = 0;
+  elementMap: any[];
   parentVal;
   parentTypeVal;
   parentIdVal;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
   isLoadingResults = true;
 
   records: any[] = [];
@@ -60,7 +59,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   }
 
   public getServerData($event) {
-    this.fetch($event.pageSize, $event.pageIndex, $event.pageIndex, this.sort.active, this.sort.direction);
+    this.fetch($event.pageSize, $event.pageIndex, $event.pageIndex, this.sort?.active, this.sort?.direction);
   }
 
   public getSortedData($event) {
@@ -75,15 +74,15 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.sort?.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.gridService.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.gridService.reloadEvent).pipe(startWith({}), switchMap(() => {
+    merge(this.sort?.sortChange, this.paginator.page, this.gridService.reloadEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       return this.fetch(
         this.paginator.pageSize,
         this.paginator.pageOffset,
-        this.sort.active,
-        this.sort.direction,
+        this.sort?.active,
+        this.sort?.direction,
         this.filter
       );
     }), map((data: any) => {
@@ -99,8 +98,6 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     this.changeRef.detectChanges();
   }
   public fetch(pageSize: number, offset: number, sortBy, sortType, filters): any {
-    // this.isLoading = true;
-
     this.options = {
       pageSize,
       pageIndex: offset,
@@ -111,18 +108,18 @@ export class HistoryComponent implements OnInit, AfterViewInit {
     if (filters) {
       Object.keys(filters).map(key => {
         this.options[key] = filters[key];
-      })
+      });
     }
 
     this.elementMap = this.elementTypeService.getBaseWithUserTypes();
-    let resource = this.elementMap.find(x => x.id === this.parentType);
+    // let resource = this.elementMap.find(x => x.id === this.parentType);
 
-    for (const type in this.elementMap) {
-      if (this.elementMap[type].id === this.parentTypeVal) {
-        resource = this.elementMap[type];
-        break;
-      }
-    }
+    // for (const type in this.elementMap) {
+    //   if (this.elementMap[type].id === this.parentTypeVal) {
+    //     resource = this.elementMap[type];
+    //     break;
+    //   }
+    // }
 
     if (this.parentId) {
       return this.resourcesService.edit.status(this.domainType, this.parentId);

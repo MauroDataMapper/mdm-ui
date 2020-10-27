@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DataClassDetailsComponent } from './data-class-details.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
@@ -49,8 +47,7 @@ describe('DataClassDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
-        // TestModule
+      imports: [
         NgxSkeletonLoaderModule,
         MatTooltipModule,
         MatProgressBarModule,

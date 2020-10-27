@@ -15,23 +15,20 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ObjectEnhancerService {
 
-  constructor() {
-  }
+  constructor() { }
 
   diff(newObj, oldObj) {
-    return Object.keys(newObj)
-      .filter(key => newObj[key] !== oldObj[key])
-      .reduce((res, key) => {
-        res[key] = newObj[key];
-        return res;
-      }, {});
+    return Object.keys(newObj).filter(key => newObj[key] !== oldObj[key]).reduce((res, key) => {
+      res[key] = newObj[key];
+      return res;
+    }, {});
   }
 
   diffCollection(newObj, oldObj) {

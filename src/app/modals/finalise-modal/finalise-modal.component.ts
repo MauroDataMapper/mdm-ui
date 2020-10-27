@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -33,43 +33,65 @@ export class FinaliseModalComponent implements OnInit {
   cancelTitle: string;
   cancelShown: boolean;
   btnType: string;
-  isSubmitDisabled = true;
+  defaultVersion = 'Major';
+  showCustomVersion = false;
+  version = '';
+  versionMajor = '';
+  versionMinor = '';
+  versionPatch = '';
+  currentVersion = '0.0.0';
+  modelVersion = '0.0.0';
 
-  versions: Array<any> = [
-    {name: 'Major', value: 'MAJOR'},
-    {name: 'Minor', value: 'MINOR'},
-    {name: 'Patch', value: 'PATCH'}
-  ];
-
-  constructor(private dialogRef: MatDialogRef<FinaliseModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { 
+  constructor(public dialogRef: MatDialogRef<FinaliseModalComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private changeRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
     this.okTitle = this.data.okBtnTitle ? this.data.okBtnTitle : 'OK';
     this.btnType = this.data.btnType ? this.data.btnType : 'primary';
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
+    this.modelVersion = this.data.modelVersion ? this.data.modelVersion : '0.0.0';
     this.title = this.data.title;
     this.message = this.data.message;
     this.password = '';
     this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
+    this.changeRef.detectChanges();
+
+    this.currentVersion = this.data.modelVersion;
+    const nameSplit = this.modelVersion.split('.');
+    if (nameSplit.length === 3) {
+      this.data.versionList = this.defaultVersion;
+      this.versionMajor = `The 'Major' option will finalise the model with version <strong>${parseInt(nameSplit[0], 10) + 1}</strong>.0.0`;
+      this.versionMinor = `The 'Minor' option will finalise the model with version ${parseInt(nameSplit[0], 10)}.<strong>${parseInt(nameSplit[1], 10) + 1}</strong>.0`;
+      this.versionPatch = `The 'Patch' option will finalise the model with version ${parseInt(nameSplit[0], 10)}.${parseInt(nameSplit[1], 10)}.<strong>${parseInt(nameSplit[2], 10) + 1}</strong>`;
+    } else {
+      this.data.versionList = 'Custom';
+      this.showCustomVersion = true;
+      this.versionMajor = 'Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i> <strong>  2</strong>.0.0';
+      this.versionMinor = 'Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.<strong>1</strong>.0';
+      this.versionPatch = 'Example: 1.0.0  <i class="fas fa-long-arrow-alt-right"></i>  1.0.<strong>1</strong>';
+    }
   }
 
-  onVersionChange()
-  {
-    this.isSubmitDisabled = (this.data.versionNumber === "underfined" && this.data.versionList === "underfined" && this.data.versionNumber === "")
+  onVersionChange() {
+    if (this.data.versionList === 'Custom') {
+      this.showCustomVersion = !this.showCustomVersion;
+    } else {
+      this.showCustomVersion = false;
+    }
   }
 
   ok() {
-    this.dialogRef.close({ status: 'ok' ,  data : this.data });
+    if (this.data.versionList === 'Custom') {
+      this.data.versionNumber = this.version;
+    }
+    this.dialogRef.close({ status: 'ok', data: this.data });
   }
-
   cancel() {
     this.dialogRef.close({ status: 'cancel' });
   }
-
   close() {
     this.dialogRef.close({ status: 'close' });
   }
-
 }

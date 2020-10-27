@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
-import { DialogPosition } from '@angular/material/dialog';
 import { TermResult } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
 
@@ -61,9 +60,6 @@ export class TermRelationshipsComponent implements OnInit {
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Editing_properties', {
-      my: 'right top',
-      at: 'bottom'
-    } as DialogPosition);
+    this.helpDialogueService.open('Editing_properties');
   }
 }

@@ -40,7 +40,7 @@ describe('MctableService', () => {
   }));
 
   it('should be created', () => {
-    const service: MctableService = TestBed.get(MctableService);
+    const service: MctableService = TestBed.inject(MctableService);
     expect(service).toBeTruthy();
   });
 });

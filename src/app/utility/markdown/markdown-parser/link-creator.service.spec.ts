@@ -15,10 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { LinkCreatorService } from './link-creator.service';
-import {ElementTypesService} from '@mdm/services/element-types.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -30,7 +30,7 @@ describe('LinkCreatorService', () => {
       imports: [
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot()
-        ],
+      ],
       providers: [ElementTypesService]
 
     });

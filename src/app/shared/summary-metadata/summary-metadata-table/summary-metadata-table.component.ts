@@ -23,7 +23,7 @@ import {
   QueryList,
   EventEmitter,
   AfterViewInit,
-  ChangeDetectorRef, OnInit
+  ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
@@ -39,9 +39,12 @@ import { SummaryMetadataPopupComponent } from '../summary-metadata-popup/summary
   templateUrl: './summary-metadata-table.component.html',
   styleUrls: ['./summary-metadata-table.component.sass']
 })
-export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
+export class SummaryMetadataTableComponent implements AfterViewInit {
   @Input() parent: any;
   @Input() domainType: any;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChildren('filters') filters: QueryList<MatInput>;
 
   hideFilters = true;
   displayedColumns: string[] = ['name', 'description'];
@@ -51,9 +54,6 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
   filter: {};
   records: any[] = [];
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  @ViewChildren('filters') filters: QueryList<MatInput>;
 
   result: any;
 
@@ -63,7 +63,6 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
     protected matDialog: MatDialog
   ) { }
 
-  ngOnInit() { }
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -72,7 +71,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
-      return this.summaryMetadataFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+      return this.summaryMetadataFetch();
     }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
@@ -91,7 +90,7 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
     });
   }
 
-  summaryMetadataFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
+  summaryMetadataFetch = () => {
     return this.resources.summaryMetadata.list(this.domainType, this.parent.id);
   };
 
@@ -130,8 +129,8 @@ export class SummaryMetadataTableComponent implements AfterViewInit, OnInit {
 
     promise.then(() => {
       this.records = output;
-    }).catch(() => { });
-  }
+    }).catch(() => console.log('error'));
+  };
 
   applyFilter = () => {
     const filter = {};

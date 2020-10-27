@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { Observable, EMPTY, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import * as joint from 'jointjs';
 
 
@@ -53,7 +53,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
         nodesMerge[flow.id] = flow.label;
       }
 
-      if (flow.domainType === "DataClassComponent") {
+      if (flow.domainType === 'DataClassComponent') {
         this.dataClassComponents[flow.id] = flow.label;
       }
     });
@@ -72,20 +72,20 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
           let link: any;
           if (flow.sourceDataClasses.length > 1) {
-            //this.addLink(flow.id + '/' + sourceDataClass.id, sourceDataClass.id, flow.id);
+            // this.addLink(flow.id + '/' + sourceDataClass.id, sourceDataClass.id, flow.id);
             // link the sourceDataClass to the merged dataClassComponent
             link = new joint.shapes.standard.Link({
-              id: flow.id + '/' + sourceDataClass.id,
+              id: `${flow.id}/${sourceDataClass.id}`,
               source: { id: sourceDataClass.id },
               target: { id: flow.id }
             });
           } else {
             link = new joint.shapes.standard.Link({
-              id: flow.id + '/' + targetDataClass.id,
+              id: `${flow.id}/${targetDataClass.id}`,
               source: { id: sourceDataClass.id },
               target: { id: targetDataClass.id }
             });
-            //this.addLink(flow.id + '/' + targetDataClass.id, sourceDataClass.id, targetDataClass.id);
+            // this.addLink(flow.id + '/' + targetDataClass.id, sourceDataClass.id, targetDataClass.id);
           }
 
           // link.id = flow.id as string;
@@ -98,7 +98,7 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       if (flow.sourceDataClasses.length > 1) {
         // link the merged dataClassComponent to the targetDataClass
         const mergedLink = new joint.shapes.standard.Link({
-          id: flow.id + '/' + flow.targetDataClasses[0].id,
+          id: `${flow.id}/${flow.targetDataClasses[0].id}`,
           source: { id: flow.id },
           target: { id: flow.targetDataClasses[0].id }
         });
@@ -114,19 +114,19 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
   delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  
+
   doubleClick = (cellView: joint.dia.CellView) => {
-    
+
     const arrMergedId: any[] = cellView.model.id.toString().split('/');
-    
+
     if (arrMergedId.length > 0) {
 
       this.selDataClassComponentId = arrMergedId[0];
     }
 
     const result: any = {
-      flowId: this.flowId as string,
-      flowComponentId: this.selDataClassComponentId as string,
+      flowId: this.flowId,
+      flowComponentId: this.selDataClassComponentId,
       parent: {
         id: this.parentId
       },
@@ -135,50 +135,47 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
 
     this.clickSubject.next(result);
     this.clickSubject.complete();
-  }
+  };
 
   singleClick = (cellView: joint.dia.CellView) => {
-    
+
     if (cellView.model.id !== undefined && cellView.model.id !== null) {
 
       const arrMergedId: any[] = cellView.model.id.toString().split('/');
-      var foundDataClassComponents: any = this.dataClassComponents;
+      let foundDataClassComponents: any = this.dataClassComponents;
 
       if (arrMergedId.length > 0) {
 
         this.selDataClassComponentId = arrMergedId[0];
-        //Check if this id is a DataClassComponent
-        foundDataClassComponents = Object.keys(this.dataClassComponents).filter(function (key) {
+        // Check if this id is a DataClassComponent
+        foundDataClassComponents = Object.keys(this.dataClassComponents).filter(() => {
           return foundDataClassComponents[arrMergedId[0]];
         });
 
         if (foundDataClassComponents !== undefined && foundDataClassComponents !== null && foundDataClassComponents.length > 0) {
           const options = { sort: 'label', order: 'asc', all: true };
           this.resourcesService.dataFlow.dataClassComponents.get(this.parentId, this.flowId, arrMergedId[0], options).subscribe(result => {
-              if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-                this.changeComponent(result.body);
-              }
-            }),
-            (error) => {
-              console.log('cell pointerclick ' + cellView.model.id + ' was clicked');
-            };
+            if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+              this.changeComponent(result.body);
+            }
+          });
         } else {
           this.changeComponent(null);
         }
       }
     }
-  }
+  };
 
   configurePaper(paper: joint.dia.Paper): void {
-    let clicks: number = 0;
-    let doubleClick: boolean = false;
-    
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+    let clicks = 0;
+    let doubleClick = false;
+
+    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView) => {
       this.doubleClick(cellView);
     });
 
-    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
-     
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView) => {
+
       clicks++;
       if (clicks === 1) {
 
@@ -211,21 +208,19 @@ export class DataflowDataclassDiagramService extends BasicDiagramService {
       },
       newMode: 'dataflow-model'
     };
-    // console.log(result);
     this.goUpSubject.next(result);
     this.goUpSubject.complete();
   }
 
   updateDataClassComponentLevel = (data) => {
-    
+
     const options = { sort: 'label', order: 'asc', all: true };
     this.resourcesService.dataFlow.dataClassComponents.update(this.parentId, this.flowId, this.selDataClassComponentId, data, options).subscribe(result => {
-        if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
-          this.changeComponent(result.body);
-        }
-      }),
-      (error) => {
-        this.messageHandler.showError('There was a problem updating the Data Class Component.', error);
-      };
-  }
+      if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+        this.changeComponent(result.body);
+      }
+    }, (error) => {
+      this.messageHandler.showError('There was a problem updating the Data Class Component.', error);
+    });
+  };
 }

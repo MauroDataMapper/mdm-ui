@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 
 @Component({
@@ -37,7 +37,7 @@ export class ComparisonTreeComponent implements OnInit {
   constructor(private broadcastSvc: BroadcastService) {}
 
   ngOnInit() {
-    this.broadcastSvc.subscribe(this.treeName + '-nodeSelected', data => {
+    this.broadcastSvc.subscribe(`${this.treeName}-nodeSelected`, data => {
       if (this.val && data.node.id !== this.val.id && this.val.selected) {
         this.val.selected = false;
       }
@@ -52,7 +52,7 @@ export class ComparisonTreeComponent implements OnInit {
     }
   }
 
-  deleteMe = index => {
+  deleteMe = () => {
     if (this.parentData) {
       const itemIndex = this.parentData.indexOf(this.val);
       this.parentData.splice(itemIndex, 1);
@@ -73,11 +73,11 @@ export class ComparisonTreeComponent implements OnInit {
 
   nodeClickFn = () => {
     this.val.selected = !this.val.selected;
-    this.broadcastSvc.broadcast(this.treeName + '-nodeSelected', {
+    this.broadcastSvc.broadcast(`${this.treeName}-nodeSelected`, {
       node: this.val
     });
     if (this.nodeClick) {
       this.nodeClick(this.val);
     }
-  }
+  };
 }

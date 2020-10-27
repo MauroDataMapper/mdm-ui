@@ -21,13 +21,14 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-type',
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent implements OnInit {
+export class DataTypeComponent extends BaseComponent implements OnInit {
   dataType: any;
   dataModelId: any;
   dataModel: any;
@@ -46,14 +47,19 @@ export class DataTypeComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private resource: MdmResourcesService,
     private sharedService: SharedService
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.id = this.stateService.params.id;
+    // tslint:disable-next-line: deprecation
     this.dataModelId = this.stateService.params.dataModelId;
+    // tslint:disable-next-line: deprecation
     this.tabView = this.stateService.params.tabView;
 
-    if (!this.id || !this.dataModelId) {
+    if (this.isGuid(this.id) && (!this.id || !this.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
@@ -64,6 +70,11 @@ export class DataTypeComponent implements OnInit {
 
     this.resource.dataType.get(this.dataModelId, this.id).subscribe(result => {
       const data = result.body;
+
+      // If the Id is a path get the actual Id
+      this.dataModelId = data.model;
+      this.id = data.id;
+
       this.dataType = data;
       this.dataType.classifiers = this.dataType.classifiers || [];
       this.loadingData = false;
@@ -118,5 +129,5 @@ export class DataTypeComponent implements OnInit {
   openEditForm = (formName: any) => {
     this.showEditForm = true;
     this.editForm = formName;
-  }
+  };
 }

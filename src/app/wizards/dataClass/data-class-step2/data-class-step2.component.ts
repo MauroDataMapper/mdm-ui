@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import {
   Component,
   OnInit,
-  Output,
   ViewChild,
   ViewChildren,
   ElementRef,
@@ -44,6 +43,10 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class DataClassStep2Component
   implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
+  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
   step: any;
   model: any;
   scope: any;
@@ -62,11 +65,6 @@ export class DataClassStep2Component
   pageSizeOptions = [5, 10, 20, 50];
 
   formChangesSubscription: Subscription;
-
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
-  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
-  @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
-  @ViewChildren(MatSort) sort = new QueryList<MatSort>();
 
   filterEvent = new EventEmitter<string>();
   filter: string;
@@ -137,7 +135,7 @@ export class DataClassStep2Component
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
     for (const id in this.model.selectedDataClassesMap) {
-      if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
+      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataClassesMap, 'id')) {
         const element = this.model.selectedDataClassesMap[id];
         this.model.selectedDataClasses.push(element.node);
       }
@@ -149,6 +147,7 @@ export class DataClassStep2Component
     this.model.selectedDataClassesMap = checkedMap;
     this.createSelectedArray();
     this.dataSource.data = this.model.selectedDataClasses;
+    // eslint-disable-next-line no-underscore-dangle
     this.dataSource._updateChangeSubscription();
     this.validate();
     this.totalSelectedItemsCount = this.model.selectedDataClasses.length;
@@ -218,7 +217,7 @@ export class DataClassStep2Component
 
     promise.then(() => {
       this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }).catch(() => { }).finally(() => {
+    }).catch(() => console.warn('error')).finally(() => {
       this.processing = false;
       this.step.submitBtnDisabled = false;
       this.isProcessComplete = true;

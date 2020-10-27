@@ -24,7 +24,6 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { DataModelResult } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -33,6 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-model.component.scss']
 })
 export class DataModelComponent implements OnInit, OnDestroy {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataModel: DataModelResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -48,8 +48,6 @@ export class DataModelComponent implements OnInit, OnDestroy {
   rootCell: any;
   semanticLinks: any[] = [];
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
@@ -60,18 +58,23 @@ export class DataModelComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
 
     this.title.setTitle('Data Model');
+
+    // tslint:disable-next-line: deprecation
     this.dataModelDetails(this.stateService.params.id);
 
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
@@ -84,6 +87,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
     let arr = [];
     this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
       this.dataModel = result.body;
+
+      id = result.body.id;
+
       this.isEditable = this.dataModel['availableActions'].includes('update');
       this.parentId = this.dataModel.id;
 
@@ -106,13 +112,14 @@ export class DataModelComponent implements OnInit, OnDestroy {
       }
 
       this.tabGroup.realignInkBar();
+      // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
       this.tabSelected(this.activeTab);
     });
   }
 
-  DataModelPermissions(id: any) {
-    this.resourcesService.security.permissions(DOMAIN_TYPE.DataModel, id).subscribe((permissions: { body: { [x: string]: any } }) => {
+  async DataModelPermissions(id: any) {
+   await this.resourcesService.security.permissions('dataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach(attrname => {
         this.dataModel[attrname] = permissions.body[attrname];
       });

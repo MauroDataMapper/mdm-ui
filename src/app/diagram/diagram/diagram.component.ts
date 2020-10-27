@@ -150,7 +150,7 @@ export class DiagramComponent implements OnInit {
       gridSize: 1,
       attributes: {
         'font-family': '"Nunito Sans", sans-serif',
-      } /*,
+      } /* ,
       This doesn't yet work with the typescript definition...
       interactive: {
         stopDelegation: false
@@ -178,13 +178,13 @@ export class DiagramComponent implements OnInit {
       this.svgPanZoom.zoom(this.diagramComponent.svgPanZoom.getZoom());
       this.svgPanZoom.pan(this.diagramComponent.svgPanZoom.getPan());
     }
-    this.paper.on('blank:pointerdown', (evt, x, y) => {
+    this.paper.on('blank:pointerdown', () => {
       this.svgPanZoom.enablePan();
     });
 
-    this.paper.on('cell:pointerup blank:pointerup', (cellView: joint.dia.CellView, event) => {
+    this.paper.on('cell:pointerup blank:pointerup', (cellView: joint.dia.CellView) => {
       this.svgPanZoom.disablePan();
-      this.diagramService.onDrag(cellView, event);
+        this.diagramService.onDrag(cellView);
     });
 
     this.diagramService.getClickSubject().subscribe((result) => {
@@ -217,7 +217,7 @@ export class DiagramComponent implements OnInit {
     panZoomControls.remove();
 
     // 80 is the margin on the graph layout algorithm
-    svg.setAttribute('viewBox', '0 0 ' + (width + 80) + ' ' + (height + 80));
+    svg.setAttribute('viewBox', `0 0 ${width + 80} ${height + 80}`);
     svg.setAttribute('style', 'font-family: sans-serif;');
     this.jointjsDiv.nativeElement.append(svg);
     this.downloadService.downloadSVGAsPNG(svg, 'diagram.png', scale, width, height);
@@ -249,7 +249,7 @@ export class DiagramComponent implements OnInit {
       } else {
         this.diagramService.layoutNodes();
       }
-      
+
       this.resetPaper();
     });
   }
@@ -277,7 +277,7 @@ export class DiagramComponent implements OnInit {
   edit = () => {
     this.isEdit = !this.isEdit;
     // this.isSearch = !this.isSearch;
-  }
+  };
 
   save = () => {
     switch (this.mode) {
@@ -292,5 +292,5 @@ export class DiagramComponent implements OnInit {
       default:
         break;
     }
-  }
+  };
 }

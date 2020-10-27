@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ContentTableComponent } from './content-table.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
@@ -51,8 +49,7 @@ describe('ContentTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[
-        // TestModule
+      imports: [
         NgxSkeletonLoaderModule,
         MatTooltipModule,
         MatMenuModule,
@@ -89,13 +86,13 @@ describe('ContentTableComponent', () => {
         ContentTableComponent
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContentTableComponent);
     component = fixture.componentInstance;
-    component.parentDataModel = {editable:true,finalised:false};
+    component.parentDataModel = { editable: true, finalised: false };
     fixture.detectChanges();
   });
 

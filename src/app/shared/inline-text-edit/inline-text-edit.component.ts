@@ -25,6 +25,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       useExisting: forwardRef(() => InlineTextEditComponent),
       multi: true
     }
@@ -34,13 +35,13 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Output() editableFormChanged = new EventEmitter<any>();
 
   @Input() inEditMode: boolean;
+  @Input() readOnly = true;
   @Input() isRequired: boolean;
   @Input() styleCss: any;
   @Input() name: any;
-
+  val: any;
   constructor() { }
 
-  val: any;
 
   writeValue(obj: any): void {
     this.ngValue = obj;
@@ -49,7 +50,9 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   registerOnChange(fn: any): void {
     this.propChange = fn;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   registerOnTouched(fn: any): void { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setDisabledState?(isDisabled: boolean): void { }
 
   ngOnInit() {

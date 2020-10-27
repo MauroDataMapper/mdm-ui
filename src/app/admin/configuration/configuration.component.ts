@@ -50,6 +50,7 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     this.getConfig();
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
@@ -115,7 +116,7 @@ export class ConfigurationComponent implements OnInit {
         if (error.status === 418) {
           this.indexingStatus = 'success';
           if (error.error && error.error.timeTaken) {
-            this.indexingTime = 'in ' + error.error.timeTaken;
+            this.indexingTime = `in ${error.error.timeTaken}`;
           }
         } else {
           this.indexingStatus = 'error';

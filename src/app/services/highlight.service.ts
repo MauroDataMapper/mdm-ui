@@ -34,7 +34,7 @@ import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-sass';
 import 'prismjs/components/prism-scss';
 
-declare var Prism: any;
+declare let prism: any;
 
 @Injectable()
 export class HighlightService {
@@ -43,7 +43,7 @@ export class HighlightService {
 
     highlightAll() {
         if (isPlatformBrowser(this.platformId)) {
-            Prism.highlightAll();
+          prism.highlightAll();
         }
     }
 }

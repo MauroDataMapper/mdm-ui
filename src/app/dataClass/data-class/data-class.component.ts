@@ -25,13 +25,15 @@ import { DataClassResult } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-class',
   templateUrl: './data-class.component.html',
   styleUrls: ['./data-class.component.sass']
 })
-export class DataClassComponent implements OnInit {
+export class DataClassComponent extends BaseComponent implements OnInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -45,7 +47,6 @@ export class DataClassComponent implements OnInit {
   parentDataModel = {};
   isEditable: boolean;
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -54,33 +55,43 @@ export class DataClassComponent implements OnInit {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title
-  ) {}
+  ) {
+    super();
+  }
 
-  async ngOnInit() {
-    if (!this.stateService.params.id || !this.stateService.params.dataModelId) {
+  ngOnInit() {
+    // tslint:disable-next-line: deprecation
+    if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.parentDataClass = { id: this.stateService.params.dataClassId };
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
 
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn() ;
 
+    // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
-    this.title.setTitle(`Data Class`);
+    this.title.setTitle('Data Class');
+    // tslint:disable-next-line: deprecation
     this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
         this.showSearch = message;
     });
     this.afterSave = (result: { body: { id: any } }) =>
+    // tslint:disable-next-line: deprecation
       this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, result.body.id);
   }
 
@@ -106,21 +117,25 @@ export class DataClassComponent implements OnInit {
   dataClassDetails(dataModelId: any, parentDataClassId, id) {
     this.resourcesService.dataClass.getChildDataClass(dataModelId, parentDataClassId, id).subscribe((result: { body: DataClassResult }) => {
         this.dataClass = result.body;
+
+        // Get the GUIDs, because we may have path instead of GUID
+        parentDataClassId = result.body.id;
+        dataModelId = result.body.model;
+
         this.dataClass.parentDataModel = dataModelId;
         this.dataClass.parentDataClass = parentDataClassId;
         this.parentDataModel = {
           id: dataModelId,
           finalised: this.dataClass.breadcrumbs[0].finalised
         };
-        this.isEditable = this.dataClass['availableActions'].includes('update');
+        this.isEditable = this.dataClass['availableActions']?.includes('update');
         this.messageService.FolderSendMessage(this.dataClass);
         this.messageService.dataChanged(this.dataClass);
 
         if (this.dataClass) {
           this.tabGroup.realignInkBar();
-          this.activeTab = this.getTabDetailByName(
-            this.stateService.params.tabView
-          ).index;
+          // tslint:disable-next-line: deprecation
+          this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
           this.tabSelected(this.activeTab);
         }
       });

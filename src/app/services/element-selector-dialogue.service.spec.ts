@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { TestBed } from '@angular/core/testing';
-
 import { ElementSelectorDialogueService } from './element-selector-dialogue.service';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
@@ -28,7 +26,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 describe('ElementSelectorDialogueService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [
-      // TestModule
       NgxSkeletonLoaderModule,
       MatTooltipModule,
       MatDialogModule
@@ -40,7 +37,7 @@ describe('ElementSelectorDialogueService', () => {
   }));
 
   it('should be created', () => {
-    const service: ElementSelectorDialogueService = TestBed.get(ElementSelectorDialogueService);
+    const service: ElementSelectorDialogueService = TestBed.inject(ElementSelectorDialogueService);
     expect(service).toBeTruthy();
   });
 });

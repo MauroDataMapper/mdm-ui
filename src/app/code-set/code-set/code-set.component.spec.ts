@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeSetComponent } from './code-set.component';
-import { TestModule } from '@mdm/modules/test/test.module';
 import { CodeSetDetailsComponent } from '../code-set-details/code-set-details.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -73,7 +72,6 @@ describe('CodeSetComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
         MatTabsModule,
         MatMenuModule,
         MatOptionModule,

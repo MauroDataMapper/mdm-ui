@@ -28,6 +28,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 })
 export class SecurityHandlerService {
   loginModalDisplayed = false;
+  // tslint:disable-next-line: variable-name
   in_AuthLoginRequiredCheck = false;
 
   constructor(
@@ -91,14 +92,12 @@ export class SecurityHandlerService {
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-  async login(username, password) {
+  async login(resource) {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
-    const resource = { username, password };
+    // const resource = { username, password };
     const response = await this.resources.security.login(resource).toPromise();
-    const admin = await this.resources.session
-      .isApplicationAdministration()
-      .toPromise();
+    const admin = await this.resources.session.isApplicationAdministration().toPromise();
     const adminResult = admin.body;
     const result = response.body;
     const currentUser = {
@@ -192,7 +191,7 @@ export class SecurityHandlerService {
   }
 
   isCurrentSessionExpired(): any {
-    return new Promise((resolve, error) => {
+    return new Promise((resolve) => {
       if (this.getCurrentUser()) {
         this.isAuthenticated().subscribe(
           (result) => {
@@ -233,25 +232,25 @@ export class SecurityHandlerService {
   dataModelAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showFinalise: element.availableActions.includes('finalise'),
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update'),
     };
   }
 
   termAccess(element) {
     return {
       showEdit: element.availableActions.includes('update') && !element.finalised,
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showNewVersion: element.availableActions.includes('update') && element.finalised,
-      showFinalise: element.availableActions.includes('update') && !element.finalised,
+      showFinalise: element.availableActions.includes('finalise'),
       showPermission: element.availableActions.includes('update') || this.isAdmin(),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
@@ -266,54 +265,54 @@ export class SecurityHandlerService {
   dataElementAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink: element.availableActions.includes('update')
     };
   }
 
   dataClassAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
-      canAddLink: element.availableActions.includes('update') && !element.finalised
+      canAddLink: element.availableActions.includes('update')
     };
   }
 
   dataTypeAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),
-      showEditDescription: element.availableActions.includes('editDescription'),
+      canEditDescription: element.availableActions.includes('editDescription'),
       showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
 
-      canAddLink: element.availableActions.includes('update') && !element.finalised,
+      canAddLink: element.availableActions.includes('update'),
     };
   }
 
   datFlowAccess(dataFlow) {
     return {
       showEdit: dataFlow.availableActions.includes('update'),
-      canAddAnnotation: dataFlow.availableActions.includes('update'),
+      canAddAnnotation: dataFlow.availableActions.includes('comment'),
       canAddMetadata: dataFlow.availableActions.includes('update')
     };
   }
 
   elementAccess(element) {
-    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet') {
+    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceData') {
       return this.dataModelAccess(element);
     }
 

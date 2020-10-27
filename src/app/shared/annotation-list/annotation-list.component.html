@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex  fxLayout="row" fxFlex="40" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="start center">
             <h4 class="marginless">Comments</h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+        <div *ngIf="canAddAnnotation" fxFlex fxLayout="row" fxFlex="60" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
             <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.canAddAnnotation" class="mt-1">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Add Comment
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                     <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
                     <div style="margin-left: 5px;"><mdm-markdown-text-area [description]="record.description" [inEditMode]="false" [rows]="'4'"></mdm-markdown-text-area></div>
-                    <div>
+                    <div *ngIf="canAddAnnotation">
                         <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
                             <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
                         </button>
@@ -104,7 +104,7 @@ SPDX-License-Identifier: Apache-2.0
 
                     <div style="margin-top: 5px; float: right">
                         <button mat-button color="warn" (click)="cancelEdit(record,i)" class="mr-1">Cancel</button>
-                        <button mat-flat-button color="primary" class="custom" (click)="saveParent(record,i)">Submit comment</button>
+                        <button mat-flat-button color="primary" class="custom" (click)="saveParent(record)">Submit comment</button>
                     </div>
                 </div>
             </td>

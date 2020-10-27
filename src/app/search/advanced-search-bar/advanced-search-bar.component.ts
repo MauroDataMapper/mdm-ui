@@ -30,7 +30,6 @@ import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators'
   styleUrls: ['./advanced-search-bar.component.sass']
 })
 export class AdvancedSearchBarComponent implements OnInit {
-  displayedColumns: string[] = ['label'];
 
   @Input() placeholder: string;
   @Input() doNotDisplayModelPathStatus: boolean;
@@ -44,6 +43,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   @ViewChild('searchInputControl', { static: true })
   searchInputControl: ElementRef;
 
+  displayedColumns: string[] = ['label'];
   searchTerm = new Subject<string>();
 
   pageIndex: any;
@@ -94,13 +94,14 @@ export class AdvancedSearchBarComponent implements OnInit {
   constructor(
     private helpDialogueService: HelpDialogueHandlerService,
     private contextSearchHandler: ContentSearchHandlerService,
-    private resouces: MdmResourcesService
+    private resources: MdmResourcesService
   ) { }
 
   ngOnInit() {
     this.advancedSearch = false;
 
-    this.resouces.classifier.list().subscribe(result => {
+
+    this.resources.classifier.list().subscribe(result => {
       this.classifications = result.body.items;
     });
 
@@ -143,7 +144,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   }
 
   loadHelp = () => {
-    this.helpDialogueService.open('Search_Help', { right: '150' });
+    this.helpDialogueService.open('Search_Help');
   };
 
   toggleAdvancedSearch() {
@@ -256,5 +257,5 @@ export class AdvancedSearchBarComponent implements OnInit {
     }
 
     this.search(true);
-  }
+  };
 }

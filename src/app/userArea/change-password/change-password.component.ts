@@ -29,6 +29,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./change-password.component.sass']
 })
 export class ChangePasswordComponent implements OnInit {
+  @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
   user: UserDetailsResult;
   currentUser: any;
   oldPassword: string;
@@ -37,7 +38,6 @@ export class ChangePasswordComponent implements OnInit {
   message: string;
   afterSave: (result: { body: { id: any } }) => void;
 
-  @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
   backendUrl: string = environment.apiEndpoint;
 
   constructor(
@@ -75,7 +75,7 @@ export class ChangePasswordComponent implements OnInit {
         this.message = '';
         this.changePasswordForm.reset();
       }, error => {
-        this.message = 'Error : ' + error.error.errors[0].message;
+        this.message = `Error : ${error.error.errors[0].message}`;
     });
   };
 }

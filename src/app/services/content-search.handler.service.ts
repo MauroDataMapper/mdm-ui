@@ -20,7 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from './validator.service';
 import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
-import { merge, Observable, of as observableOf, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'

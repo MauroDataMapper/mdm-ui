@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
     color="warn"
     type="button"
     *ngIf="!hideDelete && !record.inEdit && !record.inDelete"
-    (click)="deleteClicked(record, index)"
+    (click)="deleteClicked(record)"
     matTooltip="Delete"
     aria-label="Delete">
     <i class="far fa-trash-alt"></i>
@@ -76,7 +76,7 @@ SPDX-License-Identifier: Apache-2.0
     color="warn"
     type="button"
     *ngIf="record.inDelete"
-    (click)="deleteCancelled(record, index)"
+    (click)="deleteCancelled(record)"
     matTooltip="Cancel deletion"
     aria-label="Cancel deletion">
     <i class="fas fa-times"></i>

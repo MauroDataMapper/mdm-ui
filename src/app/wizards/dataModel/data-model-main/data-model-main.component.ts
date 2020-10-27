@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { DataModelStep1Component } from '../data-model-step1/data-model-step1.component';
 import { DataModelStep2Component } from '../data-model-step2/data-model-step2.component';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -33,18 +32,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./data-model-main.component.sass']
 })
 export class DataModelMainComponent implements OnInit {
-
-  constructor(
-    private broadcastSvc: BroadcastService,
-    private stateHandler: StateHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private stateService: StateService,
-    private title: Title
-  ) { }
   isLinear = false;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
   parentFolderId: any;
@@ -53,9 +41,18 @@ export class DataModelMainComponent implements OnInit {
     metadata: [],
     classifiers: []
   };
+  constructor(
+    private broadcastSvc: BroadcastService,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private stateService: StateService,
+    private title: Title
+  ) { }
 
   ngOnInit() {
-    this.title.setTitle(`New Data Model`);
+    this.title.setTitle('New Data Model');
+    // tslint:disable-next-line: deprecation
     this.parentFolderId = this.stateService.params.parentFolderId;
     this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
       result.domainType = 'Folder';
@@ -110,12 +107,12 @@ export class DataModelMainComponent implements OnInit {
       resource.dialect = this.model.dialect;
     }
 
-    let queryStringParams = null;
-    if (this.model.selectedDataTypeProvider) {
-      queryStringParams = {
-        defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
-      };
-    }
+    // let queryStringParams = null;
+    // if (this.model.selectedDataTypeProvider) {
+    //   queryStringParams = {
+    //     defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
+    //   };
+    // }
 
     this.resources.dataModel.addToFolder(this.parentFolderId, resource).subscribe(response => {
       this.messageHandler.showSuccess('Data Model saved successfully.');
@@ -125,5 +122,5 @@ export class DataModelMainComponent implements OnInit {
       error => {
         this.messageHandler.showError('There was a problem saving the Data Model.', error);
       });
-  }
+  };
 }

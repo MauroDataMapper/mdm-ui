@@ -58,6 +58,11 @@ import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-moda
 export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
+  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   result: DataModelResult;
   hasResult = false;
   subscription: Subscription;
@@ -83,16 +88,12 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
   download: any;
   downloadLink: any;
   urlText: any;
+  canEditDescription = true;
+  showEditDescription = false;
 
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
   constructor(
     private renderer: Renderer2,
@@ -117,7 +118,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
   public showAddElementToMarkdown() {
     // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
   }
 
   ngOnInit() {
@@ -129,7 +130,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       this.editForm.forEach(x =>
         x.edit({
           editing: true,
-          focus: x._name === 'moduleName' ? true : false
+          focus: x.name === 'moduleName' ? true : false
         })
       );
       this.editableForm.visible = true;
@@ -158,28 +159,18 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
-  private setEditableFormData() {
-    this.editableForm.description = this.result.description;
-    this.editableForm.label = this.result.label;
-    this.editableForm.organisation = this.result.organisation;
-    this.editableForm.author = this.result.author;
-  }
-
   ngAfterViewInit(): void {
     this.editForm.changes.subscribe(() => {
-      this.invokeInlineEditor();
       if (this.editMode) {
         this.editForm.forEach(x => x.edit({
           editing: true,
-          focus: x._name === 'moduleName' ? true : false
-        })
-        );
+          focus: x.name === 'moduleName' ? true : false
+        }));
         this.showForm();
       }
     });
   }
 
-  private invokeInlineEditor(): void { }
 
   DataModelDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
@@ -230,6 +221,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       this.showNewVersion = access.showNewVersion;
       this.showSoftDelete = access.showSoftDelete;
       this.showPermDelete = access.showPermanentDelete;
+      this.canEditDescription = access.canEditDescription;
     }
     this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
   }
@@ -273,7 +265,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Are you sure you want to delete this Data Model?`,
+          title: 'Are you sure you want to delete this Data Model?',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p class="marginless">This Data Model will be marked as deleted and will not be viewable by users </p>
@@ -301,10 +293,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const promise = new Promise(() => {
       const dialog = this.dialog.open(ConfirmationModalComponent, {
         data: {
-          title: `Permanent deletion`,
+          title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Data Model?`
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
         }
       });
 
@@ -314,7 +306,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         }
         const dialog2 = this.dialog.open(ConfirmationModalComponent, {
           data: {
-            title: `Confirm permanent deletion`,
+            title: 'Confirm permanent deletion',
             okBtnTitle: 'Confirm deletion',
             btnType: 'warn',
             message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
@@ -346,20 +338,30 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-    const resource = {
-      id: this.result.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description,
-      author: this.editableForm.author,
-      organisation: this.editableForm.organisation,
-      type: this.result.type,
-      domainType: this.result.domainType,
-      aliases,
-      classifiers
-    };
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.result.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.result.type,
+        domainType: this.result.domainType,
+        aliases,
+        classifiers
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.result.id,
+        description: this.editableForm.description || ''
+      };
+    }
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.dataModel.update(resource.id, resource).subscribe(result => {
+      this.resourcesService.dataModel.update(this.result.id, resource).subscribe(result => {
         if (this.afterSave) {
           this.afterSave(result);
         }
@@ -383,16 +385,18 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showForm() {
+    this.showEditDescription = false;
     this.editableForm.show();
   }
 
   onCancelEdit() {
     this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   loadHelp() {
-    this.helpDialogueService.open('Edit_model_details', { my: 'right top', at: 'bottom' } as DialogPosition);
+    this.helpDialogueService.open('Edit_model_details');
   }
 
   toggleFavourite() {
@@ -403,37 +407,37 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   finalise() {
     const promise = new Promise(() => {
-      const dialog = this.dialog.open(FinaliseModalComponent, {
-        data: {
-          title: 'Are you sure you want to finalise this Data Model?',
-          okBtnTitle: 'Finalise model',
-          btnType: 'accent',
-          message: `<p class='marginless'>Once you finalise a Data Model, you can not edit it anymore!</p>
-                    <p class='marginless'>but you can create new version of it.</p>`
-        }
-      });
+      this.resourcesService.dataModel.latestModelVersion(this.result.id).subscribe(response => {
+        const dialog = this.dialog.open(FinaliseModalComponent, {
+          data: {
+            modelVersion: response.body.modelVersion,
+            title: 'Finalise Data Model',
+            okBtnTitle: 'Finalise Data Model',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+                      <p>to be finalised with: </p>`
+          }
+        });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return promise;
-        }
-        this.processing = true;
-
-        const data = {};
-
-        if (result.data.versionList !== undefined) {
-          data['versionChangeType'] = result.data.versionList;
-        } else {
-          data['version'] = result.data.versionNumber;
-        }
-
-        this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
-          this.processing = false;
-          this.messageHandler.showSuccess('Data Model finalised successfully.');
-          this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });
-        }, error => {
-          this.processing = false;
-          this.messageHandler.showError('There was a problem finalising the Data Model.', error);
+        dialog.afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
+          this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
+            this.processing = false;
+            this.messageHandler.showSuccess('Data Model finalised successfully.');
+            this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });
+          }, error => {
+            this.processing = false;
+            this.messageHandler.showError('There was a problem finalising the Data Model.', error);
+          });
         });
       });
     });
@@ -487,7 +491,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.exportError = null;
     this.processing = true;
     this.exportedFileIsReady = false;
-    this.exportHandler.exportDataModel([this.result], exporter).subscribe(result => {
+    this.exportHandler.exportDataModel([this.result], exporter, 'dataModels').subscribe(result => {
       if (result != null) {
         this.exportedFileIsReady = true;
         const label = [this.result].length === 1 ? [this.result][0].label : 'data_models';
@@ -530,4 +534,17 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       this.errorMessage = '';
     }
   }
+
+  showDescription = () => {
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  private setEditableFormData() {
+    this.editableForm.description = this.result.description;
+    this.editableForm.label = this.result.label;
+    this.editableForm.organisation = this.result.organisation;
+    this.editableForm.author = this.result.author;
+  }
+
 }

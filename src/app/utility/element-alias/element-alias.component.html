@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
 
-    <div *ngIf="inEditMode" style="clear: both;">
+    <div *ngIf="inEditMode && !readOnly" style="clear: both;">
         <div class="input-group" style="max-width: 40%;">
             <input type="text" #typedAliasId id="aliasInput" (keyup)="keyup($event)" [(ngModel)]="typedAlias" name="typedAlias" class="outlined-input form-control">
             <button mat-flat-button color="accent" type="button" class="paddingless" [disabled]="!typedAlias" (click)="add()" aria-label="Add alias" style="margin-left: 5px;">

@@ -16,81 +16,78 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 export class TermResult {
-    terminology: any;
-    terminologyLabel: string;
-    code: string;
-    definition: string;
-    id: string;
-    domainType: string;
-    url: string;
-    dateCreated: string;
-    label: string;
-    description: string;
-    editable: boolean;
-    lastUpdated: string;
-    classifiers: Classifiers[];
-    type: string;
-    finalised: boolean;
-    author: string;
-    organisation: string;
-    dateFinalised: string;
-    aliases: any[];
-    semanticLinks: any[];
-    deleted = false;
-    readableByEveryone: boolean;
+  terminology: any;
+  terminologyLabel: string;
+  code: string;
+  definition: string;
+  id: string;
+  domainType: string;
+  url: string;
+  dateCreated: string;
+  label: string;
+  description: string;
+  editable: boolean;
+  lastUpdated: string;
+  classifiers: Classifiers[];
+  type: string;
+  finalised: boolean;
+  author: string;
+  organisation: string;
+  dateFinalised: string;
+  aliases: any[];
+  semanticLinks: any[];
+  deleted = false;
+  readableByEveryone: boolean;
 
 }
 
 
 
 export class Classifiers {
-    id: string;
-    label: string;
-    lastUpdated: string;
+  id: string;
+  label: string;
+  lastUpdated: string;
 
 }
 
 
 export class EditableTerm {
+  id: string;
+  terminology: string;
+  terminologyLabel: string;
+  code: string;
+  definition: string;
+  label: string;
+  description: string;
+  url: string;
+  dateCreated: string;
+  domainType: string;
+  editable: boolean;
+  deletePending: boolean;
+  classifiers: Classifiers[] = [];
+  aliases: any[] = [];
+  finalised: boolean;
+  visible: boolean;
+  waiting: boolean;
+  validationError: boolean;
 
-    constructor() {}
-    id: string;
-    terminology: string;
-    terminologyLabel: string;
-    code: string;
-    definition: string;
-    label: string;
-    description: string;
-    url: string;
-    dateCreated: string;
-    domainType: string;
-    editable: boolean;
-    deletePending: boolean;
-    classifiers: Classifiers[] = [];
-    aliases: any[] = [];
-    finalised: boolean;
-    visible: boolean;
-    waiting: boolean;
-    validationError: boolean;
+  constructor() { }
 
+  show() {
 
+  }
+  cancel() {
 
-    show() {
-
-    }
-    cancel() {
-
-    }
-    save(parent: any) {
-
-    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  save(parent: any) { }
 
 }
 
 export class Categories {
-    index: number;
-    id: string;
-    key: string;
-    value: string;
-    category: string;
+  index: number;
+  id: string;
+  key: string;
+  value: string;
+  category: string;
 }

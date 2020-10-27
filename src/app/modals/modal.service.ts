@@ -23,6 +23,7 @@ import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-pas
 import { BroadcastService } from '../services/broadcast.service';
 import { Subscription } from 'rxjs';
 
+// eslint-disable-next-line no-shadow
 export enum ModalType {
   Login,
   Register,

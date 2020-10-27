@@ -22,146 +22,174 @@ SPDX-License-Identifier: Apache-2.0
             <div style="margin-top: 10px;" *ngIf="formData.step === 0">
                 What type of element are you looking for?
                 <div style="margin-top: 10px;">
-                    <ul class="list-group" style="cursor: pointer;">
-                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('Folder')">
-                            <div (click)="onElementTypeSelect('Folder')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataType')">
-                            <div (click)="onElementTypeSelect('DataType')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataType'"> Data Type
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataModel')">
-                            <div (click)="onElementTypeSelect('DataModel')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataModel'"> Data Model
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataClass')">
-                            <div (click)="onElementTypeSelect('DataClass')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('DataElement')">
-                            <div (click)="onElementTypeSelect('DataElement')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngIf="validTypesToSelect.includes('Term')">
-                            <div (click)="onElementTypeSelect('Term')">
-                                <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Term'"> Term
-                            </div>
-                        </li>
-                    </ul>
+                  <ul class="list-group" style="cursor: pointer;">
+                    <!--Not supported for now-->
+                    <!--<li class="list-group-item" *ngIf="validTypesToSelect.includes('Folder')">
+                    <div (click)="onElementTypeSelect('Folder')">
+                      <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Folder'"> Folder
+                    </div>
+                    </li>-->
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('CodeSet')">
+                      <div (click)="onElementTypeSelect('CodeSet')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'CodeSet'"> Code Set
+                      </div>
+                    </li>
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataType')">
+                      <div (click)="onElementTypeSelect('DataType')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataType'"> Data Type
+                      </div>
+                    </li>
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataModel')">
+                      <div (click)="onElementTypeSelect('DataModel')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataModel'"> Data Model
+                      </div>
+                    </li>
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataClass')">
+                      <div (click)="onElementTypeSelect('DataClass')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataClass'"> Data Class
+                      </div>
+                    </li>
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('DataElement')">
+                      <div (click)="onElementTypeSelect('DataElement')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'DataElement'"> Data Element
+                      </div>
+                    </li>
+                    <li class="list-group-item" *ngIf="validTypesToSelect?.includes('Term')">
+                      <div (click)="onElementTypeSelect('Term')">
+                        <input type="radio" [(ngModel)]="formData.selectedType" style="cursor: pointer;" ngValue="'Term'"> Term
+                      </div>
+                    </li>
+                  </ul>
                 </div>
             </div>
         </div>
         <div style="margin-top: 10px;padding-right: 0px;padding-left: 0px;" *ngIf="formData.step === 1">
 
+        <div *ngIf="formData.selectedType === 'CodeSet'">
+          <div style="margin-bottom: 10px;">
+            Please select a {{formData.selectedType}}
+          </div>
+
+          <input type="text"
+                 class="form-control outlined-input"
+                 [(ngModel)]="formData.treeSearchText"
+                 placeholder="Search"
+                 (input)="searchInTree('CodeSet')"
+                 [ngModelOptions]='{ debounce: 500 }'>
+          <div class="treeDropDown">
+            <div style="width: 100%; height: 300px;overflow-y: auto;">
+              <mdm-folders-tree [inSearchMode]="formData.inSearchMode"
+                                [doNotMakeSelectedBold]="true"
+                                [searchCriteria]="formData.treeSearchText"
+                                [filterByDomainType]="['Folder','CodeSet']"
+                                [expandOnNodeClickFor]="['Folder']"
+                                (nodeClickEvent)="onNodeInTreeSelect($event)"
+                                [node]="rootNode"></mdm-folders-tree>
+            </div>
+          </div>
+        </div>
+
         <div *ngIf="formData.selectedType === 'DataModel'">
             <div style="margin-bottom: 10px;">
-                Please select a {{formData.selectedType}}
+              Please select a {{formData.selectedType}}
             </div>
 
             <input type="text"
-                    class="form-control outlined-input"
-                    [(ngModel)]="formData.treeSearchText"
-                    placeholder="Search"
-                    (input)="searchInTree('DataModel')"
-                    [ngModelOptions]='{ debounce: 500 }'>
+                   class="form-control outlined-input"
+                   [(ngModel)]="formData.treeSearchText"
+                   placeholder="Search"
+                   (input)="searchInTree('DataModel')"
+                   [ngModelOptions]='{ debounce: 500 }'>
             <div class="treeDropDown">
-                <div style="width: 100%; height: 300px;overflow-y: auto;">
-                    <mdm-folders-tree
-                        [inSearchMode]="formData.inSearchMode"
-                        [doNotMakeSelectedBold]="true"
-                        [searchCriteria]="formData.treeSearchText"
-                        [filterByDomainType]="['Folder','DataModel']"
-                        [expandOnNodeClickFor]="['Folder']"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                        [node]="rootNode"></mdm-folders-tree>
-                </div>
+              <div style="width: 100%; height: 300px;overflow-y: auto;">
+                <mdm-folders-tree [inSearchMode]="formData.inSearchMode"
+                                  [doNotMakeSelectedBold]="true"
+                                  [searchCriteria]="formData.treeSearchText"
+                                  [filterByDomainType]="['Folder','DataModel']"
+                                  [expandOnNodeClickFor]="['Folder']"
+                                  (nodeClickEvent)="onNodeInTreeSelect($event)"
+                                  [node]="rootNode"></mdm-folders-tree>
+              </div>
             </div>
-        </div>
+          </div>
 
-        <div *ngIf="formData.selectedType ===  'DataClass'">
+          <div *ngIf="formData.selectedType ===  'DataClass'">
             <div style="margin-bottom: 10px;">
-                Please select a {{formData.selectedType}}
+              Please select a {{formData.selectedType}}
             </div>
 
             <input type="text"
-                    class="form-control outlined-input"
-                    [(ngModel)]="formData.treeSearchText"
-                    placeholder="Search"
-                    (input)="searchInTree('DataClass')"
-                    [ngModelOptions]="{ debounce: 500 }">
+                   class="form-control outlined-input"
+                   [(ngModel)]="formData.treeSearchText"
+                   placeholder="Search"
+                   (input)="searchInTree('DataClass')"
+                   [ngModelOptions]="{ debounce: 500 }">
 
             <div class="treeDropDown">
-                <div style="width: 100%; height: 300px;overflow-y: auto;">
-                    <mdm-folders-tree
-                        [inSearchMode]="formData.inSearchMode"
-                        [doNotMakeSelectedBold]="true"
-                        [filterByDomainType]="['Folder','DataModel','DataClass']"
-                        [expandOnNodeClickFor]="['Folder', 'DataModel', 'DataClass']"
-                        [searchCriteria]="formData.treeSearchText"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                        [node]="rootNode"></mdm-folders-tree>
-                </div>
+              <div style="width: 100%; height: 300px;overflow-y: auto;">
+                <mdm-folders-tree [inSearchMode]="formData.inSearchMode"
+                                  [doNotMakeSelectedBold]="true"
+                                  [filterByDomainType]="['Folder','DataModel','DataClass']"
+                                  [expandOnNodeClickFor]="['Folder', 'DataModel', 'DataClass']"
+                                  [searchCriteria]="formData.treeSearchText"
+                                  (nodeClickEvent)="onNodeInTreeSelect($event)"
+                                  [node]="rootNode"></mdm-folders-tree>
+              </div>
             </div>
-        </div>
+          </div>
+          <!--Not supported for now-->
+          <!--<div *ngIf="formData.selectedType == 'Folder'">
+      <div style="margin-bottom: 10px;margin-left: 5px;">
+          Please select a Folder:
+      </div>
+      <div class="treeDropDown">
+              <mdm-folders-tree
+                  [doNotMakeSelectedBold]="true"
+                  [filterByDomainType]="['Folder']"
+                  [expandOnNodeClickFor]="['Folder']"
+                  (nodeClickEvent)="onNodeInTreeSelect($event)"
+                  [node]="rootNode"></mdm-folders-tree>
+      </div>
+  </div>-->
 
-        <div *ngIf="formData.selectedType == 'Folder'">
-            <div style="margin-bottom: 10px;margin-left: 5px;">
-                Please select a Folder:
-            </div>
-            <div class="treeDropDown">
-                    <mdm-folders-tree
-                        [doNotMakeSelectedBold]="true"
-                        [filterByDomainType]="['Folder']"
-                        [expandOnNodeClickFor]="['Folder']"
-                        (nodeClickEvent)="onNodeInTreeSelect($event)"
-                        [node]="rootNode"></mdm-folders-tree>
-            </div>
-        </div>
-
-        <div *ngIf="formData.selectedType === 'Term'">
+          <div *ngIf="formData.selectedType === 'Term'">
             <div>Please select a Term:</div>
             <div style="padding-bottom:1.2em">
-                <mdm-select [width]="'100%'"
-                            [acceptTypedInput]="false"
-                            [valueType]="'static'"
-                            [staticValues]="terminologies"
-                            [minInputLength]="1"
-                            [hasError]="false"
-                            [idProperty]="'id'"
-                            [displayProperty]="'label'"
-                            [searchProperty]="'label'"
-                            (selectEvent)="onTerminologySelect($event[0],$event[1])">
-                    <ng-template #lineContent let-item>
-                        <div>{{item.label}}</div>
-                    </ng-template>
-                </mdm-select>
+              <mdm-select [width]="'100%'"
+                          [acceptTypedInput]="false"
+                          [valueType]="'static'"
+                          [staticValues]="terminologies"
+                          [minInputLength]="1"
+                          [hasError]="false"
+                          [idProperty]="'id'"
+                          [displayProperty]="'label'"
+                          [searchProperty]="'label'"
+                            (selectEvent)="onTerminologySelect($event[0])">
+                <ng-template #lineContent let-item>
+                  <div>{{item.label}}</div>
+                </ng-template>
+              </mdm-select>
             </div>
             <div>
-                <input type="text" id="searchInput" class="form-control outlined-input ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput" #searchInputControl [ngModelOptions]="{ debounce: 500 }" placeholder="Search for Terms..." [disabled]="noData" aria-invalid="false">
+              <input type="text" id="searchInput" class="form-control outlined-input ng-pristine ng-valid ng-touched" autocomplete="off" [(ngModel)]="searchInput" #searchInputControl [ngModelOptions]="{ debounce: 500 }" placeholder="Search for Terms..." [disabled]="noData" aria-invalid="false">
             </div>
             <div style="height: 240px">
-                <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="label">
-                        <mat-header-row *matHeaderCellDef> Term </mat-header-row>
-                        <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
-                            <mdm-element-link [showTypeTitle]="true"
-                                            [newWindow]= "true"
-                                            [parentDataModel]="{id:element.dataModel}"
-                                            [parentDataClass]="{id:element.dataClass}"
-                                            [showHref]="false"
-                                            [element]="element"></mdm-element-link>
+              <mat-table #table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
+                <!-- Position Column -->
+                <ng-container matColumnDef="label">
+                  <mat-header-row *matHeaderCellDef> Term </mat-header-row>
+                  <mat-cell style="max-width: 50%; width: 50%; text-align: left; word-wrap: break-word; padding-right: 5px; padding-left: 5px" mat-cell *matCellDef="let element">
+                    <mdm-element-link [showTypeTitle]="true"
+                                      [newWindow]="true"
+                                      [parentDataModel]="{id:element.dataModel}"
+                                      [parentDataClass]="{id:element.dataClass}"
+                                      [showHref]="false"
+                                      [element]="element"></mdm-element-link>
 
-                        </mat-cell>
-                    </ng-container>
-                    <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
-                </mat-table>
+                  </mat-cell>
+                </ng-container>
+                <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
             </div>
             <div *ngIf="totalItemCount > 0" style="float: right;">
               <span *ngIf="loading">
@@ -171,31 +199,30 @@ SPDX-License-Identifier: Apache-2.0
                 {{currentRecord}} / {{totalItemCount}}
               </span>
             </div>
-        </div>
-        <div *ngIf="formData.selectedType ===  'DataElement'" style="background-color: #FFF;">
+          </div>
+          <div *ngIf="formData.selectedType ===  'DataElement'" style="background-color: #FFF;">
             <div style="margin-bottom: 10px;margin-left: 5px;">
-                Please select a {{formData.selectedType}}
+              Please select a {{formData.selectedType}}
             </div>
             <div style="margin-top: 10px;">
-                <input type="text" id="dataElementsearchInput"
-                        class="form-control outlined-input ng-pristine ng-valid ng-touched"
-                        autocomplete="off"
-                        [(ngModel)]="searchInput"
-                        (ngModelChange)="searchTextChanged()"
-                        [ngModelOptions]="{ debounce: 500 }"
-                        [placeholder]="( (formData.currentContext)? ('Search within ' + formData.currentContext.label) : 'Search...' )">
+              <input type="text" id="dataElementsearchInput"
+                     class="form-control outlined-input ng-pristine ng-valid ng-touched"
+                     autocomplete="off"
+                     [(ngModel)]="searchInput"
+                     (ngModelChange)="searchTextChanged()"
+                     [ngModelOptions]="{ debounce: 500 }"
+                     [placeholder]="( (formData.currentContext)? ('Search within ' + formData.currentContext.label) : 'Search...' )">
             </div>
 
             <div style="margin-top: 5px;">
-                <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
-                <div style="margin-top: 2px;">
-                        <mdm-model-selector-tree
-                            [onSelect]="onContextSelected"
-                            [placeholder]="'Choose a Folder or Data Model or Data Class'"
-                            [accepts]="['Folder', 'DataModel', 'DataClass']"
-                            [usedInModalDialogue]="true">
-                    </mdm-model-selector-tree>
-                </div>
+              <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
+              <div style="margin-top: 2px;">
+                <mdm-model-selector-tree [onSelect]="onContextSelected"
+                                         [placeholder]="'Choose a Folder or Data Model or Data Class'"
+                                         [accepts]="['Folder', 'DataModel', 'DataClass']"
+                                         [usedInModalDialogue]="true">
+                </mdm-model-selector-tree>
+              </div>
             </div>
 
 
@@ -204,7 +231,7 @@ SPDX-License-Identifier: Apache-2.0
               <mat-table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
 
                 <!--- Note that these columns can be defined in any order.
-                                The actual rendered columns are set as a property on the row definition" -->
+                        The actual rendered columns are set as a property on the row definition" -->
                 <!-- Position Column -->
                 <ng-container matColumnDef="label">
                   <mat-header-cell *matHeaderCellDef></mat-header-cell>
@@ -220,87 +247,86 @@ SPDX-License-Identifier: Apache-2.0
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row mat-table-row-select" [class.expanded]="expandedElement == row" (mouseover)="expandedElement = row" (click)="onTermSelect(row.element)"></mat-row>
-                <mat-row class="mat-table-row-select" (click)="onTermSelect(row.element)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden"></mat-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row mat-table-row-select" [class.expanded]="expandedElement == row" (mouseover)="expandedElement = row" (click)="onTermSelect(row)"></mat-row>
+                <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow" [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden"></mat-row>
               </mat-table>
             </div>
 
             <div *ngIf="totalItemCount > 0" style="float: right;">
-                <span *ngIf="loading">
-                    <i class="fas fa-sync-alt fa-spin"></i>
-                </span>
-                <span style="font-size: 11px; font-style: italic;">
-                    {{currentRecord}} / {{totalItemCount}}
-                </span>
+              <span *ngIf="loading">
+                <i class="fas fa-sync-alt fa-spin"></i>
+              </span>
+              <span style="font-size: 11px; font-style: italic;">
+                {{currentRecord}} / {{totalItemCount}}
+              </span>
             </div>
-        </div>
+          </div>
 
-        <div *ngIf="formData.selectedType ===  'DataType'" style="background-color: #FFF;">
+          <div *ngIf="formData.selectedType ===  'DataType'" style="background-color: #FFF;">
             <div style="margin-left: 5px;">
-                Please select a Data Type
+              Please select a Data Type
             </div>
             <div style="margin-top: 10px;">
-                <input type="text"
-                        class="form-control outlined-input"
-                        autocomplete="off"
-                        [(ngModel)]="searchInput"
-                        (ngModelChange)="searchTextChanged()"
-                        [ngModelOptions]="{ debounce: 500 }"
-                        placeholder="{{ ( (formData.currentContext)? ('Search within ' + formData.currentContext.label) : 'Search...' )}}">
+              <input type="text"
+                     class="form-control outlined-input"
+                     autocomplete="off"
+                     [(ngModel)]="searchInput"
+                     (ngModelChange)="searchTextChanged()"
+                     [ngModelOptions]="{ debounce: 500 }"
+                     placeholder="{{ ( (formData.currentContext)? ('Search within ' + formData.currentContext.label) : 'Search...' )}}">
             </div>
 
             <div style="margin-top: 5px;">
-                <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
-                <div style="margin-top: 2px;">
-                    <mdm-model-selector-tree
-                            [onSelect]="onContextSelected"
-                            [placeholder] ="'Choose a Folder or Data Model'"
-                            [doNotShowDataClasses]="true"
-                            [accepts]="['Folder', 'DataModel']"
-                            [usedInModalDialogue]="true">
-                    </mdm-model-selector-tree>
-                </div>
+              <div style="margin-left: 5px;">Restrict your search to a context (optional):</div>
+              <div style="margin-top: 2px;">
+                <mdm-model-selector-tree [onSelect]="onContextSelected"
+                                         [placeholder]="'Choose a Folder or Data Model'"
+                                         [doNotShowDataClasses]="true"
+                                         [accepts]="['Folder', 'DataModel']"
+                                         [usedInModalDialogue]="true">
+                </mdm-model-selector-tree>
+              </div>
             </div>
             <div style="height: 240px">
-                <mat-table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="label">
-                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                        <mat-cell style="max-width: 100%; width: 90%; text-align: left;" *matCellDef="let element"> {{element.label}} </mat-cell>
-                    </ng-container>
+              <mat-table [dataSource]="dataSource" (scroll)="onTableScroll($event)" style="max-height: 100%; overflow: auto;">
+                <!-- Position Column -->
+                <ng-container matColumnDef="label">
+                  <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                  <mat-cell style="max-width: 100%; width: 90%; text-align: left;" *matCellDef="let element"> {{element.label}} </mat-cell>
+                </ng-container>
 
 
-                    <!-- Expanded Content Column - The detail row is made up of this one column -->
-                    <ng-container matColumnDef="expandedDetail">
-                        <mat-cell  *matCellDef = "let record">
-                            <mdm-model-path [path]="record.element.breadcrumbs" [showHref]="false" [newWindow]="true" ></mdm-model-path>
-                        </mat-cell>
-                    </ng-container>
+                <!-- Expanded Content Column - The detail row is made up of this one column -->
+                <ng-container matColumnDef="expandedDetail">
+                  <mat-cell *matCellDef="let record">
+                    <mdm-model-path [path]="record.element.breadcrumbs" [showHref]="false" [newWindow]="true"></mdm-model-path>
+                  </mat-cell>
+                </ng-container>
 
-                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: displayedColumns;"
-                                matRipple
-                                class="element-row mat-table-row-select"
-                                [class.expanded]="expandedElement == row"
-                                (mouseover)="expandedElement = row"
-                                (click)="onTermSelect(row.element)"></mat-row>
-                    <mat-row class="mat-table-row-select" (click)="onTermSelect(row.element)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
-                                [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
-                                style="overflow: hidden">
-                    </mat-row>
-                </mat-table>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"
+                         matRipple
+                         class="element-row mat-table-row-select"
+                         [class.expanded]="expandedElement == row"
+                         (mouseover)="expandedElement = row"
+                         (click)="onTermSelect(row)"></mat-row>
+                <mat-row class="mat-table-row-select" (click)="onTermSelect(row)" *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                         [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
+                         style="overflow: hidden">
+                </mat-row>
+              </mat-table>
             </div>
 
             <div *ngIf="totalItemCount > 0" style="float: right;">
-                <span *ngIf="loading">
-                    <i class="fas fa-sync-alt fa-spin"></i>
-                </span>
-                <span style="font-size: 11px; font-style: italic;">
-                    {{currentRecord}} / {{totalItemCount}}
-                </span>
+              <span *ngIf="loading">
+                <i class="fas fa-sync-alt fa-spin"></i>
+              </span>
+              <span style="font-size: 11px; font-style: italic;">
+                {{currentRecord}} / {{totalItemCount}}
+              </span>
             </div>
+          </div>
         </div>
-    </div>
 </div>
 
 </mat-dialog-content>

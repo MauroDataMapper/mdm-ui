@@ -19,7 +19,6 @@ import {
   Component,
   OnInit,
   Input,
-  ChangeDetectorRef,
   ViewChild,
   ViewChildren,
   ElementRef,
@@ -45,13 +44,13 @@ export class LinkSuggestionComponent implements OnInit {
   @Input() sourceDataModelId: any;
   @Input() targetDataModelId: any;
 
-  datasource = new MatTableDataSource();
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
   paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  datasource = new MatTableDataSource();
   doNotSuggest: any;
 
   model = {
@@ -85,9 +84,13 @@ export class LinkSuggestionComponent implements OnInit {
     this.title.setTitle('Link Suggestion');
     this.hideFilters = true;
 
+    // tslint:disable-next-line: deprecation
     this.sourceDataModelId = this.sourceDataModelId ? this.sourceDataModelId : this.state.params.sourceDMId;
+    // tslint:disable-next-line: deprecation
     this.sourceDataElementId = this.sourceDataElementId ? this.sourceDataElementId : this.state.params.sourceDEId;
+    // tslint:disable-next-line: deprecation
     this.sourceDataClassId = this.sourceDataClassId ? this.sourceDataClassId : this.state.params.sourceDCId;
+    // tslint:disable-next-line: deprecation
     this.targetDataModelId = this.targetDataModelId ? this.targetDataModelId : this.state.params.targetDMId;
 
     if (this.sourceDataElementId) {

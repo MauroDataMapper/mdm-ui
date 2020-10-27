@@ -15,30 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
-import { MessageService } from '@mdm/services/message.service';
-import { Subscription } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { DataModelResult } from '@mdm/model/dataModelModel';
 
 @Component({
-    selector: 'mdm-element-status',
-    templateUrl: './element-status.component.html',
-    styleUrls: ['./element-status.component.sass']
+  selector: 'mdm-element-status',
+  templateUrl: './element-status.component.html',
+  styleUrls: ['./element-status.component.sass']
 })
-export class ElementStatusComponent implements OnInit {
+export class ElementStatusComponent {
 
-    @Input() result: DataModelResult;
+  @Input() result: DataModelResult;
 
-    constructor(private messageService: MessageService) {
-
-        this.DataModelDetails();
-    }
-
-    ngOnInit() {
-    }
-
-    DataModelDetails(): any {
-
-    }
-
+  constructor() { }
 }

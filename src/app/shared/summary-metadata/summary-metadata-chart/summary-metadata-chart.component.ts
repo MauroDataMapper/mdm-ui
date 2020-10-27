@@ -77,8 +77,8 @@ export class SummaryMetadataChartComponent implements OnInit {
   public barChartData: ChartDataSets[] = [];
 
   public reportIndex: number;
-  protected selectedReport: any;
   public reportDate: string;
+  protected selectedReport: any;
 
   ngOnInit() {
     if (this.summary.summaryMetadataReports && this.summary.summaryMetadataReports.length > 0) {

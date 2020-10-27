@@ -29,7 +29,6 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 
@@ -79,7 +78,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloadTree();
     },
     focusedElement: (node?) => {
-      const self = this;
       if (node) {
         this.levels.currentFocusedElement = node;
       }
@@ -89,32 +87,32 @@ export class ModelsComponent implements OnInit, OnDestroy {
       if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
         this.resources.tree.get('dataModels', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(result => {
           const children = result.body;
-          self.levels.currentFocusedElement.children = children;
-          self.levels.currentFocusedElement.open = true;
-          self.levels.currentFocusedElement.selected = true;
+          this.levels.currentFocusedElement.children = children;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
           const curModel = {
-            children: [self.levels.currentFocusedElement],
+            children: [this.levels.currentFocusedElement],
             isRoot: true
           };
           this.filteredModels = Object.assign({}, curModel);
           this.reloading = false;
-          self.levels.current = 1;
+          this.levels.current = 1;
         }, () => {
           this.reloading = false;
         }
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
         this.resources.tree.get('terminologies', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(children => {
-          self.levels.currentFocusedElement.children = children.body;
-          self.levels.currentFocusedElement.open = true;
-          self.levels.currentFocusedElement.selected = true;
+          this.levels.currentFocusedElement.children = children.body;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
           const curElement = {
-            children: [self.levels.currentFocusedElement],
+            children: [this.levels.currentFocusedElement],
             isRoot: true
           };
           this.filteredModels = Object.assign({}, curElement);
           this.reloading = false;
-          self.levels.current = 1;
+          this.levels.current = 1;
         }, () => {
           this.reloading = false;
         }
@@ -259,7 +257,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       edit: false,
       dataModelId: node.modelId,
       dataClassId: node.parentId || '',
-      terminologyId: node.model
+      terminologyId: node.modelId || node.model
     });
   };
 
@@ -271,7 +269,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.levels.focusedElement(node);
   };
 
-  onCompareTo = (source) => {
+  onCompareTo = () => {
     // this.stateHandler.NewWindow('modelscomparison', { sourceId: source.id, targetId: target ? target.id : null });
   };
 
@@ -307,16 +305,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.onAddFolder(null, null, this.folder);
           } else {
             const error = 'err';
-            this.messageHandler.showError('DataModel name can not be empty', error);
-            return promise;
+            this.messageHandler.showError('Folder name can not be empty', error);
+            return;
           }
         } else {
-          return promise;
+          return;
         }
       });
     });
     return promise;
-  }
+  };
   onAddFolder = (event?, folder?, label?) => {
     let parentId;
     if (folder) {
@@ -418,11 +416,20 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadClassifiers();
   };
 
-  changeState = (newState, newWindow?) => {
+  changeState = (newState, type?, newWindow?) => {
     if (newWindow) {
       this.stateHandler.NewWindow(newState);
       return;
     }
+    if (newState) {
+      if (newState === 'import') {
+        this.stateHandler.Go(newState, {importType: type});
+      } else if (newState === 'export') {
+        this.stateHandler.Go(newState, {exportType: type});
+      }
+      return;
+    }
+
     this.stateHandler.Go(newState);
   };
 
@@ -519,8 +526,57 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadFolders(true);
   };
 
-  addClassifier = () => {
-    this.stateHandler.Go('newclassification');
+  onAddClassifier = () => {
+    const promise = new Promise(() => {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
+        data: {
+          inputValue: '',
+          modalTitle: 'Create a new Classifier',
+          okBtn: 'Add Classifier',
+          btnType: 'primary',
+          inputLabel: 'Classifier name',
+          message: 'Please enter the name of your Classifier.'
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result) {
+          if (this.validateLabel(result)) {
+            const resource = {
+              label: result.label,
+            };
+            this.resources.classifier.save(resource).subscribe(response => {
+                this.messageHandler.showSuccess('Classifier saved successfully.');
+                this.stateHandler.Go('classification',
+                  {
+                    id: response.body.id
+                  },
+                  { reload: true, location: true }
+                );
+                this.broadcastSvc.broadcast('$reloadClassifiers');
+              }, error => {
+                this.messageHandler.showError('There was a problem saving the Classifier.', error);
+              });
+
+          } else {
+            const error = 'err';
+            this.messageHandler.showError('Classification name can not be empty', error);
+            return;
+          }
+        } else {
+          return;
+        }
+      });
+    });
+    return promise;
+  };
+
+  validateLabel = (data) => {
+    if (!data || (data && data.label.trim().length === 0)) {
+      return false;
+    } else {
+      return true;
+    }
   };
 
   private onFavioureClick(node) {
@@ -531,11 +587,4 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   }
 
-  validateLabel = (data) => {
-    if (!data || (data && data.label.trim().length === 0)) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 }

@@ -16,7 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <h4>Import a new Data Model </h4>
+    <h4 *ngIf="importType === 'dataModels'">Import a new Data Model </h4>
+    <h4 *ngIf="importType === 'codeSets'">Import a new Code Set </h4>
+    <h4 *ngIf="importType === 'referenceModels'">Import a new Reference Model </h4>
+    <h4 *ngIf="importType === 'terminologies'">Import a new Terminology </h4>
     <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltip="Help"></i>
 </div>
 <div *ngIf="importers" style="margin-top: 16px;">
@@ -67,10 +70,7 @@ SPDX-License-Identifier: Apache-2.0
 
                 <div class="import-text" *ngIf="option.type === 'Text'">
                     <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
-                        <textarea [(ngModel)]="option.value"
-                        name="{{option.name}}"
-                        [required]="option.optional == false"
-                        rows="5" class="form-control outlined-input"></textarea>
+                        <textarea [(ngModel)]="option.value" name="{{option.name}}" [required]="option.optional == false" rows="5" class="form-control outlined-input"></textarea>
                     </div>
                 </div>
 
@@ -85,9 +85,7 @@ SPDX-License-Identifier: Apache-2.0
 
                         <div *ngIf="formOptionsMap[option.type] != 'checkbox' && formOptionsMap[option.type] != 'file'">
                             <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
-                            <input type="{{formOptionsMap[option.type]}}" name="{{option.name}}" [(ngModel)]="option.value"
-                                [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}"
-                                [required]="option.optional === false">
+                            <input type="{{formOptionsMap[option.type]}}" name="{{option.name}}" [(ngModel)]="option.value" [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}" [required]="option.optional === false">
                         </div>
                         <div *ngIf="formOptionsMap[option.type] === 'file'">
                             <input type="{{formOptionsMap[option.type]}}"

@@ -29,7 +29,7 @@ import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
-import { DataModelsExportComponent } from '@mdm/data-models-export/data-models-export.component';
+import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { HistoryComponent } from '@mdm/folder/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
@@ -102,12 +102,10 @@ import { DataElementMainComponent } from '@mdm/wizards/dataElement/data-element-
 import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '@mdm/wizards/dataElement/data-element-step2/data-element-step2.component';
 import { HomeComponent } from '@mdm/home/home.component';
-import { ImportComponent } from '@mdm/import/import.component';
+import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
 import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
-import { ClassifierMainComponent } from '@mdm/wizards/classifier/classifier-main/classifier-main.component';
-import { ClassifierStep1Component } from '@mdm/wizards/classifier/classifier-step1/classifier-step1.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
@@ -136,7 +134,6 @@ import { TermRelationshipsComponent } from '@mdm/utility/term-relationships/term
 import { LinkSuggestionComponent } from '@mdm/link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from '@mdm/model-comparison/model-comparison.component';
 import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-set-main.component';
-import { CodeSetStep1Component } from '@mdm/wizards/codeSet/code-set-step1/code-set-step1.component';
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
@@ -162,6 +159,7 @@ import { MergedModelsComponent } from '@mdm/merged-models/merged-models.componen
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { NgxTextDiffModule } from 'ngx-text-diff';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @NgModule({
   declarations: [
@@ -170,7 +168,7 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     ShareWithComponent,
-    DataModelsExportComponent ,
+    ExportModelsComponent ,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
@@ -250,12 +248,10 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     DataElementStep1Component,
     DataElementStep2Component,
     HomeComponent,
-    ImportComponent,
+    ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
-    ClassifierMainComponent,
-    ClassifierStep1Component,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -286,7 +282,6 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     LinkSuggestionComponent,
     ModelComparisonComponent,
     CodeSetMainComponent,
-    CodeSetStep1Component,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
@@ -297,7 +292,9 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     ModelMergingComponent,
     MergedModelsComponent,
     ModelsMergingGraphComponent,
-    VersioningGraphModalComponent
+    VersioningGraphModalComponent,
+    BulkDeleteModalComponent,
+    BaseComponent
   ],
   imports: [
     AdminModule,
@@ -331,7 +328,7 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
     ShareWithComponent,
-    DataModelsExportComponent ,
+    ExportModelsComponent ,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
@@ -406,12 +403,10 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     DataElementStep1Component,
     DataElementStep2Component,
     HomeComponent,
-    ImportComponent,
+    ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
-    ClassifierMainComponent,
-    ClassifierStep1Component,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -442,7 +437,6 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     LinkSuggestionComponent,
     ModelComparisonComponent,
     CodeSetMainComponent,
-    CodeSetStep1Component,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
@@ -453,7 +447,9 @@ import { NgxTextDiffModule } from 'ngx-text-diff';
     ModelMergingComponent,
     MergedModelsComponent,
     ModelsMergingGraphComponent,
-    VersioningGraphModalComponent
+    VersioningGraphModalComponent,
+    BulkDeleteModalComponent,
+    BaseComponent
   ]
 })
 export class CatalogueModule { }

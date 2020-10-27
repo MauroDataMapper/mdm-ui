@@ -17,12 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataModelsExportComponent } from './data-models-export.component';
-import { TestModule } from '@mdm/modules/test/test.module';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ExportModelsComponent } from './export-models.component';
 import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -38,20 +35,17 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { empty } from 'rxjs';
 
 describe('DataModelsExportComponent', () => {
-  let component: DataModelsExportComponent;
-  let fixture: ComponentFixture<DataModelsExportComponent>;
+  let component: ExportModelsComponent;
+  let fixture: ComponentFixture<ExportModelsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        // TestModule
-        NgxSkeletonLoaderModule,
-        MatTooltipModule,
+        MatDialogModule,
         MatFormFieldModule,
         MatSelectModule,
         MatOptionModule,
         MatProgressBarModule,
-        MatDialogModule,
         FoldersTreeModule,
         FormsModule,
         UIRouterModule.forRoot({ useHash: true }),
@@ -61,11 +55,13 @@ describe('DataModelsExportComponent', () => {
         {
           provide: MdmResourcesService,
           useValue: {
-            session: {
-              isAuthenticated: () => empty()
-            },
+            // tslint:disable-next-line: deprecation
+            session: { isAuthenticated: () => empty() },
             tree: {
-              list: jest.fn()
+              // tslint:disable-next-line: deprecation
+              list: () => empty(),
+              // tslint:disable-next-line: deprecation
+              get: () => empty()
             }
           }
         }
@@ -75,14 +71,14 @@ describe('DataModelsExportComponent', () => {
         ByteArrayToBase64Pipe,
         FilterPipe,
         ModelSelectorTreeComponent,
-        DataModelsExportComponent
+        ExportModelsComponent
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataModelsExportComponent);
+    fixture = TestBed.createComponent(ExportModelsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

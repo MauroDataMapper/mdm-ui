@@ -40,7 +40,7 @@ describe('UserSettingsHandlerService', () => {
   }));
 
   it('should be created', () => {
-    const service: UserSettingsHandlerService = TestBed.get(UserSettingsHandlerService);
+    const service: UserSettingsHandlerService = TestBed.inject(UserSettingsHandlerService);
     expect(service).toBeTruthy();
   });
 });

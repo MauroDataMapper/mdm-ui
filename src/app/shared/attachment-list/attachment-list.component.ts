@@ -40,14 +40,6 @@ import { SharedService } from '@mdm/services';
   styleUrls: ['./attachment-list.component.sass'],
 })
 export class AttachmentListComponent implements AfterViewInit {
-  constructor(
-    private changeRef: ChangeDetectorRef,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private securityHandler: SecurityHandlerService,
-    private sharedService: SharedService
-  ) { }
-
   @Input() parent: any;
   @Input() domainType: any;
   @ViewChildren('filters', { read: ElementRef })
@@ -67,6 +59,13 @@ export class AttachmentListComponent implements AfterViewInit {
   access: any;
   records: any[] = [];
   apiEndpoint: any;
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private securityHandler: SecurityHandlerService,
+    private sharedService: SharedService
+  ) { }
 
   ngAfterViewInit() {
     this.currentUser = this.securityHandler.getCurrentUser();
@@ -81,13 +80,7 @@ export class AttachmentListComponent implements AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
 
-          return this.attachmentFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
+          return this.attachmentFetch();
         }),
         map((data: any) => {
           this.totalItemCount = data.body.count;
@@ -123,7 +116,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  attachmentFetch = (pageSize?, pageIndex?, sortBy?, sortType?, filters?) => {
+  attachmentFetch = () => {
     return this.resources.catalogueItem.listReferenceFiles(
       this.domainType,
       this.parent.id
@@ -142,28 +135,16 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
   download = (record) => {
-    // return this.resources.facets.downloadLinkReferenceFile(this.parent.id, record.id);
-    return this.resources.catalogueItem.getReferenceFile(
-      this.domainType,
-      this.parent.id,
-      record.id)
+    return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
   };
 
   delete = (record) => {
-    this.resources.catalogueItem
-      .removeReferenceFile(this.parent.domainType, this.parent.id, record.id)
-      .subscribe(
-        () => {
-          this.messageHandler.showSuccess('Attachment deleted successfully.');
-          this.reloadEvent.emit();
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem deleting the attachment.',
-            error
-          );
-        }
-      );
+    this.resources.catalogueItem.removeReferenceFile(this.parent.domainType, this.parent.id, record.id).subscribe(() => {
+      this.messageHandler.showSuccess('Attachment deleted successfully.');
+      this.reloadEvent.emit();
+    }, (error) => {
+      this.messageHandler.showError('There was a problem deleting the attachment.', error);
+    });
   };
 
   add = () => {
@@ -181,21 +162,20 @@ export class AttachmentListComponent implements AfterViewInit {
     this.records = [].concat([newRecord]).concat(this.records);
   };
 
-  readFile = (file) => { };
 
-  save = (record, index) => {
-    const fileName = 'File' + index;
+  save = (index) => {
+    const fileName = `File${index}`;
     const file = this.getFile(fileName);
     const reader = new FileReader();
 
     reader.readAsArrayBuffer(file);
 
-    const byt = this.readFile(file);
-
     reader.onload = () => {
       const res: any = reader.result;
       const array: any = new Int8Array(res);
       const fileByteArray = [];
+
+      // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < array.length; i++) {
         fileByteArray.push(array[i]);
       }
@@ -207,22 +187,12 @@ export class AttachmentListComponent implements AfterViewInit {
         fileContents: fileByteArray
       };
 
-      this.resources.catalogueItem
-        .saveReferenceFiles(this.domainType, this.parent.id, data)
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess(
-              'Attachment uploaded successfully.'
-            );
-            this.reloadEvent.emit();
-          },
-          (error) => {
-            this.messageHandler.showError(
-              'There was a problem saving the attachment.',
-              error
-            );
-          }
-        );
+      this.resources.catalogueItem.saveReferenceFiles(this.domainType, this.parent.id, data).subscribe(() => {
+        this.messageHandler.showSuccess('Attachment uploaded successfully.');
+        this.reloadEvent.emit();
+      }, (error) => {
+        this.messageHandler.showError('There was a problem saving the attachment.', error);
+      });
     };
   };
 }

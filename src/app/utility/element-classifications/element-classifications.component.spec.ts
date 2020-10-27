@@ -25,6 +25,8 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { empty } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 describe('ElementClassificationsComponent', () => {
   let component: ElementClassificationsComponent;
@@ -37,13 +39,16 @@ describe('ElementClassificationsComponent', () => {
         ReactiveFormsModule,
         MatSelectModule,
         UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        MatInputModule,
+        MatFormFieldModule
       ],
       providers: [
         {
           provide: MdmResourcesService,
           useValue: {
             classifier: {
+              // tslint:disable-next-line: deprecation
               list: () => empty()
             }
           }

@@ -78,11 +78,11 @@ export class NavbarComponent implements OnInit {
     this.sharedService.pendingUsersCount().subscribe(data => {
       this.pendingUsersCount = data.body.count;
     });
-  }
+  };
 
   isAdmin = () => {
     return this.securityHandler.isAdmin();
-  }
+  };
 
 
   login = () => {
@@ -134,5 +134,5 @@ export class NavbarComponent implements OnInit {
         }
       }
     });
-  }
+  };
 }

@@ -25,14 +25,16 @@ import { DataElementResult } from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-data-element',
   templateUrl: './data-element.component.html',
   styleUrls: ['./data-element.component.sass']
 })
-export class DataElementComponent implements OnInit {
-  dataElement: DataElementResult;
+export class DataElementComponent extends BaseComponent implements OnInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  dataElementOutput: DataElementResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -43,8 +45,8 @@ export class DataElementComponent implements OnInit {
   activeTab: any;
   dataClass = { id: null };
   dataModel = { id: null };
+  isDataLoaded = false;
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -54,45 +56,44 @@ export class DataElementComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private title: Title
   ) {
-    if (
-      !this.stateService.params.id ||
-      !this.stateService.params.dataModelId ||
-      !this.stateService.params.dataClassId
-    ) {
+    super();
+    // tslint:disable-next-line: deprecation
+    if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId || !this.stateService.params.dataClassId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    if (
-      this.stateService.params.id &&
-      this.stateService.params.dataModelId &&
-      this.stateService.params.dataModelId.trim() !== ''
-    ) {
+
+    // tslint:disable-next-line: deprecation
+    if (this.stateService.params.id && this.stateService.params.dataModelId && this.stateService.params.dataModelId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.dataModel = { id: this.stateService.params.dataModelId };
     }
 
-    if (
-      this.stateService.params.id &&
-      this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() !== ''
-    ) {
+    // tslint:disable-next-line: deprecation
+    if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.dataClass = { id: this.stateService.params.dataClassId };
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
   }
 
+
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
-    this.title.setTitle(`Data Element`);
+    this.title.setTitle('Data Element');
+    // tslint:disable-next-line: deprecation
     this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, this.stateService.params.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) => this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, result.body.id);
+    this.afterSave = () => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElementOutput.id);
   }
 
   getTabDetailByName(tabName) {
@@ -116,14 +117,21 @@ export class DataElementComponent implements OnInit {
 
   dataElementDetails(dataModelId: any, dataClassId, id) {
     this.resourcesService.dataElement.get(dataModelId, dataClassId, id).subscribe((result: { body: DataElementResult }) => {
-      this.dataElement = result.body;
-      this.messageService.FolderSendMessage(this.dataElement);
-      this.messageService.dataChanged(this.dataElement);
+      this.dataElementOutput = result.body;
 
-      if (this.dataElement) {
+      this.dataModel.id = result.body.model;
+      this.dataClass.id = result.body.dataClass;
+
+      this.messageService.FolderSendMessage(this.dataElementOutput);
+      this.messageService.dataChanged(this.dataElementOutput);
+
+      if (this.dataElementOutput) {
+        // tslint:disable-next-line: deprecation
         this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
         this.tabSelected(this.activeTab);
       }
+
+      this.isDataLoaded = true;
     });
   }
 

@@ -23,7 +23,6 @@ import { MatDatepicker } from '@angular/material/datepicker';
   templateUrl: './date-from-to.component.html'
 })
 export class DateFromToComponent implements OnInit {
-  constructor() { }
   @Output() selectEvent = new EventEmitter<DateEventInfo>();
 
   @ViewChild('dp1', { static: false }) datePicker1: MatDatepicker<Date>;
@@ -53,6 +52,8 @@ export class DateFromToComponent implements OnInit {
     showButtonBar: false
   };
 
+  constructor() { }
+
   ngOnInit(): void { }
 
   datePicker1Changed(newValue, oldValue): any {
@@ -62,6 +63,7 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       this.selectEvent.emit(new DateEventInfo(newValue, this.dtTo));
     }
 
@@ -77,6 +79,7 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       this.selectEvent.emit(new DateEventInfo(this.dtFrom, newValue));
     }
 
@@ -108,11 +111,10 @@ export class DateFromToComponent implements OnInit {
 }
 
 class DateEventInfo {
+  public from: Date;
+  public to: Date;
   constructor(from: Date, to: Date) {
     this.from = from;
     this.to = to;
   }
-
-  public from: Date;
-  public to: Date;
 }

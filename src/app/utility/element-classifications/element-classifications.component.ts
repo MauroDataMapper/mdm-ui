@@ -16,12 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { FolderResult } from '@mdm/model/folderModel';
 import { DataModelResult } from '@mdm/model/dataModelModel';
-import { forEach } from '@uirouter/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'mdm-element-classifications',
@@ -31,22 +28,25 @@ import { FormBuilder, FormGroup, FormControl, Validators, ControlValueAccessor }
 export class ElementClassificationsComponent implements OnInit {
 
   @Input() editableForm: any;
+  @Input() readOnly = true;
+  @Input() inEditMode: boolean;
+  @Input() property: string;
+  @Input() element: DataModelResult;
+  @Input() newWindow = false;
 
-  classificationsVal: any[];
   @Output() classificationsChanged = new EventEmitter<any[]>();
   @Input() get classifications() {
     return this.classificationsVal;
   }
+
   set classifications(val) {
 
     this.classificationsVal = val;
     this.classificationsChanged.emit(this.classificationsVal);
   }
 
-  @Input() inEditMode: boolean;
-  @Input() property: string;
-  @Input() element: DataModelResult;
-  @Input() newWindow = false;
+  classificationsVal: any[];
+
   target: string;
   lastWasShiftKey: any;
   formData: any = {
@@ -55,11 +55,10 @@ export class ElementClassificationsComponent implements OnInit {
   };
   allClassifications: any;
   selectedClassification = [];
-  constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService, private fb: FormBuilder) { }
+  constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService) { }
 
   ngOnInit() {
     this.getAllClassifications();
-
     if (!this.editableForm.visible) {
       if (this.newWindow) {
         this.target = '_blank';
@@ -72,10 +71,7 @@ export class ElementClassificationsComponent implements OnInit {
         });
       }
     } else {
-
       this.formData.classifiers = this.editableForm.classifiers;
-
-
     }
 
   }
@@ -87,20 +83,16 @@ export class ElementClassificationsComponent implements OnInit {
         this.classifications.forEach((classification) => {
           const selected = this.allClassifications.find(c => c.id === classification.id);
           selectedList.push(selected);
-        }
-        );
+        });
         this.selectedClassification = selectedList;
         this.formData.classifiers = selectedList;
         this.editableForm.classifiers = selectedList;
       }
     });
-
   }
-
   onModelChanged() {
     this.formData.classifiers = this.selectedClassification;
     this.editableForm.classifiers = this.selectedClassification;
     this.classifications = this.selectedClassification;
   }
-
 }

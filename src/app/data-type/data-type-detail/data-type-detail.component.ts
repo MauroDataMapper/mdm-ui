@@ -204,11 +204,10 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   delete = () => {
     this.resources.dataType.remove(this.mcParentDataModel.id, this.mcDataTypeObject.id).subscribe(() => {
       this.messageHandler.showSuccess('Data Type deleted successfully.');
-      this.stateHandler.Go('dataModel', { id: this.mcParentDataModel.id }, { reload: true, location: true });
+      this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     }, error => {
       this.messageHandler.showError('There was a problem deleting the Data Type.', error);
-    }
-    );
+    });
   };
 
   askToDelete = () => {

@@ -247,7 +247,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.resourcesService.dataModel.remove(this.result.id, { permanent }).subscribe(() => {
       if (permanent) {
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-        this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       } else {
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.reload();

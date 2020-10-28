@@ -22,11 +22,19 @@ SPDX-License-Identifier: Apache-2.0
               Data
               <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
               <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+              <!-- <i class="fas fa-filter" (click)="toggleSearch()" matTooltip="Toggle search"></i> -->
           </h4>
       </div>
       <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center"> </div>
   </div>
 </div>
+<!--
+<div class="full-width mb-1 mdm--shadow-block" [hidden]="!hideFilters">
+   <div class="panel">
+      <input #searchbox type="search" id="search-models-input" class="form-control outlined-input" [(ngModel)]="term" placeholder="Search models..." (keyup)="onSearchValues()">
+   </div>
+</div> -->
+
 <div class="table-responsive">
   <table mat-table [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
    <ng-container *ngFor="let disCol of (displayedColumns); let colIndex = index" matColumnDef="{{disCol}}">
@@ -52,6 +60,7 @@ SPDX-License-Identifier: Apache-2.0
     </tr>
   </table>
 </div>
-<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
+<div class="mdm--mat-pagination">
+   <!-- <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}"></div> -->
   <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

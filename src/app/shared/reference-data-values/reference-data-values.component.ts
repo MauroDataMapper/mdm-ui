@@ -20,8 +20,7 @@ import {
   Input,
   ViewChild,
   AfterViewInit,
-  ChangeDetectorRef,
-  OnInit
+  ChangeDetectorRef
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge } from 'rxjs';
@@ -34,7 +33,7 @@ import { GridService } from '@mdm/services/grid.service';
   templateUrl: './reference-data-values.component.html',
   styleUrls: ['./reference-data-values.component.scss']
 })
-export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
+export class ReferenceDataValuesComponent implements AfterViewInit {
   @Input() parent: any;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
@@ -43,6 +42,8 @@ export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
   displayedColumns: string[];
   totalItemCount = 0;
   isLoadingResults = true;
+  hideFilters = true;
+  term = '';
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -50,19 +51,12 @@ export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
     private gridService: GridService
   ) { }
 
-  ngOnInit(): void {
-   //  this.displayedColumns = ['name', 'code'];
-  }
-
   ngAfterViewInit() {
     merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
 
-      return this.listReferenceDataValues(
-        this.paginator?.pageSize,
-        this.paginator?.pageOffset
-      );
+      return this.listReferenceDataValues(this.paginator?.pageSize, this.paginator?.pageOffset);
     }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
@@ -77,17 +71,65 @@ export class ReferenceDataValuesComponent implements OnInit, AfterViewInit {
     ).subscribe(values => {
       this.records = values;
       const arr = [];
-      // tslint:disable-next-line: forin
       for (const val in values[0].columns) {
-         arr.push(values[0].columns[val].referenceDataElement.label);
+         if(values[0].columns[val]) {
+            arr.push(values[0].columns[val].referenceDataElement.label);
+         }
       }
       this.displayedColumns = arr;
     });
   }
 
+  displayReferenceDataValues = () => {
+
+  };
+
   listReferenceDataValues = (pageSize?, pageIndex?, sortBy?, sortType?) => {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
     return this.resources.referenceDataValue.list(this.parent.id, options);
+  };
+
+  toggleSearch = () => {
+      this.hideFilters = !this.hideFilters;
+  };
+
+  onSearchValues = (pageSize = this.paginator?.pageSize, pageIndex = this.paginator?.pageOffset, sortBy?, sortType?) => {
+   console.log(this.term);
+
+   console.log(this.paginator.pageSize);
+   pageSize = this.paginator?.pageSize;
+   pageIndex = this.paginator?.pageOffset;
+   const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
+
+   merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
+      this.isLoadingResults = true;
+      this.changeRef.detectChanges();
+
+      return this.resources.referenceDataValue.search(this.parent.id, { search: this.term, max: pageSize } );
+    }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.rows;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        this.changeRef.detectChanges();
+        return [];
+      })
+    ).subscribe(values => {
+      this.records = values;
+      const arr = [];
+      if(values[0]) {
+         for (const val in values[0].columns) {
+            if(values[0].columns[val]) {
+               arr.push(values[0].columns[val].referenceDataElement.label);
+            }
+         }
+         this.displayedColumns = arr;
+      }
+    });
+
   };
 
 }

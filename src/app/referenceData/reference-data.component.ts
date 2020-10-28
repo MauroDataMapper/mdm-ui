@@ -26,6 +26,8 @@ import { MessageService } from '@mdm/services/message.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { McSelectPagination } from '../utility/mc-select/mc-select.component';
+import { GridService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -44,12 +46,16 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
   activeTab: any;
   semanticLinks: any[] = [];
 
+  pagination: McSelectPagination;
+  searchTerm: any;
+
   constructor(private resourcesService: MdmResourcesService,
               private sharedService: SharedService,
               private messageService: MessageService,
               private stateService: StateService,
               private stateHandler: StateHandlerService,
-              private title: Title) { }
+              private title: Title,
+              private gridService: GridService) { }
 
   ngOnInit(): void {
     // tslint:disable-next-line: deprecation
@@ -103,6 +109,64 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
       this.tabSelected(this.activeTab);
     });
   }
+
+ fetch = (text, loadAll, offset, limit) => {
+   limit = limit ? limit : 20;
+   offset = offset ? offset : 0;
+   this.pagination = {
+     limit,
+     offset
+   };
+
+   this.searchTerm = text;
+   // return this.resourcesService.referenceDataValue.search(this.stateService.params.id, { s/earch: text } );
+   return this.resourcesService.referenceDataValue.search(this.stateService.params.id, { search:text, max: limit, offset });
+ };
+
+
+//  onSearchValues = (pageSize = this.paginator?.pageSize, pageIndex = this.paginator?.pageOffset, sortBy?, sortType?) => {
+//    console.log(this.term);
+
+//    console.log(this.paginator.pageSize);
+//    pageSize = this.paginator?.pageSize;
+//    pageIndex = this.paginator?.pageOffset;
+//    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
+
+//    merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
+//       this.isLoadingResults = true;
+//       this.changeRef.detectChanges();
+
+//       return this.resources.referenceDataValue.search(this.parent.id, { search: this.term, max: pageSize }, options );
+//     }),
+//       map((data: any) => {
+//         this.totalItemCount = data.body.count;
+//         this.isLoadingResults = false;
+//         return data.body.rows;
+//       }),
+//       catchError(() => {
+//         this.isLoadingResults = false;
+//         this.changeRef.detectChanges();
+//         return [];
+//       })
+//     ).subscribe(values => {
+//       this.records = values;
+//       const arr = [];
+//       if(values[0]) {
+//          for (const val in values[0].columns) {
+//             if(values[0].columns[val]) {
+//                arr.push(values[0].columns[val].referenceDataElement.label);
+//             }
+//          }
+//          this.displayedColumns = arr;
+//       }
+//     });
+
+//   };
+
+
+ onTermSelect = event => {
+    console.log(event);
+ };
 
   ReferenceModelPermissions(id: any) {
     this.resourcesService.security.permissions('referenceModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {

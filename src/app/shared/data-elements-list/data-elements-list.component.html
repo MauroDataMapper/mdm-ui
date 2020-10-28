@@ -22,7 +22,6 @@ SPDX-License-Identifier: Apache-2.0
         <span>Data Elements</span>
         <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
         <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{totalDataElementCount}}</span>
-        <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
       </h4>
     </div>
     <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
@@ -60,14 +59,8 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </ng-container>
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 35%;width: 35%;" columnName="name">
-        <span [hidden]="!hideFilters">Name</span>
-        <div [hidden]="hideFilters">
-          <mat-form-field class="filter" floatLabel="never">
-            <mat-label>Name</mat-label>
-            <input #filters matInput name="label" (keyup)="applyFilter()">
-          </mat-form-field>
-        </div>
+      <th mat-header-cell *matHeaderCellDef style="max-width: 35%;width: 35%;" columnName="name">
+        Name
       </th>
       <td mat-cell *matCellDef="let record" style="word-wrap: break-word;">
         <div>
@@ -79,14 +72,8 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </ng-container>
     <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="description" [disabled]="!hideFilters" style="cursor:pointer;max-width: 45%;width: 45%;" columnName="description">
-        <span [hidden]="!hideFilters">Details</span>
-        <div [hidden]="hideFilters">
-          <mat-form-field class="filter" floatLabel="never">
-            <mat-label>Details</mat-label>
-            <input #filters matInput name="description" (keyup)="applyFilter()">
-          </mat-form-field>
-        </div>
+      <th mat-header-cell *matHeaderCellDef style="max-width: 45%;width: 45%;" columnName="description">
+        Details
       </th>
       <td mat-cell *matCellDef="let record" style="word-wrap: break-word;">
         <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
@@ -103,14 +90,8 @@ SPDX-License-Identifier: Apache-2.0
       </td>
     </ng-container>
     <ng-container matColumnDef="label">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="minMultiplicity" style="cursor:pointer;max-width: 7%;width: 7%;" columnName="label">
-        <span [hidden]="!hideFilters">Multiplicity</span>
-        <div [hidden]="hideFilters">
-          <mat-form-field class="filter" floatLabel="never">
-            <mat-label>Multiplicity</mat-label>
-            <input #filters matInput name="minMultiplicity" (keyup)="applyFilter()">
-          </mat-form-field>
-        </div>
+      <th mat-header-cell *matHeaderCellDef style="max-width: 7%;width: 7%;" columnName="label">
+        Multiplicity
       </th>
       <td mat-cell *matCellDef="let record" style="text-align: center;">
         <mdm-multiplicity [min]="record.minMultiplicity" [max]="record.maxMultiplicity"></mdm-multiplicity>

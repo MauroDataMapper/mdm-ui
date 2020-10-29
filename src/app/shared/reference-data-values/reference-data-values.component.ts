@@ -107,7 +107,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
 
    contentFetch(pageSize?, pageIndex?, filters?): Observable<any> {
       const options = {
-         max: 20,
+         max: pageSize,
          offset: pageIndex,
          asRows: true
       };
@@ -120,7 +120,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
          // return this.resources.dataClass.content(this.parentDataModel.id, this.parentDataClass.id, options);
       } else if (!this.hideFilters) {
          // return this.resources.referenceDataValue.search(this.parent.id, options);
-         return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: 20, offset: pageIndex });
+         return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: pageSize, offset: pageIndex });
       }
    }
 }

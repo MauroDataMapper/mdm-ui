@@ -15,121 +15,112 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  Input,
-  ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, ElementRef, ViewChildren } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 
 @Component({
-  selector: 'mdm-reference-data-values',
-  templateUrl: './reference-data-values.component.html',
-  styleUrls: ['./reference-data-values.component.scss']
+   selector: 'mdm-reference-data-values',
+   templateUrl: './reference-data-values.component.html',
+   styleUrls: ['./reference-data-values.component.scss']
 })
 export class ReferenceDataValuesComponent implements AfterViewInit {
-  @Input() parent: any;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+   @Input() parent: any;
+   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+   records: any[] = [];
+   searchRecords: any[] = [];
+   displayedColumns: string[];
+   totalItemCount = 0;
+   isLoadingResults = true;
+   hideFilters = true;
+   searchTerm = '';
+   filterEvent = new EventEmitter<any>();
+   filter: {};
 
-  records: any[] = [];
-  total: number;
-  displayedColumns: string[];
-  totalItemCount = 0;
-  isLoadingResults = true;
-  hideFilters = true;
-  term = '';
+   constructor(
+      private changeRef: ChangeDetectorRef,
+      private resources: MdmResourcesService,
+      private gridService: GridService
+   ) { }
 
-  constructor(
-    private changeRef: ChangeDetectorRef,
-    private resources: MdmResourcesService,
-    private gridService: GridService
-  ) { }
+   ngAfterViewInit() {
+      this.displayReferenceDataValues();
+   }
 
-  ngAfterViewInit() {
-    merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
+   displayReferenceDataValues = () => {
       this.changeRef.detectChanges();
+      this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-      return this.listReferenceDataValues(this.paginator?.pageSize, this.paginator?.pageOffset);
-    }),
-      map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        return data.body.rows;
-      }),
-      catchError(() => {
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return [];
+      merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+         this.isLoadingResults = true;
+         return this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
+
+         // return (this.hideFilters ? this.listReferenceDataValues(this.paginator?.pageSize, this.paginator?.pageOffset) : this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: this.paginator?.pageSize, offset: this.paginator?.pageOffset }));
+      }), map((data: any) => {
+         this.totalItemCount = data.body.count;
+         this.isLoadingResults = false;
+         return data.body.rows;
+      }), catchError(() => {
+         this.isLoadingResults = false;
+         return [];
       })
-    ).subscribe(values => {
-      this.records = values;
-      const arr = [];
-      for (const val in values[0].columns) {
-         if(values[0].columns[val]) {
-            arr.push(values[0].columns[val].referenceDataElement.label);
-         }
-      }
-      this.displayedColumns = arr;
-    });
-  }
-
-  displayReferenceDataValues = () => {
-
-  };
-
-  listReferenceDataValues = (pageSize?, pageIndex?, sortBy?, sortType?) => {
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
-    return this.resources.referenceDataValue.list(this.parent.id, options);
-  };
-
-  toggleSearch = () => {
-      this.hideFilters = !this.hideFilters;
-  };
-
-  onSearchValues = (pageSize = this.paginator?.pageSize, pageIndex = this.paginator?.pageOffset, sortBy?, sortType?) => {
-   console.log(this.term);
-
-   console.log(this.paginator.pageSize);
-   pageSize = this.paginator?.pageSize;
-   pageIndex = this.paginator?.pageOffset;
-   const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
-
-   merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
-      this.isLoadingResults = true;
-      this.changeRef.detectChanges();
-
-      return this.resources.referenceDataValue.search(this.parent.id, { search: this.term, max: pageSize } );
-    }),
-      map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        return data.body.rows;
-      }),
-      catchError(() => {
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return [];
-      })
-    ).subscribe(values => {
-      this.records = values;
-      const arr = [];
-      if(values[0]) {
-         for (const val in values[0].columns) {
-            if(values[0].columns[val]) {
-               arr.push(values[0].columns[val].referenceDataElement.label);
+      ).subscribe(values => {
+         this.records = values;
+         const arr = [];
+         if (values[0]) {
+            for (const val in values[0].columns) {
+               if (values[0].columns[val]) {
+                  arr.push(values[0].columns[val].referenceDataElement.label);
+               }
             }
+            this.displayedColumns = arr;
          }
-         this.displayedColumns = arr;
+      });
+      this.changeRef.detectChanges();
+   };
+
+   listReferenceDataValues = (pageSize?, pageIndex?, sortBy?, sortType?) => {
+      const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
+      return this.resources.referenceDataValue.list(this.parent.id, options);
+   };
+
+   toggleSearch = () => {
+      this.hideFilters = !this.hideFilters;
+   };
+
+   applyFilter = () => {
+      const filter = {};
+      this.filters.forEach((x: any) => {
+        const name = x.nativeElement.name;
+        const value = x.nativeElement.value;
+        if (value !== '') {
+         filter[name] = value;
+        }
+      });
+      this.filter = filter;
+      this.filterEvent.emit(filter);
+    };
+
+   contentFetch(pageSize?, pageIndex?, filters?): Observable<any> {
+      const options = {
+         max: 20,
+         offset: pageIndex,
+         asRows: true
+      };
+      if (filters) {
+         options['search'] = unescape(this.searchTerm);
+       }
+
+      if (this.hideFilters) {
+         return this.resources.referenceDataValue.list(this.parent.id, options);
+         // return this.resources.dataClass.content(this.parentDataModel.id, this.parentDataClass.id, options);
+      } else if (!this.hideFilters) {
+         // return this.resources.referenceDataValue.search(this.parent.id, options);
+         return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: 20, offset: pageIndex });
       }
-    });
-
-  };
-
+   }
 }

@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
   <mdm-reference-data-details></mdm-reference-data-details>
 
 </div>
-<div class="full-width mb-1 mdm--shadow-block">
+<!-- <div class="full-width mb-1 mdm--shadow-block">
    <div class="panel">
 
       <div class="panel-body">
@@ -38,19 +38,11 @@ SPDX-License-Identifier: Apache-2.0
                         (selectEvent)="onTermSelect($event[0])">
                <ng-template #lineContent let-item let-inputText="inputText">
                   <span [innerHTML]="item.columns[0].description"></span>
-
-                  <!-- <span *ngFor="let val of item" style="margin:5px 0px; font-size: 12px;"> -->
-                     <!-- <a [innerHTML]="'(' + (item.rows[val].columns.description | mchighlighter:inputText) + ')'"></a> -->
-                     <!-- {{item.columns[val].description}} -->
-                     <!-- {{item[val].columns.description}} -->
-                     <!-- {{val.columns[0].description}} -->
-                  <!-- </span> -->
-
                </ng-template>
             </mdm-select>
       </div>
    </div>
-</div>
+</div> -->
 
 
 <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">

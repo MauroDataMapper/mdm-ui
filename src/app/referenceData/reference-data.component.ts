@@ -119,50 +119,8 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
    };
 
    this.searchTerm = text;
-   // return this.resourcesService.referenceDataValue.search(this.stateService.params.id, { s/earch: text } );
    return this.resourcesService.referenceDataValue.search(this.stateService.params.id, { search:text, max: limit, offset });
  };
-
-
-//  onSearchValues = (pageSize = this.paginator?.pageSize, pageIndex = this.paginator?.pageOffset, sortBy?, sortType?) => {
-//    console.log(this.term);
-
-//    console.log(this.paginator.pageSize);
-//    pageSize = this.paginator?.pageSize;
-//    pageIndex = this.paginator?.pageOffset;
-//    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, { asRows: true });
-
-//    merge(this.paginator?.page).pipe(startWith({}), switchMap(() => {
-//       this.isLoadingResults = true;
-//       this.changeRef.detectChanges();
-
-//       return this.resources.referenceDataValue.search(this.parent.id, { search: this.term, max: pageSize }, options );
-//     }),
-//       map((data: any) => {
-//         this.totalItemCount = data.body.count;
-//         this.isLoadingResults = false;
-//         return data.body.rows;
-//       }),
-//       catchError(() => {
-//         this.isLoadingResults = false;
-//         this.changeRef.detectChanges();
-//         return [];
-//       })
-//     ).subscribe(values => {
-//       this.records = values;
-//       const arr = [];
-//       if(values[0]) {
-//          for (const val in values[0].columns) {
-//             if(values[0].columns[val]) {
-//                arr.push(values[0].columns[val].referenceDataElement.label);
-//             }
-//          }
-//          this.displayedColumns = arr;
-//       }
-//     });
-
-//   };
-
 
  onTermSelect = event => {
     console.log(event);

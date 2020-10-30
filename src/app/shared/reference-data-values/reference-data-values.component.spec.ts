@@ -24,6 +24,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { ReferenceDataValuesComponent } from './reference-data-values.component';
+import { FormsModule } from '@angular/forms';
 
 describe('ReferenceDataValuesComponent', () => {
    let component: ReferenceDataValuesComponent;
@@ -35,7 +36,8 @@ describe('ReferenceDataValuesComponent', () => {
             MatPaginatorModule,
             NgxSkeletonLoaderModule,
             MatTableModule,
-            NoopAnimationsModule
+            NoopAnimationsModule,
+            FormsModule
          ],
          providers: [
             {
@@ -43,8 +45,10 @@ describe('ReferenceDataValuesComponent', () => {
                useValue: {
                   referenceDataValue: {
                      // tslint:disable-next-line: deprecation
-                     list: () => empty()
-                  }
+                     list: () => empty(),
+                     // tslint:disable-next-line: deprecation
+                     search: () => empty()
+                  },
                }
             }
          ],

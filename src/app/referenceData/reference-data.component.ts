@@ -78,56 +78,28 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
   }
 
   referenceModelDetails(id: any) {
-    // const arr = [];
     this.resourcesService.referenceDataModel.get(id).subscribe((result: { body: ReferenceModelResult }) => {
       this.referenceModel = result.body;
       this.isEditable = this.referenceModel['availableActions'].includes('update');
       this.parentId = this.referenceModel.id;
 
-      // await this.resourcesService.versionLink.list('referenceModels', this.referenceModel.id).subscribe(response => { // TO DO (semantic links)
-      //   if (response.body.count > 0) {
-      //     arr = response.body.items;
-      //     for (const val in arr) {
-      //       if (this.referenceModel.id !== arr[val].targetModel.id) {
-      //         this.semanticLinks.push(arr[val]);
-      //       }
-      //     }
-      //   }
-      // });
-
-      // if (this.sharedService.isLoggedIn(true)) {
-      //   this.ReferenceModelPermissions(id);
-      // } else {
-        // this.messageService.dataChanged(this.referenceModel);
-      //   this.messageService.FolderSendMessage(this.referenceModel);
-      // }
+      if (this.sharedService.isLoggedIn(true)) {
+        this.ReferenceModelPermissions(id);
+      } else {
+        this.messageService.dataChanged(this.referenceModel);
+        this.messageService.FolderSendMessage(this.referenceModel);
+      }
       this.messageService.dataChanged(this.referenceModel);
 
-      // this.tabGroup.realignInkBar();
+      this.tabGroup.realignInkBar();
       // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
       this.tabSelected(this.activeTab);
     });
   }
 
- fetch = (text, loadAll, offset, limit) => {
-   limit = limit ? limit : 20;
-   offset = offset ? offset : 0;
-   this.pagination = {
-     limit,
-     offset
-   };
-
-   this.searchTerm = text;
-   return this.resourcesService.referenceDataValue.search(this.stateService.params.id, { search:text, max: limit, offset });
- };
-
- onTermSelect = event => {
-    console.log(event);
- };
-
   ReferenceModelPermissions(id: any) {
-    this.resourcesService.security.permissions('referenceModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
+    this.resourcesService.security.permissions('referenceDataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach(attrname => {
         this.referenceModel[attrname] = permissions.body[attrname];
       });

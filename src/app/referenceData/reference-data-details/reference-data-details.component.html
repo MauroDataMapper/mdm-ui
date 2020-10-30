@@ -208,7 +208,7 @@ SPDX-License-Identifier: Apache-2.0
                             [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
                     </div>
 
-                      <!-- <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
+                      <div *ngIf="showPermission" style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
                           <button mat-stroked-button
                                   color="primary"
                                   type="button"
@@ -219,7 +219,7 @@ SPDX-License-Identifier: Apache-2.0
                                   [disabled]="deleteInProgress || processing">
                               <i class="fas fa-user-lock"></i>
                           </button>
-                      </div> -->
+                      </div>
 
                       <!-- TODO - pending update from back-end
                         <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
@@ -272,10 +272,10 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="showSecuritySection">
   <div style="width:100%;">
       <div class="userAccess" style="margin: 10px 0px 50px 0px">
-          <mdm-share-with [mcElement]="'referenceDataModel'" [mcDomainType]="'referenceDataModel'"></mdm-share-with>
+          <mdm-share-with [mcElement]="'referenceDataModels'" [mcDomainType]="'ReferenceDataModel'"></mdm-share-with>
           <div colspan="2">
               <div style="margin-top: 10px">
-                  <mdm-group-access-new [parent]="'referenceDataModel'" [parentType]="'referenceDataModel'"></mdm-group-access-new>
+                  <mdm-group-access-new [parent]="'referenceDataModels'" [parentType]="'referenceDataModels'"></mdm-group-access-new>
               </div>
           </div>
       </div>

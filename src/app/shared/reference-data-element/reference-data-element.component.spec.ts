@@ -25,7 +25,6 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ReferenceDataElementComponent', () => {
@@ -39,7 +38,6 @@ describe('ReferenceDataElementComponent', () => {
          MatDialogModule,
          NgxSkeletonLoaderModule,
          MatTableModule,
-         MatSortModule,
          NoopAnimationsModule
        ],
       providers: [

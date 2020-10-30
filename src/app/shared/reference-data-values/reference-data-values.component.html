@@ -54,20 +54,12 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
    <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-         <th style="width: 50%">
-            <ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader>
-         </th>
-         <th style="width: 50%;">
-            <ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader>
-         </th>
+         <th style="width: 50%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+         <th style="width: 50%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
       </tr>
       <tr>
-         <td>
-            <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
-         </td>
-         <td>
-            <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
-         </td>
+         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
       </tr>
    </table>
 </div>

@@ -26,8 +26,6 @@ import { MessageService } from '@mdm/services/message.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { McSelectPagination } from '../utility/mc-select/mc-select.component';
-import { GridService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -40,41 +38,31 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
   showSecuritySection: boolean;
   subscription: Subscription;
   parentId: string;
-  editMode = false;
   isEditable: boolean;
   showExtraTabs = false;
   activeTab: any;
   semanticLinks: any[] = [];
-
-  pagination: McSelectPagination;
-  searchTerm: any;
 
   constructor(private resourcesService: MdmResourcesService,
               private sharedService: SharedService,
               private messageService: MessageService,
               private stateService: StateService,
               private stateHandler: StateHandlerService,
-              private title: Title,
-              private gridService: GridService) { }
+              private title: Title) { }
 
   ngOnInit(): void {
     // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    this.parentId = this.stateService.params.id;
+    if (!this.parentId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
-      this.editMode = true;
-    }
     this.showExtraTabs = this.sharedService.isLoggedIn();
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+    this.title.setTitle('Reference Data Model');
 
-    this.title.setTitle('Data Model');
     // tslint:disable-next-line: deprecation
-    this.referenceModelDetails(this.stateService.params.id);
+    this.referenceModelDetails(this.parentId);
   }
 
   referenceModelDetails(id: any) {

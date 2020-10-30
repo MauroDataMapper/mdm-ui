@@ -15,119 +15,54 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, ViewChildren, QueryList, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
-import { MatInput } from '@angular/material/input';
-import { MatSort } from '@angular/material/sort';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
-import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
-import { MatDialog } from '@angular/material/dialog';
+import { merge } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { GridService } from '@mdm/services';
 
 @Component({
-  selector: 'mdm-reference-data-element',
-  templateUrl: './reference-data-element.component.html',
-  styleUrls: ['./reference-data-element.component.scss']
+   selector: 'mdm-reference-data-element',
+   templateUrl: './reference-data-element.component.html',
+   styleUrls: ['./reference-data-element.component.scss']
 })
-export class ReferenceDataElementComponent implements OnInit, AfterViewInit {
-  @Input() parent: any;
-  @Input() type: any;
-  @Input() isEditable: any;
+export class ReferenceDataElementComponent implements AfterViewInit {
+   @Input() parent: any;
+   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+   records: any[] = [];
+   totalItemCount = 0;
+   isLoadingResults = true;
+   displayedColumns = ['name', 'description', 'type'];
 
-  @ViewChildren('filters') filters: QueryList<MatInput>;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+   constructor(
+      private resources: MdmResourcesService,
+      private changeRef: ChangeDetectorRef,
+      private gridService: GridService
+   ) { }
 
-  records: any[] = [];
-  processing = false;
-  failCount: number;
-  hideFilters = true;
-  totalItemCount = 0;
-  isLoadingResults = true;
-  filterEvent = new EventEmitter<any>();
-  filter: any;
-  domainType;
-  checkAllCheckbox = false;
-  bulkActionsVisibile = 0;
-  displayedColumns = ['name', 'description', 'type'];
-
-  constructor(
-    private resources: MdmResourcesService,
-    private dialog: MatDialog
-    ) { }
-
-  ngOnInit(): void {
-    this.isEditable = false; // TODO - set editable to false until back-end is ready
-    if (this.isEditable && !this.parent.finalised) {
-      this.displayedColumns = ['checkbox', 'name', 'description', 'type', 'actions'];
-    } else {
-      this.displayedColumns = ['name', 'description', 'type'];
-    }
-  }
-
-  ngAfterViewInit(): void {
-     this.listReferenceDataElements(this.parent?.id).subscribe(resp => {
-      this.records = resp.body.items;
-      this.totalItemCount = resp.body.count;
-      this.isLoadingResults = false;
-    });
-  }
-
-  listReferenceDataElements = id => {
-    return this.resources.referenceDataElement.list(id);
-  };
-
-  onChecked = () => {
-    this.records.forEach(x => (x.checked = this.checkAllCheckbox));
-    this.listChecked();
-  };
-
-  toggleDelete = (record) => {
-    this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisibile = 0;
-    record.checked = true;
-    this.bulkDelete();
-  };
-
-  listChecked = () => {
-    let count = 0;
-    for (const value of Object.values(this.records)) {
-      if (value.checked) {
-        count++;
-      }
-    }
-    this.bulkActionsVisibile = count;
-  };
-
-  bulkDelete = () => {
-    const dataElementIdLst = [];
-    this.records.forEach(record => {
-      if (record.checked) {
-        dataElementIdLst.push({
-          id: record.id,
-          domainType: record.domainType
-        });
-      }
-    });
-    const promise = new Promise((resolve, reject) => {
-      const dialog = this.dialog.open(BulkDeleteModalComponent, {
-        data: { dataElementIdLst, parentDataModel: this.parent, parentDataClass: this.parent },
-        panelClass: 'bulk-delete-modal'
+   ngAfterViewInit(): void {
+      merge(this.paginator.page).pipe(startWith({}), switchMap(() => {
+         this.isLoadingResults = true;
+         this.changeRef.detectChanges();
+         return this.listDataElements(this.paginator.pageSize, this.paginator.pageOffset);
+      }), map((data: any) => {
+         this.totalItemCount = data.body.count;
+         this.isLoadingResults = false;
+         return data.body.items;
+      }), catchError(() => {
+         this.isLoadingResults = false;
+         this.changeRef.detectChanges();
+         return [];
+      })).subscribe(data => {
+         this.records = data;
+         this.isLoadingResults = false;
+         this.changeRef.detectChanges();
       });
+   }
 
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
-    });
-    promise.then(() => {
-      this.records.forEach(x => (x.checked = false));
-      // this.records = this.records;
-      this.checkAllCheckbox = false;
-      this.bulkActionsVisibile = 0;
-      this.filterEvent.emit();
-    }).catch(() => console.warn('error'));
-  };
+   listDataElements = (pageSize?, pageIndex?) => {
+      const options = this.gridService.constructOptions(pageSize, pageIndex);
+      return this.resources.referenceDataElement.list(this.parent?.id, options);
+   };
 }

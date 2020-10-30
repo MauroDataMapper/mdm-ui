@@ -32,7 +32,6 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
    @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
    @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
    records: any[] = [];
-   searchRecords: any[] = [];
    displayedColumns: string[];
    totalItemCount = 0;
    isLoadingResults = true;
@@ -54,7 +53,6 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
    displayReferenceDataValues = () => {
       this.changeRef.detectChanges();
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-
       merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
          this.isLoadingResults = true;
          return this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);

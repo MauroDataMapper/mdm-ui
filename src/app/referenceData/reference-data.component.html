@@ -24,14 +24,14 @@ SPDX-License-Identifier: Apache-2.0
   <mat-tab label="Elements">
     <ng-template matTabContent>
         <div class="full-width">
-            <mdm-reference-data-element *ngIf="referenceModel" [parent]="referenceModel" [isEditable]="isEditable"></mdm-reference-data-element>
+            <mdm-reference-data-element *ngIf="referenceModel" [parent]="referenceModel"></mdm-reference-data-element>
         </div>
     </ng-template>
   </mat-tab>
   <mat-tab label="Types">
       <ng-template matTabContent>
           <div class="full-width">
-              <mdm-reference-data-type *ngIf="referenceModel" [parent]="referenceModel" [isEditable]="isEditable"></mdm-reference-data-type>
+              <mdm-reference-data-type *ngIf="referenceModel" [parent]="referenceModel"></mdm-reference-data-type>
           </div>
       </ng-template>
   </mat-tab>

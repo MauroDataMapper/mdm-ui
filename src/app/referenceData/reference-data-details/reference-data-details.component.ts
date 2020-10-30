@@ -70,7 +70,6 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
    editableForm: EditableDataModel;
    errorMessage = '';
    processing = false;
-   compareToList = [];
    exportError = null;
    exportedFileIsReady = false;
    exportList = [];
@@ -80,7 +79,6 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
    urlText: any;
    canEditDescription = true;
    showEditDescription = false;
-
 
    constructor(
       private renderer: Renderer2,
@@ -96,10 +94,6 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       private exportHandler: ExportHandlerService,
       private title: Title
    ) { }
-   public showAddElementToMarkdown() {
-      // Remove from here & put in markdown
-      // this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
-   }
 
    ngOnInit() {
       this.isAdminUser = this.sharedService.isAdmin;
@@ -171,21 +165,6 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
                this.editableForm.aliases.push(item);
             });
          }
-         if (this.result.semanticLinks) {
-            this.result.semanticLinks.forEach(link => {
-               if (link.linkType === 'New Version Of') {
-                  this.compareToList.push(link.target);
-               }
-            });
-         }
-
-         if (this.result.semanticLinks) {
-            this.result.semanticLinks.forEach(link => {
-               if (link.linkType === 'Superseded By') {
-                  this.compareToList.push(link.target);
-               }
-            });
-         }
 
          if (this.result != null) {
             this.hasResult = true;
@@ -236,7 +215,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
          }
       }, error => {
          this.deleteInProgress = false;
-         this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+         this.messageHandler.showError('There was a problem deleting the Reference Data Model.', error);
       });
    }
 
@@ -247,10 +226,10 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       const promise = new Promise(() => {
          const dialog = this.dialog.open(ConfirmationModalComponent, {
             data: {
-               title: 'Are you sure you want to delete this Data Model?',
+               title: 'Are you sure you want to delete this Reference Data Model?',
                okBtnTitle: 'Yes, delete',
                btnType: 'warn',
-               message: `<p class="marginless">This Data Model will be marked as deleted and will not be viewable by users </p>
+               message: `<p class="marginless">This Reference Data Model will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
             }
          });
@@ -278,7 +257,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
                title: 'Permanent deletion',
                okBtnTitle: 'Yes, delete',
                btnType: 'warn',
-               message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
+               message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Reference Data Model?'
             }
          });
 
@@ -291,7 +270,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
                   title: 'Confirm permanent deletion',
                   okBtnTitle: 'Confirm deletion',
                   btnType: 'warn',
-                  message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
+                  message: `<p class='marginless'><strong>Note: </strong>All its 'Types', 'Elements' and 'Data Values'
                       <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
                }
             });
@@ -354,7 +333,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
             this.editForm.forEach(x => x.edit({ editing: false }));
             this.broadcastSvc.broadcast('$reloadFoldersTree');
          }, error => {
-            this.messageHandler.showError('There was a problem updating the Data Model.', error);
+            this.messageHandler.showError('There was a problem updating the Reference Data Model.', error);
          });
       }
    };
@@ -389,10 +368,10 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       this.exportError = null;
       this.processing = true;
       this.exportedFileIsReady = false;
-      this.exportHandler.exportDataModel([this.result], exporter, 'referenceModels').subscribe(result => {
+      this.exportHandler.exportDataModel([this.result], exporter, 'referenceDataModels').subscribe(result => {
          if (result != null) {
             this.exportedFileIsReady = true;
-            const label = [this.result].length === 1 ? [this.result][0].label : 'data_models';
+            const label = [this.result].length === 1 ? [this.result][0].label : 'reference_models';
             const fileName = this.exportHandler.createFileName(label, exporter);
             const file = new Blob([result.body], { type: exporter.fileType });
             const link = this.exportHandler.createBlobLink(file, fileName);
@@ -401,11 +380,11 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
             this.renderer.appendChild(this.aLink.nativeElement, link);
          } else {
             this.processing = false;
-            this.messageHandler.showError('There was a problem exporting the Data Model.', '');
+            this.messageHandler.showError('There was a problem exporting the Reference Data Model.', '');
          }
       }, error => {
          this.processing = false;
-         this.messageHandler.showError('There was a problem exporting the Data Model.', error);
+         this.messageHandler.showError('There was a problem exporting the Reference Data Model.', error);
       });
    }
 

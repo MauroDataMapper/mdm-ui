@@ -58,8 +58,6 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
          this.isLoadingResults = true;
          return this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
-
-         // return (this.hideFilters ? this.listReferenceDataValues(this.paginator?.pageSize, this.paginator?.pageOffset) : this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: this.paginator?.pageSize, offset: this.paginator?.pageOffset }));
       }), map((data: any) => {
          this.totalItemCount = data.body.count;
          this.isLoadingResults = false;
@@ -90,6 +88,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
 
    toggleSearch = () => {
       this.hideFilters = !this.hideFilters;
+      this.displayReferenceDataValues();
    };
 
    applyFilter = () => {
@@ -111,15 +110,14 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
          offset: pageIndex,
          asRows: true
       };
+
       if (filters) {
-         options['search'] = unescape(this.searchTerm);
-       }
+         options['search'] = this.searchTerm;
+      }
 
       if (this.hideFilters) {
          return this.resources.referenceDataValue.list(this.parent.id, options);
-         // return this.resources.dataClass.content(this.parentDataModel.id, this.parentDataClass.id, options);
       } else if (!this.hideFilters) {
-         // return this.resources.referenceDataValue.search(this.parent.id, options);
          return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: pageSize, offset: pageIndex });
       }
    }

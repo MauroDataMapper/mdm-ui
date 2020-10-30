@@ -19,31 +19,6 @@ SPDX-License-Identifier: Apache-2.0
   <mdm-reference-data-details></mdm-reference-data-details>
 
 </div>
-<!-- <div class="full-width mb-1 mdm--shadow-block">
-   <div class="panel">
-
-      <div class="panel-body">
-         <h4 class="mb-8">Find Data Values</h4>
-            <mdm-select [width]="'100%'"
-                        [acceptTypedInput]="false"
-                        [valueType]="'dynamic'"
-                        [minInputLength]="1"
-                        [defaultPlaceholder]="'Search ...'"
-                        [loadDynamicValues]="fetch"
-                        [doNotCloseOnSelect]="true"
-                        [idProperty]="'id'"
-                        [displayProperty]="'description'"
-                        [searchProperty]="'description'"
-                        [pagination]="pagination"
-                        (selectEvent)="onTermSelect($event[0])">
-               <ng-template #lineContent let-item let-inputText="inputText">
-                  <span [innerHTML]="item.columns[0].description"></span>
-               </ng-template>
-            </mdm-select>
-      </div>
-   </div>
-</div> -->
-
 
 <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
   <mat-tab label="Elements">

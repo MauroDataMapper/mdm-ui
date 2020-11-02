@@ -37,6 +37,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
 import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -78,12 +79,11 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
     private dialog: MatDialog,
-    private gridService: GridService
+    private gridService: GridService,
+    private messageHandler: MessageHandlerService,
   ) { }
 
   ngOnInit(): void {
-    // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    // Add 'implements OnInit' to the class.
     if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
     } else {
@@ -92,18 +92,11 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+    merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
-      return this.dataClassesFetch(
-        this.paginator.pageSize,
-        this.paginator.pageOffset,
-        this.sort.active,
-        this.sort.direction,
-        this.filter
-      );
+      return this.dataClassesFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
     }), map((data: any) => {
       this.totalItemCount = data.body.count;
       this.isLoadingResults = false;
@@ -113,8 +106,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
       return [];
-    })
-    ).subscribe(data => {
+    })).subscribe(data => {
       this.records = data;
     });
   }
@@ -140,9 +132,9 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.hideFilters = !this.hideFilters;
   };
 
-  dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    sortBy = 'idx';
-    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+  dataClassesFetch(pageSize?, pageIndex?, filters?): Observable<any> {
+    const sortBy = 'idx';
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
 
     if (!this.parentDataClass.id) {
       return this.resources.dataClass.list(this.parentDataModel.id, options);
@@ -207,31 +199,32 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
 
   // Drag and drop
   dropTable(event: CdkDragDrop<any[]>) {
-
     moveItemInArray(this.records, event.previousIndex, event.currentIndex);
-
-    let prevRec = this.records[event.currentIndex];
-
+    const prevRec = this.records[event.currentIndex];
     if (prevRec === undefined) {
       return;
     }
-
     this.updateOrder(event.item, event.currentIndex);
-
     this.table.renderRows();
   }
 
-    updateOrder = (item, newPosition) => {
-      const resource = {
-        index: newPosition
-      };
-
-      this.resources.dataClass.update(this.parentDataModel.id, item.data.id, resource).subscribe(result => {
-          console.log('Class list updated successfully.');
-        },
-        error => {
-          console.log('There was a problem updating the class list order.', error);
-        }
-      );
+  updateOrder = (item, newPosition) => {
+    const resource = {
+      index: newPosition
     };
+
+    if (!this.parentDataClass.id) {
+      this.resources.dataClass.update(this.parentDataModel.id, item.data.id, resource).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class reorderedsuccessfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      });
+    } else {
+      this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.data.id, resource).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class reorderedsuccessfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      });
+    }
+  }
 }

@@ -135,10 +135,9 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
     };
 
     await this.resources.dataElement.update(this.parentDataModel.id, item.data.dataClass, item.data.id, resource).subscribe(() => {
-      console.log('Data Element updated successfully.');
       this.messageHandler.showSuccess('Data Element reorderedsuccessfully.');
     }, error => {
-      console.log('There was a problem updating the Data Element.', error);
+      this.messageHandler.showError('There was a problem updating the Data Element.', error);
     });
   };
 }

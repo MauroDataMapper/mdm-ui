@@ -160,6 +160,7 @@ SPDX-License-Identifier: Apache-2.0
               </thead>
               <tbody>
                 <tr *ngFor="let diff of diffs.dataElements">
+                  <div *ngIf="!diff.modified">
                   <td
                     style="min-width: 18px; width: 18px"
                     [ngClass]="{
@@ -175,14 +176,16 @@ SPDX-License-Identifier: Apache-2.0
                     ></mat-checkbox
                     >&nbsp;
                   </td>
-                  <td style="text-align: left; word-wrap: break-word">
-                    <strong style="font-style: italic">Label:</strong>
-                    <div>
-                      <span style="border-bottom: 1px dashed #000">{{
-                        diff.label
-                      }}</span>
-                    </div>
-                  </td>
+              
+                    <td style="text-align: left; word-wrap: break-word">
+                      <strong style="font-style: italic">Label:</strong>
+                      <div>
+                        <span style="border-bottom: 1px dashed #000">{{
+                          diff.label
+                        }}</span>
+                      </div>
+                    </td>
+                  </div>
                 </tr>
               </tbody>
             </table>
@@ -309,12 +312,11 @@ SPDX-License-Identifier: Apache-2.0
                       ></span>
 
                       <span
-                        *ngIf="diff.acceptTarget  && !diff.acceptSource"
+                        *ngIf="diff.acceptTarget && !diff.acceptSource"
                         style="border-bottom: 1px dashed #000"
                         [innerHTML]="diff.left"
                       ></span>
 
-                      
                       <span
                         *ngIf="diff.acceptTarget && diff.acceptSource"
                         style="border-bottom: 1px dashed #000"
@@ -362,42 +364,38 @@ SPDX-License-Identifier: Apache-2.0
               </tbody>
             </table>
           </tr>
-          <tr
-          *ngIf="
-            diffsMerged.dataTypes && diffsMerged.dataTypes.length > 0
-          "
-        >
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Types</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffsMerged.dataTypes">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                ></td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic">Label:</strong>
+          <tr *ngIf="diffsMerged.dataTypes && diffsMerged.dataTypes.length > 0">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Types</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffsMerged.dataTypes">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  ></td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Label:</strong>
 
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.label
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>       
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
           <tr
             *ngIf="
               diffsMerged.dataClasses && diffsMerged.dataClasses.length > 0
@@ -531,48 +529,47 @@ SPDX-License-Identifier: Apache-2.0
             </table>
           </tr>
           <tr
-          *ngIf="
-            diffs.filteredDataTypes &&
-            diffs.filteredDataTypes.length > 0
-          "
-        >
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
-                <th style="cursor: pointer">Diffs Types</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let diff of diffs.filteredDataTypes">
-                <td
-                  style="min-width: 18px; width: 18px"
-                  [ngClass]="{
-                    comparisonRow: true,
-                    deleted: diff.deleted,
-                    modified: diff.modified,
-                    created: diff.created
-                  }"
-                >
-                  &nbsp;<mat-checkbox
-                    (change)="onAcceptPress(diff, 'target', 'dataElement')"
-                    [(ngModel)]="diff.acceptTarget"
-                  ></mat-checkbox
-                  >&nbsp;
-                </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <strong style="font-style: italic">Label:</strong>
+            *ngIf="
+              diffs.filteredDataTypes && diffs.filteredDataTypes.length > 0
+            "
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Types</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.filteredDataTypes">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  >
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'target', 'dataElement')"
+                      [(ngModel)]="diff.acceptTarget"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Label:</strong>
 
-                  <div>
-                    <span style="border-bottom: 1px dashed #000">{{
-                      diff.label
-                    }}</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </tr>
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
           <tr
             *ngFor="
               let diff of diffs.filteredDataClasses &&
@@ -620,4 +617,3 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
 </div>
-

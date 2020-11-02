@@ -26,7 +26,9 @@ SPDX-License-Identifier: Apache-2.0
         <div #mergeDifflr></div>
       </div>
       <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+        <h4>Parsed</h4>
         <span [innerHTML]="mergeString | safe: 'html'"></span>
+        <h4>Raw</h4>
         <textarea style="width: 100%;" rows="10" [(ngModel)]="mergeString"></textarea>
       </div>
       <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">

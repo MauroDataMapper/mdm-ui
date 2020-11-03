@@ -103,10 +103,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private exportHandler: ExportHandlerService,
     private title: Title
   ) { }
-  public showAddElementToMarkdown() {
-    // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', null);
-  }
 
   ngOnInit() {
 

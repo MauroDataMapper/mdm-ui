@@ -52,7 +52,7 @@ export class ElementTypesService {
       link: 'ReferenceDataModel',
       title: 'ReferenceDataModel',
       resourceName: 'ReferenceDataModel',
-      markdown: 'RDM',
+      markdown: 'rdm',
       classifiable: true
     },
     {
@@ -134,7 +134,7 @@ export class ElementTypesService {
       link: 'dataElement',
       title: 'DataElement (ReferenceDataElement)',
       baseTitle: 'DataElement',
-      markdown: 'DE',
+      markdown: 'rde',
       classifiable: true
     },
     { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true },
@@ -161,7 +161,7 @@ export class ElementTypesService {
       link: 'referenceDataType',
       title: 'DataType (Reference Data Type)',
       baseTitle: 'Reference Data Type',
-      markdown: 'RDT',
+      markdown: 'rdt',
       displayLabel: 'Reference Data Type',
       classifiable: true
     },
@@ -179,7 +179,7 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'DataType (ModelDataType)',
       baseTitle: 'DataType',
-      markdown: 'DT',
+      markdown: 'mdt',
       displayLabel: 'ModelDataType',
       classifiable: true
     },
@@ -197,7 +197,7 @@ export class ElementTypesService {
       link: 'codeSet',
       title: 'CodeSet',
       baseTitle: 'DataType',
-      markdown: 'DT',
+      markdown: 'cst',
       displayLabel: 'Code Set',
       classifiable: true
     },
@@ -206,7 +206,7 @@ export class ElementTypesService {
       link: 'referenceDataModel',
       title: 'ReferenceDataModel',
       baseTitle: 'DataType',
-      markdown: 'DT',
+      markdown: 'rdmt',
       displayLabel: 'Reference Data Model',
       classifiable: true
     },
@@ -252,7 +252,7 @@ export class ElementTypesService {
       link: 'ReferenceDataModel',
       title: 'ReferenceDataModel',
       resourceName: 'ReferenceDataModel',
-      markdown: 'RDM',
+      markdown: 'rdm',
       classifiable: true
     },
     DataClass: {

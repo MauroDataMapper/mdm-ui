@@ -63,8 +63,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       }), catchError(() => {
          this.isLoadingResults = false;
          return [];
-      })
-      ).subscribe(values => {
+      })).subscribe(values => {
          this.records = values;
          const arr = [];
          if (values[0]) {

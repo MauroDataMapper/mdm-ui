@@ -141,7 +141,10 @@ div.mat-tab-label {
   height: 38px;
 }
 .table td, .table th, tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
-  padding: .35rem .75rem;
+  padding: .45rem .75rem;
+}
+tr th.mat-header-cell {
+   padding: .3rem .75rem;
 }
 
 /* Styles for the active tab label */

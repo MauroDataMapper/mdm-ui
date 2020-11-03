@@ -74,13 +74,12 @@ export class DataModelComponent implements OnInit, OnDestroy {
 
     this.title.setTitle('Data Model');
 
-    // tslint:disable-next-line: deprecation
-    this.dataModelDetails(this.stateService.params.id);
+    this.dataModelDetails(this.parentId);
 
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
+    // this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
   }
 
   dataModelDetails(id: any) {

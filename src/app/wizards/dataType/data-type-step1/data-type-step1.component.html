@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="model" class="mb-2">
 	<span>How do you want to add a new Data Type(s) to </span>
 	<mdm-element-link [parentDataModel]="{id:model.parent}" [newWindow]="true" [element]="model.parent"></mdm-element-link>
-	<span>? <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltipPosition="below" matTooltip="Help"></i></span>
 	<mat-radio-group name="createType" [(ngModel)]="model.createType" (click)="selectCreateType('new')">
 		<mat-radio-button [checked]="model.createType === 'new'" value="new">Create a New Data Type</mat-radio-button>
 	</mat-radio-group>

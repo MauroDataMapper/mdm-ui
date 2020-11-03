@@ -15,7 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
@@ -64,6 +69,8 @@ export class ModelMergingComponent implements OnInit {
 
   outstandingErrors = 0;
 
+  loaded = false;
+
   form = {
     dataTypeFilter: null,
     dataElementFilter: null
@@ -75,7 +82,8 @@ export class ModelMergingComponent implements OnInit {
     private resources: MdmResourcesService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private changeRef: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -164,26 +172,6 @@ export class ModelMergingComponent implements OnInit {
     });
 
     return prom;
-  }
-
-  autoMerge(left: any, right: any) {
-    Object.entries(left).forEach((element: any) => {
-      const [] = element;
-      Object.entries(right).forEach((el: any) => {
-        const [] = el;
-        if (element[0] === el[0]) {
-          element[1].forEach((itemS) => {
-            el[1].forEach((itemT) => {
-              if (itemS.title === itemT.title) {
-                if (itemS.left === itemT.left) {
-                  // this.diffsMerged.push(element);
-                }
-              }
-            });
-          });
-        }
-      });
-    });
   }
 
   modifiedParents = (breadcrumbs, diffMap) => {
@@ -304,14 +292,13 @@ export class ModelMergingComponent implements OnInit {
     let tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
-        if(child.domainType === "PrimitiveType"){
+        if (child.domainType === 'PrimitiveType') {
           tempMod.push(this.createDiffMap(false, child));
-        }       
+        }
       });
     }
 
     objects.modified = tempMod;
-
 
     return objects;
   }
@@ -343,13 +330,12 @@ export class ModelMergingComponent implements OnInit {
       }
     });
 
-    
     let tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
-        if(child.domainType === "DataElement"){
+        if (child.domainType === 'DataElement') {
           tempMod.push(this.createDiffMap(false, child));
-        }       
+        }
       });
     }
 
@@ -386,9 +372,9 @@ export class ModelMergingComponent implements OnInit {
     let tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
-        if(child.domainType === "DataClass"){
+        if (child.domainType === 'DataClass') {
           tempMod.push(this.createDiffMap(false, child));
-        }       
+        }
       });
     }
 
@@ -410,7 +396,8 @@ export class ModelMergingComponent implements OnInit {
           let tr = this.createDiffMap(true, this.targetModel);
 
           var data = {
-            patch: tr
+            patch: tr,
+            deleteBranch: result.deleteSourceBranch
           };
 
           this.resources.versioning
@@ -453,7 +440,13 @@ export class ModelMergingComponent implements OnInit {
     diffMap[rightId].diffs.properties.push(update);
   };
 
-  findDiffProps = (propName, leftId, rightId, labelDiff, diffMap) => {
+  findDiffProps = (
+    propName,
+    leftId,
+    rightId,
+    labelDiff,
+    diffMap    
+  ) => {
     this.initDiff(leftId, diffMap);
     this.initDiff(rightId, diffMap);
     diffMap[leftId].modified = true;
@@ -470,6 +463,12 @@ export class ModelMergingComponent implements OnInit {
       right:
         !labelDiff.right || labelDiff.right === 'null' ? "' '" : labelDiff.right
     };
+
+    if (!labelDiff.isMergeConflict) {
+      update["acceptSource"] = true;
+      update["acceptTarget"] = false;
+      this.onAcceptPress(update, 'source', 'property');
+    }
 
     diffMap[leftId].diffs.properties.push(update);
     diffMap[rightId].diffs.properties.push(update);
@@ -580,6 +579,11 @@ export class ModelMergingComponent implements OnInit {
 
           // Run for DataModel
           this.calculateDiff(result, this.diffMap);
+
+          this.removeNonConflicts(this.sourceModel.children);
+          this.removeNonConflicts(this.targetModel.children);
+
+          this.loaded = true;
         },
         (error) => {
           this.messageHandler.showError(
@@ -590,6 +594,15 @@ export class ModelMergingComponent implements OnInit {
         }
       );
   };
+
+  private removeNonConflicts(arr: any) {
+    for (let i = arr.length - 1; i >= 0; i -= 1) {
+      const element = arr[i];
+      if (!element.modified && !element.created && !element.deleted) {
+        arr.splice(i, 1);
+      }
+    }
+  }
 
   searchForNode(model: any, label: any) {
     let result: any;
@@ -703,7 +716,7 @@ export class ModelMergingComponent implements OnInit {
           if (element.created) {
             if (element.breadcrumbs[0].id === this.targetModel.id) {
               tempDataTypesDiff.push(element);
-            }          
+            }
           }
         }
       });
@@ -999,6 +1012,7 @@ export class ModelMergingComponent implements OnInit {
           diff.label,
           diffMap
         );
+
       }
       if (diff.description) {
         this.findDiffProps(
@@ -1017,6 +1031,7 @@ export class ModelMergingComponent implements OnInit {
           diff.author,
           diffMap
         );
+
       }
       if (diff.organisation) {
         this.findDiffProps(
@@ -1026,6 +1041,7 @@ export class ModelMergingComponent implements OnInit {
           diff.organisation,
           diffMap
         );
+
       }
       if (diff.a) {
         this.findDiffProps(
@@ -1035,6 +1051,7 @@ export class ModelMergingComponent implements OnInit {
           diff.organisation,
           diffMap
         );
+
       }
 
       if (diff.metadata) {
@@ -1067,6 +1084,12 @@ export class ModelMergingComponent implements OnInit {
             el.modified = false;
             const parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
             diffMap[parentDC.id].diffs.dataClasses.push(el);
+            
+            if(!item.isMergeConflict){
+              el.acceptSource = true;
+              el.acceptTarget = false;
+              this.onAcceptPress(el,"source","dataClass");
+            }
           }
 
           if (diffElement === 'dataElements' && el.breadcrumbs) {
@@ -1079,6 +1102,12 @@ export class ModelMergingComponent implements OnInit {
             el.deleted = false;
             el.domainType = 'DataElement';
             diffMap[parentDC.id].diffs.dataElements.push(el);
+
+            if(!item.isMergeConflict){
+              el.acceptSource = true;
+              el.acceptTarget = false;
+              this.onAcceptPress(el,"source","dataElements");
+            }
           }
 
           if (diffElement === 'dataTypes') {
@@ -1095,6 +1124,12 @@ export class ModelMergingComponent implements OnInit {
 
             diffMap[this.sourceModel.id].diffs.dataTypes.push(el);
             diffMap[this.targetModel.id].diffs.dataTypes.push(el);
+
+            if(!item.isMergeConflict){
+              el.acceptSource = true;
+              el.acceptTarget = false;
+              this.onAcceptPress(el,"source","dataType");
+            }
           }
         });
 
@@ -1175,6 +1210,7 @@ export class ModelMergingComponent implements OnInit {
               };
               this.calculateDiff(childDataClasses, this.diffMap);
             }
+
           }
 
           if (diffElement === 'dataElements' && el.leftBreadcrumbs) {
@@ -1254,6 +1290,7 @@ export class ModelMergingComponent implements OnInit {
                 diff.label,
                 diffMap
               );
+       
             }
             if (diff.description) {
               this.findDiffProps(
@@ -1271,8 +1308,9 @@ export class ModelMergingComponent implements OnInit {
                 el.rightId,
                 diff.author,
                 diffMap
-              );
+              );      
             }
+
             if (diff.organisation) {
               this.findDiffProps(
                 'organisation',
@@ -1282,6 +1320,7 @@ export class ModelMergingComponent implements OnInit {
                 diffMap
               );
             }
+
             if (diff.minMultiplicity) {
               this.findDiffProps(
                 'minMultiplicity',

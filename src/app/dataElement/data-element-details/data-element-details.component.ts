@@ -296,7 +296,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     }, error => {
       this.deleteInProgress = false;
-      this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+      this.messageHandler.showError('There was a problem deleting the Data Element.', error);
     });
   }
 

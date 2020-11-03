@@ -71,7 +71,8 @@ mat-tree-node.mat-tree-node {
       font-size: 15px;
     }
     .mat-icon {
-      line-height: 26px;
+      // line-height: 26px;
+      line-height: 20px;
     }
   }
 
@@ -140,7 +141,7 @@ div.mat-tab-label {
   height: 38px;
 }
 .table td, .table th, tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
-  padding: .5rem .75rem;
+  padding: .35rem .75rem;
 }
 
 /* Styles for the active tab label */
@@ -265,7 +266,7 @@ ul.favourites li:focus {
   color: #076528;
   border: 1px solid rgba(10, 133, 53, 0.5);
   border-radius: 5px;
-  padding: 4px;
+  padding: 1px 6px;
   display: inline-block;
   vertical-align: middle;
 }

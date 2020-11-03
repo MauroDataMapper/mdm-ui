@@ -15,7 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="container" *ngIf="diffMap">
+<div class="loading-spinner" *ngIf="!loaded">
+  <div>
+      <i class="fas fa-sync-alt fa-spin"></i>
+  </div>
+</div>
+<div class="container" *ngIf="loaded">
   <div class="row">
     <mdm-folders-tree
       [node]="{ children: [sourceModel] }"
@@ -159,8 +164,7 @@ SPDX-License-Identifier: Apache-2.0
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let diff of diffs.dataElements">
-                  <div *ngIf="!diff.modified">
+                <tr *ngFor="let diff of diffs.dataElements">            
                   <td
                     style="min-width: 18px; width: 18px"
                     [ngClass]="{
@@ -184,8 +188,7 @@ SPDX-License-Identifier: Apache-2.0
                           diff.label
                         }}</span>
                       </div>
-                    </td>
-                  </div>
+                    </td>              
                 </tr>
               </tbody>
             </table>

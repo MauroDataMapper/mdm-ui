@@ -119,8 +119,18 @@ export class DataClassComponent extends BaseComponent implements OnInit {
         this.dataClass = result.body;
 
         // Get the GUIDs, because we may have path instead of GUID
-        parentDataClassId = result.body.id;
+        parentDataClassId = null;
         dataModelId = result.body.model;
+
+          
+        if(result.body.breadcrumbs)
+        {
+          let res = result.body.breadcrumbs[result.body.breadcrumbs.length - 1];
+          if(res.domainType !== "DataModel")
+          {        
+            parentDataClassId = res.id;
+          }
+        }
 
         this.dataClass.parentDataModel = dataModelId;
         this.dataClass.parentDataClass = parentDataClassId;

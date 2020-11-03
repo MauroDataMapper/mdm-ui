@@ -48,7 +48,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
+
   @Input() editMode = false;
   @Input() afterSave: any;
 
@@ -168,6 +168,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
 
+
       this.editableForm.description = this.result.description;
       this.editableForm.label = this.result.label;
 
@@ -257,22 +258,22 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
   delete() {
     if (!this.result.parentDataClass) {
-      this.resourcesService.dataClass.remove(this.result.parentDataModel, this.result.id).subscribe(() => {
+      this.resourcesService.dataClass.remove(this.result.model, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+        this.messageHandler.showError('There was a problem deleting this Data Class.', error);
       });
     } else {
-      this.resourcesService.dataClass.removeChildDataClass(this.result.parentDataModel, this.result.parentDataClass, this.result.id).subscribe(() => {
+      this.resourcesService.dataClass.removeChildDataClass(this.result.model, this.result.parentDataClass, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
-        this.stateHandler.Go('dataModel', { id: this.result.parentDataModel, reload: true, location: true }, null);
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting the Data Model.', error);
+        this.messageHandler.showError('There was a problem deleting this Data Class.', error);
       });
     }
   }
@@ -320,7 +321,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         };
       }
 
-      if (!this.result.parentDataClass || this.result.parentDataClass === this.result.id) {
+      if (!this.result.parentDataClass) {
         this.resourcesService.dataClass.update(this.result.parentDataModel, this.result.id, resource).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
@@ -333,7 +334,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
         });
       } else {
-        this.resourcesService.dataClass.updateChildDataClass(this.result.parentDataModel, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
+        this.resourcesService.dataClass.updateChildDataClass(this.result.model, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
           if (this.afterSave) {
             this.afterSave(result);
           }

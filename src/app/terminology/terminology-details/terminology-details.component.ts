@@ -182,11 +182,11 @@ export class TerminologyDetailsComponent implements OnInit {
         this.renderer.appendChild(this.aLink.nativeElement, link);
       } else {
         this.processing = false;
-        this.messageHandler.showError('There was a problem exporting the Data Model.', '');
+        this.messageHandler.showError('There was a problem exporting this Terminology.', '');
       }
     }, error => {
       this.processing = false;
-      this.messageHandler.showError('There was a problem exporting the Data Model.', error);
+      this.messageHandler.showError('There was a problem exporting this Terminology.', error);
     });
   }
 
@@ -284,7 +284,7 @@ export class TerminologyDetailsComponent implements OnInit {
             modelVersion: response.body.modelVersion,
             okBtnTitle: 'Finalise Terminology',
             btnType: 'accent',
-            message: `<p class='marginless'>Please select the version you would like this Data Model</p>
+            message: `<p class='marginless'>Please select the version you would like this Terminology</p>
                       <p>to be finalised with: </p>`
           }
         }).afterClosed().subscribe(result => {

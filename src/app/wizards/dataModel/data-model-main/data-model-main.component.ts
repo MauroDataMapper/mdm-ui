@@ -83,7 +83,7 @@ export class DataModelMainComponent implements OnInit {
     this.stateHandler.GoPrevious();
   };
 
-  save = () => {
+  save = async () => {
     const resource = {
       folder: this.parentFolderId,
       label: this.model.label,
@@ -114,10 +114,10 @@ export class DataModelMainComponent implements OnInit {
     //   };
     // }
 
-    this.resources.dataModel.addToFolder(this.parentFolderId, resource).subscribe(response => {
+    await this.resources.dataModel.addToFolder(this.parentFolderId, resource).subscribe(response => {
       this.messageHandler.showSuccess('Data Model saved successfully.');
       this.broadcastSvc.broadcast('$reloadFoldersTree');
-      this.stateHandler.Go('dataModel', { id: response.body.id }, { reload: true, location: true });
+      this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
     },
       error => {
         this.messageHandler.showError('There was a problem saving the Data Model.', error);

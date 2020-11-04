@@ -47,7 +47,6 @@ export class MarkdownDirective implements OnInit {
   }
 
 
-
   private renderMarkdown() {
     if (this.markdown) {
       let html = this.markdownParser.parse(this.markdown, this.renderType);

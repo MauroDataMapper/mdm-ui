@@ -38,7 +38,6 @@ export class CodeSetResult {
 }
 
 
-
 export class Classifiers {
   id: string;
   label: string;

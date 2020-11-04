@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import {
   AfterViewInit,
   Component,
-  ContentChildren,
   Input,
   OnDestroy,
   OnInit,
@@ -28,7 +27,6 @@ import {
 import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -45,12 +43,8 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
   styleUrls: ['./data-class-details.component.sass']
 })
 export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-
   @Input() editMode = false;
-
   result: DataClassResult;
   hasResult = false;
   subscription: Subscription;
@@ -142,7 +136,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       }
     };
   }
-
 
 
   ngAfterViewInit(): void {

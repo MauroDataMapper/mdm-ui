@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   Component,
-  ContentChildren,
   ElementRef,
   Input, OnDestroy,
   OnInit,
@@ -27,7 +26,6 @@ import {
 } from '@angular/core';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { from, Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -53,9 +51,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
 
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
   @Input() afterSave: any;
   @Input() editMode = false;

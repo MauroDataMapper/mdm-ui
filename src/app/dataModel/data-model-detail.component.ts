@@ -24,7 +24,6 @@ import {
   ViewChildren,
   QueryList,
   ViewChild,
-  ContentChildren,
   ElementRef,
   Renderer2,
   ViewEncapsulation,
@@ -33,7 +32,6 @@ import {
 import { Subscription } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
@@ -58,10 +56,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   @Input() afterSave: any;
   @Input() editMode = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   result: DataModelResult;
   hasResult = false;
   subscription: Subscription;

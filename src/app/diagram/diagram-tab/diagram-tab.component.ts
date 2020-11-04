@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +27,7 @@ import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component'
   templateUrl: './diagram-tab.component.html'
 })
 
-export class DiagramTabComponent implements OnInit {
+export class DiagramTabComponent {
 
   @Input() mode: string;
   @Input() parent: string;
@@ -37,10 +37,6 @@ export class DiagramTabComponent implements OnInit {
   constructor(protected resourcesService: MdmResourcesService,
               protected messageHandler: MessageHandlerService,
               protected matDialog: MatDialog) {
-  }
-
-  ngOnInit(): void {
-
   }
 
   popUp(): void {

@@ -49,7 +49,7 @@ describe('FooterComponent', () => {
         FooterComponent
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

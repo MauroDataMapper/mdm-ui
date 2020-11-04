@@ -42,7 +42,6 @@ export class TermResult {
 }
 
 
-
 export class Classifiers {
   id: string;
   label: string;

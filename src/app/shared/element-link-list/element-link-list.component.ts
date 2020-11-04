@@ -216,8 +216,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     let isValid = true;
     record.edit.errors = [];
 
-    if (this.type === 'static') {
-    } else if (!record.edit.target) {
+    if (!record.edit.target) {
       record.edit.errors.target = 'Target can\'t be empty!';
       isValid = false;
     }

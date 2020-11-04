@@ -40,7 +40,6 @@ export class DataElementResult {
 }
 
 
-
 export class Breadcrumb {
   id: string;
   label: string;

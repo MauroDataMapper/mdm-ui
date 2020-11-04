@@ -330,7 +330,6 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
 
-
   onNodeClick = (node) => {
     this.click(node);
   };

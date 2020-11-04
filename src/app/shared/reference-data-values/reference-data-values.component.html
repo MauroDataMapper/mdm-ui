@@ -38,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
    </div>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive" *ngIf="!isLoadingResults">
    <table mat-table [dataSource]="records" class="mdm--mat-table table-striped">
       <ng-container *ngFor="let disCol of (displayedColumns); let colIndex = index" matColumnDef="{{disCol}}">
          <th mat-header-cell *matHeaderCellDef style="min-width: 150px;">{{disCol}}</th>
@@ -63,6 +63,6 @@ SPDX-License-Identifier: Apache-2.0
       </tr>
    </table>
 </div>
-<div class="mdm--mat-pagination">
+<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':isLoadingResults}">
    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

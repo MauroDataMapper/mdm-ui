@@ -109,7 +109,9 @@ describe('DataClassComponent', () => {
           useValue: {
             dataClass: {
               // tslint:disable-next-line: deprecation
-              getChildDataClass: () => empty()
+              getChildDataClass: () => empty(),
+              // tslint:disable-next-line: deprecation
+              get: () => empty()
             }
           }
         }

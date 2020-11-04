@@ -50,7 +50,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
 
   @Input() editMode = false;
-  @Input() afterSave: any;
 
   result: DataClassResult;
   hasResult = false;
@@ -86,10 +85,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService
   ) {
-    this.DataClassDetails();
   }
 
   ngOnInit() {
+    this.DataClassDetails();
     this.editableForm = new EditableDataClass();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -322,25 +321,21 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
       if (!this.result.parentDataClass) {
         this.resourcesService.dataClass.update(this.result.model, this.result.id, resource).subscribe(result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
           this.messageHandler.showSuccess('Data Class updated successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.messageService.dataChanged(result.body);
         }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
         });
       } else {
         this.resourcesService.dataClass.updateChildDataClass(this.result.model, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
           this.messageHandler.showSuccess('Data Class updated successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.messageService.dataChanged(result.body);
         }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
         });

@@ -15,8 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
+<mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25" matTreeNodeToggle matTreeNodePadding cdkDrag [cdkDragData]="node">
         <button mat-icon-button disabled aria-label="Disabled button">
             <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
         </button>
@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
         <ng-container *ngTemplateOutlet="nodeContentTemplate; context:{$implicit: node}"></ng-container>
     </mat-tree-node>
 
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25" (contextmenu)="noop($event)">
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25" cdkDrag [cdkDragData]="node">
         <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
         <ng-container *ngIf="!hasChild(-1,node)">
             <button mat-icon-button disabled aria-label="Disabled button">

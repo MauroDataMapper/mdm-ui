@@ -28,6 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'mdm-folders-tree',
@@ -89,10 +90,12 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
   treeControl: FlatTreeControl<FlatNode>;
 
-    /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-    dataSource: MatTreeFlatDataSource<Node, FlatNode>;
+  /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
+  dataSource: MatTreeFlatDataSource<Node, FlatNode>;
 
-    folder = '';
+  folder = '';
+
+  expandedNodeSet = new Set<string>();
 
   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
   protected treeFlattener: MatTreeFlattener<Node, FlatNode>;
@@ -524,12 +527,140 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.refreshTree();
   }
   validateLabel = (data: string) => {
-      if (data) {
-          return true;
-      } else {
-          return false;
-      }
+    if (data) {
+      return true;
+    } else {
+      return false;
+    }
   };
+
+  visibleNodes(): FlatNode[] {
+    this.rememberExpandedTreeNodes(this.treeControl, this.expandedNodeSet);
+    const result = [];
+
+    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+    function addExpandedChildren(node, expanded: Set<string>) {
+      result.push(node);
+      if (expanded.has(node.id)) {
+        node.children.map(child => addExpandedChildren(child, expanded));
+      }
+    }
+    this.dataSource.data.forEach(node => {
+      addExpandedChildren(node, this.expandedNodeSet);
+    });
+    return result;
+  }
+
+  async drop(event: CdkDragDrop<string[]>) {
+    // ignore drops outside of the tree
+    if (!event.isPointerOverContainer) return;
+
+    // construct a list of visible nodes, this will match the DOM.
+    // the cdkDragDrop event.currentIndex jives with visible nodes.
+    // it calls rememberExpandedTreeNodes to persist expand state
+    const visibleNodes = this.visibleNodes();
+
+    // deep clone the data source so we can mutate it
+    const changedData = JSON.parse(JSON.stringify(this.dataSource.data));
+
+    // recursive find function to find siblings of node
+    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+    function findNodeSiblings(arr: Array<any>, id: string): Array<any> {
+      let result;
+      let subResult;
+      arr.forEach(item => {
+        if (item.id === id) {
+          result = arr;
+        } else if (item.children) {
+          subResult = findNodeSiblings(item.children, id);
+          if (subResult) result = subResult;
+        }
+      });
+      return result;
+    }
+
+    // remove the node from its old place
+    const node = event.item.data;
+    const domain = node.node.domainType;
+    const siblings = findNodeSiblings(changedData, node.id);
+    const siblingIndex = siblings.findIndex(n => n.id === node.id);
+    const nodeToInsert = siblings.splice(siblingIndex, 1)[0];
+
+    // determine where to insert the node
+    const nodeAtDest = visibleNodes[event.currentIndex];
+    if (nodeAtDest.id === nodeToInsert.id) return;
+
+    const nodeAtDestFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
+    const parent = this.getParentNode(nodeAtDestFlatNode);
+    const draggableModels = ['DataModel', 'Terminology', 'CodeSet', 'ReferenceDataModel'];
+
+    // if we are moving a Folder
+    // check if the 'source'/item that is being dragged is a Folder
+    if (domain === 'Folder') {
+      console.log(parent);
+      const parentFolder = parent ? parent.id : null;
+      await this.resources.folder.update(node.id, { parentFolder }).subscribe(() => {
+        this.messageHandler.showSuccess('Folder moved successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
+        this.messageHandler.showError('There was a problem moving the Folder.', error);
+      });
+    }
+    // check if the 'source'/item that is being dragged is a DataModel, Terminology, etc
+    else if (draggableModels.includes(domain)) {
+      const modelId = node.id;
+      const destinationFolder = nodeAtDestFlatNode.id;
+      console.log(nodeAtDestFlatNode);
+
+      // check if the destination item is a Folder
+      if(nodeAtDestFlatNode.node.domainType === 'Folder') {
+        let endpoint;
+        if (domain === 'DataModel') {
+          endpoint = this.resources.dataModel.moveDataModelToFolder(modelId, destinationFolder, {});
+        } else if (domain === 'CodeSet') {
+          endpoint = this.resources.codeSet.moveCodeSetToFolder(modelId, destinationFolder, {});
+        } else if (domain === 'Terminology') {
+          endpoint = this.resources.terminology.moveTerminologyToFolder(modelId, destinationFolder, {});
+        } else if (domain === 'ReferenceDataModel') {
+          endpoint = this.resources.referenceDataModel.moveReferenceDataModelToFolder(modelId, destinationFolder, {});
+        }
+
+        endpoint.subscribe(() => {
+          this.messageHandler.showSuccess(`${domain} moved successfully.`);
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+        }, error => {
+          this.messageHandler.showError(`There was a problem moving the ${domain}`, error);
+        });
+      }
+
+    }
+  }
+
+  private rememberExpandedTreeNodes(treeControl: FlatTreeControl<FlatNode>, expandedNodeSet: Set<string>) {
+    if (treeControl.dataNodes) {
+      treeControl.dataNodes.forEach((node) => {
+        if (treeControl.isExpandable(node) && treeControl.isExpanded(node)) {
+          // capture latest expanded state
+          expandedNodeSet.add(node.id);
+        }
+      });
+    }
+  }
+
+  private getParentNode(node: FlatNode): FlatNode | null {
+    const currentLevel = node.level;
+    if (currentLevel < 1) {
+      return null;
+    }
+    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+    for (let i = startIndex; i >= 0; i--) {
+      const currentNode = this.treeControl.dataNodes[i];
+      if (currentNode.level < currentLevel) {
+        return currentNode;
+      }
+    }
+    return null;
+  }
 
   private getChildren = (node: Node) => {
     if (!node.children) {

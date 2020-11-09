@@ -39,7 +39,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   @Input() node: any;
   @Input() searchCriteria: string;
-  @Input() defaultCheckedMap: any;
+  @Input() defaultCheckedMap: any = {};
 
   @Output() nodeClickEvent = new EventEmitter<any>();
   @Output() nodeDbClickEvent = new EventEmitter<any>();
@@ -86,6 +86,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
   targetVersions = [];
   expandedPaths = [];
+
+  draggableModels = [DOMAIN_TYPE.Folder, DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology, DOMAIN_TYPE.CodeSet, DOMAIN_TYPE.ReferenceDataModel];
 
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
   treeControl: FlatTreeControl<FlatNode>;
@@ -166,7 +168,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   }
 
   /** Get whether the node has children or not. Tree branch control. */
-  hasChild(index: number, node: FlatNode) {
+  hasChild(_: number, node: FlatNode) {
     if (node?.domainType === DOMAIN_TYPE.DataModel && this.doNotShowDataClasses) {
       return false;
     }
@@ -526,6 +528,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     this.node.children = filteredTreeData;
     this.refreshTree();
   }
+
   validateLabel = (data: string) => {
     if (data) {
       return true;
@@ -534,133 +537,76 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
   };
 
-  visibleNodes(): FlatNode[] {
-    this.rememberExpandedTreeNodes(this.treeControl, this.expandedNodeSet);
-    const result = [];
-
-    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-    function addExpandedChildren(node, expanded: Set<string>) {
-      result.push(node);
-      if (expanded.has(node.id)) {
-        node.children.map(child => addExpandedChildren(child, expanded));
-      }
-    }
-    this.dataSource.data.forEach(node => {
-      addExpandedChildren(node, this.expandedNodeSet);
-    });
-    return result;
-  }
+  // Drag n Drop
 
   async drop(event: CdkDragDrop<string[]>) {
     // ignore drops outside of the tree
     if (!event.isPointerOverContainer) return;
 
-    // construct a list of visible nodes, this will match the DOM.
-    // the cdkDragDrop event.currentIndex jives with visible nodes.
-    // it calls rememberExpandedTreeNodes to persist expand state
-    const visibleNodes = this.visibleNodes();
+    let currentNode: FlatNode = event.item.data;
+    let newParentFolder: FlatNode;
 
-    // deep clone the data source so we can mutate it
-    const changedData = JSON.parse(JSON.stringify(this.dataSource.data));
-
-    // recursive find function to find siblings of node
-    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-    function findNodeSiblings(arr: Array<any>, id: string): Array<any> {
-      let result;
-      let subResult;
-      arr.forEach(item => {
-        if (item.id === id) {
-          result = arr;
-        } else if (item.children) {
-          subResult = findNodeSiblings(item.children, id);
-          if (subResult) result = subResult;
+    console.log(this.treeControl.dataNodes.length);
+    console.log(event);
+    // Top Level
+    if (event.currentIndex === 0 || event.currentIndex > this.treeControl.dataNodes.length - 1) {
+      if (currentNode.domainType === DOMAIN_TYPE.Folder) {
+        // Move to top level
+        newParentFolder = null;
+      } else {
+        console.warn('Only folder is allowed at top level');
+        return;
+      }
+    } else {
+      if (this.treeControl.dataNodes[event.currentIndex-1].domainType === DOMAIN_TYPE.Folder) {
+        newParentFolder = this.treeControl.dataNodes[event.currentIndex-1];
+      } else {
+        for (let i = event.currentIndex-1; i >= 0; i--) {
+          if (this.treeControl.dataNodes[i].level === this.treeControl.dataNodes[event.currentIndex-1].level - 1 && this.treeControl.dataNodes[i].domainType === DOMAIN_TYPE.Folder) {
+            newParentFolder = this.treeControl.dataNodes[i];
+            break;
+          }
         }
-      });
-      return result;
+      }
     }
 
-    // remove the node from its old place
-    const node = event.item.data;
-    const domain = node.node.domainType;
-    const siblings = findNodeSiblings(changedData, node.id);
-    const siblingIndex = siblings.findIndex(n => n.id === node.id);
-    const nodeToInsert = siblings.splice(siblingIndex, 1)[0];
+    if (currentNode.parentFolder === newParentFolder?.id) {
+      return;
+    }
 
-    // determine where to insert the node
-    const nodeAtDest = visibleNodes[event.currentIndex];
-    if (nodeAtDest.id === nodeToInsert.id) return;
+    const parentFolderId = newParentFolder?.id;
 
-    const nodeAtDestFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
-    const parent = this.getParentNode(nodeAtDestFlatNode);
-    const draggableModels = ['DataModel', 'Terminology', 'CodeSet', 'ReferenceDataModel'];
-
-    // if we are moving a Folder
-    // check if the 'source'/item that is being dragged is a Folder
-    if (domain === 'Folder') {
-      console.log(parent);
-      const parentFolder = parent ? parent.id : null;
-      await this.resources.folder.update(node.id, { parentFolder }).subscribe(() => {
+    // Move folder
+    if (currentNode.domainType === DOMAIN_TYPE.Folder) {
+      try {
+        await this.resources.folder.update(currentNode.id, { parentFolder: parentFolderId }).toPromise();
         this.messageHandler.showSuccess('Folder moved successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
-      }, error => {
+      } catch (error) {
         this.messageHandler.showError('There was a problem moving the Folder.', error);
-      });
-    }
-    // check if the 'source'/item that is being dragged is a DataModel, Terminology, etc
-    else if (draggableModels.includes(domain)) {
-      const modelId = node.id;
-      const destinationFolder = nodeAtDestFlatNode.id;
-      console.log(nodeAtDestFlatNode);
-
-      // check if the destination item is a Folder
-      if(nodeAtDestFlatNode.node.domainType === 'Folder') {
-        let endpoint;
-        if (domain === 'DataModel') {
-          endpoint = this.resources.dataModel.moveDataModelToFolder(modelId, destinationFolder, {});
-        } else if (domain === 'CodeSet') {
-          endpoint = this.resources.codeSet.moveCodeSetToFolder(modelId, destinationFolder, {});
-        } else if (domain === 'Terminology') {
-          endpoint = this.resources.terminology.moveTerminologyToFolder(modelId, destinationFolder, {});
-        } else if (domain === 'ReferenceDataModel') {
-          endpoint = this.resources.referenceDataModel.moveReferenceDataModelToFolder(modelId, destinationFolder, {});
-        }
-
-        endpoint.subscribe(() => {
-          this.messageHandler.showSuccess(`${domain} moved successfully.`);
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-        }, error => {
-          this.messageHandler.showError(`There was a problem moving the ${domain}`, error);
-        });
       }
+    } else if (this.draggableModels.includes(currentNode.domainType)) {
+      const modelId = currentNode.id;
 
-    }
-  }
-
-  private rememberExpandedTreeNodes(treeControl: FlatTreeControl<FlatNode>, expandedNodeSet: Set<string>) {
-    if (treeControl.dataNodes) {
-      treeControl.dataNodes.forEach((node) => {
-        if (treeControl.isExpandable(node) && treeControl.isExpanded(node)) {
-          // capture latest expanded state
-          expandedNodeSet.add(node.id);
+      try {
+        switch(currentNode.domainType) {
+          case DOMAIN_TYPE.DataModel: await this.resources.dataModel.moveDataModelToFolder(modelId, parentFolderId, {}).toPromise(); break;
+          case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(modelId, parentFolderId, {}).toPromise(); break;
+          case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(modelId, parentFolderId, {}).toPromise(); break;
+          case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(modelId, parentFolderId, {}); break;
+          default: break;
         }
-      });
+        this.messageHandler.showSuccess(`${currentNode.domainType} moved successfully.`);
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      } catch (error) {
+        this.messageHandler.showError(`There was a problem moving the ${currentNode.domainType}`, error);
+      }
+    } else if (!this.draggableModels.includes(currentNode.domainType)) {
+      this.messageHandler.showWarning(`${currentNode.domainType} not movable.`);
     }
   }
 
-  private getParentNode(node: FlatNode): FlatNode | null {
-    const currentLevel = node.level;
-    if (currentLevel < 1) {
-      return null;
-    }
-    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
-    for (let i = startIndex; i >= 0; i--) {
-      const currentNode = this.treeControl.dataNodes[i];
-      if (currentNode.level < currentLevel) {
-        return currentNode;
-      }
-    }
-    return null;
-  }
+  // End Drag n Drop
 
   private getChildren = (node: Node) => {
     if (!node.children) {

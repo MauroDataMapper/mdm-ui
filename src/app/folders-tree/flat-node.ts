@@ -197,5 +197,6 @@ export enum DOMAIN_TYPE {
     Terminology = 'Terminology',
     Term = 'Term',
     CodeSet = 'CodeSet',
-    Classification = 'Classification'
+    Classification = 'Classification',
+    ReferenceDataModel = 'ReferenceDataModel'
 }

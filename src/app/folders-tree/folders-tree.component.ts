@@ -558,28 +558,46 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       }
     }
     // Bottom of tree
-    else if (event.currentIndex === this.treeControl.dataNodes.length - 1 && this.treeControl.dataNodes[event.currentIndex].domainType === DOMAIN_TYPE.Folder) {
-      newParentFolder = this.treeControl.dataNodes[event.currentIndex];
-    }
-    // Drop directly below a folder
-    else if (event.currentIndex < this.treeControl.dataNodes.length - 1 && this.treeControl.dataNodes[event.currentIndex - 1].domainType === DOMAIN_TYPE.Folder) {
-      newParentFolder = this.treeControl.dataNodes[event.currentIndex - 1];
-    }
-    // Other
-    else {
-      if (this.treeControl.dataNodes[event.currentIndex - 1].parentFolder) {
-        newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[event.currentIndex - 1].parentFolder);
+    else if (event.currentIndex === this.treeControl.dataNodes.length - 1) {
+      if (this.treeControl.dataNodes[event.currentIndex].domainType === DOMAIN_TYPE.Folder) {
+        newParentFolder = this.treeControl.dataNodes[event.currentIndex];
+      } else if (this.treeControl.dataNodes[event.currentIndex].parentFolder) {
+        newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[event.currentIndex].parentFolder);
       } else {
         // Work upwards until a tree node with parentFolder is found
         for (let i = event.currentIndex - 1; i >= 0; i--) {
           if (this.treeControl.dataNodes[i].parentFolder) {
             newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[i].parentFolder);
+            break;
+          } else if (i === 0 && currentNode.domainType === DOMAIN_TYPE.Folder) {
+            newParentFolder = null;
+          }
+        }
+      }
+    } else {
+      // Drop directly below a folder
+      if (this.treeControl.dataNodes[event.currentIndex - 1].domainType === DOMAIN_TYPE.Folder) {
+        newParentFolder = this.treeControl.dataNodes[event.currentIndex - 1];
+      }
+      // Other
+      else {
+        if (this.treeControl.dataNodes[event.currentIndex].parentFolder) {
+          newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[event.currentIndex].parentFolder);
+        } else {
+          // Work upwards until a tree node with parentFolder is found
+          for (let i = event.currentIndex - 1; i >= 0; i--) {
+            if (this.treeControl.dataNodes[i].parentFolder) {
+              newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[i].parentFolder);
+              break;
+            } else if (i === 0 && currentNode.domainType === DOMAIN_TYPE.Folder) {
+              newParentFolder = null;
+            }
           }
         }
       }
     }
 
-    if (currentNode.parentFolder === newParentFolder?.id) {
+    if ((event.currentIndex !== 0 && !newParentFolder) || currentNode.parentFolder === newParentFolder?.id) {
       return;
     }
 
@@ -589,6 +607,18 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     if (currentNode.domainType === DOMAIN_TYPE.Folder) {
       try {
         await this.resources.folder.update(currentNode.id, { parentFolder: parentFolderId }).toPromise();
+
+        if (this.rememberExpandedStates) {
+          const newParentPath = this.getExpandedPaths(newParentFolder);
+          this.expandedPaths = this.expandedPaths.map((p:string) => {
+            if (p.includes(currentNode.id)) {
+              return `${newParentPath}/${p.slice(p.indexOf(currentNode.id))}`;
+            }
+            return p;
+          });
+
+          localStorage.setItem('expandedPaths', JSON.stringify(this.expandedPaths));
+        }
 
         this.messageHandler.showSuccess('Folder moved successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -605,6 +635,18 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(modelId, parentFolderId, {}).toPromise(); break;
           case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(modelId, parentFolderId, {}); break;
           default: break;
+        }
+
+        if (this.rememberExpandedStates) {
+          const newParentPath = this.getExpandedPaths(newParentFolder);
+          this.expandedPaths = this.expandedPaths.map((p:string) => {
+            if (p.includes(currentNode.id)) {
+              return `${newParentPath}/${p.slice(p.indexOf(currentNode.id))}`;
+            }
+            return p;
+          });
+
+          localStorage.setItem('expandedPaths', JSON.stringify(this.expandedPaths));
         }
 
         this.messageHandler.showSuccess(`${currentNode.domainType} moved successfully.`);

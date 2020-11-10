@@ -609,10 +609,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         await this.resources.folder.update(currentNode.id, { parentFolder: parentFolderId }).toPromise();
 
         if (this.rememberExpandedStates) {
-          const newParentPath = this.getExpandedPaths(newParentFolder);
+          const newParentPath = newParentFolder ? `${this.getExpandedPaths(newParentFolder)}/`:'';
           this.expandedPaths = this.expandedPaths.map((p:string) => {
             if (p.includes(currentNode.id)) {
-              return `${newParentPath}/${p.slice(p.indexOf(currentNode.id))}`;
+              return `${newParentPath}${p.slice(p.indexOf(currentNode.id))}`;
             }
             return p;
           });
@@ -638,10 +638,10 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         }
 
         if (this.rememberExpandedStates) {
-          const newParentPath = this.getExpandedPaths(newParentFolder);
+          const newParentPath = newParentFolder ? `${this.getExpandedPaths(newParentFolder)}/`:'';
           this.expandedPaths = this.expandedPaths.map((p:string) => {
             if (p.includes(currentNode.id)) {
-              return `${newParentPath}/${p.slice(p.indexOf(currentNode.id))}`;
+              return `${newParentPath}${p.slice(p.indexOf(currentNode.id))}`;
             }
             return p;
           });

@@ -87,7 +87,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
   targetVersions = [];
   expandedPaths = [];
 
-  draggableModels = [DOMAIN_TYPE.Folder, DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology, DOMAIN_TYPE.CodeSet, DOMAIN_TYPE.ReferenceDataModel];
+  draggableDomains = [DOMAIN_TYPE.Folder, DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology, DOMAIN_TYPE.CodeSet, DOMAIN_TYPE.ReferenceDataModel];
+  droppableDomains = [DOMAIN_TYPE.Folder];
 
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
   treeControl: FlatTreeControl<FlatNode>;
@@ -546,25 +547,33 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     let currentNode: FlatNode = event.item.data;
     let newParentFolder: FlatNode;
 
-    console.log(this.treeControl.dataNodes.length);
-    console.log(event);
-    // Top Level
-    if (event.currentIndex === 0 || event.currentIndex > this.treeControl.dataNodes.length - 1) {
+    // Top of tree (i.e. top level)
+    if (event.currentIndex === 0) {
       if (currentNode.domainType === DOMAIN_TYPE.Folder) {
-        // Move to top level
+        // Top level tree node has no parent
         newParentFolder = null;
       } else {
-        console.warn('Only folder is allowed at top level');
+        this.messageHandler.showWarning('Only folder is allowed at top level');
         return;
       }
-    } else {
-      if (this.treeControl.dataNodes[event.currentIndex-1].domainType === DOMAIN_TYPE.Folder) {
-        newParentFolder = this.treeControl.dataNodes[event.currentIndex-1];
+    }
+    // Bottom of tree
+    else if (event.currentIndex === this.treeControl.dataNodes.length - 1 && this.treeControl.dataNodes[event.currentIndex].domainType === DOMAIN_TYPE.Folder) {
+      newParentFolder = this.treeControl.dataNodes[event.currentIndex];
+    }
+    // Drop directly below a folder
+    else if (event.currentIndex < this.treeControl.dataNodes.length - 1 && this.treeControl.dataNodes[event.currentIndex - 1].domainType === DOMAIN_TYPE.Folder) {
+      newParentFolder = this.treeControl.dataNodes[event.currentIndex - 1];
+    }
+    // Other
+    else {
+      if (this.treeControl.dataNodes[event.currentIndex - 1].parentFolder) {
+        newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[event.currentIndex - 1].parentFolder);
       } else {
-        for (let i = event.currentIndex-1; i >= 0; i--) {
-          if (this.treeControl.dataNodes[i].level === this.treeControl.dataNodes[event.currentIndex-1].level - 1 && this.treeControl.dataNodes[i].domainType === DOMAIN_TYPE.Folder) {
-            newParentFolder = this.treeControl.dataNodes[i];
-            break;
+        // Work upwards until a tree node with parentFolder is found
+        for (let i = event.currentIndex - 1; i >= 0; i--) {
+          if (this.treeControl.dataNodes[i].parentFolder) {
+            newParentFolder = this.treeControl.dataNodes.find(n => n.id === this.treeControl.dataNodes[i].parentFolder);
           }
         }
       }
@@ -580,12 +589,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     if (currentNode.domainType === DOMAIN_TYPE.Folder) {
       try {
         await this.resources.folder.update(currentNode.id, { parentFolder: parentFolderId }).toPromise();
+
         this.messageHandler.showSuccess('Folder moved successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       } catch (error) {
         this.messageHandler.showError('There was a problem moving the Folder.', error);
       }
-    } else if (this.draggableModels.includes(currentNode.domainType)) {
+    } else if (this.draggableDomains.includes(currentNode.domainType)) {
       const modelId = currentNode.id;
 
       try {
@@ -596,12 +606,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(modelId, parentFolderId, {}); break;
           default: break;
         }
+
         this.messageHandler.showSuccess(`${currentNode.domainType} moved successfully.`);
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       } catch (error) {
         this.messageHandler.showError(`There was a problem moving the ${currentNode.domainType}`, error);
       }
-    } else if (!this.draggableModels.includes(currentNode.domainType)) {
+    } else if (!this.draggableDomains.includes(currentNode.domainType)) {
       this.messageHandler.showWarning(`${currentNode.domainType} not movable.`);
     }
   }

@@ -32,7 +32,7 @@ export interface Node {
     id: string;
     label?: string;
     open?: boolean;
-    parentFolder?: string;
+    folder?: string;
     disableChecked?: boolean;
     code?: string;
     hasChildFolders?: boolean;
@@ -159,7 +159,7 @@ export class FlatNode {
     }
 
     get parentFolder() {
-        return this.node?.parentFolder;
+        return this.node?.folder;
     }
 
     get isRoot() {

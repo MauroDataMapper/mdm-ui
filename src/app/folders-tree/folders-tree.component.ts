@@ -597,11 +597,16 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       }
     }
 
-    if ((event.currentIndex !== 0 && !newParentFolder) || currentNode.parentFolder === newParentFolder?.id) {
+    if (event.currentIndex !== 0 && !newParentFolder) {
+      this.messageHandler.showError('There was a problem determining target parent folder');
       return;
     }
 
-    const parentFolderId = newParentFolder?.id;
+    if (currentNode.parentFolder === newParentFolder?.id) {
+      return;
+    }
+
+    const parentFolderId = newParentFolder?.id || null;
 
     // Move folder
     if (currentNode.domainType === DOMAIN_TYPE.Folder) {
@@ -634,7 +639,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
           case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(modelId, parentFolderId, {}).toPromise(); break;
           case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(modelId, parentFolderId, {}).toPromise(); break;
           case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(modelId, parentFolderId, {}); break;
-          default: break;
+          default:
+            this.messageHandler.showError(`Invalid domain type: ${currentNode.domainType}`);
+            return;
         }
 
         if (this.rememberExpandedStates) {

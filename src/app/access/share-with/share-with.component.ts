@@ -38,7 +38,8 @@ export class ShareWithComponent implements OnInit {
     Classifier: { name: 'classifier', message: 'Classifier' },
     Folder: { name: 'folder', message: 'Folder' },
     Terminology: { name: 'terminology', message: 'Terminology' },
-    CodeSet: { name: 'codeSet', message: 'CodeSet' }
+    CodeSet: { name: 'codeSet', message: 'CodeSet' },
+    ReferenceDataModel: { name: 'referenceDataModel', message: 'ReferenceDataModel' }
   };
 
   readableByEveryone: false;

@@ -57,7 +57,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   showEdit: boolean;
   canEditDescription = true;
   showEditDescription = false;
-  terminology: any;
+  elementType: any;
 
   constructor(
     private dialog: MatDialog,
@@ -118,7 +118,15 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'Terminology') {
       this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
-        this.terminology = result.body;
+        this.elementType = result.body;
+      });
+    } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'CodeSet') {
+      this.resources.codeSet.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+        this.elementType = result.body;
+      });
+    } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'ReferenceDataModel') {
+      this.resources.referenceDataModel.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+        this.elementType = result.body;
       });
     }
 

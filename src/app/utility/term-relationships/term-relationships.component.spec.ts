@@ -41,7 +41,6 @@ describe('TermRelationshipsComponent', () => {
       declarations: [
         McPagedListComponent,
         ElementLinkComponent,
-        McPagedListComponent,
         TermRelationshipsComponent
       ]
     })

@@ -30,6 +30,7 @@ export class StateHandlerService {
         home: 'appContainer.mainApp.home',
         alldatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel',
         datamodel: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
+        referencedatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
         codeset: 'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
         dataclass: 'appContainer.mainApp.twoSidePanel.catalogue.dataClass',
         datatype: 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
@@ -63,7 +64,7 @@ export class StateHandlerService {
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
         modelscomparison: 'appContainer.mainApp.modelsComparison',
         linksuggestion: 'appContainer.mainApp.linkSuggestion',
-                export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
+        export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
         import: 'appContainer.mainApp.twoSidePanel.catalogue.import',
 
         simpleviewhome: 'appContainer.simpleApp.home',
@@ -84,6 +85,7 @@ export class StateHandlerService {
     const needsRedirect = [
       'appContainer.mainapp.twoSidePanel.catalogue.folder', 'folder',
       'appContainer.mainapp.twoSidePanel.catalogue.datamodel', 'datamodel',
+      'appContainer.mainapp.twoSidePanel.catalogue.referencedatamodel', 'referencedatamodel',
       'appContainer.mainapp.twoSidePanel.catalogue.dataclass', 'dataclass',
       'appContainer.mainapp.twoSidePanel.catalogue.dataelement', 'dataelement',
       'appContainer.mainapp.twoSidePanel.catalogue.terminology', 'terminology',

@@ -391,10 +391,17 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnChanges {
         const query = this.loadDynamicValues(inputValue, loadAll, this.pagination.offset, this.pagination.limit);
         this.loadingDynamicData = true;
         query.subscribe((result) => {
-          if (result.body.count != null && result.body.count !== undefined) {
-            this.pagination.count = result.body.count;
+           this.pagination.count = 100;
+         //  if (result.body.count != null && result.body.count !== undefined) {
+         //  }
+
+          if(result.body.items) {
+             resolve(result.body.items);
           }
-          resolve(result.body.items);
+
+          if(result.body.rows) {
+            resolve(result.body.rows);
+         }
           this.loadingDynamicData = false;
         }, () => {
             this.loadingDynamicData = false;
@@ -408,7 +415,8 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnChanges {
     // if dynamic and is not loading
     // if it's loading, so do not load it again
     if (this.valueType === 'dynamic' && this.loadingDynamicData === false) {
-      const loadedSoFar = this.pagination.offset + this.pagination.limit;
+       const loadedSoFar = this.pagination.offset + this.pagination.limit;
+       console.log(loadedSoFar, this.pagination.count);
       if (loadedSoFar > 0 && this.pagination.count <= loadedSoFar) {
         return;
       }
@@ -416,9 +424,19 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnChanges {
       this.loadingDynamicData = true;
       this.pagination.offset += this.pagination.limit;
       this.changeRef.detectChanges();
+
+      console.log(this.pagination);
       this.loadDynamicValues(inputValue, false, this.pagination.offset, this.pagination.limit).subscribe((result) => {
         // append to this.displayValues
-        this.displayValues = this.displayValues.concat(result.body.items);
+
+        if(result.body.items) {
+           this.displayValues = this.displayValues.concat(result.body.items);
+         }
+
+         if(result.body.rows) {
+            this.displayValues = this.displayValues.concat(result.body.rows);
+     }
+
         this.loadingDynamicData = false;
       }, () => {
         this.loadingDynamicData = false;
@@ -482,4 +500,5 @@ export interface McSelectPagination {
   offset?: number;
   limit?: number;
   count?: number;
+  max?: number;
 }

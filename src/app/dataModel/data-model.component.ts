@@ -204,7 +204,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+    this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
     this.activeTab = tab.index;
 
     if (tab.name === 'diagram') {

@@ -45,7 +45,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTabsModule } from '@angular/material/tabs';
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
 import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
 import { MdmResourcesService } from '@mdm/modules/resources';

@@ -32,8 +32,29 @@ export class ElementTypesService {
   };
 
   private allTypes: Type[] = [
-    { id: 'Folder', link: 'folder', title: 'Folder', markdown: 'fd', isBase: true },
-    { id: 'DataModel', link: 'dataModel', title: 'DataModel', markdown: 'dm', isBase: true, classifiable: true },
+    {
+      id: 'Folder',
+      link: 'folder',
+      title: 'Folder',
+      markdown: 'fd',
+      isBase: true
+    },
+    {
+      id: 'DataModel',
+      link: 'dataModel',
+      title: 'DataModel',
+      markdown: 'dm',
+      isBase: true,
+      classifiable: true
+    },
+    {
+      id: 'ReferenceDataModel',
+      link: 'ReferenceDataModel',
+      title: 'ReferenceDataModel',
+      resourceName: 'ReferenceDataModel',
+      markdown: 'rdm',
+      classifiable: true
+    },
     {
       id: 'DataSet',
       link: 'dataModel',
@@ -108,6 +129,14 @@ export class ElementTypesService {
       isBase: true,
       classifiable: true
     },
+    {
+      id: 'ReferenceDataElement',
+      link: 'dataElement',
+      title: 'DataElement (ReferenceDataElement)',
+      baseTitle: 'DataElement',
+      markdown: 'rde',
+      classifiable: true
+    },
     { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true },
     {
       id: 'EnumerationType',
@@ -128,6 +157,15 @@ export class ElementTypesService {
       classifiable: true
     },
     {
+      id: 'ReferencePrimitiveType',
+      link: 'referenceDataType',
+      title: 'DataType (Reference Data Type)',
+      baseTitle: 'Reference Data Type',
+      markdown: 'rdt',
+      displayLabel: 'Reference Data Type',
+      classifiable: true
+    },
+    {
       id: 'ReferenceType',
       link: 'dataType',
       title: 'DataType (Reference)',
@@ -141,18 +179,35 @@ export class ElementTypesService {
       link: 'dataType',
       title: 'DataType (ModelDataType)',
       baseTitle: 'DataType',
-      markdown: 'DT',
+      markdown: 'mdt',
       displayLabel: 'ModelDataType',
       classifiable: true
     },
     {
-      // TODO remove (HIDDEN) once backend is fixed
       id: 'TerminologyType',
-      link: 'dataType(HIDDEN)',
+      link: 'dataType',
       title: 'DataType (Terminology)',
-      baseTitle: 'DataType(HIDDEN)',
+      baseTitle: 'DataType',
       markdown: 'dt',
       displayLabel: 'Terminology',
+      classifiable: true
+    },
+    {
+      id: 'CodeSetType',
+      link: 'codeSet',
+      title: 'CodeSet',
+      baseTitle: 'DataType',
+      markdown: 'cst',
+      displayLabel: 'Code Set',
+      classifiable: true
+    },
+    {
+      id: 'ReferenceDataModelType',
+      link: 'referenceDataModel',
+      title: 'ReferenceDataModel',
+      baseTitle: 'DataType',
+      markdown: 'rdmt',
+      displayLabel: 'Reference Data Model',
       classifiable: true
     },
     {
@@ -190,6 +245,14 @@ export class ElementTypesService {
       title: 'DataModel',
       resourceName: 'dataModel',
       markdown: 'dm',
+      classifiable: true
+    },
+    ReferenceDataModel: {
+      id: 'ReferenceDataModel',
+      link: 'ReferenceDataModel',
+      title: 'ReferenceDataModel',
+      resourceName: 'ReferenceDataModel',
+      markdown: 'rdm',
       classifiable: true
     },
     DataClass: {

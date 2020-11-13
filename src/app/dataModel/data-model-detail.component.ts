@@ -35,7 +35,6 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
-import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
 import { SharedService } from '../services/shared.service';
 import { DataModelResult } from '../model/dataModelModel';
 import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
@@ -97,7 +96,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private securityHandler: SecurityHandlerService,
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
-    private elementDialogueService: ElementSelectorDialogueService,
     private broadcastSvc: BroadcastService,
     private helpDialogueService: HelpDialogueHandlerService,
     private dialog: MatDialog,
@@ -105,10 +103,6 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private exportHandler: ExportHandlerService,
     private title: Title
   ) { }
-  public showAddElementToMarkdown() {
-    // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', null);
-  }
 
   ngOnInit() {
 
@@ -117,7 +111,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.loadExporterList();
     this.DataModelDetails();
 
-    this.editableForm = new EditableDataModel();
+   this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
 

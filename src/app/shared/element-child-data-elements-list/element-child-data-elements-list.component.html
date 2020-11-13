@@ -71,7 +71,9 @@ SPDX-License-Identifier: Apache-2.0
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
-
+<div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+   <p class="marginless">There are no Data Elements in this repository.</p>
+ </div>
 <div *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>

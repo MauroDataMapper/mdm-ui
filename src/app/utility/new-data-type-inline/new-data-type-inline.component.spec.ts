@@ -66,7 +66,15 @@ describe('NewDataTypeInlineComponent', () => {
             terminology: {
               // tslint:disable-next-line: deprecation
               list: () => empty()
-            }
+            },
+            codeSet: {
+               // tslint:disable-next-line: deprecation
+               list: () => empty()
+             },
+             referenceDataModel: {
+               // tslint:disable-next-line: deprecation
+               list: () => empty()
+             }
           }
         }
       ],

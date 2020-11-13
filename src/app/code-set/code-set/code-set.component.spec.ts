@@ -24,7 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CodeSetTermsTableComponent } from '@mdm/shared/code-set-terms-table/code-set-terms-table.component';
 import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-data-set-metadata.component';
 import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';

@@ -78,7 +78,6 @@ describe('ContentTableComponent', () => {
         MoreDescriptionComponent,
         McPagedListComponent,
         ElementDataTypeComponent,
-        McPagedListComponent,
         AllLinksInPagedListComponent,
         MdmPaginatorComponent,
         MultiplicityComponent,

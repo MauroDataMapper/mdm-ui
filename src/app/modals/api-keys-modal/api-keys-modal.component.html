@@ -15,19 +15,44 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="modal-header pxy-2">
-  <h4 class='modal-title marginless'>{{modalTitle}}</h4>
-</div>
-<div class="modal-body pxy-2">
-  <p [innerHtml]="message"></p>
-  <div class="mdm--form-input">
-      <mat-form-field appearance="outline" class="full-width paddingless">
-          <mat-label>{{inputLabel}}</mat-label>
-          <input matInput [(ngModel)]="data.inputValue">
-      </mat-form-field>
-  </div>
-</div>
-<div class="modal-footer pxy-2">
-  <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>{{cancelBtn}}</button>
-  <button mat-flat-button color="{{btnType}}" type="button" [mat-dialog-close]="data.inputValue">{{okBtn}}</button>
-</div>
+<h4 mat-dialog-title>
+   <span *ngIf="showName">Create an API Key</span>
+   <span *ngIf="!showName">Refresh API Key</span>
+</h4>
+<hr>
+<mat-dialog-content class="mat-typography">
+   <div class="full-width">
+      <form name="apiKeysForm">
+         <div class="full-width mb-2" *ngIf="showName">
+            <mat-form-field appearance="outline" class="full-width paddingless">
+               <mat-label>Name (optional)</mat-label>
+               <input type="text" matInput [(ngModel)]="name" name="name">
+            </mat-form-field>
+         </div>
+         <div class="mb-2" *ngIf="showExpiryDay">
+            <mat-form-field appearance="outline" class="paddingless" style="max-width: 200px;">
+               <mat-label>Expires in days:</mat-label>
+               <input type="number" matInput [(ngModel)]="expiresInDays" name="expiresInDays" required>
+            </mat-form-field>
+            <small class="block text-muted">
+               Use numbers only to indicate how long the API Key should be valid for.
+            </small>
+         </div>
+
+         <div class="full-width mt-2 mb-3" *ngIf="showRefreshable">
+            <mat-checkbox name="refreshable" [(ngModel)]="refreshable" data-md-icheck>
+               Refreshable
+            </mat-checkbox>
+            <small class="block text-muted">
+               Indicate whether the API Key is refreshable
+           </small>
+         </div>
+      </form>
+   </div>
+   <hr>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pt-2 pb-2">
+   <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>Cancel</button>
+   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!expiresInDays || (expiresInDays <= 0)" *ngIf="!showName && showExpiryDay">Refresh Key</button>
+   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!expiresInDays || (expiresInDays <= 0)" *ngIf="showName && showRefreshable">Create Key</button>
+</mat-dialog-actions>

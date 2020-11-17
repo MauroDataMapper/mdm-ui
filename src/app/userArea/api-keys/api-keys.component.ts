@@ -17,90 +17,155 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SecurityHandlerService } from '@mdm/services';
+import { SecurityHandlerService, MessageHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
-import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-
-const dataSource = [
-  {
-    id: '6e6af281-a781-4555-9d87-87de91b8f67b',
-    apiKey: '6e6af281-a781-4555-9d87-87de91b8f67b',
-    name: 'default',
-    expiryDate: '2020-11-15',
-    expired: false,
-    disabled: false,
-    refreshable: false,
-    createdDate: '2020-11-13'
-},
-{
-    id: '4d536277-bdef-4e14-b441-432e093dd0fb',
-    apiKey: '4d536277-bdef-4e14-b441-432e093dd0fb',
-    name: 'wobble',
-    expiryDate: '2020-11-14',
-    expired: false,
-    disabled: false,
-    refreshable: true,
-    createdDate: '2020-11-13'
-},
-{
-  id: '4d536277-bdef-4e14-b441-432e093dd0fb',
-  apiKey: '4d536277-bdef-4e14-b441-432e093dd0fb',
-  name: 'bond',
-  expiryDate: '2020-11-14',
-  expired: true,
-  disabled: true,
-  refreshable: false,
-  createdDate: '2020-11-13'
-}
-];
+import { ApiKeysModalComponent } from '@mdm/modals/api-keys-modal/api-keys-modal.component';
+import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
-  selector: 'mdm-api-keys',
-  templateUrl: './api-keys.component.html',
-  styleUrls: ['./api-keys.component.scss']
+   selector: 'mdm-api-keys',
+   templateUrl: './api-keys.component.html',
+   styleUrls: ['./api-keys.component.scss']
 })
 export class ApiKeysComponent implements OnInit {
-  records: any[] = dataSource;
-  displayedColumns = ['name', 'key', 'expiryDate', 'refreshable', 'status', 'actions'];
+   records: any[] = [];
+   displayedColumns = ['name', 'key', 'expiryDate', 'refreshable', 'status', 'actions'];
+   currentUser: any;
+   totalItemCount = 0;
+   isLoadingResults = true;
 
-  constructor(
-    private resourcesService: MdmResourcesService,
-    private securityHandler: SecurityHandlerService,
-    public dialog: MatDialog,
-    private title: Title
-  ) { }
+   constructor(
+      private resourcesService: MdmResourcesService,
+      private securityHandler: SecurityHandlerService,
+      public dialog: MatDialog,
+      private title: Title,
+      protected clipboardService: ClipboardService,
+      private messageHandler: MessageHandlerService,
+   ) { }
 
-  ngOnInit(): void {
-    this.title.setTitle('API Keys');
-  }
+   ngOnInit(): void {
+      this.title.setTitle('API Keys');
+      this.currentUser = this.securityHandler.getCurrentUser();
+      this.listApiKeys(this.currentUser);
+   }
 
-
-  toggleDeactivate = record => {
-    console.log(record);
-  };
-
-  addApiKey = () => {
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(NewFolderModalComponent, {
-        data: {
-          inputValue: 'Asda',
-          modalTitle: 'Create a new Folder',
-          okBtn: 'Add folder',
-          btnType: 'primary',
-          inputLabel: 'Folder name',
-          message: 'Please enter the name of your Folder. <br> <strong>Note:</strong> This folder will be added at the top of the Tree'
-        }
+   listApiKeys(currentUser: any) {
+      this.isLoadingResults = true;
+      this.resourcesService.catalogueUser.listApiKeys(currentUser?.id).subscribe((result) => {
+         this.records = result.body.items;
+         this.totalItemCount = result.body.count;
+         this.isLoadingResults = false;
+      }, error => {
+         this.records = [];
+         this.totalItemCount = 0;
+         this.messageHandler.showError('There was a problem loading the API Keys', error);
+         this.isLoadingResults = false;
       });
+   }
 
-      dialog.afterClosed().subscribe(result => {
-        if (result) {
-          console.log('all good');
-        } else {
-          return;
-        }
+   disableKey = record => {
+      this.resourcesService.catalogueUser.disableApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+         this.messageHandler.showSuccess('API Key disabled successfully.');
+         this.listApiKeys(this.currentUser?.id);
+      }, error => {
+         this.messageHandler.showError('There was a problem updating the API Key.', error);
       });
-    });
-    return promise;
-  };
+   };
+
+   enableKey = record => {
+      this.resourcesService.catalogueUser.enableApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+         this.messageHandler.showSuccess('API Key enabled successfully.');
+         this.listApiKeys(this.currentUser?.id);
+      }, error => {
+         this.messageHandler.showError('There was a problem updating the API Key.', error);
+      });
+   };
+
+   refreshKey = record => {
+      const promise = new Promise(() => {
+         const dialog = this.dialog.open(ApiKeysModalComponent, {
+            data: {
+               showName: false,
+               showExpiryDay: true,
+               showRefreshable: false
+            },
+            panelClass: 'api-keys-modal'
+         });
+         dialog.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result && result.status === 'ok') {
+               this.resourcesService.catalogueUser.refreshApiKey(this.currentUser?.id, record.apiKey, result.data.expiresInDays).subscribe(() => {
+                  this.messageHandler.showSuccess('API Key enabled successfully.');
+                  this.listApiKeys(this.currentUser?.id);
+               }, error => {
+                  this.messageHandler.showError('There was a problem updating the API Key.', error);
+               });
+            } else {
+               return;
+            }
+         });
+      });
+      return promise;
+   };
+
+   addApiKey = () => {
+      const promise = new Promise(() => {
+         const dialog = this.dialog.open(ApiKeysModalComponent, {
+            data: {
+               showName: true,
+               showExpiryDay: true,
+               showRefreshable: true
+            },
+            panelClass: 'api-keys-modal'
+         });
+         dialog.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result && result.status === 'ok') {
+               this.resourcesService.catalogueUser.saveApiKey(this.currentUser?.id, result.data).subscribe(() => {
+                  this.messageHandler.showSuccess('API Key created successfully.');
+                  this.listApiKeys(this.currentUser?.id);
+               }, error => {
+                  this.messageHandler.showError('There was a problem creating this API Key.', error);
+               });
+            } else {
+               return;
+            }
+         });
+      });
+      return promise;
+   };
+
+   removeKey = record => {
+      const promise = new Promise(() => {
+         const dialog = this.dialog.open(ConfirmationModalComponent, {
+            data: {
+               title: 'Are you sure you want to delete this API Key?',
+               okBtnTitle: 'Yes, delete',
+               btnType: 'warn',
+               message: '<p class="marginless">This API Key will be removed and will not be usable anymore.</p>'
+            }
+         });
+
+         dialog.afterClosed().subscribe(result => {
+            if (result != null && result.status === 'ok') {
+               this.resourcesService.catalogueUser.removeApiKey(this.currentUser?.id, record.apiKey).subscribe(() => {
+                  this.messageHandler.showSuccess('API Key removed successfully.');
+                  this.listApiKeys(this.currentUser?.id);
+               }, error => {
+                  this.messageHandler.showError('There was a problem removing this API Key.', error);
+               });
+            } else {
+               return;
+            }
+         });
+      });
+      return promise;
+   };
+
+   copyToClipboard = record => {
+      this.clipboardService.copyFromContent(record.apiKey);
+      this.messageHandler.showSuccess(`API Key (${record.name}) copied successfully!`);
+    };
 }

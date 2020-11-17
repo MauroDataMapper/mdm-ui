@@ -107,9 +107,13 @@ mat-radio-group {
   margin: 15px 0;
 }
 
-mdm-settings .mat-checkbox-layout {
-  white-space: normal;
-}
+.mat-checkbox-layout {
+   white-space: normal !important;
+ }
+
+ .mat-checkbox-inner-container {
+   margin: 4px 8px auto 0 !important;
+ }
 
 #sidenav {
   #sidenav-content {

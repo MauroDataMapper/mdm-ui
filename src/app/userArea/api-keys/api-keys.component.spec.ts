@@ -19,25 +19,57 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ApiKeysComponent } from './api-keys.component';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { empty } from 'rxjs';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
 
 describe('ApiKeysComponent', () => {
-  let component: ApiKeysComponent;
-  let fixture: ComponentFixture<ApiKeysComponent>;
+   let component: ApiKeysComponent;
+   let fixture: ComponentFixture<ApiKeysComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ApiKeysComponent ]
-    })
-    .compileComponents();
-  }));
+   beforeEach(async(() => {
+      TestBed.configureTestingModule({
+         imports: [
+            MatDialogModule,
+            MatTableModule,
+            UIRouterModule.forRoot({ useHash: true }),
+            ToastrModule.forRoot()
+         ],
+         providers: [
+            {
+               provide: MdmResourcesService,
+               useValue: {
+                  catalogueUser: {
+                     // tslint:disable-next-line: deprecation
+                     listApiKeys: () => empty(),
+                     // tslint:disable-next-line: deprecation
+                     enableApiKey: () => empty(),
+                     // tslint:disable-next-line: deprecation
+                     disableApiKey: () => empty(),
+                     // tslint:disable-next-line: deprecation
+                     refreshApiKey: () => empty(),
+                     // tslint:disable-next-line: deprecation
+                     saveApiKey: () => empty(),
+                     // tslint:disable-next-line: deprecation
+                     removeApiKey: () => empty(),
+                  }
+               }
+            }
+         ],
+         declarations: [ApiKeysComponent]
+      }).compileComponents();
+   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ApiKeysComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+   beforeEach(() => {
+      fixture = TestBed.createComponent(ApiKeysComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+   it('should create', () => {
+      expect(component).toBeTruthy();
+   });
 });

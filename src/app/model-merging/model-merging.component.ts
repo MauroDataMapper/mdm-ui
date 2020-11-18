@@ -919,7 +919,7 @@ export class ModelMergingComponent implements OnInit {
           index++
         ) {
           const element = this.diffsMerged.properties[index];
-          if (element.property == diff.property) {
+          if (element.property == diff.property && element.leftId == diff.leftId) {
             if (diff.acceptTarget || diff.acceptSource) {
               if (diff.acceptTarget && diff.acceptSource) {
                 const dialog = this.dialog.open(

@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="loading-spinner" *ngIf="!loaded">
   <div>
-      <i class="fas fa-sync-alt fa-spin"></i>
+    <i class="fas fa-sync-alt fa-spin"></i>
   </div>
 </div>
 <div class="container" *ngIf="loaded">
@@ -155,6 +155,77 @@ SPDX-License-Identifier: Apache-2.0
               </tbody>
             </table>
           </tr>
+          <tr *ngIf="diffs.metadata && diffs.metadata.length > 0">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Metadata</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.metadata">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  >
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'source', 'metadata')"
+                      [(ngModel)]="diff.acceptSource"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <div *ngIf="diff.deleted || diff.created">
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Key:</strong>
+                          {{ diff.value.key }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Namespace:</strong>
+                          {{ diff.value.namespace }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Value:</strong>
+                          {{ diff.value.value }}</span
+                        >
+                      </div>
+                    </div>
+                    <div *ngIf="diff.modified">
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Key:</strong>
+                          {{ diff.key }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Namespace:</strong>
+                          {{ diff.namespace }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Value:</strong>
+                          {{ diff.right }}</span
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
           <tr *ngIf="diffs.dataElements && diffs.dataElements.length > 0">
             <table class="table table-bordered">
               <thead>
@@ -164,7 +235,7 @@ SPDX-License-Identifier: Apache-2.0
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let diff of diffs.dataElements">            
+                <tr *ngFor="let diff of diffs.dataElements">
                   <td
                     style="min-width: 18px; width: 18px"
                     [ngClass]="{
@@ -180,15 +251,15 @@ SPDX-License-Identifier: Apache-2.0
                     ></mat-checkbox
                     >&nbsp;
                   </td>
-              
-                    <td style="text-align: left; word-wrap: break-word">
-                      <strong style="font-style: italic">Label:</strong>
-                      <div>
-                        <span style="border-bottom: 1px dashed #000">{{
-                          diff.label
-                        }}</span>
-                      </div>
-                    </td>              
+
+                  <td style="text-align: left; word-wrap: break-word">
+                    <strong style="font-style: italic">Label:</strong>
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -325,6 +396,87 @@ SPDX-License-Identifier: Apache-2.0
                         style="border-bottom: 1px dashed #000"
                         [innerHTML]="diff.left"
                       ></span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr *ngIf="diffsMerged.metadata && diffsMerged.metadata.length > 0">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Metadata</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffsMerged.metadata">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  ></td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <div *ngIf="!diff.modified">
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Key:</strong>
+                          {{ diff.value.key }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Namespace:</strong>
+                          {{ diff.value.namespace }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Value:</strong>
+                          {{ diff.value.value }}</span
+                        >
+                      </div>
+                    </div>
+                    <div *ngIf="diff.modified">
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Key:</strong>
+                          {{ diff.key }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Namespace:</strong>
+                          {{ diff.namespace }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Value:</strong>
+                          <span
+                          *ngIf="diff.acceptSource && !diff.acceptTarget"
+                          style="border-bottom: 1px dashed #000"
+                          [innerHTML]="diff.right"
+                        ></span>
+  
+                        <span
+                          *ngIf="diff.acceptTarget && !diff.acceptSource"
+                          style="border-bottom: 1px dashed #000"
+                          [innerHTML]="diff.left"
+                        ></span>
+  
+                        <span
+                          *ngIf="diff.acceptTarget && diff.acceptSource"
+                          style="border-bottom: 1px dashed #000"
+                          [innerHTML]="diff.left"
+                        ></span></span
+                        >
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -525,6 +677,79 @@ SPDX-License-Identifier: Apache-2.0
                       <span style="border-bottom: 1px dashed #000">{{
                         diff.label
                       }}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr
+            *ngIf="diffs.filteredMetadata && diffs.filteredMetadata.length > 0"
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Metadata</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.filteredMetadata">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  >
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'target', 'metadata')"
+                      [(ngModel)]="diff.acceptTarget"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <div *ngIf="diff.deleted || diff.created">
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Key:</strong>
+                          {{ diff.value.key }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Namespace:</strong>
+                          {{ diff.value.namespace }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Value:</strong>
+                          {{ diff.value.value }}</span
+                        >
+                      </div>
+                    </div>
+                    <div *ngIf="diff.modified">
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Key:</strong>
+                          {{ diff.key }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Namespace:</strong>
+                          {{ diff.namespace }}</span
+                        >
+                      </div>
+                      <div>
+                        <span>
+                          <strong style="font-style: italic">Value:</strong>
+                          {{ diff.left }}</span
+                        >
+                      </div>
                     </div>
                   </td>
                 </tr>

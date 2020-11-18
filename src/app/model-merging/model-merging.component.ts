@@ -120,7 +120,9 @@ export class ModelMergingComponent implements OnInit {
       return null;
     }
 
-    const response = await this.resources.dataModel.get(modelId).toPromise();
+    const response = await this.resources.dataModel
+      .get(modelId, { forDiff: true })
+      .toPromise();
     const model = response.body;
     const children = await this.resources.tree
       .get('dataModels', model.domainType, model.id)
@@ -220,6 +222,7 @@ export class ModelMergingComponent implements OnInit {
     localDiff.push(this.createDataClassElements(model));
     localDiff.push(this.createDataTypesElements(model));
     localDiff.push(this.createDataElementsElements(model));
+    localDiff.push(this.createMetadataElements(model));
 
     const props = this.createPropertiesElements(model);
     for (let index = 0; index < props.length; index++) {
@@ -261,6 +264,54 @@ export class ModelMergingComponent implements OnInit {
     });
 
     return properties;
+  }
+
+  createMetadataElements(model: any) {
+    let objects: any = {};
+
+    objects.fieldName = 'metadata';
+    objects.created = [];
+    objects.deleted = [];
+    let tempMod = [];
+
+    this.diffsMerged.metadata.forEach((dt) => {
+      if (model.id == dt.parentLeftId || model.id === dt.parentRightId) {
+        if (dt.created) {
+          const createdDiff = {
+            id: dt.value.id
+          };
+          objects.created.push(createdDiff);
+        }
+
+        if (dt.deleted) {
+          const createdDiff = {
+            id: dt.value.id
+          };
+          objects.deleted.push(createdDiff);
+        }
+
+        if (dt.modified) {
+
+          let tempMeMod = []
+          let val = {
+            fieldName: 'value',
+            value: dt.acceptSource && !dt.acceptTarget ? dt.right : dt.left
+          }
+
+          tempMeMod.push(val);
+
+          let mod = {
+            leftId: dt.leftId,
+            diffs:tempMeMod
+          };
+          tempMod.push(mod);
+        }
+      }
+    });
+
+    objects.modified = tempMod;
+
+    return objects;
   }
 
   createDataTypesElements(model: any) {
@@ -440,13 +491,7 @@ export class ModelMergingComponent implements OnInit {
     diffMap[rightId].diffs.properties.push(update);
   };
 
-  findDiffProps = (
-    propName,
-    leftId,
-    rightId,
-    labelDiff,
-    diffMap    
-  ) => {
+  findDiffProps = (propName, leftId, rightId, labelDiff, diffMap) => {
     this.initDiff(leftId, diffMap);
     this.initDiff(rightId, diffMap);
     diffMap[leftId].modified = true;
@@ -465,8 +510,8 @@ export class ModelMergingComponent implements OnInit {
     };
 
     if (!labelDiff.isMergeConflict) {
-      update["acceptSource"] = true;
-      update["acceptTarget"] = false;
+      update['acceptSource'] = true;
+      update['acceptTarget'] = false;
       this.onAcceptPress(update, 'source', 'property');
     }
 
@@ -483,6 +528,8 @@ export class ModelMergingComponent implements OnInit {
     if (metadataDiff.created) {
       metadataDiff.created.forEach((created) => {
         created.created = true;
+        created.parentLeftId = leftId;
+        created.parentRightId = rightId;
         diffMap[leftId].diffs.metadata.push(created);
         diffMap[rightId].diffs.metadata.push(created);
       });
@@ -490,6 +537,8 @@ export class ModelMergingComponent implements OnInit {
     if (metadataDiff.deleted) {
       metadataDiff.deleted.forEach((deleted) => {
         deleted.deleted = true;
+        deleted.parentLeftId = leftId;
+        deleted.parentRightId = rightId;
         diffMap[leftId].diffs.metadata.push(deleted);
         diffMap[rightId].diffs.metadata.push(deleted);
       });
@@ -499,6 +548,8 @@ export class ModelMergingComponent implements OnInit {
         const update = {
           leftId: modified.leftId,
           rightId: modified.rightId,
+          parentLeftId: leftId,
+          parentRightId: rightId,
           key: modified.key,
           namespace: modified.namespace,
           property: 'value',
@@ -672,6 +723,7 @@ export class ModelMergingComponent implements OnInit {
     jointArray['filteredDataElements'] = target.filteredDataElements;
     jointArray['filteredDataTypes'] = target.filteredDataTypes;
     jointArray['filteredDataClasses'] = target.filteredDataClasses;
+    jointArray['filteredMetadata'] = target.filteredMetadata;
 
     jointArray['metadata'] = [
       ...new Set([...source.metadata, ...target.metadata])
@@ -692,6 +744,7 @@ export class ModelMergingComponent implements OnInit {
       let tempDataElementDiffs = [];
       let tempDataClassesDiff = [];
       let tempDataTypesDiff = [];
+      let tempMetadata = [];
 
       diffs.dataElements.forEach((element) => {
         if (element.deleted === false) {
@@ -721,9 +774,22 @@ export class ModelMergingComponent implements OnInit {
         }
       });
 
+      diffs.metadata.forEach((metadata) => {
+        if (metadata.deleted === false || metadata.deleted === undefined) {
+          if (metadata.created) {
+            if (metadata.rightId === this.targetModel.id) {
+              tempMetadata.push(metadata);
+            }
+          } else {
+            tempMetadata.push(metadata);
+          }
+        }
+      });
+
       diffs.filteredDataTypes = Object.assign([], tempDataTypesDiff);
       diffs.filteredDataElements = Object.assign([], tempDataElementDiffs);
       diffs.filteredDataClasses = Object.assign([], tempDataClassesDiff);
+      diffs.filteredMetadata = Object.assign([], tempMetadata);
 
       return diffs;
     }
@@ -736,6 +802,7 @@ export class ModelMergingComponent implements OnInit {
       enumerationValues: [],
       filteredDataTypes: [],
       filteredDataElements: [],
+      filteredMetadata: [],
       filteredDataClasses: []
     };
   }
@@ -768,6 +835,12 @@ export class ModelMergingComponent implements OnInit {
       this.onAcceptPress(prop, 'source', 'property');
     });
 
+    this.diffs.metadata.forEach((prop) => {
+      prop.acceptSource = true;
+      prop.acceptTarget = false;
+      this.onAcceptPress(prop, 'source', 'metadata');
+    });
+
     this.useSource = true;
   }
 
@@ -794,6 +867,12 @@ export class ModelMergingComponent implements OnInit {
       dataElement.acceptTarget = true;
       dataElement.acceptSource = false;
       this.onAcceptPress(dataElement, 'target', 'dataElement');
+    });
+
+    this.diffs.filteredMetadata.forEach((metadata) => {
+      metadata.acceptTarget = true;
+      metadata.acceptSource = false;
+      this.onAcceptPress(metadata, 'target', 'metadata');
     });
 
     this.diffs.dataTypes.forEach((dataType) => {
@@ -825,6 +904,10 @@ export class ModelMergingComponent implements OnInit {
 
     if (this.diffsMerged.dataTypes === undefined) {
       this.diffsMerged.dataTypes = [];
+    }
+
+    if (this.diffsMerged.metadata === undefined) {
+      this.diffsMerged.metadata = [];
     }
 
     switch (type) {
@@ -923,6 +1006,64 @@ export class ModelMergingComponent implements OnInit {
         }
         break;
       }
+      case 'metadata': {
+        let found = false;
+        for (let index = 0; index < this.diffsMerged.metadata.length; index++) {
+          const element = this.diffsMerged.metadata[index];
+          if (element.value) {
+            if (element.value.id == diff.value.id) {
+              if (diff.accept) {
+                this.diffsMerged.metadata[index] = diff;
+                if (diffLocation === 'source') {
+                  var i = this.diffs.metadata.findIndex(
+                    (x) => x.value.id == element.value.id
+                  );
+                  if (i >= 0) {
+                    this.diffs.metadata[i].accept = false;
+                  }
+                } else {
+                  var i = this.diffs.metadata.findIndex(
+                    (x) => x.value.id == element.value.id
+                  );
+                  if (i >= 0) {
+                    this.diffs.metadata[i].accept = false;
+                  }
+                }
+              } else {
+                this.diffsMerged.metadata.splice(index, 1);
+              }
+              found = true;
+            }
+          } else {
+            if (diff.acceptTarget || diff.acceptSource) {
+              if (diffLocation === 'source') {
+                var i = this.diffs.metadata.findIndex(
+                  (x) => x.id == element.id
+                );
+                if (i >= 0) {
+                  this.diffs.metadata[i].accept = false;
+                }
+              } else {
+                var i = this.diffs.metadata.findIndex(
+                  (x) => x.id == element.id
+                );
+                if (i >= 0) {
+                  this.diffs.metadata[i].accept = false;
+                }
+              }
+            } else {
+              this.diffsMerged.metadata.splice(index, 1);
+            }
+
+            found = true;
+          }
+        }
+
+        if (!found) {
+          this.diffsMerged.metadata.push(diff);
+        }
+        break;
+      }
       case 'dataElement': {
         let found = false;
         for (
@@ -1012,7 +1153,6 @@ export class ModelMergingComponent implements OnInit {
           diff.label,
           diffMap
         );
-
       }
       if (diff.description) {
         this.findDiffProps(
@@ -1031,7 +1171,6 @@ export class ModelMergingComponent implements OnInit {
           diff.author,
           diffMap
         );
-
       }
       if (diff.organisation) {
         this.findDiffProps(
@@ -1041,7 +1180,6 @@ export class ModelMergingComponent implements OnInit {
           diff.organisation,
           diffMap
         );
-
       }
       if (diff.a) {
         this.findDiffProps(
@@ -1051,7 +1189,6 @@ export class ModelMergingComponent implements OnInit {
           diff.organisation,
           diffMap
         );
-
       }
 
       if (diff.metadata) {
@@ -1084,11 +1221,11 @@ export class ModelMergingComponent implements OnInit {
             el.modified = false;
             const parentDC = el.breadcrumbs[el.breadcrumbs.length - 1];
             diffMap[parentDC.id].diffs.dataClasses.push(el);
-            
-            if(!item.isMergeConflict){
+
+            if (!item.isMergeConflict) {
               el.acceptSource = true;
               el.acceptTarget = false;
-              this.onAcceptPress(el,"source","dataClass");
+              this.onAcceptPress(el, 'source', 'dataClass');
             }
           }
 
@@ -1103,10 +1240,10 @@ export class ModelMergingComponent implements OnInit {
             el.domainType = 'DataElement';
             diffMap[parentDC.id].diffs.dataElements.push(el);
 
-            if(!item.isMergeConflict){
+            if (!item.isMergeConflict) {
               el.acceptSource = true;
               el.acceptTarget = false;
-              this.onAcceptPress(el,"source","dataElements");
+              this.onAcceptPress(el, 'source', 'dataElements');
             }
           }
 
@@ -1125,10 +1262,10 @@ export class ModelMergingComponent implements OnInit {
             diffMap[this.sourceModel.id].diffs.dataTypes.push(el);
             diffMap[this.targetModel.id].diffs.dataTypes.push(el);
 
-            if(!item.isMergeConflict){
+            if (!item.isMergeConflict) {
               el.acceptSource = true;
               el.acceptTarget = false;
-              this.onAcceptPress(el,"source","dataType");
+              this.onAcceptPress(el, 'source', 'dataType');
             }
           }
         });
@@ -1210,7 +1347,6 @@ export class ModelMergingComponent implements OnInit {
               };
               this.calculateDiff(childDataClasses, this.diffMap);
             }
-
           }
 
           if (diffElement === 'dataElements' && el.leftBreadcrumbs) {
@@ -1290,7 +1426,6 @@ export class ModelMergingComponent implements OnInit {
                 diff.label,
                 diffMap
               );
-       
             }
             if (diff.description) {
               this.findDiffProps(
@@ -1308,7 +1443,7 @@ export class ModelMergingComponent implements OnInit {
                 el.rightId,
                 diff.author,
                 diffMap
-              );      
+              );
             }
 
             if (diff.organisation) {

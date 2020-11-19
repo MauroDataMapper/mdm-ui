@@ -211,7 +211,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.loading = false;
       });
     } else {
-      this.resources.folder.list().subscribe(data => {
+      this.resources.folder.list({all: true}).subscribe(data => {
         this.loading = false;
         this.rootNode = {
           children: data.body.items,

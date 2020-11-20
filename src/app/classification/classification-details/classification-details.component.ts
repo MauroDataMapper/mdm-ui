@@ -21,7 +21,6 @@ import {
   Input,
   QueryList,
   ViewChildren,
-  ContentChildren,
   AfterViewInit,
   OnDestroy
 } from '@angular/core';
@@ -35,7 +34,6 @@ import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { Editable, FolderResult } from '@mdm/model/folderModel';
 import { Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -51,10 +49,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   @Input() afterSave: any;
   @Input() editMode = false;
   @Input() mcClassification = false;
-
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;
@@ -133,7 +128,6 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   }
 
   ngAfterViewInit(): void {
-    // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
     this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
       // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4

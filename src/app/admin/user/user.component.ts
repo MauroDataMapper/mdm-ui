@@ -82,11 +82,11 @@ export class UserComponent implements OnInit {
         this.user = user;
         this.title.setTitle('Admin - Edit User');
 
-        if (this.user.groups) {
-          for (const val of this.user.groups) {
-            this.selectedGroups.push(val.id);
+          if (this.user.groups) {
+            for (const val of this.user.groups) {
+              this.selectedGroups.push(val.id);
+            }
           }
-        }
       });
     }
 
@@ -175,13 +175,13 @@ export class UserComponent implements OnInit {
       if (this.user.id) {
         // it's in edit mode (update)
         this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
-          this.messageHandler.showSuccess('User updated successfully.');
-          this.stateHandler.Go('admin.users');
+        this.messageHandler.showSuccess('User updated successfully.');
+        this.stateHandler.Go('admin.users');
         }, error => {
-          this.messageHandler.showError('There was a problem updating the user.', error);
-        });
-      } else {
-        // it's in new mode (create)
+        this.messageHandler.showError('There was a problem updating the user.', error);
+      });
+    } else {
+      // it's in new mode (create)
         this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
           this.messageHandler.showSuccess('User saved successfully.');
           this.stateHandler.Go('admin.users');

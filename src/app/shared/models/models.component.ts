@@ -349,7 +349,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onAddDataModel = (folder) => {
-    this.stateHandler.Go('NewDataModelNew', { parentFolderId: folder.id });
+    this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
   };
 
   onAddCodeSet = (folder) => {
@@ -383,7 +383,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
   toggleFilters = filerName => {
     this[filerName] = !this[filerName];
     this.reloading = true;
-    console.log(filerName);
 
     if (this.sharedService.isLoggedIn()) {
       this.userSettingsHandler.update('includeModelSuperseded', this.includeModelSuperseded);

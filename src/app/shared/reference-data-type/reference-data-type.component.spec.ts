@@ -16,55 +16,49 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HistoryComponent } from './history.component';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
-import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTableModule } from '@angular/material/table';
-import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { ReferenceDataTypeComponent } from './reference-data-type.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { UIRouterModule } from '@uirouter/angular';
-import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 
-
-
-describe('HistoryComponent', () => {
-  let component: HistoryComponent;
-  let fixture: ComponentFixture<HistoryComponent>;
+describe('ReferenceDataTypeComponent', () => {
+  let component: ReferenceDataTypeComponent;
+  let fixture: ComponentFixture<ReferenceDataTypeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         NgxSkeletonLoaderModule,
-        MatTooltipModule,
         MatPaginatorModule,
-        NoopAnimationsModule,
         MatTableModule,
-        UIRouterModule.forRoot({ useHash: true }),
-        ToastrModule.forRoot()
+        NoopAnimationsModule
       ],
       providers: [
         {
-          provide: MdmResourcesService, useValue: {}
+          provide: MdmResourcesService,
+          useValue: {
+            referenceDataType: {
+              // tslint:disable-next-line: deprecation
+              list: () => empty()
+            }
+          }
         }
       ],
       declarations: [
-        ProfilePictureComponent,
-        ByteArrayToBase64Pipe,
-        MdmPaginatorComponent,
-        HistoryComponent
+         ReferenceDataTypeComponent,
+         MdmPaginatorComponent
       ]
-    }).compileComponents();
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HistoryComponent);
+    fixture = TestBed.createComponent(ReferenceDataTypeComponent);
     component = fixture.componentInstance;
-    component.parent = { id: '12345' };
     fixture.detectChanges();
   });
 

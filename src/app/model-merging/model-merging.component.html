@@ -631,9 +631,7 @@ SPDX-License-Identifier: Apache-2.0
                       >{{ diff.title }}:</strong
                     >
                     <div>
-                      <span style="border-bottom: 1px dashed #000">{{
-                        diff.left
-                      }}</span>
+                      <span [innerHTML]="diff.left" style="border-bottom: 1px dashed #000"></span>
                     </div>
                   </td>
                 </tr>

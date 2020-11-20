@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import {
   AfterViewInit,
   Component,
-  ContentChildren,
   Input,
   OnDestroy,
   OnInit,
@@ -27,7 +26,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -49,8 +47,6 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() afterSave: any;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-  @ViewChildren('editableMinText') editFormMinText: QueryList<any>;
   @Input() parentDataModel;
   @Input() parentDataClass;
   @Input() editMode = false;
@@ -356,10 +352,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           description: this.editableForm.description || ''
         };
       }
-      this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(result => {
-        if (this.afterSave) {
-          this.afterSave(result);
-        }
+      this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(() => {
         this.messageHandler.showSuccess('Data Element updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.editableForm.visible = false;

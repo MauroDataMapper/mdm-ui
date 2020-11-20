@@ -64,9 +64,9 @@ export class ContentTableComponent implements AfterViewInit {
   ) { }
   ngAfterViewInit() {
     if (this.isEditable && !this.parentDataModel.finalised) {
-      this.displayedColumns = ['checkbox', 'name', 'description', 'label', 'actions'];
+      this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
     } else {
-      this.displayedColumns = ['name', 'description', 'label'];
+      this.displayedColumns = ['name', 'description', 'multiplicity'];
     }
     this.changeRef.detectChanges();
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));

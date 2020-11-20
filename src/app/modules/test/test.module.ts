@@ -1,4 +1,4 @@
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { NgModule } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MaterialModule } from '../material/material.module';

@@ -38,7 +38,6 @@ export class SummaryMetadataPopupComponent extends SummaryMetadataChartComponent
   }
 
 
-
   ngOnInit(): void {
     super.ngOnInit();
     if (this.summary.summaryMetadataType.toLowerCase() === 'number') {

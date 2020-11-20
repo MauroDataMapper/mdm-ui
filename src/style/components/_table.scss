@@ -94,7 +94,8 @@ table.table thead {
 
 table.mat-table .mat-header-cell, table.mat-table .mat-header-row td {
     font-size: $defaultFontSize;
-    font-weight: 500;
+    font-weight: 700;
+    color: #333;
     vertical-align: middle;
     border-bottom: 2px solid #e9ecef;
   }
@@ -108,3 +109,7 @@ table.mat-table .mat-header-row td {
   background-color: rgba(255, 215, 0, 0.12)!important;
 }
 
+
+mdm-paginator .mat-form-field-appearance-legacy .mat-form-field-infix {
+   padding: 0;
+}

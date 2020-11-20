@@ -63,11 +63,11 @@ export class UserSettingsHandlerService {
         } else {
           // check if we have added new items but they don't exists already, then add them
           for (const property in this.defaultSettings) {
-            if (Object.prototype.hasOwnProperty.call(this.defaultSettings, property) && !result[property]) {
+            if (this.defaultSettings.hasOwnProperty(property) && !result[property]) {
               result[property] = this.defaultSettings[property];
             }
           }
-          // save them into the localStorage
+            // save them into the localStorage
           settings = result;
         }
         // save it locally

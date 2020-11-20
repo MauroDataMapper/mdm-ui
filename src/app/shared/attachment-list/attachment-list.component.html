@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
     <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="fileName">
-            <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
                 <span [hidden]="!hideFilters">File Name</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">

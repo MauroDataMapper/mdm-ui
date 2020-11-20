@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import {
   AfterViewInit,
   Component,
-  ContentChildren,
   Input,
   OnDestroy,
   OnInit,
@@ -28,7 +27,6 @@ import {
 import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -45,13 +43,8 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
   styleUrls: ['./data-class-details.component.sass']
 })
 export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-
   @Input() editMode = false;
-  @Input() afterSave: any;
-
   result: DataClassResult;
   hasResult = false;
   subscription: Subscription;
@@ -86,10 +79,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private dialog: MatDialog,
     private securityHandler: SecurityHandlerService
   ) {
-    this.DataClassDetails();
   }
 
   ngOnInit() {
+    this.DataClassDetails();
     this.editableForm = new EditableDataClass();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -145,7 +138,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
 
-
   ngAfterViewInit(): void {
     this.error = '';
     this.editForm.changes.subscribe(() => {
@@ -167,7 +159,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   DataClassDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
-
 
       this.editableForm.description = this.result.description;
       this.editableForm.label = this.result.label;
@@ -322,26 +313,22 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       }
 
       if (!this.result.parentDataClass) {
-        this.resourcesService.dataClass.update(this.result.parentDataModel, this.result.id, resource).subscribe(result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
+        this.resourcesService.dataClass.update(this.result.model, this.result.id, resource).subscribe(result => {
           this.messageHandler.showSuccess('Data Class updated successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.messageService.dataChanged(result.body);
         }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
         });
       } else {
         this.resourcesService.dataClass.updateChildDataClass(this.result.model, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
           this.messageHandler.showSuccess('Data Class updated successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.messageService.dataChanged(result.body);
         }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
         });

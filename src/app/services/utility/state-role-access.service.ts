@@ -37,6 +37,7 @@ export class StateRoleAccessService {
         'appContainer.mainApp.home',
         'appContainer.mainApp.twoSidePanel.catalogue.dataType',
         'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
+        'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel',
         'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
         'appContainer.mainApp.twoSidePanel.catalogue.terminology',
         'appContainer.mainApp.twoSidePanel.catalogue.term',

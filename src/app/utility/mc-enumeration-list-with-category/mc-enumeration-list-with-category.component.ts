@@ -85,6 +85,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   // Drag and drop
   dropTable(event: CdkDragDrop<any[]>) {
+
     const prevIndex = this.displayItems.findIndex(r => r.id === event.item.data.id);
 
     moveItemInArray(this.displayItems, prevIndex, event.currentIndex);
@@ -125,6 +126,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   }
 
   updateOrder = (enumId, newPosition, newCategory) => {
+
     if (this.clientSide) {
       const sorted = this.allRecords;
 
@@ -174,6 +176,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         this.messageHandler.showSuccess('Enumeration updated successfully.');
       },
         error => {
+
           this.messageHandler.showError('There was a problem updating the enumeration.', error);
         }
       );
@@ -509,6 +512,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
         this.messageHandler.showSuccess('Enumeration updated successfully.');
       }, error => {
+
         this.messageHandler.showError('There was a problem updating the enumeration.', error);
       });
     } else {
@@ -537,18 +541,6 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
 
   reloadRecordsFromServer() {
     return this.resourcesService.dataType.get(this.parent.model, this.parent.id);
-  }
-
-  groupSortClicked() {
-    if (this.sortType === 'desc') {
-      this.sortType = 'asc';
-    } else if (this.sortType === 'asc') {
-      this.sortType = '';
-    } else {
-      this.sortType = 'desc';
-    }
-
-    this.showRecords(this.allRecords);
   }
 
   pageSizeClicked(paginator) {

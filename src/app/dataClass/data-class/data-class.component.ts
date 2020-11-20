@@ -38,15 +38,12 @@ export class DataClassComponent extends BaseComponent implements OnInit {
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
-  parentId: string;
-  afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   showExtraTabs = false;
   activeTab: any;
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
-
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -80,19 +77,14 @@ export class DataClassComponent extends BaseComponent implements OnInit {
     // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
-    this.showExtraTabs = this.sharedService.isLoggedIn() ;
+    this.showExtraTabs = this.sharedService.isLoggedIn();
 
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
     this.title.setTitle('Data Class');
     // tslint:disable-next-line: deprecation
-    this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, this.stateService.params.id);
+    this.dataClassDetails(this.stateService.params.dataModelId, this.stateService.params.id, this.parentDataClass.id);
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-        this.showSearch = message;
+      this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) =>
-    // tslint:disable-next-line: deprecation
-      this.dataClassDetails(this.stateService.params.dataModelId, this.parentDataClass.id, result.body.id);
   }
 
   getTabDetailByName(tabName) {
@@ -114,28 +106,12 @@ export class DataClassComponent extends BaseComponent implements OnInit {
     }
   }
 
-  dataClassDetails(dataModelId: any, parentDataClassId, id) {
-    this.resourcesService.dataClass.getChildDataClass(dataModelId, parentDataClassId, id).subscribe((result: { body: DataClassResult }) => {
+  dataClassDetails(model, id, parentDataClass?) {
+    if (!parentDataClass) {
+      this.resourcesService.dataClass.get(model, id).subscribe((result: { body: DataClassResult }) => {
         this.dataClass = result.body;
-
-        // Get the GUIDs, because we may have path instead of GUID
-        parentDataClassId = null;
-        dataModelId = result.body.model;
-
-          
-        if(result.body.breadcrumbs)
-        {
-          let res = result.body.breadcrumbs[result.body.breadcrumbs.length - 1];
-          if(res.domainType !== "DataModel")
-          {        
-            parentDataClassId = res.id;
-          }
-        }
-
-        this.dataClass.parentDataModel = dataModelId;
-        this.dataClass.parentDataClass = parentDataClassId;
         this.parentDataModel = {
-          id: dataModelId,
+          id: result.body.model,
           finalised: this.dataClass.breadcrumbs[0].finalised
         };
         this.isEditable = this.dataClass['availableActions']?.includes('update');
@@ -149,6 +125,25 @@ export class DataClassComponent extends BaseComponent implements OnInit {
           this.tabSelected(this.activeTab);
         }
       });
+    } else {
+      this.resourcesService.dataClass.getChildDataClass(model, parentDataClass, id).subscribe((result: { body: DataClassResult }) => {
+        this.dataClass = result.body;
+        this.parentDataModel = {
+          id: result.body.model,
+          finalised: this.dataClass.breadcrumbs[0].finalised
+        };
+        this.isEditable = this.dataClass['availableActions']?.includes('update');
+        this.messageService.FolderSendMessage(this.dataClass);
+        this.messageService.dataChanged(this.dataClass);
+
+        if (this.dataClass) {
+          this.tabGroup.realignInkBar();
+          // tslint:disable-next-line: deprecation
+          this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+          this.tabSelected(this.activeTab);
+        }
+      });
+    }
   }
 
   toggleShowSearch() {
@@ -175,7 +170,7 @@ export class DataClassComponent extends BaseComponent implements OnInit {
   }
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+    this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false });
     this.activeTab = tab.index;
   }
 }

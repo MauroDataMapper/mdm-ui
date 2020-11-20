@@ -15,8 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, Input, ViewChildren, QueryList, ContentChildren, OnDestroy} from '@angular/core';
-import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FolderResult } from '../model/folderModel';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -35,8 +34,6 @@ export class ClassificationComponent implements OnInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
 
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   @Input() mcClassification;
   classifier = null;
 
@@ -79,22 +76,22 @@ export class ClassificationComponent implements OnInit, OnDestroy {
 
     // const promises = [];
     // promises.push(this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id))
-      // this.resourcesService.classifier.get(
-      //   this.stateService.params.id,
-      //   'catalogueItems',
-      //   null
-      // )
+    // this.resourcesService.classifier.get(
+    //   this.stateService.params.id,
+    //   'catalogueItems',
+    //   null
+    // )
     // );
     // promises.push([]
-      // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
-      // this.resourcesService.classifier.get(
-      //   this.stateService.params.id,
-      //   'terminologies',
-      //   null
-      // )
+    // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
+    // this.resourcesService.classifier.get(
+    //   this.stateService.params.id,
+    //   'terminologies',
+    //   null
+    // )
     // );
     // promises.push(this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id));
-      // this.resourcesService.classifier.get(this.stateService.params.id, 'terms', null)
+    // this.resourcesService.classifier.get(this.stateService.params.id, 'terms', null)
     // promises.push(
     //   // this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
     //   // this.resourcesService.classifier.get(this.stateService.params.id, 'codeSets', null)
@@ -116,7 +113,6 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     // });
 
 
-
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
         this.showSecuritySection = message;
@@ -129,32 +125,32 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     );
     this.afterSave = (result: { body: { id: any } }) => this.classifierDetails(result.body.id);
 
-      // tslint:disable-next-line: deprecation
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
   }
 
   classifierDetails(id: any) {
     this.resourcesService.classifier.get(id).subscribe((response: { body: FolderResult }) => {
-        this.result = response.body;
+      this.result = response.body;
 
-        this.parentId = this.result.id;
-        if (this.sharedService.isLoggedIn(true)) {
-          this.classifierPermissions(id);
-        } else {
-          this.messageService.FolderSendMessage(this.result);
-          this.messageService.dataChanged(this.result);
-        }
-      });
+      this.parentId = this.result.id;
+      if (this.sharedService.isLoggedIn(true)) {
+        this.classifierPermissions(id);
+      } else {
+        this.messageService.FolderSendMessage(this.result);
+        this.messageService.dataChanged(this.result);
+      }
+    });
   }
   classifierPermissions(id: any) {
     this.resourcesService.security.permissions('classifiers', id).subscribe((permissions: { body: { [x: string]: any } }) => {
-        Object.keys(permissions.body).forEach(attrname => {
-          this.result[attrname] = permissions.body[attrname];
-        });
-        // Send it to message service to receive in child components
-        this.messageService.FolderSendMessage(this.result);
-        this.messageService.dataChanged(this.result);
+      Object.keys(permissions.body).forEach(attrname => {
+        this.result[attrname] = permissions.body[attrname];
       });
+      // Send it to message service to receive in child components
+      this.messageService.FolderSendMessage(this.result);
+      this.messageService.dataChanged(this.result);
+    });
   }
 
   toggleShowSearch() {

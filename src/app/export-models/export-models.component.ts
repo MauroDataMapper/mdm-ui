@@ -58,6 +58,7 @@ export class ExportModelsComponent implements OnInit {
   }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.exportType = this.stateService.params.exportType ? this.stateService.params.exportType : 'dataModels';
     this.loadExporterList();
     this.step = 1;
@@ -99,7 +100,13 @@ export class ExportModelsComponent implements OnInit {
         }, error => {
           this.messageHandler.showError('There was a problem loading exporters list.', error);
         });
-      }
+      } else if (this.exportType === 'referenceDataModels') {
+         this.resources.referenceDataModel.exporters().subscribe(result2 => {
+           this.exportersList = result2.body;
+         }, error => {
+           this.messageHandler.showError('There was a problem loading exporters list.', error);
+         });
+       }
     });
   }
 

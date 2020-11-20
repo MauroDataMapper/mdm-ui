@@ -312,7 +312,7 @@ export class SecurityHandlerService {
   }
 
   elementAccess(element) {
-    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceData') {
+    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceDataModel') {
       return this.dataModelAccess(element);
     }
 

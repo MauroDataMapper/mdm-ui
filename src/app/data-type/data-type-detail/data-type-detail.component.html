@@ -68,7 +68,14 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Type</th>
                     <td>
-                        {{allDataTypesMap[mcDataTypeObject.domainType]["displayLabel"]}}
+                       <div *ngIf='allDataTypesMap[mcDataTypeObject.domainType]?.displayLabel'>
+                        {{ allDataTypesMap[mcDataTypeObject.domainType]?.displayLabel }}
+                       </div>
+
+                       <div *ngIf='!allDataTypesMap[mcDataTypeObject?.domainType]?.displayLabel'>
+                        {{ allDataTypesMap[mcDataTypeObject.modelResourceDomainType]?.displayLabel }}
+                       </div>
+
                         <mdm-element-data-type [elementDataType]="mcDataTypeObject"
                                                [hideName]="true"
                                                [showTypeName]="true"
@@ -77,9 +84,9 @@ SPDX-License-Identifier: Apache-2.0
                         </mdm-element-data-type>
 
                         <div *ngIf="mcDataTypeObject.domainType === 'ModelDataType'">
-                          <small><span *ngIf="!terminology?.finalised" class="badge badge-warning">Draft</span></small>
-                          <small><span *ngIf="terminology?.finalised" class="badge badge-success">Finalised</span> </small>
-                          <mdm-element-link [element]="terminology" [showLink]="true" [newWindow]="false"></mdm-element-link>
+                          <small><span *ngIf="!elementType?.finalised" class="badge badge-warning">Draft</span></small>
+                          <small><span *ngIf="elementType?.finalised" class="badge badge-success">Finalised</span> </small>
+                          <mdm-element-link [element]="elementType" [showLink]="true" [newWindow]="false"></mdm-element-link>
                         </div>
                     </td>
                 </tr>

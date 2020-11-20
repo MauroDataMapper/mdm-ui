@@ -19,7 +19,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
 
@@ -28,17 +27,13 @@ import {
   templateUrl: './diagram-toolbar.component.html'
 })
 
-export class DiagramToolbarComponent implements OnInit {
+export class DiagramToolbarComponent {
 
   @Output() toolbarClick = new EventEmitter<string>();
 
   @Input() isPopup: boolean;
-  @Input() canMoveUp: boolean;
 
   constructor() {
-  }
-
-  ngOnInit(): void {
   }
 
   click(buttonName: string): void {

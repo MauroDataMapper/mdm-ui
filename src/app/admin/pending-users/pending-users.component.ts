@@ -15,15 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'mdm-pending-users',
   templateUrl: './pending-users.component.html',
   styleUrls: ['./pending-users.component.sass']
 })
-export class PendingUsersComponent implements OnInit {
+export class PendingUsersComponent {
   constructor() {}
-
-  ngOnInit() {}
 }

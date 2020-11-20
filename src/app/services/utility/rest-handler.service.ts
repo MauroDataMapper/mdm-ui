@@ -39,8 +39,8 @@ export class RestHandlerService {
             throw new Error('withCredentials is not provided!');
         }
 
-        if (options.responseType) { } else {
-            options.responseType = undefined;
+        if (!options.responseType) {
+          options.responseType = undefined;
         }
 
         options.headers = options.headers || {};

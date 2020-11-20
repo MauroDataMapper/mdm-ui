@@ -57,7 +57,6 @@ export class HomeComponent implements OnInit {
   }
 
 
-
   login = () => {
     this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {
       if (user) {

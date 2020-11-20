@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import {
   AfterViewInit,
   Component,
-  ContentChildren,
   ElementRef,
   Input,
   OnInit,
@@ -28,7 +27,6 @@ import {
 } from '@angular/core';
 import { TermResult, EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -51,12 +49,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   @Input() mcTerminology: any;
   @Input() hideEditButton: any;
   @Input() openEditForm: any;
-
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
-
   download: any;
   downloadLink: any;
   urlText: any;

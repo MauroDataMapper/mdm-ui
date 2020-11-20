@@ -23,7 +23,7 @@ import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-li
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { ElementChildDataClassesListComponent } from '@mdm/shared/element-child-data-classes-list/element-child-data-classes-list.component';
 import { ElementOwnedDataTypeListComponent } from '@mdm/shared/element-owned-data-type-list/element-owned-data-type-list.component';
 import { McDataSetMetadataComponent } from '@mdm/shared/mc-data-set-metadata/mc-data-set-metadata.component';

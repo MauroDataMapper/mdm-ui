@@ -44,7 +44,6 @@ export class ContentSearchHandlerService {
         }
 
 
-
         if (this.validator.isDate(lastUpdatedAfter)) {
             lastUpdatedAfter = new DatePipe('en-gb').transform(lastUpdatedAfter, 'yyyy-MM-dd');
         } else {
@@ -68,7 +67,6 @@ export class ContentSearchHandlerService {
         } else {
             createdBefore =  null;
         }
-
 
 
         if (this.validator.isEmpty(searchText) && (!classifiers || (classifiers && classifiers.length === 0)) && (!classifierFilter || (classifierFilter && classifierFilter.length === 0))) {

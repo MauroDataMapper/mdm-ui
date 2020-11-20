@@ -97,6 +97,12 @@ export class ImportModelsComponent implements OnInit {
       }, error => {
         this.messageHandler.showError('Can not load importers!', error);
       });
+   } else if (this.importType === 'referenceDataModels') {
+      this.resources.referenceDataModel.importers().subscribe(result => {
+        this.importers = result.body;
+      }, error => {
+        this.messageHandler.showError('Can not load importers!', error);
+      });
     }
   }
 
@@ -180,6 +186,8 @@ export class ImportModelsComponent implements OnInit {
     let method = this.resources.dataModel.importModels(namespace, name, version, this.formData);
     if (this.importType === 'terminologies') {
       method = this.resources.terminology.importModels(namespace, name, version, this.formData);
+    } else if (this.importType === 'referenceDataModels') {
+      method = this.resources.referenceDataModel.importModels(namespace, name, version, this.formData);
     }
 
     method.subscribe((result: any) => {

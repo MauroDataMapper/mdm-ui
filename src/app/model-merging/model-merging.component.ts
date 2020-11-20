@@ -532,6 +532,12 @@ export class ModelMergingComponent implements OnInit {
         created.parentRightId = rightId;
         diffMap[leftId].diffs.metadata.push(created);
         diffMap[rightId].diffs.metadata.push(created);
+     
+        if (!created.isMergeConflict) {
+          created['acceptSource'] = true;
+          created['acceptTarget'] = false;
+          this.onAcceptPress(created, 'source', 'metadata');
+        }
       });
     }
     if (metadataDiff.deleted) {

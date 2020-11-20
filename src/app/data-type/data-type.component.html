@@ -37,8 +37,7 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab label="Data Elements">
       <ng-template matTabContent>
         <div class="full-width" *ngIf="dataType">
-          <mdm-element-child-data-elements-list [parentDataModel]="dataModel" [parentDataType]="dataType"
-            [type]="'dynamic'" [loadingData]="loadingData"></mdm-element-child-data-elements-list>
+          <mdm-element-child-data-elements-list [parentDataModel]="dataModel" [parentDataType]="dataType" [type]="'dynamic'" [loadingData]="loadingData"></mdm-element-child-data-elements-list>
         </div>
       </ng-template>
     </mat-tab>

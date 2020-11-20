@@ -31,7 +31,7 @@ import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/adva
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
@@ -148,8 +148,8 @@ import { DiagramTabComponent } from '@mdm/diagram/diagram-tab/diagram-tab.compon
 import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.component';
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
-import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
-import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+import { SummaryMetadataPopupComponent } from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
+import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
@@ -159,6 +159,11 @@ import { MergedModelsComponent } from '@mdm/merged-models/merged-models.componen
 import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { NgxTextDiffModule } from 'ngx-text-diff';
+import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
+import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
+import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
+import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
+import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @NgModule({
@@ -168,7 +173,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     ShareWithComponent,
-    ExportModelsComponent ,
+    ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
@@ -294,7 +299,12 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
-    BaseComponent
+    ReferenceDataComponent,
+    ReferenceDataDetailsComponent,
+    BaseComponent,
+    ReferenceDataTypeComponent,
+    ReferenceDataElementComponent,
+    ReferenceDataValuesComponent
   ],
   imports: [
     AdminModule,
@@ -316,7 +326,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
       positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
-    UserIdleModule.forRoot({idle: 600, timeout: 300}), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
+    UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
     MatTabsModule
@@ -328,7 +338,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
     ShareWithComponent,
-    ExportModelsComponent ,
+    ExportModelsComponent,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
@@ -449,7 +459,9 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     ModelsMergingGraphComponent,
     VersioningGraphModalComponent,
     BulkDeleteModalComponent,
-    BaseComponent
+    BaseComponent,
+    ReferenceDataComponent,
+    ReferenceDataDetailsComponent
   ]
 })
 export class CatalogueModule { }

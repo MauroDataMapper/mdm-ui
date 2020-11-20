@@ -23,13 +23,11 @@ import {
   Input,
   ViewChildren,
   QueryList,
-  ContentChildren,
   OnDestroy
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
-import { MarkdownTextAreaComponent } from '../utility/markdown/markdown-text-area/markdown-text-area.component';
 import { FolderHandlerService } from '../services/handlers/folder-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { SharedService } from '../services/shared.service';
@@ -49,7 +47,6 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   result: FolderResult;
   hasResult = false;
   subscription: Subscription;

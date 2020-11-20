@@ -48,6 +48,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   isValid = false;
   reloading = false;
   terminologies: any;
+  codesets: any;
+  referenceDataModels: any;
 
   constructor(
     private resourceService: MdmResourcesService,
@@ -56,6 +58,8 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
     if (this.allDataTypes) { this.model.domainType = this.allDataTypes[0]; }
     this.loadTerminologies();
+    this.loadCodeSets();
+    this.loadReferenceModels();
   }
 
   sendValidationStatus() {
@@ -97,17 +101,11 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
-    if (
-      this.model.domainType === 'EnumerationType' &&
-      this.model.enumerationValues.length === 0
-    ) {
+    if (this.model.domainType === 'EnumerationType' && this.model.enumerationValues.length === 0) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
-    if (
-      this.model.domainType === 'ReferenceType' &&
-      (!this.model.referencedDataClass || this.model.referencedDataClass.id === '')
-    ) {
+    if (this.model.domainType === 'ReferenceType' && (!this.model.referencedDataClass || this.model.referencedDataClass.id === '')) {
       isValid = false;
     }
     if (this.model.domainType === 'Primitive') {
@@ -115,6 +113,14 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     }
     // Check if for TerminologyType, the terminology is selected
     if (this.model.domainType === 'TerminologyType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+      isValid = false;
+    }
+
+    if (this.model.domainType === 'CodeSetType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+      isValid = false;
+    }
+
+    if (this.model.domainType === 'ReferenceDataModelType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
       isValid = false;
     }
     this.isValid = isValid;
@@ -139,8 +145,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
       this.reloading = false;
     }, () => {
       this.reloading = false;
-    }
-    );
+    });
   }
 
   onTerminologySelect(terminology: any) {
@@ -149,6 +154,26 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
     this.validate();
     this.sendValidationStatus();
   }
+
+  loadCodeSets() {
+   this.reloading = true;
+   this.resourceService.codeSet.list().subscribe(data => {
+     this.codesets = data.body.items;
+     this.reloading = false;
+   }, () => {
+     this.reloading = false;
+   });
+ }
+
+ loadReferenceModels() {
+   this.reloading = true;
+   this.resourceService.referenceDataModel.list().subscribe(data => {
+     this.referenceDataModels = data.body.items;
+     this.reloading = false;
+   }, () => {
+     this.reloading = false;
+   });
+ }
 
   onEnumListUpdated = newEnumList => {
     this.model.enumerationValues = newEnumList;

@@ -15,15 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'mdm-groups',
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.sass']
 })
-export class GroupsComponent implements OnInit {
+export class GroupsComponent {
   constructor() {}
-
-  ngOnInit() {}
 }

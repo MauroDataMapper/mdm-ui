@@ -195,6 +195,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
         return 'fa-tags';
       case DOMAIN_TYPE.Term:
         return 'fa-code';  // Not currently used in html template
+      case DOMAIN_TYPE.ReferenceDataModel:
+          return 'fa-file-contract';
       default:
         return null;
     }

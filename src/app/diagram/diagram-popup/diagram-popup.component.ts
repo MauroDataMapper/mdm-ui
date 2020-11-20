@@ -72,12 +72,12 @@ export class DiagramPopupComponent implements OnInit {
   }
 
   filterClick(): void {
-    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList);
+    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList, this.data.diagramComponent.mode);
   }
 
   clearFilterClick(): void {
     this.loadTree();
-    this.diagramComponent.filter(this.data.diagramComponent.parent, []);
+    this.diagramComponent.filter(this.data.diagramComponent.parent, [], this.data.diagramComponent.mode);
   }
 
   toolbarClick(buttonName: string) {

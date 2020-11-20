@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<div #diagramTab style="height: 40em;">
-  <mdm-diagram-toolbar (toolbarClick)="this.toolbarClick($event)" [isPopup]="false" [canMoveUp]="canMoveUp"></mdm-diagram-toolbar>
-  <mdm-diagram [parent]="this.parent" [mode]="this.mode" [diagramComponent]=""></mdm-diagram>
-</div>
+*/
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'mdm-merged-models',
+  templateUrl: './merged-models.component.html',
+  styleUrls: ['./merged-models.component.scss']
+})
+export class MergedModelsComponent implements OnInit {
+
+  @Output() onNodeClickedEvent = new EventEmitter<any>(); 
+
+  @Input() mergedModel:any;
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  onNodeClick = (node, tree) => {
+    this.onNodeClickedEvent.emit([node,tree])
+  }
+
+}

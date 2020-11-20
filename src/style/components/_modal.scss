@@ -40,7 +40,21 @@ SPDX-License-Identifier: Apache-2.0
     }
   }
 }
-.mdm--form-modal, .bulk-edit-modal, .bulk-delete-modal {
+.versioning-graph-modal {
+  @include respond-to($mobile-xs) {
+    min-width: 90%;
+    max-width: 90%;
+  }
+  .mat-dialog-content {
+    min-height: 789px;
+  }
+  @include respond-to($mobile-xs) {
+    .mat-dialog-content {
+      min-height: 510px;
+    }
+  }
+}
+.mdm--form-modal, .bulk-edit-modal, .bulk-delete-modal, .versioning-graph-modal {
   position: relative!important;
   .close-modal {
     position: absolute;

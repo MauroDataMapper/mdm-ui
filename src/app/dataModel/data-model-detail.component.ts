@@ -44,6 +44,7 @@ import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -443,6 +444,35 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       },
       null
     );
+  }
+
+  merge = () => {
+    this.stateHandler.NewWindow('modelsmerging',
+      {
+        sourceId: this.result.id,
+        targetId: null
+      },
+      null);
+  }
+
+  showMergeGraph = () => {
+
+    const promise = new Promise((resolve, reject) => {
+      const dialog = this.dialog.open(VersioningGraphModalComponent, {
+        data: { parentDataModel: this.result.id },
+        panelClass: 'versioning-graph-modal'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result != null && result.status === 'ok') {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+    promise.then(() => {
+    }).catch(() => { });
   }
 
   export(exporter) {

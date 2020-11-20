@@ -154,6 +154,11 @@ import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
+import { MergedModelsComponent } from '@mdm/merged-models/merged-models.component';
+import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
+import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { NgxTextDiffModule } from 'ngx-text-diff';
 import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
 import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
 import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
@@ -289,6 +294,11 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
     BulkDeleteModalComponent,
+    ModelMergingComponent,
+    MergedModelsComponent,
+    ModelsMergingGraphComponent,
+    VersioningGraphModalComponent,
+    BulkDeleteModalComponent,
     ReferenceDataComponent,
     ReferenceDataDetailsComponent,
     BaseComponent,
@@ -309,6 +319,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     HttpClientModule,
     ImageCropperModule,
     ReactiveFormsModule,
+    NgxTextDiffModule,
     SharedModule,
     ToastrModule.forRoot({
       timeOut: 30000,
@@ -442,6 +453,11 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
+    BulkDeleteModalComponent,
+    ModelMergingComponent,
+    MergedModelsComponent,
+    ModelsMergingGraphComponent,
+    VersioningGraphModalComponent,
     BulkDeleteModalComponent,
     BaseComponent,
     ReferenceDataComponent,

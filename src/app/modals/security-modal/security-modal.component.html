@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright 2020 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,30 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
-*/
-
-#viewport {
-  display: flex;
-  align-items: flex-start;
-  margin-top: 5px;
-  border-top: 1px solid rgb(221, 221, 221);
-  width: 100%;
-  height: 85%;
-
-  pre {
-    background: #f4f4f4;
-    border: 1px solid #ddd;
-    border-left: 3px solid #f36d33;
-    color: #666;
-    page-break-inside: avoid;
-    font-family: monospace;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 1.6em;
-    max-width: 100%;
-    overflow: auto;
-    padding: 1em 1.5em;
-    display: block;
-    word-wrap: break-word;
-  }
-}
+-->
+<button mat-icon-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
+<div class="userAccess full-width" style="margin: 30px 0px 50px 0px">
+   <mdm-share-with [mcElement]='element' [mcDomainType]='domainType'></mdm-share-with>
+   <div class="mt-2">
+      <mdm-group-access-new [parent]='element' [parentType]='domainType'></mdm-group-access-new>
+   </div>
+</div>

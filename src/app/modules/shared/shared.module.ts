@@ -37,6 +37,8 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SafePipe } from '@mdm/pipes/safe.pipe';
+import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
+import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { SafePipe } from '@mdm/pipes/safe.pipe';
     EnumerationCompareComponent,
     ErrorComponent,
     MdmPaginatorComponent,
-    SafePipe
+    SafePipe,
+    ShareWithComponent,
+    GroupAccessNewComponent
   ],
   imports: [
     CommonModule,
@@ -84,7 +88,9 @@ import { SafePipe } from '@mdm/pipes/safe.pipe';
     MdmPaginatorComponent,
     NgxSkeletonLoaderModule,
     CodemirrorModule,
-    SafePipe
+    SafePipe,
+    ShareWithComponent,
+    GroupAccessNewComponent
   ]
 })
 export class SharedModule {}

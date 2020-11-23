@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
 </div>
-<div *ngIf="!showSearch">
+<div *ngIf="!showSearch" style="clear: both;">
     <div *ngIf="dataModel && semanticLinks && semanticLinks.length > 0">
         <div class="mdm--shadow-block bordered">
             <div class="heading-container">
@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
 </div>
 
-<div *ngIf="showSecuritySection" (selectedIndexChange)="tabSelected($event)">
+<div *ngIf="showSecuritySection" (selectedIndexChange)="tabSelected($event)" style="clear: both;">
     <mat-tab-group>
         <mat-tab select="tabSelected('access')" label="User & Group Access">
             <div class="full-width">
@@ -83,6 +83,148 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 
 <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+   <mat-tab label="Description">
+       <ng-template matTabContent>
+         <div class="mb-2 full-width">
+            <div class="bordered">
+               <div class="heading-container">
+                  <h4 class="marginless">Description</h4>
+               </div>
+            </div>
+            <table class="table table-bordered mdm--table-fixed">
+               <tbody>
+                   <tr>
+                       <td class="detailsRowHeader">Aliases</td>
+                       <td>
+                           <mdm-element-alias [readOnly]='true'
+                                              [inEditMode]="editableForm?.visible"
+                                              [aliases]="dataModel?.aliases"
+                                              [editableForm]="editableForm"
+                                              [property]="'aliases'"></mdm-element-alias>
+                       </td>
+                   </tr>
+                   <tr>
+                       <td class="detailsRowHeader">Author</td>
+                       <td *ngIf="dataModel">
+
+                           <mdm-inline-text-edit [readOnly]='true'
+                                                 [inEditMode]="editableForm?.visible"
+                                                 [(ngModel)]="editableForm.author"
+                                                 class="dataModelDetailsLabel"
+                                                 name="moduleNameAuthor"></mdm-inline-text-edit>
+                       </td>
+                   </tr>
+                   <tr>
+                       <td class="detailsRowHeader">Organisation</td>
+                       <td *ngIf="dataModel">
+                           <mdm-inline-text-edit [readOnly]='true'
+                                                 [inEditMode]="editableForm?.visible"
+                                                 [(ngModel)]="editableForm.organisation" class="dataModelDetailsLabel"
+                                                 name="moduleNameOrganisation"
+                                                 size="20"></mdm-inline-text-edit>
+                       </td>
+                   </tr>
+                   <tr>
+                       <td class="detailsRowHeader">Description</td>
+                       <td class="elementDetailDescription">
+                           <div *ngIf="dataModel">
+                               <mdm-markdown-text-area [editableForm]="editableForm"
+                                                       [element]="dataModel"
+                                                       [property]="'description'"></mdm-markdown-text-area>
+                           </div>
+                       </td>
+                   </tr>
+                   <tr>
+                       <td class="detailsRowHeader">Type</td>
+                       <td *ngIf="dataModel">
+                           <span [innerHTML]="dataModel.type"></span>
+                       </td>
+                   </tr>
+                   <tr>
+                       <td class="detailsRowHeader">Classifications</td>
+                       <td *ngIf="dataModel">
+                           <mdm-element-classifications [readOnly]='true'
+                                                        [classifications]="dataModel.classifiers"
+                                                        [editableForm]="editableForm"
+                                                        [element]="dataModel"
+                                                        [property]="'classifiers'">
+                           </mdm-element-classifications>
+
+                       </td>
+                   </tr>
+               </tbody>
+           </table>
+         </div>
+      </ng-template>
+   </mat-tab>
+   <mat-tab label="Schema">
+      <ng-template matTabContent>
+         <div class="full-width">
+
+
+            <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [isEditable]="isEditable" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
+            <div class="bordered mt-3">
+               <div class="heading-container">
+                  <h4 class="marginless">Data Classes Diagram</h4>
+                  <mdm-diagram-tab [parent]="dataModel" [mode]="'umlclass'"></mdm-diagram-tab>
+               </div>
+            </div>
+
+
+            <!-- <mdm-diagram-tab [parent]="dataModel" [mode]="'umlclass'"></mdm-diagram-tab> -->
+<!--
+            <mat-accordion>
+               <mat-expansion-panel [expanded]="true">
+                 <mat-expansion-panel-header>
+                   <mat-panel-title>
+                      Data Classes
+                   </mat-panel-title>
+                   <mat-panel-description>
+                  </mat-panel-description>
+               </mat-expansion-panel-header>
+               </mat-expansion-panel>
+
+               <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                     Data Classes Diagram
+                    </mat-panel-title>
+                    <mat-panel-description>
+                   </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <ng-container matExpansionPanelContent>
+
+                  </ng-container>
+                </mat-expansion-panel>
+             </mat-accordion> -->
+
+          </div>
+      </ng-template>
+  </mat-tab>
+   <mat-tab label="Types">
+       <ng-template matTabContent>
+           <div class="full-width">
+               <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'" [isEditable]="isEditable"></mdm-element-owned-data-type-list>
+           </div>
+       </ng-template>
+   </mat-tab>
+   <mat-tab label="Context" *ngIf="dataModel && dataModel.type === 'Data Asset'">
+       <ng-template matTabContent>
+           <div class="full-width">
+            <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'"></mdm-diagram-tab>
+           </div>
+       </ng-template>
+   </mat-tab>
+   <mat-tab label="History">
+      <ng-template matTabContent>
+          <div class="full-width">
+              <mdm-history *ngIf="dataModel" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="parentId" [domainType]="'dataModels'"></mdm-history>
+          </div>
+      </ng-template>
+  </mat-tab>
+</mat-tab-group>
+
+<!-- <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
     <mat-tab label="Data Classes">
         <ng-template matTabContent>
             <div class="mb-2 full-width">

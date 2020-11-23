@@ -15,14 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { DataModelResult } from '../model/dataModelModel';
+import { DataModelResult, EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
@@ -34,6 +34,7 @@ import { EditingService } from '@mdm/services/editing.service';
 })
 export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  @ViewChildren('editableText') editForm: QueryList<any>;
   dataModel: DataModelResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -48,6 +49,10 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
+
+  editableForm: EditableDataModel;
+  errorMessage = '';
+  displayedColumns = ['author', 'description', 'organisation', 'type', 'classifications'];
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -91,6 +96,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     let arr = [];
     this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
       this.dataModel = result.body;
+      this.dataModel.description = 'Proin scelerisque ante sed lorem pretium fringilla. Etiam tempor imperdiet velit vel tempor. Aenean imperdiet tortor et laoreet aliquet. Integer consequat lobortis est vel auctor. Duis pulvinar tincidunt velit, in pharetra nibh. Quisque vestibulum metus quis eros rutrum, quis tempor velit ornare. In id efficitur urna. Aenean aliquet sem blandit nibh suscipit mattis. Suspendisse eget consectetur ex. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla gravida neque id pharetra dignissim.';
 
       id = result.body.id;
 
@@ -119,6 +125,49 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
       this.tabSelected(this.activeTab);
+
+      this.editableForm = new EditableDataModel();
+      this.editableForm.visible = false;
+      this.editableForm.deletePending = false;
+
+      this.editableForm.show = () => {
+        this.editForm.forEach(x =>
+          x.edit({
+            editing: true,
+            focus: x.name === 'moduleName' ? true : false
+          })
+        );
+        this.editableForm.visible = true;
+      };
+
+      this.editableForm.cancel = () => {
+        this.editForm.forEach(x => x.edit({ editing: false }));
+        this.editableForm.visible = false;
+        this.editableForm.validationError = false;
+        this.errorMessage = '';
+        this.setEditableFormData();
+        if (this.dataModel.classifiers) {
+          this.dataModel.classifiers.forEach(item => {
+            this.editableForm.classifiers.push(item);
+          });
+        }
+        if (this.dataModel.aliases) {
+          this.dataModel.aliases.forEach(item => {
+            this.editableForm.aliases.push(item);
+          });
+        }
+      };
+
+      if (this.dataModel.classifiers) {
+         this.dataModel.classifiers.forEach(item => {
+           this.editableForm.classifiers.push(item);
+         });
+       }
+       if (this.dataModel.aliases) {
+         this.dataModel.aliases.forEach(item => {
+           this.editableForm.aliases.push(item);
+         });
+       }
     });
   }
 
@@ -223,4 +272,11 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
   }
+
+  private setEditableFormData() {
+   this.editableForm.description = this.dataModel.description;
+   this.editableForm.label = this.dataModel.label;
+   this.editableForm.organisation = this.dataModel.organisation;
+   this.editableForm.author = this.dataModel.author;
+ }
 }

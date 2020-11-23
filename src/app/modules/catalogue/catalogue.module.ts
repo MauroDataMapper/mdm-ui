@@ -28,9 +28,8 @@ import { UsersModule } from '../users/users.module';
 import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
-import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
-import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+
 import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
@@ -183,13 +182,11 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
-    ShareWithComponent,
     ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
     DiagramToolbarComponent,
-    GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
     ElementLinkComponent,
@@ -356,9 +353,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
-    ShareWithComponent,
     ExportModelsComponent,
-    GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
     ElementLinkComponent,

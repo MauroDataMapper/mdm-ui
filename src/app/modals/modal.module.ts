@@ -39,6 +39,7 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { AddRuleRepresentationModalComponent } from './add-rule-representation-modal/add-rule-representation-modal.component';
 import { AddRuleModalComponent } from './add-rule-modal/add-rule-modal.component';
 import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
+import { SecurityModalComponent } from './security-modal/security-modal.component';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component
     ResolveMergeConflictModalComponent,
     AddRuleRepresentationModalComponent,
     AddRuleModalComponent,
-    ApiKeysModalComponent
+    ApiKeysModalComponent,
+    SecurityModalComponent
   ],
   providers: [
     ModalService

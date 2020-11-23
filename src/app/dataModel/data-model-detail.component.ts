@@ -44,6 +44,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { SecurityModalComponent } from '../modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -219,7 +220,25 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+   const promise = new Promise(() => {
+      const dialog = this.dialog.open(SecurityModalComponent, {
+        data: {
+          element: 'dataModel',
+          domainType: 'DataModel'
+        }, panelClass: 'security-modal'
+      });
+
+      dialog.afterClosed().subscribe(result => {
+         console.log(result);
+        if (result != null && result.status === 'ok') {
+          this.processing = false;
+        } else {
+          return;
+        }
+      });
+    });
+    return promise;
+
   }
   toggleShowSearch() {
     this.messageService.toggleSearch();

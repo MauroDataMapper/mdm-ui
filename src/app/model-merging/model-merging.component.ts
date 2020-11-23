@@ -25,14 +25,10 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
-import { Observable } from 'rxjs';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { StateHandlerService } from '@mdm/services';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ResolveMergeConflictModalComponent } from '@mdm/modals/resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
-import { isUndefined, object } from 'lodash';
-import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'mdm-model-merging',
@@ -82,9 +78,7 @@ export class ModelMergingComponent implements OnInit {
     private resources: MdmResourcesService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    public dialog: MatDialog,
-    private changeRef: ChangeDetectorRef
-  ) {}
+    public dialog: MatDialog  ) {}
 
   async ngOnInit() {
     const sourceId = this.stateService.params.sourceId;
@@ -139,10 +133,10 @@ export class ModelMergingComponent implements OnInit {
     }
 
     if (model.hasChildren) {
-      this.getChildren(model).then((res) => {
+      this.getChildren(model).then(() => {
         //get third level
         model.children.forEach((child) => {
-          this.getChildren(child).then((res) => {
+          this.getChildren(child).then(() => {
             //get forth level
             model.children.forEach(async (child) => {
               this.getChildren(child);
@@ -156,7 +150,7 @@ export class ModelMergingComponent implements OnInit {
   }
 
   private getChildren(model: any) {
-    let prom = new Promise((resolve, rej) => {
+    let prom = new Promise((resolve) => {
       let promiseColl: Array<any> = [];
 
       model.children.forEach((child) => {

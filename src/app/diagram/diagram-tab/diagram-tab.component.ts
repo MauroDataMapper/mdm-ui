@@ -31,6 +31,8 @@ export class DiagramTabComponent {
 
   @Input() mode: string;
   @Input() parent: string;
+  @Input() isPopup: boolean;
+  @Input() canMoveUp: boolean;
 
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
 

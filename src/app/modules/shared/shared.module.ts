@@ -36,7 +36,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { NgxTextDiffModule } from 'ngx-text-diff/lib/ngx-text-diff.module';
 import { SafePipe } from '@mdm/pipes/safe.pipe';
 
 @NgModule({

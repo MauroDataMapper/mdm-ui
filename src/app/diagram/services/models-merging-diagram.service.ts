@@ -19,11 +19,8 @@ import { BasicDiagramService } from './basic-diagram.service';
 import { Injectable } from '@angular/core';
 import * as joint from 'jointjs';
 
-import { Observable, EMPTY, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { mergeMap } from 'rxjs/operators';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +29,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
 
   parentId: string;
 
-  //Color codes for the diagram shapes
+  // Color codes for the diagram shapes
   fontColorBlack = '#000000';
   lightOrange = '#f7a900';
   shadedOrange = '#fec994';
@@ -46,7 +43,7 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
 
     result.body.forEach((item: any) => {
       if (item.newFork) {
-        this.addRectangleCell(item.modelId, item.label + '\n\n' + item.branchName + ' branch', 300, 100, 288);
+        this.addRectangleCell(item.modelId,  `${item.label} \n\n  ${item.branchName} branch`, 300, 100, 288);
       }
       if (item.newDocumentationVersion) {
         this.addColoredRectangleCell(this.fontColorBlack, this.shadedOrange, item.modelId, `${item.label} \n\n Version ${item.version} \n\n ${item.branchName} branch`, 300, 100, 288);
@@ -59,12 +56,12 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
       }
     });
 
-    //Adding the links in a separate loop, because it won't find the target otherwise
+    // Adding the links in a separate loop, because it won't find the target otherwise
     result.body.forEach((item: any) => {
       let link: any;
       item.targets.forEach(itmTarget => {
         link = new joint.shapes.standard.Link({
-          id: item.modelId + '_' + itmTarget.modelId,
+          id: `${item.modelId} _  ${itmTarget.modelId}`,
           source: { id: item.modelId },
           target: { id: itmTarget.modelId },
           labels: [{
@@ -83,11 +80,11 @@ export class ModelsMergingDiagramService extends BasicDiagramService {
 
   configurePaper(paper: joint.dia.Paper): void {
 
-    paper.on('cell:pointerclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('cell:pointerclick', () => {
 
     });
 
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('link:pointerdblclick', () => {
 
     });
   }

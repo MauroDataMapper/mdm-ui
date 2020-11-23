@@ -453,7 +453,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         targetId: null
       },
       null);
-  }
+  };
 
   showMergeGraph = () => {
 
@@ -473,7 +473,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     });
     promise.then(() => {
     }).catch(() => { });
-  }
+  };
 
   export(exporter) {
     this.exportError = null;

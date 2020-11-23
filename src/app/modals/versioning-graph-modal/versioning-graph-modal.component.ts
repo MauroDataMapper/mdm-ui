@@ -49,7 +49,7 @@ export class VersioningGraphModalComponent implements OnInit, AfterViewInit {
   async ngAfterViewInit() {
 
     const sourceId = this.data.parentDataModel;
-    
+
     if (sourceId) {
       this.sourceModel = await this.loadDataModelDetail(sourceId);
     }

@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  ChangeDetectorRef,
   Component,
   OnInit,
   ViewEncapsulation
@@ -134,12 +133,12 @@ export class ModelMergingComponent implements OnInit {
 
     if (model.hasChildren) {
       this.getChildren(model).then(() => {
-        //get third level
+        // get third level
         model.children.forEach((child) => {
           this.getChildren(child).then(() => {
-            //get forth level
-            model.children.forEach(async (child) => {
-              this.getChildren(child);
+            // get forth level
+            model.children.forEach((secondChild) => {
+              this.getChildren(secondChild);
             });
           });
         });
@@ -150,8 +149,8 @@ export class ModelMergingComponent implements OnInit {
   }
 
   private getChildren(model: any) {
-    let prom = new Promise((resolve) => {
-      let promiseColl: Array<any> = [];
+    const prom = new Promise((resolve) => {
+      const promiseColl: Array<any> = [];
 
       model.children.forEach((child) => {
         const children = this.resources.tree
@@ -205,14 +204,14 @@ export class ModelMergingComponent implements OnInit {
   };
 
   createDiffMap(top: boolean, model: any) {
-    let thingRet: any = {};
+    const thingRet: any = {};
 
     if (top) {
       thingRet.rightId = this.sourceModel.id;
     }
     thingRet.leftId = model.id;
 
-    let localDiff = [];
+    const localDiff = [];
     localDiff.push(this.createDataClassElements(model));
     localDiff.push(this.createDataTypesElements(model));
     localDiff.push(this.createDataElementsElements(model));
@@ -230,7 +229,7 @@ export class ModelMergingComponent implements OnInit {
   }
 
   createPropertiesElements(model: any) {
-    let properties = [];
+    const properties = [];
 
     this.diffsMerged.properties.forEach((element) => {
       let value;
@@ -245,7 +244,7 @@ export class ModelMergingComponent implements OnInit {
 
         const newDiff = {
           fieldName: element.property,
-          value: value
+          value
         };
 
         properties.push(newDiff);
@@ -261,15 +260,15 @@ export class ModelMergingComponent implements OnInit {
   }
 
   createMetadataElements(model: any) {
-    let objects: any = {};
+    const objects: any = {};
 
     objects.fieldName = 'metadata';
     objects.created = [];
     objects.deleted = [];
-    let tempMod = [];
+    const tempMod = [];
 
     this.diffsMerged.metadata.forEach((dt) => {
-      if (model.id == dt.parentLeftId || model.id === dt.parentRightId) {
+      if (model.id === dt.parentLeftId || model.id === dt.parentRightId) {
         if (dt.created) {
           const createdDiff = {
             id: dt.value.id
@@ -286,15 +285,15 @@ export class ModelMergingComponent implements OnInit {
 
         if (dt.modified) {
 
-          let tempMeMod = []
-          let val = {
+          const tempMeMod = [];
+          const val = {
             fieldName: 'value',
             value: dt.acceptSource && !dt.acceptTarget ? dt.right : dt.left
-          }
+          };
 
           tempMeMod.push(val);
 
-          let mod = {
+          const mod = {
             leftId: dt.leftId,
             diffs:tempMeMod
           };
@@ -309,7 +308,7 @@ export class ModelMergingComponent implements OnInit {
   }
 
   createDataTypesElements(model: any) {
-    let objects: any = {};
+    const objects: any = {};
 
     objects.fieldName = 'dataTypes';
     objects.created = [];
@@ -317,7 +316,7 @@ export class ModelMergingComponent implements OnInit {
 
     this.diffsMerged.dataTypes.forEach((dt) => {
       if (dt.created) {
-        if (model.label == dt.breadcrumbs[dt.breadcrumbs.length - 1].label) {
+        if (model.label === dt.breadcrumbs[dt.breadcrumbs.length - 1].label) {
           const createdDiff = {
             id: dt.id
           };
@@ -325,7 +324,7 @@ export class ModelMergingComponent implements OnInit {
         }
       }
       if (dt.deleted) {
-        if (model.label == dt.breadcrumbs[dt.breadcrumbs.length - 1].label) {
+        if (model.label === dt.breadcrumbs[dt.breadcrumbs.length - 1].label) {
           const createdDiff = {
             id: dt.id
           };
@@ -334,7 +333,7 @@ export class ModelMergingComponent implements OnInit {
       }
     });
 
-    let tempMod = [];
+    const tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
         if (child.domainType === 'PrimitiveType') {
@@ -349,7 +348,7 @@ export class ModelMergingComponent implements OnInit {
   }
 
   createDataElementsElements(model: any) {
-    let objects: any = {};
+    const objects: any = {};
 
     objects.fieldName = 'dataElements';
     objects.created = [];
@@ -357,7 +356,7 @@ export class ModelMergingComponent implements OnInit {
 
     this.diffsMerged.dataElements.forEach((de) => {
       if (!de.modified) {
-        if (model.label == de.breadcrumbs[de.breadcrumbs.length - 1].label) {
+        if (model.label === de.breadcrumbs[de.breadcrumbs.length - 1].label) {
           if (de.created) {
             const createdDiff = {
               id: de.id
@@ -375,7 +374,7 @@ export class ModelMergingComponent implements OnInit {
       }
     });
 
-    let tempMod = [];
+    const tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
         if (child.domainType === 'DataElement') {
@@ -390,14 +389,14 @@ export class ModelMergingComponent implements OnInit {
   }
 
   createDataClassElements(model: any) {
-    let objects: any = {};
+    const objects: any = {};
 
     objects.fieldName = 'dataClasses';
     objects.created = [];
     objects.deleted = [];
 
     this.diffsMerged.dataClasses.forEach((dc) => {
-      if (model.label == dc.breadcrumbs[dc.breadcrumbs.length - 1].label) {
+      if (model.label === dc.breadcrumbs[dc.breadcrumbs.length - 1].label) {
         if (dc.created) {
           const createdDiff = {
             id: dc.id
@@ -414,7 +413,7 @@ export class ModelMergingComponent implements OnInit {
       }
     });
 
-    let tempMod = [];
+    const tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
         if (child.domainType === 'DataClass') {
@@ -438,9 +437,9 @@ export class ModelMergingComponent implements OnInit {
 
       dialog.afterClosed().subscribe((result) => {
         if (result) {
-          let tr = this.createDiffMap(true, this.targetModel);
+          const tr = this.createDiffMap(true, this.targetModel);
 
-          var data = {
+          const data = {
             patch: tr,
             deleteBranch: result.deleteSourceBranch
           };
@@ -458,8 +457,7 @@ export class ModelMergingComponent implements OnInit {
               },
               (err) => {
                 this.messageHandler.showError(
-                  'There has been error merging the data, please try again - ' +
-                    err.message,
+                  `There has been error merging the data, please try again - ${err.message}`,
                   'Error Merging'
                 );
               }
@@ -498,9 +496,9 @@ export class ModelMergingComponent implements OnInit {
       rightId,
       modified: true,
       left:
-        !labelDiff.left || labelDiff.left === 'null' ? "' '" : labelDiff.left,
+        !labelDiff.left || labelDiff.left === 'null' ? '\' \'' : labelDiff.left,
       right:
-        !labelDiff.right || labelDiff.right === 'null' ? "' '" : labelDiff.right
+        !labelDiff.right || labelDiff.right === 'null' ? '\' \'' : labelDiff.right
     };
 
     if (!labelDiff.isMergeConflict) {
@@ -526,7 +524,7 @@ export class ModelMergingComponent implements OnInit {
         created.parentRightId = rightId;
         diffMap[leftId].diffs.metadata.push(created);
         diffMap[rightId].diffs.metadata.push(created);
-     
+
         if (!created.isMergeConflict) {
           created['acceptSource'] = true;
           created['acceptTarget'] = false;
@@ -706,7 +704,7 @@ export class ModelMergingComponent implements OnInit {
   };
 
   mergeArrays(source, target) {
-    let jointArray = {};
+    const jointArray = {};
 
     jointArray['dataElements'] = [
       ...new Set([...source.dataElements, ...target.dataElements])
@@ -741,10 +739,10 @@ export class ModelMergingComponent implements OnInit {
     if (diffMapForId) {
       const diffs = diffMapForId.diffs;
 
-      let tempDataElementDiffs = [];
-      let tempDataClassesDiff = [];
-      let tempDataTypesDiff = [];
-      let tempMetadata = [];
+      const tempDataElementDiffs = [];
+      const tempDataClassesDiff = [];
+      const tempDataTypesDiff = [];
+      const tempMetadata = [];
 
       diffs.dataElements.forEach((element) => {
         if (element.deleted === false) {
@@ -919,7 +917,7 @@ export class ModelMergingComponent implements OnInit {
           index++
         ) {
           const element = this.diffsMerged.properties[index];
-          if (element.property == diff.property && element.leftId == diff.leftId) {
+          if (element.property === diff.property && element.leftId === diff.leftId) {
             if (diff.acceptTarget || diff.acceptSource) {
               if (diff.acceptTarget && diff.acceptSource) {
                 const dialog = this.dialog.open(
@@ -941,15 +939,15 @@ export class ModelMergingComponent implements OnInit {
               } else {
                 this.diffsMerged.properties[index] = diff;
                 if (diffLocation === 'source') {
-                  var i = this.diffs.properties.findIndex(
-                    (x) => x.property == element.property
+                  const i = this.diffs.properties.findIndex(
+                    (x) => x.property === element.property
                   );
                   if (i >= 0) {
                     this.diffs.properties[i].acceptTarget = false;
                   }
                 } else {
-                  var i = this.diffs.properties.findIndex(
-                    (x) => x.property == element.property
+                  const i = this.diffs.properties.findIndex(
+                    (x) => x.property === element.property
                   );
                   if (i >= 0) {
                     this.diffs.properties[i].acceptSource = false;
@@ -976,19 +974,19 @@ export class ModelMergingComponent implements OnInit {
           index++
         ) {
           const element = this.diffsMerged.dataClasses[index];
-          if (element.label == diff.label) {
+          if (element.label === diff.label) {
             if (diff.accept) {
               this.diffsMerged.dataClasses[index] = diff;
               if (diffLocation === 'source') {
-                var i = this.diffs.dataClasses.findIndex(
-                  (x) => x.label == element.label
+                const i = this.diffs.dataClasses.findIndex(
+                  (x) => x.label === element.label
                 );
                 if (i >= 0) {
                   this.diffs.dataClasses[i].accept = false;
                 }
               } else {
-                var i = this.diffs.dataClasses.findIndex(
-                  (x) => x.label == element.label
+                const i = this.diffs.dataClasses.findIndex(
+                  (x) => x.label === element.label
                 );
                 if (i >= 0) {
                   this.diffs.dataClasses[i].accept = false;
@@ -1011,19 +1009,19 @@ export class ModelMergingComponent implements OnInit {
         for (let index = 0; index < this.diffsMerged.metadata.length; index++) {
           const element = this.diffsMerged.metadata[index];
           if (element.value) {
-            if (element.value.id == diff.value.id) {
+            if (element.value.id === diff.value.id) {
               if (diff.accept) {
                 this.diffsMerged.metadata[index] = diff;
                 if (diffLocation === 'source') {
-                  var i = this.diffs.metadata.findIndex(
-                    (x) => x.value.id == element.value.id
+                  const i = this.diffs.metadata.findIndex(
+                    (x) => x.value.id === element.value.id
                   );
                   if (i >= 0) {
                     this.diffs.metadata[i].accept = false;
                   }
                 } else {
-                  var i = this.diffs.metadata.findIndex(
-                    (x) => x.value.id == element.value.id
+                  const i = this.diffs.metadata.findIndex(
+                    (x) => x.value.id === element.value.id
                   );
                   if (i >= 0) {
                     this.diffs.metadata[i].accept = false;
@@ -1037,15 +1035,15 @@ export class ModelMergingComponent implements OnInit {
           } else {
             if (diff.acceptTarget || diff.acceptSource) {
               if (diffLocation === 'source') {
-                var i = this.diffs.metadata.findIndex(
-                  (x) => x.id == element.id
+                const i = this.diffs.metadata.findIndex(
+                  (x) => x.id === element.id
                 );
                 if (i >= 0) {
                   this.diffs.metadata[i].accept = false;
                 }
               } else {
-                var i = this.diffs.metadata.findIndex(
-                  (x) => x.id == element.id
+                const i = this.diffs.metadata.findIndex(
+                  (x) => x.id === element.id
                 );
                 if (i >= 0) {
                   this.diffs.metadata[i].accept = false;
@@ -1072,19 +1070,19 @@ export class ModelMergingComponent implements OnInit {
           index++
         ) {
           const element = this.diffsMerged.dataElements[index];
-          if (element.label == diff.label) {
+          if (element.label === diff.label) {
             if (diff.accept) {
               this.diffsMerged.dataElements[index] = diff;
               if (diffLocation === 'source') {
-                var i = this.diffs.dataElements.findIndex(
-                  (x) => x.label == element.label
+                const i = this.diffs.dataElements.findIndex(
+                  (x) => x.label === element.label
                 );
                 if (i >= 0) {
                   this.diffs.dataElements[i].accept = false;
                 }
               } else {
-                var i = this.diffs.dataElements.findIndex(
-                  (x) => x.label == element.label
+                const i = this.diffs.dataElements.findIndex(
+                  (x) => x.label === element.label
                 );
                 if (i >= 0) {
                   this.diffs.dataElements[i].accept = false;
@@ -1110,19 +1108,19 @@ export class ModelMergingComponent implements OnInit {
           index++
         ) {
           const element = this.diffsMerged.dataTypes[index];
-          if (element.label == diff.label) {
+          if (element.label === diff.label) {
             if (diff.accept) {
               this.diffsMerged.dataTypes[index] = diff;
               if (diffLocation === 'source') {
-                var i = this.diffs.dataTypes.findIndex(
-                  (x) => x.label == element.label
+                const i = this.diffs.dataTypes.findIndex(
+                  (x) => x.label === element.label
                 );
                 if (i >= 0) {
                   this.diffs.dataTypes[i].accept = false;
                 }
               } else {
-                var i = this.diffs.dataTypes.findIndex(
-                  (x) => x.label == element.label
+                const i = this.diffs.dataTypes.findIndex(
+                  (x) => x.label === element.label
                 );
                 if (i >= 0) {
                   this.diffs.dataTypes[i].accept = false;
@@ -1417,87 +1415,87 @@ export class ModelMergingComponent implements OnInit {
           }
 
           // Run for Element
-          el.diffs.forEach((diff) => {
-            if (diff.label) {
+          el.diffs.forEach((subDiff) => {
+            if (subDiff.label) {
               this.findDiffProps(
                 'label',
                 el.leftId,
                 el.rightId,
-                diff.label,
+                subDiff.label,
                 diffMap
               );
             }
-            if (diff.description) {
+            if (subDiff.description) {
               this.findDiffProps(
                 'description',
                 el.leftId,
                 el.rightId,
-                diff.description,
+                subDiff.description,
                 diffMap
               );
             }
-            if (diff.author) {
+            if (subDiff.author) {
               this.findDiffProps(
                 'author',
                 el.leftId,
                 el.rightId,
-                diff.author,
+                subDiff.author,
                 diffMap
               );
             }
 
-            if (diff.organisation) {
+            if (subDiff.organisation) {
               this.findDiffProps(
                 'organisation',
                 el.leftId,
                 el.rightId,
-                diff.organisation,
+                subDiff.organisation,
                 diffMap
               );
             }
 
-            if (diff.minMultiplicity) {
+            if (subDiff.minMultiplicity) {
               this.findDiffProps(
                 'minMultiplicity',
                 el.leftId,
                 el.rightId,
-                diff.minMultiplicity,
+                subDiff.minMultiplicity,
                 diffMap
               );
             }
-            if (diff.maxMultiplicity) {
+            if (subDiff.maxMultiplicity) {
               this.findDiffProps(
                 'maxMultiplicity',
                 el.leftId,
                 el.rightId,
-                diff.maxMultiplicity,
+                subDiff.maxMultiplicity,
                 diffMap
               );
             }
 
-            if (diff.metadata) {
+            if (subDiff.metadata) {
               this.findDiffMetadata(
                 el.leftId,
                 el.rightId,
-                diff.metadata,
+                subDiff.metadata,
                 diffMap
               );
             }
 
-            if (diffElement === 'dataTypes' && diff.enumerationValues) {
+            if (diffElement === 'dataTypes' && subDiff.enumerationValues) {
               this.findDiffEnumerationValues(
                 el.leftId,
                 el.rightId,
-                diff.enumerationValues,
+                subDiff.enumerationValues,
                 diffMap
               );
             }
 
-            if (diffElement === 'dataElements' && diff['dataType.label']) {
+            if (diffElement === 'dataElements' && subDiff['dataType.label']) {
               this.findDiffDataTypeChanges(
                 el.leftId,
                 el.rightId,
-                diff['dataType.label'],
+                subDiff['dataType.label'],
                 diffMap
               );
             }

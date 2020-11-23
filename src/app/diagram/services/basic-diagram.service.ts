@@ -59,7 +59,7 @@ export abstract class BasicDiagramService {
   abstract getDiagramContent(params: any): Observable<any>;
 
   abstract render(data: any): void;
-  
+
   abstract configurePaper(paper: joint.dia.Paper): void;
 
 
@@ -77,7 +77,7 @@ export abstract class BasicDiagramService {
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
     let nodeSep = 100;
     let rankSep = 400;
-      
+
     if (rankDir === 'TB') {
       nodeSep = 100;
       rankSep = 250;
@@ -154,7 +154,7 @@ export abstract class BasicDiagramService {
     this.graph.addCell(rectangle);
     return rectangle;
   }
-  
+
   protected addSmallRectangleCell(id: string, label: string): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,

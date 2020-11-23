@@ -42,7 +42,7 @@ import { UiViewComponent } from './shared/ui-view/ui-view.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [ 
+  imports: [
     BrowserModule,
     CatalogueModule,
     AdminModule,

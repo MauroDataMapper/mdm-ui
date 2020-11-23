@@ -28,7 +28,7 @@ export class CheckInModalComponent implements OnInit {
   commitComment: string;
   deleteSourceBranch: boolean;
 
-  
+
   constructor(
     private dialogRef: MatDialogRef<CheckInModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any

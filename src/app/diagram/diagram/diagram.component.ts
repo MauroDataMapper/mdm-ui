@@ -126,8 +126,8 @@ export class DiagramComponent implements OnInit {
         // The diagram service is responsible for the graph
       this.diagramService.render(data);
       if (this.mode === 'model-merging-graph') {
-        //Bottom-to-top layout
-        this.diagramService.layoutNodes("BT");
+        // Bottom-to-top layout
+        this.diagramService.layoutNodes('BT');
       } else {
         this.diagramService.layoutNodes();
       }
@@ -250,8 +250,8 @@ export class DiagramComponent implements OnInit {
       this.diagramService.render(data);
 
       if (mode === 'model-merging-graph') {
-        //Bottom-to-top layout
-        this.diagramService.layoutNodes("BT");
+        // Bottom-to-top layout
+        this.diagramService.layoutNodes('BT');
       } else {
         this.diagramService.layoutNodes();
       }

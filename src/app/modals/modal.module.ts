@@ -76,4 +76,3 @@ export class ModalModule {
     modalService.init();
   }
 }
- 

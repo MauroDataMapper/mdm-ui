@@ -194,7 +194,6 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getTabDetailByName(tabName) {
-    console.log(tabName);
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
@@ -248,7 +247,6 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   tabSelected(index) {
-    console.log(index);
     const tab = this.getTabDetailByIndex(index);
 
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });

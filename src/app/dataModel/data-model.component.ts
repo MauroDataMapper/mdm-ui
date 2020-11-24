@@ -159,20 +159,20 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       };
 
       if (this.dataModel.classifiers) {
-         this.dataModel.classifiers.forEach(item => {
-           this.editableForm.classifiers.push(item);
-         });
-       }
-       if (this.dataModel.aliases) {
-         this.dataModel.aliases.forEach(item => {
-           this.editableForm.aliases.push(item);
-         });
-       }
+        this.dataModel.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+      if (this.dataModel.aliases) {
+        this.dataModel.aliases.forEach(item => {
+          this.editableForm.aliases.push(item);
+        });
+      }
     });
   }
 
   async DataModelPermissions(id: any) {
-   await this.resourcesService.security.permissions('dataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
+    await this.resourcesService.security.permissions('dataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach(attrname => {
         this.dataModel[attrname] = permissions.body[attrname];
       });
@@ -194,75 +194,61 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getTabDetailByName(tabName) {
+    console.log(tabName);
     switch (tabName) {
-      case 'dataClasses':
-        return { index: 0, name: 'dataClasses' };
+      case 'description':
+        return { index: 0, name: 'description' };
+      case 'schema':
+        return { index: 1, name: 'schema' };
       case 'types':
-        return { index: 1, name: 'types' };
-      case 'properties':
-        return { index: 2, name: 'properties' };
-      case 'summaryMetadata':
-        return { index: 3, name: 'summaryMetadata' };
-      case 'comments':
-        return { index: 4, name: 'comments' };
+        return { index: 2, name: 'types' };
       case 'history':
-        return { index: 5, name: 'history' };
-      case 'diagram':
-        return { index: 6, name: 'diagram' };
-      case 'links':
-        return { index: 7, name: 'links' };
-      case 'attachments':
-        return { index: 8, name: 'attachments' };
-      case 'dataflow': {
         if (this.dataModel.type === 'Data Asset') {
-          return { index: 9, name: 'dataflows' };
-        } else {
-          return { index: 0, name: 'dataClasses' };
+          return { index: 4, name: 'history' };
         }
-      }
+        return { index: 3, name: 'history' };
+      case 'context':
+        if (this.dataModel.type === 'Data Asset') {
+          return { index: 3, name: 'context' };
+        }
       case 'rulesConstraints' : {
         return { index: 10, name: 'rulesConstraints' };
       }
       default:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'description' };
     }
   }
 
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'types' };
+        return { index: 1, name: 'schema' };
       case 2:
-        return { index: 2, name: 'properties' };
+        return { index: 2, name: 'types' };
       case 3:
-        return { index: 3, name: 'summaryMetadata' };
-      case 4:
-        return { index: 4, name: 'comments' };
-      case 5:
-        return { index: 5, name: 'history' };
-      case 6:
-        return { index: 6, name: 'diagram' };
-      case 7:
-        return { index: 7, name: 'links' };
-      case 8:
-        return { index: 8, name: 'attachments' };
-      case 9: {
         if (this.dataModel.type === 'Data Asset') {
-          return { index: 9, name: 'dataflow' };
+          return { index: 3, name: 'context' };
+        } else {
+          return { index: 3, name: 'history' };
         }
-        return { index: 0, name: 'dataClasses' };
+      case 4: {
+        if (this.dataModel.type === 'Data Asset') {
+          return { index: 4, name: 'history' };
+        }
+        break;
       }
       case 10 : {
         return { index: 10, name: 'rulesConstraints' };
       }
       default:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'description' };
     }
   }
 
   tabSelected(index) {
+    console.log(index);
     const tab = this.getTabDetailByIndex(index);
 
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
@@ -274,9 +260,9 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setEditableFormData() {
-   this.editableForm.description = this.dataModel.description;
-   this.editableForm.label = this.dataModel.label;
-   this.editableForm.organisation = this.dataModel.organisation;
-   this.editableForm.author = this.dataModel.author;
- }
+    this.editableForm.description = this.dataModel.description;
+    this.editableForm.label = this.dataModel.label;
+    this.editableForm.organisation = this.dataModel.organisation;
+    this.editableForm.author = this.dataModel.author;
+  }
 }

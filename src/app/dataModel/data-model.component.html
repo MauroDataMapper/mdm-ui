@@ -160,8 +160,6 @@ SPDX-License-Identifier: Apache-2.0
    <mat-tab label="Schema">
       <ng-template matTabContent>
          <div class="full-width">
-
-
             <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [isEditable]="isEditable" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
             <div class="bordered mt-3">
                <div class="heading-container">
@@ -169,35 +167,6 @@ SPDX-License-Identifier: Apache-2.0
                   <mdm-diagram-tab [parent]="dataModel" [mode]="'umlclass'"></mdm-diagram-tab>
                </div>
             </div>
-
-
-            <!-- <mdm-diagram-tab [parent]="dataModel" [mode]="'umlclass'"></mdm-diagram-tab> -->
-<!--
-            <mat-accordion>
-               <mat-expansion-panel [expanded]="true">
-                 <mat-expansion-panel-header>
-                   <mat-panel-title>
-                      Data Classes
-                   </mat-panel-title>
-                   <mat-panel-description>
-                  </mat-panel-description>
-               </mat-expansion-panel-header>
-               </mat-expansion-panel>
-
-               <mat-expansion-panel>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title>
-                     Data Classes Diagram
-                    </mat-panel-title>
-                    <mat-panel-description>
-                   </mat-panel-description>
-                  </mat-expansion-panel-header>
-                  <ng-container matExpansionPanelContent>
-
-                  </ng-container>
-                </mat-expansion-panel>
-             </mat-accordion> -->
-
           </div>
       </ng-template>
   </mat-tab>

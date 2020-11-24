@@ -88,7 +88,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   urlText: any;
   canEditDescription = true;
   showEditDescription = false;
-
+  branchGraph = [];
+  currentBranch = '';
 
   constructor(
     private renderer: Renderer2,
@@ -114,7 +115,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.loadExporterList();
     this.DataModelDetails();
 
-   this.editableForm = new EditableDataModel();
+    this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
 
@@ -168,6 +169,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   DataModelDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
+      this.getModelGraph(this.result.id);
       this.setEditableFormData();
 
       if (this.result.classifiers) {
@@ -220,25 +222,12 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   toggleSecuritySection() {
-   const promise = new Promise(() => {
-      const dialog = this.dialog.open(SecurityModalComponent, {
-        data: {
-          element: 'dataModel',
-          domainType: 'DataModel'
-        }, panelClass: 'security-modal'
-      });
-
-      dialog.afterClosed().subscribe(result => {
-         console.log(result);
-        if (result != null && result.status === 'ok') {
-          this.processing = false;
-        } else {
-          return;
-        }
-      });
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'dataModel',
+        domainType: 'DataModel'
+      }, panelClass: 'security-modal'
     });
-    return promise;
-
   }
   toggleShowSearch() {
     this.messageService.toggleSearch();
@@ -248,6 +237,23 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
+
+  getModelGraph = modelId => {
+    this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(res => {
+      this.currentBranch = this.result.branchName;
+      this.branchGraph = res.body;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
+    });
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go('datamodel', { id: this.branchGraph[val].modelId }, { reload: true, location: true });
+      }
+    }
+  };
 
   delete(permanent) {
     if (!this.showDelete) {

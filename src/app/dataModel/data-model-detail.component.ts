@@ -169,9 +169,10 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   DataModelDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
-      this.getModelGraph(this.result.id);
       this.setEditableFormData();
-
+      if(this.result.domainType === 'DataModel') {
+         this.getModelGraph(this.result.id);
+      }
       if (this.result.classifiers) {
         this.result.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);

@@ -19,15 +19,15 @@ SPDX-License-Identifier: Apache-2.0
   <ol [ngClass]="{ breadcrumb: true, emptyBackground: showAsSimpleText }" *ngIf="updatedPath && updatedPath.length > 0">
       <li class="breadcrumb-item" *ngFor="let p of updatedPath; let i = index">
           <small>
-              <span *ngIf="!doNotDisplayStatus && i == 0 && !p.finalised" class="badge badge-warning mr-1">Draft</span>
-              <span *ngIf="!doNotDisplayStatus && i == 0 && p.finalised" class="badge badge-success mr-1">Finalised</span>
-              <a *ngIf="i >= 0 && showHref" aria-hidden="false" href="{{ p.link }}" target="{{ targetWindow }}"><span [innerHtml]="p.label"></span></a>
-              <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{ targetWindow }}" style="margin-left: 7px;"><span [innerHtml]="p.label"></span></a>
-              <span [hidden]="!doNotShowParentDataModel && i == 0">
-                  <a *ngIf="p.domainType == 'DataModel' && showHref" href="{{ p.link }}" target="{{ targetWindow }}">{{ p.label }}</a>
-                  <a *ngIf="p.domainType == 'DataModel' && !showHref" aria-hidden="false" target="{{ targetWindow }}"><span [innerHtml]="p.label"></span></a>
-                  <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{ targetWindow }}"><span [innerHtml]="p.label"></span></a>
-              </span>
+            <a *ngIf="i >= 0 && showHref" aria-hidden="false" href="{{ p.link }}" target="{{ targetWindow }}"><span [innerHtml]="p.label"></span></a>
+            <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{ targetWindow }}" style="margin-left: 7px;"><span [innerHtml]="p.label"></span></a>
+            <span [hidden]="!doNotShowParentDataModel && i == 0">
+              <a *ngIf="p.domainType == 'DataModel' && showHref" href="{{ p.link }}" target="{{ targetWindow }}">{{ p.label }}</a>
+              <a *ngIf="p.domainType == 'DataModel' && !showHref" aria-hidden="false" target="{{ targetWindow }}"><span [innerHtml]="p.label"></span></a>
+              <a *ngIf="i >= 0 && !showHref" aria-hidden="false" target="{{ targetWindow }}"><span [innerHtml]="p.label"></span></a>
+            </span>
+            <span *ngIf="!doNotDisplayStatus && i == 0 && !p.finalised" class="badge badge-warning ml-1">Draft</span>
+            <!-- <span *ngIf="!doNotDisplayStatus && i == 0 && p.finalised" class="badge badge-success mr-1">Finalised</span> -->
           </small>
       </li>
   </ol>

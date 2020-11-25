@@ -15,13 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { DataClassResult } from '@mdm/model/dataClassModel';
+import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -35,6 +35,7 @@ import { EditingService } from '@mdm/services/editing.service';
 })
 export class DataClassComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  @ViewChildren('editableText') editForm: QueryList<any>;
   dataClass: DataClassResult;
   showSecuritySection: boolean;
   subscription: Subscription;
@@ -45,6 +46,13 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
+
+  showEditDescription = false;
+  max: any;
+  min: any;
+  error = '';
+  editableForm: EditableDataClass;
+  aliases: any[] = [];
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -59,6 +67,26 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
   }
 
   ngOnInit() {
+    this.editableForm = new EditableDataClass();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.editForm.forEach(x =>
+        x.edit({
+          editing: true,
+          focus: x.name === 'moduleName' ? true : false
+        })
+      );
+      this.editableForm.visible = true;
+      if (this.min === '*') {
+        this.min = '-1';
+      }
+
+      if (this.max === '*') {
+        this.max = '-1';
+      }
+    };
     // tslint:disable-next-line: deprecation
     if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
@@ -87,6 +115,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
+
+    this.setEditableForm();
   }
 
   ngAfterViewInit(): void {
@@ -130,6 +160,35 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
           this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
           this.tabSelected(this.activeTab);
         }
+
+        this.editableForm.description = this.dataClass?.description;
+        this.editableForm.label = this.dataClass.label;
+
+        if (this.dataClass.classifiers) {
+          this.dataClass.classifiers.forEach(item => {
+            this.editableForm.classifiers.push(item);
+          });
+        }
+        this.aliases = [];
+        if (this.dataClass.aliases) {
+          this.dataClass.aliases.forEach(item => {
+            this.aliases.push(item);
+          });
+        }
+
+        if (this.dataClass.minMultiplicity && this.dataClass.minMultiplicity === -1) {
+          this.min = '*';
+        } else {
+          this.min = this.dataClass.minMultiplicity;
+        }
+
+        if (this.dataClass.maxMultiplicity && this.dataClass.maxMultiplicity === -1) {
+          this.max = '*';
+        } else {
+          this.max = this.dataClass.maxMultiplicity;
+        }
+
+        // this.watchDataClassObject();
       });
     } else {
       this.resourcesService.dataClass.getChildDataClass(model, parentDataClass, id).subscribe((result: { body: DataClassResult }) => {
@@ -178,5 +237,12 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
     const tab = this.getTabDetailByIndex(index);
     this.stateHandler.Go('dataClass', { tabView: tab.name }, { notify: false });
     this.activeTab = tab.index;
+  }
+
+  private setEditableForm() {
+    this.editableForm.description = this.dataClass?.description;
+    this.editableForm.label = this.dataClass?.label;
+    this.min = this.dataClass?.minMultiplicity;
+    this.max = this.dataClass?.maxMultiplicity;
   }
 }

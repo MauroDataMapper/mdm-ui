@@ -44,7 +44,73 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div *ngIf="!showSearch">
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-        <mat-tab label="Content">
+      <mat-tab label="Description">
+        <ng-template matTabContent>
+          <div class="full-width">
+            <table class="table table-bordered mdm--table-fixed">
+              <tbody>
+                 <tr>
+                    <td class="detailsRowHeader">Aliases</td>
+                    <td>
+                       <mdm-element-alias [readOnly]='showEditDescription' [inEditMode]="editableForm?.visible" [aliases]="aliases" [element]="dataClass" [editableForm]="editableForm" [property]="'aliases'">
+                       </mdm-element-alias>
+                    </td>
+                 </tr>
+                 <tr>
+                    <td class="detailsRowHeader">Description</td>
+                    <td class="elementDetailDescription">
+                       <div *ngIf="dataClass">
+                          <mdm-markdown-text-area [editableForm]="editableForm" [element]="dataClass" [property]="'description'"></mdm-markdown-text-area>
+                       </div>
+                    </td>
+                 </tr>
+                 <tr>
+                    <th class="detailsRowHeader">Multiplicity</th>
+                    <td class="dataClassDetailsModelPath">
+                       <div *ngIf="(!editableForm?.visible && dataClass) || (editableForm?.visible && showEditDescription)">
+                          <mdm-multiplicity [min]="dataClass.minMultiplicity" [max]="dataClass.maxMultiplicity"></mdm-multiplicity>
+                       </div>
+                       <div *ngIf="dataClass && !showEditDescription">
+                          <div style="float: left;">
+                             <div *ngIf="editableForm?.visible">
+                                <div *ngIf="editableForm?.visible" style="padding-left: 8px">Min</div>
+                                <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm?.visible" [(ngModel)]="min" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMinText" size="20" size="5"> </mdm-inline-text-edit>
+                                <small class="block">
+                                   Use numbers only
+                                </small>
+                             </div>
+                             <span *ngIf="!editableForm?.visible && (dataClass.minMultiplicity && dataClass.minMultiplicity == 0)">..</span>
+                             <span *ngIf="editableForm?.visible" style="padding-right: 10px"></span>
+                          </div>
+
+                          <div style="float: left;margin-right: 13px;">
+                             <div *ngIf="editableForm?.visible" style="padding-left: 6px">
+                                Max
+                                <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm?.visible" [(ngModel)]="max" [styleCss]="'dataModelDetailsLabel'" name="moduleNameMaxText"> </mdm-inline-text-edit>
+                                <small class="block">
+                                   User numbers or <strong>*</strong> for unbound multiplicity
+                                </small>
+                             </div>
+                          </div>
+                          <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
+                             <small class="warning">{{error}}</small>
+                          </div>
+                       </div>
+                    </td>
+                 </tr>
+                 <tr>
+                    <td class="detailsRowHeader">Classifications</td>
+                    <td *ngIf="dataClass">
+                       <!-- <mdm-element-classifications [readOnly]='showEditDescription' [classifications]="dataClass.classifiers" [editableForm]="editableForm" [element]="dataClass" [property]="'classifiers'"></mdm-element-classifications> -->
+                    </td>
+                 </tr>
+              </tbody>
+           </table>
+
+          </div>
+        </ng-template>
+      </mat-tab>
+        <mat-tab label="Schema">
             <ng-template matTabContent>
               <div class="full-width">
                <mdm-data-classes-list *ngIf="dataClass"
@@ -62,20 +128,6 @@ SPDX-License-Identifier: Apache-2.0
                               [isEditable]="isEditable">
                </mdm-data-elements-list>
               </div>
-            </ng-template>
-        </mat-tab>
-        <mat-tab label="Properties">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'" [domainType]="'dataClasses'"></mdm-data-set-metadata>
-                </div>
-            </ng-template>
-        </mat-tab>
-        <mat-tab label="Comments">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-annotation-list>
-                </div>
             </ng-template>
         </mat-tab>
         <mat-tab label="Links">
@@ -102,3 +154,55 @@ SPDX-License-Identifier: Apache-2.0
         </mat-tab>
     </mat-tab-group>
 </div>
+
+
+<!-- <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+  <mat-tab label="Content">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-content-table *ngIf="dataClass"
+                              [parentDataModel]="parentDataModel"
+                              [parentDataClass]="dataClass"
+                              [grandParentDataClass]="parentDataClass"
+                              [isEditable]="isEditable">
+          </mdm-content-table>
+        </div>
+      </ng-template>
+  </mat-tab>
+  <mat-tab label="Properties">
+      <ng-template matTabContent>
+          <div class="full-width">
+              <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'" [domainType]="'dataClasses'"></mdm-data-set-metadata>
+          </div>
+      </ng-template>
+  </mat-tab>
+  <mat-tab label="Comments">
+      <ng-template matTabContent>
+          <div class="full-width">
+              <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-annotation-list>
+          </div>
+      </ng-template>
+  </mat-tab>
+  <mat-tab label="Links">
+      <ng-template matTabContent>
+          <div class="full-width">
+              <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-element-link-list>
+          </div>
+      </ng-template>
+  </mat-tab>
+  <mat-tab label="Summary" *ngIf="showExtraTabs">
+      <ng-template matTabContent>
+          <div class="full-width">
+              <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'">
+              </mdm-summary-metadata-table>
+          </div>
+      </ng-template>
+  </mat-tab>
+  <mat-tab label="Attachments" *ngIf="showExtraTabs">
+      <ng-template matTabContent>
+          <div class="full-width">
+              <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"  [domainType]="'dataClasses'"></mdm-attachment-list>
+          </div>
+      </ng-template>
+  </mat-tab>
+</mat-tab-group> -->

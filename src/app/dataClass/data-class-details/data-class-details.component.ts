@@ -67,6 +67,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   exportError: any;
   canEditDescription = true;
   showEditDescription = false;
+  parentLabel = '';
 
   constructor(
     private messageService: MessageService,
@@ -161,6 +162,12 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   DataClassDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
+
+      if(this.result.domainType === 'DataClass') {
+        this.resourcesService.dataModel.get(this.result.model).subscribe(result => {
+          this.parentLabel = result.body.label;
+        });
+      }
 
       this.editableForm.description = this.result.description;
       this.editableForm.label = this.result.label;

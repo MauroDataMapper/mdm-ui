@@ -227,7 +227,7 @@ export class DataElementStep2Component implements OnInit, AfterViewInit, OnDestr
   createSelectedArray = () => {
     this.model.selectedDataClasses = [];
     for (const id in this.model.selectedDataClassesMap) {
-      if (Object.prototype.hasOwnProperty.call(this.model.selectedDataClassesMap, 'id')) {
+      if (this.model.selectedDataClassesMap.hasOwnProperty(id)) {
         const element = this.model.selectedDataClassesMap[id];
         this.model.selectedDataClasses.push(element.node);
       }

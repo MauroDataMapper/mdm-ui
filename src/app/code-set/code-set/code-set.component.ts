@@ -38,7 +38,6 @@ export class CodeSetComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   showExtraTabs = false;
   activeTab: any;
@@ -70,13 +69,11 @@ export class CodeSetComponent implements OnInit, OnDestroy {
     this.parentId = this.stateService.params.id;
 
     this.title.setTitle('Code Set');
-    // tslint:disable-next-line: deprecation
-    this.codeSetDetails(this.stateService.params.id);
+    this.codeSetDetails(this.parentId);
 
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) => this.codeSetDetails(result.body.id);
   }
 
   codeSetDetails(id: any) {
@@ -85,13 +82,13 @@ export class CodeSetComponent implements OnInit, OnDestroy {
 
       // Get the guid
       this.codeSetModel = result.body;
-      this.parentId = this.codeSetModel.id;
+      // this.parentId = this.codeSetModel.id;
 
-      await this.resourcesService.versionLink.list('codeSets', this.parentId).subscribe(response => {
+      await this.resourcesService.versionLink.list('codeSets', this.codeSetModel.id).subscribe(response => {
         if (response.body.count > 0) {
           arr = response.body.items;
           for (const val in arr) {
-            if (this.parentId !== arr[val].targetModel.id) {
+            if (this.codeSetModel.id !== arr[val].targetModel.id) {
               this.semanticLinks.push(arr[val]);
             }
           }

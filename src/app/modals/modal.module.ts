@@ -33,6 +33,9 @@ import { InputModalComponent } from './input-modal/input-modal.component';
 import { NewFolderModalComponent } from './new-folder-modal/new-folder-modal.component';
 import { MaterialModule } from '@mdm/modules/material/material.module';
 import { FinaliseModalComponent } from './finalise-modal/finalise-modal.component';
+import { CheckInModalComponent } from './check-in-modal/check-in-modal.component';
+import { ResolveMergeConflictModalComponent } from './resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
+import { SharedModule } from '@mdm/modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -44,7 +47,8 @@ import { FinaliseModalComponent } from './finalise-modal/finalise-modal.componen
     MatInputModule,
     MatButtonModule,
     MatPasswordStrengthModule,
-    MaterialModule
+    MaterialModule,
+    SharedModule
   ],
   declarations: [
     RegisterModalComponent,
@@ -53,7 +57,9 @@ import { FinaliseModalComponent } from './finalise-modal/finalise-modal.componen
     ConfirmationModalComponent,
     InputModalComponent,
     NewFolderModalComponent,
-    FinaliseModalComponent
+    FinaliseModalComponent,
+    CheckInModalComponent,
+    ResolveMergeConflictModalComponent
   ],
   providers: [
     ModalService

@@ -770,4 +770,3 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
     }
   }
 }
-

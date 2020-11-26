@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="99" failures="0" errors="0" time="37.098">
+  <testsuite name="DataElementDetailsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="10.305" tests="1">
+    <testcase classname="DataElementDetailsComponent should create" name="DataElementDetailsComponent should create" time="1.18">
+    </testcase>
+  </testsuite>
+  <testsuite name="TermComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="10.376" tests="1">
+    <testcase classname="TermComponent should create" name="TermComponent should create" time="1.367">
+    </testcase>
+  </testsuite>
+  <testsuite name="ClassificationComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="10.757" tests="1">
+    <testcase classname="ClassificationComponent should create" name="ClassificationComponent should create" time="1.513">
+    </testcase>
+  </testsuite>
+  <testsuite name="CodeSetComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="10.822" tests="1">
+    <testcase classname="CodeSetComponent should create" name="CodeSetComponent should create" time="1.711">
+    </testcase>
+  </testsuite>
+  <testsuite name="LoginModalComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:15" time="3.215" tests="7">
+    <testcase classname="LoginModalComponent should create" name="LoginModalComponent should create" time="0.473">
+    </testcase>
+    <testcase classname="LoginModalComponent Test: ngOnInit should initialize the form" name="LoginModalComponent Test: ngOnInit should initialize the form" time="0.192">
+    </testcase>
+    <testcase classname="LoginModalComponent Test: Login form Test: Login form SHOULD submit the login form" name="LoginModalComponent Test: Login form Test: Login form SHOULD submit the login form" time="0.201">
+    </testcase>
+    <testcase classname="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (1)" name="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (1)" time="0.146">
+    </testcase>
+    <testcase classname="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (2)" name="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (2)" time="0.137">
+    </testcase>
+    <testcase classname="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (3)" name="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (3)" time="0.172">
+    </testcase>
+    <testcase classname="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (4)" name="LoginModalComponent Test: Login form Test: Login form SHOULD NOT submit the login form (4)" time="0.118">
+    </testcase>
+  </testsuite>
+  <testsuite name="ContentTableComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:15" time="3.117" tests="1">
+    <testcase classname="ContentTableComponent should create" name="ContentTableComponent should create" time="1.183">
+    </testcase>
+  </testsuite>
+  <testsuite name="ClassifiedElementsListComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:15" time="3.54" tests="1">
+    <testcase classname="ClassifiedElementsListComponent should create" name="ClassifiedElementsListComponent should create" time="1.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="NewDataTypeInlineComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:15" time="3.391" tests="1">
+    <testcase classname="NewDataTypeInlineComponent should create" name="NewDataTypeInlineComponent should create" time="1.042">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataElementComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="15.896" tests="1">
+    <testcase classname="DataElementComponent should create" name="DataElementComponent should create" time="1.876">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataClassComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="16.172" tests="1">
+    <testcase classname="DataClassComponent should create" name="DataClassComponent should create" time="1.907">
+    </testcase>
+  </testsuite>
+  <testsuite name="McDataSetMetadataComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:18" time="2.773" tests="1">
+    <testcase classname="McDataSetMetadataComponent should create" name="McDataSetMetadataComponent should create" time="0.983">
+    </testcase>
+  </testsuite>
+  <testsuite name="CodeSetTermsTableComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:18" time="2.859" tests="1">
+    <testcase classname="CodeSetTermsTableComponent should create" name="CodeSetTermsTableComponent should create" time="0.903">
+    </testcase>
+  </testsuite>
+  <testsuite name="CodeSetDetailsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:19" time="2.77" tests="1">
+    <testcase classname="CodeSetDetailsComponent should create" name="CodeSetDetailsComponent should create" time="0.708">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataElementStep2Component" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:18" time="3.427" tests="1">
+    <testcase classname="DataElementStep2Component should create" name="DataElementStep2Component should create" time="0.802">
+    </testcase>
+  </testsuite>
+  <testsuite name="ReferenceDataModelsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:21" time="2.356" tests="1">
+    <testcase classname="ReferenceDataModelsComponent should create" name="ReferenceDataModelsComponent should create" time="0.686">
+    </testcase>
+  </testsuite>
+  <testsuite name="AdvancedSearchBarComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:20" time="2.676" tests="1">
+    <testcase classname="AdvancedSearchBarComponent should create" name="AdvancedSearchBarComponent should create" time="0.579">
+    </testcase>
+  </testsuite>
+  <testsuite name="GroupAccessNewComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:21" time="2.125" tests="1">
+    <testcase classname="GroupAccessNewComponent should create" name="GroupAccessNewComponent should create" time="0.541">
+    </testcase>
+  </testsuite>
+  <testsuite name="ElementSelectorComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:21" time="2.258" tests="1">
+    <testcase classname="ElementSelectorComponent should create" name="ElementSelectorComponent should create" time="0.593">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataModelComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:04" time="19.23" tests="1">
+    <testcase classname="DataModelComponent should create" name="DataModelComponent should create" time="2.059">
+    </testcase>
+  </testsuite>
+  <testsuite name="AppComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:22" time="2.216" tests="2">
+    <testcase classname="AppComponent should create the app" name="AppComponent should create the app" time="0.418">
+    </testcase>
+    <testcase classname="AppComponent should have as title &apos;mdm-ui&apos;" name="AppComponent should have as title &apos;mdm-ui&apos;" time="0.108">
+    </testcase>
+  </testsuite>
+  <testsuite name="CodeSetMainComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:22" time="2.394" tests="1">
+    <testcase classname="CodeSetMainComponent should create" name="CodeSetMainComponent should create" time="0.734">
+    </testcase>
+  </testsuite>
+  <testsuite name="RegisterModalComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:23" time="2.013" tests="1">
+    <testcase classname="RegisterModalComponent should create" name="RegisterModalComponent should create" time="0.589">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataModelsExportComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:23" time="2.213" tests="1">
+    <testcase classname="DataModelsExportComponent should create" name="DataModelsExportComponent should create" time="0.502">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataClassDetailsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:24" time="2.028" tests="1">
+    <testcase classname="DataClassDetailsComponent should create" name="DataClassDetailsComponent should create" time="0.5">
+    </testcase>
+  </testsuite>
+  <testsuite name="HistoryComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:24" time="1.982" tests="1">
+    <testcase classname="HistoryComponent should create" name="HistoryComponent should create" time="0.59">
+    </testcase>
+  </testsuite>
+  <testsuite name="ClassificationDetailsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:24" time="2.06" tests="1">
+    <testcase classname="ClassificationDetailsComponent should create" name="ClassificationDetailsComponent should create" time="0.554">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataElementStep1Component" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:24" time="1.865" tests="1">
+    <testcase classname="DataElementStep1Component should create" name="DataElementStep1Component should create" time="0.321">
+    </testcase>
+  </testsuite>
+  <testsuite name="TermDetailsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:24" time="1.917" tests="1">
+    <testcase classname="TermDetailsComponent should create" name="TermDetailsComponent should create" time="0.389">
+    </testcase>
+  </testsuite>
+  <testsuite name="ReferenceDataTypeComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:25" time="2.017" tests="1">
+    <testcase classname="ReferenceDataTypeComponent should create" name="ReferenceDataTypeComponent should create" time="0.454">
+    </testcase>
+  </testsuite>
+  <testsuite name="ReferenceDataElementComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:26" time="1.811" tests="1">
+    <testcase classname="ReferenceDataElementComponent should create" name="ReferenceDataElementComponent should create" time="0.375">
+    </testcase>
+  </testsuite>
+  <testsuite name="ReferenceDataValuesComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:25" time="1.926" tests="1">
+    <testcase classname="ReferenceDataValuesComponent should create" name="ReferenceDataValuesComponent should create" time="0.481">
+    </testcase>
+  </testsuite>
+  <testsuite name="MultipleTermsSelectorComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:26" time="1.676" tests="1">
+    <testcase classname="MultipleTermsSelectorComponent should create" name="MultipleTermsSelectorComponent should create" time="0.375">
+    </testcase>
+  </testsuite>
+  <testsuite name="ReferenceDataModelDetailsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:26" time="1.758" tests="1">
+    <testcase classname="ReferenceDataModelDetailsComponent should create" name="ReferenceDataModelDetailsComponent should create" time="0.422">
+    </testcase>
+  </testsuite>
+  <testsuite name="ModelSelectorTreeComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:26" time="1.877" tests="1">
+    <testcase classname="ModelSelectorTreeComponent should create" name="ModelSelectorTreeComponent should create" time="0.334">
+    </testcase>
+  </testsuite>
+  <testsuite name="mdm-folders-tree" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:26" time="1.799" tests="1">
+    <testcase classname="mdm-folders-tree should create" name="mdm-folders-tree should create" time="0.278">
+    </testcase>
+  </testsuite>
+  <testsuite name="SettingsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:27" time="1.694" tests="1">
+    <testcase classname="SettingsComponent should create" name="SettingsComponent should create" time="0.266">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataElementMainComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:27" time="1.513" tests="1">
+    <testcase classname="DataElementMainComponent should create" name="DataElementMainComponent should create" time="0.16">
+    </testcase>
+  </testsuite>
+  <testsuite name="NewVersionDataModelComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:28" time="1.454" tests="1">
+    <testcase classname="NewVersionDataModelComponent should create" name="NewVersionDataModelComponent should create" time="0.188">
+    </testcase>
+  </testsuite>
+  <testsuite name="NewVersionCodeSetComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:28" time="1.528" tests="1">
+    <testcase classname="NewVersionCodeSetComponent should create" name="NewVersionCodeSetComponent should create" time="0.215">
+    </testcase>
+  </testsuite>
+  <testsuite name="ErrorComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:28" time="1.5" tests="1">
+    <testcase classname="ErrorComponent should create" name="ErrorComponent should create" time="0.186">
+    </testcase>
+  </testsuite>
+  <testsuite name="FinaliseModalComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:28" time="1.414" tests="1">
+    <testcase classname="FinaliseModalComponent should create" name="FinaliseModalComponent should create" time="0.376">
+    </testcase>
+  </testsuite>
+  <testsuite name="NewFolderModalComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:28" time="1.446" tests="1">
+    <testcase classname="NewFolderModalComponent should create" name="NewFolderModalComponent should create" time="0.211">
+    </testcase>
+  </testsuite>
+  <testsuite name="AllLinksInPagedListComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.404" tests="1">
+    <testcase classname="AllLinksInPagedListComponent should create" name="AllLinksInPagedListComponent should create" time="0.155">
+    </testcase>
+  </testsuite>
+  <testsuite name="ShareWithComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.39" tests="1">
+    <testcase classname="ShareWithComponent should create" name="ShareWithComponent should create" time="0.151">
+    </testcase>
+  </testsuite>
+  <testsuite name="ElementSelectorDialogueService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.389" tests="1">
+    <testcase classname="ElementSelectorDialogueService should be created" name="ElementSelectorDialogueService should be created" time="0.062">
+    </testcase>
+  </testsuite>
+  <testsuite name="TermRelationshipsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.5" tests="1">
+    <testcase classname="TermRelationshipsComponent should create" name="TermRelationshipsComponent should create" time="0.207">
+    </testcase>
+  </testsuite>
+  <testsuite name="MoreDescriptionComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.538" tests="1">
+    <testcase classname="MoreDescriptionComponent should create" name="MoreDescriptionComponent should create" time="0.19">
+    </testcase>
+  </testsuite>
+  <testsuite name="FooterComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.449" tests="1">
+    <testcase classname="FooterComponent should create" name="FooterComponent should create" time="0.138">
+    </testcase>
+  </testsuite>
+  <testsuite name="ElementClassificationsComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:29" time="1.436" tests="1">
+    <testcase classname="ElementClassificationsComponent should create" name="ElementClassificationsComponent should create" time="0.134">
+    </testcase>
+  </testsuite>
+  <testsuite name="MctableService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:31" time="1.209" tests="1">
+    <testcase classname="MctableService should be created" name="MctableService should be created" time="0.028">
+    </testcase>
+  </testsuite>
+  <testsuite name="FavouriteHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:30" time="1.373" tests="1">
+    <testcase classname="FavouriteHandlerService should be created" name="FavouriteHandlerService should be created" time="0.078">
+    </testcase>
+  </testsuite>
+  <testsuite name="UserSettingsHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:31" time="1.264" tests="1">
+    <testcase classname="UserSettingsHandlerService should be created" name="UserSettingsHandlerService should be created" time="0.045">
+    </testcase>
+  </testsuite>
+  <testsuite name="ExportHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:31" time="1.342" tests="1">
+    <testcase classname="ExportHandlerService should be created" name="ExportHandlerService should be created" time="0.071">
+    </testcase>
+  </testsuite>
+  <testsuite name="InputModalComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:31" time="1.353" tests="1">
+    <testcase classname="InputModalComponent should create" name="InputModalComponent should create" time="0.227">
+    </testcase>
+  </testsuite>
+  <testsuite name="LinkCreatorService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:31" time="1.205" tests="1">
+    <testcase classname="LinkCreatorService should be created" name="LinkCreatorService should be created" time="0.041">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataElementBulkEditDialogService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:31" time="1.289" tests="1">
+    <testcase classname="DataElementBulkEditDialogService should be created" name="DataElementBulkEditDialogService should be created" time="0.032">
+    </testcase>
+  </testsuite>
+  <testsuite name="CustomHtmlRendererService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.108" tests="1">
+    <testcase classname="CustomHtmlRendererService should be created" name="CustomHtmlRendererService should be created" time="0.039">
+    </testcase>
+  </testsuite>
+  <testsuite name="CustomTextRendererService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.075" tests="1">
+    <testcase classname="CustomTextRendererService should be created" name="CustomTextRendererService should be created" time="0.028">
+    </testcase>
+  </testsuite>
+  <testsuite name="YoutrackService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.166" tests="1">
+    <testcase classname="YoutrackService should be created" name="YoutrackService should be created" time="0.046">
+    </testcase>
+  </testsuite>
+  <testsuite name="SecurityHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.173" tests="1">
+    <testcase classname="SecurityHandlerService should be created" name="SecurityHandlerService should be created" time="0.045">
+    </testcase>
+  </testsuite>
+  <testsuite name="ElementAliasComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.221" tests="1">
+    <testcase classname="ElementAliasComponent should create" name="ElementAliasComponent should create" time="0.115">
+    </testcase>
+  </testsuite>
+  <testsuite name="DateFromToDirective" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.176" tests="1">
+    <testcase classname="DateFromToDirective should create an instance" name="DateFromToDirective should create an instance" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="SharedService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:32" time="1.203" tests="1">
+    <testcase classname="SharedService should be created" name="SharedService should be created" time="0.04">
+    </testcase>
+  </testsuite>
+  <testsuite name="InlineTextEditComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.089" tests="1">
+    <testcase classname="InlineTextEditComponent should create" name="InlineTextEditComponent should create" time="0.072">
+    </testcase>
+  </testsuite>
+  <testsuite name="ElementTypesService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.175" tests="1">
+    <testcase classname="ElementTypesService should be created" name="ElementTypesService should be created" time="0.029">
+    </testcase>
+  </testsuite>
+  <testsuite name="RestHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.104" tests="1">
+    <testcase classname="RestHandlerService should be created" name="RestHandlerService should be created" time="0.047">
+    </testcase>
+  </testsuite>
+  <testsuite name="ShowIfRolesWritableDirective" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.242" tests="1">
+    <testcase classname="ShowIfRolesWritableDirective should create an instance" name="ShowIfRolesWritableDirective should create an instance" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="ValidatorService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.016" tests="5">
+    <testcase classname="ValidatorService should be created" name="ValidatorService should be created" time="0.02">
+    </testcase>
+    <testcase classname="ValidatorService should captalise" name="ValidatorService should captalise" time="0.012">
+    </testcase>
+    <testcase classname="ValidatorService should validate emails" name="ValidatorService should validate emails" time="0.017">
+    </testcase>
+    <testcase classname="ValidatorService should validate date instances" name="ValidatorService should validate date instances" time="0.006">
+    </testcase>
+    <testcase classname="ValidatorService should identify empty strings" name="ValidatorService should identify empty strings" time="0.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="ElementStatusComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.032" tests="1">
+    <testcase classname="ElementStatusComponent should create" name="ElementStatusComponent should create" time="0.085">
+    </testcase>
+  </testsuite>
+  <testsuite name="StateHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:33" time="1.161" tests="5">
+    <testcase classname="StateHandlerService should be created" name="StateHandlerService should be created" time="0.025">
+    </testcase>
+    <testcase classname="StateHandlerService should reload" name="StateHandlerService should reload" time="0.011">
+    </testcase>
+    <testcase classname="StateHandlerService should get folder url" name="StateHandlerService should get folder url" time="0.006">
+    </testcase>
+    <testcase classname="StateHandlerService should get simple app result" name="StateHandlerService should get simple app result" time="0.008">
+    </testcase>
+    <testcase classname="StateHandlerService should get unknown" name="StateHandlerService should get unknown" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="TestService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:34" time="1.063" tests="1">
+    <testcase classname="TestService should be created" name="TestService should be created" time="0.016">
+    </testcase>
+  </testsuite>
+  <testsuite name="DataModelDefaultComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:34" time="1.079" tests="1">
+    <testcase classname="DataModelDefaultComponent should create" name="DataModelDefaultComponent should create" time="0.051">
+    </testcase>
+  </testsuite>
+  <testsuite name="McPagedListComponent" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:34" time="1.151" tests="1">
+    <testcase classname="McPagedListComponent should create" name="McPagedListComponent should create" time="0.102">
+    </testcase>
+  </testsuite>
+  <testsuite name="MessageHandlerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:34" time="1.048" tests="1">
+    <testcase classname="MessageHandlerService should be created" name="MessageHandlerService should be created" time="0.022">
+    </testcase>
+  </testsuite>
+  <testsuite name="DownloadService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:34" time="1.096" tests="1">
+    <testcase classname="DownloadService should be created" name="DownloadService should be created" time="0.016">
+    </testcase>
+  </testsuite>
+  <testsuite name="CustomTokenizerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:35" time="1.087" tests="1">
+    <testcase classname="CustomTokenizerService should be created" name="CustomTokenizerService should be created" time="0.021">
+    </testcase>
+  </testsuite>
+  <testsuite name="FilterPipeDirective" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:35" time="1.1" tests="1">
+    <testcase classname="FilterPipeDirective should create an instance" name="FilterPipeDirective should create an instance" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="PropertiesDirective" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:35" time="0.976" tests="1">
+    <testcase classname="PropertiesDirective should create an instance" name="PropertiesDirective should create an instance" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="MarkdownDirective" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:35" time="1.089" tests="1">
+    <testcase classname="MarkdownDirective should create an instance" name="MarkdownDirective should create an instance" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="AppSettingService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:35" time="1.063" tests="1">
+    <testcase classname="AppSettingService should be created" name="AppSettingService should be created" time="0.014">
+    </testcase>
+  </testsuite>
+  <testsuite name="ObjectEnhancerService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:36" time="1.016" tests="1">
+    <testcase classname="ObjectEnhancerService should be created" name="ObjectEnhancerService should be created" time="0.019">
+    </testcase>
+  </testsuite>
+  <testsuite name="MessageService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:36" time="0.967" tests="1">
+    <testcase classname="MessageService should be created" name="MessageService should be created" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="PropertyRenamingService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:36" time="0.956" tests="1">
+    <testcase classname="PropertyRenamingService should be created" name="PropertyRenamingService should be created" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="GlobalSettingsService" errors="0" failures="0" skipped="0" timestamp="2020-11-23T08:28:36" time="0.975" tests="1">
+    <testcase classname="GlobalSettingsService should be created" name="GlobalSettingsService should be created" time="0.013">
+    </testcase>
+  </testsuite>
+</testsuites>

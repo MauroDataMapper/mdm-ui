@@ -51,7 +51,7 @@ export class StateHandlerService {
         newversiondatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
         newversionterminology: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
         newversioncodeset: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
-
+                modelsmerginggraph: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
         'admin.user': 'appContainer.adminArea.user',
         'admin.users': 'appContainer.adminArea.users',
 
@@ -63,6 +63,7 @@ export class StateHandlerService {
         dataflowdm2dm: 'appContainer.mainApp.dataFlowDM2DM',
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
         modelscomparison: 'appContainer.mainApp.modelsComparison',
+                modelsmerging: 'appContainer.mainApp.modelsMerging',
         linksuggestion: 'appContainer.mainApp.linkSuggestion',
         export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
         import: 'appContainer.mainApp.twoSidePanel.catalogue.import',

@@ -53,6 +53,9 @@ import { ModelComparisonComponent } from './model-comparison/model-comparison.co
 import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-main.component';
 import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+import { ModelMergingComponent } from './model-merging/model-merging.component';
+import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
+
 
 export const pageRoutes = {
   states: [
@@ -236,6 +239,16 @@ export const pageRoutes = {
       name: 'appContainer.mainApp.modelsComparison',
       url: '/modelsComparison/:sourceId/:targetId',
       component: ModelComparisonComponent
+    },
+    {
+      name: 'appContainer.mainApp.modelsMerging',
+      url: '/modelsMerging/:sourceId/:targetId',
+      component: ModelMergingComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
+      url: '/modelsMergingGraph/:modelType/:modelId',
+      component: ModelsMergingGraphComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',

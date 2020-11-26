@@ -226,5 +226,5 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         this.messageHandler.showError('There was a problem updating the Data Class.', error);
       });
     }
-  }
+  };
 }

@@ -362,7 +362,7 @@ export class ElementTypesService {
   getTypesForBaseTypeArray(baseType) {
     const array = [];
     for (const property in this.allTypes) {
-      if (Object.prototype.hasOwnProperty.call(this.allTypes, property)) {
+      if (this.allTypes.hasOwnProperty(property)) {
         if (!this.allTypes[property].isBase && this.allTypes[property].baseTitle.toLowerCase() === baseType.toLowerCase()) {
           array.push(this.allTypes[property]);
         }
@@ -374,7 +374,7 @@ export class ElementTypesService {
   getBaseTypesAsArray() {
     const array = [];
     for (const property in this.baseTypes) {
-      if (Object.prototype.hasOwnProperty.call(this.baseTypes, property)) {
+      if (this.baseTypes.hasOwnProperty(property)) {
         array.push(this.baseTypes[property]);
       }
     }

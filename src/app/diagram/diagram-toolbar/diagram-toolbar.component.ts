@@ -32,6 +32,7 @@ export class DiagramToolbarComponent {
   @Output() toolbarClick = new EventEmitter<string>();
 
   @Input() isPopup: boolean;
+  @Input() canMoveUp: boolean;
 
   constructor() {
   }

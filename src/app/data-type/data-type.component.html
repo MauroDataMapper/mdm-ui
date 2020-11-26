@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <div class="full-width" *ngIf="dataType && dataType.domainType == 'EnumerationType'">
   <div style="width:100%; margin-bottom: 45px;">
-    <mdm-mc-enumeration-list-with-category [parent]="dataType" [type]="'static'" [enumerationValues]="dataType.enumerationValues"></mdm-mc-enumeration-list-with-category>
+    <mdm-mc-enumeration-list-with-category [parent]="dataType" [type]="'static'" [enumerationValues]="dataType.enumerationValues" [domainType]="'EnumerationType'"></mdm-mc-enumeration-list-with-category>
   </div>
 </div>
 

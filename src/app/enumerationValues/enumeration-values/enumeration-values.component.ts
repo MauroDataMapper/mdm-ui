@@ -1,0 +1,114 @@
+/*
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
+import { StateService } from '@uirouter/core';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MatTabGroup } from '@angular/material/tabs';
+
+@Component({
+   selector: 'mdm-enumeration-values',
+   templateUrl: './enumeration-values.component.html',
+   styleUrls: ['./enumeration-values.component.scss']
+})
+export class EnumerationValuesComponent implements OnInit, AfterViewInit {
+   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+   tabView: any;
+   activeTab: any;
+   loadingData = false;
+   parentDataModel: any;
+   parentDataType: any;
+   enumerationValues: any;
+   currentEnumerationValue: any;
+   id: any;
+   label: any;
+   breadCrumbs: any;
+   parent: any;
+
+   constructor(
+      private stateHandler: StateHandlerService,
+      private stateService: StateService,
+      private resource: MdmResourcesService
+   ) { }
+
+   ngOnInit(): void {
+   }
+
+   async ngAfterViewInit() {
+      // tslint:disable-next-line: deprecation
+      this.parentDataModel = this.stateService.params.dataModelId;
+      // tslint:disable-next-line: deprecation
+      this.parentDataType = this.stateService.params.dataTypeId;
+      // tslint:disable-next-line: deprecation
+      this.id = this.stateService.params.id;
+
+      await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe(result => {
+         this.breadCrumbs = result.body.breadcrumbs;
+         this.parent = result.body;
+         this.resource.enumerationValues.getFromDataType(this.parentDataModel, this.parentDataType, this.id).subscribe(res => {
+            if (res !== null && res !== undefined && res.body !== null && res.body !== undefined) {
+               this.label = res.body.value;
+               this.currentEnumerationValue = res.body;
+               this.parent.id = res.body.id;
+            }
+         });
+      });
+      this.tabGroup.realignInkBar();
+      // tslint:disable-next-line: deprecation
+      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+      this.tabSelected(this.activeTab);
+   }
+
+   tabSelected(index) {
+      const tab = this.getTabDetailByIndex(index);
+      this.stateHandler.Go('enumerationValues', { tabView: tab.name }, { notify: false });
+      this.activeTab = tab.index;
+    }
+
+   getTabDetailByName(tabName) {
+      switch (tabName) {
+        case 'properties':
+          return { index: 0, name: 'properties' };
+        case 'comments':
+          return { index: 1, name: 'comments' };
+        case 'links':
+          return { index: 2, name: 'links' };
+      case 'attachments':
+          return { index: 3, name: 'attachments' };
+        default:
+          return { index: 0, name: 'properties' };
+      }
+    }
+
+    getTabDetailByIndex(index) {
+      switch (index) {
+        case 0:
+          return { index: 0, name: 'properties' };
+        case 1:
+          return { index: 1, name: 'comments' };
+        case 2:
+          return { index: 2, name: 'links' };
+        case 3:
+          return { index: 3, name: 'attachments' };
+        default:
+          return { index: 0, name: 'properties' };
+      }
+    }
+
+}

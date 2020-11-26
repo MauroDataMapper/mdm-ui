@@ -87,7 +87,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
       if (this.type === 'dynamic') {
         this.resources.metadata.namespaces().toPromise().then((result) => {
-            this.namespaces = result.body.filter((n) => n.defaultNamespace);
+            this.namespaces = result.body.filter((n) => n.defaultNamespace === false);
             this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
             this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
             merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
@@ -138,7 +138,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   loadNamespaces() {
     this.resources.metadata.namespaces().toPromise().then((result) => {
         this.namespaces = result.body.filter((n) => {
-          return n.defaultNamespace;
+          return n.defaultNamespace === false;
         });
       });
   }

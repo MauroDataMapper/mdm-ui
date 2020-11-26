@@ -25,13 +25,19 @@ SPDX-License-Identifier: Apache-2.0
          <div class="text-muted">
             <small>
                <i class="fas fa-cube" matTooltip="Item type"></i>
-               <span><strong>Item type: </strong><span class="item-type">Enumeration Type</span></span>
+               <span><strong>Item type: </strong><span class="item-type">Enumeration Value</span></span>
             </small>
          </div>
       </div>
    </div>
    <table class="table table-bordered mdm--table-fixed">
       <tbody>
+         <tr>
+            <th class="detailsRowHeader">Data Type</th>
+            <td class="elementDetailDescription">
+               <mdm-element-link [element]="parent" [parentDataModel]="{id:parentDataModel}"></mdm-element-link>
+            </td>
+         </tr>
          <tr>
             <th class="detailsRowHeader">Data Model</th>
             <td class="elementDetailDescription">

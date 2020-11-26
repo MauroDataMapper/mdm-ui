@@ -40,6 +40,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
    label: any;
    breadCrumbs: any;
    parent: any;
+   dataModelId: string;
 
    constructor(
       private stateHandler: StateHandlerService,
@@ -60,6 +61,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
 
       await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe(result => {
          this.breadCrumbs = result.body.breadcrumbs;
+         this.dataModelId = result.body.model;
          this.parent = result.body;
          this.resource.enumerationValues.getFromDataType(this.parentDataModel, this.parentDataType, this.id).subscribe(res => {
             if (res !== null && res !== undefined && res.body !== null && res.body !== undefined) {

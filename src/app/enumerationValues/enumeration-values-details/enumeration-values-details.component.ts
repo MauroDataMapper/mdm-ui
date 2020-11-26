@@ -28,6 +28,8 @@ export class EnumerationValuesDetailsComponent {
   @Input() enumerationValues: any;
   @Input() label: any;
   @Input() breadcrumbs: any;
+  @Input() parent: any;
+  @Input() parentDataModel: any;
 
   constructor() { }
 }

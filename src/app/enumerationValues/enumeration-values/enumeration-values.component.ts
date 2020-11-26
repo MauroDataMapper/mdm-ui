@@ -71,7 +71,6 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
 
       await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe(result => {
          this.breadCrumbs = result.body.breadcrumbs;
-
          this.dataModelId = result.body.model;
 
          this.element.availableActions = result.body.availableActions;

@@ -21,6 +21,7 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { StateService } from '@uirouter/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
    selector: 'mdm-enumeration-values',
@@ -41,11 +42,20 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
    breadCrumbs: any;
    parent: any;
    dataModelId: string;
+   element = {
+      availableActions: [],
+      id: '',
+      breadcrumbs: [],
+      domainType: '',
+      label: '',
+      model: ''
+   };
 
    constructor(
       private stateHandler: StateHandlerService,
       private stateService: StateService,
-      private resource: MdmResourcesService
+      private resource: MdmResourcesService,
+      private title: Title
    ) { }
 
    ngOnInit(): void {
@@ -62,12 +72,21 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
       await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe(result => {
          this.breadCrumbs = result.body.breadcrumbs;
          this.dataModelId = result.body.model;
-         this.parent = result.body;
+
+         this.element.availableActions = result.body.availableActions;
+         this.element.breadcrumbs = result.body.breadcrumbs;
+         this.element.domainType = result.body.domainType;
+         this.element.model = result.body.model;
+         this.element.label = result.body.label;
+         this.element.id = result.body.id;
+
          this.resource.enumerationValues.getFromDataType(this.parentDataModel, this.parentDataType, this.id).subscribe(res => {
             if (res !== null && res !== undefined && res.body !== null && res.body !== undefined) {
                this.label = res.body.value;
                this.currentEnumerationValue = res.body;
+               this.parent = result.body;
                this.parent.id = res.body.id;
+               this.title.setTitle(`Enumeration Value - ${this.label}`);
             }
          });
       });

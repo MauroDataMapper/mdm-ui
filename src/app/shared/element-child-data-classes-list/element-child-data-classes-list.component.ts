@@ -24,7 +24,8 @@ import {
   ElementRef,
   EventEmitter,
   ChangeDetectorRef,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -51,6 +52,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   @Input() type: any;
   @Input() childDataClasses: any;
   @Input() isEditable: any;
+  @Output() totalCount = new EventEmitter<string>();
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -99,6 +101,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       return this.dataClassesFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
     }), map((data: any) => {
       this.totalItemCount = data.body.count;
+      this.totalCount.emit(String(data.body.count));
       this.isLoadingResults = false;
       this.changeRef.detectChanges();
       return data.body.items;

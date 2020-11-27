@@ -52,7 +52,13 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   editableForm: EditableDataModel;
   errorMessage = '';
-  displayedColumns = ['author', 'description', 'organisation', 'type', 'classifications'];
+
+  schemaView = 'table';
+  descriptionView = 'default';
+  schemaItemCount = 0;
+  typesItemCount = 0;
+  isLoadingSchema = true;
+  isLoadingTypes = true;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -192,6 +198,20 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
+
+  schemaCountEmitter($event) {
+    this.isLoadingSchema = false;
+    this.schemaItemCount = $event;
+  }
+
+  typesCountEmitter($event) {
+    this.isLoadingTypes = false;
+    this.typesItemCount = $event;
+  }
+
+  addDataClass = () => {
+    // this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null);
+  };
 
   getTabDetailByName(tabName) {
     switch (tabName) {

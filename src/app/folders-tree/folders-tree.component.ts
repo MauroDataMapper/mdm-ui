@@ -627,7 +627,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             case DOMAIN_TYPE.DataModel: await this.resources.dataModel.moveDataModelToFolder(node.id, parentFolder.id, {}).toPromise(); break;
             case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(node.id, parentFolder.id, {}).toPromise(); break;
             case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(node.id, parentFolder.id, {}).toPromise(); break;
-            case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(node.id, parentFolder.id, {}); break;
+            case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(node.id, parentFolder.id, {}).toPromise(); break;
             default:
                this.messageHandler.showError(`Invalid domain type: ${node.domainType}`);
                return;

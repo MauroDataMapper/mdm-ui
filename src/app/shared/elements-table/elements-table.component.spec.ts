@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ContentTableComponent } from './content-table.component';
+import { ElementsTableComponent } from './elements-table.component';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
@@ -44,8 +44,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 
 describe('ContentTableComponent', () => {
-  let component: ContentTableComponent;
-  let fixture: ComponentFixture<ContentTableComponent>;
+  let component: ElementsTableComponent;
+  let fixture: ComponentFixture<ElementsTableComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -82,14 +82,14 @@ describe('ContentTableComponent', () => {
         MdmPaginatorComponent,
         MultiplicityComponent,
         ByteArrayToBase64Pipe,
-        ContentTableComponent
+        ElementsTableComponent
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContentTableComponent);
+    fixture = TestBed.createComponent(ElementsTableComponent);
     component = fixture.componentInstance;
     component.parentDataModel = { editable: true, finalised: false };
     fixture.detectChanges();

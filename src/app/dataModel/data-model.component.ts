@@ -55,6 +55,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   schemaView = 'table';
   descriptionView = 'default';
+  contextView = 'default';
   schemaItemCount = 0;
   typesItemCount = 0;
   isLoadingSchema = true;
@@ -221,9 +222,10 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         return { index: 1, name: 'schema' };
       case 'types':
         return { index: 2, name: 'types' };
+      case 'context':
+        return { index: 3, name: 'context' };
       case 'history':
-        if (this.dataModel.type === 'Data Asset') {
-          return { index: 4, name: 'history' };
+        return { index: 4, name: 'history' };
         }
         return { index: 3, name: 'history' };
       case 'context':
@@ -247,15 +249,10 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       case 2:
         return { index: 2, name: 'types' };
       case 3:
-        if (this.dataModel.type === 'Data Asset') {
-          return { index: 3, name: 'context' };
-        } else {
-          return { index: 3, name: 'history' };
-        }
+        return { index: 3, name: 'context' };
       case 4: {
-        if (this.dataModel.type === 'Data Asset') {
-          return { index: 4, name: 'history' };
-        }
+        return { index: 4, name: 'history' };
+      }
         break;
       }
       case 10 : {

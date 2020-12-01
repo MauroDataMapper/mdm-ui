@@ -94,7 +94,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.dataSource.paginator = this.paginator;
     }
     if (this.isEditable && !this.parent.finalised) {
-      this.displayedColumns = ['checkbox', 'name', 'description', 'type', 'actions'];
+      this.displayedColumns = ['name', 'description', 'type', 'checkbox'];
     } else {
       this.displayedColumns = ['name', 'description', 'type'];
     }

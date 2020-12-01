@@ -42,23 +42,6 @@ SPDX-License-Identifier: Apache-2.0
       </div>
    </div>
 </div>
-<div *ngIf="!showSearch" style="clear: both;">
-   <div *ngIf="dataModel && semanticLinks && semanticLinks.length > 0">
-      <div class="mdm--shadow-block bordered">
-         <div class="heading-container">
-            <h4 class="marginless">Links</h4>
-         </div>
-         <div class="pxy-2">
-          <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
-                                       [parent]="semanticLinks"
-                                       [showDescription]="true"
-                                       [showNoLinksMessage]="true"
-                                       [type]="'static'">
-          </mdm-all-links-in-paged-list>
-         </div>
-      </div>
-   </div>
-</div>
 
 <div *ngIf="showSecuritySection" (selectedIndexChange)="tabSelected($event)" style="clear: both;">
    <mat-tab-group>
@@ -102,7 +85,7 @@ SPDX-License-Identifier: Apache-2.0
                  <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
                     <button mat-flat-button color="primary" type="button" class="mr-1">
                       <i class="fas fa-pencil-alt"></i>
-                       Edit fields
+                       Edit
                     </button>
                  </div>
               </div>
@@ -152,10 +135,6 @@ SPDX-License-Identifier: Apache-2.0
          <div class="heading-container">
             <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
                <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
-                  <!-- <select class="form-control" style="max-width: 200px; padding: 8px;" [(ngModel)]="schemaView" name="schemaView">
-                     <option value="table">Data Classes</option>
-                     <option value="diagram">Diagram</option>
-                  </select> -->
                   <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
                     <mat-select [(ngModel)]="schemaView" name="schemaView">
                         <mat-option value="table">Data Classes</mat-option>
@@ -164,7 +143,7 @@ SPDX-License-Identifier: Apache-2.0
                   </mat-form-field>
                </div>
                <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                  <button mat-flat-button color="primary" type="button" class="mr-1" (click)="addDataClass()">
+                  <button mat-flat-button color="primary" type="button" (click)="addDataClass()">
                      <i class="fas fa-plus" aria-hidden="true"></i>
                      Add Data Class
                   </button>
@@ -191,10 +170,43 @@ SPDX-License-Identifier: Apache-2.0
          <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'" [isEditable]="isEditable" (totalCount)='typesCountEmitter($event)'></mdm-element-owned-data-type-list>
       </div>
    </mat-tab>
-   <mat-tab label="Context" *ngIf="dataModel && dataModel.type === 'Data Asset'">
+   <mat-tab label="Context">
       <ng-template matTabContent>
          <div class="full-width">
-            <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'"></mdm-diagram-tab>
+            <div class="heading-container">
+              <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+                <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
+                    <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
+                      <mat-select [(ngModel)]="contextView" name="contextView">
+                          <mat-option value="default">Links</mat-option>
+                          <mat-option value="semanticLinks" *ngIf="dataModel && semanticLinks && semanticLinks.length > 0">Semantic Links</mat-option>
+                          <mat-option value="dataFlow" *ngIf="dataModel && dataModel.type === 'Data Asset'">Data Flow</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="contextView === 'default'">
+              <mdm-element-link-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-element-link-list>
+            </div>
+
+            <div class="mdm--shadow-block bordered" *ngIf="contextView === 'semanticLinks'">
+              <div class="pxy-2">
+                <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
+                                            [parent]="semanticLinks"
+                                            [showDescription]="true"
+                                            [showNoLinksMessage]="true"
+                                            [type]="'static'">
+                </mdm-all-links-in-paged-list>
+              </div>
+            </div>
+
+            <div *ngIf="contextView === 'dataFlow' && dataModel.type === 'Data Asset'">
+              <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'"></mdm-diagram-tab>
+            </div>
          </div>
       </ng-template>
    </mat-tab>
@@ -205,84 +217,4 @@ SPDX-License-Identifier: Apache-2.0
          </div>
       </ng-template>
    </mat-tab>
-</mat-tab-group>
-
-<!-- <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-    <mat-tab label="Data Classes">
-        <ng-template matTabContent>
-            <div class="mb-2 full-width">
-                <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [isEditable]="isEditable" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'"></mdm-element-child-data-classes-list>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Types">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-element-owned-data-type-list *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'" [isEditable]="isEditable"></mdm-element-owned-data-type-list>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Properties">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-data-set-metadata *ngIf="dataModel" [parent]="dataModel" [type]="'dynamic'" [domainType]="'dataModels'"></mdm-data-set-metadata>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Summary" *ngIf="showExtraTabs">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-summary-metadata-table *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-summary-metadata-table>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Comments">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-annotation-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-annotation-list>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="History">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-history *ngIf="dataModel" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="parentId" [domainType]="'dataModels'"></mdm-history>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Diagram">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-diagram-tab [parent]="dataModel"  [mode]="'umlclass'" [canMoveUp]="true"></mdm-diagram-tab>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Links">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-element-link-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-element-link-list>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Attachments" *ngIf="showExtraTabs">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-attachment-list *ngIf="dataModel" [parent]="dataModel" [domainType]="'dataModels'"></mdm-attachment-list>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Dataflow" *ngIf="dataModel && dataModel.type === 'Data Asset'">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-diagram-tab [parent]="dataModel" [mode]="'dataflow-model'" [canMoveUp]="true"></mdm-diagram-tab>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Rules/Constraints">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-constraints-rules [parent]="dataModel" [domainType]="'dataModels'"></mdm-constraints-rules>
-            </div>
-        </ng-template>
-    </mat-tab>
 </mat-tab-group>

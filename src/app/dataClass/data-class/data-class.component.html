@@ -46,7 +46,28 @@ SPDX-License-Identifier: Apache-2.0
     <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
       <mat-tab label="Description">
         <ng-template matTabContent>
-          <div class="full-width">
+          <div class="mb-2 full-width">
+            <div class="heading-container">
+              <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+                 <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
+                    <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
+                      <mat-select [(ngModel)]="descriptionView" name="descriptionView">
+                          <mat-option value="default">Default Profile</mat-option>
+                          <mat-option value="hdruk">HDR Uk Profile</mat-option>
+                          <mat-option value="schema.org">Schema.org Profile</mat-option>
+                          <mat-option value="schema.org">Other Profiles</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                 </div>
+                 <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+                    <button mat-flat-button color="primary" type="button" class="mr-1">
+                      <i class="fas fa-pencil-alt"></i>
+                       Edit
+                    </button>
+                 </div>
+              </div>
+           </div>
+
             <table class="table table-bordered mdm--table-fixed">
               <tbody>
                  <tr>
@@ -130,79 +151,33 @@ SPDX-License-Identifier: Apache-2.0
               </div>
             </ng-template>
         </mat-tab>
-        <mat-tab label="Links">
+        <mat-tab label="Constraints">
+          <ng-template matTabContent>
+            <div class="full-width">
+              Content for constraints
+            </div>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Context">
             <ng-template matTabContent>
                 <div class="full-width">
                     <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-element-link-list>
                 </div>
             </ng-template>
         </mat-tab>
-        <mat-tab label="Summary" *ngIf="showExtraTabs">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'">
-                    </mdm-summary-metadata-table>
-                </div>
-            </ng-template>
-        </mat-tab>
-        <mat-tab label="Attachments" *ngIf="showExtraTabs">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"  [domainType]="'dataClasses'"></mdm-attachment-list>
-                </div>
-            </ng-template>
-        </mat-tab>
+        <mat-tab label="History">
+          <ng-template matTabContent>
+              <div class="full-width">
+                  <mdm-history *ngIf="dataClass" [parent]="'dataModel'" [parentType]="'DataModel'" [parentId]="dataClass.id" [domainType]="'dataClasses'"></mdm-history>
+              </div>
+          </ng-template>
+      </mat-tab>
+      <mat-tab label="Data" *ngIf="showExtraTabs">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-summary-metadata-table>
+            </div>
+        </ng-template>
+      </mat-tab>
     </mat-tab-group>
 </div>
-
-
-<!-- <mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-  <mat-tab label="Content">
-      <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-content-table *ngIf="dataClass"
-                              [parentDataModel]="parentDataModel"
-                              [parentDataClass]="dataClass"
-                              [grandParentDataClass]="parentDataClass"
-                              [isEditable]="isEditable">
-          </mdm-content-table>
-        </div>
-      </ng-template>
-  </mat-tab>
-  <mat-tab label="Properties">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-data-set-metadata *ngIf="dataClass" [parent]="dataClass" [type]="'dynamic'" [domainType]="'dataClasses'"></mdm-data-set-metadata>
-          </div>
-      </ng-template>
-  </mat-tab>
-  <mat-tab label="Comments">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-annotation-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-annotation-list>
-          </div>
-      </ng-template>
-  </mat-tab>
-  <mat-tab label="Links">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-element-link-list *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'"></mdm-element-link-list>
-          </div>
-      </ng-template>
-  </mat-tab>
-  <mat-tab label="Summary" *ngIf="showExtraTabs">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-summary-metadata-table *ngIf="dataClass" [parent]="dataClass" [domainType]="'dataClasses'">
-              </mdm-summary-metadata-table>
-          </div>
-      </ng-template>
-  </mat-tab>
-  <mat-tab label="Attachments" *ngIf="showExtraTabs">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-attachment-list *ngIf="dataClass" [parent]="dataClass"  [domainType]="'dataClasses'"></mdm-attachment-list>
-          </div>
-      </ng-template>
-  </mat-tab>
-</mat-tab-group> -->

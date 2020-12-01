@@ -79,9 +79,9 @@ import { DataClassStep2Component } from '@mdm/wizards/dataClass/data-class-step2
 import { DataTypeMainComponent } from '@mdm/wizards/dataType/data-type-main/data-type-main.component';
 import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
-import { ContentTableComponent } from '@mdm/shared/content-table/content-table.component';
 import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
 import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
+import { ElementsTableComponent } from '@mdm/shared/elements-table/elements-table.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -238,9 +238,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    ContentTableComponent,
     DataElementsListComponent,
     DataClassesListComponent,
+    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -404,9 +404,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    ContentTableComponent,
     DataClassesListComponent,
     DataElementsListComponent,
+    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,

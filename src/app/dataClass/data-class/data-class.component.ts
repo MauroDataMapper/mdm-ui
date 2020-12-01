@@ -54,6 +54,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
   editableForm: EditableDataClass;
   aliases: any[] = [];
 
+  descriptionView = 'default';
+
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
@@ -218,19 +220,19 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'content' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'properties' };
+        return { index: 1, name: 'elements' };
       case 2:
-        return { index: 2, name: 'comments' };
+        return { index: 2, name: 'constraints' };
       case 3:
-        return { index: 3, name: 'links' };
+        return { index: 3, name: 'history' };
       case 4:
-        return { index: 4, name: 'summaryMetadata' };
+        return { index: 4, name: 'context' };
       case 5:
-        return { index: 5, name: 'attachments' };
+        return { index: 5, name: 'data' };
       default:
-        return { index: 0, name: 'content' };
+        return { index: 0, name: 'description' };
     }
   }
   tabSelected(index) {

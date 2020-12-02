@@ -28,7 +28,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
    selector: 'mdm-folders-tree',
@@ -562,10 +561,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          this.showDropTopPlaceHolder = true;
       }
 
-      const currentNode = this.draggedTreeNode; //this.treeControl.dataNodes.find(n => n.id === e.dataTransfer.getData('data'));
+      const currentNode = this.draggedTreeNode;
       const targetElement: Element = (e.target as Element);
 
-      if (parentFolder.id === currentNode.id) {
+      // if over original node or under original parent folder
+      if (parentFolder.id === currentNode.id || parentFolder.id === currentNode.parentFolder) {
          return;
       }
 
@@ -583,7 +583,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          return;
       }
 
-      if (this.droppableDomains.includes(parentFolder?.domainType) && this.draggedTreeNode.id !== parentFolder.id) {
+      // if over original node or under original parent folder
+      if (this.draggedTreeNode.id === parentFolder.id || this.draggedTreeNode.parentFolder === parentFolder.id) {
+         return;
+      }
+
+      // make sure the drop will happen
+      if (this.droppableDomains.includes(parentFolder?.domainType)) {
          e.preventDefault()
       }
    }
@@ -595,6 +601,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
       const targetElement: Element = (e.target as Element);
 
+      // remove highlight
       if (targetElement.classList.contains('dnd-top-placeholder')) {
          targetElement.classList.remove('drag-over-top');
       } else {
@@ -615,29 +622,29 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       e.preventDefault();
       e.stopPropagation();
 
-      const node: FlatNode = this.draggedTreeNode; //this.treeControl.dataNodes.find(n => n.id === e.dataTransfer.getData('data'));
+      const currentNode: FlatNode = this.draggedTreeNode;
 
-      if (node.id === parentFolder.id) {
+      if (currentNode.id === parentFolder.id || currentNode.parentFolder === parentFolder.id) {
          return;
       }
 
       try {
-         switch (node.domainType) {
-            case DOMAIN_TYPE.Folder: await this.resources.folder.update(node.id, { parentFolder: parentFolder?.id }).toPromise(); break;
-            case DOMAIN_TYPE.DataModel: await this.resources.dataModel.moveDataModelToFolder(node.id, parentFolder.id, {}).toPromise(); break;
-            case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(node.id, parentFolder.id, {}).toPromise(); break;
-            case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(node.id, parentFolder.id, {}).toPromise(); break;
-            case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(node.id, parentFolder.id, {}).toPromise(); break;
+         switch (currentNode.domainType) {
+            case DOMAIN_TYPE.Folder: await this.resources.folder.update(currentNode.id, { parentFolder: parentFolder?.id }).toPromise(); break;
+            case DOMAIN_TYPE.DataModel: await this.resources.dataModel.moveDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+            case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+            case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
+            case DOMAIN_TYPE.ReferenceDataModel: await this.resources.referenceDataModel.moveReferenceDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
             default:
-               this.messageHandler.showError(`Invalid domain type: ${node.domainType}`);
+               this.messageHandler.showError(`Invalid domain type: ${currentNode.domainType}`);
                return;
          }
 
          if (this.rememberExpandedStates) {
             const newParentPath = parentFolder ? `${this.getExpandedPaths(parentFolder)}/` : '';
             this.expandedPaths = this.expandedPaths.map((p: string) => {
-               if (p.includes(node.id)) {
-                  return `${newParentPath}${p.slice(p.indexOf(node.id))}`;
+               if (p.includes(currentNode.id)) {
+                  return `${newParentPath}${p.slice(p.indexOf(currentNode.id))}`;
                }
                return p;
             });
@@ -645,13 +652,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             localStorage.setItem('expandedPaths', JSON.stringify(this.expandedPaths));
          }
 
-         this.messageHandler.showSuccess(`${node.domainType} moved successfully.`);
+         this.messageHandler.showSuccess(`${currentNode.domainType} moved successfully.`);
          this.broadcastSvc.broadcast('$reloadFoldersTree');
       } catch (error) {
-         this.messageHandler.showError(`There was a problem moving the ${node.domainType}`, error);
+         this.messageHandler.showError(`There was a problem moving the ${currentNode.domainType}`, error);
       }
 
-      // dropleave event does not seem to be triggered consistantly on drop
+      // dragleave event did not seem to be triggered consistantly on drop
       this.dragLeave(e);
    }
 
@@ -694,7 +701,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       e.preventDefault();
       e.stopPropagation();
 
-      const currentNode: FlatNode = this.draggedTreeNode; //this.treeControl.dataNodes.find(n => n.id === e.dataTransfer.getData('data'));
+      const currentNode: FlatNode = this.draggedTreeNode;
 
       if (currentNode.domainType === DOMAIN_TYPE.Folder) {
          try {
@@ -721,7 +728,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          this.messageHandler.showWarning('Only folder is allowed at top level');
       }
 
-      // dropleave event does not seem to be triggered consistantly on drop
+      // dragleave event did not seem to be triggered consistantly on drop
       this.dragLeave(e);
    }
 

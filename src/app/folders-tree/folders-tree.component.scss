@@ -17,23 +17,26 @@ SPDX-License-Identifier: Apache-2.0
 */
 .mdm-folders-tree {
    &.dnd-top-placeholder {
-      border: 2px dotted #cccccc;
+      border: 2px dotted #6a9eff;
       min-height: 20px;
       width: 100%;
       text-align: center;
-      color: #cccccc;
+      color: #6a9eff;
    }
 
    &.drag-over-top {
-      background-color: #cccccc;
+      background-color: #e5eeff;
+      color: #6a9eff;
    }
 }
 
 mat-tree {
    mat-tree-node {
       .drag-over {
-         border: 1px dotted #cccccc;
-         background-color: #cccccc;
+         border: 1px dotted #6a9eff;
+         background-color: #e5eeff;
+         padding-left: 5px;
+         padding-right: 5px;
       }
    }
 }

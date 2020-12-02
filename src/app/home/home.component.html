@@ -19,8 +19,9 @@ SPDX-License-Identifier: Apache-2.0
     <div class="container">
         <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
             <div fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
-              <h3>Use the <strong>Mauro Data Mapper</strong> platform to create and share data models, and to manage big data within your organisation.</h3>
-                <p>Automatically import your existing schemas; link, annotate and share them; use these definitions in the creation of new software components.</p>
+              <h3>Use the <strong>Mauro Data Mapper</strong> platform to create shared documentation for your data, and to collaborate on the definition of new data models</h3>
+               <p>Automatically import your existing schemas; link, annotate and share them; use these definitions in the creation of new software components.</p>
+               <p>Mauro was previously known as the Metadata Catalogue, and has been built at the University of Oxford with support from the National Institute for Health Research, and NHS Digital.</p>
 
                 <div *ngIf="!isLoggedIn">
                     <button mat-flat-button color="primary" (click)="login()" class="custom mb-1">
@@ -58,8 +59,7 @@ SPDX-License-Identifier: Apache-2.0
                     </span>
                     <h4><strong>Automate</strong></h4>
                     <p>
-                        It is safer to produce a new artefact by copying parts of a model than by copying parts of the
-                        existing implementation.
+                       Automatically create data models from existing artefacts, such as relational databases, Excel spreadsheets, XML Schema, or definitions in OWL or UML.  Visualise your data to check for completeness and consistency.
                     </p>
                 </div>
             </div>
@@ -70,8 +70,7 @@ SPDX-License-Identifier: Apache-2.0
                     </span>
                     <h4><strong>Collaborate</strong></h4>
                     <p>
-                        It is easier to compare data models, written in a single modelling language, than to compare
-                        artefacts implemented using a range of different technologies.
+                        Create new models, re-using existing definitions.   Manage versioning and publication lifecycles, and comment directly on parts of a model.
                     </p>
                 </div>
             </div>
@@ -82,8 +81,7 @@ SPDX-License-Identifier: Apache-2.0
                     </span>
                     <h4><strong>Generate</strong></h4>
                     <p>
-                        Automatically import data models from XML Schema, relational databases such as PostgreSQL, MS
-                        SQL Server and OracleDB
+                        Create new software and configuration from existing definitions - generate forms, websites and databases - and make your documentation go further using our extensive APIs.
                     </p>
                 </div>
             </div>

@@ -22,20 +22,18 @@ SPDX-License-Identifier: Apache-2.0
 
   <div class="mb-2">
     <p>
-      A new version of the Data Model keeps all Data Classes, Data Types, Data
-      Elements and Properties of the<br />
-      current Data Model (<mdm-element-link
+      Create a new version of <mdm-element-link
         [parentDataModel]="{ id: codeSet.id }"
         [element]="codeSet"
       ></mdm-element-link
-      >)
+      >
     </p>
   </div>
 
   <div class="mb-2">
     <div class="mb-2">
-      <h4 class="mat-h4 marginless">
-        Select the type of the new version that you want to create:
+      <h4 class="mat-h4">
+        Select how you'd like to create a new version:
       </h4>
       <mat-radio-group
         class="marginless"
@@ -48,11 +46,8 @@ SPDX-License-Identifier: Apache-2.0
         >
       </mat-radio-group>
       <small>
-        This will create a new fork of
-        <mdm-element-link
-          [parentDataModel]="{ id: codeSet.id }"
-          [element]="codeSet"
-        ></mdm-element-link>
+        This will create a copy of
+        the model with a new name, and a new 'main' branch.  Use this option if you are planning on taking this model in a new direction, or under a new authority.
       </small>
     </div>
 
@@ -68,12 +63,8 @@ SPDX-License-Identifier: Apache-2.0
         >
       </mat-radio-group>
       <small
-        >This will create a new version for
-        <mdm-element-link
-          [parentDataModel]="{ id: codeSet.id }"
-          [element]="codeSet"
-        ></mdm-element-link
-      ></small>
+        >This will create a copy of the data model under the 'main' branch.  Use this option if you want to create the next iteration of this model.
+      </small>
     </div>
 
     <div class="mb-2">
@@ -88,12 +79,9 @@ SPDX-License-Identifier: Apache-2.0
         >
       </mat-radio-group>
       <small
-        >This will create a new <strong>Branch</strong> for
-        <mdm-element-link
-          [parentDataModel]="{ id: codeSet.id }"
-          [element]="codeSet"
-        ></mdm-element-link
-      ></small>
+        >This will create a copy of the model in a new branch. You may choose the name of the new branch.
+         Use this option if you want to make some changes that you subsequently wish to merge back into 'main'.
+        </small>
     </div>
   </div>
 

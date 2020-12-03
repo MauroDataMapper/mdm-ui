@@ -25,7 +25,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
-import { from, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -306,7 +306,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
 
-  formBeforeSave = () => {
+  formBeforeSave = async () => {
     this.editMode = false;
     this.errorMessage = '';
     this.editForm.forEach((modules) => {
@@ -351,14 +351,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.validateLabel(this.result.label)) {
-      from(this.resourcesService.codeSet.update(this.result.id, resource)).subscribe(result => {
-        if (this.afterSave) {
-          this.afterSave(result);
-        }
-        this.CodeSetDetails();
+      await this.resourcesService.codeSet.update(this.result.id, resource).subscribe(res => {
         this.messageHandler.showSuccess('Code Set updated successfully.');
         this.editableForm.visible = false;
+        this.result.description = res.body.description;
         this.editForm.forEach(x => x.edit({ editing: false }));
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Code Set.', error);
       });

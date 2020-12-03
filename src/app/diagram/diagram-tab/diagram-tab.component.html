@@ -16,6 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div #diagramTab style="height: 40em;">
-  <mdm-diagram-toolbar (toolbarClick)="this.toolbarClick($event)" [isPopup]="false"></mdm-diagram-toolbar>
+  <mdm-diagram-toolbar (toolbarClick)="this.toolbarClick($event)" [isPopup]="false" [canMoveUp]="canMoveUp"></mdm-diagram-toolbar>
   <mdm-diagram [parent]="this.parent" [mode]="this.mode" [diagramComponent]=""></mdm-diagram>
 </div>

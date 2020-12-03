@@ -236,14 +236,18 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[rightId].modified = true;
 
     if (metadataDiff.created) {
-      metadataDiff.created.forEach(created => {
+      metadataDiff.created.forEach(item => {
+
+        const created = item.value ?? item;
         created.created = true;
         diffMap[leftId].diffs.metadata.push(created);
         diffMap[rightId].diffs.metadata.push(created);
       });
     }
     if (metadataDiff.deleted) {
-      metadataDiff.deleted.forEach(deleted => {
+       metadataDiff.deleted.forEach(item => {
+
+        const deleted = item.value ?? item;
         deleted.deleted = true;
         diffMap[leftId].diffs.metadata.push(deleted);
         diffMap[rightId].diffs.metadata.push(deleted);
@@ -279,14 +283,18 @@ export class ModelComparisonComponent implements OnInit {
     diffMap[rightId].modified = true;
 
     if (enumerationValuesDiff.created) {
-      enumerationValuesDiff.created.forEach(created => {
+      enumerationValuesDiff.created.forEach(item => {
+
+        const created = item.value ?? item;
         created.created = true;
         diffMap[leftId].diffs.enumerationValues.push(created);
         diffMap[rightId].diffs.enumerationValues.push(created);
       });
     }
     if (enumerationValuesDiff.deleted) {
-      enumerationValuesDiff.deleted.forEach(deleted => {
+      enumerationValuesDiff.deleted.forEach(item => {
+
+        const deleted = item.value ?? item;
         deleted.deleted = true;
         diffMap[leftId].diffs.enumerationValues.push(deleted);
         diffMap[rightId].diffs.enumerationValues.push(deleted);
@@ -382,7 +390,9 @@ export class ModelComparisonComponent implements OnInit {
                 return;
               }
 
-              diff[diffElement].created?.forEach(el => {
+            diff[diffElement].created?.forEach(item => {
+                 
+                const el = item.value ?? item;
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
                 diffMap[el.id].created = true;
@@ -422,7 +432,8 @@ export class ModelComparisonComponent implements OnInit {
                 }
               });
 
-              diff[diffElement].deleted?.forEach(el => {
+              diff[diffElement].deleted?.forEach(item => {
+                const el = item.value ?? item;
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
                 diffMap[el.id].deleted = true;
@@ -464,7 +475,9 @@ export class ModelComparisonComponent implements OnInit {
                 }
               });
 
-              diff[diffElement].modified?.forEach(el => {
+               diff[diffElement].modified?.forEach(item => {
+
+                  const el = item.value ?? item;
                 this.initDiff(el.leftId, diffMap);
                 diffMap[el.leftId].modified = true;
                 diffMap[el.leftId].id = el.leftId;
@@ -636,7 +649,7 @@ export class ModelComparisonComponent implements OnInit {
             });
           });
           this.diffMap = diffMap;
-
+          
           if (this.diffMap[this.sourceModel.id]) {
             this.sourceModel.modified = this.diffMap[
               this.sourceModel.id

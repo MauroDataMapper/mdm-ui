@@ -391,7 +391,6 @@ export class ModelComparisonComponent implements OnInit {
               }
 
             diff[diffElement].created?.forEach(item => {
-                 
                 const el = item.value ?? item;
                 this.initDiff(el.id, diffMap);
                 diffMap[el.id].id = el.id;
@@ -649,7 +648,6 @@ export class ModelComparisonComponent implements OnInit {
             });
           });
           this.diffMap = diffMap;
-          
           if (this.diffMap[this.sourceModel.id]) {
             this.sourceModel.modified = this.diffMap[
               this.sourceModel.id

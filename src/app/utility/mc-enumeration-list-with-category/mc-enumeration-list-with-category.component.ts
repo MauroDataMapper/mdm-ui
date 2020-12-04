@@ -24,6 +24,7 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { StateHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -36,6 +37,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   @Input() enumerationValues;
   @Input() onUpdate;
   @Input() type: any;
+  @Input() isEditable = false;
+  @Input() domainType: any;
 
   @Output() afterSave = new EventEmitter<any>();
 
@@ -68,11 +71,19 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private validator: ValidatorService
+    private validator: ValidatorService,
+    private stateHandler: StateHandlerService
   ) {
   }
 
   ngOnInit() {
+
+   if (!this.clientSide) {
+      this.displayedColumnsEnums = ['group', 'key', 'value', 'more', 'buttons'];
+    } else {
+      this.displayedColumnsEnums = ['group', 'key', 'value', 'buttons'];
+    }
+
     if (this.enumerationValues !== null && this.enumerationValues !== undefined) {
       this.showRecords(this.enumerationValues);
 
@@ -321,6 +332,10 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
     }
   }
+
+  openEnumerationValues = record => {
+      this.stateHandler.Go('enumerationvalues', { dataModelId: this.parent.model, dataTypeId: this.parent.id, id: record.id}, {reload: true, location: true, notify: false});
+   };
 
   add() {
     const newRecord = {

@@ -55,6 +55,7 @@ import { CodeSetComponent } from './code-set/code-set/code-set.component';
 import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
+import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 
 
 export const pageRoutes = {
@@ -218,6 +219,12 @@ export const pageRoutes = {
       params: {
         tabView: { dynamic: true, value: null, squash: true }
       }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.enumerationValues',
+      url: '/enumerationType/:dataModelId/:dataTypeId/:id/{tabView:string}',
+      component: EnumerationValuesComponent,
+      params: { tabView: { dynamic: true, value: null, squash: true } }
     },
     {
       name: 'appContainer.mainApp.resetPassword',

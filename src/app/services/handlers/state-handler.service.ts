@@ -34,6 +34,7 @@ export class StateHandlerService {
         codeset: 'appContainer.mainApp.twoSidePanel.catalogue.codeSet',
         dataclass: 'appContainer.mainApp.twoSidePanel.catalogue.dataClass',
         datatype: 'appContainer.mainApp.twoSidePanel.catalogue.dataType',
+        enumerationvalues: 'appContainer.mainApp.twoSidePanel.catalogue.enumerationValues',
         dataelement: 'appContainer.mainApp.twoSidePanel.catalogue.dataElement',
         folder: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
         classification: 'appContainer.mainApp.twoSidePanel.catalogue.classification',
@@ -92,6 +93,7 @@ export class StateHandlerService {
       'appContainer.mainapp.twoSidePanel.catalogue.terminology', 'terminology',
       'appContainer.mainapp.twoSidePanel.catalogue.term', 'term',
       'appContainer.mainapp.twoSidePanel.catalogue.datatype', 'datatype',
+      'appContainer.mainapp.twoSidePanel.catalogue.enumerationValues', 'enumerationvalues',
       'appContainer.mainapp.twoSidePanel.catalogue.classification', 'classification',
     ];
 

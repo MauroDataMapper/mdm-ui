@@ -1,0 +1,49 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="panel panel-default mdm--shadow-block">
+   <div class="panel-body">
+      <h4 class="marginless">
+         {{label}}
+      </h4>
+
+      <div class="detail-icons">
+         <div class="text-muted">
+            <small>
+               <i class="fas fa-cube" matTooltip="Item type"></i>
+               <span><strong>Item type: </strong><span class="item-type">Enumeration Value</span></span>
+            </small>
+         </div>
+      </div>
+   </div>
+   <table class="table table-bordered mdm--table-fixed">
+      <tbody>
+         <tr>
+            <th class="detailsRowHeader">Data Type</th>
+            <td class="elementDetailDescription">
+               <mdm-element-link [element]="element" [parentDataModel]="{id:parentDataModel}"></mdm-element-link>
+            </td>
+         </tr>
+         <tr>
+            <th class="detailsRowHeader">Data Model</th>
+            <td class="elementDetailDescription">
+               <mdm-model-path [path]="breadcrumbs"></mdm-model-path>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>

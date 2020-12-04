@@ -27,9 +27,9 @@ SPDX-License-Identifier: Apache-2.0
     </textarea>
     <div style="float: right; margin-bottom: 10px;" *ngIf="inEditMode">
         <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="top: 3px; position: relative;">
-            Preview Markdown
+            Preview
         </mat-checkbox>
-        <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px;">
+        <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px; margin-left: 4px;">
             <i class="fas fa-plus"></i>
             Add Element
         </button>
@@ -58,9 +58,9 @@ SPDX-License-Identifier: Apache-2.0
 
         <div style="float: right; margin-bottom: 10px;" *ngIf="editableForm.visible">
             <mat-checkbox name="showMarkdown" [(ngModel)]="formData.showMarkDownPreview" style="position: relative;">
-              Preview Markdown
+              Preview
             </mat-checkbox>
-            <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px;">
+            <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown()" style="top: 3px; margin-left: 4px;">
                 <i class="fas fa-plus"></i>
                 Add Element
             </button>

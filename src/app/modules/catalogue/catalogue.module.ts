@@ -471,9 +471,10 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     BaseComponent,
     ReferenceDataComponent,
     ReferenceDataDetailsComponent,
+    WysiwygEditorComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent,
-    WysiwygEditorComponent
+    EnumerationValuesDetailsComponent
+
   ]
 })
 export class CatalogueModule { }

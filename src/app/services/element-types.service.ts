@@ -37,6 +37,7 @@ export class ElementTypesService {
       link: 'folder',
       title: 'Folder',
       markdown: 'fd',
+      baseTitle: 'Folder',
       isBase: true
     },
     {
@@ -44,6 +45,7 @@ export class ElementTypesService {
       link: 'dataModel',
       title: 'DataModel',
       markdown: 'dm',
+      baseTitle: 'DataModel',
       isBase: true,
       classifiable: true
     },
@@ -52,63 +54,8 @@ export class ElementTypesService {
       link: 'ReferenceDataModel',
       title: 'ReferenceDataModel',
       resourceName: 'ReferenceDataModel',
+      baseTitle: 'ReferenceDataModel',
       markdown: 'rdm',
-      classifiable: true
-    },
-    {
-      id: 'DataSet',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
-      classifiable: true
-    },
-    {
-      id: 'Database',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
-      classifiable: true
-    },
-    {
-      id: 'DataStandard',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
-      classifiable: true
-    },
-    {
-      id: 'Form',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
-      classifiable: true
-    },
-    {
-      id: 'Message',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
-      classifiable: true
-    },
-    {
-      id: 'Report',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
-      classifiable: true
-    },
-    {
-      id: 'Workflow',
-      link: 'dataModel',
-      title: 'DataModel',
-      baseTitle: 'DataModel',
-      markdown: 'dm',
       classifiable: true
     },
     {
@@ -137,7 +84,7 @@ export class ElementTypesService {
       markdown: 'rde',
       classifiable: true
     },
-    { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true },
+    { id: 'DataType', link: 'dataType', title: 'DataType', markdown: 'dt', isBase: true, classifiable: true, baseTitle: 'DataType' },
     {
       id: 'EnumerationType',
       link: 'dataType',
@@ -233,6 +180,7 @@ export class ElementTypesService {
       link: 'classification',
       title: 'Classifier',
       resourceName: 'classifier',
+      baseTitle: 'Classifier',
       markdown: 'cs',
       isBase: true
     },

@@ -167,6 +167,9 @@ import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-elemen
 import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 
+import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
+import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
+
 @NgModule({
   declarations: [
     MarkedPipe,
@@ -305,7 +308,9 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     BaseComponent,
     ReferenceDataTypeComponent,
     ReferenceDataElementComponent,
-    ReferenceDataValuesComponent
+    ReferenceDataValuesComponent,
+    EnumerationValuesComponent,
+    EnumerationValuesDetailsComponent
   ],
   imports: [
     AdminModule,
@@ -462,7 +467,9 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
     BulkDeleteModalComponent,
     BaseComponent,
     ReferenceDataComponent,
-    ReferenceDataDetailsComponent
+    ReferenceDataDetailsComponent,
+    EnumerationValuesComponent,
+    EnumerationValuesDetailsComponent
   ]
 })
 export class CatalogueModule { }

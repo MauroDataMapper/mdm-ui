@@ -15,8 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
+<div *ngIf="showDropTopPlaceHolder" class="mdm-folders-tree dnd-top-placeholder" (dragenter)="dragEnterTop($event)" (dragover)="dragOverTop($event)" (dragleave)="dragLeave($event)" (drop)="dropTop($event)" (dragend)="dragEnd()">Top Level Dropzone</div>
 <mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
+   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25" matTreeNodeToggle matTreeNodePadding>
         <button mat-icon-button disabled aria-label="Disabled button">
             <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
         </button>
@@ -24,8 +25,7 @@ SPDX-License-Identifier: Apache-2.0
         <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
         <ng-container *ngTemplateOutlet="nodeContentTemplate; context:{$implicit: node}"></ng-container>
     </mat-tree-node>
-
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25" (contextmenu)="noop($event)">
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25">
         <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
         <ng-container *ngIf="!hasChild(-1,node)">
             <button mat-icon-button disabled aria-label="Disabled button">
@@ -100,7 +100,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <!-- Template for tree node content. Assumed an $implicit node is provided in context. -->
 <ng-template #nodeContentTemplate let-node>
-    <div class="mat-tree-node-content"  [ngClass]="{'mat-tree-node-active': node === selectedNode}">
+    <div class="mat-tree-node-content"  [ngClass]="{'mat-tree-node-active': node === selectedNode}" [draggable]="enableDragAndDrop && draggableDomains.includes(node.domainType)" (dragstart)="dragStart(node, $event)" (drop)="drop(node, $event)" (dragenter)="dragEnter(node, $event)" (dragover)="dragOver(node, $event)" (dragleave)="dragLeave($event)" (dragend)="dragEnd()">
         <!-- <div> -->
           <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
           <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet', 'Classification', 'ReferenceDataModel'].includes(node.domainType)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>

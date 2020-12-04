@@ -32,8 +32,21 @@ import { FolderService } from './folder.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PortalModule } from '@angular/cdk/portal';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { CdkTableModule } from '@angular/cdk/table';
+
 @NgModule({
   imports: [
+    CdkTreeModule,
+    DragDropModule,
+    PortalModule,
+    ScrollingModule,
+    CdkStepperModule,
+    CdkTableModule,
     CommonModule,
     FormsModule,
     MatTreeModule,
@@ -59,7 +72,13 @@ import { MatInputModule } from '@angular/material/input';
     HighlighterPipe,
     StringifyPipe,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    CdkTreeModule,
+    DragDropModule,
+    PortalModule,
+    ScrollingModule,
+    CdkStepperModule,
+    CdkTableModule,
   ],
   providers: [
     FolderService

@@ -25,7 +25,7 @@ import { ToastrService } from 'ngx-toastr';
 export class MessageHandlerService {
 
     constructor(private ngToast: ToastrService) { }
-    showError(defaultMessage, error) {
+    showError(defaultMessage, error?) {
         let text = defaultMessage;
         if (error && error.status === 422) {
             const result = this.getErrorText(error);

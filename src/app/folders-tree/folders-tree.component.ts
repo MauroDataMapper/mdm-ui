@@ -60,7 +60,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    @Input() justShowFolders: any;
    @Input() showCheckboxFor: any; // it is an array of domainTypes like ['DataClass';'DataModel';'Folder']
    @Input() propagateCheckbox: any;
-   @Input() enableDragAndDrop: boolean = false;
+   @Input() enableDragAndDrop = false;
    @Input() enableContextMenu = false;
    @Input() rememberExpandedStates = false;
    @Input() expandOnNodeClickFor: any;
@@ -590,7 +590,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
       // make sure the drop will happen
       if (this.droppableDomains.includes(parentFolder?.domainType)) {
-         e.preventDefault()
+         e.preventDefault();
       }
    }
 
@@ -689,7 +689,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       const isTopPlaceHolder = targetElement.classList.contains('dnd-top-placeholder');
 
       if (isTopPlaceHolder) {
-         e.preventDefault()
+         e.preventDefault();
       }
    }
 

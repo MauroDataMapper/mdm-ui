@@ -20,6 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EnumerationValuesDetailsComponent } from './enumeration-values-details.component';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -35,7 +36,8 @@ describe('EnumerationValuesDetailsComponent', () => {
          ],
          declarations: [
             EnumerationValuesDetailsComponent,
-            ModelPathComponent
+            ModelPathComponent,
+            ElementLinkComponent
          ]
       })
          .compileComponents();

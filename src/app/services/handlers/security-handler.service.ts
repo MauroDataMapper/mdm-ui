@@ -76,18 +76,19 @@ export class SecurityHandlerService {
   }
 
   addToLocalStorage(user) {
+    // Keep username for 100 days
+    const expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + 1);
     localStorage.setItem('userId', user.id);
     localStorage.setItem('token', user.token);
     localStorage.setItem('firstName', user.firstName);
     localStorage.setItem('lastName', user.lastName);
-    localStorage.setItem('username', user.username);
+    localStorage.setItem('username',  JSON.stringify({username: user.username, expiry : expireDate}));
     localStorage.setItem('userId', user.id);
     localStorage.setItem('isAdmin', user.isAdmin);
 
-    // Keep username for 100 days
-    const expireDate = new Date();
-    expireDate.setDate(expireDate.getDate() + 100);
-    localStorage.setItem('email', user.username); // , expireDate);
+
+    localStorage.setItem('email', JSON.stringify({email: user.username, expiry : expireDate}));
     localStorage.setItem('role', user.role);
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
@@ -96,7 +97,7 @@ export class SecurityHandlerService {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     // const resource = { username, password };
-    const response = await this.resources.security.login(resource).toPromise();
+    const response = await this.resources.security.login(resource, {login:true}).toPromise();
     const admin = await this.resources.session.isApplicationAdministration().toPromise();
     const adminResult = admin.body;
     const result = response.body;

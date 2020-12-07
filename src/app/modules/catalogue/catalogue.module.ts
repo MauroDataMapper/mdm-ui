@@ -474,7 +474,6 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     WysiwygEditorComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent
-
   ]
 })
 export class CatalogueModule { }

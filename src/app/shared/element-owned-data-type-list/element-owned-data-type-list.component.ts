@@ -75,7 +75,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   domainType;
   dataSource: MatTableDataSource<any>;
   checkAllCheckbox = false;
-  bulkActionsVisibile = 0;
+  bulkActionsVisible = 0;
 
 
   constructor(
@@ -207,11 +207,11 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         count++;
       }
     }
-    this.bulkActionsVisibile = count;
+    this.bulkActionsVisible = count;
   };
   toggleCheckbox = (record) => {
     this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisibile = 0;
+    this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
   };
@@ -247,7 +247,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.records.forEach(x => (x.checked = false));
       // this.records = this.records;
       this.checkAllCheckbox = false;
-      this.bulkActionsVisibile = 0;
+      this.bulkActionsVisible = 0;
       this.filterEvent.emit();
     }).catch(() => console.warn('error'));
   };

@@ -108,11 +108,11 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       return;
     }
 
-    let newPostion = 0;
+    let newPosition = 0;
     if (prevRec.isCategoryRow) {
-      newPostion = nextRec.index;
+      newPosition = nextRec.index;
     } else {
-      newPostion = parseInt(prevRec.index, 10) + 1;
+      newPosition = parseInt(prevRec.index, 10) + 1;
     }
 
     let newCategory = null;
@@ -130,7 +130,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
     }
 
-    this.updateOrder(event.item.data.id, newPostion, newCategory);
+    this.updateOrder(event.item.data.id, newPosition, newCategory);
 
     this.table.renderRows();
 

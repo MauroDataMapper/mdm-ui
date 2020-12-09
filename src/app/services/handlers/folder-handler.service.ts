@@ -27,7 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class FolderHandlerService {
   constructor(
-    private resoucesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog,
     private broadcastSvc: BroadcastService
@@ -94,7 +94,7 @@ export class FolderHandlerService {
 
   delete(id, permanent = false) {
     return new Promise((resolve) => {
-        this.resoucesService.folder.remove(id, { permanent }).subscribe(() => {
+        this.resourcesService.folder.remove(id, { permanent }).subscribe(() => {
           this.messageHandler.showSuccess('Successfully Deleted Folder');
           resolve();
         }, error => {

@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-radio-button [checked]="model.createType === 'new'" value="new">Create a New Data Class</mat-radio-button>
     </mat-radio-group>
 
-    <mat-radio-group name="createTypecopy" [(ngModel)]="model.createType" (click)="selectCreateType('copy')">
+    <mat-radio-group name="createTypeCopy" [(ngModel)]="model.createType" (click)="selectCreateType('copy')">
         <mat-radio-button [checked]="model.createType === 'copy'" value="copy">Copy Data Class(s) from...</mat-radio-button>
     </mat-radio-group>
 

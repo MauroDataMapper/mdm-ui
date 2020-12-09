@@ -54,7 +54,7 @@ export class CustomTextRendererService extends marked.Renderer {
     return `${this.htmlEscapeToText(text)}\\r\\n`;
   };
 
-  // render just the text of a heading element, but indecate level
+  // render just the text of a heading element, but indicate level
   heading = (text) => {
     return text;
   };

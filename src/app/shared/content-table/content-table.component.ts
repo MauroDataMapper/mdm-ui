@@ -54,7 +54,7 @@ export class ContentTableComponent implements AfterViewInit {
   filterEvent = new EventEmitter<any>();
   filter: {};
   deleteInProgress: boolean;
-  bulkActionsVisibile = 0;
+  bulkActionsVisible = 0;
 
   constructor(
     private resources: MdmResourcesService,
@@ -166,13 +166,13 @@ export class ContentTableComponent implements AfterViewInit {
 
   toggleDelete = (record) => {
     this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisibile = 0;
+    this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkEdit();
   };
   toggleEdit = (record) => {
     this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisibile = 0;
+    this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
   };
@@ -184,7 +184,7 @@ export class ContentTableComponent implements AfterViewInit {
         count++;
       }
     }
-    this.bulkActionsVisibile = count;
+    this.bulkActionsVisible = count;
   };
 
   bulkEdit = () => {
@@ -215,7 +215,7 @@ export class ContentTableComponent implements AfterViewInit {
       this.records.forEach(x => (x.checked = false));
       // this.records = this.records;
       this.checkAllCheckbox = false;
-      this.bulkActionsVisibile = 0;
+      this.bulkActionsVisible = 0;
       this.filterEvent.emit();
     }).catch(() =>  console.warn('error') );
   };
@@ -248,7 +248,7 @@ export class ContentTableComponent implements AfterViewInit {
       this.records.forEach(x => (x.checked = false));
       // this.records = this.records;
       this.checkAllCheckbox = false;
-      this.bulkActionsVisibile = 0;
+      this.bulkActionsVisible = 0;
       this.filterEvent.emit();
     }).catch(() => console.log('error'));
   };

@@ -12,7 +12,7 @@ Web front-end for the Mauro Data Mapper
 
 
 ### Build the application for production
-- To 'export' the code for production, run `ng build --prod` - this will compile & minfy the code, making it ready for production
+- To 'export' the code for production, run `ng build --prod` - this will compile & minify the code, making it ready for production
 
 
 

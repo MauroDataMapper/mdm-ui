@@ -271,7 +271,7 @@ export class ElementSelectorComponent implements OnInit {
     this.fetch(40, 0);
   }
 
-  public fetch(pageSize: number, offset: number, infinateScrollCall: boolean = false): any {
+  public fetch(pageSize: number, offset: number, infiniteScrollCall: boolean = false): any {
     if ((!this.searchInput || (this.searchInput && this.searchInput.trim().length === 0)) && this.formData.currentContext) {
       // offset = offset / pageSize;
       // load all elements if possible(just all DataTypes for DataModel and all DataElements for a DataClass)
@@ -308,7 +308,7 @@ export class ElementSelectorComponent implements OnInit {
         });
 
         // if(element.hasOwnProperty("breadcrumbs"))
-        if (infinateScrollCall === true) {
+        if (infiniteScrollCall === true) {
           this.isProcessing = true;
           if (this.dataSource.data) {
             this.dataSource.data = this.dataSource.data.concat(rows);

@@ -57,7 +57,7 @@ export class DataElementsListComponent implements AfterViewInit {
    filterEvent = new EventEmitter<any>();
    filter: {};
    deleteInProgress: boolean;
-   bulkActionsVisibile = 0;
+   bulkActionsVisible = 0;
 
    constructor(
       private resources: MdmResourcesService,
@@ -154,7 +154,7 @@ export class DataElementsListComponent implements AfterViewInit {
             count++;
          }
       }
-      this.bulkActionsVisibile = count;
+      this.bulkActionsVisible = count;
    };
 
    bulkEdit = () => {
@@ -186,7 +186,7 @@ export class DataElementsListComponent implements AfterViewInit {
          // eslint-disable-next-line no-self-assign
          this.dataElementRecords = this.dataElementRecords;
          this.checkAllCheckbox = false;
-         this.bulkActionsVisibile = 0;
+         this.bulkActionsVisible = 0;
          this.filterEvent.emit();
       }).catch(() => { });
    };
@@ -220,7 +220,7 @@ export class DataElementsListComponent implements AfterViewInit {
          // eslint-disable-next-line no-self-assign
          this.dataElementRecords = this.dataElementRecords;
          this.checkAllCheckbox = false;
-         this.bulkActionsVisibile = 0;
+         this.bulkActionsVisible = 0;
          this.filterEvent.emit();
       }).catch(() => { });
    };

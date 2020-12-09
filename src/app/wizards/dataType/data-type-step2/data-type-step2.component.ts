@@ -122,7 +122,7 @@ export class DataTypeStep2Component implements OnInit, AfterViewInit, OnDestroy 
   }
 
   // When sorting makes a backend calls we loose the selected datatypes.
-  // We need to keep the selected ones and recheck them after aech backend call
+  // We need to keep the selected ones and recheck them after each backend call
   dataTypesFetch(pageSize, pageIndex, sortBy, sortType, filters) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 

@@ -30,7 +30,7 @@ describe('ValidatorService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should captalise', () => {
+  it('should capitalise', () => {
     expect(service.capitalize('blobert')).toEqual('Blobert');
     expect(service.capitalize('1234')).toEqual('1234');
     expect(service.capitalize('PEANUT')).toEqual('PEANUT');

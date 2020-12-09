@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
       <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
           <div *ngIf="isEditable && !parentDataModel.finalised" class="mt-1">
 
-              <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="contentBulkActions" *ngIf="bulkActionsVisibile > 0">
+              <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="contentBulkActions" *ngIf="bulkActionsVisible > 0">
                   Bulk actions
                   <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
               </button>

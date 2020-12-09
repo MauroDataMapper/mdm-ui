@@ -72,7 +72,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   filter: {};
   deleteInProgress: boolean;
   checkAllCheckbox = false;
-  bulkActionsVisibile = 0;
+  bulkActionsVisible = 0;
 
   constructor(
     private changeRef: ChangeDetectorRef,
@@ -149,7 +149,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
 
   toggleDelete = (record) => {
     this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisibile = 0;
+    this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
   };
@@ -161,7 +161,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         count++;
       }
     }
-    this.bulkActionsVisibile = count;
+    this.bulkActionsVisible = count;
   };
 
   bulkDelete = () => {
@@ -192,7 +192,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
       this.records.forEach(x => (x.checked = false));
       // this.records = this.records;
       this.checkAllCheckbox = false;
-      this.bulkActionsVisibile = 0;
+      this.bulkActionsVisible = 0;
       this.filterEvent.emit();
     }).catch(() => console.warn('error'));
   };

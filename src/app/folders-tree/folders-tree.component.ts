@@ -151,7 +151,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          }
       }
 
-      // HACK TO FILTER CLASSIFERS NEEDS REVISITED
+      // HACK TO FILTER CLASSIFIERS NEEDS REVISITED
       // Note 1: The domain model tree uses backend API call to get filtered results.
       if (changes.searchCriteria) {
          if (this.treeName && this.treeName === 'Classifiers' && this.searchCriteria && this.searchCriteria.trim().length > 0) {
@@ -208,7 +208,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       }
    }
 
-   /** Additional CSS classes to add to the tree node. fa-lg is requied to make sure fa icon is properly sized. */
+   /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */
    getCssClass(node: FlatNode) {
       return `fa-sm ${node.deleted ? 'deleted-folder' : ''}`;
    }
@@ -658,7 +658,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          this.messageHandler.showError(`There was a problem moving the ${currentNode.domainType}`, error);
       }
 
-      // dragleave event did not seem to be triggered consistantly on drop
+      // dragleave event did not seem to be triggered consistently on drop
       this.dragLeave(e);
    }
 
@@ -728,7 +728,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          this.messageHandler.showWarning('Only folder is allowed at top level');
       }
 
-      // dragleave event did not seem to be triggered consistantly on drop
+      // dragleave event did not seem to be triggered consistently on drop
       this.dragLeave(e);
    }
 
@@ -768,7 +768,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
       for (const expandedPath of this.expandedPaths) {
          /*
-             `mat-tree` requires the ancesters to be expanded first.
+             `mat-tree` requires the ancestors to be expanded first.
              dataNodes: Flatten nodes
 
              Each extended path follow the pattern `<level0 node>/<level1 node>/.../<target node>.

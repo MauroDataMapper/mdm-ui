@@ -60,7 +60,7 @@ SPDX-License-Identifier: Apache-2.0
             <ng-container *ngIf="isUserAdmin">
                 <mat-divider></mat-divider>
                 <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button> -->
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanenly</span></button>
+                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanently</span></button>
             </ng-container>
         </ng-container>
         <ng-container *ngIf="node.domainType === 'DataModel'">

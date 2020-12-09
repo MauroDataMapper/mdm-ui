@@ -76,7 +76,7 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
   ngAfterViewInit() {
     if (this.type === 'dynamic') {
       this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-      this.gridSvc.reloadEvent.subscribe(fitler => (this.filter = fitler));
+      this.gridSvc.reloadEvent.subscribe(filter => (this.filter = filter));
       merge(this.paginator.page, this.filterEvent, this.gridSvc.reloadEvent).pipe(startWith({}), switchMap(() => {
         this.isLoadingResults = true;
         return this.dataElementsFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);

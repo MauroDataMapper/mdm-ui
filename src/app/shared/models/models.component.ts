@@ -433,7 +433,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onSearchInputKeyDown(event: KeyboardEvent | InputEvent) {
-    // Initialize debounce listener if neccessary
+    // Initialize debounce listener if necessary
     if (!this.debounceInputEvent) {
       this.debounceInputEvent = new Subject<KeyboardEvent | InputEvent>();
       this.subscriptions = this.debounceInputEvent.pipe(debounceTime(300)).subscribe(e => {
@@ -514,11 +514,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onFavouriteDbClick = node => {
-    this.onFavioureClick(node);
+    this._onFavouriteClick(node);
   };
 
   onFavouriteClick = node => {
-    this.onFavioureClick(node);
+    this._onFavouriteClick(node);
   };
 
   reloadTree = () => {
@@ -578,7 +578,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  private onFavioureClick(node) {
+  private _onFavouriteClick(node) {
     this.stateHandler.Go(node.domainType, {
       id: node.id,
       dataModelId: node.dataModel,

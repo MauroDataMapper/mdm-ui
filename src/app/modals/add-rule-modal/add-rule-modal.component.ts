@@ -18,9 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService, MessageHandlerService } from '@mdm/services';
-
 
 @Component({
   selector: 'mdm-add-rule-modal',
@@ -40,10 +37,8 @@ export class AddRuleModalComponent implements OnInit {
   selectedGroups = [];
 
   constructor( private dialogRef: MatDialogRef<AddRuleModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private resourcesService: MdmResourcesService,
-    private gridService: GridService,
-    private messageHandler: MessageHandlerService) { }
+    @Inject(MAT_DIALOG_DATA) public data: any)
+ { }
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
@@ -56,16 +51,6 @@ export class AddRuleModalComponent implements OnInit {
       label: '',
       groups: []
     };
-
-    const options = this.gridService.constructOptions(null, null, 'name', 'asc');
-    options['all'] = true;
-
-    this.resourcesService.userGroups.list(options).subscribe(res => {
-        this.allGroups = res.body.items;
-      }, error => {
-        this.messageHandler.showError('There was a problem getting the group list', error);
-      }
-    );
   }
 
 }

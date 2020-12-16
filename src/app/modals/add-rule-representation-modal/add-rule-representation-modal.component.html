@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
       </mat-form-field>
    </div>
 
-   <div *ngIf="data.language !== 'sql'" class="mdm--form-input">
+   <div *ngIf="data.language !== 'sql' && data.language !== 'dmn'" class="mdm--form-input">
       <mat-form-field appearance="outline" class="full-width paddingless">
          <mat-label>Representation</mat-label>
          <input matInput [(ngModel)]="data.representation" />
@@ -41,6 +41,10 @@ SPDX-License-Identifier: Apache-2.0
          [options]="{ lineNumbers: true, theme: 'default', mode: 'text/x-sql' }"      >
       </ngx-codemirror>
    </div>
+   <div  [ngStyle]="{'visibility':data.language === 'dmn' ? 'visible' : 'hidden'}" class="mdm--form-input">
+      <label>Representation</label>
+      <div id="dmn" #dmn></div>
+   </div>
 </div>
 <div class="modal-footer pxy-2">
    <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
@@ -50,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0
       mat-flat-button
       color="{{ btnType }}"
       type="button"
-      [mat-dialog-close]="data"
+      (click)="save()"
    >
       {{ okBtn }}
    </button>

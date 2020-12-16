@@ -121,8 +121,8 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
             okBtn: 'Add',
             btnType: 'primary'
          },
-         height: '400px',
-         width: '600px'
+         height: '1000px',
+         width: '1000px'
       });
 
       dialog.afterClosed().subscribe((dialogResult) => {
@@ -174,8 +174,8 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
                okBtn: 'Apply',
                btnType: 'primary'
             },
-            height: '400px',
-            width: '600px'
+            height: '1000px',
+            width: '1000px'
          });
 
          dialog.afterClosed().subscribe((dialogResult) => {
@@ -210,8 +210,8 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
             okBtn: 'Apply',
             btnType: 'primary'
          },
-         height: '800px',
-         width: '800px'
+         height: '1000px',
+         width: '1000px'
       });
 
       dialog.afterClosed().subscribe((dialogResult) => {
@@ -265,8 +265,8 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
             okBtn: 'Add',
             btnType: 'primary'
          },
-         height: '800px',
-         width: '800px'
+         height: '1000px',
+         width: '1000px'
       });
 
       dialog.afterClosed().subscribe((dialogResult) => {

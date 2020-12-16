@@ -16,10 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService, MessageHandlerService } from '@mdm/services';
+import DmnModeler from 'dmn-js/lib/Modeler';
 
 @Component({
   selector: 'mdm-add-rule-representation-modal',
@@ -28,6 +27,9 @@ import { GridService, MessageHandlerService } from '@mdm/services';
 })
 export class AddRuleRepresentationModalComponent implements OnInit {
 
+  @ViewChild('dmn') dmn : ElementRef;
+
+  initalDiagram = '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="definitions_{{ ID }}" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
   okBtn: string;
   cancelBtn: string;
   btnType: string;
@@ -37,12 +39,11 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   inputLabel: string;
   allGroups = [];
   selectedGroups = [];
+  modeler: DmnModeler;
+
 
   constructor(    private dialogRef: MatDialogRef<AddRuleRepresentationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private resourcesService: MdmResourcesService,
-    private gridService: GridService,
-    private messageHandler: MessageHandlerService) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
@@ -56,15 +57,36 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       groups: []
     };
 
-    const options = this.gridService.constructOptions(null, null, 'name', 'asc');
-    options['all'] = true;
+    this.modeler = new DmnModeler({
+      container:'#dmn',
+      width: '100%',
+      height: '600px',
+    });
 
-    this.resourcesService.userGroups.list(options).subscribe(res => {
-        this.allGroups = res.body.items;
-      }, error => {
-        this.messageHandler.showError('There was a problem getting the group list', error);
-      }
-    );
+    const xml = this.data.language === 'dmn' && this.data.representation.length > 0 ? this.data.representation : this.initalDiagram;
+
+    this.modeler.importXML(xml,(err) =>{
+     if(err){
+      alert(err);
+     }
+
+     const activeEditor = this.modeler.getActiveViewer();
+     const canvas = activeEditor.get('canvas');
+     canvas.zoom('fit-viewport');
+    });
+
   }
 
+  save() {
+    if (this.data.language === 'dmn') {
+      this.modeler.saveXML({format:true},(err,xml)=>{
+        if(err)
+        {
+          return;
+        }
+        this.data.representation = xml;
+      });
+    }
+    this.dialogRef.close(this.data);
+  }
 }

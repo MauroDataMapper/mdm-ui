@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="modal-body pxy-2">
     <p [innerHtml]="message"></p>
     <div class="mdm--form-input">
-        <mat-form-field appearance="outline" class="full-width paddingless">
+        <mat-form-field appearance="outline" required  class="full-width paddingless">
             <mat-label>Name</mat-label>
             <input matInput [(ngModel)]="data.name">
         </mat-form-field>
@@ -35,5 +35,5 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div class="modal-footer pxy-2">
     <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>{{cancelBtn}}</button>
-    <button mat-flat-button color="{{btnType}}" type="button" [mat-dialog-close]="data">{{okBtn}}</button>
+    <button mat-flat-button color="{{btnType}}" type="button" [disabled]="data.name.length === 0" [mat-dialog-close]="data">{{okBtn}}</button>
 </div>

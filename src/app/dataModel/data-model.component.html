@@ -73,12 +73,14 @@ SPDX-License-Identifier: Apache-2.0
               <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
                  <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
                     <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
-                      <mat-select [(ngModel)]="descriptionView" name="descriptionView">
-                          <mat-option value="default">Default Profile</mat-option>
+                      <mat-select [(ngModel)]="descriptionView" name="descriptionView" (ngModelChange)="changeProfile()">
+                          <mat-option value="default">Default profile</mat-option>
                           <mat-divider></mat-divider>
-                          <mat-option value="hdruk">HDR Uk Profile</mat-option>
-                          <mat-option value="schema.org">Schema.org Profile</mat-option>
-                          <mat-option value="schema.org">Other Profiles</mat-option>
+                          <mat-option *ngFor="let option of allUsedProfiles" [value]="option">{{option}}</mat-option>
+                          <mat-divider></mat-divider>
+                          <mat-option value="other">Other properties</mat-option>
+                          <mat-divider></mat-divider>
+                          <mat-option value="Addnew">Add new profile...</mat-option>
                       </mat-select>
                     </mat-form-field>
                  </div>
@@ -137,7 +139,7 @@ SPDX-License-Identifier: Apache-2.0
                <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
                   <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
                     <mat-select [(ngModel)]="schemaView" name="schemaView">
-                        <mat-option value="table">Data Classes</mat-option>
+                        <mat-option value="list">List</mat-option>
                         <mat-option value="diagram">Diagram</mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -150,7 +152,7 @@ SPDX-License-Identifier: Apache-2.0
                </div>
             </div>
          </div>
-         <div *ngIf="schemaView === 'table'">
+         <div *ngIf="schemaView === 'list'">
             <mdm-element-child-data-classes-list *ngIf="dataModel" [parentDataModel]="dataModel" [isEditable]="isEditable" [parentDataClass]="{id:null}" [mcDataClass]="{id:null}" [type]="'dynamic'" (totalCount)='schemaCountEmitter($event)'></mdm-element-child-data-classes-list>
          </div>
          <div class="bordered" *ngIf="schemaView === 'diagram'">

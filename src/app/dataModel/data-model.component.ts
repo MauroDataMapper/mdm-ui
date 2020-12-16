@@ -40,6 +40,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   subscription: Subscription;
   showSearch = false;
   parentId: string;
+  allUsedProfiles: any[] = [];
+  currentProfileDetails: any[];
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   isEditable: boolean;
@@ -53,7 +55,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   editableForm: EditableDataModel;
   errorMessage = '';
 
-  schemaView = 'table';
+  schemaView = 'list';
   descriptionView = 'default';
   contextView = 'default';
   schemaItemCount = 0;
@@ -101,9 +103,10 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dataModelDetails(id: any) {
     let arr = [];
+
     this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
+      console.log(result.body);
       this.dataModel = result.body;
-      this.dataModel.description = 'Proin scelerisque ante sed lorem pretium fringilla. Etiam tempor imperdiet velit vel tempor. Aenean imperdiet tortor et laoreet aliquet. Integer consequat lobortis est vel auctor. Duis pulvinar tincidunt velit, in pharetra nibh. Quisque vestibulum metus quis eros rutrum, quis tempor velit ornare. In id efficitur urna. Aenean aliquet sem blandit nibh suscipit mattis. Suspendisse eget consectetur ex. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla gravida neque id pharetra dignissim.';
 
       id = result.body.id;
 
@@ -123,6 +126,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (this.sharedService.isLoggedIn(true)) {
         this.DataModelPermissions(id);
+        this.DataModelUsedProfiles(id);
       } else {
         this.messageService.FolderSendMessage(this.dataModel);
         this.messageService.dataChanged(this.dataModel);
@@ -187,6 +191,18 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       this.messageService.FolderSendMessage(this.dataModel);
       this.messageService.dataChanged(this.dataModel);
     });
+  }
+
+  async DataModelUsedProfiles(id: any) {
+    await this.resourcesService.profile.usedProfiles('dataModel', id).subscribe((profiles: { body: { [x: string]: any } }) => {
+      profiles.body.forEach(profile => {
+        this.allUsedProfiles.push(profile.displayName);
+      });
+    });
+  }
+
+  changeProfile() {
+    console.log(this.descriptionView);
   }
 
   toggleShowSearch() {

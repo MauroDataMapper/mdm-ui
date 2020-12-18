@@ -32,3 +32,11 @@ tr.detail-row {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  .prevent-click{
+    pointer-events: none;
+  }
+
+  .authorize-click{
+    pointer-events: auto;
+  }

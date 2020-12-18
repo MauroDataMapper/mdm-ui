@@ -29,7 +29,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
 
   @ViewChild('dmn') dmn : ElementRef;
 
-  initalDiagram = '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="definitions_{{ ID }}" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
+  initialDiagram = '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="definitions_{{ ID }}" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
   okBtn: string;
   cancelBtn: string;
   btnType: string;
@@ -63,9 +63,11 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       height: '600px',
     });
 
-    const xml = this.data.language === 'dmn' && this.data.representation.length > 0 ? this.data.representation : this.initalDiagram;
+    const xml = this.data.language === 'dmn' && this.data.representation.length > 0 ? this.data.representation : this.initialDiagram;
 
-    this.modeler.importXML(xml,(err) =>{
+   const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
+   migrateDiagram(xml).then((migratedXML) => {
+        this.modeler.importXML(migratedXML,(err) =>{
      if(err){
       alert(err);
      }
@@ -75,6 +77,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
      canvas.zoom('fit-viewport');
     });
 
+  });
   }
 
   save() {

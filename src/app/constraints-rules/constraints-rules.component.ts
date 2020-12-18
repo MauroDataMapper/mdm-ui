@@ -42,6 +42,11 @@ export class RuleModel {
    }
 }
 
+export class RuleLanguage {
+   displayName:any;
+   value:any;
+}
+
 import {
    trigger,
    state,
@@ -82,6 +87,11 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
    isLoadingResults: boolean;
    expandedElement: any;
    isEditable: boolean;
+   languages:  Array<RuleLanguage>;
+   selectedLanguage: RuleLanguage;
+
+   clickButton = false;
+   filteredOpen = false;
 
    constructor(
       public dialog: MatDialog,
@@ -89,6 +99,8 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
       protected messageHandler: MessageHandlerService
    ) {
       super();
+
+     this.languages = [ {displayName:'SQL', value:'sql'}, {displayName:'DMN',value:'dmn'}, {displayName:'All',value:'all'} ];
       this.isLoadingResults = true;
       this.displayedColumns = ['name', 'description', 'rule', 'actions'];
       this.isEditable = true;
@@ -102,17 +114,22 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
       this.expandedElement = record;
       this.resourcesService.catalogueItem.listRuleRepresentations(this.domainType,this.parent.id,record.id).subscribe(result => {
 
+         const tempList : Array<RuleRepresentation> = [];
+
          result.body.items.forEach(element => {
              element['rule'] = record;
+             if(this.selectedLanguage.value === 'all' || this.selectedLanguage.value === element.language)
+             {
+               tempList.push(element);
+             }
          });
 
-         record.rule = result.body.items;
-
-
+         record.rule = tempList;
       });
    };
 
    add = () => {
+      this.clickButton = true;
       const dialog = this.dialog.open(AddRuleModalComponent, {
          data: {
             name: '',
@@ -126,6 +143,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
       });
 
       dialog.afterClosed().subscribe((dialogResult) => {
+         this.clickButton = false;
          if (dialogResult) {
             const data = {
                name: dialogResult.name,
@@ -310,4 +328,35 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
          });
        });
    }
+
+   filterClick = () =>{
+      this.filteredOpen = !this.filteredOpen;
+   };
+
+   selectedLanguageChange = () => {
+
+      if(this.selectedLanguage.value === 'all')
+      {
+         this.loadRules();
+         return;
+      }
+
+      const data = {
+         language: this.selectedLanguage.value
+      };
+
+      this.resourcesService.catalogueItem
+         .listRules(this.domainType, this.parent.id,data)
+         .subscribe(
+            (result) => {
+               this.records = result.body.items;
+               this.totalItemCount = result.body.count;
+               this.isLoadingResults = false;
+            },
+            (error) => {
+               this.messageHandler.showError(error);
+               this.isLoadingResults = false;
+            }
+         );
+   };
 }

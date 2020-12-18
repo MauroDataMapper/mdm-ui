@@ -27,6 +27,7 @@
     "@angular/platform-browser": "9.1.12",
     "@angular/platform-browser-dynamic": "9.1.12",
     "@angular/router": "9.1.12",
+    "@bpmn-io/dmn-migrate": "^0.4.3",
     "@ctrl/ngx-codemirror": "4.0.1",
     "@fortawesome/fontawesome-free": "5.15.1",
     "@maurodatamapper/mdm-resources": "github:MauroDataMapper/mdm-resources#develop",

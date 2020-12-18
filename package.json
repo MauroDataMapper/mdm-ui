@@ -30,7 +30,7 @@
     "@bpmn-io/dmn-migrate": "^0.4.3",
     "@ctrl/ngx-codemirror": "4.0.1",
     "@fortawesome/fontawesome-free": "5.15.1",
-    "@maurodatamapper/mdm-resources": "github:MauroDataMapper/mdm-resources#develop",
+    "@maurodatamapper/mdm-resources": "github:MauroDataMapper/mdm-resources#4.1.39-SNAPSHOT",
     "@uirouter/angular": "7.0.0",
     "@uirouter/core": "6.0.6",
     "@uirouter/rx": "0.6.5",

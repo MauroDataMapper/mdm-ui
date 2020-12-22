@@ -196,13 +196,23 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   async DataModelUsedProfiles(id: any) {
     await this.resourcesService.profile.usedProfiles('dataModel', id).subscribe((profiles: { body: { [x: string]: any } }) => {
       profiles.body.forEach(profile => {
-        this.allUsedProfiles.push(profile.displayName);
+        const prof: any = [];
+        prof['display'] = profile.displayName;
+        prof['value'] = profile.namespace + '/' + profile.name;
+        this.allUsedProfiles.push(prof);
       });
     });
   }
 
   changeProfile() {
-    console.log(this.descriptionView);
+    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+      const splitDescription = this.descriptionView.split('/');
+      this.resourcesService.profile.profile('DataModel', this.dataModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
+        this.currentProfileDetails = body.body;
+       });
+    } else {
+      this.currentProfileDetails = null;
+    }
   }
 
   toggleShowSearch() {

@@ -76,11 +76,11 @@ SPDX-License-Identifier: Apache-2.0
                       <mat-select [(ngModel)]="descriptionView" name="descriptionView" (ngModelChange)="changeProfile()">
                           <mat-option value="default">Default profile</mat-option>
                           <mat-divider></mat-divider>
-                          <mat-option *ngFor="let option of allUsedProfiles" [value]="option">{{option}}</mat-option>
+                          <mat-option *ngFor="let option of allUsedProfiles" [value]="option.value">{{option.display}}</mat-option>
                           <mat-divider></mat-divider>
                           <mat-option value="other">Other properties</mat-option>
                           <mat-divider></mat-divider>
-                          <mat-option value="Addnew">Add new profile...</mat-option>
+                          <mat-option value="addnew">Add new profile...</mat-option>
                       </mat-select>
                     </mat-form-field>
                  </div>
@@ -93,7 +93,31 @@ SPDX-License-Identifier: Apache-2.0
               </div>
            </div>
 
-            <table class="table table-bordered mdm--table-fixed">
+           <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
+             <tbody *ngFor="let section of this.currentProfileDetails">
+              <tr>
+                <td [attr.colspan]="2" class="detailsRowHeader">
+                  {{section.sectionName}}
+                </td>
+              </tr>
+              <tr *ngFor="let field of section.fields">
+                <td class="detailsRowHeader">{{field.fieldName}}</td>
+                <td class="elementDetailDescription">
+                    <mdm-markdown-text-area [editableForm]="editableForm" [element]="dataModel" [property]="'description'">
+                      {{field.currentValue}}
+                    </mdm-markdown-text-area>
+                </td>
+              </tr>
+
+             </tbody>
+           </table>
+
+           <div class="full-width">
+             <mdm-data-set-metadata *ngIf="this.descriptionView === 'other'" [parent]="dataModel" [type]="'dynamic'" [domainType]="'dataModels'" [isProfileView]="true"></mdm-data-set-metadata>
+           </div>
+
+
+           <table *ngIf="this.descriptionView === 'default'" class="table table-bordered mdm--table-fixed">
                <tbody>
                   <tr>
                      <td class="detailsRowHeader">Aliases</td>

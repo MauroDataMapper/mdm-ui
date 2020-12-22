@@ -103,9 +103,7 @@ SPDX-License-Identifier: Apache-2.0
               <tr *ngFor="let field of section.fields">
                 <td class="detailsRowHeader">{{field.fieldName}}</td>
                 <td class="elementDetailDescription">
-                    <mdm-markdown-text-area [editableForm]="editableForm" [element]="dataModel" [property]="'description'">
-                      {{field.currentValue}}
-                    </mdm-markdown-text-area>
+                  <mdm-more-description [description]="field.currentValue" [length]="100"></mdm-more-description>
                 </td>
               </tr>
 

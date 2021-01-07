@@ -27,6 +27,7 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -43,6 +44,13 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
   showExtraTabs = false;
   activeTab: any;
   semanticLinks: any[] = [];
+  schemaView = 'list';
+  descriptionView = 'default';
+  contextView = 'default';
+  currentProfileDetails: any[];
+  editableForm: EditableDataModel;
+  errorMessage = '';
+  allUsedProfiles: any[] = [];
 
   constructor(private resourcesService: MdmResourcesService,
               private sharedService: SharedService,
@@ -77,6 +85,10 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
       this.isEditable = this.referenceModel['availableActions'].includes('update');
       this.parentId = this.referenceModel.id;
 
+      this.editableForm = new EditableDataModel();
+      this.editableForm.visible = false;
+      this.editableForm.deletePending = false;
+
       if (this.sharedService.isLoggedIn(true)) {
         this.ReferenceModelPermissions(id);
       } else {
@@ -100,6 +112,28 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
       // Send it to message service to receive in child components
       this.messageService.FolderSendMessage(this.referenceModel);
       this.messageService.dataChanged(this.referenceModel);
+    });
+  }
+
+    changeProfile() {
+    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+      const splitDescription = this.descriptionView.split('/');
+      this.resourcesService.profile.profile('referenceDataModels', this.referenceModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
+        this.currentProfileDetails = body.body;
+       });
+    } else {
+      this.currentProfileDetails = null;
+    }
+  }
+
+  async DataModelUsedProfiles(id: any) {
+    await this.resourcesService.profile.usedProfiles('referenceDataModels', id).subscribe((profiles: { body: { [x: string]: any } }) => {
+      profiles.body.forEach(profile => {
+        const prof: any = [];
+        prof['display'] = profile.displayName;
+        prof['value'] = `${profile.namespace}/${profile.name}`;
+        this.allUsedProfiles.push(prof);
+      });
     });
   }
 

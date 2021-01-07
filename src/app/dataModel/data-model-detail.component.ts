@@ -230,6 +230,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       }, panelClass: 'security-modal'
     });
   }
+
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
@@ -466,7 +467,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   showMergeGraph = () => {
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(VersioningGraphModalComponent, {
         data: { parentDataModel: this.result.id },
         panelClass: 'versioning-graph-modal'

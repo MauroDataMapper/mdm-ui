@@ -15,7 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import {
+AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -26,6 +34,10 @@ import { DataModelResult, EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-model',
@@ -70,6 +82,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
     private editingService: EditingService) { }
 
   ngOnInit() {
@@ -91,9 +105,11 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.dataModelDetails(this.parentId);
 
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
     // this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
   }
 
@@ -104,115 +120,210 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   dataModelDetails(id: any) {
     let arr = [];
 
-    this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
-      console.log(result.body);
-      this.dataModel = result.body;
+    this.resourcesService.dataModel
+      .get(id)
+      .subscribe(async (result: { body: DataModelResult }) => {
+        console.log(result.body);
+        this.dataModel = result.body;
 
-      id = result.body.id;
+        id = result.body.id;
 
-      this.isEditable = this.dataModel['availableActions'].includes('update');
-      this.parentId = this.dataModel.id;
+        this.isEditable = this.dataModel['availableActions'].includes('update');
+        this.parentId = this.dataModel.id;
 
-      await this.resourcesService.versionLink.list('dataModels', this.dataModel.id).subscribe(response => {
-        if (response.body.count > 0) {
-          arr = response.body.items;
-          for (const val in arr) {
-            if (this.dataModel.id !== arr[val].targetModel.id) {
-              this.semanticLinks.push(arr[val]);
+        await this.resourcesService.versionLink
+          .list('dataModels', this.dataModel.id)
+          .subscribe((response) => {
+            if (response.body.count > 0) {
+              arr = response.body.items;
+              for (const val in arr) {
+                if (this.dataModel.id !== arr[val].targetModel.id) {
+                  this.semanticLinks.push(arr[val]);
+                }
+              }
             }
-          }
+          });
+
+        if (this.sharedService.isLoggedIn(true)) {
+          this.DataModelPermissions(id);
+          this.DataModelUsedProfiles(id);
+        } else {
+          this.messageService.FolderSendMessage(this.dataModel);
+          this.messageService.dataChanged(this.dataModel);
         }
-      });
 
-      if (this.sharedService.isLoggedIn(true)) {
-        this.DataModelPermissions(id);
-        this.DataModelUsedProfiles(id);
-      } else {
-        this.messageService.FolderSendMessage(this.dataModel);
-        this.messageService.dataChanged(this.dataModel);
-      }
+        this.tabGroup.realignInkBar();
+        // tslint:disable-next-line: deprecation
+        this.activeTab = this.getTabDetailByName(
+          this.stateService.params.tabView
+        ).index;
+        this.tabSelected(this.activeTab);
 
-      this.tabGroup.realignInkBar();
-      // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
-      this.tabSelected(this.activeTab);
-
-      this.editableForm = new EditableDataModel();
-      this.editableForm.visible = false;
-      this.editableForm.deletePending = false;
-
-      this.editableForm.show = () => {
-        this.editForm.forEach(x =>
-          x.edit({
-            editing: true,
-            focus: x.name === 'moduleName' ? true : false
-          })
-        );
-        this.editableForm.visible = true;
-      };
-
-      this.editableForm.cancel = () => {
-        this.editForm.forEach(x => x.edit({ editing: false }));
+        this.editableForm = new EditableDataModel();
         this.editableForm.visible = false;
-        this.editableForm.validationError = false;
-        this.errorMessage = '';
-        this.setEditableFormData();
+        this.editableForm.deletePending = false;
+
+        this.editableForm.show = () => {
+          this.editForm.forEach((x) =>
+            x.edit({
+              editing: true,
+              focus: x.name === 'moduleName' ? true : false
+            })
+          );
+          this.editableForm.visible = true;
+        };
+
+        this.editableForm.cancel = () => {
+          this.editForm.forEach((x) => x.edit({ editing: false }));
+          this.editableForm.visible = false;
+          this.editableForm.validationError = false;
+          this.errorMessage = '';
+          this.setEditableFormData();
+          if (this.dataModel.classifiers) {
+            this.dataModel.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          if (this.dataModel.aliases) {
+            this.dataModel.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+        };
+
         if (this.dataModel.classifiers) {
-          this.dataModel.classifiers.forEach(item => {
+          this.dataModel.classifiers.forEach((item) => {
             this.editableForm.classifiers.push(item);
           });
         }
         if (this.dataModel.aliases) {
-          this.dataModel.aliases.forEach(item => {
+          this.dataModel.aliases.forEach((item) => {
             this.editableForm.aliases.push(item);
           });
         }
-      };
-
-      if (this.dataModel.classifiers) {
-        this.dataModel.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.dataModel.aliases) {
-        this.dataModel.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    });
+      });
   }
 
   async DataModelPermissions(id: any) {
-    await this.resourcesService.security.permissions('dataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
-      Object.keys(permissions.body).forEach(attrname => {
-        this.dataModel[attrname] = permissions.body[attrname];
+    await this.resourcesService.security
+      .permissions('dataModels', id)
+      .subscribe((permissions: { body: { [x: string]: any } }) => {
+        Object.keys(permissions.body).forEach((attrname) => {
+          this.dataModel[attrname] = permissions.body[attrname];
+        });
+        // Send it to message service to receive in child components
+        this.messageService.FolderSendMessage(this.dataModel);
+        this.messageService.dataChanged(this.dataModel);
       });
-      // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.dataModel);
-      this.messageService.dataChanged(this.dataModel);
-    });
   }
 
   async DataModelUsedProfiles(id: any) {
-    await this.resourcesService.profile.usedProfiles('dataModel', id).subscribe((profiles: { body: { [x: string]: any } }) => {
-      profiles.body.forEach(profile => {
-        const prof: any = [];
-        prof['display'] = profile.displayName;
-        prof['value'] = profile.namespace + '/' + profile.name;
-        this.allUsedProfiles.push(prof);
+    await this.resourcesService.profile
+      .usedProfiles('dataModel', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUsedProfiles.push(prof);
+        });
       });
-    });
   }
 
   changeProfile() {
-    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
-      const splitDescription = this.descriptionView.split('/');
-      this.resourcesService.profile.profile('DataModel', this.dataModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
-        this.currentProfileDetails = body.body;
-       });
+    if (
+      this.descriptionView !== 'default' &&
+      this.descriptionView !== 'other' &&
+      this.descriptionView !== 'addnew'
+    ) {
+      this.loadProfile();
+    } else if (this.descriptionView === 'addnew') {
+      const dialog = this.dialog.open(AddProfileModalComponent, {
+        data: {
+          domainType: 'DataModel',
+          domainId: this.dataModel.id
+        },
+        height: '250px'
+      });
+
+      dialog.afterClosed().subscribe((newProfile) => {
+        if (newProfile) {
+          const splitDescription = newProfile.split('/');
+          this.resourcesService.profile
+            .saveProfile(
+              'DataModel',
+              this.dataModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              ''
+            )
+            .subscribe(
+              () => {
+                this.messageHandler.showSuccess('Profile Added');
+                this.DataModelUsedProfiles(this.dataModel.id);
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        }
+      });
     } else {
       this.currentProfileDetails = null;
     }
+  }
+
+  editProfile = () => {
+    const prof = this.allUsedProfiles.find(
+      (x) => x.value === this.descriptionView
+    );
+    const dialog = this.dialog.open(EditProfileModalComponent, {
+      data: {
+        profile: this.currentProfileDetails,
+        profileName: prof.display
+      },
+      disableClose: true,
+      width: '500px'
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        const splitDescription = prof.value.split('/');
+        const data = JSON.stringify(result);
+        this.resourcesService.profile
+            .saveProfile(
+              'DataModel',
+              this.dataModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.loadProfile();
+                this.messageHandler.showSuccess('Profile Edited Successfully');
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+      }
+    });
+  };
+
+ loadProfile() {
+    const splitDescription = this.descriptionView.split('/');
+    this.resourcesService.profile
+      .profile(
+        'DataModel',
+        this.dataModel.id,
+        splitDescription[0],
+        splitDescription[1]
+      )
+      .subscribe((body) => {
+        this.currentProfileDetails = body.body;
+      });
   }
 
   toggleShowSearch() {

@@ -1,0 +1,200 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<h4 mat-dialog-title>Edit Profile - {{ data.profileName }}</h4>
+<mat-dialog-content class="mat-typography">
+  <form
+    #userForm="ngForm"
+    id="userForm"
+   
+   #] novalidate
+    enctype="multipart/form-data"
+    method="POST"
+  >
+    <div *ngFor="let group of profileData" class="containerStyle">
+      <h4>{{ group.sectionName }}</h4>
+      <div *ngFor="let option of group.fields" class="mb-2">
+        <div
+          [ngClass]="{
+            'has-error':
+              userForm.form.get(option.fieldName)?.invalid &&
+              userForm.form.get(option.fieldName)?.touched
+          }"
+        >
+          <mat-form-field
+            appearance="outline"
+            class="full-width"
+            *ngIf="option.dataType === 'Text'"
+          >
+            <mat-label>{{ option.fieldName }}</mat-label>
+            <textarea
+              [(ngModel)]="option.currentValue"
+              name="{{ option.fieldName }}"
+              [required]="option.optional == false"
+              rows="5"
+              id="{{ option.fieldName }}"
+              class="form-control outlined-input"
+              matInput
+              matTooltip="{{option.description}}"
+            ></textarea>
+          </mat-form-field>
+        </div>
+
+        <div
+          *ngIf="
+            option.dataType !== 'Folder' &&
+            option.dataType !== 'DataModel' &&
+            option.dataType != 'Text'
+          "
+        >
+          <div
+            [ngClass]="{
+              'has-error':
+                userForm.form.get(option.fieldName)?.invalid &&
+                userForm.form.get(option.fieldName)?.touched
+            }"
+            class="topping"
+          >
+            <div *ngIf="formOptionsMap[option.dataType] === 'checkbox'">
+              <mat-checkbox
+                [(ngModel)]="option.currentValue"
+                name="{{ option.fieldName }}"
+                [required]="option.optional === false"
+              >
+                <span
+                  >{{ option.fieldName
+                  }}<span [hidden]="option.optional">*</span></span
+                >
+              </mat-checkbox>
+            </div>
+
+            <mat-form-field
+              appearance="outline"
+              class="full-width"
+              *ngIf="
+                formOptionsMap[option.dataType] != 'checkbox' &&
+                formOptionsMap[option.dataType] != 'file' &&
+                formOptionsMap[option.dataType] != 'date'
+              "
+            >
+              <mat-label>{{ option.fieldName }}</mat-label>
+              <input
+                matInput
+                matTooltip="{{option.description}}"
+                type="{{ formOptionsMap[option.dataType] }}"
+                name="{{ option.fieldName }}"
+                [(ngModel)]="option.currentValue"
+                value="option.currentValue"
+                [ngClass]="{
+                  'outlined-input form-control':
+                    formOptionsMap[option.dataType] != 'checkbox'
+                }"
+                [required]="option.optional === false"
+              />
+            </mat-form-field>
+            <mat-form-field
+            appearance="outline"
+            class="full-width"
+            *ngIf="
+              formOptionsMap[option.dataType] === 'date'
+            "
+          >
+            <mat-label>{{ option.fieldName }}</mat-label>
+            <input
+              matInput
+              matTooltip="{{option.description}}"
+              type="date"           
+              name="{{ option.fieldName }}"
+              [(ngModel)]="option.currentValue"
+              value="{{option.currentValue}}"
+              [ngClass]="{
+                'outlined-input form-control':
+                  formOptionsMap[option.dataType] != 'checkbox'
+              }"
+              [required]="option.optional === false"
+            />
+          </mat-form-field>
+            <div *ngIf="formOptionsMap[option.dataType] === 'file'">
+              <input
+              matTooltip="{{option.description}}"
+                type="{{ formOptionsMap[option.dataType] }}"
+                name="{{ option.fieldName }}"
+                [(ngModel)]="option.currentValue"
+                id="{{ option.fieldName }}"
+                [ngClass]="{
+                  'form-control': formOptionsMap[option.dataType] != 'checkbox'
+                }"
+                [required]="option.optional === false"
+                [attr.valid-file]="formOptionsMap[option.dataType] == 'file'"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="has-error">
+          <div
+            *ngIf="
+              userForm.form.get(option.fieldName)?.errors?.number &&
+              option.dataType == 'Integer'
+            "
+          >
+            <span class="control-label">This is not a valid number.</span>
+          </div>
+          <div
+            *ngIf="
+              userForm.form.get(option.fieldName)?.errors?.required &&
+              userForm.form.get(option.fieldName)?.touched
+            "
+          >
+            <span class="control-label">This field is required.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="full-width mt-2">
+      <div *ngIf="saveInProgress">
+        <mat-progress-bar
+          mode="indeterminate"
+          color="accent"
+        ></mat-progress-bar>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+  <mat-dialog-actions align="end" class="pt-2 pb-2">
+  <div>
+    <button
+      mat-button
+      color="warn"
+      [disabled]="saveInProgress"
+      style="margin-right: 8px"
+      (click)="onCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="custom"
+      (click)="save()"
+      [disabled]="userForm.invalid || saveInProgress"
+    >
+      Save Changes
+    </button>
+  </div>
+</mat-dialog-actions>

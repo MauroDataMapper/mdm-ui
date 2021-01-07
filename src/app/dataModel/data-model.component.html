@@ -85,7 +85,7 @@ SPDX-License-Identifier: Apache-2.0
                     </mat-form-field>
                  </div>
                  <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                    <button mat-flat-button color="primary" type="button" class="mr-1">
+                    <button mat-flat-button color="primary" type="button" class="mr-1" (click)="editProfile()">
                       <i class="fas fa-pencil-alt"></i>
                        Edit
                     </button>
@@ -106,7 +106,6 @@ SPDX-License-Identifier: Apache-2.0
                   <mdm-more-description [description]="field.currentValue" [length]="100"></mdm-more-description>
                 </td>
               </tr>
-
              </tbody>
            </table>
 

@@ -40,6 +40,8 @@ import { AddRuleRepresentationModalComponent } from './add-rule-representation-m
 import { AddRuleModalComponent } from './add-rule-modal/add-rule-modal.component';
 import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
 import { SecurityModalComponent } from './security-modal/security-modal.component';
+import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.component';
+import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
 
 @NgModule({
   imports: [
@@ -68,6 +70,9 @@ import { SecurityModalComponent } from './security-modal/security-modal.componen
     AddRuleModalComponent,
     ApiKeysModalComponent,
     SecurityModalComponent
+    SecurityModalComponent,
+    AddProfileModalComponent,
+    EditProfileModalComponent
   ],
   providers: [
     ModalService

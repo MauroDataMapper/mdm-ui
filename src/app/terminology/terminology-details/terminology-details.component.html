@@ -57,8 +57,13 @@ SPDX-License-Identifier: Apache-2.0
                   <div class="text-muted" *ngIf="mcTerminology">
                     <small>
                         <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-                        <span><strong>Branch: </strong> <span class="branch-name">{{mcTerminology.branchName}}</span></span>
-                    </small>
+                        <span><strong>Branch: </strong></span>
+                            <span>
+                                  <select class="form-control" style="display: inline; max-width: 120px; height: 30px; line-height: 1; padding: 0 .35em; width: auto;" [(ngModel)]="currentBranch" name="currentBranch" (ngModelChange)="onModelChange()">
+                                    <option [value]="item.branchName" *ngFor="let item of branchGraph">{{item.branchName}}</option>
+                                 </select>
+                           </span>
+                     </small>
                   </div>
                   <div class="text-muted" *ngIf="mcTerminology">
                       <small>
@@ -82,120 +87,7 @@ SPDX-License-Identifier: Apache-2.0
                   </div>
               </div>
           </div>
-          <table class="mdm--mat-table table-striped mdm--table-fixed">
-              <tbody>
-                  <tr>
-                      <td class="detailsRowHeader">Aliases</td>
-                      <td>
-                          <mdm-element-alias [readOnly]="true" [inEditMode]="editableForm.visible" [aliases]="editableForm?.aliases"></mdm-element-alias>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td class="detailsRowHeader">Author</td>
-                      <td>{{mcTerminology.author}}</td>
-                  </tr>
-                  <tr>
-                      <td class="detailsRowHeader">Organisation</td>
-                      <td>{{mcTerminology.organisation}}</td>
-                  </tr>
-                  <tr>
-                      <td class="detailsRowHeader">Description</td>
-                      <td class="elementDetailDescription">
-                        <mdm-content-editor [editableForm]="editableForm" 
-                                            [element]="mcTerminology" 
-                                            [property]="'description'">
-                        </mdm-content-editor>                          
-                      </td>
-                  </tr>
-                  <tr>
-                      <td class="detailsRowHeader">Classifications</td>
-                      <td>
-                          <mdm-element-classifications [readOnly]='true' [classifications]="mcTerminology.classifiers"
-                                                        [editableForm]="editableForm">
-                          </mdm-element-classifications>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td colspan="2" style="text-align: right;">
 
-                          <div style="float: right; margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                              <div style="float: right; margin-left: 5px;">
-                                  <button mat-stroked-button
-                                          color="warn"
-                                          type="button"
-                                          matTooltip="Delete"
-                                          aria-label="Delete"
-                                          class="paddingless dropdown-toggle"
-                                          [disabled]="deleteInProgress || exporting"
-                                          [matMenuTriggerFor]="menu">
-                                      <i class="far fa-trash-alt warning"></i>
-                                  </button>
-
-                                  <mat-menu #menu="matMenu">
-                                      <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !mcTerminology?.deleted">
-                                          Mark as deleted
-                                      </button>
-                                      <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                                          Delete <span class="warning">permanently</span>
-                                      </button>
-                                  </mat-menu>
-                              </div>
-                          </div>
-
-                          <div *ngIf="showPermission" style="position: relative; float: right; margin-right: 4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                              <button mat-stroked-button
-                                      color="primary"
-                                      type="button"
-                                      class="paddingless"
-                                      matTooltip="User & Group Access"
-                                      aria-label="User & Group Access"
-                                      *ngIf="showPermission"
-                                      [disabled]="deleteInProgress || processing"
-                                      (click)="toggleSecuritySection()">
-                                      <i class="fas fa-user-lock"></i>
-                              </button>
-                          </div>
-
-                          <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
-                            <button mat-stroked-button
-                                    color="primary"
-                                    type="button"
-                                    *ngIf="isLoggedIn"
-                                    class="paddingless dropdown-toggle"
-                                    [disabled]="processing || deleteInProgress"
-                                    [matMenuTriggerFor]="exporterList"
-                                    matTooltip="Export as JSON, XML,..."
-                                    aria-label="Export as JSON, XML,...">
-                                <i class="fas fa-download"></i>
-                            </button>
-                            <mat-menu #exporterList="matMenu">
-                                <div *ngIf="exportList && exportList.length > 0">
-                                    <div *ngFor="let exporter of exportList">
-                                        <button type="button" mat-menu-item (click)="export(exporter)">
-                                            {{exporter.displayName}}
-                                        </button>
-                                    </div>
-                                </div>
-                            </mat-menu>
-                        </div>
-
-                        <div style="position: relative; float: right; margin-right:8px;">
-                            <div id="exportFileDownload" #aLink></div>
-                        </div>
-                        <div style="clear: both;" *ngIf="processing">
-                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
-                        </div>
-                        <div style="text-align: left" *ngIf="exportError">
-                            <div style="padding-top: 25px;">
-                                <div class="alert alert-danger">
-                                    <strong>Error!</strong> {{exportError}}
-                                </div>
-                            </div>
-                        </div>
-                      </td>
-                  </tr>
-              </tbody>
-          </table>
       </form>
   </div>
   <div class="userAccess" *ngIf="securitySection" style="margin: 10px 0px 50px 0px">

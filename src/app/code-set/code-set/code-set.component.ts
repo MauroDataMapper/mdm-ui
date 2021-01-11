@@ -25,6 +25,7 @@ import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -46,6 +47,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
+  currentProfileDetails: any[];
+  editableForm: EditableDataModel;
+  descriptionView = 'default';
+  allUsedProfiles: any[] = [];
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -89,6 +94,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
       this.codeSetModel = result.body;
       // this.parentId = this.codeSetModel.id;
 
+      this.editableForm = new EditableDataModel();
+      this.editableForm.visible = false;
+      this.editableForm.deletePending = false;
+
       await this.resourcesService.versionLink.list('codeSets', this.codeSetModel.id).subscribe(response => {
         if (response.body.count > 0) {
           arr = response.body.items;
@@ -116,8 +125,30 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  CodeSetPermissions() {
-    this.resourcesService.security.permissions('codeSets', this.codeSetModel.id).subscribe((permissions: { body: { [x: string]: any } }) => {
+  async codeSetUsedProfiles(id: any) {
+    await this.resourcesService.profile.usedProfiles('codeSets', id).subscribe((profiles: { body: { [x: string]: any } }) => {
+      profiles.body.forEach(profile => {
+        const prof: any = [];
+        prof['display'] = profile.displayName;
+        prof['value'] = `${profile.namespace}/${profile.name}`;
+        this.allUsedProfiles.push(prof);
+      });
+    });
+  }
+
+  changeProfile() {
+    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+      const splitDescription = this.descriptionView.split('/');
+      this.resourcesService.profile.profile('codeSets', this.codeSetModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
+        this.currentProfileDetails = body.body;
+       });
+    } else {
+      this.currentProfileDetails = null;
+    }
+  }
+
+  CodeSetPermissions(id: any) {
+    this.resourcesService.security.permissions('codeSets', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach((attrname) => {
         this.codeSetModel[attrname] = permissions.body[attrname];
       });
@@ -141,9 +172,9 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'terminology':
-        return { index: 0, name: 'terminology' };
-      case 'properties':
-        return { index: 1, name: 'properties' };
+        return { index: 1, name: 'terminology' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'comments':
         return { index: 2, name: 'comments' };
       case 'history':
@@ -159,10 +190,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getTabDetailByIndex(index) {
     switch (index) {
-      case 0:
-        return { index: 0, name: 'terminology' };
       case 1:
-        return { index: 1, name: 'properties' };
+        return { index: 1, name: 'terminology' };
+      case 0:
+        return { index: 0, name: 'description' };
       case 2:
         return { index: 2, name: 'comments' };
       case 3:

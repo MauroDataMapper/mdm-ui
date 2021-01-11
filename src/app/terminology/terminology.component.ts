@@ -24,6 +24,7 @@ import { BroadcastService } from '../services/broadcast.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
+import { EditableTerm } from '@mdm/model/termModel';
 
 @Component({
   selector: 'mdm-terminology',
@@ -41,6 +42,11 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
   pagination: McSelectPagination;
   showEditForm = false;
   editForm = null;
+  allUsedProfiles: any[] = [];
+  descriptionView = 'default';
+  currentProfileDetails: any[];
+  editableForm: EditableTerm;
+
 
   constructor(
     private stateHandler: StateHandlerService,
@@ -57,6 +63,9 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
       this.stateHandler.NotFound({ location: false });
       return;
     }
+    this.editableForm = new EditableTerm();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
@@ -71,6 +80,17 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
+  }
+
+  changeProfile() {
+    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+      const splitDescription = this.descriptionView.split('/');
+      this.resources.profile.profile('referenceDataModels', this.terminology.id, splitDescription[0], splitDescription[1]).subscribe(body => {
+        this.currentProfileDetails = body.body;
+       });
+    } else {
+      this.currentProfileDetails = null;
+    }
   }
 
   getTabDetail = tabName => {

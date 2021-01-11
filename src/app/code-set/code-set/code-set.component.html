@@ -39,18 +39,127 @@ SPDX-License-Identifier: Apache-2.0
 
 <div>
     <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
+        <mat-tab label="Description">
+            <ng-template matTabContent>
+              <div class="mb-2 full-width">
+                <div class="heading-container">
+                    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+                        <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
+                           <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
+                            <mat-select [(ngModel)]="descriptionView" name="descriptionView" (ngModelChange)="changeProfile()">
+                                <mat-option value="default">Default profile</mat-option>
+                                <mat-divider></mat-divider>
+                                <mat-option *ngFor="let option of allUsedProfiles" [value]="option.value">{{option.display}}</mat-option>
+                                <mat-divider></mat-divider>
+                                <mat-option value="other">Other properties</mat-option>
+                                <mat-divider></mat-divider>
+                                <mat-option value="addnew">Add new profile...</mat-option>
+                            </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+                            <button mat-flat-button color="primary" type="button" class="mr-1">
+                              <i class="fas fa-pencil-alt"></i>
+                               Edit
+                            </button>
+                         </div>
+                    </div>
+                </div>
+                
+                <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
+                    <tbody *ngFor="let section of this.currentProfileDetails">
+                     <tr>
+                       <td [attr.colspan]="2" class="detailsRowHeader">
+                         {{section.sectionName}}
+                       </td>
+                     </tr>
+                     <tr *ngFor="let field of section.fields">
+                       <td class="detailsRowHeader">{{field.fieldName}}</td>
+                       <td class="elementDetailDescription">Code Set
+                           <mdm-markdown-text-area [editableForm]="editableForm" [element]="codeSetModel" [property]="'description'">
+                             {{field.currentValue}}
+                           </mdm-markdown-text-area>
+                       </td>
+                     </tr>
+        
+                    </tbody>
+                </table>
+                <div class="full-width">
+                    <mdm-data-set-metadata *ngIf="this.descriptionView === 'other'" [parent]="codeSetModel" [type]="'dynamic'" [domainType]="'codeSets'" [isProfileView]="true"></mdm-data-set-metadata>
+                  </div>
+        
+        
+                  <table *ngIf="this.descriptionView === 'default'" class="table table-bordered mdm--table-fixed">
+                    <tbody>
+                        <tr>
+                            <td class="detailsRowHeader">Aliases</td>
+                            <td>
+                                <mdm-element-alias  [readOnly]='true'
+                                                    [inEditMode]="editableForm.visible"
+                                                    [aliases]="codeSetModel?.aliases"
+                                                    [editableForm]="editableForm"
+                                                    [property]="'aliases'"></mdm-element-alias>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader">Author</td>
+                            <td *ngIf="codeSetModel">
+                                <mdm-inline-text-edit [readOnly]='true'
+                                                      [inEditMode]="editableForm.visible"
+                                                      [(ngModel)]="codeSetModel.author"
+                                                      [name]="'moduleNameAuthor'"
+                                                      size="20"
+                                                      [styleCss]="'dataModelDetailsLabel'">
+                                </mdm-inline-text-edit>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader">Organisation</td>
+                            <td *ngIf="codeSetModel">
+                                <mdm-inline-text-edit [readOnly]='true'
+                                                      [inEditMode]="editableForm.visible"
+                                                      [(ngModel)]="codeSetModel.organisation"
+                                                      [name]="'moduleNameOrganisation'"
+                                                      size="20"
+                                                      [styleCss]="'dataModelDetailsLabel'">
+                                </mdm-inline-text-edit>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="detailsRowHeader">Description</td>
+                            <td class="elementDetailDescription">
+                                <div *ngIf="codeSetModel">
+                                    <mdm-markdown-text-area [editableForm]="editableForm"
+                                                            [element]="codeSetModel"
+                                                            [property]="'description'">
+                                    </mdm-markdown-text-area>
+                                </div>
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td class="codeSetModel">Classifications</td>
+                            <td *ngIf="codeSetModel">
+                                <mdm-element-classifications  [readOnly]='true'
+                                                              [classifications]="codeSetModel.classifiers"
+                                                              name="classifiers"
+                                                              [editableForm]="editableForm"
+                                                              [element]="codeSetModel"
+                                                              [property]="'classifiers'">
+                                </mdm-element-classifications>
+        
+                            </td>
+                        </tr>                       
+                    </tbody>
+                   </table>  
+              </div>
+            </ng-template>
+          </mat-tab>
+       
         <mat-tab label="Terms">
             <ng-template matTabContent>
                 <div class="full-width">
                     <mdm-code-set-terms-table *ngIf="codeSetModel" [codeSet]="codeSetModel" [type]="'dynamic'"></mdm-code-set-terms-table>
-                </div>
-            </ng-template>
-        </mat-tab>
-
-        <mat-tab label="Properties">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-data-set-metadata *ngIf="codeSetModel" [parent]="codeSetModel" [type]="'dynamic'" [domainType]="'codeSets'"></mdm-data-set-metadata>
                 </div>
             </ng-template>
         </mat-tab>

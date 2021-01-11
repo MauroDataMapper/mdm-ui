@@ -63,6 +63,9 @@ export class TerminologyDetailsComponent implements OnInit {
   showPermDelete: boolean;
   errorMessage: string;
   exporting: boolean;
+  currentBranch = '';
+  branchGraph = [];
+
 
   @Input() get openEditForm() {
     return this.openEditFormVal;
@@ -119,6 +122,7 @@ export class TerminologyDetailsComponent implements OnInit {
     };
 
     this.loadExporterList();
+    this.getModelGraph(this.mcTerminology.id);
     this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
     this.title.setTitle(`Terminology - ${this.mcTerminology?.label}`);
   }
@@ -126,6 +130,32 @@ export class TerminologyDetailsComponent implements OnInit {
   validateLabel = data => {
     if (!data || (data && data.trim().length === 0)) {
       return 'Terminology name can not be empty';
+    }
+  };
+
+  getModelGraph = (modelId) => {
+    this.currentBranch = this.mcTerminology.branchName;
+    this.branchGraph = [
+      {
+        branchName: 'main',
+        label: this.mcTerminology.label,
+        modelId,
+        newBranchModelVersion: false,
+        newDocumentationVersion: false,
+        newFork: false
+      }
+    ];
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go(
+          'terminology',
+          { id: this.branchGraph[val].id },
+          { reload: true, location: true }
+        );
+      }
     }
   };
 

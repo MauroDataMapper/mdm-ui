@@ -15,12 +15,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FolderResult } from '@mdm/model/folderModel';
 
 export enum ContentEditorFormat {
   Markdown,
   Html
+}
+
+export interface ContentEditorMarkdownOptions {
+  showHelpText: boolean
 }
 
 @Component({
@@ -33,13 +37,22 @@ export class ContentEditorComponent implements OnInit {
   @Input() contentFormat: ContentEditorFormat = ContentEditorFormat.Markdown;
   ContentFormatType = ContentEditorFormat;
 
+  /* Inputs/outputs for manual properties */
+  @Input() inEditMode: boolean;
+  @Input() description: string;
+  @Output() descriptionChange = new EventEmitter<string>();
+
+  /* Inputs for model binding */
   @Input() editableForm: any;
   @Input() element: FolderResult;
   @Input() property: string;
 
+  @Input() markdownOptions: ContentEditorMarkdownOptions;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
   }
 
   changeContentType(format: ContentEditorFormat) {
@@ -56,7 +69,16 @@ export class ContentEditorComponent implements OnInit {
   }
 
   isInEditMode() : boolean {
+    if (!this.editableForm) {
+      return this.inEditMode;
+    }    
+
     return this.editableForm.visible;
+  }
+
+  onEditorDescriptionChanged(value: string) {
+    this.description = value;
+    this.descriptionChange.emit(value);
   }
 
 }

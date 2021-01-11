@@ -15,8 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FolderResult } from '@mdm/model/folderModel';
+import { EventObj } from 'jodit-angular/lib/Events';
 
 @Component({
   selector: 'mdm-html-editor',
@@ -24,6 +25,12 @@ import { FolderResult } from '@mdm/model/folderModel';
 })
 export class HtmlEditorComponent implements OnInit {  
 
+  /* Inputs for manual properties */
+  @Input() inEditMode: boolean;
+  @Input() description: string;
+  @Output() descriptionChange = new EventEmitter<string>();
+
+  /* Inputs for model binding */
   @Input() editableForm: any;
   @Input() element: FolderResult;
   @Input() property: string;
@@ -31,6 +38,11 @@ export class HtmlEditorComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onHtmlEditorChanged(event: EventObj) {
+    this.description = event.editor.value;
+    this.descriptionChange.emit(this.description);
   }
 
 }

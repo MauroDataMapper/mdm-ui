@@ -56,7 +56,10 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
-                        <mdm-markdown-text-area [editableForm]="editableForm" [element]="mcDataTypeObject" [property]="'description'"></mdm-markdown-text-area>
+                        <mdm-content-editor [editableForm]="editableForm" 
+                                            [element]="mcDataTypeObject" 
+                                            [property]="'description'">
+                        </mdm-content-editor>
                     </td>
                 </tr>
                 <tr>

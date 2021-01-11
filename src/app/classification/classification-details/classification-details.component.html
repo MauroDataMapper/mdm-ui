@@ -62,9 +62,10 @@ SPDX-License-Identifier: Apache-2.0
                     <td class="detailsRowHeader">Description</td>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
-                            <mdm-markdown-text-area [editableForm]="editableForm"
-                                                    [element]="result"
-                                                    [property]="'description'"></mdm-markdown-text-area>
+                          <mdm-content-editor [editableForm]="editableForm" 
+                                              [element]="result" 
+                                              [property]="'description'">
+                          </mdm-content-editor>
                         </div>
                     </td>
                 </tr>

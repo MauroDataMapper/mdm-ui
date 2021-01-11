@@ -18,13 +18,20 @@ SPDX-License-Identifier: Apache-2.0
 <mdm-markdown-text-area *ngIf="contentFormat === ContentFormatType.Markdown"
     [editableForm]="editableForm" 
     [element]="element" 
-    [property]="property">
+    [property]="property"
+    [inEditMode]="inEditMode"
+    [description]="description"
+    [hideHelpText]="!markdownOptions.showHelpText"
+    (descriptionChange)="onEditorDescriptionChanged($event)">
 </mdm-markdown-text-area>
 
 <mdm-html-editor *ngIf="contentFormat === ContentFormatType.Html"
     [editableForm]="editableForm" 
     [element]="element" 
-    [property]="property">
+    [property]="property"
+    [inEditMode]="inEditMode"
+    [description]="description"
+    (descriptionChange)="onEditorDescriptionChanged($event)">
 </mdm-html-editor>
 
 <div *ngIf="isInEditMode()">

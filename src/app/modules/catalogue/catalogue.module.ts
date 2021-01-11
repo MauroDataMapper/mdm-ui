@@ -167,7 +167,8 @@ import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-elemen
 import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { JoditAngularModule } from 'jodit-angular';
-import { WysiwygEditorComponent } from '@mdm/wysiwyg-editor/wysiwyg-editor.component';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
@@ -311,9 +312,11 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     ReferenceDataTypeComponent,
     ReferenceDataElementComponent,
     ReferenceDataValuesComponent,
-    WysiwygEditorComponent,
+    HtmlEditorComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent
+    EnumerationValuesDetailsComponent,
+    HtmlEditorComponent,
+    ContentEditorComponent
   ],
   imports: [
     AdminModule,
@@ -471,9 +474,11 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     BaseComponent,
     ReferenceDataComponent,
     ReferenceDataDetailsComponent,
-    WysiwygEditorComponent,
+    HtmlEditorComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent
+    EnumerationValuesDetailsComponent,
+    HtmlEditorComponent,
+    ContentEditorComponent
   ]
 })
 export class CatalogueModule { }

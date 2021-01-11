@@ -120,10 +120,15 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
 
                 <div class="text-muted" *ngIf="result">
-                  <small>
-                      <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-                      <span><strong>Branch: </strong> <span class="branch-name">{{result.branchName}}</span></span>
-                  </small>
+                    <small>
+                        <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+                        <span><strong>Branch: </strong></span>
+                            <span>
+                                  <select class="form-control" style="display: inline; max-width: 120px; height: 30px; line-height: 1; padding: 0 .35em; width: auto;" [(ngModel)]="currentBranch" name="currentBranch" (ngModelChange)="onModelChange()">
+                                    <option [value]="item.branchName" *ngFor="let item of branchGraph">{{item.branchName}}</option>
+                                 </select>
+                           </span>
+                     </small>
                 </div>
                 <div class="text-muted" *ngIf="result">
                     <small>

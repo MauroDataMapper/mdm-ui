@@ -40,6 +40,7 @@ import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -83,6 +84,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   download: any;
   downloadLink: any;
   urlText: any;
+  currentBranch = '';
+  branchGraph = [];
 
   canEditDescription = true;
   showEditDescription = false;
@@ -152,6 +155,10 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
 
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
+
+
+      this.getModelGraph(this.result.id);
+
       this.editableForm.description = this.result.description;
       if (this.result.classifiers) {
         this.result.classifiers.forEach(item => {
@@ -204,7 +211,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'result',
+        domainType: 'codeSets'
+      }, panelClass: 'security-modal'
+    });
   }
 
   toggleShowSearch() {
@@ -258,6 +270,41 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  getModelGraph = (modelId) => {
+    this.currentBranch = this.result.branchName;
+    this.branchGraph = [
+      {
+        branchName: 'main',
+        label: this.result.label,
+        modelId,
+        newBranchModelVersion: false,
+        newDocumentationVersion: false,
+        newFork: false
+      }
+    ];
+
+    // this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(res => {
+    //   this.currentBranch = this.result.branchName;
+    //   this.branchGraph = res.body;
+    // }, error => {
+    //   this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
+    // });
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go(
+          'codesets',
+          { id: this.branchGraph[val].modelId },
+          { reload: true, location: true }
+        );
+      }
+    }
+  };
+
+
+  askForPermanentDelete(): any {
   askForPermanentDelete() {
     if (!this.showPermDelete) {
       return;

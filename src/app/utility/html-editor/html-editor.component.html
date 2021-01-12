@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
                   (onChange)="onHtmlEditorChanged($event)">
    </jodit-editor>
    <div style="clear: both;">
-      <span [innerHTML]="description" *ngIf="!inEditMode"></span>
+      <span [innerHTML]="description | safe:'html'" *ngIf="!inEditMode"></span>
   </div>
 </div>
 
@@ -35,6 +35,6 @@ SPDX-License-Identifier: Apache-2.0
                   [config]="editorConfig">
    </jodit-editor>
    <div style="clear: both;">
-      <span [innerHTML]="element[property]" *ngIf="!editableForm.visible"></span>
+      <span [innerHTML]="element[property] | safe:'html'" *ngIf="!editableForm.visible"></span>
    </div>
 </div>

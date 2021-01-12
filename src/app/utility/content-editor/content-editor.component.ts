@@ -62,6 +62,8 @@ export class ContentEditorComponent implements OnInit {
   ngOnInit(): void {
     this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
     this.htmlOptions = this.htmlOptions ?? { useBasicButtons: false };
+
+    this.contentFormat = this.isHtmlContent() ? ContentEditorFormat.Html : ContentEditorFormat.Markdown;
   }
 
   changeContentType(format: ContentEditorFormat) {
@@ -90,4 +92,13 @@ export class ContentEditorComponent implements OnInit {
     this.descriptionChange.emit(value);
   }
 
+  isHtmlContent() {
+    const content = this.editableForm ? this.editableForm[this.property] : this.description;
+    if (!content) {
+      return false;
+    }
+
+    const expression = /<([A-Z][A-Z0-9]*)\b[^>]*>(.*?)<\/\1>/gmi;
+    return expression.test(content);
+  }
 }

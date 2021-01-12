@@ -19,6 +19,60 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FolderResult } from '@mdm/model/folderModel';
 import { EventObj } from 'jodit-angular/lib/Events';
 
+const standardButtons = [
+  'source', 
+  '|', 
+  'bold', 
+  'italic', 
+  'underline', 
+  '|', 
+  'ul', 
+  'ol', 
+  'eraser', 
+  '|', 
+  'outdent', 
+  'indent', 
+  '|', 
+  'font',
+  'fontsize',
+  'brush',
+  'paragraph',
+  '|',
+  'table',
+  '|',
+  'align',
+  '\n',
+  'undo',
+  'redo',
+  '|',
+  'hr',
+  'copyformat',
+  'fullsize',
+];
+
+const basicButtons = [
+  'bold', 
+  'italic', 
+  'underline', 
+  '|', 
+  'ul', 
+  'ol', 
+  'eraser', 
+  '|', 
+  'outdent', 
+  'indent', 
+  '|', 
+  'font',
+  'fontsize',
+  'brush',
+  'paragraph'
+];
+
+export enum HtmlButtonMode {
+  Standard,
+  Basic
+}
+
 @Component({
   selector: 'mdm-html-editor',
   templateUrl: './html-editor.component.html'
@@ -35,9 +89,22 @@ export class HtmlEditorComponent implements OnInit {
   @Input() element: FolderResult;
   @Input() property: string;
 
+  @Input() buttonMode: HtmlButtonMode;
+  ButtonModeType = HtmlButtonMode;
+
+  editorConfig: object;
+
   constructor() { }
 
   ngOnInit(): void {
+    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
+
+    this.editorConfig = {
+      buttons,
+      buttonsMD: buttons,
+      buttonsSM: buttons,
+      buttonsXS: buttons
+    }
   }
 
   onHtmlEditorChanged(event: EventObj) {

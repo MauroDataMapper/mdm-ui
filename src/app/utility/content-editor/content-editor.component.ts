@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FolderResult } from '@mdm/model/folderModel';
+import { HtmlButtonMode } from '../html-editor/html-editor.component';
 
 export enum ContentEditorFormat {
   Markdown,
@@ -24,7 +25,11 @@ export enum ContentEditorFormat {
 }
 
 export interface ContentEditorMarkdownOptions {
-  showHelpText: boolean
+  showHelpText: boolean;
+}
+
+export interface ContentEditorHtmlOptions {
+  useBasicButtons: boolean;
 }
 
 @Component({
@@ -34,7 +39,7 @@ export interface ContentEditorMarkdownOptions {
 })
 export class ContentEditorComponent implements OnInit {
 
-  @Input() contentFormat: ContentEditorFormat = ContentEditorFormat.Markdown;
+  @Input() contentFormat: ContentEditorFormat = ContentEditorFormat.Html;
   ContentFormatType = ContentEditorFormat;
 
   /* Inputs/outputs for manual properties */
@@ -48,11 +53,15 @@ export class ContentEditorComponent implements OnInit {
   @Input() property: string;
 
   @Input() markdownOptions: ContentEditorMarkdownOptions;
+  @Input() htmlOptions: ContentEditorHtmlOptions;
+
+  ButtonModeTypes = HtmlButtonMode;
 
   constructor() { }
 
   ngOnInit(): void {
     this.markdownOptions = this.markdownOptions ?? { showHelpText: true };
+    this.htmlOptions = this.htmlOptions ?? { useBasicButtons: false };
   }
 
   changeContentType(format: ContentEditorFormat) {

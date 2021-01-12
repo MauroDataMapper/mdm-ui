@@ -17,7 +17,11 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FolderResult } from '@mdm/model/folderModel';
+import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
+import { ElementTypesService } from '@mdm/services/element-types.service';
+import { MessageService } from '@mdm/services/message.service';
 import { EventObj } from 'jodit-angular/lib/Events';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 const standardButtons = [
   'source', 
@@ -94,22 +98,61 @@ export class HtmlEditorComponent implements OnInit {
 
   editorConfig: object;
 
-  constructor() { }
+  private elementSelectorSubscription: Subscription;
+
+  constructor(
+    private elementDialogService: ElementSelectorDialogueService,
+    private messageService: MessageService,
+    private elementTypesService: ElementTypesService) { }
 
   ngOnInit(): void {
-    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
+    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;    
+
+    const extraButtons = [
+      {
+        name: 'addelement',
+        text: 'Add Element',
+        icon: '',
+        exec: (editor: any) => this.onAddElementLink(this, editor)
+      }
+    ];
 
     this.editorConfig = {
       buttons,
       buttonsMD: buttons,
       buttonsSM: buttons,
-      buttonsXS: buttons
+      buttonsXS: buttons,
+      extraButtons
     }
   }
 
   onHtmlEditorChanged(event: EventObj) {
     this.description = event.editor.value;
     this.descriptionChange.emit(this.description);
+  }
+
+  // Requires a reference to the HtmlEditorComponent to get correct scope
+  onAddElementLink(component: HtmlEditorComponent, editor: any) {    
+    if (component.elementSelectorSubscription) {
+      component.elementSelectorSubscription.unsubscribe();
+      component.elementSelectorSubscription = null;
+    }
+
+    const focusNode = editor.selection.sel.focusNode;
+    
+    component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(element => {
+      if (!element) {
+        return;
+      }
+
+      const href = component.elementTypesService.getLinkUrl(element);
+      const html = editor.create.fromHTML(`<a href='${href}' title='${element.label}'>${element.label}</a>`);
+
+      editor.selection.setCursorIn(focusNode);
+      editor.selection.insertHTML(html);
+    });
+    
+    component.elementDialogService.open([], []);
   }
 
 }

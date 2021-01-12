@@ -73,16 +73,16 @@ export class ContentEditorComponent implements OnInit {
   getContentFormatName() {
     switch (this.contentFormat)
     {
-      case ContentEditorFormat.Markdown: return "Markdown";
-      case ContentEditorFormat.Html: return "HTML";
-      default: return "";
+      case ContentEditorFormat.Markdown: return 'Markdown';
+      case ContentEditorFormat.Html: return 'HTML';
+      default: return '';
     }
   }
 
   isInEditMode() : boolean {
     if (!this.editableForm) {
       return this.inEditMode;
-    }    
+    }
 
     return this.editableForm.visible;
   }

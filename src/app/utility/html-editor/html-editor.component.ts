@@ -24,19 +24,19 @@ import { EventObj } from 'jodit-angular/lib/Events';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 const standardButtons = [
-  'source', 
-  '|', 
-  'bold', 
-  'italic', 
-  'underline', 
-  '|', 
-  'ul', 
-  'ol', 
-  'eraser', 
-  '|', 
-  'outdent', 
-  'indent', 
-  '|', 
+  'source',
+  '|',
+  'bold',
+  'italic',
+  'underline',
+  '|',
+  'ul',
+  'ol',
+  'eraser',
+  '|',
+  'outdent',
+  'indent',
+  '|',
   'font',
   'fontsize',
   'brush',
@@ -55,17 +55,17 @@ const standardButtons = [
 ];
 
 const basicButtons = [
-  'bold', 
-  'italic', 
-  'underline', 
-  '|', 
-  'ul', 
-  'ol', 
-  'eraser', 
-  '|', 
-  'outdent', 
-  'indent', 
-  '|', 
+  'bold',
+  'italic',
+  'underline',
+  '|',
+  'ul',
+  'ol',
+  'eraser',
+  '|',
+  'outdent',
+  'indent',
+  '|',
   'font',
   'fontsize',
   'brush',
@@ -81,7 +81,7 @@ export enum HtmlButtonMode {
   selector: 'mdm-html-editor',
   templateUrl: './html-editor.component.html'
 })
-export class HtmlEditorComponent implements OnInit {  
+export class HtmlEditorComponent implements OnInit {
 
   /* Inputs for manual properties */
   @Input() inEditMode: boolean;
@@ -106,7 +106,7 @@ export class HtmlEditorComponent implements OnInit {
     private elementTypesService: ElementTypesService) { }
 
   ngOnInit(): void {
-    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;    
+    const buttons = this.buttonMode === HtmlButtonMode.Basic ? basicButtons : standardButtons;
 
     const extraButtons = [
       {
@@ -123,7 +123,7 @@ export class HtmlEditorComponent implements OnInit {
       buttonsSM: buttons,
       buttonsXS: buttons,
       extraButtons
-    }
+    };
   }
 
   onHtmlEditorChanged(event: EventObj) {
@@ -132,14 +132,14 @@ export class HtmlEditorComponent implements OnInit {
   }
 
   // Requires a reference to the HtmlEditorComponent to get correct scope
-  onAddElementLink(component: HtmlEditorComponent, editor: any) {    
+  onAddElementLink(component: HtmlEditorComponent, editor: any) {
     if (component.elementSelectorSubscription) {
       component.elementSelectorSubscription.unsubscribe();
       component.elementSelectorSubscription = null;
     }
 
     const focusNode = editor.selection.sel.focusNode;
-    
+
     component.elementSelectorSubscription = component.messageService.elementSelector.subscribe(element => {
       if (!element) {
         return;
@@ -151,7 +151,7 @@ export class HtmlEditorComponent implements OnInit {
       editor.selection.setCursorIn(focusNode);
       editor.selection.insertHTML(html);
     });
-    
+
     component.elementDialogService.open([], []);
   }
 

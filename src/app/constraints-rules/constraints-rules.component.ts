@@ -100,10 +100,11 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
    ) {
       super();
 
-     this.languages = [ {displayName:'SQL', value:'sql'}, {displayName:'DMN',value:'dmn'}, {displayName:'All',value:'all'} ];
+      this.languages = [ {displayName:'SQL', value:'sql'}, {displayName:'DMN',value:'dmn'}, {displayName:'All',value:'all'} ];
       this.isLoadingResults = true;
       this.displayedColumns = ['name', 'description', 'rule', 'actions'];
       this.isEditable = true;
+      this.selectedLanguage = this.languages[2];
    }
 
    ngOnInit(): void {

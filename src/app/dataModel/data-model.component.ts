@@ -237,7 +237,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     await this.resourcesService.profile
       .unusedProfiles('dataModel', id)
       .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUsedProfiles = [];
+        this.allUnUsedProfiles = [];
         profiles.body.forEach((profile) => {
           const prof: any = [];
           prof['display'] = profile.displayName;
@@ -276,10 +276,9 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
             )
             .subscribe(
               (body) => {
-                this.messageHandler.showSuccess('Profile Added');
                 this.descriptionView = newProfile;
                 this.currentProfileDetails = body.body;
-                this.editProfile();
+                this.editProfile(true);
               },
               (error) => {
                 this.messageHandler.showError('error saving', error.message);
@@ -292,12 +291,12 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  editProfile = () => {
+  editProfile = (isNew: Boolean) => {
     let prof = this.allUsedProfiles.find(
       (x) => x.value === this.descriptionView
     );
 
-    if(!prof){
+    if (!prof) {
       prof = this.allUnUsedProfiles.find(
         (x) => x.value === this.descriptionView
       );
@@ -309,7 +308,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         profileName: prof.display
       },
       disableClose: true,
-      width: '500px'
+      panelClass: 'full-width-dialog'
     });
 
     dialog.afterClosed().subscribe((result) => {
@@ -317,27 +316,34 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         const splitDescription = prof.value.split('/');
         const data = JSON.stringify(result);
         this.resourcesService.profile
-            .saveProfile(
-              'DataModel',
-              this.dataModel.id,
-              splitDescription[0],
-              splitDescription[1],
-              data
-            )
-            .subscribe(
-              () => {
-                this.loadProfile();
+          .saveProfile(
+            'DataModel',
+            this.dataModel.id,
+            splitDescription[0],
+            splitDescription[1],
+            data
+          )
+          .subscribe(
+            () => {
+              this.loadProfile();
+              if (isNew) {
+                this.messageHandler.showSuccess('Profile Added');
+              } else {
                 this.messageHandler.showSuccess('Profile Edited Successfully');
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
               }
-            );
+            },
+            (error) => {
+              this.messageHandler.showError('error saving', error.message);
+            }
+          );
+      } else if (isNew) {
+        this.descriptionView = 'default';
+        this.changeProfile();
       }
     });
   };
 
- loadProfile() {
+  loadProfile() {
     const splitDescription = this.descriptionView.split('/');
     this.resourcesService.profile
       .profile(

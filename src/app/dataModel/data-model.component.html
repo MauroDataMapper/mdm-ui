@@ -94,14 +94,14 @@ SPDX-License-Identifier: Apache-2.0
            </div>
 
            <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
-             <tbody *ngFor="let section of this.currentProfileDetails">
+             <tbody *ngFor="let section of this.currentProfileDetails?.sections">
               <tr>
                 <td [attr.colspan]="2" class="detailsRowHeader">
                   {{section.sectionName}}
                 </td>
               </tr>
               <tr *ngFor="let field of section.fields">
-                <td class="detailsRowHeader">{{field.fieldName}}</td>
+                <td class="detailsRowHeader">{{field.fieldName}}</td> 
                 <td class="elementDetailDescription">
                   <mdm-more-description [description]="field.currentValue" [length]="100"></mdm-more-description>
                 </td>

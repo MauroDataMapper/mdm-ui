@@ -53,7 +53,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   showSearch = false;
   parentId: string;
   allUsedProfiles: any[] = [];
-  currentProfileDetails: any[];
+  allUnUsedProfiles: any[] = [];
+  currentProfileDetails: any;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   isEditable: boolean;
@@ -147,6 +148,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.sharedService.isLoggedIn(true)) {
           this.DataModelPermissions(id);
           this.DataModelUsedProfiles(id);
+          this.DataModelUnUsedProfiles(id);
         } else {
           this.messageService.FolderSendMessage(this.dataModel);
           this.messageService.dataChanged(this.dataModel);
@@ -231,6 +233,20 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  async DataModelUnUsedProfiles(id: any) {
+    await this.resourcesService.profile
+      .unusedProfiles('dataModel', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUnUsedProfiles.push(prof);
+        });
+      });
+  }
+
   changeProfile() {
     if (
       this.descriptionView !== 'default' &&
@@ -251,7 +267,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         if (newProfile) {
           const splitDescription = newProfile.split('/');
           this.resourcesService.profile
-            .saveProfile(
+            .profile(
               'DataModel',
               this.dataModel.id,
               splitDescription[0],
@@ -259,9 +275,11 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
               ''
             )
             .subscribe(
-              () => {
+              (body) => {
                 this.messageHandler.showSuccess('Profile Added');
-                this.DataModelUsedProfiles(this.dataModel.id);
+                this.descriptionView = newProfile;
+                this.currentProfileDetails = body.body;
+                this.editProfile();
               },
               (error) => {
                 this.messageHandler.showError('error saving', error.message);
@@ -275,9 +293,16 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editProfile = () => {
-    const prof = this.allUsedProfiles.find(
+    let prof = this.allUsedProfiles.find(
       (x) => x.value === this.descriptionView
     );
+
+    if(!prof){
+      prof = this.allUnUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
+    }
+
     const dialog = this.dialog.open(EditProfileModalComponent, {
       data: {
         profile: this.currentProfileDetails,

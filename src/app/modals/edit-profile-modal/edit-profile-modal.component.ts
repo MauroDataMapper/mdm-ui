@@ -10,7 +10,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
   styleUrls: ['./edit-profile-modal.component.scss']
 })
 export class EditProfileModalComponent implements OnInit {
-  profileData: Array<any>;
+  profileData: any;
 
   saveInProgress = false;
 
@@ -20,7 +20,10 @@ export class EditProfileModalComponent implements OnInit {
     Boolean: 'checkbox',
     boolean: 'checkbox',
     int: 'number',
-    Date: 'date'
+    date: 'date',
+    time: 'time',
+    datetime: 'datetime',
+    decimal: 'number'
   };
 
   constructor(

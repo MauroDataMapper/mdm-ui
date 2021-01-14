@@ -26,7 +26,7 @@ SPDX-License-Identifier: Apache-2.0
     enctype="multipart/form-data"
     method="POST"
   >
-    <div *ngFor="let group of profileData" class="containerStyle">
+    <div *ngFor="let group of profileData?.sections" class="containerStyle">
       <h4>{{ group.sectionName }}</h4>
       <div *ngFor="let option of group.fields" class="mb-2">
         <div
@@ -89,7 +89,8 @@ SPDX-License-Identifier: Apache-2.0
               *ngIf="
                 formOptionsMap[option.dataType] != 'checkbox' &&
                 formOptionsMap[option.dataType] != 'file' &&
-                formOptionsMap[option.dataType] != 'date'
+                formOptionsMap[option.dataType] != 'date' &&
+                formOptionsMap[option.dataType] != 'datetime'
               "
             >
               <mat-label>{{ option.fieldName }}</mat-label>
@@ -111,7 +112,7 @@ SPDX-License-Identifier: Apache-2.0
             appearance="outline"
             class="full-width"
             *ngIf="
-              formOptionsMap[option.dataType] === 'date'
+             option.dataType === 'date'
             "
           >
             <mat-label>{{ option.fieldName }}</mat-label>
@@ -129,6 +130,28 @@ SPDX-License-Identifier: Apache-2.0
               [required]="option.optional === false"
             />
           </mat-form-field>
+          <mat-form-field
+          appearance="outline"
+          class="full-width"
+          *ngIf="
+           option.dataType === 'datetime'
+          "
+        >
+          <mat-label>{{ option.fieldName }}</mat-label>
+          <input
+            matInput
+            matTooltip="{{option.description}}"
+            type="datetime-local"           
+            name="{{ option.fieldName }}"
+            [(ngModel)]="option.currentValue"
+            value="{{option.currentValue}}"
+            [ngClass]="{
+              'outlined-input form-control':
+                formOptionsMap[option.dataType] != 'checkbox'
+            }"
+            [required]="option.optional === false"
+          />
+        </mat-form-field>
             <div *ngIf="formOptionsMap[option.dataType] === 'file'">
               <input
               matTooltip="{{option.description}}"

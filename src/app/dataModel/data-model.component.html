@@ -93,7 +93,7 @@ SPDX-License-Identifier: Apache-2.0
               </div>
            </div>
 
-           <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
+           <table *ngIf="this.currentProfileDetails" class="table table-bordered">
              <tbody *ngFor="let section of this.currentProfileDetails?.sections">
               <tr>
                 <td [attr.colspan]="2" class="detailsRowHeader">
@@ -101,7 +101,7 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
               </tr>
               <tr *ngFor="let field of section.fields">
-                <td class="detailsRowHeader">{{field.fieldName}}</td> 
+                <td class="detailsRowHeader">{{field.fieldName}} <i style="float: right;"   matTooltip="{{ field.description }}" class="fas fa-info"></i></td> 
                 <td class="elementDetailDescription">
                   <mdm-more-description [description]="field.currentValue" [length]="100"></mdm-more-description>
                 </td>

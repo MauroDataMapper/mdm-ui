@@ -328,6 +328,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
               this.loadProfile();
               if (isNew) {
                 this.messageHandler.showSuccess('Profile Added');
+                this.DataModelUsedProfiles(this.dataModel.id);
               } else {
                 this.messageHandler.showSuccess('Profile Edited Successfully');
               }

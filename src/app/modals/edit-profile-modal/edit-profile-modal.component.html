@@ -28,17 +28,17 @@ SPDX-License-Identifier: Apache-2.0
   >
     <table
       *ngIf="this.profileData"
-      class="table table-bordered mdm--table-fixed"
+      class="table table-bordered"
     >
       <tbody *ngFor="let section of this.profileData?.sections">
-        <tr>
+        <tr >
           <td [attr.colspan]="2" class="detailsRowHeader">
             {{ section.sectionName }}
           </td>
         </tr>
         <tr *ngFor="let field of section.fields">
-          <td class="detailsRowHeader">{{ field.fieldName }}</td>
-          <td class="elementDetailDescription">
+          <td  class="detailsRowHeader" class="detailsRowHeader">{{ field.fieldName }}</td>
+          <td  class="elementDetailDescription">
             <textarea
               [(ngModel)]="field.currentValue"
               name="{{ field.fieldName }} + {{section.sectionName}}"

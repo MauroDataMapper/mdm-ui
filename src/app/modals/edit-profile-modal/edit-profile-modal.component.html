@@ -21,173 +21,96 @@ SPDX-License-Identifier: Apache-2.0
   <form
     #userForm="ngForm"
     id="userForm"
-   
-   #] novalidate
+    #]
+    novalidate
     enctype="multipart/form-data"
     method="POST"
   >
-    <div *ngFor="let group of profileData?.sections" class="containerStyle">
-      <h4>{{ group.sectionName }}</h4>
-      <div *ngFor="let option of group.fields" class="mb-2">
-        <div
-          [ngClass]="{
-            'has-error':
-              userForm.form.get(option.fieldName)?.invalid &&
-              userForm.form.get(option.fieldName)?.touched
-          }"
-        >
-          <mat-form-field
-            appearance="outline"
-            class="full-width"
-            *ngIf="option.dataType === 'Text'"
-          >
-            <mat-label>{{ option.fieldName }}</mat-label>
+    <table
+      *ngIf="this.profileData"
+      class="table table-bordered mdm--table-fixed"
+    >
+      <tbody *ngFor="let section of this.profileData?.sections">
+        <tr>
+          <td [attr.colspan]="2" class="detailsRowHeader">
+            {{ section.sectionName }}
+          </td>
+        </tr>
+        <tr *ngFor="let field of section.fields">
+          <td class="detailsRowHeader">{{ field.fieldName }}</td>
+          <td class="elementDetailDescription">
             <textarea
-              [(ngModel)]="option.currentValue"
-              name="{{ option.fieldName }}"
-              [required]="option.optional == false"
+              [(ngModel)]="field.currentValue"
+              name="{{ field.fieldName }} + {{section.sectionName}}"
+              [required]="field.optional == false"
               rows="5"
-              id="{{ option.fieldName }}"
+              id="{{ field.fieldName }}"
               class="form-control outlined-input"
               matInput
-              matTooltip="{{option.description}}"
+              matTooltip="{{ field.description }}"
+              *ngIf="field.dataType === 'Text'"
             ></textarea>
-          </mat-form-field>
-        </div>
-
-        <div
-          *ngIf="
-            option.dataType !== 'Folder' &&
-            option.dataType !== 'DataModel' &&
-            option.dataType != 'Text'
-          "
-        >
-          <div
-            [ngClass]="{
-              'has-error':
-                userForm.form.get(option.fieldName)?.invalid &&
-                userForm.form.get(option.fieldName)?.touched
-            }"
-            class="topping"
-          >
-            <div *ngIf="formOptionsMap[option.dataType] === 'checkbox'">
-              <mat-checkbox
-                [(ngModel)]="option.currentValue"
-                name="{{ option.fieldName }}"
-                [required]="option.optional === false"
-              >
-                <span
-                  >{{ option.fieldName
-                  }}<span [hidden]="option.optional">*</span></span
-                >
-              </mat-checkbox>
-            </div>
-
-            <mat-form-field
-              appearance="outline"
-              class="full-width"
-              *ngIf="
-                formOptionsMap[option.dataType] != 'checkbox' &&
-                formOptionsMap[option.dataType] != 'file' &&
-                formOptionsMap[option.dataType] != 'date' &&
-                formOptionsMap[option.dataType] != 'datetime'
-              "
+            <mat-checkbox
+              *ngIf="formOptionsMap[field.dataType] === 'checkbox'"
+              [(ngModel)]="field.currentValue"
+              name="{{ field.fieldName }} + {{section.sectionName}}"
+              [required]="field.optional === false"
             >
-              <mat-label>{{ option.fieldName }}</mat-label>
-              <input
-                matInput
-                matTooltip="{{option.description}}"
-                type="{{ formOptionsMap[option.dataType] }}"
-                name="{{ option.fieldName }}"
-                [(ngModel)]="option.currentValue"
-                value="option.currentValue"
-                [ngClass]="{
-                  'outlined-input form-control':
-                    formOptionsMap[option.dataType] != 'checkbox'
-                }"
-                [required]="option.optional === false"
-              />
-            </mat-form-field>
-            <mat-form-field
-            appearance="outline"
-            class="full-width"
-            *ngIf="
-             option.dataType === 'date'
-            "
-          >
-            <mat-label>{{ option.fieldName }}</mat-label>
+            </mat-checkbox>
             <input
-              matInput
-              matTooltip="{{option.description}}"
-              type="date"           
-              name="{{ option.fieldName }}"
-              [(ngModel)]="option.currentValue"
-              value="{{option.currentValue}}"
-              [ngClass]="{
-                'outlined-input form-control':
-                  formOptionsMap[option.dataType] != 'checkbox'
-              }"
-              [required]="option.optional === false"
-            />
-          </mat-form-field>
-          <mat-form-field
-          appearance="outline"
-          class="full-width"
-          *ngIf="
-           option.dataType === 'datetime'
+            *ngIf="
+            field.dataType !== 'Folder' &&
+            field.dataType !== 'DataModel' &&
+            field.dataType != 'Text' &&
+            field.dataType != 'date' &&
+            field.dataType != 'datetime' &&
+            field.dataType != 'boolean' &&
+            field.dataType != 'Boolean'
           "
-        >
-          <mat-label>{{ option.fieldName }}</mat-label>
-          <input
             matInput
-            matTooltip="{{option.description}}"
-            type="datetime-local"           
-            name="{{ option.fieldName }}"
-            [(ngModel)]="option.currentValue"
-            value="{{option.currentValue}}"
+            matTooltip="{{ field.description }}"
+            type="{{ formOptionsMap[field.dataType] }}"
+            name="{{ field.fieldName }} + {{section.sectionName}}"
+            [(ngModel)]="field.currentValue"
+            value="field.currentValue"
             [ngClass]="{
               'outlined-input form-control':
-                formOptionsMap[option.dataType] != 'checkbox'
+                formOptionsMap[field.dataType] != 'checkbox'
             }"
-            [required]="option.optional === false"
+            [required]="field.optional === false"
           />
-        </mat-form-field>
-            <div *ngIf="formOptionsMap[option.dataType] === 'file'">
-              <input
-              matTooltip="{{option.description}}"
-                type="{{ formOptionsMap[option.dataType] }}"
-                name="{{ option.fieldName }}"
-                [(ngModel)]="option.currentValue"
-                id="{{ option.fieldName }}"
+          <input
+          *ngIf="field.dataType === 'date'"
+                matInput
+                matTooltip="{{ field.description }}"
+                type="date"
+                name="{{ field.fieldName }} + {{section.sectionName}}"
+                [(ngModel)]="field.currentValue"
+                value="{{ field.currentValue }}"
                 [ngClass]="{
-                  'form-control': formOptionsMap[option.dataType] != 'checkbox'
+                  'outlined-input form-control':
+                    formOptionsMap[field.dataType] != 'checkbox'
                 }"
-                [required]="option.optional === false"
-                [attr.valid-file]="formOptionsMap[option.dataType] == 'file'"
+                [required]="field.optional === false"
               />
-            </div>
-          </div>
-        </div>
-        <div class="has-error">
-          <div
-            *ngIf="
-              userForm.form.get(option.fieldName)?.errors?.number &&
-              option.dataType == 'Integer'
-            "
-          >
-            <span class="control-label">This is not a valid number.</span>
-          </div>
-          <div
-            *ngIf="
-              userForm.form.get(option.fieldName)?.errors?.required &&
-              userForm.form.get(option.fieldName)?.touched
-            "
-          >
-            <span class="control-label">This field is required.</span>
-          </div>
-        </div>
-      </div>
-    </div>
+              <input
+              *ngIf="field.dataType === 'datetime'"
+              matInput
+              matTooltip="{{ field.description }}"
+              type="datetime-local"
+              name="{{ field.fieldName }} + {{section.sectionName}}"
+              [(ngModel)]="field.currentValue"
+              value="{{ field.currentValue }}"
+              [ngClass]="{
+                'outlined-input form-control':
+                  formOptionsMap[field.dataType] != 'checkbox'
+              }"
+              [required]="field.optional === false"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>    
     <div class="full-width mt-2">
       <div *ngIf="saveInProgress">
         <mat-progress-bar
@@ -198,7 +121,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </form>
 </mat-dialog-content>
-  <mat-dialog-actions align="end" class="pt-2 pb-2">
+<mat-dialog-actions align="end" class="pt-2 pb-2">
   <div>
     <button
       mat-button

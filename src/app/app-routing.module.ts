@@ -32,7 +32,7 @@ import { ImportModelsComponent } from './import-models/import-models.component';
 import { SearchComponent } from './search/search.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
-import { UIRouterModule } from '@uirouter/angular';
+import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import { ModelsComponent } from './shared/models/models.component';
@@ -56,9 +56,11 @@ import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/n
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
+import { StateDeclaration, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import { EditingService } from './editing/editing.service';
 
 
-export const pageRoutes = {
+export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
     {
       name: 'appContainer',
@@ -131,7 +133,8 @@ export const pageRoutes = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
       url: '/dataModel/:id/{tabView:string}',
       component: DataModelComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } }
+      params: { tabView: { dynamic: true, value: null, squash: true } },
+      data: { isEditable: true }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
@@ -279,8 +282,54 @@ export const pageRoutes = {
   ]
 };
 
+/**
+ * Router transition hook to check editing state of app before switching views
+ */
+function editingViewTransitionHooks(transitionService: TransitionService) {
+
+  /**
+   * Check each state transition where the "from" view state is marked as editable.
+   */
+  const canLeaveStateCriteria = {
+    from: (state) => state.data && state.data.isEditable
+  };
+
+  /**
+   * Check a state transition by checking if any unsaved edits still exist. If so, confirm with the user whether to continue.
+   */
+  const canLeaveStateAction = (transition: Transition) => {
+    const editingService = transition.injector().get<EditingService>(EditingService);
+
+    let leave = true;
+    if (editingService && editingService.isEditing) {
+      leave = confirm("Are you sure you want to leave this view? Any unsaved changes will be lost.");
+    }    
+
+    return leave;
+  };
+
+  /**
+   * When entering each view, ensure that the global editing state of the app is reset.
+   */
+  const onEnteringViewAction = (transition: Transition, state: StateDeclaration) => {
+    const editingService = transition.injector().get<EditingService>(EditingService);
+    editingService.isEditing = false;
+  };
+
+  transitionService.onBefore(canLeaveStateCriteria, canLeaveStateAction);
+  transitionService.onEnter({}, onEnteringViewAction);
+}
+
+function routerConfigFn(router: UIRouter) {
+  const transitionService = router.transitionService;
+  editingViewTransitionHooks(transitionService);
+}
+
 @NgModule({
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })],
+  imports: [UIRouterModule.forChild({ 
+    states: pageRoutes.states,
+    config: routerConfigFn
+  })],
   providers: [
     {
       provide: LocationStrategy,

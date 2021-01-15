@@ -45,6 +45,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { EditingService } from '@mdm/editing/editing.service';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -102,7 +103,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
-    private title: Title
+    private title: Title,
+    private editingService: EditingService
   ) { }
 
   ngOnInit() {
@@ -127,6 +129,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.isEditing = false;
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -356,6 +359,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.editableForm.visible = false;
         this.result.description = res.body.description;
         this.editForm.forEach(x => x.edit({ editing: false }));
+        this.editingService.isEditing = false;
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Model.', error);
@@ -374,12 +378,13 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   showForm() {
     this.showEditDescription = false;
+    this.editingService.isEditing = true;
     this.editableForm.show();
   }
 
   onCancelEdit() {
     this.errorMessage = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
+    this.editMode = false; // Use Input editor whe adding a new folder.    
     this.showEditDescription = false;
   }
 
@@ -524,6 +529,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showDescription = () => {
+    this.editingService.isEditing = true;
     this.showEditDescription = true;
     this.editableForm.show();
   };

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
@@ -25,15 +25,18 @@ import { McSelectPagination } from '../utility/mc-select/mc-select.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableTerm } from '@mdm/model/termModel';
+import { Subscription } from 'rxjs';
+import { MessageHandlerService, MessageService } from '@mdm/services';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-terminology',
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
-export class TerminologyComponent implements OnInit, AfterViewInit {
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-
+export class TerminologyComponent implements OnInit, OnDestroy {
   terminology: any;
   diagram: any;
   activeTab: any;
@@ -43,9 +46,12 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
   showEditForm = false;
   editForm = null;
   allUsedProfiles: any[] = [];
+  allUnUsedProfiles: any[] = [];
   descriptionView = 'default';
   currentProfileDetails: any[];
   editableForm: EditableTerm;
+  showSearch = false;
+  subscription: Subscription;
 
 
   constructor(
@@ -54,6 +60,9 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
     private title: Title,
     private resources: MdmResourcesService,
     private broadcastSvc: BroadcastService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
     private editingService: EditingService) { }
 
   ngOnInit() {
@@ -71,11 +80,49 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
     this.title.setTitle('Terminology');
     this.resources.terminology.get(id).subscribe(result => {
       const data = result.body;
+
+      this.DataModelUsedProfiles(id);
+      this.DataModelUnUsedProfiles(id);
+
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
       // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
+
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
+  }
+
+  async DataModelUsedProfiles(id: any) {
+    await this.resources.profile
+      .usedProfiles('Terminology', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUsedProfiles.push(prof);
+        });
+      });
+  }
+
+  async DataModelUnUsedProfiles(id: any) {
+    await this.resources.profile
+      .unusedProfiles('Terminology', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUnUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUnUsedProfiles.push(prof);
+        });
+      });
   }
 
   ngAfterViewInit(): void {
@@ -85,12 +132,110 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
   changeProfile() {
     if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
       const splitDescription = this.descriptionView.split('/');
-      this.resources.profile.profile('referenceDataModels', this.terminology.id, splitDescription[0], splitDescription[1]).subscribe(body => {
+      this.resources.profile.profile('terminology', this.terminology.id, splitDescription[0], splitDescription[1]).subscribe(body => {
         this.currentProfileDetails = body.body;
        });
-    } else {
+    }  else if (this.descriptionView === 'addnew') {
+      const dialog = this.dialog.open(AddProfileModalComponent, {
+        data: {
+          domainType: 'Terminology',
+          domainId: this.terminology.id
+        },
+        height: '250px'
+      });
+
+      dialog.afterClosed().subscribe((newProfile) => {
+        if (newProfile) {
+          const splitDescription = newProfile.split('/');
+          this.resources.profile
+            .profile(
+              'Terminology',
+              this.terminology.id,
+              splitDescription[0],
+              splitDescription[1],
+              ''
+            )
+            .subscribe(
+              (body) => {
+                this.descriptionView = newProfile;
+                this.currentProfileDetails = body.body;
+                this.editProfile(true);
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        }
+      });
       this.currentProfileDetails = null;
     }
+  }
+
+  editProfile = (isNew: Boolean) => {
+    let prof = this.allUsedProfiles.find(
+      (x) => x.value === this.descriptionView
+    );
+
+    if (!prof) {
+      prof = this.allUnUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
+    }
+
+    const dialog = this.dialog.open(EditProfileModalComponent, {
+      data: {
+        profile: this.currentProfileDetails,
+        profileName: prof.display
+      },
+      disableClose: true,
+      panelClass: 'full-width-dialog'
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        const splitDescription = prof.value.split('/');
+        const data = JSON.stringify(result);
+        this.resources.profile
+          .saveProfile(
+            'Terminology',
+            this.terminology.id,
+            splitDescription[0],
+            splitDescription[1],
+            data
+          )
+          .subscribe(
+            () => {
+              this.loadProfile();
+              if (isNew) {
+                this.messageHandler.showSuccess('Profile Added');
+                this.DataModelUsedProfiles(this.terminology.id);
+              } else {
+                this.messageHandler.showSuccess('Profile Edited Successfully');
+              }
+            },
+            (error) => {
+              this.messageHandler.showError('error saving', error.message);
+            }
+          );
+      } else if (isNew) {
+        this.descriptionView = 'default';
+        this.changeProfile();
+      }
+    });
+  };
+
+  loadProfile() {
+    const splitDescription = this.descriptionView.split('/');
+    this.resources.profile
+      .profile(
+        'Terminology',
+        this.terminology.id,
+        splitDescription[0],
+        splitDescription[1]
+      )
+      .subscribe((body) => {
+        this.currentProfileDetails = body.body;
+      });
   }
 
   getTabDetail = tabName => {
@@ -153,6 +298,10 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
     this.editForm = formName;
   };
 
+  toggleShowSearch() {
+    this.messageService.toggleSearch();
+  }
+
   closeEditForm = () => {
     this.showEditForm = false;
     this.editForm = null;
@@ -173,4 +322,12 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
   onTermSelect = term => {
     this.stateHandler.NewWindow('term', { terminologyId: term.terminology, id: term.id }, null);
   };
+
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      // unsubscribe to ensure no memory leaks
+      this.subscription.unsubscribe();
+    }
+  }
 }

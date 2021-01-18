@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
         (afterSave)="save()"
         [openEditForm]="openEditForm"></mdm-terminology-details>
 
-        <div class="panel-body">
+        <div class="panel-body" *ngIf="showSearch">
           <h4 class="marginless">Find Terms</h4>
             <mdm-select [width]="'100%'"
                         [acceptTypedInput]="false"
@@ -74,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
                             </mat-form-field>
                         </div>
                         <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                            <button mat-flat-button color="primary" type="button" class="mr-1">
+                            <button mat-flat-button color="primary" type="button" class="mr-1"  (click)="editProfile(false)">
                               <i class="fas fa-pencil-alt"></i>
                                Edit
                             </button>
@@ -83,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 
                 <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
-                    <tbody *ngFor="let section of this.currentProfileDetails">
+                    <tbody *ngFor="let section of this.currentProfileDetails?.sections">
                      <tr>
                        <td [attr.colspan]="2" class="detailsRowHeader">
                          {{section.sectionName}}
@@ -91,10 +91,8 @@ SPDX-License-Identifier: Apache-2.0
                      </tr>
                      <tr *ngFor="let field of section.fields">
                        <td class="detailsRowHeader">{{field.fieldName}}</td>
-                       <td class="elementDetailDescription">referenceModel
-                           <mdm-markdown-text-area [editableForm]="editableForm" [element]="terminology" [property]="'description'">
-                             {{field.currentValue}}
-                           </mdm-markdown-text-area>
+                       <td class="elementDetailDescription">
+                        <mdm-more-description [description]="field.currentValue" [length]="100"></mdm-more-description>
                        </td>
                      </tr>
         
@@ -103,8 +101,8 @@ SPDX-License-Identifier: Apache-2.0
                 <div class="full-width">
                     <mdm-data-set-metadata *ngIf="this.descriptionView === 'other'" [parent]="terminology" [type]="'dynamic'" [domainType]="'terminology'" [isProfileView]="true"></mdm-data-set-metadata>
                   </div>
-                  <div class="full-width">
-                    <table *ngIf="terminology" class="mdm--mat-table table-striped mdm--table-fixed">
+                 
+                    <table *ngIf="this.descriptionView === 'default' && terminology" class="mdm--mat-table table-striped mdm--table-fixed">
                         <tbody>
                             <tr>
                                 <td class="detailsRowHeader">Aliases</td>
@@ -140,7 +138,7 @@ SPDX-License-Identifier: Apache-2.0
                         </tbody>
                     </table>
 
-                </div>
+            
         
                   
               </div>

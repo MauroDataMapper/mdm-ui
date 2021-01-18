@@ -29,6 +29,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -88,7 +90,10 @@ export class TerminologyDetailsComponent implements OnInit {
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private renderer: Renderer2,
-    private editingService: EditingService) {}
+    private editingService: EditingService,
+    private messageService: MessageService
+  ) {}
+
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -195,7 +200,16 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   toggleSecuritySection = () => {
-    this.securitySection = !this.securitySection;
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'terminology',
+        domainType: 'terminology'
+      }, panelClass: 'security-modal'
+    });
+  };
+
+  toggleShowSearch = () => {
+    this.messageService.toggleSearch();
   };
 
   export(exporter) {

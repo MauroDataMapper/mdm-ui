@@ -15,88 +15,204 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div *ngIf="mcTerminology">
-  <div class="panel panel-default mdm--shadow-block">
-      <form editable-form name="editableForm" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" onkeypress="return event.keyCode != 13;">
-          <div class="panel-body">
-              <div *ngIf="mcTerminology">
-                  <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                      <div class="detail-icons--cta">
-                          <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-                          <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
-                      </div>
-                      <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': mcTerminology?.deleted}">
-                          <span class="dataModelTypeIcon">
-                              <i matTooltip="Terminology" class="fas fa-book"></i>
-                          </span>
-                          <span [innerHTML]="mcTerminology.label" class="dataModelDetailsLabel">
-                              <!-- TODO ADD SEARCH CRITERIA PIPE -->
-                          </span>
-                      </h4>
-                      <mdm-element-status [result]="mcTerminology"></mdm-element-status>
-                      <span class="inline-block">
-                          <small *ngIf="mcTerminology?.deleted" class="warning"> | Deleted</small>
-                      </span>
-                  </div>
-              </div>
 
-              <div class="detail-icons">
-                  <div class="text-muted">
-                      <small>
-                          <i class="fas fa-cube" matTooltip="Item type"></i>
-                          <span><strong>Item type: </strong><span class="item-type">Terminology</span></span>
-                      </small>
+<div class="panel panel-default mdm--shadow-block">
+    <form
+        editable-form
+        name="editableForm"
+        onaftersave="onAfterSave()"
+        (ngSubmit)="formBeforeSave()"
+        onkeypress="return event.keyCode != 13;">
+        <div class="panel-body">
+            <div class="full-width" style="clear: both" *ngIf="mcTerminology">
+                <div
+                    *ngIf="showPermission"
+                    style="position: relative; float: right; margin-right: 8px"
+                    [hidden]="editableForm.visible ||
+                    editableForm.deletePending">
+                    <button
+                        mat-icon-button
+                        color="primary"
+                        type="button"
+                        class="paddingless"
+                        (click)="toggleSecuritySection()"
+                        matTooltip="User & Group Access"
+                        aria-label="User & Group Access">
+                        <i class="fas fa-user-lock"></i>
+                    </button>
+                </div>
+
+                <div
+                    style="position: relative; float: right; margin-right: 8px"
+                    *ngIf="!editableForm.visible && !editableForm.deletePending">
+                    <button
+                        mat-icon-button
+                        color="primary"
+                        type="button"
+                        *ngIf="isLoggedIn"
+                        class="paddingless dropdown-toggle"
+                        [disabled]="processing || deleteInProgress"
+                        [matMenuTriggerFor]="exporterList"
+                        matTooltip="Export as JSON, XML,..."
+                        aria-label="Export as JSON, XML,...">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <mat-menu #exporterList="matMenu">
+                        <div *ngIf="exportList && exportList.length> 0">
+                            <div *ngFor="let exporter of exportList">
+                                <button type="button" mat-menu-item
+                                    (click)="export(exporter)">
+                                    {{ exporter.displayName }}
+                                </button>
+                            </div>
+                        </div>
+                    </mat-menu>
+                </div>
+                <div
+                    style="position: relative;
+                    float: right;
+                    margin-right: 8px;
+                    margin-left: 8px;"[hidden]="editableForm.visible ||
+                    editableForm.deletePending">
+                    <button
+                        mat-icon-button
+                        color="primary"
+                        type="button"
+                        class="paddingless"
+                        (click)="toggleShowSearch()"
+                        [disabled]="processing"
+                        matTooltip="Search"
+                        aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="mcTerminology">
+                <div [ngClass]="{ 'has-error': errorMessage != '' }">
+                    <div class="detail-icons--cta">
+                        <i
+                            class="fas fa-info-circle helpIcon"
+                            matTooltip="Help"
+                            (click)="loadHelp()"></i>
+
+                        <i
+                            style="position: relative;
+                            float: right;
+                            margin-left: 8px;"
+                            [ngClass]="{
+                            'fas fa-star favouritesIcon': true,
+                            addedToFavourite: addedToFavourite
+                            }"
+                            (click)="toggleFavourite()"
+                            matTooltip="Favorite"></i>
                     </div>
-                  <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
-                      <small>
-                          <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
-                          <span><strong>Availability: </strong>Publicly Readable</span>
-                      </small>
-                  </div>
 
-                  <div class="text-muted" *ngIf="mcTerminology">
+                    <h4
+                        class="inline-block marginless"
+                        [ngClass]="{ deletedDataModelTitle:
+                        mcTerminology?.deleted }">
+                        <span class="dataModelTypeIcon">
+                            <i matTooltip="Terminology" class="fas fa-book"></i>
+                        </span>
+                        <span
+                            [innerHTML]="mcTerminology.label"
+                            class="dataModelDetailsLabel">
+                            <!-- TODO ADD SEARCH CRITERIA PIPE -->
+                        </span>
+                    </h4>
+                    <mdm-element-status [result]="mcTerminology"></mdm-element-status>
+                    <span class="inline-block">
+                        <small *ngIf="mcTerminology?.deleted" class="warning">
+                            | Deleted</small>
+                    </span>
+                </div>
+            </div>
+
+            <div class="detail-icons">
+                <div class="text-muted">
+                    <small>
+                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span><strong>Item type: </strong><span
+                                class="item-type">Terminology</span></span>
+                    </small>
+                </div>
+                <div class="text-muted"
+                    *ngIf="mcTerminology?.readableByEveryone">
+                    <small>
+                        <i
+                            class="fas fa-globe-europe globe"
+                            aria-hidden="true"
+                            matTooltip="Availability"></i>
+                        <span><strong>Availability: </strong>Publicly Readable</span>
+                    </small>
+                </div>
+
+                <div class="text-muted" *ngIf="mcTerminology">
                     <small>
                         <i class="fas fa-code-branch" matTooltip="Branch name"></i>
                         <span><strong>Branch: </strong></span>
-                            <span>
-                                  <select class="form-control" style="display: inline; max-width: 120px; height: 30px; line-height: 1; padding: 0 .35em; width: auto;" [(ngModel)]="currentBranch" name="currentBranch" (ngModelChange)="onModelChange()">
-                                    <option [value]="item.branchName" *ngFor="let item of branchGraph">{{item.branchName}}</option>
-                                 </select>
-                           </span>
-                     </small>
-                  </div>
-                  <div class="text-muted" *ngIf="mcTerminology">
-                      <small>
-                          <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-                          <span><strong>Documentation Version: </strong>{{mcTerminology.documentationVersion}}</span>
-                      </small>
-                  </div>
+                        <span>
+                            <select
+                                class="form-control"
+                                style="display: inline;
+                                max-width: 120px;
+                                height: 30px;
+                                line-height: 1;
+                                padding: 0 0.35em;
+                                width: auto;"[(ngModel)]="currentBranch"
+                                name="currentBranch"
+                                (ngModelChange)="onModelChange()">
+                                <option
+                                    [value]="item.branchName"
+                                    *ngFor="let item of branchGraph">
+                                    {{ item.branchName }}
+                                </option>
+                            </select>
+                        </span>
+                    </small>
+                </div>
+                <div class="text-muted" *ngIf="mcTerminology">
+                    <small>
+                        <i matTooltip="Documentation Version" class="fas
+                            fa-copy"></i>
+                        <span><strong>Documentation Version: </strong>{{
+                            mcTerminology.documentationVersion }}</span>
+                    </small>
+                </div>
 
-                  <div class="text-muted" *ngIf="mcTerminology">
-                      <small>
-                          <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                          <span><strong>Last update: </strong>{{mcTerminology.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                      </small>
-                  </div>
 
-                  <div class="text-muted" *ngIf="mcTerminology && mcTerminology.finalised && mcTerminology.dateFinalised">
-                      <small>
-                          <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                          <span><strong>Finalised on:</strong> {{mcTerminology.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                      </small>
-                  </div>
-              </div>
-          </div>
-
-      </form>
-  </div>
-  <div class="userAccess" *ngIf="securitySection" style="margin: 10px 0px 50px 0px">
-
-      <mdm-share-with [mcElement]="mcTerminology" [mcDomainType]="'Terminology'"></mdm-share-with>
-      <div>
-          <div style="margin-top: 10px">
-              <mdm-group-access-new [parent]="mcTerminology" [parentType]="'Terminology'"></mdm-group-access-new>
-          </div>
-      </div>
-  </div>
+                <div
+                    class="text-muted"
+                    *ngIf="mcTerminology &&
+                    mcTerminology.finalised &&
+                    mcTerminology.dateFinalised">
+                    <small>
+                        <i class="far fa-calendar-check" matTooltip="Finalised
+                            on"></i>
+                        <span><strong>Finalised on:</strong>
+                            {{
+                            mcTerminology.dateFinalised | date: 'yyyy-MM-dd
+                            HH:mm:ss'
+                            }}</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div
+    class="userAccess"
+    *ngIf="securitySection"
+    style="margin: 10px 0px 50px 0px">
+    <mdm-share-with
+        [mcElement]="mcTerminology"
+        [mcDomainType]="'Terminology'"></mdm-share-with>
+    <div>
+        <div style="margin-top: 10px">
+            <mdm-group-access-new
+                [parent]="mcTerminology"
+                [parentType]="'Terminology'"></mdm-group-access-new>
+        </div>
+    </div>
 </div>

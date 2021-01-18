@@ -39,6 +39,7 @@ import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-classification-details',
@@ -81,6 +82,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     private broadcaseSvc: BroadcastService,
     private title: Title,
     private dialog: MatDialog,
+    private editingService: EditingService
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
@@ -112,6 +114,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.errorMessage = '';
       this.editableForm.label = this.result.label;
@@ -252,6 +255,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
           this.afterSave(result);
         }
         this.messageHandler.showSuccess('Classifier updated successfully.');
+        this.editingService.stop();
         this.editableForm.visible = false;
         this.editForm.forEach(x => x.edit({ editing: false }));
       }, error => {
@@ -270,6 +274,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   }
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 

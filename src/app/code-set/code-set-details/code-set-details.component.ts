@@ -41,6 +41,7 @@ import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -98,7 +99,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
               private helpDialogueService: HelpDialogueHandlerService,
               private dialog: MatDialog,
               private favouriteHandler: FavouriteHandlerService,
-              private title: Title) {
+              private title: Title,
+              private editingService: EditingService) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.CodeSetDetails();
@@ -123,6 +125,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -352,6 +355,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
 
     if (this.validateLabel(this.result.label)) {
       await this.resourcesService.codeSet.update(this.result.id, resource).subscribe(res => {
+        this.editingService.stop();
         this.messageHandler.showSuccess('Code Set updated successfully.');
         this.editableForm.visible = false;
         this.result.description = res.body.description;
@@ -373,6 +377,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   showForm() {
+    this.editingService.start();
     this.showEditDescription = false;
     this.editableForm.show();
   }
@@ -449,6 +454,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

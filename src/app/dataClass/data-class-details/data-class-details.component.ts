@@ -36,6 +36,7 @@ import { Title } from '@angular/platform-browser';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -77,7 +78,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private stateHandler: StateHandlerService,
     private title: Title,
     private dialog: MatDialog,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    private editingService: EditingService
   ) {
   }
 
@@ -105,6 +107,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -318,6 +321,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.editingService.stop();
           this.messageService.dataChanged(result.body);
         }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
@@ -328,6 +332,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
+          this.editingService.stop();
           this.messageService.dataChanged(result.body);
         }, error => {
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
@@ -368,6 +373,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   showForm() {
+    this.editingService.start();
     this.showEditDescription = false;
     this.editableForm.show();
   }
@@ -393,6 +399,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   };
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

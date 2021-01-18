@@ -38,6 +38,7 @@ import { GridService } from '@mdm/services/grid.service';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -101,7 +102,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private broadcastSvc: BroadcastService,
     private gridService: GridService,
     private dialog: MatDialog,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    private editingService: EditingService
   ) {
     this.DataElementDetails();
   }
@@ -140,6 +142,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -353,6 +356,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         };
       }
       this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(() => {
+        this.editingService.stop();
         this.messageHandler.showSuccess('Data Element updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.editableForm.visible = false;
@@ -428,6 +432,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   showForm() {
+    this.editingService.start();
     this.showEditDescription = false;
     this.editableForm.show();
   }
@@ -456,6 +461,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   };
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

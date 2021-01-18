@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { EditingService } from '@mdm/services/editing.service';
 import { Editable } from '@mdm/model/folderModel';
 
 @Component({
@@ -47,7 +48,7 @@ export class EditableFormButtonsComponent implements OnInit {
 
   public displayEditTitle: string = this.editTitle;
 
-  constructor() {}
+  constructor(private editingService: EditingService) {}
 
   ngOnInit() {
     if (!this.displayDeleteTitle) {
@@ -120,6 +121,10 @@ export class EditableFormButtonsComponent implements OnInit {
   /// 	----------------------------------------
 
   cancelEditClicked() {
+    if (!this.editingService.confirmCancel()) {
+      return;
+    }
+
     if (this.editable) {
       this.editable.cancel();
     }

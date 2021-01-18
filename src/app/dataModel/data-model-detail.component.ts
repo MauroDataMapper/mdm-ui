@@ -45,7 +45,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
-import { EditingService } from '@mdm/editing/editing.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -129,7 +129,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     this.editableForm.cancel = () => {
-      this.editingService.isEditing = false;
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -359,7 +359,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.editableForm.visible = false;
         this.result.description = res.body.description;
         this.editForm.forEach(x => x.edit({ editing: false }));
-        this.editingService.isEditing = false;
+        this.editingService.stop();
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Model.', error);
@@ -378,7 +378,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   showForm() {
     this.showEditDescription = false;
-    this.editingService.isEditing = true;
+    this.editingService.start();
     this.editableForm.show();
   }
 
@@ -529,7 +529,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showDescription = () => {
-    this.editingService.isEditing = true;
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

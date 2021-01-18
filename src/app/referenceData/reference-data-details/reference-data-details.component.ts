@@ -41,6 +41,7 @@ import { ExportHandlerService } from '@mdm/services/handlers/export-handler.serv
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
    selector: 'mdm-reference-data-details',
@@ -92,8 +93,8 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       private dialog: MatDialog,
       private favouriteHandler: FavouriteHandlerService,
       private exportHandler: ExportHandlerService,
-      private title: Title
-   ) { }
+      private title: Title,
+      private editingService: EditingService) { }
 
    ngOnInit() {
       this.isAdminUser = this.sharedService.isAdmin;
@@ -116,6 +117,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       };
 
       this.editableForm.cancel = () => {
+         this.editingService.stop();
          this.editForm.forEach(x => x.edit({ editing: false }));
          this.editableForm.visible = false;
          this.editableForm.validationError = false;
@@ -329,6 +331,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
             this.result.description = res.body.description;
             this.ReferenceModelDetails();
             this.messageHandler.showSuccess('Reference Data Model updated successfully.');
+            this.editingService.stop();
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
             this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -348,6 +351,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
    }
 
    showForm() {
+      this.editingService.start();
       this.showEditDescription = false;
       this.editableForm.show();
    }
@@ -413,6 +417,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
    }
 
    showDescription = () => {
+      this.editingService.start();
       this.showEditDescription = true;
       this.editableForm.show();
    };

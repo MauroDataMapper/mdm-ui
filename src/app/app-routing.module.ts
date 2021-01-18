@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { AboutComponent } from './about/about.component';
 import { FolderComponent } from './folder/folder.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
@@ -56,8 +56,8 @@ import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/n
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { StateDeclaration, Transition, TransitionService, UIRouter } from '@uirouter/core';
-import { EditingService } from './editing/editing.service';
+import { StateDeclaration, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import { EditingService } from '@mdm/services/editing.service';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -133,8 +133,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
       url: '/dataModel/:id/{tabView:string}',
       component: DataModelComponent,
-      params: { tabView: { dynamic: true, value: null, squash: true } },
-      data: { isEditable: true }
+      params: { tabView: { dynamic: true, value: null, squash: true } }
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
@@ -285,44 +284,36 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-function editingViewTransitionHooks(transitionService: TransitionService) {
+function editingViewTransitionHooks(transitionService: TransitionService, editingService: EditingService) {
 
   /**
    * Check each state transition where the "from" view state is marked as editable.
    */
   const canLeaveStateCriteria = {
-    from: (state) => state.data && state.data.isEditable
+    from: (state: StateObject) => state.name && editingService.isRouteEditable(state.name)
   };
 
   /**
    * Check a state transition by checking if any unsaved edits still exist. If so, confirm with the user whether to continue.
    */
-  const canLeaveStateAction = (transition: Transition) => {
-    const editingService = transition.injector().get<EditingService>(EditingService);
-
-    let leave = true;
-    if (editingService && editingService.isEditing) {
-      leave = confirm("Are you sure you want to leave this view? Any unsaved changes will be lost.");
-    }    
-
-    return leave;
-  };
+  const canLeaveStateAction = (transition: Transition) => editingService?.confirmLeave() ?? true;
 
   /**
    * When entering each view, ensure that the global editing state of the app is reset.
    */
   const onEnteringViewAction = (transition: Transition, state: StateDeclaration) => {
     const editingService = transition.injector().get<EditingService>(EditingService);
-    editingService.isEditing = false;
+    editingService.stop();
   };
 
   transitionService.onBefore(canLeaveStateCriteria, canLeaveStateAction);
   transitionService.onEnter({}, onEnteringViewAction);
 }
 
-function routerConfigFn(router: UIRouter) {
+function routerConfigFn(router: UIRouter, injector: Injector) {
   const transitionService = router.transitionService;
-  editingViewTransitionHooks(transitionService);
+  const editingService = injector.get<EditingService>(EditingService);
+  editingViewTransitionHooks(transitionService, editingService);
 }
 
 @NgModule({

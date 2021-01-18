@@ -29,6 +29,21 @@ import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 
+/**
+ * Event arguments for confirming a click of a node in the FoldersTreeComponent.
+ */
+export class NodeConfirmClickEvent {
+
+   constructor(
+      public current: FlatNode,
+      public next: FlatNode,
+      private broadcastSvc: BroadcastService)
+   {      
+   }
+
+   setSelectedNode = (node: FlatNode) => this.broadcastSvc.broadcast('$folderTreeNodeSelection', node);
+}
+
 @Component({
    selector: 'mdm-folders-tree',
    templateUrl: './folders-tree.component.html',
@@ -41,6 +56,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    @Input() defaultCheckedMap: any = {};
 
    @Output() nodeClickEvent = new EventEmitter<any>();
+   @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
    @Output() nodeDbClickEvent = new EventEmitter<any>();
    @Output() nodeCheckedEvent = new EventEmitter<any>();
 
@@ -134,6 +150,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       this.treeControl = new FlatTreeControl((node: FlatNode) => node.level, (node: FlatNode) => node.hasChildren || node.hasChildFolders);
 
       this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener, []);
+
+      this.broadcastSvc.subscribe('$folderTreeNodeSelection', node => this.selectedNode = node);
    }
 
 
@@ -241,6 +259,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    }
 
    handleClick(fnode: FlatNode) {
+      if (this.nodeConfirmClickEvent) {
+         this.nodeConfirmClickEvent.emit(new NodeConfirmClickEvent(this.selectedNode, fnode, this.broadcastSvc));
+         return;
+      }
+
       this.selectedNode = fnode; // Control highlighting selected tree node
       this.nodeClickEvent.emit(fnode.node);
    }

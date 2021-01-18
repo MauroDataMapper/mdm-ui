@@ -29,8 +29,9 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
+import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 
 @Component({
   selector: 'mdm-models',
@@ -251,15 +252,19 @@ export class ModelsComponent implements OnInit, OnDestroy {
     );
   };
 
-  onNodeClick = node => {
+  onNodeConfirmClick($event: NodeConfirmClickEvent) {
+    const node = $event.next.node;
+
     this.stateHandler.Go(node.domainType, {
-      id: node.id,
-      edit: false,
-      dataModelId: node.modelId,
-      dataClassId: node.parentId || '',
-      terminologyId: node.modelId || node.model
-    });
-  };
+          id: node.id,
+          edit: false,
+          dataModelId: node.modelId,
+          dataClassId: node.parentId || '',
+          terminologyId: node.modelId || node.model
+        }).then(
+          () => $event.setSelectedNode($event.next), 
+          () => $event.setSelectedNode($event.current));
+  }
 
   onNodeDbClick = node => {
     // if the element if a dataModel, load it

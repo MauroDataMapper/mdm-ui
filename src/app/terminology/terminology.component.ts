@@ -48,7 +48,7 @@ export class TerminologyComponent implements OnInit, OnDestroy {
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
   descriptionView = 'default';
-  currentProfileDetails: any[];
+  currentProfileDetails: any;
   editableForm: EditableTerm;
   showSearch = false;
   subscription: Subscription;

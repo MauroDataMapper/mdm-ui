@@ -71,12 +71,7 @@ SPDX-License-Identifier: Apache-2.0
                    </button>
                 </div>
 
-                <div style="position: relative; float: right; margin-right:8px; margin-left: 8px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                   <button mat-icon-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
-                      <i class="fas fa-search"></i>
-                   </button>
-                </div>
-             </div>
+                  </div>
 
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
@@ -134,12 +129,6 @@ SPDX-License-Identifier: Apache-2.0
                     <small>
                         <i matTooltip="Documentation Version" class="fas fa-copy"></i>
                         <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
-                    </small>
-                </div>
-                <div class="text-muted" *ngIf="result">
-                    <small>
-                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                        <span><strong>Last update: </strong>{{ result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
                     </small>
                 </div>
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">

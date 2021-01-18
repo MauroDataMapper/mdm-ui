@@ -26,6 +26,10 @@ import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import { MessageHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -47,10 +51,11 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
-  currentProfileDetails: any[];
+  currentProfileDetails: any;
   editableForm: EditableDataModel;
   descriptionView = 'default';
   allUsedProfiles: any[] = [];
+  allUnUsedProfiles: any[] = [];
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -59,7 +64,11 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private editingService: EditingService) { }
+    private editingService: EditingService,
+    private title: Title,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService
+  ) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -97,6 +106,9 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
       this.editableForm = new EditableDataModel();
       this.editableForm.visible = false;
       this.editableForm.deletePending = false;
+
+      this.codeSetUsedProfiles(id);
+      this.codsetUnUsedProfiles(id);
 
       await this.resourcesService.versionLink.list('codeSets', this.codeSetModel.id).subscribe(response => {
         if (response.body.count > 0) {
@@ -136,15 +148,128 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  async codsetUnUsedProfiles(id: any) {
+    await this.resourcesService.profile
+      .unusedProfiles('codeSets', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUnUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUnUsedProfiles.push(prof);
+        });
+      });
+  }
+
   changeProfile() {
     if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
       const splitDescription = this.descriptionView.split('/');
       this.resourcesService.profile.profile('codeSets', this.codeSetModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
         this.currentProfileDetails = body.body;
        });
+    } else if (this.descriptionView === 'addnew') {
+      const dialog = this.dialog.open(AddProfileModalComponent, {
+        data: {
+          domainType: 'codeSets',
+          domainId: this.codeSetModel.id
+        },
+        height: '250px'
+      });
+
+      dialog.afterClosed().subscribe((newProfile) => {
+        if (newProfile) {
+          const splitDescription = newProfile.split('/');
+          this.resourcesService.profile
+            .profile(
+              'codeSets',
+              this.codeSetModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              ''
+            )
+            .subscribe(
+              (body) => {
+                this.descriptionView = newProfile;
+                this.currentProfileDetails = body.body;
+                this.editProfile(true);
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        }
+      });
     } else {
       this.currentProfileDetails = null;
     }
+  }
+
+  editProfile = (isNew: Boolean) => {
+    let prof = this.allUsedProfiles.find(
+      (x) => x.value === this.descriptionView
+    );
+
+    if (!prof) {
+      prof = this.allUnUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
+    }
+
+    const dialog = this.dialog.open(EditProfileModalComponent, {
+      data: {
+        profile: this.currentProfileDetails,
+        profileName: prof.display
+      },
+      disableClose: true,
+      panelClass: 'full-width-dialog'
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        const splitDescription = prof.value.split('/');
+        const data = JSON.stringify(result);
+        this.resourcesService.profile
+          .saveProfile(
+            'codeSets',
+            this.codeSetModel.id,
+            splitDescription[0],
+            splitDescription[1],
+            data
+          )
+          .subscribe(
+            () => {
+              this.loadProfile();
+              if (isNew) {
+                this.messageHandler.showSuccess('Profile Added');
+                this.codeSetUsedProfiles(this.codeSetModel.id);
+              } else {
+                this.messageHandler.showSuccess('Profile Edited Successfully');
+              }
+            },
+            (error) => {
+              this.messageHandler.showError('error saving', error.message);
+            }
+          );
+      } else if (isNew) {
+        this.descriptionView = 'default';
+        this.changeProfile();
+      }
+    });
+  };
+
+  loadProfile() {
+    const splitDescription = this.descriptionView.split('/');
+    this.resourcesService.profile
+      .profile(
+        'codeSets',
+        this.codeSetModel.id,
+        splitDescription[0],
+        splitDescription[1]
+      )
+      .subscribe((body) => {
+        this.currentProfileDetails = body.body;
+      });
   }
 
   CodeSetPermissions(id: any) {

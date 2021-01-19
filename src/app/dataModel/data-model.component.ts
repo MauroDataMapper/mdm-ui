@@ -37,7 +37,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { MessageHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-model',
@@ -85,7 +85,10 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     private title: Title,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService) { }
+    private editingService: EditingService,
+    private messageHandler: MessageHandlerService,
+    private broadcastSvc: BroadcastService
+  ) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -289,6 +292,49 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.currentProfileDetails = null;
     }
+  }
+
+  formBeforeSave = () => {
+    this.editMode = false;
+    this.errorMessage = '';
+
+    const classifiers = [];
+    this.editableForm.classifiers.forEach(cls => {
+      classifiers.push(cls);
+    });
+    const aliases = [];
+    this.editableForm.aliases.forEach(alias => {
+      aliases.push(alias);
+    });
+
+    let resource =  {
+        id: this.dataModel.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.dataModel.type,
+        domainType: this.dataModel.domainType,
+        aliases,
+        classifiers
+      };
+
+      this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe(res => {
+        this.messageHandler.showSuccess('Data Model updated successfully.');
+        this.editableForm.visible = false;
+        this.dataModel.description = res.body.description;
+        this.editForm.forEach(x => x.edit({ editing: false }));
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Model.', error);
+      });
+  };
+
+
+  onCancelEdit() {
+    this.errorMessage = '';
+    this.editMode = false; // Use Input editor whe adding a new folder.
+
   }
 
   editProfile = (isNew: Boolean) => {

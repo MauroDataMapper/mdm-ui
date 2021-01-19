@@ -292,56 +292,62 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editProfile = (isNew: Boolean) => {
-    let prof = this.allUsedProfiles.find(
-      (x) => x.value === this.descriptionView
-    );
-
-    if (!prof) {
-      prof = this.allUnUsedProfiles.find(
+    if (this.descriptionView === 'default') {
+         this.editableForm.show();
+    } else {
+      let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
       );
-    }
 
-    const dialog = this.dialog.open(EditProfileModalComponent, {
-      data: {
-        profile: this.currentProfileDetails,
-        profileName: prof.display
-      },
-      disableClose: true,
-      panelClass: 'full-width-dialog'
-    });
-
-    dialog.afterClosed().subscribe((result) => {
-      if (result) {
-        const splitDescription = prof.value.split('/');
-        const data = JSON.stringify(result);
-        this.resourcesService.profile
-          .saveProfile(
-            'DataModel',
-            this.dataModel.id,
-            splitDescription[0],
-            splitDescription[1],
-            data
-          )
-          .subscribe(
-            () => {
-              this.loadProfile();
-              if (isNew) {
-                this.messageHandler.showSuccess('Profile Added');
-                this.DataModelUsedProfiles(this.dataModel.id);
-              } else {
-                this.messageHandler.showSuccess('Profile Edited Successfully');
-              }
-            },
-            (error) => {
-              this.messageHandler.showError('error saving', error.message);
-            }
-          );
-      } else if (isNew) {
-        this.descriptionView = 'default';
-        this.changeProfile();
+      if (!prof) {
+        prof = this.allUnUsedProfiles.find(
+          (x) => x.value === this.descriptionView
+        );
       }
-    });
+
+      const dialog = this.dialog.open(EditProfileModalComponent, {
+        data: {
+          profile: this.currentProfileDetails,
+          profileName: prof.display
+        },
+        disableClose: true,
+        panelClass: 'full-width-dialog'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result) {
+          const splitDescription = prof.value.split('/');
+          const data = JSON.stringify(result);
+          this.resourcesService.profile
+            .saveProfile(
+              'DataModel',
+              this.dataModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.loadProfile();
+                if (isNew) {
+                  this.messageHandler.showSuccess('Profile Added');
+                  this.DataModelUsedProfiles(this.dataModel.id);
+                } else {
+                  this.messageHandler.showSuccess(
+                    'Profile Edited Successfully'
+                  );
+                }
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        } else if (isNew) {
+          this.descriptionView = 'default';
+          this.changeProfile();
+        }
+      });
+    }
   };
 
   loadProfile() {

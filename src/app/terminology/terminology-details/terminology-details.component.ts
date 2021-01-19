@@ -30,6 +30,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -84,9 +85,8 @@ export class TerminologyDetailsComponent implements OnInit {
     private broadcastSvc: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
-    private renderer: Renderer2
-  ) {}
-
+    private renderer: Renderer2,
+    private editingService: EditingService) {}
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -107,6 +107,7 @@ export class TerminologyDetailsComponent implements OnInit {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -153,6 +154,8 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.mcTerminology.aliases = Object.assign({}, result.aliases || []);
         this.mcTerminology.editAliases = Object.assign({}, this.mcTerminology.aliases);
+
+        this.editingService.stop();
 
         this.messageHandler.showSuccess('Terminology updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -341,6 +344,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 }

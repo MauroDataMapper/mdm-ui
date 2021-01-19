@@ -15,20 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-type',
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent extends BaseComponent implements OnInit {
+export class DataTypeComponent extends BaseComponent implements OnInit, AfterViewInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+
   dataType: any;
   dataModelId: any;
   dataModel: any;
@@ -46,10 +50,10 @@ export class DataTypeComponent extends BaseComponent implements OnInit {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private resource: MdmResourcesService,
-    private sharedService: SharedService
-  ) {
+    private sharedService: SharedService,
+    private editingService: EditingService) {
     super();
-  }
+  }  
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -83,6 +87,10 @@ export class DataTypeComponent extends BaseComponent implements OnInit {
     }, () => {
       this.loadingData = false;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   tabSelected = itemsName => {

@@ -15,20 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-terminology',
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
-export class TerminologyComponent implements OnInit {
+export class TerminologyComponent implements OnInit, AfterViewInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+
   terminology: any;
   diagram: any;
   activeTab: any;
@@ -37,14 +41,14 @@ export class TerminologyComponent implements OnInit {
   pagination: McSelectPagination;
   showEditForm = false;
   editForm = null;
+
   constructor(
     private stateHandler: StateHandlerService,
     private stateService: StateService,
     private title: Title,
     private resources: MdmResourcesService,
-    private broadcastSvc: BroadcastService
-  ) { }
-
+    private broadcastSvc: BroadcastService,
+    private editingService: EditingService) { }  
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -63,6 +67,10 @@ export class TerminologyComponent implements OnInit {
       // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   getTabDetail = tabName => {

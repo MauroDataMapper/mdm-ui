@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -26,13 +26,14 @@ import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-class',
   templateUrl: './data-class.component.html',
   styleUrls: ['./data-class.component.sass']
 })
-export class DataClassComponent extends BaseComponent implements OnInit {
+export class DataClassComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassResult;
   showSecuritySection: boolean;
@@ -51,7 +52,8 @@ export class DataClassComponent extends BaseComponent implements OnInit {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private editingService: EditingService
   ) {
     super();
   }
@@ -85,6 +87,10 @@ export class DataClassComponent extends BaseComponent implements OnInit {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   getTabDetailByName(tabName) {

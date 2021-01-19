@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { ReferenceModelResult } from '@mdm/model/referenceModelModel';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -26,13 +26,14 @@ import { MessageService } from '@mdm/services/message.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-reference-data',
   templateUrl: './reference-data.component.html',
   styleUrls: ['./reference-data.component.scss']
 })
-export class ReferenceDataComponent implements OnInit, OnDestroy {
+export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   referenceModel: ReferenceModelResult;
   showSecuritySection: boolean;
@@ -48,7 +49,8 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
               private messageService: MessageService,
               private stateService: StateService,
               private stateHandler: StateHandlerService,
-              private title: Title) { }
+              private title: Title,
+              private editingService: EditingService) { }  
 
   ngOnInit(): void {
     // tslint:disable-next-line: deprecation
@@ -63,6 +65,10 @@ export class ReferenceDataComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line: deprecation
     this.referenceModelDetails(this.parentId);
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   referenceModelDetails(id: any) {

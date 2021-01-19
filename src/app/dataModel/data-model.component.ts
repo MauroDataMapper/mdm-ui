@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -25,13 +25,14 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { DataModelResult } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-model',
   templateUrl: './data-model.component.html',
   styleUrls: ['./data-model.component.scss']
 })
-export class DataModelComponent implements OnInit, OnDestroy {
+export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataModel: DataModelResult;
   showSecuritySection: boolean;
@@ -54,9 +55,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private title: Title
-  ) { }
-
+    private title: Title,
+    private editingService: EditingService) { }
+  
   ngOnInit() {
     // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
@@ -70,7 +71,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
     // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+    this.parentId = this.stateService.params.id;    
 
     this.title.setTitle('Data Model');
 
@@ -81,6 +82,10 @@ export class DataModelComponent implements OnInit, OnDestroy {
     });
     // this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
   }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  }  
 
   dataModelDetails(id: any) {
     let arr = [];
@@ -204,6 +209,7 @@ export class DataModelComponent implements OnInit, OnDestroy {
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
+
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
     this.activeTab = tab.index;
 

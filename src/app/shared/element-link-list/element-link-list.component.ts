@@ -28,6 +28,7 @@ import { MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -74,8 +75,8 @@ export class ElementLinkListComponent implements AfterViewInit {
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
     private elementSelector: ElementSelectorDialogueService,
-    private gridService: GridService
-  ) { }
+    private gridService: GridService,
+    private editingService: EditingService) { }
 
 
   ngAfterViewInit() {
@@ -201,15 +202,20 @@ export class ElementLinkListComponent implements AfterViewInit {
     };
 
     this.records = [].concat([newRecord]).concat(this.records);
-    return;
+    this.editingService.setFromCollection(this.records);
   };
 
-  onEdit = () => { };
+  onEdit = () => { 
+    this.editingService.setFromCollection(this.records);
+  };
+
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.table.renderRows();
     }
+
+    this.editingService.setFromCollection(this.records);
   };
 
   validate = (record) => {
@@ -254,6 +260,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         // record.edit.target = Object.assign({}, result.target);
         // record.linkType = result.linkType;
         record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
         this.table.renderRows();
 
         this.messageHandler.showSuccess('Link updated successfully.');
@@ -271,6 +278,9 @@ export class ElementLinkListComponent implements AfterViewInit {
       this.resources.catalogueItem.saveSemanticLinks(this.domainType, this.parent.id, body).subscribe(response => {
         record = Object.assign({}, response);
         record.status = 'source';
+
+        record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
 
         if (this.type === 'static') {
           this.records[index] = record;

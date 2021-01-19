@@ -36,6 +36,7 @@ import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-term-details',
@@ -88,8 +89,8 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     private title: Title,
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private broadcastSvc: BroadcastService
-  ) {
+    private broadcastSvc: BroadcastService,
+    private editingService: EditingService) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.TermDetails();
@@ -111,6 +112,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -227,6 +229,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
         this.afterSave(this.mcTerm);
       }
       this.messageHandler.showSuccess('Term updated successfully.');
+      this.editingService.stop();
       this.editableForm.visible = false;
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -237,6 +240,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   };
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 

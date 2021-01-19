@@ -24,6 +24,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -52,7 +53,7 @@ export class AnnotationListComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
-  ) { }
+    private editingService: EditingService) { }
 
 
   set content(content: MarkdownTextAreaComponent) {
@@ -115,12 +116,21 @@ export class AnnotationListComponent implements AfterViewInit {
       isNew: true
     };
     this.records = [].concat([newRecord]).concat(this.records);
+
+    this.editingService.setFromCollection(this.records);
   };
 
-  cancelEdit = (record, index) => {
+  cancelEdit(record, index) {
+    if (!this.editingService.confirmCancel()) {
+      return;
+    }
+
     if (record.isNew) {
       this.records.splice(index, 1);
+      this.records = [].concat(this.records);
     }
+
+    this.editingService.setFromCollection(this.records);
   };
 
   saveParent = (record) => {
@@ -129,6 +139,8 @@ export class AnnotationListComponent implements AfterViewInit {
       description: record.edit.description
     };
     this.resources.catalogueItem.saveAnnotations(this.domainType, this.parent.id, resource).subscribe(() => {
+      record.inEdit = false;
+      this.editingService.setFromCollection(this.records);
       this.messageHandler.showSuccess('Comment saved successfully.');
       this.reloadEvent.emit();
     }, error => {

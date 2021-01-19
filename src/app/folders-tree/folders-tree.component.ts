@@ -259,7 +259,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    }
 
    handleClick(fnode: FlatNode) {
-      if (this.nodeConfirmClickEvent) {
+      if (this.nodeConfirmClickEvent.observers.length > 0) {
          this.nodeConfirmClickEvent.emit(new NodeConfirmClickEvent(this.selectedNode, fnode, this.broadcastSvc));
          return;
       }

@@ -33,6 +33,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { SharedService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-attachment-list',
@@ -64,8 +65,8 @@ export class AttachmentListComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
-    private sharedService: SharedService
-  ) { }
+    private sharedService: SharedService,
+    private editingService: EditingService) { }
 
   ngAfterViewInit() {
     this.currentUser = this.securityHandler.getCurrentUser();
@@ -126,7 +127,10 @@ export class AttachmentListComponent implements AfterViewInit {
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
+      this.records = [].concat(this.records);
     }
+
+    this.editingService.setFromCollection(this.records);
   };
 
   getFile = (inputFileName) => {
@@ -160,10 +164,11 @@ export class AttachmentListComponent implements AfterViewInit {
       isNew: true,
     };
     this.records = [].concat([newRecord]).concat(this.records);
+    this.editingService.setFromCollection(this.records);
   };
 
 
-  save = (index) => {
+  save = (record, index) => {
     const fileName = `File${index}`;
     const file = this.getFile(fileName);
     const reader = new FileReader();
@@ -189,6 +194,10 @@ export class AttachmentListComponent implements AfterViewInit {
 
       this.resources.catalogueItem.saveReferenceFiles(this.domainType, this.parent.id, data).subscribe(() => {
         this.messageHandler.showSuccess('Attachment uploaded successfully.');
+
+        record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
+
         this.reloadEvent.emit();
       }, (error) => {
         this.messageHandler.showError('There was a problem saving the attachment.', error);

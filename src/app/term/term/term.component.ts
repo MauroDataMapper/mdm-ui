@@ -19,7 +19,8 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  AfterViewInit
 } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -32,13 +33,14 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-term',
   templateUrl: './term.component.html',
   styleUrls: ['./term.component.scss']
 })
-export class TermComponent implements OnInit {
+export class TermComponent implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology = null;
   term: TermResult;
@@ -54,6 +56,7 @@ export class TermComponent implements OnInit {
   hasResult = false;
   showEditForm = false;
   editForm = null;
+
   constructor(
     private resources: MdmResourcesService,
     private messageService: MessageService,
@@ -62,8 +65,8 @@ export class TermComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
-    private title: Title
-  ) { }
+    private title: Title,
+    private editingService: EditingService) { }  
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -83,6 +86,10 @@ export class TermComponent implements OnInit {
       this.showSearch = message;
     });
     this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   termDetails = id => {

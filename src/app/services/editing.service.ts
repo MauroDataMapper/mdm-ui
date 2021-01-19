@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
+import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 
 const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -27,6 +28,10 @@ const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.folder',
   'appContainer.mainApp.twoSidePanel.catalogue.ReferenceDataModel'
 ];
+
+export interface EditableObject {
+  inEdit?: boolean
+}
 
 /**
  * Service to manage global editing state of the application.
@@ -63,6 +68,41 @@ export class EditingService {
    * @param name The name of the route
    */
   isRouteEditable = (name: string) => editableRouteNames.indexOf(name) !== -1;
+
+  /**
+   * Mark the application as being in edit mode if any item in the given collection states it is being edited.
+   * 
+   * @param items Array of `EditableObject` items which should contain an `inEdit` property
+   */
+  setFromCollection(items: Array<EditableObject>) {
+    if (!items) {
+      return;
+    }
+
+    this._isEditing = items.some(item => item.inEdit);
+  }
+
+  /**
+   * Set a custom click event handler to a `MatTabGroup` to add confirmation to each tab click.
+   * 
+   * @param tabGroup The `MatTabGroup` to modify.
+   * 
+   * @description The `MatTabGroup` responds to click events when a tab is clicked but does not provide the ability
+   * to cancel that click event. For the case when something is still being edited, the cancellation of a tab click
+   * is important.
+   * 
+   * A custom click event handler is therefore attached to intercept the click event and first check if editing is in
+   * place. If not or the user allows the transition, the original tab click event will be carried out.
+   */
+  setTabGroupClickEvent(tabGroup: MatTabGroup) {
+    tabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, index: number) => {
+      if (this.confirmLeave()) {
+        // Manually stop "editing" so that other transition hooks don't trigger another confirmation message
+        this.stop();
+        MatTabGroup.prototype._handleClick.apply(tabGroup, [tab, tabHeader, index]);
+      }      
+    };
+  }
 
   /**
    * Confirm if it is safe to leave a view to transition to another.

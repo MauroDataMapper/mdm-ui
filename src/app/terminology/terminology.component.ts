@@ -167,6 +167,7 @@ export class TerminologyComponent implements OnInit, OnDestroy {
             );
         }
       });
+    } else {
       this.currentProfileDetails = null;
     }
   }

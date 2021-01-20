@@ -450,22 +450,24 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   }
 
   cancelEditClicked(record) {
-    if (!this.editingService.confirmCancel()) {
-      return;
-    }
-
-    if (record.isNew && this.allRecords) {
-      let i = this.allRecords.length - 1;
-      while (i >= 0) {
-        if (this.allRecords[i].id === record.id) {
-          this.allRecords.splice(i, 1);
-        }
-        i--;
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
       }
-      this.showRecords([].concat(this.allRecords));
-    }
-    record.inEdit = false;
-    this.editingService.setFromCollection(this.displayItems);
+
+      if (record.isNew && this.allRecords) {
+        let i = this.allRecords.length - 1;
+        while (i >= 0) {
+          if (this.allRecords[i].id === record.id) {
+            this.allRecords.splice(i, 1);
+          }
+          i--;
+        }
+        this.showRecords([].concat(this.allRecords));
+      }
+      record.inEdit = false;
+      this.editingService.setFromCollection(this.displayItems);
+    });    
   }
 
   saveClicked(record) {

@@ -160,16 +160,18 @@ export class GroupAccessNewComponent implements OnInit {
   }
 
   cancelEdit(record, index) {
-    if (!this.editingService.confirmCancel()) {
-      return;
-    }
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
 
-    if (record.isNew) {
-      this.groups.splice(index, 1);
-      this.refreshDataSource();
-    }
-
-    this.editingService.setFromCollection(this.groups);
+      if (record.isNew) {
+        this.groups.splice(index, 1);
+        this.refreshDataSource();
+      }
+  
+      this.editingService.setFromCollection(this.groups);
+    });    
   }
 
   refreshDataSource() {

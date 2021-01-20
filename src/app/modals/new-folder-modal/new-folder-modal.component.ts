@@ -86,9 +86,11 @@ export class NewFolderModalComponent implements OnInit {
   };
 
   cancel(event) {
-    if (this.editingService.confirmCancel()) {
-      this.dialogRef.close();      
-    }        
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (confirm) {
+        this.dialogRef.close();        
+      }
+    });    
   }
 
   confirm(event) {

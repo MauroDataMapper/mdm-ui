@@ -16,9 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
-import { dia } from 'jointjs';
+import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult, ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -47,7 +49,7 @@ export class EditingService {
 
   private _isEditing: boolean = false;
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
 
   /**
    * Mark the application as starting edits.
@@ -98,11 +100,13 @@ export class EditingService {
    */
   setTabGroupClickEvent(tabGroup: MatTabGroup) {
     tabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, index: number) => {
-      if (this.confirmLeave()) {
-        // Manually stop "editing" so that other transition hooks don't trigger another confirmation message
-        this.stop();
-        MatTabGroup.prototype._handleClick.apply(tabGroup, [tab, tabHeader, index]);
-      }      
+      this.confirmCancelAsync().subscribe(confirm => {
+        if (confirm) {
+          // Manually stop "editing" so that other transition hooks don't trigger another confirmation message
+          this.stop();
+          MatTabGroup.prototype._handleClick.apply(tabGroup, [tab, tabHeader, index]);
+        }
+      });    
     };
   }
 
@@ -126,22 +130,29 @@ export class EditingService {
     dialogRef.afterClosed().subscribe(() => this.stop());
 
     dialogRef.disableClose = true;
-    dialogRef.backdropClick().subscribe(() => {
-      if (this.confirmCancel()) {
-        dialogRef.close();
-      }
-    });
+    dialogRef
+      .backdropClick()
+      .pipe(
+        switchMap(() => this.confirmCancelAsync())
+      )
+      .subscribe(confirm => {
+        if (confirm) {
+          dialogRef.close();
+        }
+      });
   }
 
   /**
    * Confirm if it is safe to leave a view to transition to another.
+   * 
+   * @returns True if confirmation was provided.
+   * 
+   * **Note:** This confirmation uses the browser `alert()` synchronously. To use the Angular Material confirmation dialog,
+   * use `confirmLeaveAsync()`.
+   * 
+   * @see confirmLeaveAsync()
    */
-  confirmLeave = (): boolean => this.confirmStop('Are you sure you want to leave this view? Any unsaved changes will be lost.');
-
-  /**
-   * Confirm if it is safe to cancel a form edit view.
-   */
-  confirmCancel = (): boolean => this.confirmStop('Are you sure you want to cancel? Any unsaved changes will be lost.');    
+  confirmLeave = (): boolean => this.confirmStop('Are you sure you want to leave this view? Any unsaved changes will be lost.');  
 
   private confirmStop(message: string): boolean {
     if (!this._isEditing) {
@@ -149,5 +160,46 @@ export class EditingService {
     }
 
     return confirm(message);
+  }
+
+  /**
+   * Confirm if it is safe to leave a view to transition to another asynchronously.
+   * 
+   * @returns An `Observable<boolean>` to subscribe to. If the next value is true, then confirmation was provided.
+   * 
+   * This confirmation uses the Angular Material `MatDialog` which returns observables. If it is essential to have the
+   * confirmation run synchronously, use the `confirmLeave()` function instead.
+   * 
+   * @see confirmLeave()
+   */
+  confirmLeaveAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to leave this view? Any unsaved changes will be lost.');
+
+  /**
+   * Confirm if it is safe to leave a view to transition to another asynchronously.
+   * 
+   * @returns An `Observable<boolean>` to subscribe to. If the next value is true, then confirmation was provided.
+   * 
+   * This confirmation uses the Angular Material `MatDialog` which returns observables.
+   */
+  confirmCancelAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to cancel? Any unsaved changes will be lost.');
+
+  private confirmStopAsync(message: string): Observable<boolean> {
+    if (!this._isEditing) {
+      return of(true);
+    }
+
+    return this.dialog
+      .open<ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult>(ConfirmationModalComponent, {
+        data: {
+          title: 'Confirmation',
+          message,
+          okBtnTitle: 'Yes',
+          cancelBtnTitle: 'No'
+        },
+        disableClose: true
+      })
+      .afterClosed()
+      .pipe(
+        map(result => result.status === ConfirmationModalStatus.Ok));
   }
 }

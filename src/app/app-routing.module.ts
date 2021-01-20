@@ -296,15 +296,12 @@ function editingViewTransitionHooks(transitionService: TransitionService, editin
   /**
    * Check a state transition by checking if any unsaved edits still exist. If so, confirm with the user whether to continue.
    */
-  const canLeaveStateAction = (transition: Transition) => editingService?.confirmLeave() ?? true;
+  const canLeaveStateAction = (transition: Transition) => editingService.confirmLeaveAsync().toPromise();  
 
   /**
    * When entering each view, ensure that the global editing state of the app is reset.
    */
-  const onEnteringViewAction = (transition: Transition, state: StateDeclaration) => {
-    const editingService = transition.injector().get<EditingService>(EditingService);
-    editingService.stop();
-  };
+  const onEnteringViewAction = (transition: Transition, state: StateDeclaration) => editingService.stop();
 
   transitionService.onBefore(canLeaveStateCriteria, canLeaveStateAction);
   transitionService.onEnter({}, onEnteringViewAction);

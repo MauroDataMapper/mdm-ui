@@ -59,16 +59,18 @@ export class TableButtonsComponent {
   }
 
   editCancelled(record, index) {
-    if (!this.editingService.confirmCancel()) {
-      return;
-    }
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
 
-    record.inEdit = undefined;
-    record.edit = undefined;
+      record.inEdit = undefined;
+      record.edit = undefined;
 
-    if (this.cancelEdit) {
-      this.cancelEdit.emit([record, index]);
-    }
+      if (this.cancelEdit) {
+        this.cancelEdit.emit([record, index]);
+      }
+    });    
   }
 
   deleteClicked(record) {

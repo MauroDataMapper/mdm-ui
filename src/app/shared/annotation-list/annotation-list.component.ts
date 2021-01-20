@@ -121,16 +121,18 @@ export class AnnotationListComponent implements AfterViewInit {
   };
 
   cancelEdit(record, index) {
-    if (!this.editingService.confirmCancel()) {
-      return;
-    }
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
 
-    if (record.isNew) {
-      this.records.splice(index, 1);
-      this.records = [].concat(this.records);
-    }
-
-    this.editingService.setFromCollection(this.records);
+      if (record.isNew) {
+        this.records.splice(index, 1);
+        this.records = [].concat(this.records);
+      }
+  
+      this.editingService.setFromCollection(this.records);  
+    });    
   };
 
   saveParent = (record) => {

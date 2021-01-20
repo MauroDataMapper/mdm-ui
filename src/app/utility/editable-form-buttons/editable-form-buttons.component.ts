@@ -120,17 +120,19 @@ export class EditableFormButtonsComponent implements OnInit {
   }
   /// 	----------------------------------------
 
-  cancelEditClicked() {
-    if (!this.editingService.confirmCancel()) {
-      return;
-    }
+  cancelEditClicked() {    
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
 
-    if (this.editable) {
-      this.editable.cancel();
-    }
-    if (this.onCancelEdit) {
-      this.onCancelEdit();
-    }
+      if (this.editable) {
+        this.editable.cancel();
+      }
+      if (this.onCancelEdit) {
+        this.onCancelEdit();
+      }
+    });
   }
 
   saveClicked(): any {

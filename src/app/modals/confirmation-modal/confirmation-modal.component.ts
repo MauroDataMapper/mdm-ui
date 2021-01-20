@@ -18,6 +18,25 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+export interface ConfirmationModalConfig {
+  title?: string;
+  message: string;
+  okBtnTitle?: string;
+  cancelBtnTitle?: string;
+  cancelShown?: boolean;
+  btnType?: string;
+}
+
+export enum ConfirmationModalStatus {
+  Ok = 'ok',
+  Cancel = 'cancel',
+  Close = 'close'
+}
+
+export interface ConfirmationModalResult {
+  status: 'ok' | 'cancel' | 'close'
+}
+
 @Component({
   selector: 'mdm-confirmation-modal',
   templateUrl: './confirmation-modal.component.html',
@@ -26,16 +45,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ConfirmationModalComponent implements OnInit {
   title: string;
   message: string;
-  username: string;
-  password: string;
   okTitle: string;
   cancelTitle: string;
   cancelShown: boolean;
   btnType: string;
 
   constructor(
-    private dialogRef: MatDialogRef<ConfirmationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    private dialogRef: MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmationModalConfig
   ) { }
 
   ngOnInit() {
@@ -44,19 +61,12 @@ export class ConfirmationModalComponent implements OnInit {
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
     this.title = this.data.title;
     this.message = this.data.message;
-    this.password = '';
     this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
   }
 
-  ok() {
-    this.dialogRef.close({ status: 'ok' });
-  }
+  ok = () => this.dialogRef.close({ status: ConfirmationModalStatus.Ok });
 
-  cancel() {
-    this.dialogRef.close({ status: 'cancel' });
-  }
+  cancel = () => this.dialogRef.close({ status: ConfirmationModalStatus.Cancel });
 
-  close() {
-    this.dialogRef.close({ status: 'close' });
-  }
+  close = () => this.dialogRef.close({ status: ConfirmationModalStatus.Close });
 }

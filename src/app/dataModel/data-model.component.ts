@@ -307,7 +307,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       aliases.push(alias);
     });
 
-    let resource =  {
+    const resource =  {
         id: this.dataModel.id,
         label: this.editableForm.label,
         description: this.editableForm.description || '',

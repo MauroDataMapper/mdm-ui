@@ -1,5 +1,5 @@
 export class ProfileModalDataModel
 {
- public profile: Array<any>;
+ public profile: any;
  public profileName: String;
 }

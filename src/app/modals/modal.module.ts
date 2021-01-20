@@ -42,6 +42,7 @@ import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component
 import { SecurityModalComponent } from './security-modal/security-modal.component';
 import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
+import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-mod
     MatButtonModule,
     MatPasswordStrengthModule,
     MaterialModule,
-    SharedModule
+    SharedModule,
+    CatalogueModule
   ],
   declarations: [
     RegisterModalComponent,

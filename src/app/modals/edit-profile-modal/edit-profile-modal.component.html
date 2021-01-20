@@ -60,11 +60,12 @@ SPDX-License-Identifier: Apache-2.0
             <input
             *ngIf="
             field.dataType !== 'Folder' &&
-            field.dataType !== 'DataModel' &&
+            field.dataType !== 'datamodel' &&
             field.dataType != 'Text' &&
             field.dataType != 'date' &&
             field.dataType != 'datetime' &&
             field.dataType != 'boolean' &&
+            field.dataType != 'folder' &&
             field.dataType != 'Boolean'
           "
             matInput
@@ -107,6 +108,38 @@ SPDX-License-Identifier: Apache-2.0
               }"
               [required]="field.optional === false"
             />
+            <div  *ngIf="field.dataType === 'datamodel'">
+              <input type="text" matInput
+              matTooltip="{{ field.description }}"
+              type="text"
+              name="{{ field.fieldName }} + {{section.sectionName}}"
+              [(ngModel)]="field.currentValue"
+              value="{{ field.currentValue }}"
+              [ngClass]="{
+                'outlined-input form-control':
+                  formOptionsMap[field.dataType] != 'checkbox'
+              }"
+              [required]="field.optional === false">
+              <button mat-stroked-button type="button" color="primary" (click)="showAddElementToMarkdown(field)" style="top: 3px; margin-left: 4px;">
+                <i class="fas fa-plus"></i>
+                Add Data Model
+            </button>
+            </div>
+            <div  *ngIf="field.dataType === 'folder'">
+            <mdm-model-selector-tree [treeSearchDomainType]="'Folder'"
+            [justShowFolders]="true"
+            [ngModel]="field.currentValue"
+            name="Folder"
+            (ngModelChange)="field.currentValue = $event"
+            [accepts]="['Folder']"
+            ngDefaultControl
+            [showValidationError]="field.optional === false"
+            [isRequired]="field.optional == false"
+            [multiple]="true"
+            [hideSelectedElements]="true"
+            >
+</mdm-model-selector-tree>
+</div>
           </td>
         </tr>
       </tbody>

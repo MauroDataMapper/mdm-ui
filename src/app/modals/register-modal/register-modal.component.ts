@@ -21,6 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-register-modal',
@@ -37,7 +38,13 @@ export class RegisterModalComponent implements OnInit {
   confirmPassword: any;
   message: any;
 
-  constructor(public broadcastService: BroadcastService, public dialog: MatDialog, public dialogRef: MatDialogRef<RegisterModalComponent>, private securityHandler: SecurityHandlerService, private resources: MdmResourcesService) {}
+  constructor(
+    public broadcastService: BroadcastService, 
+    public dialog: MatDialog, 
+    public dialogRef: MatDialogRef<RegisterModalComponent>, 
+    private securityHandler: SecurityHandlerService, 
+    private resources: MdmResourcesService,
+    private editingService: EditingService) {}
 
   ngOnInit() {
     this.email = '';
@@ -99,7 +106,10 @@ export class RegisterModalComponent implements OnInit {
     this.dialogRef.close();
     this.broadcastService.broadcast('openLoginModalDialog');
   }
-  close = () => {
-    this.dialogRef.close();
+
+  close() {
+    if (this.editingService.confirmCancel()) {
+      this.dialogRef.close();      
+    }    
   };
 }

@@ -20,6 +20,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
+import { EditingService } from './editing.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,13 +30,18 @@ export class DataElementBulkEditDialogService {
   messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
 
-  constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(
+    public dialog: MatDialog, 
+    private editingService: EditingService) { }
 
   open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any) {
     const dg = this.dialog.open(BulkEditModalComponent, {
         data: { dataElementIdLst, parentDataModel, parentDataClass },
         panelClass: 'bulk-edit-modal'
       });
+
+    this.editingService.configureDialogRef(dg);
+
     return dg.afterClosed();
   }
 

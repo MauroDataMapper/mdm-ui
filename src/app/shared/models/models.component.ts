@@ -32,6 +32,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-models',
@@ -133,8 +134,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private broadcastSvc: BroadcastService,
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
-    public dialog: MatDialog
-  ) {
+    public dialog: MatDialog,
+    private editingService: EditingService) {
   }
 
   ngOnInit() {
@@ -302,6 +303,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
           message: 'Please enter the name of your Folder. <br> <strong>Note:</strong> This folder will be added at the top of the Tree'
         }
       });
+
+      this.editingService.configureDialogRef(dialog);
 
       dialog.afterClosed().subscribe(result => {
         if (result) {

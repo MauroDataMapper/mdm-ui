@@ -28,6 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -134,8 +135,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       protected stateHandler: StateHandlerService,
       protected messageHandler: MessageHandlerService,
       private broadcastSvc: BroadcastService,
-      public dialog: MatDialog
-   ) {
+      public dialog: MatDialog,
+      private editingService: EditingService) {
       this.loadFavourites();
       this.subscriptions.add(this.messages.on('favourites', () => {
          this.loadFavourites();
@@ -396,6 +397,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
                message: 'Please enter the name of your Folder.'
             }
          });
+
+         this.editingService.configureDialogRef(dialog);
 
          dialog.afterClosed().subscribe(result => {
             if (result) {

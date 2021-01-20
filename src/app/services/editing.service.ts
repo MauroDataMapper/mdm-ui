@@ -16,7 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
+import { dia } from 'jointjs';
 
 const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -87,7 +89,7 @@ export class EditingService {
    * 
    * @param tabGroup The `MatTabGroup` to modify.
    * 
-   * @description The `MatTabGroup` responds to click events when a tab is clicked but does not provide the ability
+   * The `MatTabGroup` responds to click events when a tab is clicked but does not provide the ability
    * to cancel that click event. For the case when something is still being edited, the cancellation of a tab click
    * is important.
    * 
@@ -102,6 +104,33 @@ export class EditingService {
         MatTabGroup.prototype._handleClick.apply(tabGroup, [tab, tabHeader, index]);
       }      
     };
+  }
+
+  /**
+   * Configure a `MatDialogRef` to handle editing state tracking and confirmations.
+   * 
+   * @param dialogRef The `MatDialogRef` to configure
+   * 
+   * Configuring the dialog will involve the following:
+   * 
+   * * Subscribing to the `afterOpened()` observable to track state after opening
+   * * Subscribing to the `afterClosed()` observable to track state after closing
+   * * Subscribing to the `backdropClick()` observable to confirm if the dialog should be closed
+   * 
+   * Use this function if a dialog contains any component that edit data to ensure that editing state is
+   * correctly maintained for the duration of the dialog.
+   */
+  configureDialogRef<T, R>(dialogRef: MatDialogRef<T, R>) {
+    dialogRef.afterOpened().subscribe(() => this.start());
+
+    dialogRef.afterClosed().subscribe(() => this.stop());
+
+    dialogRef.disableClose = true;
+    dialogRef.backdropClick().subscribe(() => {
+      if (this.confirmCancel()) {
+        dialogRef.close();
+      }
+    });
   }
 
   /**

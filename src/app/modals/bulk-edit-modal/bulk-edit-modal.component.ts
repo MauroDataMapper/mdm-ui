@@ -19,6 +19,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
 @Component({
@@ -48,8 +49,8 @@ export class BulkEditModalComponent implements AfterViewInit {
     public dialogRef: MatDialogRef<BulkEditModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService
-  ) { }
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService) { }
 
 
   ngAfterViewInit() {
@@ -85,11 +86,15 @@ export class BulkEditModalComponent implements AfterViewInit {
   }
 
   cancel = () => {
-    this.dialogRef.close();
+    if (this.editingService.confirmCancel()) {
+      this.dialogRef.close();
+    }
   };
 
   closeAndRefresh = () => {
-    this.dialogRef.close({ status: 'ok' });
+    if (this.editingService.confirmCancel()) {
+      this.dialogRef.close({ status: 'ok' });
+    }
   };
 
   saveChanges = () => {

@@ -26,6 +26,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '@mdm/modals/register-modal/register-modal.component';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-navbar',
@@ -46,7 +47,14 @@ export class NavbarComponent implements OnInit {
   isLoggedIn = this.securityHandler.isLoggedIn();
   subscription: Subscription;
 
-  constructor(private sharedService: SharedService, private dialog: MatDialog, private securityHandler: SecurityHandlerService, private stateHandler: StateHandlerService, private broadcastSvc: BroadcastService, private messageService: MessageService) { }
+  constructor(
+    private sharedService: SharedService, 
+    private dialog: MatDialog, 
+    private securityHandler: SecurityHandlerService, 
+    private stateHandler: StateHandlerService, 
+    private broadcastSvc: BroadcastService, 
+    private messageService: MessageService,
+    private editingService: EditingService) { }
 
   ngOnInit() {
     this.subscription = this.messageService.loggedInChanged$.subscribe(result => {
@@ -114,7 +122,11 @@ export class NavbarComponent implements OnInit {
     this.dialog.open(ForgotPasswordModalComponent, {});
   };
   register = () => {
-    this.dialog.open(RegisterModalComponent, { panelClass: 'register-modal' }).afterClosed().subscribe(user => {
+    const dialog = this.dialog.open(RegisterModalComponent, { panelClass: 'register-modal' });
+
+    this.editingService.configureDialogRef(dialog);
+
+    dialog.afterClosed().subscribe(user => {
       if (user) {
         if (user.needsToResetPassword) {
           this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.userArea.change-password' });

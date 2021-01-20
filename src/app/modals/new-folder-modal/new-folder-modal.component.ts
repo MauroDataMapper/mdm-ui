@@ -22,6 +22,7 @@ import { InputModalComponent } from '../input-modal/input-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService } from '@mdm/services/grid.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 
 @Component({
@@ -46,9 +47,8 @@ export class NewFolderModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private resourcesService: MdmResourcesService,
     private gridService: GridService,
-    private messageHandler: MessageHandlerService
-
-  ) {}
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService) {}
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
@@ -85,4 +85,13 @@ export class NewFolderModalComponent implements OnInit {
     }
   };
 
+  cancel(event) {
+    if (this.editingService.confirmCancel()) {
+      this.dialogRef.close();      
+    }        
+  }
+
+  confirm(event) {
+    this.dialogRef.close(this.inputValue);
+  }
 }

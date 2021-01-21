@@ -35,7 +35,6 @@ import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
-import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
@@ -253,7 +252,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
   askForPermanentDelete() {
     this.dialog
-      .openConfirmation({
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
@@ -261,31 +260,15 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Element?</p>
                     <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Element.</p>`
         }
-      })
-      .afterClosed()
-      .subscribe(result => {
-        if (result?.status !== ConfirmationModalStatus.Ok) {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
         }
-
-        this.dialog
-          .openConfirmation({
-            data: {
-              title: 'Confirm permanent deletion',
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-            }
-          })
-          .afterClosed()
-          .subscribe(result2 => {
-            if (result2?.status !== ConfirmationModalStatus.Ok) {
-              return;
-            }
-
-            this.delete();
-          })
-      });    
+      })
+      .subscribe(() => this.delete());          
   }
 
   delete() {

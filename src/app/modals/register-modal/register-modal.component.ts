@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ConfirmationModalStatus } from '../confirmation-modal/confirmation-modal.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { EditingService } from '@mdm/services/editing.service';
@@ -83,7 +82,7 @@ export class RegisterModalComponent implements OnInit {
 
   registerSuccess() {
     this.dialog
-      .openConfirmation({
+      .openConfirmationAsync({
         data: {
           title: 'Registration successful',
           message: `<p class="marginless">You have successfully requested access to the Mauro Data Mapper. </p>
@@ -94,12 +93,7 @@ export class RegisterModalComponent implements OnInit {
           btnType: 'warn',
         }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result?.status !== ConfirmationModalStatus.Ok) {
-          // reject("cancelled");
-        }
-      });
+      .subscribe(() => { /* TODO */ });          
   }
 
   login() {

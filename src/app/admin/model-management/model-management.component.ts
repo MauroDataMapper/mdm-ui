@@ -20,7 +20,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -145,44 +144,30 @@ export class ModelManagementComponent implements OnInit {
       message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this record?';
     }
 
+    let confirmTitle = 'Are you sure you want to delete these records?';
+    let confirmMessage = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
+                          <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
+    if (this.selectedElementsCount === 1) {
+      confirmTitle = 'Are you sure you want to delete this record?';
+    }
+
     this.dialog
-      .openConfirmation({
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Delete permanently',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message,
         }
+      }, {
+        data: {
+          title: confirmTitle,
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: confirmMessage,
+        }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status !== ConfirmationModalStatus.Ok) {
-          return;
-        }
-
-        let title = 'Are you sure you want to delete these records?';
-        message = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
-                   <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
-        if (this.selectedElementsCount === 1) {
-          title = 'Are you sure you want to delete this record?';
-        }
-
-        this.dialog
-          .openConfirmation({
-            data: {
-              title,
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message,
-            }
-          })
-          .afterClosed()
-          .subscribe(result2 => {
-            if (result2.status === ConfirmationModalStatus.Ok) {
-              this.delete(true);
-            }
-          });
-      });    
+      .subscribe(() => this.delete(true));      
   }
 
   delete(permanent?) {
@@ -235,7 +220,7 @@ export class ModelManagementComponent implements OnInit {
     }
 
     this.dialog
-      .openConfirmation({
+      .openConfirmationAsync({
         data: {
           title,
           okBtnTitle: 'Yes, delete',
@@ -243,12 +228,7 @@ export class ModelManagementComponent implements OnInit {
           message,
         }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status === ConfirmationModalStatus.Ok) {
-          this.delete(false);
-        }
-      });    
+      .subscribe(() => this.delete(false));
   }
 
   private removeChildren(node: any) {

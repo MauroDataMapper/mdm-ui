@@ -21,7 +21,6 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Title } from '@angular/platform-browser';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge } from 'rxjs';
@@ -116,7 +115,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
 
     this.dialog
-      .openConfirmation({
+      .openConfirmationAsync({
         data: {
           title: 'Approve user',
           okBtnTitle: 'Approve',
@@ -124,12 +123,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
           message
         }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status === ConfirmationModalStatus.Ok) {
-          this.approveUser(row);
-        }
-      });    
+      .subscribe(() => this.approveUser(row));
   };
 
   askForSoftRejection = (row: { firstName: string; lastName: string }) => {
@@ -138,7 +132,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
                       <br> Instead they will be <span class='warning'>disabled</span>`;
 
     this.dialog
-      .openConfirmation({
+      .openConfirmationAsync({
         data: {
           title: 'Reject user',
           okBtnTitle: 'Reject',
@@ -146,12 +140,7 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
           message
         }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status === ConfirmationModalStatus.Ok) {
-          this.rejectUser(row);
-        }
-      });    
+      .subscribe(() => this.rejectUser(row));
   };
 
   approveUser = (row) => {

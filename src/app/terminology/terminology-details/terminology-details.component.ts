@@ -25,7 +25,6 @@ import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
@@ -222,7 +221,7 @@ export class TerminologyDetailsComponent implements OnInit {
     }
 
     this.dialog
-      .openConfirmation({
+      .openConfirmationAsync({
         data: {
           title: 'Are you sure you want to delete this Terminology?',
           okBtnTitle: 'Yes, delete',
@@ -231,12 +230,7 @@ export class TerminologyDetailsComponent implements OnInit {
                     <p class="marginless">except Administrators.</p>`
         }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status === ConfirmationModalStatus.Ok) {
-          this.delete(false);
-        }
-      });    
+      .subscribe(() => this.delete(false));
   };
 
   askForPermanentDelete = () => {
@@ -245,36 +239,22 @@ export class TerminologyDetailsComponent implements OnInit {
     }
 
     this.dialog
-      .openConfirmation({
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
         }
-      })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status !== ConfirmationModalStatus.Ok) {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
         }
-
-        this.dialog
-          .openConfirmation({
-            data: {
-              title: 'Confirm permanent deletion',
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
-            }
-          })
-          .afterClosed()
-          .subscribe(result2 => {
-            if (result2.status === ConfirmationModalStatus.Ok) {
-              this.delete(true);
-            }
-          });
-      });    
+      })
+      .subscribe(() => this.delete(true));      
   };
 
   openEditClicked = formName => {

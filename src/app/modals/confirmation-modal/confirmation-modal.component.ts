@@ -29,12 +29,11 @@ export interface ConfirmationModalConfig {
 
 export enum ConfirmationModalStatus {
   Ok = 'ok',
-  Cancel = 'cancel',
-  Close = 'close'
+  Cancel = 'cancel'
 }
 
 export interface ConfirmationModalResult {
-  status: 'ok' | 'cancel' | 'close'
+  status: ConfirmationModalStatus
 }
 
 @Component({
@@ -67,6 +66,4 @@ export class ConfirmationModalComponent implements OnInit {
   ok = () => this.dialogRef.close({ status: ConfirmationModalStatus.Ok });
 
   cancel = () => this.dialogRef.close({ status: ConfirmationModalStatus.Cancel });
-
-  close = () => this.dialogRef.close({ status: ConfirmationModalStatus.Close });
 }

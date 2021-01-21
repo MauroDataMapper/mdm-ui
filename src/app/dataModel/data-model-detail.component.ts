@@ -37,7 +37,6 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { SharedService } from '../services/shared.service';
 import { DataModelResult } from '../model/dataModelModel';
-import { ConfirmationModalStatus } from '../modals/confirmation-modal/confirmation-modal.component';
 import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
@@ -257,7 +256,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     this.dialog
-      .openConfirmation({
+      .openConfirmationAsync({
         data: {
           title: 'Are you sure you want to delete this Data Model?',
           okBtnTitle: 'Yes, delete',
@@ -266,14 +265,11 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
                     <p class="marginless">except Administrators.</p>`
         }
       })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status === ConfirmationModalStatus.Ok) {
-          this.processing = true;
-          this.delete(false);
-          this.processing = false;
-        }
-      });      
+      .subscribe(() => {
+        this.processing = true;
+        this.delete(false);
+        this.processing = false;
+      });       
   }
 
   askForPermanentDelete(): any {
@@ -282,37 +278,23 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     this.dialog
-      .openConfirmation({
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
         }
-      })
-      .afterClosed()
-      .subscribe(result => {
-        if (result?.status !== ConfirmationModalStatus.Ok) {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
+                    <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
         }
-
-        this.dialog
-          .openConfirmation({
-            data: {
-              title: 'Confirm permanent deletion',
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
-                        <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
-            }
-          })
-          .afterClosed()
-          .subscribe(result2 => {
-            if (result2.status === ConfirmationModalStatus.Ok) {
-              this.delete(true);
-            }            
-          });        
-      });    
+      })
+      .subscribe(() => this.delete(true));      
   }
 
   formBeforeSave = async () => {

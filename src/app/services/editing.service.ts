@@ -199,7 +199,8 @@ export class EditingService {
         disableClose: true
       })
       .afterClosed()
-        .pipe(
-          map(result => result.status === ConfirmationModalStatus.Ok));    
+      .pipe(
+        map(result => result.status === ConfirmationModalStatus.Ok)
+      );
   }
 }

@@ -37,7 +37,6 @@ import { Subscription } from 'rxjs';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
 
@@ -205,7 +204,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     }
 
     this.dialog
-      .openConfirmation({
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
@@ -213,29 +212,15 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Classifier?</p>
                     <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> classifier.</p>`
         }
-      })
-      .afterClosed()
-      .subscribe(result => {
-        if (result.status !== ConfirmationModalStatus.Ok) {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
         }
-
-        this.dialog
-          .openConfirmation({
-            data: {
-              title: 'Confirm permanent deletion',
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-            }
-          })
-          .afterClosed()
-          .subscribe(result2 => {
-            if (result2.status === ConfirmationModalStatus.Ok) {
-              this.delete();
-            }
-          })
-      });    
+      })
+      .subscribe(() => this.delete());      
   }
 
   formBeforeSave = () => {

@@ -38,6 +38,7 @@ import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -177,19 +178,25 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.showDelete) {
       return;
     }
-    this.folderHandler.askForSoftDelete(this.result.id).then(() => {
-      this.stateHandler.reload();
-    });
+
+    this.folderHandler
+      .askForSoftDelete(this.result.id)
+      .subscribe(() => {
+        this.stateHandler.reload();
+      });
   }
 
   askForPermanentDelete(): any {
     if (!this.showPermDelete) {
       return;
     }
-    this.folderHandler.askForPermanentDelete(this.result.id).then(() => {
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-      this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-    });
+
+    this.folderHandler
+      .askForPermanentDelete(this.result.id)
+      .subscribe(() => {
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
+      });
   }
 
   formBeforeSave = () => {

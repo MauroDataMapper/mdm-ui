@@ -29,7 +29,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -246,20 +246,21 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
         }
       }
 
-      this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: 'Permanent deletion',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message
-        }
-      }).afterClosed().subscribe((result2) => {
-        if (result2 != null && result2.status === 'ok') {
-          this.delete();
-        } else {
-          return;
-        }
-      });
+      this.dialog
+        .openConfirmation({
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message
+          }
+        })
+        .afterClosed()
+        .subscribe(result2 => {
+          if (result2?.status === ConfirmationModalStatus.Ok) {
+            this.delete();
+          }
+        })      
     });
   };
 

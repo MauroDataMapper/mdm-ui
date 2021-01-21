@@ -35,7 +35,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { ReferenceModelResult } from '@mdm/model/referenceModelModel';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -225,8 +225,9 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       if (!this.showSoftDelete) {
          return;
       }
-      const promise = new Promise(() => {
-         const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+      this.dialog
+         .openConfirmation({
             data: {
                title: 'Are you sure you want to delete this Reference Data Model?',
                okBtnTitle: 'Yes, delete',
@@ -234,59 +235,54 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
                message: `<p class="marginless">This Reference Data Model will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
             }
-         });
-
-         dialog.afterClosed().subscribe(result => {
-            if (result != null && result.status === 'ok') {
+         })
+         .afterClosed()
+         .subscribe(result => {
+            if (result.status === ConfirmationModalStatus.Ok) {
                this.processing = true;
                this.delete(false);
                this.processing = false;
-            } else {
-               return;
             }
-         });
-      });
-      return promise;
+         });      
    }
 
    askForPermanentDelete(): any {
       if (!this.showPermDelete) {
          return;
       }
-      const promise = new Promise(() => {
-         const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+      this.dialog
+         .openConfirmation({
             data: {
                title: 'Permanent deletion',
                okBtnTitle: 'Yes, delete',
                btnType: 'warn',
                message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Reference Data Model?'
             }
-         });
-
-         dialog.afterClosed().subscribe(result => {
-            if (result?.status !== 'ok') {
+         })
+         .afterClosed()
+         .subscribe(result => {
+            if (result.status !== ConfirmationModalStatus.Ok) {
                return;
             }
-            const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-               data: {
-                  title: 'Confirm permanent deletion',
-                  okBtnTitle: 'Confirm deletion',
-                  btnType: 'warn',
-                  message: `<p class='marginless'><strong>Note: </strong>All its 'Types', 'Elements' and 'Data Values'
-                      <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
-               }
-            });
 
-            dialog2.afterClosed().subscribe(result2 => {
-               if (result != null && result2.status === 'ok') {
-                  this.delete(true);
-               } else {
-                  return;
-               }
-            });
-         });
-      });
-      return promise;
+            this.dialog
+               .openConfirmation({
+                  data: {
+                     title: 'Confirm permanent deletion',
+                     okBtnTitle: 'Confirm deletion',
+                     btnType: 'warn',
+                     message: `<p class='marginless'><strong>Note: </strong>All its 'Types', 'Elements' and 'Data Values'
+                         <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
+                  }
+               })
+               .afterClosed()
+               .subscribe(result2 => {
+                  if (result2.status === ConfirmationModalStatus.Ok) {
+                     this.delete(true);
+                  }
+               })
+         });      
    }
 
    formBeforeSave = () => {

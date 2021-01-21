@@ -21,7 +21,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Title } from '@angular/platform-browser';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge } from 'rxjs';
@@ -113,48 +113,45 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   };
 
   askForSoftApproval = (row: { firstName: string; lastName: string }) => {
-    const promise = new Promise(() => {
-      const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+    const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
+
+    this.dialog
+      .openConfirmation({
         data: {
           title: 'Approve user',
           okBtnTitle: 'Approve',
           btnType: 'accent',
           message
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result.status === ConfirmationModalStatus.Ok) {
+          this.approveUser(row);
         }
-        this.approveUser(row);
-      });
-    });
-    return promise;
+      });    
   };
+
   askForSoftRejection = (row: { firstName: string; lastName: string }) => {
-    const promise = new Promise(() => {
-      const message = `Are you sure you want to reject <em><strong>${row.firstName} ${row.lastName}</strong></em>?
+    const message = `Are you sure you want to reject <em><strong>${row.firstName} ${row.lastName}</strong></em>?
                       <br> <strong>Note:</strong> Rejected users will not be removed;
                       <br> Instead they will be <span class='warning'>disabled</span>`;
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmation({
         data: {
           title: 'Reject user',
           okBtnTitle: 'Reject',
           btnType: 'warn',
           message
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result.status === ConfirmationModalStatus.Ok) {
+          this.rejectUser(row);
         }
-        this.rejectUser(row);
-      });
-    });
-    return promise;
+      });    
   };
 
   approveUser = (row) => {

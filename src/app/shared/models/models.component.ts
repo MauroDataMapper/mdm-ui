@@ -407,12 +407,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
       return;
     }
     if (event.permanent) {
-      this.folderHandler.askForPermanentDelete(event.folder.id).then(() => {
+      this.folderHandler.askForPermanentDelete(event.folder.id).subscribe(() => {
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       });
     } else {
-      this.folderHandler.askForSoftDelete(event.folder.id).then(() => {
+      this.folderHandler.askForSoftDelete(event.folder.id).subscribe(() => {
         event.folder.deleted = true;
       });
     }

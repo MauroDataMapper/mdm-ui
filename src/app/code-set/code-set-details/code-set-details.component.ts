@@ -36,7 +36,7 @@ import { ElementSelectorDialogueService } from '@mdm/services/element-selector-d
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -241,73 +241,64 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     if (!this.showSoftDelete) {
       return;
     }
-    const promise = new Promise(() => {
 
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
-          data: {
-            title: 'Are you sure you want to delete this Code Set?',
-            okBtnTitle: 'Yes, delete',
-            btnType: 'warn',
-            message: `<p class='marginless'>This Code Set will be marked as deleted and will not be visible to users,</p>
-                      <p class='marginless'>except Administrators.</p>`
-          }
-        });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result != null && result.status === 'ok') {
+    this.dialog
+      .openConfirmation({
+        data: {
+          title: 'Are you sure you want to delete this Code Set?',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class='marginless'>This Code Set will be marked as deleted and will not be visible to users,</p>
+                    <p class='marginless'>except Administrators.</p>`
+        }
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result.status === ConfirmationModalStatus.Ok) {
           this.processing = true;
           this.delete(false);
           this.processing = false;
-        } else {
-          return;
         }
-      });
-    });
-    return promise;
+      });    
   }
 
-  askForPermanentDelete(): any {
+  askForPermanentDelete() {
     if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
-          data: {
-            title: 'Delete permanently',
-            okBtnTitle: 'Yes, delete',
-            btnType: 'warn',
-            message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
-          }
-        });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
+    this.dialog
+      .openConfirmation({
+        data: {
+          title: 'Delete permanently',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
+        }        
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result.status !== ConfirmationModalStatus.Ok) {
           return;
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: 'Are you sure you want to delete this Code Set?',
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
-          }
-        });
 
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result != null && result2.status === 'ok') {
-            this.delete(true);
-          } else {
-            return;
-          }
-        });
-      });
-    });
-
-    return promise;
+        this.dialog
+          .openConfirmation({
+            data: {
+              title: 'Are you sure you want to delete this Code Set?',
+              okBtnTitle: 'Confirm deletion',
+              btnType: 'warn',
+              message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
+            }
+          })
+          .afterClosed()
+          .subscribe(result2 => {
+            if (result2.status === ConfirmationModalStatus.Ok) {
+              this.delete(true);
+            }
+          })
+      });    
   }
-
 
   formBeforeSave = async () => {
     this.editMode = false;

@@ -33,7 +33,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
@@ -212,10 +212,10 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
-  askForPermanentDelete() {
 
-    const promise = new Promise((resolve) => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+  askForPermanentDelete() {
+    this.dialog
+      .openConfirmation({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
@@ -223,31 +223,31 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Class?</p>
                     <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Class.</p>`
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result?.status !== ConfirmationModalStatus.Ok) {
           return;
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: 'Confirm permanent deletion',
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-          }
-        });
 
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            return;
-          }
-          resolve(this.delete());
-        });
-      });
-    });
+        this.dialog
+          .openConfirmation({
+            data: {
+              title: 'Confirm permanent deletion',
+              okBtnTitle: 'Confirm deletion',
+              btnType: 'warn',
+              message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
+            }
+          })
+          .afterClosed()
+          .subscribe(result2 => {
+            if (result2?.status !== ConfirmationModalStatus.Ok) {
+              return;
+            }
 
-    return promise;
+            this.delete();
+          })
+      });    
   }
 
   delete() {

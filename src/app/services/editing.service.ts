@@ -189,7 +189,7 @@ export class EditingService {
     }
 
     return this.dialog
-      .open<ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult>(ConfirmationModalComponent, {
+      .openConfirmation({
         data: {
           title: 'Confirmation',
           message,
@@ -199,7 +199,7 @@ export class EditingService {
         disableClose: true
       })
       .afterClosed()
-      .pipe(
-        map(result => result.status === ConfirmationModalStatus.Ok));
+        .pipe(
+          map(result => result.status === ConfirmationModalStatus.Ok));    
   }
 }

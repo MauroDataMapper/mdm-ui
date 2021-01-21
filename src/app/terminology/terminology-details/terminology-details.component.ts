@@ -25,7 +25,7 @@ import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
@@ -220,7 +220,9 @@ export class TerminologyDetailsComponent implements OnInit {
     if (!this.showSoftDelete) {
       return;
     }
-    this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmation({
         data: {
           title: 'Are you sure you want to delete this Terminology?',
           okBtnTitle: 'Yes, delete',
@@ -228,45 +230,51 @@ export class TerminologyDetailsComponent implements OnInit {
           message: `<p class="marginless">This Terminology will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
         }
-    }).afterClosed().subscribe(result => {
-      if (result != null && result.status === 'ok') {
-        this.delete(false);
-      } else {
-        return;
-      }
-    });
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result.status === ConfirmationModalStatus.Ok) {
+          this.delete(false);
+        }
+      });    
   };
 
   askForPermanentDelete = () => {
     if (!this.showPermDelete) {
       return;
     }
-    this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmation({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
         }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result.status !== ConfirmationModalStatus.Ok) {
           return;
         }
-        this.dialog.open(ConfirmationModalComponent, {
+
+        this.dialog
+          .openConfirmation({
             data: {
               title: 'Confirm permanent deletion',
               okBtnTitle: 'Confirm deletion',
               btnType: 'warn',
               message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
             }
-          }).afterClosed().subscribe(result2 => {
-            if (result2 != null && result.status === 'ok') {
+          })
+          .afterClosed()
+          .subscribe(result2 => {
+            if (result2.status === ConfirmationModalStatus.Ok) {
               this.delete(true);
-            } else {
-              return;
             }
           });
-      });
+      });    
   };
 
   openEditClicked = formName => {

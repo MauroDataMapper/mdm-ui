@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult, ConfirmationModalStatus } from '../confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '../confirmation-modal/confirmation-modal.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { EditingService } from '@mdm/services/editing.service';
@@ -42,7 +42,6 @@ export class RegisterModalComponent implements OnInit {
     public broadcastService: BroadcastService, 
     public dialog: MatDialog, 
     public dialogRef: MatDialogRef<RegisterModalComponent>, 
-    private securityHandler: SecurityHandlerService, 
     private resources: MdmResourcesService,
     private editingService: EditingService) {}
 
@@ -83,23 +82,24 @@ export class RegisterModalComponent implements OnInit {
   }
 
   registerSuccess() {
-    const dialog = this.dialog.open<ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult>(ConfirmationModalComponent, {
-      data: {
-        title: 'Registration successful',
-        message: `<p class="marginless">You have successfully requested access to the Mauro Data Mapper. </p>
-                  <p class="marginless">You will receive an email (to ${this.email}) containing your login details </p>
-                  <p class="marginless">once an administrator has approved your request.</p>`,
-        cancelShown: false,
-        okBtnTitle: 'Close modal',
-        btnType: 'warn',
-      }
-    });
-
-    dialog.afterClosed().subscribe(result => {
-      if (result?.status !== ConfirmationModalStatus.Ok) {
-        // reject("cancelled");
-      }
-    });
+    this.dialog
+      .openConfirmation({
+        data: {
+          title: 'Registration successful',
+          message: `<p class="marginless">You have successfully requested access to the Mauro Data Mapper. </p>
+                    <p class="marginless">You will receive an email (to ${this.email}) containing your login details </p>
+                    <p class="marginless">once an administrator has approved your request.</p>`,
+          cancelShown: false,
+          okBtnTitle: 'Close modal',
+          btnType: 'warn',
+        }
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result?.status !== ConfirmationModalStatus.Ok) {
+          // reject("cancelled");
+        }
+      });
   }
 
   login() {

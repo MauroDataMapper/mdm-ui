@@ -39,6 +39,7 @@ import { SharedService } from './services/shared.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
+import './utility/extensions/mat-dialog.extensions'
 
 @NgModule({
   declarations: [AppComponent],

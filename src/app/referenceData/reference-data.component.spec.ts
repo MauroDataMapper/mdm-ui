@@ -31,6 +31,7 @@ import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import '@mdm/utility/extensions/mat-dialog.extensions'
 
 describe('ReferenceDataModelsComponent', () => {
   let component: ReferenceDataComponent;

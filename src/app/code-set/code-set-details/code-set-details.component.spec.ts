@@ -45,6 +45,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
+import '@mdm/utility/extensions/mat-dialog.extensions'
 
 describe('CodeSetDetailsComponent', () => {
   let component: CodeSetDetailsComponent;

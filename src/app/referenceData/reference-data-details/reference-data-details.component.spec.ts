@@ -28,6 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ElementAliasComponent } from '@mdm/utility/element-alias/element-alias.component';
 import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons/editable-form-buttons.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import '@mdm/utility/extensions/mat-dialog.extensions'
 
 describe('ReferenceDataModelDetailsComponent', () => {
   let component: ReferenceDataDetailsComponent;

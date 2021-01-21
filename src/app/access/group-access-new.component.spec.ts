@@ -28,6 +28,7 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { empty } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { EditingService } from '@mdm/services/editing.service';
 
 describe('GroupAccessNewComponent', () => {
   let component: GroupAccessNewComponent;
@@ -56,6 +57,11 @@ describe('GroupAccessNewComponent', () => {
               // tslint:disable-next-line: deprecation
               isAuthenticated: () => empty()
             }
+          }
+        },
+        {
+          provide: EditingService,
+          useValue: {            
           }
         }
       ],

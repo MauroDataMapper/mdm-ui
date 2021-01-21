@@ -71,6 +71,8 @@ import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.servic
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { empty } from 'rxjs';
+import { MatDialogModule } from '@angular/material/dialog';
+import '@mdm/utility/extensions/mat-dialog.extensions'
 
 
 describe('DataClassComponent', () => {
@@ -97,6 +99,7 @@ describe('DataClassComponent', () => {
         MatProgressBarModule,
         MatPaginatorModule,
         MatSortModule,
+        MatDialogModule,
         FoldersTreeModule,
         ChartsModule,
         FormsModule,

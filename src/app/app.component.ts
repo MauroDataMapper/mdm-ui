@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener('window:beforeunload', ['$event'])
-  onBeforeUnload(event: BeforeUnloadEvent) {
+  onBeforeUnload(event) {
     if (!this.editingService.confirmLeave()) {
       event.preventDefault();
       event.returnValue = 'Your data will be lost';

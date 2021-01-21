@@ -57,6 +57,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MoreDescriptionComponent } from '@mdm/shared/more-description/more-description.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
+import '@mdm/utility/extensions/mat-dialog.extensions'
 
 describe('ClassificationComponent', () => {
   let component: ClassificationComponent;

@@ -33,7 +33,7 @@ export enum ConfirmationModalStatus {
 }
 
 export interface ConfirmationModalResult {
-  status: ConfirmationModalStatus
+  status: ConfirmationModalStatus;
 }
 
 @Component({

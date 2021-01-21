@@ -48,11 +48,11 @@ export class NavbarComponent implements OnInit {
   subscription: Subscription;
 
   constructor(
-    private sharedService: SharedService, 
-    private dialog: MatDialog, 
-    private securityHandler: SecurityHandlerService, 
-    private stateHandler: StateHandlerService, 
-    private broadcastSvc: BroadcastService, 
+    private sharedService: SharedService,
+    private dialog: MatDialog,
+    private securityHandler: SecurityHandlerService,
+    private stateHandler: StateHandlerService,
+    private broadcastSvc: BroadcastService,
     private messageService: MessageService,
     private editingService: EditingService) { }
 

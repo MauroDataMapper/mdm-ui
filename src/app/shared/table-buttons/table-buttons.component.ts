@@ -70,7 +70,7 @@ export class TableButtonsComponent {
       if (this.cancelEdit) {
         this.cancelEdit.emit([record, index]);
       }
-    });    
+    });
   }
 
   deleteClicked(record) {

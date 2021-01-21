@@ -29,7 +29,7 @@ import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
-import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
@@ -263,7 +263,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           dataClassId: node.parentId || '',
           terminologyId: node.modelId || node.model
         }).then(
-          () => $event.setSelectedNode($event.next), 
+          () => $event.setSelectedNode($event.next),
           () => $event.setSelectedNode($event.current));
   }
 

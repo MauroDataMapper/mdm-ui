@@ -230,7 +230,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
         }
       })
-      .subscribe(() => this.delete());          
+      .subscribe(() => this.delete());
   }
 
   delete() {

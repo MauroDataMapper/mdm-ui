@@ -57,7 +57,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     private stateHandler: StateHandlerService,
     private title: Title,
     private editingService: EditingService) { }
-  
+
   ngOnInit() {
     // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
@@ -71,7 +71,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
     // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;    
+    this.parentId = this.stateService.params.id;
 
     this.title.setTitle('Data Model');
 
@@ -85,7 +85,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
-  }  
+  }
 
   dataModelDetails(id: any) {
     let arr = [];

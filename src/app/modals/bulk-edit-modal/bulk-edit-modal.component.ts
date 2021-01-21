@@ -88,7 +88,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   cancel = () => {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (confirm) {
-        this.dialogRef.close();        
+        this.dialogRef.close();
       }
     });
   };
@@ -96,7 +96,7 @@ export class BulkEditModalComponent implements AfterViewInit {
   closeAndRefresh = () => {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (confirm) {
-        this.dialogRef.close({ status: 'ok' });        
+        this.dialogRef.close({ status: 'ok' });
       }
     });
   };

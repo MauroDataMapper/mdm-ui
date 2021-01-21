@@ -56,7 +56,7 @@ import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/n
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
-import { StateDeclaration, StateObject, Transition, TransitionService, UIRouter } from '@uirouter/core';
+import { StateObject, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 
 
@@ -284,7 +284,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
 /**
  * Router transition hook to check editing state of app before switching views
  */
-function editingViewTransitionHooks(transitionService: TransitionService, editingService: EditingService) {
+const editingViewTransitionHooks = (transitionService: TransitionService, editingService: EditingService) => {
 
   /**
    * Check each state transition where the "from" view state is marked as editable.
@@ -296,25 +296,25 @@ function editingViewTransitionHooks(transitionService: TransitionService, editin
   /**
    * Check a state transition by checking if any unsaved edits still exist. If so, confirm with the user whether to continue.
    */
-  const canLeaveStateAction = (transition: Transition) => editingService.confirmLeaveAsync().toPromise();  
+  const canLeaveStateAction = () => editingService.confirmLeaveAsync().toPromise();
 
   /**
    * When entering each view, ensure that the global editing state of the app is reset.
    */
-  const onEnteringViewAction = (transition: Transition, state: StateDeclaration) => editingService.stop();
+  const onEnteringViewAction = () => editingService.stop();
 
   transitionService.onBefore(canLeaveStateCriteria, canLeaveStateAction);
   transitionService.onEnter({}, onEnteringViewAction);
-}
+};
 
-function routerConfigFn(router: UIRouter, injector: Injector) {
+const routerConfigFn = (router: UIRouter, injector: Injector) => {
   const transitionService = router.transitionService;
   const editingService = injector.get<EditingService>(EditingService);
   editingViewTransitionHooks(transitionService, editingService);
-}
+};
 
 @NgModule({
-  imports: [UIRouterModule.forChild({ 
+  imports: [UIRouterModule.forChild({
     states: pageRoutes.states,
     config: routerConfigFn
   })],

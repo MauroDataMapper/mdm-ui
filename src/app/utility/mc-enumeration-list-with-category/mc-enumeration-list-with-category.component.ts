@@ -467,7 +467,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       }
       record.inEdit = false;
       this.editingService.setFromCollection(this.displayItems);
-    });    
+    });
   }
 
   saveClicked(record) {

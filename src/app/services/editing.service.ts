@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
-import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult, ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -34,12 +34,12 @@ const editableRouteNames = [
 ];
 
 export interface EditableObject {
-  inEdit?: boolean
+  inEdit?: boolean;
 }
 
 /**
  * Service to manage global editing state of the application.
- * 
+ *
  * Used to track when editing is happening and to confirm whether it is safe to leave views/editors during edits.
  */
 @Injectable({
@@ -47,7 +47,7 @@ export interface EditableObject {
 })
 export class EditingService {
 
-  private _isEditing: boolean = false;
+  private _isEditing = false;
 
   constructor(private dialog: MatDialog) { }
 
@@ -68,14 +68,14 @@ export class EditingService {
 
   /**
    * Determine if a route is allowed to be edited and should be checked before transitioning out of the view.
-   * 
+   *
    * @param name The name of the route
    */
   isRouteEditable = (name: string) => editableRouteNames.indexOf(name) !== -1;
 
   /**
    * Mark the application as being in edit mode if any item in the given collection states it is being edited.
-   * 
+   *
    * @param items Array of `EditableObject` items which should contain an `inEdit` property
    */
   setFromCollection(items: Array<EditableObject>) {
@@ -88,13 +88,13 @@ export class EditingService {
 
   /**
    * Set a custom click event handler to a `MatTabGroup` to add confirmation to each tab click.
-   * 
+   *
    * @param tabGroup The `MatTabGroup` to modify.
-   * 
+   *
    * The `MatTabGroup` responds to click events when a tab is clicked but does not provide the ability
    * to cancel that click event. For the case when something is still being edited, the cancellation of a tab click
    * is important.
-   * 
+   *
    * A custom click event handler is therefore attached to intercept the click event and first check if editing is in
    * place. If not or the user allows the transition, the original tab click event will be carried out.
    */
@@ -106,21 +106,21 @@ export class EditingService {
           this.stop();
           MatTabGroup.prototype._handleClick.apply(tabGroup, [tab, tabHeader, index]);
         }
-      });    
+      });
     };
   }
 
   /**
    * Configure a `MatDialogRef` to handle editing state tracking and confirmations.
-   * 
+   *
    * @param dialogRef The `MatDialogRef` to configure
-   * 
+   *
    * Configuring the dialog will involve the following:
-   * 
+   *
    * * Subscribing to the `afterOpened()` observable to track state after opening
    * * Subscribing to the `afterClosed()` observable to track state after closing
    * * Subscribing to the `backdropClick()` observable to confirm if the dialog should be closed
-   * 
+   *
    * Use this function if a dialog contains any component that edit data to ensure that editing state is
    * correctly maintained for the duration of the dialog.
    */
@@ -144,15 +144,15 @@ export class EditingService {
 
   /**
    * Confirm if it is safe to leave a view to transition to another.
-   * 
+   *
    * @returns True if confirmation was provided.
-   * 
+   *
    * **Note:** This confirmation uses the browser `alert()` synchronously. To use the Angular Material confirmation dialog,
    * use `confirmLeaveAsync()`.
-   * 
+   *
    * @see confirmLeaveAsync()
    */
-  confirmLeave = (): boolean => this.confirmStop('Are you sure you want to leave this view? Any unsaved changes will be lost.');  
+  confirmLeave = (): boolean => this.confirmStop('Are you sure you want to leave this view? Any unsaved changes will be lost.');
 
   private confirmStop(message: string): boolean {
     if (!this._isEditing) {
@@ -164,21 +164,21 @@ export class EditingService {
 
   /**
    * Confirm if it is safe to leave a view to transition to another asynchronously.
-   * 
+   *
    * @returns An `Observable<boolean>` to subscribe to. If the next value is true, then confirmation was provided.
-   * 
+   *
    * This confirmation uses the Angular Material `MatDialog` which returns observables. If it is essential to have the
    * confirmation run synchronously, use the `confirmLeave()` function instead.
-   * 
+   *
    * @see confirmLeave()
    */
   confirmLeaveAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to leave this view? Any unsaved changes will be lost.');
 
   /**
    * Confirm if it is safe to leave a view to transition to another asynchronously.
-   * 
+   *
    * @returns An `Observable<boolean>` to subscribe to. If the next value is true, then confirmation was provided.
-   * 
+   *
    * This confirmation uses the Angular Material `MatDialog` which returns observables.
    */
   confirmCancelAsync = (): Observable<boolean> => this.confirmStopAsync('Are you sure you want to cancel? Any unsaved changes will be lost.');

@@ -66,7 +66,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { empty } from 'rxjs';
-import '@mdm/utility/extensions/mat-dialog.extensions'
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 
 describe('DataElementComponent', () => {

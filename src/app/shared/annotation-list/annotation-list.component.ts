@@ -130,9 +130,9 @@ export class AnnotationListComponent implements AfterViewInit {
         this.records.splice(index, 1);
         this.records = [].concat(this.records);
       }
-  
-      this.editingService.setFromCollection(this.records);  
-    });    
+
+      this.editingService.setFromCollection(this.records);
+    });
   };
 
   saveParent = (record) => {

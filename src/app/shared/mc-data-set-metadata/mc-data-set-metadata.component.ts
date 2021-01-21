@@ -275,7 +275,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       isNew: true,
     };
     this.records = [].concat([newRecord]).concat(this.records);
-    
+
     this.editingService.setFromCollection(this.records);
   }
 
@@ -320,7 +320,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         record.value = resource.value;
         record.inEdit = false;
         this.editingService.setFromCollection(this.records);
-        this.messageHandler.showSuccess('Property updated successfully.');        
+        this.messageHandler.showSuccess('Property updated successfully.');
       }, (error) => {
           // duplicate namespace + key
           if (error.status === 422) {
@@ -359,7 +359,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         }
         this.messageHandler.showError('There was a problem saving property.', error);
       });
-    }    
+    }
   }
 
   delete(record, $index) {

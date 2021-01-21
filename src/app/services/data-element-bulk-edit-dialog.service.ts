@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
@@ -31,7 +30,7 @@ export class DataElementBulkEditDialogService {
   currentMessage = this.messageSource.asObservable();
 
   constructor(
-    public dialog: MatDialog, 
+    public dialog: MatDialog,
     private editingService: EditingService) { }
 
   open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any) {

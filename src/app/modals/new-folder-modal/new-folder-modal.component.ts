@@ -85,15 +85,15 @@ export class NewFolderModalComponent implements OnInit {
     }
   };
 
-  cancel(event) {
+  cancel() {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (confirm) {
-        this.dialogRef.close();        
+        this.dialogRef.close();
       }
-    });    
+    });
   }
 
-  confirm(event) {
+  confirm() {
     this.dialogRef.close(this.inputValue);
   }
 }

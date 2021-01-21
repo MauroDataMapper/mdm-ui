@@ -66,7 +66,7 @@ export class TermComponent implements OnInit, AfterViewInit {
     private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
-    private editingService: EditingService) { }  
+    private editingService: EditingService) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation

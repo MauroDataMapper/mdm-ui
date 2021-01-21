@@ -220,7 +220,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
           message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
         }
       })
-      .subscribe(() => this.delete());      
+      .subscribe(() => this.delete());
   }
 
   formBeforeSave = () => {

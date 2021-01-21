@@ -145,7 +145,7 @@ export class ModelManagementComponent implements OnInit {
     }
 
     let confirmTitle = 'Are you sure you want to delete these records?';
-    let confirmMessage = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
+    const confirmMessage = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
                           <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
     if (this.selectedElementsCount === 1) {
       confirmTitle = 'Are you sure you want to delete this record?';
@@ -167,7 +167,7 @@ export class ModelManagementComponent implements OnInit {
           message: confirmMessage,
         }
       })
-      .subscribe(() => this.delete(true));      
+      .subscribe(() => this.delete(true));
   }
 
   delete(permanent?) {

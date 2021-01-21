@@ -169,9 +169,9 @@ export class GroupAccessNewComponent implements OnInit {
         this.groups.splice(index, 1);
         this.refreshDataSource();
       }
-  
+
       this.editingService.setFromCollection(this.groups);
-    });    
+    });
   }
 
   refreshDataSource() {

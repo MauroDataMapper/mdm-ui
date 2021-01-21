@@ -48,7 +48,7 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
     private title: Title,
     private resources: MdmResourcesService,
     private broadcastSvc: BroadcastService,
-    private editingService: EditingService) { }  
+    private editingService: EditingService) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation

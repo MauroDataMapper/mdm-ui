@@ -54,7 +54,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private editingService: EditingService) { }  
+    private editingService: EditingService) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation

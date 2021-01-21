@@ -239,7 +239,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
             this.processing = true;
             this.delete(false);
             this.processing = false;
-         });      
+         });
    }
 
    askForPermanentDelete(): any {
@@ -264,7 +264,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
                    <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
             }
          })
-         .subscribe(() => this.delete(true));         
+         .subscribe(() => this.delete(true));
    }
 
    formBeforeSave = () => {

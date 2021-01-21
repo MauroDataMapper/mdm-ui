@@ -255,7 +255,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
         this.processing = true;
         this.delete(false);
         this.processing = false;
-      });    
+      });
   }
 
   askForPermanentDelete() {
@@ -270,7 +270,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
-        }        
+        }
       }, {
         data: {
           title: 'Are you sure you want to delete this Code Set?',
@@ -279,7 +279,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
           message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
         }
       })
-      .subscribe(() => this.delete(true));      
+      .subscribe(() => this.delete(true));
   }
 
   formBeforeSave = async () => {

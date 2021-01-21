@@ -254,7 +254,7 @@ export class TerminologyDetailsComponent implements OnInit {
           message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
         }
       })
-      .subscribe(() => this.delete(true));      
+      .subscribe(() => this.delete(true));
   };
 
   openEditClicked = formName => {

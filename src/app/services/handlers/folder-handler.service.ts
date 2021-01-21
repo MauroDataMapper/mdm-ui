@@ -31,7 +31,7 @@ export class FolderHandlerService {
     private messageHandler: MessageHandlerService,
     private dialog: MatDialog) {}
 
-  askForSoftDelete(id: string): Observable<void> {  
+  askForSoftDelete(id: string): Observable<void> {
     return this.dialog.openConfirmationAsync({
       data: {
         title: 'Are you sure you want to delete this Folder?',
@@ -43,7 +43,7 @@ export class FolderHandlerService {
     })
     .pipe(
       mergeMap(() => this.delete(id, false))
-    );      
+    );
   }
 
   askForPermanentDelete(id: string): Observable<void> {
@@ -63,8 +63,8 @@ export class FolderHandlerService {
       }
     })
     .pipe(
-      mergeMap(() => this.delete(id, true))      
-    );    
+      mergeMap(() => this.delete(id, true))
+    );
   }
 
   delete(id: string, permanent = false): Observable<void> {
@@ -74,8 +74,8 @@ export class FolderHandlerService {
         map(() => this.messageHandler.showSuccess('Successfully Deleted Folder')),
         catchError(error => {
           this.messageHandler.showError('There was a problem deleting the Folder.', error);
-          return of()
+          return of();
         })
-      );    
+      );
   }
 }

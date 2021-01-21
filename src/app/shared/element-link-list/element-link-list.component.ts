@@ -205,7 +205,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.editingService.setFromCollection(this.records);
   };
 
-  onEdit = () => { 
+  onEdit = () => {
     this.editingService.setFromCollection(this.records);
   };
 

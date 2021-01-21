@@ -53,7 +53,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     private sharedService: SharedService,
     private editingService: EditingService) {
     super();
-  }  
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation

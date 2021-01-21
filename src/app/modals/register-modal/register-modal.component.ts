@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -38,9 +37,9 @@ export class RegisterModalComponent implements OnInit {
   message: any;
 
   constructor(
-    public broadcastService: BroadcastService, 
-    public dialog: MatDialog, 
-    public dialogRef: MatDialogRef<RegisterModalComponent>, 
+    public broadcastService: BroadcastService,
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<RegisterModalComponent>,
     private resources: MdmResourcesService,
     private editingService: EditingService) {}
 
@@ -93,7 +92,7 @@ export class RegisterModalComponent implements OnInit {
           btnType: 'warn',
         }
       })
-      .subscribe(() => { /* TODO */ });          
+      .subscribe(() => { /* TODO */ });
   }
 
   login() {

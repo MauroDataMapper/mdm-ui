@@ -557,89 +557,88 @@ export class ModelComparisonComponent implements OnInit {
                 }
 
                 // Run for Element
-                // tslint:disable-next-line: no-shadowed-variable
-                el.diffs.forEach(diff => {
-                  if (diff.label) {
+                el.diffs.forEach(diff2 => {
+                  if (diff2.label) {
                     this.findDiffProps(
                       'label',
                       el.leftId,
                       el.rightId,
-                      diff.label,
+                      diff2.label,
                       diffMap
                     );
                   }
-                  if (diff.description) {
+                  if (diff2.description) {
                     this.findDiffProps(
                       'description',
                       el.leftId,
                       el.rightId,
-                      diff.description,
+                      diff2.description,
                       diffMap
                     );
                   }
-                  if (diff.author) {
+                  if (diff2.author) {
                     this.findDiffProps(
                       'author',
                       el.leftId,
                       el.rightId,
-                      diff.author,
+                      diff2.author,
                       diffMap
                     );
                   }
-                  if (diff.organisation) {
+                  if (diff2.organisation) {
                     this.findDiffProps(
                       'organisation',
                       el.leftId,
                       el.rightId,
-                      diff.organisation,
+                      diff2.organisation,
                       diffMap
                     );
                   }
-                  if (diff.minMultiplicity) {
+                  if (diff2.minMultiplicity) {
                     this.findDiffProps(
                       'minMultiplicity',
                       el.leftId,
                       el.rightId,
-                      diff.minMultiplicity,
+                      diff2.minMultiplicity,
                       diffMap
                     );
                   }
-                  if (diff.maxMultiplicity) {
+                  if (diff2.maxMultiplicity) {
                     this.findDiffProps(
                       'maxMultiplicity',
                       el.leftId,
                       el.rightId,
-                      diff.maxMultiplicity,
+                      diff2.maxMultiplicity,
                       diffMap
                     );
                   }
 
-                  if (diff.metadata) {
+                  if (diff2.metadata) {
                     this.findDiffMetadata(
                       el.leftId,
                       el.rightId,
-                      diff.metadata,
+                      diff2.metadata,
                       diffMap
                     );
                   }
 
-                  if (diffElement === 'dataTypes' && diff.enumerationValues) {
+                  if (diffElement === 'dataTypes' && diff2.enumerationValues) {
                     this.findDiffEnumerationValues(
                       el.leftId,
                       el.rightId,
-                      diff.enumerationValues,
+                      diff2.enumerationValues,
                       diffMap
                     );
                   }
 
                   if (
                     diffElement === 'dataElements' &&
-                    diff['dataType.label']
+                    diff2['dataType.label']
                   ) {
                     this.findDiffDataTypeChanges(
                       el.leftId,
                       el.rightId,
-                      diff['dataType.label'],
+                      diff2['dataType.label'],
                       diffMap
                     );
                   }

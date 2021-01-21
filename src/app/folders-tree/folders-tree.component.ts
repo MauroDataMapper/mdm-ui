@@ -39,7 +39,7 @@ export class NodeConfirmClickEvent {
       public current: FlatNode,
       public next: FlatNode,
       private broadcastSvc: BroadcastService)
-   {      
+   {
    }
 
    setSelectedNode = (node: FlatNode) => this.broadcastSvc.broadcast('$folderTreeNodeSelection', node);

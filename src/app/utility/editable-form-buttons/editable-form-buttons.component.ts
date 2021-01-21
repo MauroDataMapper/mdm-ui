@@ -120,7 +120,7 @@ export class EditableFormButtonsComponent implements OnInit {
   }
   /// 	----------------------------------------
 
-  cancelEditClicked() {    
+  cancelEditClicked() {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (!confirm) {
         return;

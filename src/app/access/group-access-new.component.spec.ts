@@ -61,7 +61,7 @@ describe('GroupAccessNewComponent', () => {
         },
         {
           provide: EditingService,
-          useValue: {            
+          useValue: {
           }
         }
       ],

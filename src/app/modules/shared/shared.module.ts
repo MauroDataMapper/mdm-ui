@@ -39,6 +39,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component'
     MdmPaginatorComponent,
     SafePipe,
     ShareWithComponent,
-    GroupAccessNewComponent
+    GroupAccessNewComponent,
+    ProfileDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -90,7 +92,8 @@ import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component'
     CodemirrorModule,
     SafePipe,
     ShareWithComponent,
-    GroupAccessNewComponent
+    GroupAccessNewComponent,
+    ProfileDetailsComponent
   ]
 })
 export class SharedModule {}

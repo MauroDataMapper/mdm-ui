@@ -21,7 +21,6 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="showSearch" style="clear: both">
   <div class="mdm--shadow-block">
     <div class="panel">
-       
       <div class="panel-heading">
         <div class="heading-container">
           <h4 class="marginless">Search</h4>
@@ -173,33 +172,9 @@ SPDX-License-Identifier: Apache-2.0
           </div>
         </div>
 
-        <table *ngIf="this.currentProfileDetails" class="table table-bordered">
-          <tbody *ngFor="let section of this.currentProfileDetails?.sections">
-            <tr>
-              <td [attr.colspan]="2" class="detailsRowHeader">
-                {{ section.sectionName }}
-              </td>
-            </tr>
-            <tr *ngFor="let field of section.fields">
-              <td class="detailsRowHeader">
-                {{ field.fieldName }}
-                <i
-                  style="float: right"
-                  matTooltip="{{ field.description }}"
-                  class="fas fa-info"
-                ></i>
-              </td>
-              <td class="elementDetailDescription">
-                <mdm-more-description
-                  [description]="field.currentValue"
-                  [length]="100"
-                ></mdm-more-description>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <mdm-profile-details *ngIf="this.currentProfileDetails" [currentProfileDetails]="this.currentProfileDetails"></mdm-profile-details>
 
-        <div class="full-width" >
+        <div class="full-width">
           <mdm-data-set-metadata
             *ngIf="this.descriptionView === 'other'"
             [parent]="dataModel"
@@ -208,60 +183,65 @@ SPDX-License-Identifier: Apache-2.0
             [isProfileView]="true"
           ></mdm-data-set-metadata>
         </div>
-        <form editable-form name="form" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
-        <table
-          *ngIf="this.descriptionView === 'default'"
-          class="table table-bordered mdm--table-fixed"
+        <form
+          editable-form
+          name="form"
+          (ngSubmit)="formBeforeSave()"
+          disable-submit-on-enter
         >
-          <tbody>
-            <tr>
-              <td class="detailsRowHeader">Aliases</td>
-              <td>
-                <mdm-element-alias
-                  [readOnly]="true"
-                  [inEditMode]="editableForm?.visible"
-                  [aliases]="dataModel?.aliases"
-                  [editableForm]="editableForm"
-                  [property]="'aliases'"
-                >
-                </mdm-element-alias>
-              </td>
-            </tr>
-            <tr>
-              <td class="detailsRowHeader">Description</td>
-              <td class="elementDetailDescription">
-                <div *ngIf="dataModel">
-                  <mdm-markdown-text-area
+          <table
+            *ngIf="this.descriptionView === 'default'"
+            class="table table-bordered mdm--table-fixed"
+          >
+            <tbody>
+              <tr>
+                <td class="detailsRowHeader">Aliases</td>
+                <td>
+                  <mdm-element-alias
+                    [readOnly]="true"
+                    [inEditMode]="editableForm?.visible"
+                    [aliases]="dataModel?.aliases"
+                    [editableForm]="editableForm"
+                    [property]="'aliases'"
+                  >
+                  </mdm-element-alias>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Description</td>
+                <td class="elementDetailDescription">
+                  <div *ngIf="dataModel">
+                    <mdm-markdown-text-area
+                      [editableForm]="editableForm"
+                      [element]="dataModel"
+                      [property]="'description'"
+                    ></mdm-markdown-text-area>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Classifications</td>
+                <td *ngIf="dataModel">
+                  <mdm-element-classifications
+                    [readOnly]="true"
+                    [classifications]="dataModel.classifiers"
                     [editableForm]="editableForm"
                     [element]="dataModel"
-                    [property]="'description'"
-                  ></mdm-markdown-text-area>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="detailsRowHeader">Classifications</td>
-              <td *ngIf="dataModel">
-                <mdm-element-classifications
-                  [readOnly]="true"
-                  [classifications]="dataModel.classifiers"
-                  [editableForm]="editableForm"
-                  [element]="dataModel"
-                  [property]="'classifiers'"
-                ></mdm-element-classifications>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <mdm-editable-form-buttons
-        *ngIf="editableForm"
-        [hidden]="!editableForm.visible"
-        [onCancelEdit]="onCancelEdit"
-        [editable]="editableForm"
-        [textLocation]="'left'"
-        [hideDelete]="true"
-        [hideCancel]="false"
-      ></mdm-editable-form-buttons>
+                    [property]="'classifiers'"
+                  ></mdm-element-classifications>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <mdm-editable-form-buttons
+            *ngIf="editableForm"
+            [hidden]="!editableForm.visible"
+            [onCancelEdit]="onCancelEdit"
+            [editable]="editableForm"
+            [textLocation]="'left'"
+            [hideDelete]="true"
+            [hideCancel]="false"
+          ></mdm-editable-form-buttons>
         </form>
       </div>
     </ng-template>

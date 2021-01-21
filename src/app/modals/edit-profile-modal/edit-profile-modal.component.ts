@@ -42,7 +42,13 @@ export class EditProfileModalComponent implements OnInit {
       section.fields.forEach(field => {
         if(field.dataType === 'folder')
         {
-          field.currentValue = JSON.parse(field.currentValue);
+          if(field.currentValue === '[]' || field.currentValue === '""' || field.currentValue === '')
+          {
+            field.currentValue = null;
+          }
+          else{
+            field.currentValue = JSON.parse(field.currentValue);
+          }
         }
       });
     });
@@ -55,16 +61,18 @@ export class EditProfileModalComponent implements OnInit {
   save() {
     // Save Changes
 
-    this.profileData.sections.forEach(section => {
+    const returnData =JSON.parse(JSON.stringify(this.profileData));
+
+    returnData.sections.forEach(section => {
       section.fields.forEach(field => {
-        if(field.dataType === 'folder')
+        if(field.dataType === 'folder'  && field.currentValue && field.currentValue.length > 0)
         {
-          field.currentValue = JSON.stringify(field.currentValue);
+         field.currentValue = JSON.stringify(field.currentValue);
         }
       });
     });
 
-    this.dialogRef.close(this.profileData);
+    this.dialogRef.close(returnData);
   }
 
   onCancel() {

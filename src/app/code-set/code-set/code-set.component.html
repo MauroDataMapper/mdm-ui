@@ -66,22 +66,8 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                 </div>
                 
-                <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
-                    <tbody *ngFor="let section of this.currentProfileDetails?.sections">
-                     <tr>
-                       <td [attr.colspan]="2" class="detailsRowHeader">
-                         {{section.sectionName}}
-                       </td>
-                     </tr>
-                     <tr *ngFor="let field of section.fields">
-                       <td class="detailsRowHeader">{{field.fieldName}}</td>
-                       <td class="elementDetailDescription">
-                        <mdm-more-description [description]="field.currentValue" [length]="100"></mdm-more-description>
-                      </td>
-                     </tr>
-        
-                    </tbody>
-                </table>
+                <mdm-profile-details *ngIf="this.currentProfileDetails" [currentProfileDetails]="this.currentProfileDetails"></mdm-profile-details>
+                
                 <div class="full-width">
                     <mdm-data-set-metadata *ngIf="this.descriptionView === 'other'" [parent]="codeSetModel" [type]="'dynamic'" [domainType]="'codeSets'" [isProfileView]="true"></mdm-data-set-metadata>
                   </div>

@@ -44,7 +44,7 @@ SPDX-License-Identifier: Apache-2.0
                     </mat-form-field>
                 </div>
                 <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                    <button mat-flat-button color="primary" type="button" class="mr-1">
+                    <button mat-flat-button color="primary" type="button" class="mr-1"   (click)="editProfile(false)">
                       <i class="fas fa-pencil-alt"></i>
                        Edit
                     </button>
@@ -52,24 +52,8 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </div>
         
-        <table *ngIf="this.currentProfileDetails" class="table table-bordered mdm--table-fixed">
-            <tbody *ngFor="let section of this.currentProfileDetails">
-             <tr>
-               <td [attr.colspan]="2" class="detailsRowHeader">
-                 {{section.sectionName}}
-               </td>
-             </tr>
-             <tr *ngFor="let field of section.fields">
-               <td class="detailsRowHeader">{{field.fieldName}}</td>
-               <td class="elementDetailDescription">referenceModel
-                   <mdm-markdown-text-area [editableForm]="editableForm" [element]="referenceModel" [property]="'description'">
-                     {{field.currentValue}}
-                   </mdm-markdown-text-area>
-               </td>
-             </tr>
+        <mdm-profile-details *ngIf="this.currentProfileDetails" [currentProfileDetails]="this.currentProfileDetails"></mdm-profile-details>
 
-            </tbody>
-        </table>
         <div class="full-width">
             <mdm-data-set-metadata *ngIf="this.descriptionView === 'other'" [parent]="referenceModel" [type]="'dynamic'" [domainType]="'referenceModel'" [isProfileView]="true"></mdm-data-set-metadata>
           </div>

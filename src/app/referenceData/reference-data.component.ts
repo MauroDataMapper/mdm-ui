@@ -28,6 +28,10 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { MessageHandlerService } from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -51,12 +55,15 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
   editableForm: EditableDataModel;
   errorMessage = '';
   allUsedProfiles: any[] = [];
+  allUnUsedProfiles: any[] = [];
 
   constructor(private resourcesService: MdmResourcesService,
               private sharedService: SharedService,
               private messageService: MessageService,
               private stateService: StateService,
               private stateHandler: StateHandlerService,
+              private dialog: MatDialog,
+              private messageHandler: MessageHandlerService,
               private title: Title,
               private editingService: EditingService) { }
 
@@ -89,6 +96,9 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
       this.editableForm.visible = false;
       this.editableForm.deletePending = false;
 
+      this.DataModelUsedProfiles(this.referenceModel.id);
+      this.DataModelUnUsedProfiles(this.referenceModel.id);
+
       if (this.sharedService.isLoggedIn(true)) {
         this.ReferenceModelPermissions(id);
       } else {
@@ -117,13 +127,115 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
 
     changeProfile() {
     if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
-      const splitDescription = this.descriptionView.split('/');
-      this.resourcesService.profile.profile('referenceDataModels', this.referenceModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
-        this.currentProfileDetails = body.body;
-       });
+      this.loadProfile();
+    } else if (this.descriptionView === 'addnew') {
+      const dialog = this.dialog.open(AddProfileModalComponent, {
+        data: {
+          domainType: 'referenceDataModels',
+          domainId: this.referenceModel.id
+        },
+        height: '250px'
+      });
+
+      dialog.afterClosed().subscribe((newProfile) => {
+        if (newProfile) {
+          const splitDescription = newProfile.split('/');
+          this.resourcesService.profile
+            .profile(
+              'referenceDataModels',
+              this.referenceModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              ''
+            )
+            .subscribe(
+              (body) => {
+                this.descriptionView = newProfile;
+                this.currentProfileDetails = body.body;
+                this.editProfile(true);
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        }
+      });
     } else {
       this.currentProfileDetails = null;
     }
+  }
+
+  editProfile = (isNew: Boolean) => {
+    if (this.descriptionView === 'default') {
+         this.editableForm.show();
+    } else {
+      let prof = this.allUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
+
+      if (!prof) {
+        prof = this.allUnUsedProfiles.find(
+          (x) => x.value === this.descriptionView
+        );
+      }
+
+      const dialog = this.dialog.open(EditProfileModalComponent, {
+        data: {
+          profile: this.currentProfileDetails,
+          profileName: prof.display
+        },
+        disableClose: true,
+        panelClass: 'full-width-dialog'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result) {
+          const splitDescription = prof.value.split('/');
+          const data = JSON.stringify(result);
+          this.resourcesService.profile
+            .saveProfile(
+              'referenceDataModels',
+              this.referenceModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.loadProfile();
+                if (isNew) {
+                  this.messageHandler.showSuccess('Profile Added');
+                  this.DataModelUsedProfiles(this.referenceModel.id);
+                } else {
+                  this.messageHandler.showSuccess(
+                    'Profile Edited Successfully'
+                  );
+                }
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        } else if (isNew) {
+          this.descriptionView = 'default';
+          this.changeProfile();
+        }
+      });
+    }
+  };
+
+  loadProfile() {
+    const splitDescription = this.descriptionView.split('/');
+    this.resourcesService.profile
+      .profile(
+        'referenceDataModels',
+        this.referenceModel.id,
+        splitDescription[0],
+        splitDescription[1]
+      )
+      .subscribe((body) => {
+        this.currentProfileDetails = body.body;
+      });
   }
 
   async DataModelUsedProfiles(id: any) {
@@ -135,6 +247,20 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
         this.allUsedProfiles.push(prof);
       });
     });
+  }
+
+  async DataModelUnUsedProfiles(id: any) {
+    await this.resourcesService.profile
+      .unusedProfiles('referenceDataModels', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUnUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUnUsedProfiles.push(prof);
+        });
+      });
   }
 
   toggleShowSearch() {

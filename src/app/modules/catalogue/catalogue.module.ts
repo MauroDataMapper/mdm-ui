@@ -91,8 +91,7 @@ import { GroupsComponent } from '@mdm/admin/groups/groups.component';
 import { GroupsTableComponent } from '@mdm/admin/groups-table/groups-table.component';
 import { PendingUsersComponent } from '@mdm/admin/pending-users/pending-users.component';
 import { PendingUsersTableComponent } from '@mdm/admin/pending-users-table/pending-users-table.component';
-import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
-import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/subscribed-catalogues.component';
+import { ConnectedCataloguesComponent } from '@mdm/admin/connected-catalogues/connected-catalogues.component';
 import { DashboardComponent } from '@mdm/admin/home/home.component';
 import { ModulesComponent } from '@mdm/admin/home/modules/modules.component';
 import { PluginsComponent } from '@mdm/admin/home/plugins/plugins.component';
@@ -257,8 +256,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     GroupsTableComponent,
     PendingUsersComponent,
     PendingUsersTableComponent,
-    SubscribedCatalogueComponent,
-    SubscribedCataloguesComponent,
+    ConnectedCataloguesComponent,
     DashboardComponent,
     ModulesComponent,
     PluginsComponent,
@@ -431,8 +429,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     GroupsTableComponent,
     PendingUsersComponent,
     PendingUsersTableComponent,
-    SubscribedCatalogueComponent,
-    SubscribedCataloguesComponent,
+    ConnectedCataloguesComponent,
     DashboardComponent,
     ModulesComponent,
     PluginsComponent,

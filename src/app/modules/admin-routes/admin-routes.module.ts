@@ -27,6 +27,7 @@ import { PendingUsersComponent } from '@mdm/admin/pending-users/pending-users.co
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { GroupComponent } from '@mdm/admin/group/group.component';
+import { ConnectedCataloguesComponent } from '@mdm/admin/connected-catalogues/connected-catalogues.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -50,6 +51,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.adminArea.modelManagement',
       url: '/modelManagement',
       component: ModelManagementComponent
+    },
+    {
+      name: 'appContainer.adminArea.connectedCatalogues',
+      url: '/connectedCatalogues',
+      component: ConnectedCataloguesComponent
     },
     {
       name: 'appContainer.adminArea.users',

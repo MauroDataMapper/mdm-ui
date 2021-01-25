@@ -27,10 +27,9 @@ import { PendingUsersComponent } from '@mdm/admin/pending-users/pending-users.co
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { GroupComponent } from '@mdm/admin/group/group.component';
-import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/subscribed-catalogues.component';
-import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { ConnectedCataloguesComponent } from '@mdm/admin/connected-catalogues/connected-catalogues.component';
+import { ConnectedCatalogueComponent } from '@mdm/admin/connected-catalogue/connected-catalogue.component';
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
@@ -60,15 +59,10 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ConnectedCataloguesComponent
     },
     {
-      name: 'appContainer.adminArea.subscribedCatalogues',
-      url: '/subscribedCatalogues',
-      component: SubscribedCataloguesComponent
-    },
-    {
-      name: 'appContainer.adminArea.subscribedCatalogue',
-      url: '/subscribedCatalogue/{id}',
+      name: 'appContainer.adminArea.connectedCatalogue',
+      url: '/connectedCatalogue/{id}',
       params: { id: { value: null, squash: true} },
-      component: SubscribedCatalogueComponent
+      component: ConnectedCatalogueComponent
     },
     {
       name: 'appContainer.adminArea.users',

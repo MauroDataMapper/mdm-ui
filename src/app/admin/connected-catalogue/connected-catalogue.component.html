@@ -1,0 +1,48 @@
+<!--
+Copyright 2021 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container mb-2">
+    <h4>
+        <span *ngIf="catalogue.id">Edit Connected Catalogue</span>
+        <span *ngIf="!catalogue.id">Add Connected Catalogue</span>
+    </h4>
+</div>
+<form name="editableForm" class="mdm--form mb-2">
+    <mat-form-field appearance="outline">
+        <mat-label>URL</mat-label>
+        <input matInput name="name" [(ngModel)]="catalogue.url" required />
+        <mat-error *ngIf="errors && errors['url']">
+            {{errors['url']}}
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>API Key</mat-label>
+        <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" required />
+        <mat-error *ngIf="errors && errors['apiKey']">
+            {{errors['apiKey']}}
+        </mat-error>
+    </mat-form-field>
+    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+        Cancel
+    </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="catalogue.id">
+        Update connection
+    </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!catalogue.id">
+        Add connection
+    </button>
+</form>

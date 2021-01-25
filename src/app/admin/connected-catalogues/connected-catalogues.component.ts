@@ -20,7 +20,7 @@ import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService } from '@mdm/services';
+import { GridService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge, Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -45,6 +45,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
   constructor(
     private resources: MdmResourcesService,
     private gridService: GridService,
+    private stateHandlerService: StateHandlerService,
     private title: Title) {
     this.dataSource = new MatTableDataSource(this.records);
   }
@@ -102,10 +103,12 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
         count: 2,
         items: [
           {
+            id: 1,
             url: 'http://www.bbc.co.uk',
             apiKey: '12345'
           },
           {
+            id: 2,
             url: 'http://www.google.co.uk',
             apiKey: 'xyz999'
           }
@@ -116,12 +119,16 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
     return of(results);    
   }
 
-  addConnection() {
-    alert('TODO: add connection');
+  addConnection = () => {
+    this.stateHandlerService.Go('appContainer.adminArea.connectedCatalogue', { id: null });
   }
 
   editConnection(record) {
-    alert('TODO: edit connection');
+    if (!record) {
+      return;
+    }
+
+    this.stateHandlerService.Go('appContainer.adminArea.connectedCatalogue', { id: record.id });
   }
 
   deleteConnection(record) {

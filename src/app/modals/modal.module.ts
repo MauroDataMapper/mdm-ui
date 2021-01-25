@@ -36,6 +36,8 @@ import { FinaliseModalComponent } from './finalise-modal/finalise-modal.componen
 import { CheckInModalComponent } from './check-in-modal/check-in-modal.component';
 import { ResolveMergeConflictModalComponent } from './resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
 import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { AddRuleRepresentationModalComponent } from './add-rule-representation-modal/add-rule-representation-modal.component';
+import { AddRuleModalComponent } from './add-rule-modal/add-rule-modal.component';
 
 @NgModule({
   imports: [
@@ -59,7 +61,9 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
     NewFolderModalComponent,
     FinaliseModalComponent,
     CheckInModalComponent,
-    ResolveMergeConflictModalComponent
+    ResolveMergeConflictModalComponent,
+    AddRuleRepresentationModalComponent,
+    AddRuleModalComponent
   ],
   providers: [
     ModalService

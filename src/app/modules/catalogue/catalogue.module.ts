@@ -172,6 +172,7 @@ import { ContentEditorComponent } from '@mdm/utility/content-editor/content-edit
 
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
 
 @NgModule({
   declarations: [
@@ -312,11 +313,11 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     ReferenceDataTypeComponent,
     ReferenceDataElementComponent,
     ReferenceDataValuesComponent,
-    HtmlEditorComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
     HtmlEditorComponent,
-    ContentEditorComponent
+    ContentEditorComponent,
+    ConstraintsRulesComponent
   ],
   imports: [
     AdminModule,
@@ -474,11 +475,11 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     BaseComponent,
     ReferenceDataComponent,
     ReferenceDataDetailsComponent,
-    HtmlEditorComponent,
     EnumerationValuesComponent,
     EnumerationValuesDetailsComponent,
     HtmlEditorComponent,
-    ContentEditorComponent
+    ContentEditorComponent,
+    ConstraintsRulesComponent
   ]
 })
 export class CatalogueModule { }

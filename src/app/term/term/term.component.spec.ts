@@ -56,7 +56,7 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import '@mdm/utility/extensions/mat-dialog.extensions'
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 describe('TermComponent', () => {
   let component: TermComponent;

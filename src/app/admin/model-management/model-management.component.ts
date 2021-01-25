@@ -136,7 +136,8 @@ export class ModelManagementComponent implements OnInit {
 
   askForPermanentDelete() {
     if (!this.securityHandler.isAdmin()) {
-      alert('Only Admins are allowed to delete records!');
+      this.messageHandler.showError('Only Admins are allowed to delete records!');
+      return;
     }
 
     let message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete these records?';
@@ -207,7 +208,8 @@ export class ModelManagementComponent implements OnInit {
 
   askForSoftDelete() {
     if (!this.securityHandler.isAdmin()) {
-      alert('Only Admins are allowed to delete records!');
+      this.messageHandler.showError('Only Admins are allowed to delete records!');
+      return;
     }
 
     let title = 'Are you sure you want to delete these records?';

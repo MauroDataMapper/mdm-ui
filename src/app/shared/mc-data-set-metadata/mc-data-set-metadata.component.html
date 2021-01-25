@@ -126,7 +126,11 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 <div *ngIf="record.inEdit" style="margin-top: 8px;">
                     <div class="form-group" [ngClass]="{'has-error':record.edit.errors && record.edit.errors['value']}">
-                        <mdm-markdown-text-area rows="'2'" [(description)]="record.edit.value" [inEditMode]="true" [hideHelpText]="true"></mdm-markdown-text-area>
+                        <mdm-content-editor [(description)]="record.edit.value" 
+                                            [inEditMode]="true" 
+                                            [markdownOptions]="{ showHelpText: false }"
+                                            [htmlOptions]="{ useBasicButtons: true }">
+                        </mdm-content-editor>
                         <small *ngIf="record.edit.errors && record.edit.errors['value']" class="errorMessage">{{record.edit.errors['value']}}</small>
                     </div>
                 </div>

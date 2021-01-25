@@ -154,8 +154,8 @@ SPDX-License-Identifier: Apache-2.0
                                                       [doNotDisplayStatus]="doNotDisplayModelPathStatus"></mdm-model-path>
 
                                   </div>
-                                  <mdm-markdown-text-area rows="'4'" [description]="record.description"
-                                      [inEditMode]="false" [hideHelpText]="true"></mdm-markdown-text-area>
+                                  <mdm-content-editor [description]="record.description" [inEditMode]="false">
+                                  </mdm-content-editor>
                               </div>
 
                           </td>

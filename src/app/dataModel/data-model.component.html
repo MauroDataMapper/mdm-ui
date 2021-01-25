@@ -153,4 +153,11 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </ng-template>
     </mat-tab>
+    <mat-tab label="Rules/Constraints">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-constraints-rules [parent]="dataModel" [domainType]="'dataModels'"></mdm-constraints-rules>
+            </div>
+        </ng-template>
+    </mat-tab>
 </mat-tab-group>

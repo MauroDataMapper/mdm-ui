@@ -169,6 +169,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
 
 @NgModule({
   declarations: [
@@ -310,7 +311,8 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     ReferenceDataElementComponent,
     ReferenceDataValuesComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent
+    EnumerationValuesDetailsComponent,
+    ConstraintsRulesComponent
   ],
   imports: [
     AdminModule,
@@ -469,7 +471,8 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     ReferenceDataComponent,
     ReferenceDataDetailsComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent
+    EnumerationValuesDetailsComponent,
+    ConstraintsRulesComponent
   ]
 })
 export class CatalogueModule { }

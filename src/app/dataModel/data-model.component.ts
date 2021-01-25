@@ -166,6 +166,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
           return { index: 0, name: 'dataClasses' };
         }
       }
+      case 'rulesConstraints' : {
+        return { index: 10, name: 'rulesConstraints' };
+      }
       default:
         return { index: 0, name: 'dataClasses' };
     }
@@ -196,6 +199,9 @@ export class DataModelComponent implements OnInit, OnDestroy {
           return { index: 9, name: 'dataflow' };
         }
         return { index: 0, name: 'dataClasses' };
+      }
+      case 10 : {
+        return { index: 10, name: 'rulesConstraints' };
       }
       default:
         return { index: 0, name: 'dataClasses' };

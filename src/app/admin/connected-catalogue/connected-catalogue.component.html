@@ -23,17 +23,24 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <form name="editableForm" class="mdm--form mb-2">
     <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput name="name" [(ngModel)]="catalogue.name" required />
+        <mat-error *ngIf="errors && errors.name">
+            {{errors.name}}
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
         <mat-label>URL</mat-label>
-        <input matInput name="name" [(ngModel)]="catalogue.url" required />
-        <mat-error *ngIf="errors && errors['url']">
-            {{errors['url']}}
+        <input matInput name="url" [(ngModel)]="catalogue.url" required />
+        <mat-error *ngIf="errors && errors.url">
+            {{errors.url}}
         </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>API Key</mat-label>
         <input matInput name="apiKey" [(ngModel)]="catalogue.apiKey" required />
-        <mat-error *ngIf="errors && errors['apiKey']">
-            {{errors['apiKey']}}
+        <mat-error *ngIf="errors && errors.apiKey">
+            {{errors.apiKey}}
         </mat-error>
     </mat-form-field>
     <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">

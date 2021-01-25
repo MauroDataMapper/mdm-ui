@@ -17,8 +17,15 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ConnectedCatalogue } from '@mdm/model/connectedCatalogueModel';
 import { StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
+
+interface ConnectedCatalogueComponentErrors {
+  name?: string;
+  url?: string;
+  apiKey?: string;
+};
 
 @Component({
   selector: 'mdm-connected-catalogue',
@@ -27,13 +34,8 @@ import { UIRouterGlobals } from '@uirouter/core';
 })
 export class ConnectedCatalogueComponent implements OnInit {
 
-  catalogue = {
-    id: '',
-    url: '',
-    apiKey: ''
-  };
-
-  errors: any;
+  catalogue: ConnectedCatalogue;
+  errors: ConnectedCatalogueComponentErrors;
 
   constructor(
     private routerGobals: UIRouterGlobals,
@@ -47,9 +49,23 @@ export class ConnectedCatalogueComponent implements OnInit {
       this.title.setTitle('Connected Catalogue - Edit Catalogue');
 
       alert('TODO: fetch connected catalogue ' + catalogueId);
+
+      // TODO: replace with fetch from server
+      this.catalogue = {
+        id: catalogueId,
+        name: 'Test3',
+        url: 'http://localhost',
+        apiKey: '5678'
+      };
     }
     else {
       this.title.setTitle('Connected Catalogue - Add Catalogue');
+
+      this.catalogue = {
+        name: '',
+        url: '',
+        apiKey: ''
+      };
     }
   }
 
@@ -78,7 +94,12 @@ export class ConnectedCatalogueComponent implements OnInit {
 
   validate() {
     let isValid = true;
-    this.errors = [];
+    this.errors = {};
+
+    if (this.catalogue.name.trim().length === 0) {
+      this.errors.name = 'Name cannot be empty!';
+      isValid = false;
+    }  
 
     if (this.catalogue.url.trim().length === 0) {
       this.errors.url = 'URL cannot be empty!';
@@ -88,11 +109,7 @@ export class ConnectedCatalogueComponent implements OnInit {
     if (this.catalogue.apiKey.trim().length === 0) {
       this.errors.apiKey = 'API key cannot be empty!';
       isValid = false;
-    }
-
-    if (isValid) {
-      delete this.errors;
-    }
+    }  
 
     return isValid;
   }

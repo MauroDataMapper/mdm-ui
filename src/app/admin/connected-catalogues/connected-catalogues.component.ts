@@ -19,6 +19,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
+import { ConnectedCatalogue, ConnectedCatalogueFetchBody, ConnectedCatalogueFetchResponse } from '@mdm/model/connectedCatalogueModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -39,8 +40,8 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<any>();
 
-  displayedColumns = ['url', 'apiKey', 'icons'];
-  records: any[] = [];
+  displayedColumns = ['name', 'url', 'apiKey', 'icons'];
+  records: ConnectedCatalogue[] = [];
 
   constructor(
     private resources: MdmResourcesService,
@@ -70,7 +71,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
             this.sort.direction
           );
         }),
-        map((data: any) => {
+        map((data: ConnectedCatalogueFetchResponse) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
@@ -80,7 +81,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
           return [];
         })
       )
-      .subscribe(data => {
+      .subscribe((data: ConnectedCatalogue[]) => {
         this.records = data;
         this.dataSource.data = this.records;
       });
@@ -90,7 +91,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
     pageSize?: number, 
     pageIndex?: number, 
     sortBy?: string, 
-    sortType?: SortDirection): Observable<any> {
+    sortType?: SortDirection): Observable<ConnectedCatalogueFetchResponse> {
     const options = this.gridService.constructOptions(
       pageSize, 
       pageIndex, 
@@ -98,17 +99,19 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
       sortType);    
     
     // TODO: fetch data from server
-    const results = {
+    const results: ConnectedCatalogueFetchResponse = {
       body: {
         count: 2,
         items: [
           {
             id: 1,
+            name: 'Test1',
             url: 'http://www.bbc.co.uk',
             apiKey: '12345'
           },
           {
             id: 2,
+            name: 'Test2',
             url: 'http://www.google.co.uk',
             apiKey: 'xyz999'
           }
@@ -123,7 +126,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
     this.stateHandlerService.Go('appContainer.adminArea.connectedCatalogue', { id: null });
   }
 
-  editConnection(record) {
+  editConnection(record: ConnectedCatalogue) {
     if (!record) {
       return;
     }
@@ -131,7 +134,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
     this.stateHandlerService.Go('appContainer.adminArea.connectedCatalogue', { id: record.id });
   }
 
-  deleteConnection(record) {
+  deleteConnection(record: ConnectedCatalogue) {
     alert('TODO: delete connection');
   }
 }

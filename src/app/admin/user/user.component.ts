@@ -24,6 +24,7 @@ import { StateService } from '@uirouter/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { GridService } from '@mdm/services/grid.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-user',
@@ -66,10 +67,11 @@ export class UserComponent implements OnInit {
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
     private stateHandler: StateHandlerService,
-    private gridService: GridService
-  ) { }
+    private gridService: GridService,
+    private editingService: EditingService) { }
 
   ngOnInit() {
+    this.editingService.start();
     this.title.setTitle('Admin - Add User');
     this.roles = this.role.notPendingArray;
 
@@ -176,7 +178,7 @@ export class UserComponent implements OnInit {
         // it's in edit mode (update)
         this.resourcesService.catalogueUser.update(this.user.id, resource).subscribe(() => {
         this.messageHandler.showSuccess('User updated successfully.');
-        this.stateHandler.Go('admin.users');
+        this.navigateToParent();
         }, error => {
         this.messageHandler.showError('There was a problem updating the user.', error);
       });
@@ -184,7 +186,7 @@ export class UserComponent implements OnInit {
       // it's in new mode (create)
         this.resourcesService.catalogueUser.adminRegister(resource).subscribe(() => {
           this.messageHandler.showSuccess('User saved successfully.');
-          this.stateHandler.Go('admin.users');
+          this.navigateToParent();
         },
           error => {
             this.messageHandler.showError('There was a problem saving the user.', error);
@@ -194,8 +196,17 @@ export class UserComponent implements OnInit {
   };
 
   cancel = () => {
-    this.stateHandler.Go('admin.users');
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (confirm) {
+        this.navigateToParent();
+      }
+    });
   };
+
+  private navigateToParent() {
+    this.editingService.stop();
+    this.stateHandler.Go('admin.users');
+  }
 
   onGroupSelect = (groups) => {
     this.user.groups = [];

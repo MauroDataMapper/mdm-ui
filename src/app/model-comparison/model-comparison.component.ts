@@ -600,7 +600,7 @@ export class ModelComparisonComponent implements OnInit {
                       'minMultiplicity',
                       el.leftId,
                       el.rightId,
-                      diff2.minMultiplicity,
+                      elemDiff.minMultiplicity,
                       diffMap
                     );
                   }
@@ -623,7 +623,7 @@ export class ModelComparisonComponent implements OnInit {
                     );
                   }
 
-                  if (diffElement === 'dataTypes' && diff2.enumerationValues) {
+                  if (diffElement === 'dataTypes' && elemDiff.enumerationValues) {
                     this.findDiffEnumerationValues(
                       el.leftId,
                       el.rightId,

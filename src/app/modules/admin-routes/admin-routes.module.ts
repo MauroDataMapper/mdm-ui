@@ -28,6 +28,7 @@ import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.c
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { GroupComponent } from '@mdm/admin/group/group.component';
 import { ConnectedCataloguesComponent } from '@mdm/admin/connected-catalogues/connected-catalogues.component';
+import { ConnectedCatalogueComponent } from '@mdm/admin/connected-catalogue/connected-catalogue.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -56,6 +57,12 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.adminArea.connectedCatalogues',
       url: '/connectedCatalogues',
       component: ConnectedCataloguesComponent
+    },
+    {
+      name: 'appContainer.adminArea.connectedCatalogue',
+      url: '/connectedCatalogue/{id}',
+      params: { id: { value: null, squash: true} },
+      component: ConnectedCatalogueComponent
     },
     {
       name: 'appContainer.adminArea.users',

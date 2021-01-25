@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { UIRouter } from '@uirouter/angular';
+import { TransitionOptions, UIRouter } from '@uirouter/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 
@@ -133,7 +133,7 @@ export class StateHandlerService {
 
   }
 
-  Go(name, params = {}, option = null) {
+  Go(name: string, params: any = {}, option: TransitionOptions = null) {
     const state = this.getStateName(name, params);
     return this.router.stateService.go(state, params, option);
   }

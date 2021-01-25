@@ -41,7 +41,10 @@ SPDX-License-Identifier: Apache-2.0
                         <span class="annotation-date">{{record.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                     </div>
                     <div style="margin-left: 5px;font-weight:bold">{{record.label}}</div>
-                    <div style="margin-left: 5px;"><mdm-markdown-text-area [description]="record.description" [inEditMode]="false" [rows]="'4'"></mdm-markdown-text-area></div>
+                    <div style="margin-left: 5px;">
+                        <mdm-content-editor [description]="record.description" [inEditMode]="false">                            
+                        </mdm-content-editor>
+                    </div>
                     <div *ngIf="canAddAnnotation">
                         <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
                             <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
@@ -56,7 +59,8 @@ SPDX-License-Identifier: Apache-2.0
                                     <span class="annotation-date">{{childAnnotation.lastUpdated | date:"dd-MM-yyyy HH:mm:ss" }}</span>
                                 </div>
                                 <div style="padding:5px 5px 5px 10px;">
-                                    <mdm-markdown-text-area [description]="childAnnotation.description" [inEditMode]="false" [rows]="'4'"></mdm-markdown-text-area>
+                                    <mdm-content-editor [description]="childAnnotation.description" [inEditMode]="false">                            
+                                    </mdm-content-editor>
                                 </div>
                             </div>
                             <div>
@@ -75,7 +79,8 @@ SPDX-License-Identifier: Apache-2.0
                                 </span>
                             </div>
                             <div style="padding-left: 10px;">
-                                <mdm-markdown-text-area #childEditor [(description)]="record.newChildText" [inEditMode]="true" [rows]="'4'"></mdm-markdown-text-area>
+                                <mdm-content-editor [(description)]="record.newChildText" [inEditMode]="true">                                    
+                                </mdm-content-editor>
                                 <div style="float: right; margin: 8px 0;">
                                     <button mat-button color="warn" (click)="showChildren(record)">
                                         Cancel
@@ -99,7 +104,8 @@ SPDX-License-Identifier: Apache-2.0
                     </div>
                     <div>
                         <span>Description</span>
-                        <mdm-markdown-text-area [(description)]="record.edit.description" [inEditMode]="true" [rows]="'4'"></mdm-markdown-text-area>
+                        <mdm-content-editor [(description)]="record.edit.description" [inEditMode]="true">                            
+                        </mdm-content-editor>
                     </div>
 
                     <div style="margin-top: 5px; float: right">

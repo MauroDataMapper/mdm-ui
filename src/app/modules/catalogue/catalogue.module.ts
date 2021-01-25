@@ -166,9 +166,13 @@ import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/refe
 import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
 import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { JoditAngularModule } from 'jodit-angular';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
 
 @NgModule({
   declarations: [
@@ -310,7 +314,10 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     ReferenceDataElementComponent,
     ReferenceDataValuesComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent
+    EnumerationValuesDetailsComponent,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    ConstraintsRulesComponent
   ],
   imports: [
     AdminModule,
@@ -335,7 +342,7 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    MatTabsModule
+    JoditAngularModule
   ],
   exports: [
     MarkedPipe,
@@ -469,7 +476,10 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
     ReferenceDataComponent,
     ReferenceDataDetailsComponent,
     EnumerationValuesComponent,
-    EnumerationValuesDetailsComponent
+    EnumerationValuesDetailsComponent,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    ConstraintsRulesComponent
   ]
 })
 export class CatalogueModule { }

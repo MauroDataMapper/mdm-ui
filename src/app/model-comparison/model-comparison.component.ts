@@ -557,44 +557,45 @@ export class ModelComparisonComponent implements OnInit {
                 }
 
                 // Run for Element
-                el.diffs.forEach(diff2 => {
-                  if (diff2.label) {
+                // tslint:disable-next-line: no-shadowed-variable
+                el.diffs.forEach(elemDiff => {
+                  if (elemDiff.label) {
                     this.findDiffProps(
                       'label',
                       el.leftId,
                       el.rightId,
-                      diff2.label,
+                      elemDiff.label,
                       diffMap
                     );
                   }
-                  if (diff2.description) {
+                  if (elemDiff.description) {
                     this.findDiffProps(
                       'description',
                       el.leftId,
                       el.rightId,
-                      diff2.description,
+                      elemDiff.description,
                       diffMap
                     );
                   }
-                  if (diff2.author) {
+                  if (elemDiff.author) {
                     this.findDiffProps(
                       'author',
                       el.leftId,
                       el.rightId,
-                      diff2.author,
+                      elemDiff.author,
                       diffMap
                     );
                   }
-                  if (diff2.organisation) {
+                  if (elemDiff.organisation) {
                     this.findDiffProps(
                       'organisation',
                       el.leftId,
                       el.rightId,
-                      diff2.organisation,
+                      elemDiff.organisation,
                       diffMap
                     );
                   }
-                  if (diff2.minMultiplicity) {
+                  if (elemDiff.minMultiplicity) {
                     this.findDiffProps(
                       'minMultiplicity',
                       el.leftId,
@@ -603,21 +604,21 @@ export class ModelComparisonComponent implements OnInit {
                       diffMap
                     );
                   }
-                  if (diff2.maxMultiplicity) {
+                  if (elemDiff.maxMultiplicity) {
                     this.findDiffProps(
                       'maxMultiplicity',
                       el.leftId,
                       el.rightId,
-                      diff2.maxMultiplicity,
+                      elemDiff.maxMultiplicity,
                       diffMap
                     );
                   }
 
-                  if (diff2.metadata) {
+                  if (elemDiff.metadata) {
                     this.findDiffMetadata(
                       el.leftId,
                       el.rightId,
-                      diff2.metadata,
+                      elemDiff.metadata,
                       diffMap
                     );
                   }
@@ -626,19 +627,19 @@ export class ModelComparisonComponent implements OnInit {
                     this.findDiffEnumerationValues(
                       el.leftId,
                       el.rightId,
-                      diff2.enumerationValues,
+                      elemDiff.enumerationValues,
                       diffMap
                     );
                   }
 
                   if (
                     diffElement === 'dataElements' &&
-                    diff2['dataType.label']
+                    elemDiff['dataType.label']
                   ) {
                     this.findDiffDataTypeChanges(
                       el.leftId,
                       el.rightId,
-                      diff2['dataType.label'],
+                      elemDiff['dataType.label'],
                       diffMap
                     );
                   }

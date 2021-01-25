@@ -28,9 +28,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/jodit/build/jodit.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jodit/build/jodit.min.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -33,7 +33,7 @@ export interface ApiKeysModalResponseData {
 
 export interface ApiKeysModalResponse {
   status: 'ok' | 'cancel';
-  data?: ApiKeysModalResponseData
+  data?: ApiKeysModalResponseData;
 }
 
 @Component({

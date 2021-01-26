@@ -131,7 +131,7 @@ export class ApiKeysComponent implements OnInit {
   };
 
   removeKey = record => {
-    const foo = this.dialog
+    this.dialog
       .open(ConfirmationModalComponent, {
         data: {
           title: 'Are you sure you want to delete this API Key?',

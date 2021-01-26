@@ -19,44 +19,62 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+export interface ApiKeysModalConfiguration {
+  showName?: boolean;
+  showExpiryDay?: boolean;
+  showRefreshable?: boolean;
+}
+
+export interface ApiKeysModalResponseData {
+  name: string;
+  expiresInDays: number;
+  refreshable: boolean;
+}
+
+export interface ApiKeysModalResponse {
+  status: 'ok' | 'cancel';
+  data?: ApiKeysModalResponseData
+}
+
 @Component({
-   selector: 'mdm-api-keys-modal',
-   templateUrl: './api-keys-modal.component.html',
-   styleUrls: ['./api-keys-modal.component.scss']
+  selector: 'mdm-api-keys-modal',
+  templateUrl: './api-keys-modal.component.html',
+  styleUrls: ['./api-keys-modal.component.scss']
 })
 export class ApiKeysModalComponent implements OnInit {
-   name: string;
-   refreshable = false;
-   expiresInDays: number;
-   output: any;
+  name: string;
+  refreshable = false;
+  expiresInDays: number;
+  output: ApiKeysModalResponseData;
 
-   showName: boolean;
-   showExpiryDay: boolean;
-   showRefreshable: boolean;
+  showName: boolean;
+  showExpiryDay: boolean;
+  showRefreshable: boolean;
 
-   constructor(
-      private dialogRef: MatDialogRef<ApiKeysModalComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any
-   ) { }
+  constructor(
+    private dialogRef: MatDialogRef<ApiKeysModalComponent, ApiKeysModalResponse>,
+    @Inject(MAT_DIALOG_DATA) public data: ApiKeysModalConfiguration) { }
 
-   ngOnInit(): void {
-      this.showName = this.data.showName ? this.data.showName : false;
-      this.showExpiryDay = this.data.showExpiryDay ? this.data.showExpiryDay : false;
-      this.showRefreshable = this.data.showRefreshable ? this.data.showRefreshable : false;
-   }
+  ngOnInit(): void {
+    this.showName = this.data.showName ? this.data.showName : false;
+    this.showExpiryDay = this.data.showExpiryDay ? this.data.showExpiryDay : false;
+    this.showRefreshable = this.data.showRefreshable ? this.data.showRefreshable : false;
+  }
 
-   ok() {
-      this.output = {
-         name: this.name,
-         expiresInDays: this.expiresInDays,
-         refreshable: this.refreshable
-      };
-      this.dialogRef.close({ status: 'ok', data: this.output });
-   }
-   cancel() {
-      this.dialogRef.close({ status: 'cancel' });
-   }
-   close() {
-      this.dialogRef.close({ status: 'close' });
-   }
+  ok() {
+    this.output = {
+      name: this.name,
+      expiresInDays: this.expiresInDays,
+      refreshable: this.refreshable
+    };
+    this.dialogRef.close({ status: 'ok', data: this.output });
+  }
+
+  cancel() {
+    this.dialogRef.close({ status: 'cancel' });
+  }
+
+  enableOk() {
+    return this.name && this.name.trim().length !== 0;
+  }
 }

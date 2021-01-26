@@ -25,14 +25,14 @@ SPDX-License-Identifier: Apache-2.0
       <form name="apiKeysForm">
          <div class="full-width mb-2" *ngIf="showName">
             <mat-form-field appearance="outline" class="full-width paddingless">
-               <mat-label>Name (optional)</mat-label>
-               <input type="text" matInput [(ngModel)]="name" name="name">
+               <mat-label>Name</mat-label>
+               <input type="text" matInput [(ngModel)]="name" name="name" required>
             </mat-form-field>
          </div>
          <div class="mb-2" *ngIf="showExpiryDay">
             <mat-form-field appearance="outline" class="paddingless" style="max-width: 200px;">
                <mat-label>Expires in days:</mat-label>
-               <input type="number" matInput [(ngModel)]="expiresInDays" name="expiresInDays" required>
+               <input type="number" matInput [(ngModel)]="expiresInDays" name="expiresInDays">
             </mat-form-field>
             <small class="block text-muted">
                Use numbers only to indicate how long the API Key should be valid for.
@@ -52,7 +52,7 @@ SPDX-License-Identifier: Apache-2.0
    <hr>
 </mat-dialog-content>
 <mat-dialog-actions align="end" class="pt-2 pb-2">
-   <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>Cancel</button>
-   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!expiresInDays || (expiresInDays <= 0)" *ngIf="!showName && showExpiryDay">Refresh Key</button>
-   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!expiresInDays || (expiresInDays <= 0)" *ngIf="showName && showRefreshable">Create Key</button>
+   <button mat-button color="warn" class="mr-1" type="button" (click)="cancel()">Cancel</button>
+   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!enableOk()" *ngIf="!showName && showExpiryDay">Refresh Key</button>
+   <button mat-flat-button color="primary" type="button" (click)="ok()" [disabled]="!enableOk()" *ngIf="showName && showRefreshable">Create Key</button>
 </mat-dialog-actions>

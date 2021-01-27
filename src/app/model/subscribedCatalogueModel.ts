@@ -16,18 +16,18 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-export interface ConnectedCatalogue {
+export interface SubscribedCatalogue {
   id?: number;
   name: string;
   url: string;
   apiKey: string
 }
 
-export interface ConnectedCatalogueFetchBody {
+export interface SubscribedCatalogueFetchBody {
   count: number;
-  items: ConnectedCatalogue[];
+  items: SubscribedCatalogue[];
 }
 
-export interface ConnectedCatalogueFetchResponse {
-  body: ConnectedCatalogueFetchBody;
+export interface SubscribedCatalogueFetchResponse {
+  body: SubscribedCatalogueFetchBody;
 }

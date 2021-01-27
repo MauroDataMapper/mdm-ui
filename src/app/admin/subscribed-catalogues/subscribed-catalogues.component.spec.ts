@@ -17,21 +17,21 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConnectedCataloguesComponent } from './connected-catalogues.component';
+import { SubscribedCataloguesComponent } from './subscribed-catalogues.component';
 
-describe('ConnectedCataloguesComponent', () => {
-  let component: ConnectedCataloguesComponent;
-  let fixture: ComponentFixture<ConnectedCataloguesComponent>;
+describe('SubscribedCataloguesComponent', () => {
+  let component: SubscribedCataloguesComponent;
+  let fixture: ComponentFixture<SubscribedCataloguesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConnectedCataloguesComponent ]
+      declarations: [ SubscribedCataloguesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConnectedCataloguesComponent);
+    fixture = TestBed.createComponent(SubscribedCataloguesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

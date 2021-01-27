@@ -17,17 +17,15 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue, SubscribedCatalogueResponse } from '@mdm/model/subscribed-catalogue-model';
-import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, StateHandlerService } from '@mdm/services';
-import { EditingService } from '@mdm/services/editing.service';
+import { SubscribedCatalogue } from '@mdm/model/subscribedCatalogueModel';
+import { StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 
 interface SubscribedCatalogueComponentErrors {
-  label?: string;
+  name?: string;
   url?: string;
   apiKey?: string;
-}
+};
 
 @Component({
   selector: 'mdm-subscribed-catalogue',
@@ -38,40 +36,35 @@ export class SubscribedCatalogueComponent implements OnInit {
 
   catalogue: SubscribedCatalogue;
   errors: SubscribedCatalogueComponentErrors;
-  isCreating: boolean;
 
   constructor(
-    private resources: MdmResourcesService,
     private routerGobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
-    private messageHandler: MessageHandlerService,
-    private title: Title,
-    private editingService: EditingService) { }
+    private title: Title) { }
 
   ngOnInit(): void {
-    this.editingService.start();
     const catalogueId = this.routerGobals.params.id;
 
     if (catalogueId) {
-      this.isCreating = false;
       this.title.setTitle('Subscribed Catalogue - Edit Subscription');
 
-      this.resources.subscribedCatalogues
-        .get(catalogueId)
-        .subscribe(
-          (data: SubscribedCatalogueResponse) => this.catalogue = data.body,
-          error => {
-            this.messageHandler.showError('Unable to get the subscribed catalogue.', error);
-            this.navigateToParent();
-          });
+      alert('TODO: fetch subscription catalogue ' + catalogueId);
+
+      // TODO: replace with fetch from server
+      this.catalogue = {
+        id: catalogueId,
+        name: 'Test3',
+        url: 'http://localhost',
+        apiKey: '5678'
+      };
     }
     else {
-      this.isCreating = true;
       this.title.setTitle('Subscribed Catalogue - Add Subscription');
 
       this.catalogue = {
-        label: '',
-        url: ''
+        name: '',
+        url: '',
+        apiKey: ''
       };
     }
   }
@@ -82,37 +75,20 @@ export class SubscribedCatalogueComponent implements OnInit {
     }
 
     if (this.catalogue.id) {
-      this.resources.subscribedCatalogues
-        .update(this.catalogue.id, this.catalogue)
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess('Subscribed catalogue updated successfully.');
-            this.navigateToParent();
-          },
-          error => this.messageHandler.showError('There was a problem updating the subscribed catalogue.', error));
+      alert('TODO: save subscription catalogue ' + this.catalogue.id);
+      this.navigateToParent();
     }
     else {
-      this.resources.subscribedCatalogues
-        .save(this.catalogue)
-        .subscribe(
-          () => {
-            this.messageHandler.showSuccess('Subscribed catalogue saved successfully.');
-            this.navigateToParent();
-          },
-          error => this.messageHandler.showError('There was a problem saving the subscribed catalogue.', error));
+      alert('TODO: new connected catalogue ' + this.catalogue.url);
+      this.navigateToParent();
     }
   }
 
   cancel() {
-    this.editingService.confirmCancelAsync().subscribe(confirm => {
-      if (confirm) {
-        this.navigateToParent();
-      }
-    });
+    this.navigateToParent();
   }
 
   private navigateToParent() {
-    this.editingService.stop();
     this.stateHandler.Go('appContainer.adminArea.subscribedCatalogues');
   }
 
@@ -120,18 +96,18 @@ export class SubscribedCatalogueComponent implements OnInit {
     let isValid = true;
     this.errors = {};
 
-    if (this.catalogue.label.trim().length === 0) {
-      this.errors.label = 'Label cannot be empty';
+    if (this.catalogue.name.trim().length === 0) {
+      this.errors.name = 'Name cannot be empty!';
       isValid = false;
     }
 
     if (this.catalogue.url.trim().length === 0) {
-      this.errors.url = 'URL cannot be empty';
+      this.errors.url = 'URL cannot be empty!';
       isValid = false;
     }
 
-    if (this.isCreating && (this.catalogue.apiKey?.trim()?.length ?? 0) === 0) {
-      this.errors.apiKey = 'API key cannot be empty when creating a subscribed catalogue';
+    if (this.catalogue.apiKey.trim().length === 0) {
+      this.errors.apiKey = 'API key cannot be empty!';
       isValid = false;
     }
 

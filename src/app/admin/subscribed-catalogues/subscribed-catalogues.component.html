@@ -33,20 +33,12 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table table-striped marginless">
-            <ng-container matColumnDef="label">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="label">
-                    <span>Label</span>                    
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="name">
+                    <span>Name</span>                    
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    {{record.label}}
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="description">
-                    <span>Description</span>                    
-                </th>
-                <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    {{record.description}}
+                    {{record.name}}
                 </td>
             </ng-container>
             <ng-container matColumnDef="url">
@@ -56,15 +48,15 @@ SPDX-License-Identifier: Apache-2.0
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
                     {{record.url}}
                 </td>
-            </ng-container>      
-            <ng-container matColumnDef="refreshPeriod">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%; cursor: pointer; max-width: 40%;" columnName="refreshPeriod">
-                    <span>Refresh period (days)</span>                    
+            </ng-container>
+            <ng-container matColumnDef="apiKey">
+                <th mat-header-cell *matHeaderCellDef columnName="apiKey" style="max-width: 50%;">
+                    <span>API Key</span>
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    {{record.refreshPeriod}}
+                    {{record.apiKey}}
                 </td>
-            </ng-container>      
+            </ng-container>
             <ng-container matColumnDef="icons">
                 <td mat-header-cell *matHeaderCellDef columnName="icons" style="width: 7%; text-align: center;"></td>
                 <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">

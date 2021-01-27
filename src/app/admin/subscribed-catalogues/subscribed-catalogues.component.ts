@@ -16,15 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
+import { SubscribedCatalogue, SubscribedCatalogueFetchResponse } from '@mdm/model/subscribedCatalogueModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { GridService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
-import { merge, Observable } from 'rxjs';
+import { merge, Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -41,31 +40,25 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<any>();
 
-  displayedColumns = ['label', 'description', 'url', 'refreshPeriod', 'icons'];
+  displayedColumns = ['name', 'url', 'apiKey', 'icons'];
   records: SubscribedCatalogue[] = [];
 
   constructor(
     private resources: MdmResourcesService,
     private gridService: GridService,
     private stateHandlerService: StateHandlerService,
-    private messageHandler: MessageHandlerService,
-    private title: Title,
-    private dialog: MatDialog) {
+    private title: Title) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
   ngOnInit(): void {
-    this.title.setTitle('Subscribed catalogues');
+    this.title.setTitle('Connected catalogues');
   }
 
   ngAfterViewInit(): void {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     this.dataSource.sort = this.sort;
 
-    this.refreshList();
-  }
-
-  refreshList() {
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
@@ -78,14 +71,13 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
             this.sort.direction
           );
         }),
-        map((data: SubscribedCatalogueIndexResponse) => {
+        map((data: SubscribedCatalogueFetchResponse) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
         }),
-        catchError(error => {
+        catchError(() => {
           this.isLoadingResults = false;
-          this.messageHandler.showError('There was a problem loading the subscribed catalogues.', error);
           return [];
         })
       )
@@ -96,22 +88,43 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   }
 
   fetchConnections(
-    pageSize?: number,
-    pageIndex?: number,
-    sortBy?: string,
-    sortType?: SortDirection): Observable<SubscribedCatalogueIndexResponse> {
+    pageSize?: number, 
+    pageIndex?: number, 
+    sortBy?: string, 
+    sortType?: SortDirection): Observable<SubscribedCatalogueFetchResponse> {
     const options = this.gridService.constructOptions(
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType);
+      pageSize, 
+      pageIndex, 
+      sortBy, 
+      sortType);    
+    
+    // TODO: fetch data from server
+    const results: SubscribedCatalogueFetchResponse = {
+      body: {
+        count: 2,
+        items: [
+          {
+            id: 1,
+            name: 'Test1',
+            url: 'http://www.bbc.co.uk',
+            apiKey: '12345'
+          },
+          {
+            id: 2,
+            name: 'Test2',
+            url: 'http://www.google.co.uk',
+            apiKey: 'xyz999'
+          }
+        ]
+      }
+    };
 
-    return this.resources.subscribedCatalogues.list(options);
+    return of(results);    
   }
 
   addSubscription = () => {
     this.stateHandlerService.Go('appContainer.adminArea.subscribedCatalogue', { id: null });
-  };
+  }
 
   editSubscription(record: SubscribedCatalogue) {
     if (!record) {
@@ -122,23 +135,6 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   }
 
   deleteSubscription(record: SubscribedCatalogue) {
-    this.dialog
-      .openConfirmationAsync({
-        data: {
-          title: 'Are you sure you want to delete this subscribed catalogue?',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: 'Once deleted, the subscription cannot be retrieved.',
-        }
-      })
-      .pipe(
-        switchMap(() => this.resources.subscribedCatalogues.remove(record.id))
-      )
-      .subscribe(
-        () => {
-          this.messageHandler.showSuccess('Subscribed catalogue deleted successfully.');
-          this.refreshList();
-        },
-        error => this.messageHandler.showError('There was a problem deleting the subscribed catalogue.', error));
+    alert('TODO: delete connection');
   }
 }

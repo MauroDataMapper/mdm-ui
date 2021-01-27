@@ -35,9 +35,9 @@ import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { GridService } from '@mdm/services/grid.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -101,7 +101,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     private broadcastSvc: BroadcastService,
     private gridService: GridService,
     private dialog: MatDialog,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    private editingService: EditingService
   ) {
     this.DataElementDetails();
   }
@@ -140,6 +141,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -249,9 +251,8 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     this.subscription.unsubscribe(); // unsubscribe to ensure no memory leaks
   }
   askForPermanentDelete() {
-
-    const promise = new Promise((resolve) => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+    this.dialog
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
@@ -259,31 +260,15 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Data Element?</p>
                     <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> Data Element.</p>`
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: 'Confirm permanent deletion',
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-          }
-        });
-
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            return;
-          }
-          resolve(this.delete());
-        });
-      });
-    });
-
-    return promise;
+      })
+      .subscribe(() => this.delete());
   }
 
   delete() {
@@ -353,6 +338,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         };
       }
       this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(() => {
+        this.editingService.stop();
         this.messageHandler.showSuccess('Data Element updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.editableForm.visible = false;
@@ -428,6 +414,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   }
 
   showForm() {
+    this.editingService.start();
     this.showEditDescription = false;
     this.editableForm.show();
   }
@@ -456,6 +443,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   };
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

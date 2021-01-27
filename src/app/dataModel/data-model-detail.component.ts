@@ -37,7 +37,6 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { SharedService } from '../services/shared.service';
 import { DataModelResult } from '../model/dataModelModel';
-import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
 import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
@@ -45,6 +44,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -102,7 +102,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
-    private title: Title
+    private title: Title,
+    private editingService: EditingService
   ) { }
 
   ngOnInit() {
@@ -127,6 +128,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -252,8 +254,9 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     if (!this.showSoftDelete) {
       return;
     }
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmationAsync({
         data: {
           title: 'Are you sure you want to delete this Data Model?',
           okBtnTitle: 'Yes, delete',
@@ -261,59 +264,37 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           message: `<p class="marginless">This Data Model will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
         }
+      })
+      .subscribe(() => {
+        this.processing = true;
+        this.delete(false);
+        this.processing = false;
       });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result != null && result.status === 'ok') {
-          this.processing = true;
-          this.delete(false);
-          this.processing = false;
-        } else {
-          return;
-        }
-      });
-    });
-    return promise;
   }
 
   askForPermanentDelete(): any {
     if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Data Model?'
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
+                    <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: 'Confirm permanent deletion',
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: `<p class='marginless'><strong>Note: </strong>All its 'Data Classes', 'Data Elements' and 'Data Types'
-                      <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
-          }
-        });
-
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result != null && result2.status === 'ok') {
-            this.delete(true);
-          } else {
-            return;
-          }
-        });
-      });
-    });
-    return promise;
+      })
+      .subscribe(() => this.delete(true));
   }
 
   formBeforeSave = async () => {
@@ -356,6 +337,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         this.editableForm.visible = false;
         this.result.description = res.body.description;
         this.editForm.forEach(x => x.edit({ editing: false }));
+        this.editingService.stop();
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.messageHandler.showError('There was a problem updating the Data Model.', error);
@@ -374,6 +356,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   showForm() {
     this.showEditDescription = false;
+    this.editingService.start();
     this.editableForm.show();
   }
 
@@ -524,6 +507,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

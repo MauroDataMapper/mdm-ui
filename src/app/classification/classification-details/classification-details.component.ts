@@ -37,8 +37,8 @@ import { Subscription } from 'rxjs';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-classification-details',
@@ -81,6 +81,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     private broadcaseSvc: BroadcastService,
     private title: Title,
     private dialog: MatDialog,
+    private editingService: EditingService
   ) {
     // securitySection = false;
     this.isAdminUser = this.sharedService.isAdmin;
@@ -112,6 +113,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.errorMessage = '';
       this.editableForm.label = this.result.label;
@@ -191,7 +193,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
       return;
     }
 
-    this.folderHandler.askForSoftDelete(this.result.id).then(() => {
+    this.folderHandler.askForSoftDelete(this.result.id).subscribe(() => {
       this.stateHandler.reload();
     });
   }
@@ -200,8 +202,9 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise((resolve) => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
@@ -209,31 +212,15 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
           message: `<p>Are you sure you want to <span class='warning'>permanently</span> delete this Classifier?</p>
                     <p class='marginless'><strong>Note:</strong> You are deleting the <strong><i>${this.result.label}</i></strong> classifier.</p>`
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: 'Confirm permanent deletion',
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: '<strong>Note: </strong> All its contents will be deleted <span class=\'warning\'>permanently</span>.'
-          }
-        });
-
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            return;
-          }
-          resolve(this.delete());
-        });
-      });
-    });
-
-    return promise;
+      })
+      .subscribe(() => this.delete());
   }
 
   formBeforeSave = () => {
@@ -252,6 +239,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
           this.afterSave(result);
         }
         this.messageHandler.showSuccess('Classifier updated successfully.');
+        this.editingService.stop();
         this.editableForm.visible = false;
         this.editForm.forEach(x => x.edit({ editing: false }));
       }, error => {
@@ -270,6 +258,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   }
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 

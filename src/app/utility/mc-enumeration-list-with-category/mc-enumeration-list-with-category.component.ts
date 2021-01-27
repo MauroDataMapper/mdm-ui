@@ -25,6 +25,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { StateHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-mc-enumeration-list-with-category',
@@ -72,8 +73,8 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
-    private stateHandler: StateHandlerService
-  ) {
+    private stateHandler: StateHandlerService,
+    private editingService: EditingService) {
   }
 
   ngOnInit() {
@@ -361,6 +362,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     }
 
     this.displayItems = this.displayItems.concat(newRecord);
+    this.editingService.setFromCollection(this.displayItems);
   }
 
   validate(record) {
@@ -409,6 +411,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
     record.edit = Object.assign({}, record);
     record.edit.errors = [];
     record.inEdit = true;
+    this.editingService.setFromCollection(this.displayItems);
   }
 
   deleteClicked(record) {
@@ -447,17 +450,24 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
   }
 
   cancelEditClicked(record) {
-    if (record.isNew && this.allRecords) {
-      let i = this.allRecords.length - 1;
-      while (i >= 0) {
-        if (this.allRecords[i].id === record.id) {
-          this.allRecords.splice(i, 1);
-        }
-        i--;
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
       }
-      this.showRecords([].concat(this.allRecords));
-    }
-    record.inEdit = false;
+
+      if (record.isNew && this.allRecords) {
+        let i = this.allRecords.length - 1;
+        while (i >= 0) {
+          if (this.allRecords[i].id === record.id) {
+            this.allRecords.splice(i, 1);
+          }
+          i--;
+        }
+        this.showRecords([].concat(this.allRecords));
+      }
+      record.inEdit = false;
+      this.editingService.setFromCollection(this.displayItems);
+    });
   }
 
   saveClicked(record) {
@@ -478,6 +488,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
       record.category = resource.category;
       record.inEdit = false;
       record.isNew = false;
+      this.editingService.setFromCollection(this.displayItems);
 
       // New Record
       if (record.id.indexOf('temp-') === 0) {
@@ -520,6 +531,7 @@ export class McEnumerationListWithCategoryComponent implements OnInit {
         record.value = resource.value;
         record.category = resource.category;
         record.inEdit = false;
+        this.editingService.setFromCollection(this.displayItems);
 
         this.reloadRecordsFromServer().subscribe((data) => {
           this.showRecords(data.body.enumerationValues);

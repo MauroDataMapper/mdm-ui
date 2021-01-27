@@ -46,6 +46,7 @@ export interface Node {
     modelVersion?: string;
     modelId?: string;
     parentId?: string;
+    model?: any;
 }
 
 /** Wrapper for source node to support Material Flat Tree */

@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-table-buttons',
@@ -36,8 +37,7 @@ export class TableButtonsComponent {
   @Output() delete = new EventEmitter<any>();
   @Output() save = new EventEmitter<any>();
 
-  constructor() {}
-
+  constructor(private editingService: EditingService) {}
 
   saveClicked(record, index) {
     if (!this.validate) {
@@ -59,12 +59,18 @@ export class TableButtonsComponent {
   }
 
   editCancelled(record, index) {
-    record.inEdit = undefined;
-    record.edit = undefined;
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
 
-    if (this.cancelEdit) {
-      this.cancelEdit.emit([record, index]);
-    }
+      record.inEdit = undefined;
+      record.edit = undefined;
+
+      if (this.cancelEdit) {
+        this.cancelEdit.emit([record, index]);
+      }
+    });
   }
 
   deleteClicked(record) {

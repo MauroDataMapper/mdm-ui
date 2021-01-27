@@ -31,6 +31,8 @@ import { debounceTime } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
+import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-models',
@@ -132,8 +134,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private broadcastSvc: BroadcastService,
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
-    public dialog: MatDialog
-  ) {
+    public dialog: MatDialog,
+    private editingService: EditingService) {
   }
 
   ngOnInit() {
@@ -251,15 +253,19 @@ export class ModelsComponent implements OnInit, OnDestroy {
     );
   };
 
-  onNodeClick = node => {
+  onNodeConfirmClick($event: NodeConfirmClickEvent) {
+    const node = $event.next.node;
+
     this.stateHandler.Go(node.domainType, {
-      id: node.id,
-      edit: false,
-      dataModelId: node.modelId,
-      dataClassId: node.parentId || '',
-      terminologyId: node.modelId || node.model
-    });
-  };
+          id: node.id,
+          edit: false,
+          dataModelId: node.modelId,
+          dataClassId: node.parentId || '',
+          terminologyId: node.modelId || node.model
+        }).then(
+          () => $event.setSelectedNode($event.next),
+          () => $event.setSelectedNode($event.current));
+  }
 
   onNodeDbClick = node => {
     // if the element if a dataModel, load it
@@ -297,6 +303,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
           message: 'Please enter the name of your Folder. <br> <strong>Note:</strong> This folder will be added at the top of the Tree'
         }
       });
+
+      this.editingService.configureDialogRef(dialog);
 
       dialog.afterClosed().subscribe(result => {
         if (result) {
@@ -399,12 +407,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
       return;
     }
     if (event.permanent) {
-      this.folderHandler.askForPermanentDelete(event.folder.id).then(() => {
+      this.folderHandler.askForPermanentDelete(event.folder.id).subscribe(() => {
         this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       });
     } else {
-      this.folderHandler.askForSoftDelete(event.folder.id).then(() => {
+      this.folderHandler.askForSoftDelete(event.folder.id).subscribe(() => {
         event.folder.deleted = true;
       });
     }

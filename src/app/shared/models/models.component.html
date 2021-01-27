@@ -144,7 +144,8 @@ SPDX-License-Identifier: Apache-2.0
                                         (addChildDataElementEvent)="onAddChildDataElement($event)"
                                         (addChildDataTypeEvent)="onAddChildDataType($event)"
                                         (nodeDbClickEvent)="onNodeDbClick($event)"
-                                        (nodeClickEvent)="onNodeClick($event)"></mdm-folders-tree>
+                                        (nodeConfirmClickEvent)="onNodeConfirmClick($event)">
+                            </mdm-folders-tree>
                     </div>
                     <div class="loading-spinner" *ngIf="reloading">
                         <div>

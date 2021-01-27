@@ -36,11 +36,11 @@ import { ElementSelectorDialogueService } from '@mdm/services/element-selector-d
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -98,7 +98,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
               private helpDialogueService: HelpDialogueHandlerService,
               private dialog: MatDialog,
               private favouriteHandler: FavouriteHandlerService,
-              private title: Title) {
+              private title: Title,
+              private editingService: EditingService) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.CodeSetDetails();
@@ -123,6 +124,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -238,73 +240,47 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     if (!this.showSoftDelete) {
       return;
     }
-    const promise = new Promise(() => {
 
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
-          data: {
-            title: 'Are you sure you want to delete this Code Set?',
-            okBtnTitle: 'Yes, delete',
-            btnType: 'warn',
-            message: `<p class='marginless'>This Code Set will be marked as deleted and will not be visible to users,</p>
-                      <p class='marginless'>except Administrators.</p>`
-          }
-        });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result != null && result.status === 'ok') {
-          this.processing = true;
-          this.delete(false);
-          this.processing = false;
-        } else {
-          return;
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Are you sure you want to delete this Code Set?',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class='marginless'>This Code Set will be marked as deleted and will not be visible to users,</p>
+                    <p class='marginless'>except Administrators.</p>`
         }
+      })
+      .subscribe(() => {
+        this.processing = true;
+        this.delete(false);
+        this.processing = false;
       });
-    });
-    return promise;
   }
 
-  askForPermanentDelete(): any {
+  askForPermanentDelete() {
     if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
-          data: {
-            title: 'Delete permanently',
-            okBtnTitle: 'Yes, delete',
-            btnType: 'warn',
-            message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
-          }
-        });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+    this.dialog
+      .openDoubleConfirmationAsync({
+        data: {
+          title: 'Delete permanently',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: 'Are you sure you want to delete this Code Set?',
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
-          }
-        });
-
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result != null && result2.status === 'ok') {
-            this.delete(true);
-          } else {
-            return;
-          }
-        });
-      });
-    });
-
-    return promise;
+      }, {
+        data: {
+          title: 'Are you sure you want to delete this Code Set?',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
+        }
+      })
+      .subscribe(() => this.delete(true));
   }
-
 
   formBeforeSave = async () => {
     this.editMode = false;
@@ -352,6 +328,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
 
     if (this.validateLabel(this.result.label)) {
       await this.resourcesService.codeSet.update(this.result.id, resource).subscribe(res => {
+        this.editingService.stop();
         this.messageHandler.showSuccess('Code Set updated successfully.');
         this.editableForm.visible = false;
         this.result.description = res.body.description;
@@ -373,6 +350,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   showForm() {
+    this.editingService.start();
     this.showEditDescription = false;
     this.editableForm.show();
   }
@@ -449,6 +427,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

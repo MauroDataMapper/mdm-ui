@@ -29,11 +29,11 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -68,7 +68,8 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     private stateHandler: StateHandlerService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
-    private securityHandler: SecurityHandlerService
+    private securityHandler: SecurityHandlerService,
+    private editingService: EditingService
   ) { }
 
 
@@ -89,6 +90,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -183,6 +185,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       this.mcDataTypeObject.label = result.label;
       this.mcDataTypeObject.description = result.description;
       this.messageHandler.showSuccess('Data Type updated successfully.');
+      this.editingService.stop();
       this.editableForm.visible = false;
     }, error => {
       this.messageHandler.showError('There was a problem updating the Data Type.', error);
@@ -199,6 +202,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     }
   };
   showForm() {
+    this.editingService.start();
     this.showEditDescription = false;
     this.editableForm.show();
   }
@@ -241,24 +245,21 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
         }
       }
 
-      this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: 'Permanent deletion',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message
-        }
-      }).afterClosed().subscribe((result2) => {
-        if (result2 != null && result2.status === 'ok') {
-          this.delete();
-        } else {
-          return;
-        }
-      });
+      this.dialog
+        .openConfirmationAsync({
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message
+          }
+        })
+        .subscribe(() => this.delete());
     });
   };
 
   showDescription = () => {
+    this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };

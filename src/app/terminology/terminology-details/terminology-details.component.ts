@@ -25,11 +25,11 @@ import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -84,9 +84,8 @@ export class TerminologyDetailsComponent implements OnInit {
     private broadcastSvc: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
-    private renderer: Renderer2
-  ) {}
-
+    private renderer: Renderer2,
+    private editingService: EditingService) {}
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -107,6 +106,7 @@ export class TerminologyDetailsComponent implements OnInit {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -153,6 +153,8 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.mcTerminology.aliases = Object.assign({}, result.aliases || []);
         this.mcTerminology.editAliases = Object.assign({}, this.mcTerminology.aliases);
+
+        this.editingService.stop();
 
         this.messageHandler.showSuccess('Terminology updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -217,7 +219,9 @@ export class TerminologyDetailsComponent implements OnInit {
     if (!this.showSoftDelete) {
       return;
     }
-    this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmationAsync({
         data: {
           title: 'Are you sure you want to delete this Terminology?',
           okBtnTitle: 'Yes, delete',
@@ -225,45 +229,32 @@ export class TerminologyDetailsComponent implements OnInit {
           message: `<p class="marginless">This Terminology will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
         }
-    }).afterClosed().subscribe(result => {
-      if (result != null && result.status === 'ok') {
-        this.delete(false);
-      } else {
-        return;
-      }
-    });
+      })
+      .subscribe(() => this.delete(false));
   };
 
   askForPermanentDelete = () => {
     if (!this.showPermDelete) {
       return;
     }
-    this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
         }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
         }
-        this.dialog.open(ConfirmationModalComponent, {
-            data: {
-              title: 'Confirm permanent deletion',
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
-            }
-          }).afterClosed().subscribe(result2 => {
-            if (result2 != null && result.status === 'ok') {
-              this.delete(true);
-            } else {
-              return;
-            }
-          });
-      });
+      })
+      .subscribe(() => this.delete(true));
   };
 
   openEditClicked = formName => {
@@ -341,6 +332,7 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 }

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { FolderResult } from '../model/folderModel';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -24,13 +24,17 @@ import { SharedService } from '../services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { MatTabGroup } from '@angular/material/tabs';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-classification',
   templateUrl: './classification.component.html',
   styleUrls: ['./classification.component.sass']
 })
-export class ClassificationComponent implements OnInit, OnDestroy {
+export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+
   @Input() afterSave: any;
   @Input() editMode = false;
 
@@ -56,8 +60,8 @@ export class ClassificationComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private title: Title
-  ) { }
+    private title: Title,
+    private editingService: EditingService) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -112,7 +116,6 @@ export class ClassificationComponent implements OnInit, OnDestroy {
 
     // });
 
-
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
         this.showSecuritySection = message;
@@ -127,6 +130,10 @@ export class ClassificationComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   classifierDetails(id: any) {

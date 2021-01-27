@@ -36,7 +36,6 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTable } from '@angular/material/table';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -205,25 +204,16 @@ export class GroupMemberTableComponent implements AfterViewInit {
   };
 
   askForDelete = (record: { firstName: string; lastName: string }) => {
-    const promise = new Promise(() => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+    this.dialog
+      .openConfirmationAsync({
         data: {
           title: 'Are you sure?',
           okBtnTitle: 'Yes, remove',
           btnType: 'warn',
           message: `<p class="marginless"> <strong>Note:</strong> You are removing <strong>${record.firstName} ${record.lastName}</strong> from this group`,
         },
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
-          this.confirmRemove(record);
-        } else {
-          return;
-        }
-      });
-    });
-    return promise;
+      })
+      .subscribe(() => this.confirmRemove(record));
   };
 
   confirmRemove = (record) => {

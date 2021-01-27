@@ -37,6 +37,7 @@ import { ElementSelectorDialogueService } from '../services/element-selector-dia
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -78,7 +79,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcastSvc: BroadcastService,
     private title: Title,
-  ) {
+    private editingService: EditingService) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.FolderDetails();
@@ -105,6 +106,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.errorMessage = '';
       this.editableForm.label = this.result.label;
@@ -175,19 +177,25 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.showDelete) {
       return;
     }
-    this.folderHandler.askForSoftDelete(this.result.id).then(() => {
-      this.stateHandler.reload();
-    });
+
+    this.folderHandler
+      .askForSoftDelete(this.result.id)
+      .subscribe(() => {
+        this.stateHandler.reload();
+      });
   }
 
   askForPermanentDelete(): any {
     if (!this.showPermDelete) {
       return;
     }
-    this.folderHandler.askForPermanentDelete(this.result.id).then(() => {
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-      this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-    });
+
+    this.folderHandler
+      .askForPermanentDelete(this.result.id)
+      .subscribe(() => {
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
+      });
   }
 
   formBeforeSave = () => {
@@ -206,6 +214,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
             this.afterSave(result);
           }
           this.messageHandlerService.showSuccess('Folder updated successfully.');
+          this.editingService.stop();
           this.editableForm.visible = false;
           this.editForm.forEach(x => x.edit({ editing: false }));
           this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -226,6 +235,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 

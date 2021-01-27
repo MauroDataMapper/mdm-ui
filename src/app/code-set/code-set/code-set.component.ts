@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { CodeSetResult } from '@mdm/model/codeSetModel';
@@ -25,13 +25,14 @@ import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-code-set',
   templateUrl: './code-set.component.html',
   styleUrls: ['./code-set.component.scss'],
 })
-export class CodeSetComponent implements OnInit, OnDestroy {
+export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   codeSetModel: CodeSetResult;
   showSecuritySection: boolean;
@@ -52,8 +53,8 @@ export class CodeSetComponent implements OnInit, OnDestroy {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private title: Title
-  ) { }
+    private title: Title,
+    private editingService: EditingService) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -74,6 +75,10 @@ export class CodeSetComponent implements OnInit, OnDestroy {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   codeSetDetails(id: any) {

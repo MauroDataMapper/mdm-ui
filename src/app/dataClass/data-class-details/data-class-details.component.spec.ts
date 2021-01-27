@@ -40,6 +40,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ToastrModule } from 'ngx-toastr';
 import { UIRouterModule } from '@uirouter/angular';
 import { MatDialogModule } from '@angular/material/dialog';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 describe('DataClassDetailsComponent', () => {
   let component: DataClassDetailsComponent;

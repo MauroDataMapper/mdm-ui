@@ -20,7 +20,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -136,58 +135,40 @@ export class ModelManagementComponent implements OnInit {
   };
 
   askForPermanentDelete() {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'Only Admins are allowed to delete records!' });
-      }
+    if (!this.securityHandler.isAdmin()) {
+      this.messageHandler.showError('Only Admins are allowed to delete records!');
+      return;
+    }
 
-      let message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete these records?';
-      if (this.selectedElementsCount === 1) {
-        message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this record?';
-      }
+    let message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete these records?';
+    if (this.selectedElementsCount === 1) {
+      message = 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this record?';
+    }
 
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+    let confirmTitle = 'Are you sure you want to delete these records?';
+    const confirmMessage = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
+                          <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
+    if (this.selectedElementsCount === 1) {
+      confirmTitle = 'Are you sure you want to delete this record?';
+    }
+
+    this.dialog
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Delete permanently',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message,
-        },
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result?.status !== 'ok') {
-          return;
         }
-
-        let title = 'Are you sure you want to delete these records?';
-        message = `<p class='marginless'><strong>Note: </strong>All 'Data Classes', 'Data Elements' and 'Data Types'
-                   <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`;
-        if (this.selectedElementsCount === 1) {
-          title = 'Are you sure you want to delete this record?';
+      }, {
+        data: {
+          title: confirmTitle,
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: confirmMessage,
         }
-
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title,
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message,
-          },
-        });
-
-        dialog2.afterClosed().subscribe((res) => {
-          if (res?.status !== 'ok') {
-            reject(null);
-            return;
-          }
-
-          this.delete(true);
-        });
-      });
-    });
-
-    return promise;
+      })
+      .subscribe(() => this.delete(true));
   }
 
   delete(permanent?) {
@@ -226,38 +207,30 @@ export class ModelManagementComponent implements OnInit {
   }
 
   askForSoftDelete() {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'Only Admins are allowed to delete records!' });
-      }
+    if (!this.securityHandler.isAdmin()) {
+      this.messageHandler.showError('Only Admins are allowed to delete records!');
+      return;
+    }
 
-      let title = 'Are you sure you want to delete these records?';
-      let message = `<p class="marginless">They will be marked as deleted and will not be viewable by users</p>
-                     <p class="marginless">except Administrators.</p>`;
-      if (this.selectedElementsCount === 1) {
-        title = 'Are you sure you want to delete this record?';
-        message = `<p class="marginless">It will be marked as deleted and will not be viewable by users</p>
+    let title = 'Are you sure you want to delete these records?';
+    let message = `<p class="marginless">They will be marked as deleted and will not be viewable by users</p>
                    <p class="marginless">except Administrators.</p>`;
-      }
+    if (this.selectedElementsCount === 1) {
+      title = 'Are you sure you want to delete this record?';
+      message = `<p class="marginless">It will be marked as deleted and will not be viewable by users</p>
+                 <p class="marginless">except Administrators.</p>`;
+    }
 
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+    this.dialog
+      .openConfirmationAsync({
         data: {
           title,
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message,
-        },
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result?.status !== 'ok') {
-          return;
         }
-
-        this.delete(false);
-      });
-    });
-    return promise;
+      })
+      .subscribe(() => this.delete(false));
   }
 
   private removeChildren(node: any) {

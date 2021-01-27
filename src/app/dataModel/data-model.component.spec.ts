@@ -80,6 +80,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { empty } from 'rxjs/internal/observable/empty';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 describe('DataModelComponent', () => {
   let component: DataModelComponent;

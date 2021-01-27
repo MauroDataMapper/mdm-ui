@@ -35,6 +35,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatInput } from '@angular/material/input';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-set-metadata',
@@ -74,7 +75,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     private messageHandler: MessageHandlerService,
     private helpService: HelpDialogueHandlerService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private gridService: GridService
+    private gridService: GridService,
+    private editingService: EditingService
   ) { }
 
   ngAfterViewInit() {
@@ -196,6 +198,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   onEdit(record) {
+    this.editingService.setFromCollection(this.records);
     // now fill the 'metadataKeys'
     for (const namespace of this.namespaces) {
       if (namespace.namespace === record.namespace) {
@@ -272,6 +275,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       isNew: true,
     };
     this.records = [].concat([newRecord]).concat(this.records);
+
+    this.editingService.setFromCollection(this.records);
   }
 
   cancelEdit(record, index) {
@@ -279,6 +284,8 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.records.splice(index, 1);
       this.records = [].concat(this.records);
     }
+
+    this.editingService.setFromCollection(this.records);
   }
 
   save(record, index) {
@@ -312,6 +319,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         record.key = resource.key;
         record.value = resource.value;
         record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
         this.messageHandler.showSuccess('Property updated successfully.');
       }, (error) => {
           // duplicate namespace + key
@@ -331,6 +339,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         record.key = response.body.key;
         record.value = response.body.value;
         record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
         delete record.edit;
 
         if (this.type === 'static') {

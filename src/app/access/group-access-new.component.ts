@@ -25,6 +25,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-group-access-new',
@@ -64,8 +65,8 @@ export class GroupAccessNewComponent implements OnInit {
     private messageService: MessageService,
     private resourceService: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
-    private messageHandler: MessageHandlerService
-  ) {
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService) {
     this.dataSource = new MatTableDataSource(this.groups);
   }
 
@@ -129,6 +130,10 @@ export class GroupAccessNewComponent implements OnInit {
 
     this.resourceService.securableResource.addUserGroupToSecurableResourceGroupRole(this.folderResult?.domainType, mId, levelId, gId, null).subscribe(() => {
       this.messageHandler.showSuccess('Save Successful');
+
+      row.inEdit = false;
+      this.editingService.setFromCollection(this.groups);
+
       this.buildGroups();
     }, (error) => {
       this.messageHandler.showError('Save Error', error);
@@ -150,14 +155,23 @@ export class GroupAccessNewComponent implements OnInit {
       isNew: true,
     };
     this.groups = [].concat([newRecord]).concat(this.groups);
+    this.editingService.setFromCollection(this.groups);
     this.refreshDataSource();
   }
 
   cancelEdit(record, index) {
-    if (record.isNew) {
-      this.groups.splice(index, 1);
-      this.refreshDataSource();
-    }
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
+
+      if (record.isNew) {
+        this.groups.splice(index, 1);
+        this.refreshDataSource();
+      }
+
+      this.editingService.setFromCollection(this.groups);
+    });
   }
 
   refreshDataSource() {

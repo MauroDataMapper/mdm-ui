@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -26,13 +26,14 @@ import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { BaseComponent } from '@mdm/shared/base/base.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-element',
   templateUrl: './data-element.component.html',
   styleUrls: ['./data-element.component.sass']
 })
-export class DataElementComponent extends BaseComponent implements OnInit {
+export class DataElementComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataElementOutput: DataElementResult;
   showSecuritySection: boolean;
@@ -54,8 +55,8 @@ export class DataElementComponent extends BaseComponent implements OnInit {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private title: Title
-  ) {
+    private title: Title,
+    private editingService: EditingService) {
     super();
     // tslint:disable-next-line: deprecation
     if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId || !this.stateService.params.dataClassId)) {
@@ -81,7 +82,6 @@ export class DataElementComponent extends BaseComponent implements OnInit {
     }
   }
 
-
   ngOnInit() {
     // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
@@ -94,6 +94,10 @@ export class DataElementComponent extends BaseComponent implements OnInit {
       this.showSearch = message;
     });
     this.afterSave = () => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElementOutput.id);
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   getTabDetailByName(tabName) {

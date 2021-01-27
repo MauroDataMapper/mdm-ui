@@ -35,12 +35,12 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { ReferenceModelResult } from '@mdm/model/referenceModelModel';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
    selector: 'mdm-reference-data-details',
@@ -92,8 +92,8 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       private dialog: MatDialog,
       private favouriteHandler: FavouriteHandlerService,
       private exportHandler: ExportHandlerService,
-      private title: Title
-   ) { }
+      private title: Title,
+      private editingService: EditingService) { }
 
    ngOnInit() {
       this.isAdminUser = this.sharedService.isAdmin;
@@ -116,6 +116,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       };
 
       this.editableForm.cancel = () => {
+         this.editingService.stop();
          this.editForm.forEach(x => x.edit({ editing: false }));
          this.editableForm.visible = false;
          this.editableForm.validationError = false;
@@ -223,8 +224,9 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
       if (!this.showSoftDelete) {
          return;
       }
-      const promise = new Promise(() => {
-         const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+      this.dialog
+         .openConfirmationAsync({
             data: {
                title: 'Are you sure you want to delete this Reference Data Model?',
                okBtnTitle: 'Yes, delete',
@@ -232,59 +234,37 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
                message: `<p class="marginless">This Reference Data Model will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
             }
+         })
+         .subscribe(() => {
+            this.processing = true;
+            this.delete(false);
+            this.processing = false;
          });
-
-         dialog.afterClosed().subscribe(result => {
-            if (result != null && result.status === 'ok') {
-               this.processing = true;
-               this.delete(false);
-               this.processing = false;
-            } else {
-               return;
-            }
-         });
-      });
-      return promise;
    }
 
    askForPermanentDelete(): any {
       if (!this.showPermDelete) {
          return;
       }
-      const promise = new Promise(() => {
-         const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+      this.dialog
+         .openDoubleConfirmationAsync({
             data: {
                title: 'Permanent deletion',
                okBtnTitle: 'Yes, delete',
                btnType: 'warn',
                message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Reference Data Model?'
             }
-         });
-
-         dialog.afterClosed().subscribe(result => {
-            if (result?.status !== 'ok') {
-               return;
+         }, {
+            data: {
+               title: 'Confirm permanent deletion',
+               okBtnTitle: 'Confirm deletion',
+               btnType: 'warn',
+               message: `<p class='marginless'><strong>Note: </strong>All its 'Types', 'Elements' and 'Data Values'
+                   <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
             }
-            const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-               data: {
-                  title: 'Confirm permanent deletion',
-                  okBtnTitle: 'Confirm deletion',
-                  btnType: 'warn',
-                  message: `<p class='marginless'><strong>Note: </strong>All its 'Types', 'Elements' and 'Data Values'
-                      <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
-               }
-            });
-
-            dialog2.afterClosed().subscribe(result2 => {
-               if (result != null && result2.status === 'ok') {
-                  this.delete(true);
-               } else {
-                  return;
-               }
-            });
-         });
-      });
-      return promise;
+         })
+         .subscribe(() => this.delete(true));
    }
 
    formBeforeSave = () => {
@@ -329,6 +309,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
             this.result.description = res.body.description;
             this.ReferenceModelDetails();
             this.messageHandler.showSuccess('Reference Data Model updated successfully.');
+            this.editingService.stop();
             this.editableForm.visible = false;
             this.editForm.forEach(x => x.edit({ editing: false }));
             this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -348,6 +329,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
    }
 
    showForm() {
+      this.editingService.start();
       this.showEditDescription = false;
       this.editableForm.show();
    }
@@ -413,6 +395,7 @@ export class ReferenceDataDetailsComponent implements OnInit, AfterViewInit, OnD
    }
 
    showDescription = () => {
+      this.editingService.start();
       this.showEditDescription = true;
       this.editableForm.show();
    };

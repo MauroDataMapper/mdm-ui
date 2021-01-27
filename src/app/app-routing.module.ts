@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { AboutComponent } from './about/about.component';
 import { FolderComponent } from './folder/folder.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
@@ -32,7 +32,7 @@ import { ImportModelsComponent } from './import-models/import-models.component';
 import { SearchComponent } from './search/search.component';
 import { TerminologyComponent } from './terminology/terminology.component';
 import { TwoSidePanelComponent } from './two-side-panel/two-side-panel.component';
-import { UIRouterModule } from '@uirouter/angular';
+import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import { ModelsComponent } from './shared/models/models.component';
@@ -56,9 +56,11 @@ import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/n
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
+import { StateObject, TransitionService, UIRouter } from '@uirouter/core';
+import { EditingService } from '@mdm/services/editing.service';
 
 
-export const pageRoutes = {
+export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
     {
       name: 'appContainer',
@@ -279,8 +281,43 @@ export const pageRoutes = {
   ]
 };
 
+/**
+ * Router transition hook to check editing state of app before switching views
+ */
+const editingViewTransitionHooks = (transitionService: TransitionService, editingService: EditingService) => {
+
+  /**
+   * Check each state transition where the "from" view state is marked as editable.
+   */
+  const canLeaveStateCriteria = {
+    from: (state: StateObject) => state.name && editingService.isRouteEditable(state.name)
+  };
+
+  /**
+   * Check a state transition by checking if any unsaved edits still exist. If so, confirm with the user whether to continue.
+   */
+  const canLeaveStateAction = () => editingService.confirmLeaveAsync().toPromise();
+
+  /**
+   * When entering each view, ensure that the global editing state of the app is reset.
+   */
+  const onEnteringViewAction = () => editingService.stop();
+
+  transitionService.onBefore(canLeaveStateCriteria, canLeaveStateAction);
+  transitionService.onEnter({}, onEnteringViewAction);
+};
+
+const routerConfigFn = (router: UIRouter, injector: Injector) => {
+  const transitionService = router.transitionService;
+  const editingService = injector.get<EditingService>(EditingService);
+  editingViewTransitionHooks(transitionService, editingService);
+};
+
 @NgModule({
-  imports: [UIRouterModule.forChild({ states: pageRoutes.states })],
+  imports: [UIRouterModule.forChild({
+    states: pageRoutes.states,
+    config: routerConfigFn
+  })],
   providers: [
     {
       provide: LocationStrategy,

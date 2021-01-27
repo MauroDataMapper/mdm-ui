@@ -24,6 +24,8 @@ import { ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse 
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { ClipboardService } from 'ngx-clipboard';
 import { filter, mergeMap } from 'rxjs/operators';
+import { EditingService } from '@mdm/services/editing.service';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-api-keys',
@@ -44,7 +46,7 @@ export class ApiKeysComponent implements OnInit {
     private title: Title,
     protected clipboardService: ClipboardService,
     private messageHandler: MessageHandlerService,
-  ) { }
+    private editingService: EditingService) { }
 
   ngOnInit(): void {
     this.title.setTitle('API Keys');
@@ -91,8 +93,8 @@ export class ApiKeysComponent implements OnInit {
   };
 
   refreshKey = record => {
-    this.dialog
-      .open<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
+    this.editingService
+      .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
           showName: false,
           showExpiryDay: true,
@@ -102,7 +104,7 @@ export class ApiKeysComponent implements OnInit {
       })
       .afterClosed()
       .pipe(
-        filter(result => result && result.status === 'ok'),
+        filter(result => result && result.status === ModalDialogStatus.Ok),
         mergeMap(result => this.resourcesService.catalogueUser.refreshApiKey(this.currentUser?.id, record.apiKey, result.data.expiresInDays))
       )
       .subscribe(() => {
@@ -114,8 +116,8 @@ export class ApiKeysComponent implements OnInit {
   };
 
   addApiKey = () => {
-    this.dialog
-      .open<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
+    this.editingService
+      .openDialog<ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse>(ApiKeysModalComponent, {
         data: {
           showName: true,
           showExpiryDay: true,
@@ -125,7 +127,7 @@ export class ApiKeysComponent implements OnInit {
       })
       .afterClosed()
       .pipe(
-        filter(result => result && result.status === 'ok'),
+        filter(result => result && result.status === ModalDialogStatus.Ok),
         mergeMap(result => this.resourcesService.catalogueUser.saveApiKey(this.currentUser?.id, result.data))
       )
       .subscribe(() => {
@@ -137,26 +139,23 @@ export class ApiKeysComponent implements OnInit {
   };
 
   removeKey = record => {
-    this.dialog
-      .open(ConfirmationModalComponent, {
-        data: {
-          title: 'Are you sure you want to delete this API Key?',
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: '<p class="marginless">This API Key will be removed and will not be usable anymore.</p>'
-        }
-      })
-      .afterClosed()
-      .pipe(
-        filter(result => result && result.status === 'ok'),
-        mergeMap(() => this.resourcesService.catalogueUser.removeApiKey(this.currentUser?.id, record.apiKey))
-      )
-      .subscribe(() => {
-        this.messageHandler.showSuccess('API Key removed successfully.');
-        this.listApiKeys(this.currentUser);
-      }, error => {
-        this.messageHandler.showError('There was a problem removing this API Key.', error);
-      });
+    this.dialog.openConfirmationAsync({
+      data: {
+        title: 'Are you sure you want to delete this API Key?',
+        okBtnTitle: 'Yes, delete',
+        btnType: 'warn',
+        message: '<p class="marginless">This API Key will be removed and will not be usable anymore.</p>'
+      }
+    })
+    .pipe(
+      mergeMap(() => this.resourcesService.catalogueUser.removeApiKey(this.currentUser?.id, record.apiKey))
+    )
+    .subscribe(() => {
+      this.messageHandler.showSuccess('API Key removed successfully.');
+      this.listApiKeys(this.currentUser);
+    }, error => {
+      this.messageHandler.showError('There was a problem removing this API Key.', error);
+    });    
   };
 
   copyToClipboard = record => {

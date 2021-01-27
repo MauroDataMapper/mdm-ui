@@ -18,6 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { EditingService } from '@mdm/services/editing.service';
 
 export interface ApiKeysModalConfiguration {
   showName?: boolean;
@@ -32,7 +34,7 @@ export interface ApiKeysModalResponseData {
 }
 
 export interface ApiKeysModalResponse {
-  status: 'ok' | 'cancel';
+  status: ModalDialogStatus;
   data?: ApiKeysModalResponseData;
 }
 
@@ -44,7 +46,7 @@ export interface ApiKeysModalResponse {
 export class ApiKeysModalComponent implements OnInit {
   name: string;
   refreshable = false;
-  expiresInDays: number;
+  expiresInDays: number = 365;
   output: ApiKeysModalResponseData;
 
   showName: boolean;
@@ -53,7 +55,8 @@ export class ApiKeysModalComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ApiKeysModalComponent, ApiKeysModalResponse>,
-    @Inject(MAT_DIALOG_DATA) public data: ApiKeysModalConfiguration) { }
+    @Inject(MAT_DIALOG_DATA) public data: ApiKeysModalConfiguration,
+    private editingService: EditingService) { }
 
   ngOnInit(): void {
     this.showName = this.data.showName ? this.data.showName : false;
@@ -68,11 +71,15 @@ export class ApiKeysModalComponent implements OnInit {
       refreshable: this.refreshable
     };
 
-    this.dialogRef.close({ status: 'ok', data: this.output });
+    this.dialogRef.close({ status: ModalDialogStatus.Ok, data: this.output });
   }
 
   cancel() {
-    this.dialogRef.close({ status: 'cancel' });
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (confirm) {
+        this.dialogRef.close({ status: ModalDialogStatus.Cancel });        
+      }      
+    });
   }
 
   enableOk() {

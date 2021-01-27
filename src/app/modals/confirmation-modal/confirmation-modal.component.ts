@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 export interface ConfirmationModalConfig {
   title?: string;
@@ -27,13 +28,8 @@ export interface ConfirmationModalConfig {
   btnType?: string;
 }
 
-export enum ConfirmationModalStatus {
-  Ok = 'ok',
-  Cancel = 'cancel'
-}
-
 export interface ConfirmationModalResult {
-  status: ConfirmationModalStatus;
+  status: ModalDialogStatus;
 }
 
 @Component({
@@ -63,7 +59,7 @@ export class ConfirmationModalComponent implements OnInit {
     this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
   }
 
-  ok = () => this.dialogRef.close({ status: ConfirmationModalStatus.Ok });
+  ok = () => this.dialogRef.close({ status: ModalDialogStatus.Ok });
 
-  cancel = () => this.dialogRef.close({ status: ConfirmationModalStatus.Cancel });
+  cancel = () => this.dialogRef.close({ status: ModalDialogStatus.Cancel });
 }

@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container mb-2">
     <h4>
-        <span *ngIf="catalogue.id">Edit Connected Catalogue</span>
-        <span *ngIf="!catalogue.id">Add Connected Catalogue</span>
+        <span *ngIf="catalogue.id">Edit Subscribed Catalogue</span>
+        <span *ngIf="!catalogue.id">Add Subscribed Catalogue</span>
     </h4>
 </div>
 <form name="editableForm" class="mdm--form mb-2">
@@ -47,9 +47,9 @@ SPDX-License-Identifier: Apache-2.0
         Cancel
     </button>
     <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="catalogue.id">
-        Update connection
+        Update subscription
     </button>
     <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!catalogue.id">
-        Add connection
+        Add subscription
     </button>
 </form>

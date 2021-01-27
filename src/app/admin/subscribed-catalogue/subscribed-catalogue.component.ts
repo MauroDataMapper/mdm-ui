@@ -17,25 +17,25 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ConnectedCatalogue } from '@mdm/model/connectedCatalogueModel';
+import { SubscribedCatalogue } from '@mdm/model/subscribedCatalogueModel';
 import { StateHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 
-interface ConnectedCatalogueComponentErrors {
+interface SubscribedCatalogueComponentErrors {
   name?: string;
   url?: string;
   apiKey?: string;
 };
 
 @Component({
-  selector: 'mdm-connected-catalogue',
-  templateUrl: './connected-catalogue.component.html',
-  styleUrls: ['./connected-catalogue.component.scss']
+  selector: 'mdm-subscribed-catalogue',
+  templateUrl: './subscribed-catalogue.component.html',
+  styleUrls: ['./subscribed-catalogue.component.scss']
 })
-export class ConnectedCatalogueComponent implements OnInit {
+export class SubscribedCatalogueComponent implements OnInit {
 
-  catalogue: ConnectedCatalogue;
-  errors: ConnectedCatalogueComponentErrors;
+  catalogue: SubscribedCatalogue;
+  errors: SubscribedCatalogueComponentErrors;
 
   constructor(
     private routerGobals: UIRouterGlobals,
@@ -43,12 +43,12 @@ export class ConnectedCatalogueComponent implements OnInit {
     private title: Title) { }
 
   ngOnInit(): void {
-     const catalogueId = this.routerGobals.params.id;
+    const catalogueId = this.routerGobals.params.id;
 
     if (catalogueId) {
-      this.title.setTitle('Connected Catalogue - Edit Catalogue');
+      this.title.setTitle('Subscribed Catalogue - Edit Subscription');
 
-      alert('TODO: fetch connected catalogue ' + catalogueId);
+      alert('TODO: fetch subscription catalogue ' + catalogueId);
 
       // TODO: replace with fetch from server
       this.catalogue = {
@@ -59,7 +59,7 @@ export class ConnectedCatalogueComponent implements OnInit {
       };
     }
     else {
-      this.title.setTitle('Connected Catalogue - Add Catalogue');
+      this.title.setTitle('Subscribed Catalogue - Add Subscription');
 
       this.catalogue = {
         name: '',
@@ -75,21 +75,21 @@ export class ConnectedCatalogueComponent implements OnInit {
     }
 
     if (this.catalogue.id) {
-      alert('TODO: save connected catalogue ' + this.catalogue.id);
-      this.navigateToCatalogues();
+      alert('TODO: save subscription catalogue ' + this.catalogue.id);
+      this.navigateToParent();
     }
     else {
       alert('TODO: new connected catalogue ' + this.catalogue.url);
-      this.navigateToCatalogues();
+      this.navigateToParent();
     }
   }
 
   cancel() {
-    this.navigateToCatalogues();
+    this.navigateToParent();
   }
 
-  private navigateToCatalogues() {
-    this.stateHandler.Go('appContainer.adminArea.connectedCatalogues');
+  private navigateToParent() {
+    this.stateHandler.Go('appContainer.adminArea.subscribedCatalogues');
   }
 
   validate() {
@@ -99,17 +99,17 @@ export class ConnectedCatalogueComponent implements OnInit {
     if (this.catalogue.name.trim().length === 0) {
       this.errors.name = 'Name cannot be empty!';
       isValid = false;
-    }  
+    }
 
     if (this.catalogue.url.trim().length === 0) {
       this.errors.url = 'URL cannot be empty!';
       isValid = false;
-    }  
+    }
 
     if (this.catalogue.apiKey.trim().length === 0) {
       this.errors.apiKey = 'API key cannot be empty!';
       isValid = false;
-    }  
+    }
 
     return isValid;
   }

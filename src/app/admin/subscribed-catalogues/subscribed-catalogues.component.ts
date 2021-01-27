@@ -19,7 +19,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
-import { ConnectedCatalogue, ConnectedCatalogueFetchBody, ConnectedCatalogueFetchResponse } from '@mdm/model/connectedCatalogueModel';
+import { SubscribedCatalogue, SubscribedCatalogueFetchResponse } from '@mdm/model/subscribedCatalogueModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
@@ -27,11 +27,11 @@ import { merge, Observable, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'mdm-connected-catalogues',
-  templateUrl: './connected-catalogues.component.html',
-  styleUrls: ['./connected-catalogues.component.scss']
+  selector: 'mdm-subscribed-catalogues',
+  templateUrl: './subscribed-catalogues.component.html',
+  styleUrls: ['./subscribed-catalogues.component.scss']
 })
-export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
+export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
@@ -41,7 +41,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>();
 
   displayedColumns = ['name', 'url', 'apiKey', 'icons'];
-  records: ConnectedCatalogue[] = [];
+  records: SubscribedCatalogue[] = [];
 
   constructor(
     private resources: MdmResourcesService,
@@ -71,7 +71,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
             this.sort.direction
           );
         }),
-        map((data: ConnectedCatalogueFetchResponse) => {
+        map((data: SubscribedCatalogueFetchResponse) => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
@@ -81,7 +81,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
           return [];
         })
       )
-      .subscribe((data: ConnectedCatalogue[]) => {
+      .subscribe((data: SubscribedCatalogue[]) => {
         this.records = data;
         this.dataSource.data = this.records;
       });
@@ -91,7 +91,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
     pageSize?: number, 
     pageIndex?: number, 
     sortBy?: string, 
-    sortType?: SortDirection): Observable<ConnectedCatalogueFetchResponse> {
+    sortType?: SortDirection): Observable<SubscribedCatalogueFetchResponse> {
     const options = this.gridService.constructOptions(
       pageSize, 
       pageIndex, 
@@ -99,7 +99,7 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
       sortType);    
     
     // TODO: fetch data from server
-    const results: ConnectedCatalogueFetchResponse = {
+    const results: SubscribedCatalogueFetchResponse = {
       body: {
         count: 2,
         items: [
@@ -122,19 +122,19 @@ export class ConnectedCataloguesComponent implements OnInit, AfterViewInit {
     return of(results);    
   }
 
-  addConnection = () => {
-    this.stateHandlerService.Go('appContainer.adminArea.connectedCatalogue', { id: null });
+  addSubscription = () => {
+    this.stateHandlerService.Go('appContainer.adminArea.subscribedCatalogue', { id: null });
   }
 
-  editConnection(record: ConnectedCatalogue) {
+  editSubscription(record: SubscribedCatalogue) {
     if (!record) {
       return;
     }
 
-    this.stateHandlerService.Go('appContainer.adminArea.connectedCatalogue', { id: record.id });
+    this.stateHandlerService.Go('appContainer.adminArea.subscribedCatalogue', { id: record.id });
   }
 
-  deleteConnection(record: ConnectedCatalogue) {
+  deleteSubscription(record: SubscribedCatalogue) {
     alert('TODO: delete connection');
   }
 }

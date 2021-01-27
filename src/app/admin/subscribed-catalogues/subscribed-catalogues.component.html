@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
             <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="25" fxFlex.xs="100"
                 fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                <mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="addConnection"></mdm-data-type-list-buttons>
+                <mdm-data-type-list-buttons [displayRecords]="records" [showContentDropdown]="false" [showDeleteButton]="false" [add]="addSubscription"></mdm-data-type-list-buttons>
             </div>
         </div>
     </div>
@@ -64,11 +64,11 @@ SPDX-License-Identifier: Apache-2.0
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
-                        <button mat-menu-item (click)="editConnection(record)">
-                            <i class="fas fa-pencil-alt"></i> Edit connection
+                        <button mat-menu-item (click)="editSubscription(record)">
+                            <i class="fas fa-pencil-alt"></i> Edit subscription
                         </button>
-                        <button mat-menu-item (click)="deleteConnection(record)">
-                            <i class="far fa-trash-alt warning"></i> Delete connection
+                        <button mat-menu-item (click)="deleteSubscription(record)">
+                            <i class="far fa-trash-alt warning"></i> Delete subscription
                         </button>
                     </mat-menu>
                 </td>

@@ -22,6 +22,7 @@ import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataModel',

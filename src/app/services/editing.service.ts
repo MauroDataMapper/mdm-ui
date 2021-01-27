@@ -147,12 +147,12 @@ export class EditingService {
 
   /**
    * Open an Angular Material dialog which will be configured to handle editing state tracking and confirmations.
-   * 
+   *
    * @param componentOrTemplateRef The component or template to display in the dialog.
    * @param config The dialog configuration.
-   * 
+   *
    * @returns The `MatDialogRef<T, R>` that can be used to subscribe to events when the dialog closes.
-   * 
+   *
    * @see configureDialogRef()
    */
   openDialog<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R> {

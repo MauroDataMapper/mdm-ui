@@ -47,6 +47,7 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSortModule } from '@angular/material/sort';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 describe('DataElementStep2Component', () => {
   let component: DataElementStep2Component;

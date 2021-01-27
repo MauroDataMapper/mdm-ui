@@ -21,7 +21,6 @@ import { SecurityHandlerService, MessageHandlerService } from '@mdm/services';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiKeysModalComponent, ApiKeysModalConfiguration, ApiKeysModalResponse } from '@mdm/modals/api-keys-modal/api-keys-modal.component';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { ClipboardService } from 'ngx-clipboard';
 import { filter, mergeMap } from 'rxjs/operators';
 import { EditingService } from '@mdm/services/editing.service';
@@ -155,7 +154,7 @@ export class ApiKeysComponent implements OnInit {
       this.listApiKeys(this.currentUser);
     }, error => {
       this.messageHandler.showError('There was a problem removing this API Key.', error);
-    });    
+    });
   };
 
   copyToClipboard = record => {

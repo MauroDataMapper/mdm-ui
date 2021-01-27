@@ -46,7 +46,7 @@ export interface ApiKeysModalResponse {
 export class ApiKeysModalComponent implements OnInit {
   name: string;
   refreshable = false;
-  expiresInDays: number = 365;
+  expiresInDays = 365;
   output: ApiKeysModalResponseData;
 
   showName: boolean;
@@ -77,8 +77,8 @@ export class ApiKeysModalComponent implements OnInit {
   cancel() {
     this.editingService.confirmCancelAsync().subscribe(confirm => {
       if (confirm) {
-        this.dialogRef.close({ status: ModalDialogStatus.Cancel });        
-      }      
+        this.dialogRef.close({ status: ModalDialogStatus.Cancel });
+      }
     });
   }
 

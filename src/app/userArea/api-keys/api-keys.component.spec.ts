@@ -25,6 +25,7 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 describe('ApiKeysComponent', () => {
    let component: ApiKeysComponent;

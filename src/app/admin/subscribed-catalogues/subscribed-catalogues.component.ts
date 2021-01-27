@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
@@ -47,7 +48,8 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
     private resources: MdmResourcesService,
     private gridService: GridService,
     private stateHandlerService: StateHandlerService,
-    private title: Title) {
+    private title: Title,
+    private dialog: MatDialog) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
@@ -88,16 +90,16 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   }
 
   fetchConnections(
-    pageSize?: number, 
-    pageIndex?: number, 
-    sortBy?: string, 
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
     sortType?: SortDirection): Observable<SubscribedCatalogueFetchResponse> {
     const options = this.gridService.constructOptions(
-      pageSize, 
-      pageIndex, 
-      sortBy, 
-      sortType);    
-    
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType);
+
     // TODO: fetch data from server
     const results: SubscribedCatalogueFetchResponse = {
       body: {
@@ -119,7 +121,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
       }
     };
 
-    return of(results);    
+    return of(results);
   }
 
   addSubscription = () => {
@@ -135,6 +137,17 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
   }
 
   deleteSubscription(record: SubscribedCatalogue) {
-    alert('TODO: delete connection');
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Are you sure you want to delete this Subscribed Catalogue?',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: 'Once deleted, the subscription cannot be retrieved.',
+        }
+      })
+      .subscribe(() => {
+        alert('TODO: delete connection');
+      })
   }
 }

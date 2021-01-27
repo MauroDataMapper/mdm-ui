@@ -19,6 +19,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue } from '@mdm/model/subscribedCatalogueModel';
 import { StateHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 
 interface SubscribedCatalogueComponentErrors {
@@ -40,9 +41,11 @@ export class SubscribedCatalogueComponent implements OnInit {
   constructor(
     private routerGobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
-    private title: Title) { }
+    private title: Title,
+    private editingService: EditingService) { }
 
   ngOnInit(): void {
+    this.editingService.start();
     const catalogueId = this.routerGobals.params.id;
 
     if (catalogueId) {
@@ -85,10 +88,15 @@ export class SubscribedCatalogueComponent implements OnInit {
   }
 
   cancel() {
-    this.navigateToParent();
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (confirm) {
+        this.navigateToParent();        
+      }
+    });    
   }
 
   private navigateToParent() {
+    this.editingService.stop();
     this.stateHandler.Go('appContainer.adminArea.subscribedCatalogues');
   }
 

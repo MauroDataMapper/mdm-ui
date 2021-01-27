@@ -74,7 +74,6 @@ export class CodeSetMainComponent implements OnInit {
                let result = await this.resources.folder.addCondeSets(this.model.parentFolderId, resource).toPromise();
                this.messageHandler.showSuccess('Code Set created successfully.');
                this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
-               this.broadcastSvc.broadcast('$reloadFoldersTree');
             } catch (error) {
                this.messageHandler.showError('There was a problem creating the Code Set.', error);
             }

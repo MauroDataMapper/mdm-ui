@@ -117,7 +117,6 @@ export class DataModelMainComponent implements OnInit {
    try {
       let response = await this.resources.dataModel.addToFolder(this.parentFolderId, resource).toPromise();
       this.messageHandler.showSuccess('Data Model saved successfully.');
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
    } catch (error) {
       this.messageHandler.showError('There was a problem saving the Data Model.', error);

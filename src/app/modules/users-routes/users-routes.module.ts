@@ -22,6 +22,7 @@ import { SettingsComponent } from '@mdm/userArea/settings/settings.component';
 import { UsersAppContainerComponent } from '@mdm/users/users-app-container/users-app-container.component';
 import { UIRouterModule } from '@uirouter/angular';
 import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-password.component';
+import { ApiKeysComponent } from '@mdm/userArea/api-keys/api-keys.component';
 
 export const pageRoutes = {
   states: [
@@ -44,6 +45,11 @@ export const pageRoutes = {
       name: 'appContainer.userArea.changePassword',
       url: '/profile/changePassword',
       component: ChangePasswordComponent
+    },
+    {
+      name: 'appContainer.userArea.apiKeys',
+      url: '/profile/api',
+      component: ApiKeysComponent
     }
   ]
 };

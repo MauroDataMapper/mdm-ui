@@ -1,0 +1,136 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="mdm--shadow-block">
+  <div class="heading-container">
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+        <div fxFlex fxLayout="row" fxFlex="70" fxFlex.md="70" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="flex-start center">
+          <h4 class="marginless">
+            <h4>API Keys <span class="mdm--badge mdm--element-count">{{ totalItemCount }}</span></h4>
+          </h4>
+        </div>
+        <div fxFlex fxLayout="row" fxFlex="30" fxFlex.md="30" fxFlex.sm="45" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+          <button mat-flat-button color="primary" (click)="addApiKey()">Create Key</button>
+        </div>
+      </div>
+  </div>
+
+  <div class="table-responsive">
+      <table mat-table [dataSource]="records" class="mdm--mat-table table-striped">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef style="width:30%"> Name </th>
+          <td mat-cell *matCellDef="let record"> {{record.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="key">
+          <th mat-header-cell *matHeaderCellDef style="width:40%"> Key </th>
+          <td mat-cell *matCellDef="let record">
+            <span>{{record.apiKey}}  </span>
+            <span *ngIf="!record.expired"><button mat-stroked-button color="primary" type="button" class="pt-0 pb-0 pl-1 pr-1" (click)="copyToClipboard(record)">
+              <i class="fas fa-copy fa-sm mr-1"></i> <small>Copy</small></button>
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expiryDate">
+          <th mat-header-cell *matHeaderCellDef style="width:15%"> Expiry date </th>
+          <td mat-cell *matCellDef="let record">
+            <div *ngIf="!record.expired">
+              {{record.expiryDate}}
+            </div>
+            <div *ngIf="record.expired">
+              API Key expired
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="refreshable">
+          <th mat-header-cell *matHeaderCellDef style="width: 10%; text-align: center;"> Refreshable </th>
+          <td mat-cell *matCellDef="let record" style="text-align: center;">
+            <div *ngIf="record.refreshable">
+              Yes
+            </div>
+            <div *ngIf="!record.refreshable">
+              No
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef style="width: 5%; text-align: center;"> Status </th>
+          <td mat-cell *matCellDef="let record" style="text-align: center;">
+              <span *ngIf="record.disabled" class="pill-card--red">Disabled</span>
+              <span *ngIf="!record.disabled" class="pill-card--green">Active</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef style="width:10%"> </th>
+          <td mat-cell *matCellDef="let record">
+            <div style="margin-bottom: 3px;">
+              <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <mat-menu #actions="matMenu" yPosition="below" xPosition="after" class="mdm--mat-menu--actions">
+                <button mat-menu-item *ngIf="!record.expired && !record.disabled" (click)="disableKey(record)" aria-label="Disable Key">
+                  <i class="fas fa-ban warning"></i> Disable API Key
+                </button>
+                <button mat-menu-item *ngIf="!record.expired && record.disabled" (click)="enableKey(record)" aria-label="Enable Key">
+                  <i class="fas fa-check"></i> Enable API Key
+                </button>
+                <button mat-menu-item *ngIf="record.expired && record.refreshable" (click)="refreshKey(record)" aria-label="Refresh Key">
+                  <i class="fas fa-redo"></i> Refresh API Key
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item class="warning" (click)="removeKey(record)">
+                  <i class="far fa-trash-alt warning"></i> Delete Key
+                </button>
+              </mat-menu>
+              </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+  </div>
+
+  <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
+   <p class="marginless">There are no API Keys in this repository.</p>
+ </div>
+
+ <div class="item" *ngIf="isLoadingResults">
+   <table class="mdm--mat-table mdm--skeleton-table">
+     <tr>
+       <th style="width: 30%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+       <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+       <th style="width: 15%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 10%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 5%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+       <th style="width: 10%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+   </tr>
+   <tr>
+       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+       <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+       <td><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '10px'}"></ngx-skeleton-loader></td>
+     </tr>
+   </table>
+</div>
+</div>

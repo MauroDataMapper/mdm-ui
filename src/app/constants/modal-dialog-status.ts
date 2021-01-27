@@ -15,3 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+export enum ModalDialogStatus {
+    Ok = 'ok',
+    Cancel = 'cancel',
+    Close = 'close'
+}

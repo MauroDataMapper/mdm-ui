@@ -16,7 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult, ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { ConfirmationModalComponent, ConfirmationModalConfig, ConfirmationModalResult } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Observable } from 'rxjs/internal/Observable';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
@@ -104,7 +105,7 @@ MatDialog.prototype.openConfirmationAsync = function (
     .openConfirmation(config)
     .afterClosed()
     .pipe(
-      filter(result => result.status === ConfirmationModalStatus.Ok),
+      filter(result => result.status === ModalDialogStatus.Ok),
       map(() => { })
     );
 };
@@ -117,13 +118,13 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
     .openConfirmation(firstConfig)
     .afterClosed()
     .pipe(
-      filter(result => result.status === ConfirmationModalStatus.Ok),
+      filter(result => result.status === ModalDialogStatus.Ok),
       mergeMap(() => {
         return this
           .openConfirmation(finalConfig)
           .afterClosed()
           .pipe(
-            filter(result2 => result2.status === ConfirmationModalStatus.Ok),
+            filter(result2 => result2.status === ModalDialogStatus.Ok),
             map(() => { })
           );
       })

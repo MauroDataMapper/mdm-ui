@@ -61,8 +61,12 @@ SPDX-License-Identifier: Apache-2.0
                                     <span>Preferences</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.userArea.changePassword">
-                                    <i class="fas fa-key"></i>
+                                  <i class="fas fa-unlock-alt"></i>
                                     <span>Change password</span>
+                                </a>
+                                <a mat-menu-item uiSref="appContainer.userArea.apiKeys">
+                                  <i class="fas fa-key"></i>
+                                  <span>API keys</span>
                                 </a>
                             </div>
                             <div *ngIf="isAdmin()">
@@ -162,8 +166,12 @@ SPDX-License-Identifier: Apache-2.0
                     <span>Preferences</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.userArea.changePassword" (click)="sidenav.toggle()" uiSrefActive="active">
-                    <i class="fas fa-key"></i>
+                  <i class="fas fa-unlock-alt"></i>
                     <span>Change password</span>
+                </a>
+                <a mat-menu-item uiSref="appContainer.userArea.apiKeys" (click)="sidenav.toggle()" uiSrefActive="active">
+                  <i class="fas fa-key"></i>
+                  <span>API keys</span>
                 </a>
             </div>
             <div *ngIf="isLoggedIn && isAdmin()">

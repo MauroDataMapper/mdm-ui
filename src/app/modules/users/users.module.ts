@@ -25,6 +25,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { SharedModule } from '../shared/shared.module';
 import { UsersRoutesModule } from '../users-routes/users-routes.module';
 import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-password.component';
+import { ApiKeysComponent } from '@mdm/userArea/api-keys/api-keys.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ChangePasswordComponent } from '@mdm/userArea/change-password/change-pa
     ProfileComponent,
     ImgCroppieComponent,
     UserDetailsComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ApiKeysComponent
   ],
   imports: [CommonModule, ImageCropperModule, SharedModule, UsersRoutesModule],
   exports: [

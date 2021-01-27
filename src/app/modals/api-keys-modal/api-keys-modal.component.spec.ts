@@ -15,39 +15,41 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FinaliseModalComponent } from './finalise-modal.component';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { ApiKeysModalComponent } from './api-keys-modal.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
-describe('FinaliseModalComponent', () => {
-  let component: FinaliseModalComponent;
-  let fixture: ComponentFixture<FinaliseModalComponent>;
+describe('ApiKeysModalComponent', () => {
+  let component: ApiKeysModalComponent;
+  let fixture: ComponentFixture<ApiKeysModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatRadioModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        MatButtonModule
-      ],
-      providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }],
-      declarations: [ FinaliseModalComponent ]
-    }).compileComponents();
+         MatRadioModule,
+         MatDialogModule,
+         MatFormFieldModule,
+         MatInputModule,
+         BrowserAnimationsModule,
+         FormsModule,
+         MatButtonModule
+       ],
+       providers: [{provide : MatDialogRef, useValue : {}}, { provide: MAT_DIALOG_DATA, useValue: {} }],
+      declarations: [ ApiKeysModalComponent ]
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FinaliseModalComponent);
+    fixture = TestBed.createComponent(ApiKeysModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -15,12 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ComponentType } from '@angular/cdk/portal';
+import { Injectable, TemplateRef } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
-import { ConfirmationModalStatus } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 const editableRouteNames = [
   'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -145,6 +147,22 @@ export class EditingService {
   }
 
   /**
+   * Open an Angular Material dialog which will be configured to handle editing state tracking and confirmations.
+   *
+   * @param componentOrTemplateRef The component or template to display in the dialog.
+   * @param config The dialog configuration.
+   *
+   * @returns The `MatDialogRef<T, R>` that can be used to subscribe to events when the dialog closes.
+   *
+   * @see configureDialogRef()
+   */
+  openDialog<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R> {
+    const dialogRef = this.dialog.open(componentOrTemplateRef, config);
+    this.configureDialogRef(dialogRef);
+    return dialogRef;
+  }
+
+  /**
    * Confirm if it is safe to leave a view to transition to another.
    *
    * @returns True if confirmation was provided.
@@ -202,7 +220,7 @@ export class EditingService {
       })
       .afterClosed()
       .pipe(
-        map(result => result.status === ConfirmationModalStatus.Ok)
+        map(result => result.status === ModalDialogStatus.Ok)
       );
   }
 }

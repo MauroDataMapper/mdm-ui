@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
          <div class="mb-2" *ngIf="showExpiryDay">
             <mat-form-field appearance="outline" class="paddingless" style="max-width: 200px;">
                <mat-label>Expires in days:</mat-label>
-               <input type="number" matInput [(ngModel)]="expiresInDays" name="expiresInDays">
+               <input type="number" matInput [(ngModel)]="expiresInDays" name="expiresInDays" required>
             </mat-form-field>
             <small class="block text-muted">
                Use numbers only to indicate how long the API Key should be valid for.

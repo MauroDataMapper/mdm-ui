@@ -67,6 +67,7 @@ export class ApiKeysModalComponent implements OnInit {
       expiresInDays: this.expiresInDays,
       refreshable: this.refreshable
     };
+
     this.dialogRef.close({ status: 'ok', data: this.output });
   }
 
@@ -75,6 +76,6 @@ export class ApiKeysModalComponent implements OnInit {
   }
 
   enableOk() {
-    return this.name && this.name.trim().length !== 0;
+    return this.name && this.name.trim().length !== 0 && this.expiresInDays && this.expiresInDays >= 0;
   }
 }

@@ -53,6 +53,12 @@ export class ApiKeysComponent implements OnInit {
   }
 
   listApiKeys(currentUser: any) {
+    if (!currentUser) {
+      this.records = [];
+      this.totalItemCount = 0;
+      return;
+    }
+
     this.isLoadingResults = true;
     this.resourcesService.catalogueUser.listApiKeys(currentUser?.id).subscribe((result) => {
       this.records = result.body.items;

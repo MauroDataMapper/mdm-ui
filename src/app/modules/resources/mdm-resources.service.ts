@@ -51,7 +51,9 @@ import {
   MdmReferenceDataValueResource,
   MdmVersioningResource,
   MdmApiPropertyResources,
-  MdmProfileResource
+  MdmProfileResource,
+  MdmVersioningResource,
+  MdmSubscribedCataloguesResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -100,6 +102,7 @@ export class MdmResourcesService {
   referenceDataValue = new MdmReferenceDataValueResource(this.resourcesConfig, this.restHandler);
   profile = new MdmProfileResource(this.resourcesConfig, this.restHandler);
   apiProperties = new MdmApiPropertyResources(this.resourcesConfig, this.restHandler);
+  subscribedCatalogues = new MdmSubscribedCataloguesResource(this.resourcesConfig, this.restHandler);
 
   constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 }

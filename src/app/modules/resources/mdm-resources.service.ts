@@ -51,6 +51,7 @@ import {
   MdmReferenceDataValueResource,
   MdmVersioningResource,
   MdmApiPropertyResources,
+  MdmSubscribedCataloguesResource
   MdmProfileResource,
   MdmVersioningResource,
   MdmSubscribedCataloguesResource

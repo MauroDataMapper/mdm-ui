@@ -18,9 +18,101 @@ SPDX-License-Identifier: Apache-2.0
 <div class="panel panel-default mdm--shadow-block">
    <form editable-form name="form" onaftersave="afterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
       <div class="panel-body">
+
+        <div class="full-width" style="clear: both;" *ngIf="result">
+            <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px;">
+               <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <!--First level Menu-->
+            <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+               <!-- <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
+                  <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
+               </button> -->
+               <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" (click)="showForm()">
+                  <i class="fas fa-pencil-alt"></i> Edit Title
+               </button>
+               <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
+                  <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
+               </button> -->
+               <!-- <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
+                  <i class="fas fa-copy"></i> Create a New Version
+               </button> -->
+               <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
+                  <i class="fas fa-code-branch"></i> Merge
+               </button> -->
+
+               <!-- <mat-divider></mat-divider>
+               <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete" class="warning">
+                  <i class="far fa-trash-alt warning"></i> Delete
+               </button> -->
+            </mat-menu> 
+            <!-- End of first level menu -->
+
+            <!--Second level sub Menu-->
+            <!-- <mat-menu #userActionsDelete="matMenu">
+               <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
+                  Mark as deleted
+               </button>
+               <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
+                  Delete <span class="warning">permanently</span>
+               </button>
+            </mat-menu> -->
+
+            <!-- <mat-menu #compareMenu="matMenu">
+               <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
+                  Compare to another Data Model
+               </button>
+               <div *ngIf="compareToList && compareToList.length > 0" class="divider"></div>
+               <div *ngIf="compareToList && compareToList.length > 0">
+                  <div *ngFor="let el of compareToList">
+                     <button mat-menu-item (click)="compare(el)">
+                        <a>{{el.label}} <span style="font-style: italic; font-size: 12px;">{{el.documentationVersion}}</span></a>
+                     </button>
+                  </div>
+               </div>
+            </mat-menu> -->
+
+            <!-- <mat-menu #mergeMenu>
+               <button mat-menu-item (click)="merge()">
+                  Merge Model
+               </button>
+               <button mat-menu-item (click)="showMergeGraph()">
+                  Show merge graph
+               </button>
+            </mat-menu> -->
+            <!-- End of second level sub menu -->
+
+
+            <div *ngIf="showPermission" style="position: relative; float: right; margin-right:8px;" [hidden]="editableForm.visible || editableForm.deletePending">
+               <button mat-icon-button color="primary" type="button" class="paddingless" (click)="toggleSecuritySection()" matTooltip="User & Group Access" aria-label="User & Group Access">
+                  <i class="fas fa-user-lock"></i>
+               </button>
+            </div>
+
+            <div style="position: relative; float: right; margin-right:8px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
+               <button mat-icon-button color="primary" type="button" *ngIf="isLoggedIn" class="paddingless dropdown-toggle" [disabled]="processing || deleteInProgress" [matMenuTriggerFor]="exporterList" matTooltip="Export as JSON, XML,..." aria-label="Export as JSON, XML,...">
+                  <i class="fas fa-download"></i>
+               </button>
+               <mat-menu #exporterList="matMenu">
+                  <div *ngIf="exportList && exportList.length > 0">
+                     <div *ngFor="let exporter of exportList">
+                        <button type="button" mat-menu-item (click)="export(exporter)">
+                           {{exporter.displayName}}
+                        </button>
+                     </div>
+                  </div>
+               </mat-menu>
+            </div>
+            <!-- <div style="position: relative; float: right; margin-right:8px; margin-left: 8px;" [hidden]="editableForm.visible || editableForm.deletePending">
+               <button mat-icon-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
+                  <i class="fas fa-search"></i>
+               </button>
+            </div> -->
+         </div>
+
           <div *ngIf="result">
               <div [ngClass]="{ 'has-error': errorMessage != ''}" class="data-model-header">
-                  <div class="detail-icons--cta">
+                  <div  style="position: relative; float: right; margin-right:8px; margin-left: 8px;" class="detail-icons--cta">
                       <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
                   </div>
                   <div *ngIf="showSecuritySection" style="position: relative; float: right; margin-right:8px;" [hidden]="editableForm.visible || editableForm.deletePending">
@@ -39,6 +131,15 @@ SPDX-License-Identifier: Apache-2.0
                                             size="20"
                                             [styleCss]="'dataModelDetailsLabel'">
                       </mdm-inline-text-edit>
+                      <mdm-editable-form-buttons
+                      *ngIf="editableForm"
+                      [hidden]="!editableForm.visible"
+                      [onCancelEdit]="onCancelEdit"
+                      [editable]="editableForm"
+                      [textLocation]="'left'"
+                      [hideDelete]="true"
+                      [hideCancel]="false"
+                    ></mdm-editable-form-buttons>
                   </h4>
                   <span class="inline-block" *ngIf="result?.deleted">
                       <small class="warning"> | Deleted</small>

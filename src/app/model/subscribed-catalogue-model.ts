@@ -27,6 +27,11 @@ export interface SubscribedCatalogue {
   refreshPeriod?: number;
 }
 
+export interface SubscribedCatalogueDataModel {
+  id: string;
+  label: string;
+}
+
 /**
  * Type alias for an operation for the Subscribed Catalogues API endpoint.
  * 

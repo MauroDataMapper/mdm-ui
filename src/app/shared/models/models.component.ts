@@ -26,13 +26,15 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
+import { Node } from '@mdm/folders-tree/flat-node'
+import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
 
 @Component({
   selector: 'mdm-models',
@@ -42,7 +44,7 @@ import { EditingService } from '@mdm/services/editing.service';
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};
   activeTab = 0;
-  allModels = null;
+  allModels: Node = null;
   filteredModels = null;
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
@@ -167,7 +169,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
 
     this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
-      this.loadFolders(true);
+      this.loadModelsTree(true);
     });
 
     this.currentClassification = null;
@@ -221,9 +223,40 @@ export class ModelsComponent implements OnInit, OnDestroy {
     );
   };
 
-  loadFolders = (noCache?) => {
+  loadModelsTree = (noCache?) => {
     this.reloading = true;
 
+    combineLatest([
+      this.getLocalCatalogueTreeNodes(noCache),
+      this.getSubscribedCatalogueTreeNodes()])
+      .pipe(
+        map(([local, subscribed]) => {
+          // If no subscribed catalogues exist, ensure the root of the tree are the folders from the current instance
+          // A "LocalCatalogue" domain type root node is not required in this scenario
+          const children = ((subscribed?.length ?? 0) === 0 && (local?.length ?? 0) >= 1 && local[0].domainType === DOMAIN_TYPE.LocalCatalogue)
+            ? local[0].children
+            : local.concat(subscribed);          
+
+          return Object.assign<{}, Node>({}, {
+            id: '',
+            domainType: DOMAIN_TYPE.Root,
+            children,
+            hasChildren: true,
+            isRoot: true
+          })
+        })
+      )
+      .subscribe(node => {
+        this.allModels = node;
+        this.filteredModels = node;
+        this.reloading = false;
+      }, error => {
+        this.messageHandler.showError('There was a problem loading the model tree.', error);
+        this.reloading = false;
+      })
+  };
+
+  private getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
     let options: any = {};
     if (this.sharedService.isLoggedIn()) {
       options = {
@@ -239,32 +272,55 @@ export class ModelsComponent implements OnInit, OnDestroy {
       options.queryStringParams.noCache = true;
     }
 
-    this.resources.tree.list('folders', options.queryStringParams).subscribe(result => {
-      const data = result.body;
-      this.allModels = {
-        children: data,
-        isRoot: true
-      };
-      this.filteredModels = Object.assign({}, this.allModels);
-      this.reloading = false;
-    }, () => {
-      this.reloading = false;
-    }
-    );
-  };
+    return this.resources.tree
+      .list('folders', options.queryStringParams)
+      .pipe(
+        map((response: any) => <Node[]>response.body),
+        map((nodes: Node[]) => {
+          const parent: Node = {
+            id: '',
+            domainType: DOMAIN_TYPE.LocalCatalogue,
+            label: 'This catalogue',
+            hasChildren: true,
+            children: nodes
+          };
+
+          return [parent];
+        })
+      );
+  }
+
+  private getSubscribedCatalogueTreeNodes(): Observable<Node[]> {
+    const options = {
+      sort: 'label',
+      order: 'asc'
+    };
+
+    return this.resources.subscribedCatalogues    
+      .list(options)
+      .pipe(
+        map((response: SubscribedCatalogueIndexResponse) => response.body.items ?? []),
+        map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, Node>({}, {
+          id: item.id,
+          domainType: DOMAIN_TYPE.SubscribedCatalogue,
+          hasChildren: true,
+          label: item.label
+        })))
+      );
+  }
 
   onNodeConfirmClick($event: NodeConfirmClickEvent) {
     const node = $event.next.node;
 
     this.stateHandler.Go(node.domainType, {
-          id: node.id,
-          edit: false,
-          dataModelId: node.modelId,
-          dataClassId: node.parentId || '',
-          terminologyId: node.modelId || node.model
-        }).then(
-          () => $event.setSelectedNode($event.next),
-          () => $event.setSelectedNode($event.current));
+      id: node.id,
+      edit: false,
+      dataModelId: node.modelId,
+      dataClassId: node.parentId || '',
+      terminologyId: node.modelId || node.model
+    }).then(
+      () => $event.setSelectedNode($event.next),
+      () => $event.setSelectedNode($event.current));
   }
 
   onNodeDbClick = node => {
@@ -330,7 +386,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.resources.folder.saveChildrenOf(parentId, label );
+      endpoint = this.resources.folder.saveChildrenOf(parentId, label);
     } else {
       endpoint = this.resources.folder.save(label);
     }
@@ -350,7 +406,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.stateHandler.Go('Folder', { id: result.id, edit: false });
       this.messageHandler.showSuccess(`Folder ${label.label} created successfully.`);
       this.folder = '';
-      this.loadFolders();
+      this.loadModelsTree();
     }, error => {
       this.messageHandler.showError('There was a problem creating the Folder.', error);
     });
@@ -398,7 +454,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
       this.userSettingsHandler.saveOnServer();
     }
-    this.loadFolders();
+    this.loadModelsTree();
     this.showFilters = !this.showFilters;
   };
 
@@ -419,7 +475,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   initializeModelsTree = () => {
-    this.loadFolders();
+    this.loadModelsTree();
     this.loadClassifiers();
   };
 
@@ -430,9 +486,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     if (newState) {
       if (newState === 'import') {
-        this.stateHandler.Go(newState, {importType: type});
+        this.stateHandler.Go(newState, { importType: type });
       } else if (newState === 'export') {
-        this.stateHandler.Go(newState, {exportType: type});
+        this.stateHandler.Go(newState, { exportType: type });
       }
       return;
     }
@@ -479,13 +535,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
       this.reloading = true;
       this.inSearchMode = true;
-      this.allModels = [];
+      this.allModels = null;
 
       this.resources.tree.search('folders', this.sharedService.searchCriteria).subscribe(res => {
-        const result = res.body;
+        const result: Node[] = res.body;
         this.reloading = false;
         this.allModels = {
+          id: '',
+          domainType: DOMAIN_TYPE.Root,
           children: result,
+          hasChildren: true,
           isRoot: true
         };
 
@@ -496,7 +555,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = false;
       this.sharedService.searchCriteria = '';
       this.searchText = '';
-      this.loadFolders();
+      this.loadModelsTree();
     }
   };
 
@@ -530,7 +589,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   reloadTree = () => {
-    this.loadFolders(true);
+    this.loadModelsTree(true);
   };
 
   onAddClassifier = () => {
@@ -553,17 +612,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
               label: result.label,
             };
             this.resources.classifier.save(resource).subscribe(response => {
-                this.messageHandler.showSuccess('Classifier saved successfully.');
-                this.stateHandler.Go('classification',
-                  {
-                    id: response.body.id
-                  },
-                  { reload: true, location: true }
-                );
-                this.broadcastSvc.broadcast('$reloadClassifiers');
-              }, error => {
-                this.messageHandler.showError('There was a problem saving the Classifier.', error);
-              });
+              this.messageHandler.showSuccess('Classifier saved successfully.');
+              this.stateHandler.Go('classification',
+                {
+                  id: response.body.id
+                },
+                { reload: true, location: true }
+              );
+              this.broadcastSvc.broadcast('$reloadClassifiers');
+            }, error => {
+              this.messageHandler.showError('There was a problem saving the Classifier.', error);
+            });
 
           } else {
             const error = 'err';

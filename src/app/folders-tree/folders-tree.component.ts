@@ -20,7 +20,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { of, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
@@ -29,6 +29,8 @@ import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { SubscribedCatalogueDataModel } from '@mdm/model/subscribed-catalogue-model';
+import { map } from 'rxjs/operators';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -45,12 +47,35 @@ export class NodeConfirmClickEvent {
    setSelectedNode = (node: FlatNode) => this.broadcastSvc.broadcast('$folderTreeNodeSelection', node);
 }
 
+type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
+
 @Component({
    selector: 'mdm-folders-tree',
    templateUrl: './folders-tree.component.html',
    styleUrls: ['./folders-tree.component.scss']
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
+
+   readonly domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
+      [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
+      [DOMAIN_TYPE.DataModel, (fnode, _) =>  {
+         if (fnode.type === 'Data Standard') {
+            return 'fa-file-alt';
+         }
+         if (fnode.type === 'Data Asset') {
+            return 'fa-database'
+         }
+         return null;
+      }],
+      [DOMAIN_TYPE.Terminology, () => 'fa-book'],
+      [DOMAIN_TYPE.CodeSet, () => 'fa-list'],
+      [DOMAIN_TYPE.Classification, () => 'fa-tags'],
+      //[DOMAIN_TYPE.Term, () => 'fa-code'],
+      [DOMAIN_TYPE.ReferenceDataModel, () => 'fa-file-contract'],
+      [DOMAIN_TYPE.LocalCatalogue, () => 'fa-server'],
+      [DOMAIN_TYPE.SubscribedCatalogue, () => 'fa-rss'],
+      [DOMAIN_TYPE.FederatedDataModel, () => 'fa-external-link-alt']
+   ]);
 
    @Input() node: any;
    @Input() searchCriteria: string;
@@ -202,29 +227,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
    /** Determine which tree node icon to use based on given node's domain type */
    getIcon(fnode: FlatNode) {
-      switch (fnode.domainType) {
-         case DOMAIN_TYPE.Folder:
-            return this.treeControl.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder';
-         case DOMAIN_TYPE.DataModel:
-            if (fnode.type === 'Data Standard') {
-               return 'fa-file-alt';
-            } else if (fnode.type === 'Data Asset') {
-               return 'fa-database';
-            }
-            break;
-         case DOMAIN_TYPE.Terminology:
-            return 'fa-book';
-         case DOMAIN_TYPE.CodeSet:
-            return 'fa-list';
-         case DOMAIN_TYPE.Classification:
-            return 'fa-tags';
-         case DOMAIN_TYPE.Term:
-            return 'fa-code';  // Not currently used in html template
-         case DOMAIN_TYPE.ReferenceDataModel:
-            return 'fa-file-contract';
-         default:
-            return null;
+      if (!this.domainTypeIcons.has(fnode.domainType)) {
+         return null;
       }
+
+      return this.domainTypeIcons.get(fnode.domainType)(fnode, this.treeControl);      
    }
 
    /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */
@@ -275,10 +282,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    }
 
    async expand(node: Node) {
-      let dataModelResponse;
-      let dataClassResponse;
-      let terminologyResponse;
-      let termResponse;
       try {
          switch (node.domainType) {
             case DOMAIN_TYPE.Folder:
@@ -289,17 +292,20 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
                   return node.children;
                }
             case DOMAIN_TYPE.DataModel:
-               dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
+               const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
                return dataModelResponse.body;
             case DOMAIN_TYPE.DataClass:
-               dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
+               const dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
                return dataClassResponse.body;
             case DOMAIN_TYPE.Terminology:
-               terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
+               const terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
                return terminologyResponse.body;
             case DOMAIN_TYPE.Term:
-               termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
+               const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
                return termResponse.body;
+            case DOMAIN_TYPE.SubscribedCatalogue:
+               // TODO: refactor subscribed catalogue models
+               return await this.getSubscribedCatalogueModelNodes().toPromise();
             default:
                return [];
          }
@@ -307,6 +313,30 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          console.error(error);
          return [];
       }
+   }
+
+   // TODO: move this to somewhere more logical, like a service
+   private getSubscribedCatalogueModelNodes(): Observable<Node[]> {
+      // TODO: use actual Subscribed Catalogue endpoint, this is just dummy data
+      return of<SubscribedCatalogueDataModel[]>([
+         {
+            id: 'aa827529-59ac-4a72-a30a-25467b819f92',
+            label: 'Federated Data Model 1'
+         },
+         {
+            id: '95bab4fc-5681-4f82-bb02-a190e33615f6',
+            label: 'Federated Data Model 2'
+         }
+      ])
+      .pipe(
+         map(models => models.map(item => Object.assign<{}, Node>({}, {
+            id: item.id,
+            domainType: DOMAIN_TYPE.FederatedDataModel,
+            label: item.label,
+            hasChildren: false,
+            children: []
+         })))
+      );
    }
 
    noop(event: Event) {

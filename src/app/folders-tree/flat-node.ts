@@ -200,5 +200,11 @@ export enum DOMAIN_TYPE {
     CodeSet = 'CodeSet',
     Classification = 'Classification',
     ReferenceDataModel = 'ReferenceDataModel',
-    EnumerationType = 'EnumerationType'
+    EnumerationType = 'EnumerationType',
+
+    // TODO: UI only domains for prototyping, consider making them part of backend
+    Root = 'Root',
+    LocalCatalogue = 'LocalCatalogue',
+    SubscribedCatalogue = 'SubscribedCatalogue',
+    FederatedDataModel = 'FederatedDataModel'
 }

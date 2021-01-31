@@ -18,119 +18,64 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../utility/message-handler.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
-import { SecurityHandlerService } from './security-handler.service';
-import { BroadcastService } from '../broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FolderHandlerService {
   constructor(
-    private resoucesService: MdmResourcesService,
+    private resourcesService: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private dialog: MatDialog,
-    private securityHandler: SecurityHandlerService,
-    private broadcastSvc: BroadcastService
-  ) {}
+    private dialog: MatDialog) {}
 
-  askForSoftDelete(id) {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
+  askForSoftDelete(id: string): Observable<void> {
+    return this.dialog.openConfirmationAsync({
+      data: {
+        title: 'Are you sure you want to delete this Folder?',
+        okBtnTitle: 'Yes, delete',
+        btnType: 'warn',
+        message: `<p class="marginless">This Folder will be marked as deleted and will not be viewable by users </p>
+                  <p class="marginless">except Administrators.</p>`
       }
-
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: `Are you sure you want to delete this Folder?`,
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: `<p class="marginless">This Folder will be marked as deleted and will not be viewable by users </p>
-                    <p class="marginless">except Administrators.</p>`
-        }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return promise;
-        }
-        this.delete(id, false).then(result2 => {
-            resolve(result2);
-          }).catch((error) => {
-            reject(error);
-          });
-      });
-    });
-    return promise;
+    })
+    .pipe(
+      mergeMap(() => this.delete(id, false))
+    );
   }
 
-  askForPermanentDelete(id) {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'Only Admins are allowed to delete records permanently!' });
+  askForPermanentDelete(id: string): Observable<void> {
+    return this.dialog.openDoubleConfirmationAsync({
+      data: {
+        title: 'Permanent deletion',
+        okBtnTitle: 'Yes, delete',
+        btnType: 'warn',
+        message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Folder?'
       }
-
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: `Permanent deletion`,
-          okBtnTitle: 'Yes, delete',
-          btnType: 'warn',
-          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Folder?`
-        }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          // reject(null); Commented by AS as it was throwing error
-          return;
-        }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-          data: {
-            title: `Confirm permanent deletion`,
-            okBtnTitle: 'Confirm deletion',
-            btnType: 'warn',
-            message: `<strong>Note: </strong> All its 'Data Models' and 'Folders' will be deleted <span class='warning'>permanently</span>.`
-          }
-        });
-
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            // reject(null);
-            return;
-          }
-          this.delete(id, true).then((result3) => {
-              resolve(result3);
-            }).catch((error) => {
-              reject(error);
-            });
-        });
-      });
-    });
-
-    return promise;
+    }, {
+      data: {
+        title: 'Confirm permanent deletion',
+        okBtnTitle: 'Confirm deletion',
+        btnType: 'warn',
+        message: '<strong>Note: </strong> All its \'Data Models\' and \'Folders\' will be deleted <span class=\'warning\'>permanently</span>.'
+      }
+    })
+    .pipe(
+      mergeMap(() => this.delete(id, true))
+    );
   }
 
-  delete(id, permanent) {
-    const promise = new Promise((resolve, reject) => {
-      if (!this.securityHandler.isAdmin()) {
-        reject({ message: 'You should be an Admin!' });
-      } else {
-        const queryString = permanent ? 'permanent=true' : null;
-        this.resoucesService.folder.delete(id, null, queryString).subscribe(result => {
-            if (permanent) {
-              this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'permanentDelete', result});
-            } else {
-              this.broadcastSvc.broadcast('$updateFoldersTree', {type: 'softDelete', result});
-            }
-            resolve(result);
-          }, error => {
-            this.messageHandler.showError('There was a problem deleting the Folder.', error);
-            reject(error);
-          }
-        );
-      }
-    });
-    return promise;
+  delete(id: string, permanent = false): Observable<void> {
+    return this.resourcesService.folder
+      .remove(id, { permanent })
+      .pipe(
+        map(() => this.messageHandler.showSuccess('Successfully Deleted Folder')),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem deleting the Folder.', error);
+          return of();
+        })
+      );
   }
 }

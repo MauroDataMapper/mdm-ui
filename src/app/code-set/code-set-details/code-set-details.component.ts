@@ -16,9 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-  AfterViewInit,
   Component,
-  ContentChildren,
   ElementRef,
   Input, OnDestroy,
   OnInit,
@@ -27,8 +25,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
-import { from, Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
+import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -39,17 +36,24 @@ import { ElementSelectorDialogueService } from '@mdm/services/element-selector-d
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-code-set-details',
   templateUrl: './code-set-details.component.html',
   styleUrls: ['./code-set-details.component.scss']
 })
-export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CodeSetDetailsComponent implements OnInit, OnDestroy {
+
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+  @ViewChildren('editableText') editForm: QueryList<any>;
+
+  @Input() afterSave: any;
+  @Input() editMode = false;
 
   result: CodeSetResult;
   hasResult = false;
@@ -60,6 +64,8 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   showFinalise: boolean;
   showPermission: boolean;
   showDelete: boolean;
+  showSoftDelete: boolean;
+  showPermDelete: boolean;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
@@ -74,18 +80,12 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  @ViewChild('aLink', {static: false}) aLink: ElementRef;
   download: any;
   downloadLink: any;
   urlText: any;
-  @Input() afterSave: any;
-  @Input() editMode = false;
 
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
+  canEditDescription = true;
+  showEditDescription = false;
 
   constructor(private resourcesService: MdmResourcesService,
               private messageService: MessageService,
@@ -98,14 +98,15 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
               private helpDialogueService: HelpDialogueHandlerService,
               private dialog: MatDialog,
               private favouriteHandler: FavouriteHandlerService,
-              private title: Title) {
+              private title: Title,
+              private editingService: EditingService) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.CodeSetDetails();
   }
 
   public showAddElementToMarkdown() { // Remove from here & put in markdown
-    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition, null, null);
+    this.elementDialogueService.open('Search_Help', 'left' as DialogPosition);
   }
 
   ngOnInit() {
@@ -117,13 +118,14 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.editableForm.show = () => {
       this.editForm.forEach(x => x.edit({
         editing: true,
-        focus: x._name === 'moduleName' ? true : false
+        focus: x.name === 'moduleName' ? true : false
       }));
       this.editableForm.visible = true;
     };
 
     this.editableForm.cancel = () => {
-      this.editForm.forEach(x => x.edit({editing: false}));
+      this.editingService.stop();
+      this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -145,8 +147,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       this.showSecuritySection = message;
     });
   }
-
-  ngAfterViewInit(): void { }
 
   CodeSetDetails(): any {
 
@@ -191,8 +191,11 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     const access: any = this.securityHandler.elementAccess(this.result);
     if (access !== undefined) {
       this.showEdit = access.showEdit;
+      this.canEditDescription = access.canEditDescription;
       this.showPermission = access.showPermission;
-      this.showDelete = access.showDelete;
+      this.showDelete = access.showSoftDelete || access.showPermanentDelete;
+      this.showSoftDelete = access.showSoftDelete;
+      this.showPermDelete = access.showPermanentDelete;
       this.showFinalise = access.showFinalise;
       this.showNewVersion = access.showNewVersion;
     }
@@ -214,104 +217,74 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   delete(permanent) {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showDelete) {
       return;
     }
-    const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
 
-    this.resourcesService.codeSet.delete(this.result.id, null, queryString, null).subscribe(result => {
-        if (permanent) {
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.stateHandler.Go('allDataModel', {reload: true, location: true}, null);
-        } else {
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-          this.stateHandler.reload();
-        }
-
-      },
-      error => {
-        this.deleteInProgress = false;
-        this.messageHandler.showError('There was a problem deleting the Code Set.', error);
-      });
+    this.resourcesService.codeSet.remove(this.result.id, { permanent }).subscribe(() => {
+      if (permanent) {
+        this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
+      } else {
+        this.stateHandler.reload();
+      }
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }, error => {
+      this.deleteInProgress = false;
+      this.messageHandler.showError('There was a problem deleting the Code Set.', error);
+    });
 
   }
 
   askForSoftDelete() {
-    if (!this.securityHandler.isAdmin()) {
+    if (!this.showSoftDelete) {
       return;
     }
-    const promise = new Promise((resolve, reject) => {
 
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
-          data: {
-            title: 'Are you sure you want to delete this Code Set?',
-            okBtnTitle: 'Yes, delete',
-            btnType: 'warn',
-            message: `<p class='marginless'>This Code Set will be marked as deleted and will not be viewable by users</p>
-                      <p class='marginless'>except Administrators.</p>`
-          }
-        });
-
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          // reject("cancelled");
-          return promise;
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Are you sure you want to delete this Code Set?',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class='marginless'>This Code Set will be marked as deleted and will not be visible to users,</p>
+                    <p class='marginless'>except Administrators.</p>`
         }
+      })
+      .subscribe(() => {
         this.processing = true;
         this.delete(false);
         this.processing = false;
       });
-    });
-    return promise;
   }
 
-  askForPermanentDelete(): any {
-    if (!this.securityHandler.isAdmin()) {
+  askForPermanentDelete() {
+    if (!this.showPermDelete) {
       return;
     }
-    const promise = new Promise((resolve, reject) => {
-      const dialog = this.dialog.open(ConfirmationModalComponent,
-        {
-          data: {
-            title: 'Delete permanently',
-            okBtnTitle: 'Yes, delete',
-            btnType: 'warn',
-            message: `Are you sure you want to <span class='warning'>permanently</span> delete this Code Set?`
-          }
-        });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+    this.dialog
+      .openDoubleConfirmationAsync({
+        data: {
+          title: 'Delete permanently',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Code Set?'
         }
-        const dialog2 = this.dialog.open(ConfirmationModalComponent, {
-            data: {
-              title: `Are you sure you want to delete this Code Set?`,
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: `<strong>Note: </strong>It will be deleted <span class='warning'>permanently</span>.`
-            }
-          });
-
-        dialog2.afterClosed().subscribe(result2 => {
-          if (result2.status !== 'ok') {
-            return;
-          }
-          this.delete(true);
-        });
-      });
-    });
-
-    return promise;
+      }, {
+        data: {
+          title: 'Are you sure you want to delete this Code Set?',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong>It will be deleted <span class=\'warning\'>permanently</span>.'
+        }
+      })
+      .subscribe(() => this.delete(true));
   }
 
-
-  formBeforeSave = () => {
+  formBeforeSave = async () => {
     this.editMode = false;
     this.errorMessage = '';
-    // this.editForm.forEach(x => this.result["label"] = x.getHotState().value);
     this.editForm.forEach((modules) => {
       if (modules.config.name === 'moduleName') {
         this.result.label = modules.getHotState().value;
@@ -333,27 +306,37 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-    const resource = {
-      id: this.result.id,
-      label: this.result.label,
-      description: this.editableForm.description,
-      author: this.result.author,
-      organisation: this.result.organisation,
-      aliases,
-      classifiers
-    };
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.result.id,
+        label: this.result.label,
+        description: this.editableForm.description || '',
+        author: this.result.author,
+        organisation: this.result.organisation,
+        aliases,
+        classifiers
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.result.id,
+        description: this.editableForm.description || ''
+      };
+    }
 
     if (this.validateLabel(this.result.label)) {
-      from(this.resourcesService.codeSet.put(resource.id, null, {resource})).subscribe(result => {
-          if (this.afterSave) {
-            this.afterSave(result);
-          }
-          this.messageHandler.showSuccess('Code Set updated successfully.');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({editing: false}));
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Code Set.', error);
-        });
+      await this.resourcesService.codeSet.update(this.result.id, resource).subscribe(res => {
+        this.editingService.stop();
+        this.messageHandler.showSuccess('Code Set updated successfully.');
+        this.editableForm.visible = false;
+        this.result.description = res.body.description;
+        this.editForm.forEach(x => x.edit({ editing: false }));
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Code Set.', error);
+      });
     }
   };
 
@@ -367,58 +350,65 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   showForm() {
+    this.editingService.start();
+    this.showEditDescription = false;
     this.editableForm.show();
   }
 
   onCancelEdit() {
     this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Edit_model_details', {my: 'right top', at: 'bottom'} as DialogPosition);
+    this.helpDialogueService.open('Edit_model_details');
   }
 
   toggleFavourite() {
     if (this.favouriteHandler.toggle(this.result)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
     }
-
   }
 
   finalise() {
-    const promise = new Promise((resolve, reject) => {
-
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+    const promise = new Promise(() => {
+      this.resourcesService.codeSet.latestModelVersion(this.result.id).subscribe(response => {
+        const dialog = this.dialog.open(FinaliseModalComponent, {
           data: {
-            title: 'Are you sure you want to finalise this Code Set ?',
+            title: 'Finalise Code Set',
+            modelVersion: response.body.modelVersion,
             okBtnTitle: 'Finalise Code Set',
             btnType: 'accent',
-            message: `<p class='marginless'>Once you finalise a Code Set, you can not edit it anymore! </p>
-                      <p class='marginless'>but you can create new version of it.</p>`
+            message: `<p class='marginless'>Please select the version you would like this Code Set</p>
+                        <p>to be finalised with: </p>`
           }
         });
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          // reject("cancelled");
-          return promise;
-        }
-        this.processing = true;
-        this.resourcesService.codeSet.put(this.result.id, 'finalise', null).subscribe(() => {
+        dialog.afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
+          this.resourcesService.codeSet.finalise(this.result.id, data).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
-            this.stateHandler.Go('codeset', {id: this.result.id}, {reload: true});
+            this.stateHandler.Go('codeset', { id: this.result.id }, { reload: true });
           }, error => {
             this.processing = false;
             this.messageHandler.showError('There was a problem finalising the CodeSet.', error);
           });
-
+        });
       });
     });
     return promise;
   }
-
 
   onLabelChange(value: any) {
     if (!this.validateLabel(value)) {
@@ -427,7 +417,6 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       this.editableForm.validationError = false;
       this.errorMessage = '';
     }
-
   }
   newVersion() {
     this.stateHandler.Go(
@@ -436,4 +425,10 @@ export class CodeSetDetailsComponent implements OnInit, AfterViewInit, OnDestroy
       { location: true }
     );
   }
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
 }

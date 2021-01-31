@@ -16,30 +16,35 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
-import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
+import { EditingService } from './editing.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataElementBulkEditDialogService {
 
-  private messageSource = new BehaviorSubject(false);
+  messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
 
-  constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(
+    public dialog: MatDialog,
+    private editingService: EditingService) { }
 
-  open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any, position: DialogPosition) {
+  open(dataElementIdLst: any, parentDataModel: any, parentDataClass: any) {
     const dg = this.dialog.open(BulkEditModalComponent, {
         data: { dataElementIdLst, parentDataModel, parentDataClass },
         panelClass: 'bulk-edit-modal'
       });
+
+    this.editingService.configureDialogRef(dg);
+
     return dg.afterClosed();
   }
 
   refreshParent = (isRefresh: boolean) => {
     this.messageSource.next(isRefresh);
-  }
+  };
 }

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
     private broadcastSvc: BroadcastService,
     private title: Title
   ) {
-    this.broadcastSvc.subscribe('userLoggedOut', args => {
+    this.broadcastSvc.subscribe('userLoggedOut', () => {
       this.isLoggedIn = false;
     });
 
@@ -55,7 +55,6 @@ export class HomeComponent implements OnInit {
     }
     this.title.setTitle('Mauro Data Mapper - Home');
   }
-
 
 
   login = () => {
@@ -106,5 +105,5 @@ export class HomeComponent implements OnInit {
         }
       }
     });
-  }
+  };
 }

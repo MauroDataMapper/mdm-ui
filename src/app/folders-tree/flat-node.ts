@@ -32,7 +32,7 @@ export interface Node {
     id: string;
     label?: string;
     open?: boolean;
-    parentFolder?: string;
+    folder?: string;
     disableChecked?: boolean;
     code?: string;
     hasChildFolders?: boolean;
@@ -40,6 +40,13 @@ export interface Node {
     parentDataClass?: Node;
     dataModel?: any;
     isRoot?: boolean;
+    superseded?: boolean;
+    documentationVersion?: string;
+    branchName?: string;
+    modelVersion?: string;
+    modelId?: string;
+    parentId?: string;
+    model?: any;
 }
 
 /** Wrapper for source node to support Material Flat Tree */
@@ -52,6 +59,10 @@ export class FlatNode {
     get id() {
         return this.node?.id;
     }
+
+    get modelId() {
+      return this.node?.modelId;
+  }
 
     get label() {
         return this.node?.label;
@@ -149,7 +160,7 @@ export class FlatNode {
     }
 
     get parentFolder() {
-        return this.node?.parentFolder;
+        return this.node?.folder;
     }
 
     get isRoot() {
@@ -160,8 +171,25 @@ export class FlatNode {
         return this.node?.code;
     }
 
+    get superseded() {
+        return this.node?.superseded;
+    }
+
+    get documentationVersion() {
+        return this.node?.documentationVersion;
+    }
+
+    get branchName() {
+      return this.node?.branchName;
+    }
+
+    get modelVersion() {
+        return this.node?.modelVersion;
+    }
+
 }
 
+// eslint-disable-next-line no-shadow
 export enum DOMAIN_TYPE {
     Folder = 'Folder',
     DataModel = 'DataModel',
@@ -170,5 +198,7 @@ export enum DOMAIN_TYPE {
     Terminology = 'Terminology',
     Term = 'Term',
     CodeSet = 'CodeSet',
-    Classification = 'Classification'
+    Classification = 'Classification',
+    ReferenceDataModel = 'ReferenceDataModel',
+    EnumerationType = 'EnumerationType'
 }

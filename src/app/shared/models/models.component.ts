@@ -28,8 +28,11 @@ import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-
 import { ValidatorService } from '@mdm/services/validator.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputModalComponent } from '@mdm/modals/input-modal/input-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
+import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-models',
@@ -45,15 +48,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
   inSearchMode = false;
   folder = '';
   searchboxFocused = false;
-  debounceInputEvent: Subject<KeyboardEvent|InputEvent>;
+  debounceInputEvent: Subject<KeyboardEvent | InputEvent>;
   subscriptions: Subscription;
 
   // Hard
-  includeSupersededDocModels = false;
+  includeModelSuperseded = false;
 
   // Soft
   showSupersededModels = false;
-  showDeletedModels = false;
+  includeDeleted = false;
 
   showFilters = false;
 
@@ -74,11 +77,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     folders: () => {
       this.levels.current = 0;
-      // $scope.filteredModels = $scope.filterDataModels(angular.copy($scope.allModels));
       this.reloadTree();
     },
     focusedElement: (node?) => {
-      const self = this;
       if (node) {
         this.levels.currentFocusedElement = node;
       }
@@ -86,41 +87,37 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloading = true;
 
       if (this.levels.currentFocusedElement?.domainType === 'DataModel') {
-        this.resources.tree.get(this.levels.currentFocusedElement.id).subscribe(result => {
-            const children = result.body;
-            self.levels.currentFocusedElement.children = children;
-            self.levels.currentFocusedElement.open = true;
-            self.levels.currentFocusedElement.selected = true;
-            const curModel = {
-              children: [self.levels.currentFocusedElement],
-              isRoot: true
-            };
-            // $scope.filteredModels = $scope.filterDataModels(angular.copy(curModel));
-            this.filteredModels = Object.assign({}, curModel);
-            this.reloading = false;
-            self.levels.current = 1;
-          },
-          error => {
-            this.reloading = false;
-          }
+        this.resources.tree.get('dataModels', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(result => {
+          const children = result.body;
+          this.levels.currentFocusedElement.children = children;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
+          const curModel = {
+            children: [this.levels.currentFocusedElement],
+            isRoot: true
+          };
+          this.filteredModels = Object.assign({}, curModel);
+          this.reloading = false;
+          this.levels.current = 1;
+        }, () => {
+          this.reloading = false;
+        }
         );
       } else if (this.levels.currentFocusedElement?.domainType === 'Terminology') {
-        this.resources.terminology.get(this.levels.currentFocusedElement.id, 'tree').subscribe(children => {
-            self.levels.currentFocusedElement.children = children.body;
-            self.levels.currentFocusedElement.open = true;
-            self.levels.currentFocusedElement.selected = true;
-            const curElement = {
-              children: [self.levels.currentFocusedElement],
-              isRoot: true
-            };
-            // $scope.filteredModels = $scope.filterDataModels(angular.copy(curElement));
-            this.filteredModels = Object.assign({}, curElement);
-            this.reloading = false;
-            self.levels.current = 1;
-          },
-          error => {
-            this.reloading = false;
-          }
+        this.resources.tree.get('terminologies', this.levels.currentFocusedElement.domainType, this.levels.currentFocusedElement.id).subscribe(children => {
+          this.levels.currentFocusedElement.children = children.body;
+          this.levels.currentFocusedElement.open = true;
+          this.levels.currentFocusedElement.selected = true;
+          const curElement = {
+            children: [this.levels.currentFocusedElement],
+            isRoot: true
+          };
+          this.filteredModels = Object.assign({}, curElement);
+          this.reloading = false;
+          this.levels.current = 1;
+        }, () => {
+          this.reloading = false;
+        }
         );
       }
     }
@@ -137,17 +134,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private broadcastSvc: BroadcastService,
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
-    public dialog: MatDialog
-  ) {
+    public dialog: MatDialog,
+    private editingService: EditingService) {
   }
 
   ngOnInit() {
     this.title.setTitle('Models');
 
     if (this.sharedService.isLoggedIn()) {
-      this.includeSupersededDocModels = this.userSettingsHandler.get('includeSupersededDocModels') || false;
+      this.includeModelSuperseded = this.userSettingsHandler.get('includeModelSuperseded') || false;
       this.showSupersededModels = this.userSettingsHandler.get('showSupersededModels') || false;
-      this.showDeletedModels = this.userSettingsHandler.get('showDeletedModels') || false;
+      this.includeDeleted = this.userSettingsHandler.get('includeDeleted') || false;
     }
 
     if (
@@ -160,7 +157,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.initializeModelsTree();
 
     this.broadcastSvc.subscribe('$reloadClassifiers', () => {
-      this.resources.classifier.get(null, null, {all: true}).subscribe(data => {
+      this.resources.classifier.list().subscribe(data => {
         this.allClassifiers = data.items;
         this.classifiers = {
           children: data,
@@ -170,7 +167,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
 
     this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
-      this.loadFolders();
+      this.loadFolders(true);
     });
 
     this.currentClassification = null;
@@ -186,7 +183,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
   isLoggedIn() {
     return this.sharedService.isLoggedIn();
   }
-
 
   tabSelected = tabIndex => {
     switch (tabIndex) {
@@ -207,22 +203,21 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   loadClassifiers = () => {
     this.classifierLoading = true;
-    this.resources.classifier.get(null, null, {all: true}).subscribe(result => {
-        const data = result.body;
-        this.allClassifiers = data.items;
-        data.items.forEach(x => {
-          x.hasChildren = false;
-          x.domainType = 'Classification';
-        });
-        this.classifiers = {
-          children: data.items,
-          isRoot: true
-        };
-        this.classifierLoading = false;
-      },
-      () => {
-        this.classifierLoading = false;
-      }
+    this.resources.classifier.list().subscribe(result => {
+      const data = result.body;
+      this.allClassifiers = data.items;
+      data.items.forEach(x => {
+        x.hasChildren = false;
+        x.domainType = 'Classification';
+      });
+      this.classifiers = {
+        children: data.items,
+        isRoot: true
+      };
+      this.classifierLoading = false;
+    }, () => {
+      this.classifierLoading = false;
+    }
     );
   };
 
@@ -233,56 +228,59 @@ export class ModelsComponent implements OnInit, OnDestroy {
     if (this.sharedService.isLoggedIn()) {
       options = {
         queryStringParams: {
-          includeDocumentSuperseded: this.userSettingsHandler.get('includeSupersededDocModels') || false,
-          includeModelSuperseded: this.userSettingsHandler.get('showSupersededModels') || false,
-          includeDeleted: this.userSettingsHandler.get('showDeletedModels') || false
+          includeDocumentSuperseded: this.userSettingsHandler.get('includeDocumentSuperseded') || false,
+          // includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
+          includeModelSuperseded: true,
+          includeDeleted: this.userSettingsHandler.get('includeDeleted') || false
         }
       };
     }
     if (noCache) {
       options.queryStringParams.noCache = true;
     }
-    this.resources.tree.get(null, null, options).subscribe(result => {
-        const data = result.body;
-        this.allModels = {
-          children: data,
-          isRoot: true
-        };
-        this.filteredModels = Object.assign({}, this.allModels);
-        this.reloading = false;
-      }, () => {
-        this.reloading = false;
-      }
+
+    this.resources.tree.list('folders', options.queryStringParams).subscribe(result => {
+      const data = result.body;
+      this.allModels = {
+        children: data,
+        isRoot: true
+      };
+      this.filteredModels = Object.assign({}, this.allModels);
+      this.reloading = false;
+    }, () => {
+      this.reloading = false;
+    }
     );
   };
 
-  onNodeClick = node => {
+  onNodeConfirmClick($event: NodeConfirmClickEvent) {
+    const node = $event.next.node;
+
     this.stateHandler.Go(node.domainType, {
-      id: node.id,
-      edit: false,
-      dataModelId: node.dataModel,
-      dataClassId: node.parentDataClass || '',
-      terminologyId: node.terminology
-    });
-  };
+          id: node.id,
+          edit: false,
+          dataModelId: node.modelId,
+          dataClassId: node.parentId || '',
+          terminologyId: node.modelId || node.model
+        }).then(
+          () => $event.setSelectedNode($event.next),
+          () => $event.setSelectedNode($event.current));
+  }
 
   onNodeDbClick = node => {
     // if the element if a dataModel, load it
-    if (['DataModel', 'Terminology'].indexOf(node.domainType) === -1) {
+    if ([DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(node.domainType) === -1) {
       return;
     }
     this.levels.focusedElement(node);
   };
 
-  onCompareTo = (source, target) => {
-    this.stateHandler.NewWindow('modelscomparison', {
-      sourceId: source.id,
-      targetId: target ? target.id : null
-    });
+  onCompareTo = () => {
+    // this.stateHandler.NewWindow('modelscomparison', { sourceId: source.id, targetId: target ? target.id : null });
   };
 
   loadModelsToCompare = dataModel => {
-    this.resources.dataModel.get(dataModel.id, 'semanticLinks', {filters: 'all=true'}).subscribe(result => {
+    this.resources.catalogueItem.listSemanticLinks(dataModel.domainType, dataModel.id, { all: true }).subscribe(result => {
       const compareToList = [];
       const semanticLinks = result.body;
       semanticLinks.items.forEach(link => {
@@ -294,8 +292,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onFolderAddModal = () => {
-    const promise = new Promise((resolve, reject) => {
-      const dialog = this.dialog.open(InputModalComponent, {
+    const promise = new Promise(() => {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
           inputValue: this.folder,
           modalTitle: 'Create a new Folder',
@@ -306,6 +304,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
         }
       });
 
+      this.editingService.configureDialogRef(dialog);
+
       dialog.afterClosed().subscribe(result => {
         if (result) {
           if (this.validateLabel(result)) {
@@ -313,60 +313,58 @@ export class ModelsComponent implements OnInit, OnDestroy {
             this.onAddFolder(null, null, this.folder);
           } else {
             const error = 'err';
-            this.messageHandler.showError('DataModel name can not be empty', error);
-            return promise;
+            this.messageHandler.showError('Folder name can not be empty', error);
+            return;
           }
         } else {
-          return promise;
+          return;
         }
       });
     });
     return promise;
-  }
-  onAddFolder = function(event?, folder?, label?) {
+  };
+  onAddFolder = (event?, folder?, label?) => {
     let parentId;
     if (folder) {
       parentId = folder.id;
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.folder.post(parentId, 'folders', {resource: {label}});
+      endpoint = this.resources.folder.saveChildrenOf(parentId, label );
     } else {
-      endpoint = this.resources.folder.post(null, null, {resource: {label}});
+      endpoint = this.resources.folder.save(label);
     }
     endpoint.subscribe(res => {
-        const result = res.body;
-        if (folder) {
-          result.domainType = 'Folder';
-          folder.children = folder.children || [];
-          folder.children.push(result);
-        } else {
-          result.domainType = 'Folder';
-          this.allModels.children.push(result);
-          this.filteredModels.children.push(result);
-        }
+      const result = res.body;
+      if (folder) {
+        result.domainType = 'Folder';
+        folder.children = folder.children || [];
+        folder.children.push(result);
+      } else {
+        result.domainType = 'Folder';
+        this.allModels.children.push(result);
+        this.filteredModels.children.push(result);
+      }
 
-        // go to folder
-        this.stateHandler.Go('Folder', {id: result.id, edit: false});
-
-        this.messageHandler.showSuccess(`Folder ${label} created successfully.`);
-        this.folder = '';
-        this.loadFolders();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem creating the Folder.', error);
-      });
+      // go to folder
+      this.stateHandler.Go('Folder', { id: result.id, edit: false });
+      this.messageHandler.showSuccess(`Folder ${label.label} created successfully.`);
+      this.folder = '';
+      this.loadFolders();
+    }, error => {
+      this.messageHandler.showError('There was a problem creating the Folder.', error);
+    });
   };
 
-  onAddDataModel = (event, folder) => {
-    this.stateHandler.Go('NewDataModelNew', {parentFolderId: folder.id});
+  onAddDataModel = (folder) => {
+    this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
   };
 
-  onAddCodeSet = (event, folder) => {
-    this.stateHandler.Go('NewCodeSet', {parentFolderId: folder.id});
+  onAddCodeSet = (folder) => {
+    this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
   };
 
-  onAddChildDataClass = (event, element) => {
+  onAddChildDataClass = (element) => {
     this.stateHandler.Go('NewDataClassNew', {
       grandParentDataClassId: element.domainType === 'DataClass' ? element.parentDataClass : null,
       parentDataModelId: element.domainType === 'DataModel' ? element.id : element.dataModel,
@@ -374,7 +372,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataElement = (event, element) => {
+  onAddChildDataElement = (element) => {
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: element.parentDataClass ? element.parentDataClass : null,
       parentDataModelId: element.dataModel,
@@ -382,8 +380,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataType = (event, element) => {
-    this.stateHandler.Go('NewDataType', {parentDataModelId: element.id});
+  onAddChildDataType = (element) => {
+    this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
   };
 
   toggleFilterMenu = () => {
@@ -395,13 +393,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.reloading = true;
 
     if (this.sharedService.isLoggedIn()) {
+      this.userSettingsHandler.update('includeModelSuperseded', this.includeModelSuperseded);
       this.userSettingsHandler.update('showSupersededModels', this.showSupersededModels);
-      this.userSettingsHandler.update('showDeletedModels', this.showDeletedModels);
+      this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
       this.userSettingsHandler.saveOnServer();
     }
-
     this.loadFolders();
-
     this.showFilters = !this.showFilters;
   };
 
@@ -410,11 +407,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
       return;
     }
     if (event.permanent) {
-      this.folderHandler.askForPermanentDelete(event.folder.id).then(() => {
-        this.loadFolders();
+      this.folderHandler.askForPermanentDelete(event.folder.id).subscribe(() => {
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       });
     } else {
-      this.folderHandler.askForSoftDelete(event.folder.id).then(() => {
+      this.folderHandler.askForSoftDelete(event.folder.id).subscribe(() => {
         event.folder.deleted = true;
       });
     }
@@ -425,21 +423,28 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadClassifiers();
   };
 
-  changeState = (newState, newWindow?) => {
+  changeState = (newState, type?, newWindow?) => {
     if (newWindow) {
       this.stateHandler.NewWindow(newState);
       return;
     }
+    if (newState) {
+      if (newState === 'import') {
+        this.stateHandler.Go(newState, {importType: type});
+      } else if (newState === 'export') {
+        this.stateHandler.Go(newState, {exportType: type});
+      }
+      return;
+    }
+
     this.stateHandler.Go(newState);
   };
 
-  onSearchInputKeyDown(event: KeyboardEvent|InputEvent) {
-    // Initialize debounce listener if neccessary
+  onSearchInputKeyDown(event: KeyboardEvent | InputEvent) {
+    // Initialize debounce listener if necessary
     if (!this.debounceInputEvent) {
-      this.debounceInputEvent = new Subject<KeyboardEvent|InputEvent>();
-      this.subscriptions = this.debounceInputEvent.pipe(
-        debounceTime(300)
-      ).subscribe(e => {
+      this.debounceInputEvent = new Subject<KeyboardEvent | InputEvent>();
+      this.subscriptions = this.debounceInputEvent.pipe(debounceTime(300)).subscribe(e => {
         if (e instanceof KeyboardEvent) {
           switch (e.key) {
             case 'Enter': this.search(); return;
@@ -476,7 +481,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = [];
 
-      this.resources.tree.get(null, 'search/' + this.sharedService.searchCriteria).subscribe(res => {
+      this.resources.tree.search('folders', this.sharedService.searchCriteria).subscribe(res => {
         const result = res.body;
         this.reloading = false;
         this.allModels = {
@@ -484,7 +489,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
           isRoot: true
         };
 
-        this.filteredModels = Object.assign({}, this.allModels); // $scope.filterDataModels();
+        this.filteredModels = Object.assign({}, this.allModels);
         this.searchText = this.formData.filterCriteria;
       });
     } else {
@@ -496,7 +501,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   classifierTreeOnSelect = node => {
-    this.stateHandler.Go('classification', {id: node.id});
+    this.stateHandler.Go('classification', { id: node.id });
   };
 
   classificationFilterChange = val => {
@@ -507,7 +512,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  filterClassifications = function() {
+  filterClassifications = () => {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
       this.formData.filterCriteria = '';
       this.sharedService.searchCriteria = this.formData.ClassificationFilterCriteria;
@@ -517,22 +522,71 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   onFavouriteDbClick = node => {
-    this.onFavioureClick(node);
+    this._onFavouriteClick(node);
   };
 
   onFavouriteClick = node => {
-    this.onFavioureClick(node);
+    this._onFavouriteClick(node);
   };
 
   reloadTree = () => {
     this.loadFolders(true);
   };
 
-  addClassifier = () => {
-    this.stateHandler.Go('newclassification');
+  onAddClassifier = () => {
+    const promise = new Promise(() => {
+      const dialog = this.dialog.open(NewFolderModalComponent, {
+        data: {
+          inputValue: '',
+          modalTitle: 'Create a new Classifier',
+          okBtn: 'Add Classifier',
+          btnType: 'primary',
+          inputLabel: 'Classifier name',
+          message: 'Please enter the name of your Classifier.'
+        }
+      });
+
+      dialog.afterClosed().subscribe(result => {
+        if (result) {
+          if (this.validateLabel(result)) {
+            const resource = {
+              label: result.label,
+            };
+            this.resources.classifier.save(resource).subscribe(response => {
+                this.messageHandler.showSuccess('Classifier saved successfully.');
+                this.stateHandler.Go('classification',
+                  {
+                    id: response.body.id
+                  },
+                  { reload: true, location: true }
+                );
+                this.broadcastSvc.broadcast('$reloadClassifiers');
+              }, error => {
+                this.messageHandler.showError('There was a problem saving the Classifier.', error);
+              });
+
+          } else {
+            const error = 'err';
+            this.messageHandler.showError('Classification name can not be empty', error);
+            return;
+          }
+        } else {
+          return;
+        }
+      });
+    });
+    return promise;
   };
 
-  private onFavioureClick(node) {
+  validateLabel = (data) => {
+    if (!data || (data && data.label.trim().length === 0)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  private _onFavouriteClick(node) {
     this.stateHandler.Go(node.domainType, {
       id: node.id,
       dataModelId: node.dataModel,
@@ -540,11 +594,4 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   }
 
-  validateLabel = (data) => {
-    if (!data || (data && data.trim().length === 0)) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 }

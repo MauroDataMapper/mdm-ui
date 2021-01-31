@@ -29,10 +29,9 @@ import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
-import { DataModelsExportComponent } from '@mdm/data-models-export/data-models-export.component';
-import { UserAccessNewComponent } from '@mdm/access/user-access-new.component';
+import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
-import { HistoryComponent } from '@mdm/folder/history.component';
+import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
@@ -78,11 +77,12 @@ import { DataModelStep2Component } from '@mdm/wizards/dataModel/data-model-step2
 import { DataClassMainComponent } from '@mdm/wizards/dataClass/data-class-main/data-class-main.component';
 import { DataClassStep1Component } from '@mdm/wizards/dataClass/data-class-step1/data-class-step1.component';
 import { DataClassStep2Component } from '@mdm/wizards/dataClass/data-class-step2/data-class-step2.component';
-import { DataClassStep3Component } from '@mdm/wizards/dataClass/data-class-step3/data-class-step3.component';
 import { DataTypeMainComponent } from '@mdm/wizards/dataType/data-type-main/data-type-main.component';
 import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
 import { ContentTableComponent } from '@mdm/shared/content-table/content-table.component';
+import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
+import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -103,14 +103,11 @@ import { NewDataTypeInlineComponent } from '@mdm/utility/new-data-type-inline/ne
 import { DataElementMainComponent } from '@mdm/wizards/dataElement/data-element-main/data-element-main.component';
 import { DataElementStep1Component } from '@mdm/wizards/dataElement/data-element-step1/data-element-step1.component';
 import { DataElementStep2Component } from '@mdm/wizards/dataElement/data-element-step2/data-element-step2.component';
-import { DataElementStep3Component } from '@mdm/wizards/dataElement/data-element-step3/data-element-step3.component';
 import { HomeComponent } from '@mdm/home/home.component';
-import { ImportComponent } from '@mdm/import/import.component';
+import { ImportModelsComponent } from '@mdm/import-models/import-models.component';
 import { SearchComponent } from '@mdm/search/search.component';
 import { TerminologyComponent } from '@mdm/terminology/terminology.component';
 import { TerminologyDetailsComponent } from '@mdm/terminology/terminology-details/terminology-details.component';
-import { ClassifierMainComponent } from '@mdm/wizards/classifier/classifier-main/classifier-main.component';
-import { ClassifierStep1Component } from '@mdm/wizards/classifier/classifier-step1/classifier-step1.component';
 import { TwoSidePanelComponent } from '@mdm/two-side-panel/two-side-panel.component';
 import { UiViewComponent } from '@mdm/shared/ui-view/ui-view.component';
 import { ModelsComponent } from '@mdm/shared/models/models.component';
@@ -139,7 +136,6 @@ import { TermRelationshipsComponent } from '@mdm/utility/term-relationships/term
 import { LinkSuggestionComponent } from '@mdm/link-suggestion/link-suggestion.component';
 import { ModelComparisonComponent } from '@mdm/model-comparison/model-comparison.component';
 import { CodeSetMainComponent } from '@mdm/wizards/codeSet/code-set-main/code-set-main.component';
-import { CodeSetStep1Component } from '@mdm/wizards/codeSet/code-set-step1/code-set-step1.component';
 import { MultipleTermsSelectorComponent } from '@mdm/utility/multiple-terms-selector/multiple-terms-selector.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
@@ -154,13 +150,29 @@ import { DiagramTabComponent } from '@mdm/diagram/diagram-tab/diagram-tab.compon
 import { DiagramPopupComponent } from '@mdm/diagram/diagram-popup/diagram-popup.component';
 import { DiagramComponent } from '@mdm/diagram/diagram/diagram.component';
 import { DiagramToolbarComponent } from '@mdm/diagram/diagram-toolbar/diagram-toolbar.component';
-import {SummaryMetadataPopupComponent} from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
-import {NewVersionCodeSetComponent} from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
+import { SummaryMetadataPopupComponent } from '@mdm/shared/summary-metadata/summary-metadata-popup/summary-metadata-popup.component';
+import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { MarkedPipe } from '@mdm/pipes/marked.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-modal.component';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { ModelMergingComponent } from '@mdm/model-merging/model-merging.component';
+import { ModelsMergingGraphComponent } from '@mdm/models-merging-graph/models-merging-graph.component';
+import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { NgxTextDiffModule } from 'ngx-text-diff';
+import { ReferenceDataComponent } from '@mdm/referenceData/reference-data.component';
+import { ReferenceDataDetailsComponent } from '@mdm/referenceData/reference-data-details/reference-data-details.component';
+import { ReferenceDataTypeComponent } from '@mdm/shared/reference-data-type/reference-data-type.component';
+import { ReferenceDataElementComponent } from '@mdm/shared/reference-data-element/reference-data-element.component';
+import { ReferenceDataValuesComponent } from '@mdm/shared/reference-data-values/reference-data-values.component';
+import { BaseComponent } from '@mdm/shared/base/base.component';
+import { JoditAngularModule } from 'jodit-angular';
+import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
+import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 
+import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
+import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
+import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
 
 @NgModule({
   declarations: [
@@ -169,8 +181,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     ShareWithComponent,
-    DataModelsExportComponent ,
-    UserAccessNewComponent,
+    ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
@@ -224,12 +235,12 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataClassMainComponent,
     DataClassStep1Component,
     DataClassStep2Component,
-    DataClassStep3Component,
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
     ContentTableComponent,
-    ContentTableComponent,
+    DataElementsListComponent,
+    DataClassesListComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -250,14 +261,11 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataElementMainComponent,
     DataElementStep1Component,
     DataElementStep2Component,
-    DataElementStep3Component,
     HomeComponent,
-    ImportComponent,
+    ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
-    ClassifierMainComponent,
-    ClassifierStep1Component,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -288,14 +296,28 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     LinkSuggestionComponent,
     ModelComparisonComponent,
     CodeSetMainComponent,
-    CodeSetStep1Component,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
-    BulkDeleteModalComponent
+    BulkDeleteModalComponent,
+    ModelMergingComponent,
+    ModelsMergingGraphComponent,
+    VersioningGraphModalComponent,
+    BulkDeleteModalComponent,
+    ReferenceDataComponent,
+    ReferenceDataDetailsComponent,
+    BaseComponent,
+    ReferenceDataTypeComponent,
+    ReferenceDataElementComponent,
+    ReferenceDataValuesComponent,
+    EnumerationValuesComponent,
+    EnumerationValuesDetailsComponent,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    ConstraintsRulesComponent
   ],
   imports: [
     AdminModule,
@@ -310,16 +332,17 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     HttpClientModule,
     ImageCropperModule,
     ReactiveFormsModule,
+    NgxTextDiffModule,
     SharedModule,
     ToastrModule.forRoot({
       timeOut: 30000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: false
     }),
-    UserIdleModule.forRoot({idle: 600, timeout: 300}), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
+    UserIdleModule.forRoot({ idle: 600, timeout: 300 }), // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     UsersModule,
     MatTabsModule,
-    MatTabsModule
+    JoditAngularModule
   ],
   exports: [
     MarkedPipe,
@@ -328,8 +351,7 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
     ShareWithComponent,
-    DataModelsExportComponent ,
-    UserAccessNewComponent,
+    ExportModelsComponent,
     GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
@@ -378,12 +400,12 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataClassMainComponent,
     DataClassStep1Component,
     DataClassStep2Component,
-    DataClassStep3Component,
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
     ContentTableComponent,
-    ContentTableComponent,
+    DataClassesListComponent,
+    DataElementsListComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -404,14 +426,11 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     DataElementMainComponent,
     DataElementStep1Component,
     DataElementStep2Component,
-    DataElementStep3Component,
     HomeComponent,
-    ImportComponent,
+    ImportModelsComponent,
     SearchComponent,
     TerminologyComponent,
     TerminologyDetailsComponent,
-    ClassifierMainComponent,
-    ClassifierStep1Component,
     TwoSidePanelComponent,
     UiViewComponent,
     ModelsComponent,
@@ -442,14 +461,25 @@ import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-del
     LinkSuggestionComponent,
     ModelComparisonComponent,
     CodeSetMainComponent,
-    CodeSetStep1Component,
     MultipleTermsSelectorComponent,
     CodeSetComponent,
     CodeSetDetailsComponent,
     CodeSetTermsTableComponent,
     NewVersionCodeSetComponent,
     BulkEditModalComponent,
-    BulkDeleteModalComponent
+    BulkDeleteModalComponent,
+    ModelMergingComponent,
+    ModelsMergingGraphComponent,
+    VersioningGraphModalComponent,
+    BulkDeleteModalComponent,
+    BaseComponent,
+    ReferenceDataComponent,
+    ReferenceDataDetailsComponent,
+    EnumerationValuesComponent,
+    EnumerationValuesDetailsComponent,
+    HtmlEditorComponent,
+    ContentEditorComponent,
+    ConstraintsRulesComponent
   ]
 })
 export class CatalogueModule { }

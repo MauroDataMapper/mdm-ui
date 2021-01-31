@@ -15,16 +15,10 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, ElementRef, Inject, Input, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import * as SvgPanZoom from 'svg-pan-zoom';
-import * as _ from 'lodash';
-import * as joint from 'jointjs';
-import { forkJoin } from 'rxjs';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { BasicDiagramService } from '../services/basic-diagram.service';
-import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
+import { MatDialog } from '@angular/material/dialog';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component';
 
@@ -33,25 +27,21 @@ import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component'
   templateUrl: './diagram-tab.component.html'
 })
 
-export class DiagramTabComponent implements OnInit {
+export class DiagramTabComponent {
 
   @Input() mode: string;
   @Input() parent: string;
+  @Input() isPopup: boolean;
+  @Input() canMoveUp: boolean;
 
   @ViewChild(DiagramComponent) diagramComponent: DiagramComponent;
 
   constructor(protected resourcesService: MdmResourcesService,
               protected messageHandler: MessageHandlerService,
               protected matDialog: MatDialog) {
-    // super(resourcesService, messageHandler, matDialog);
-  }
-
-  ngOnInit(): void {
-
   }
 
   popUp(): void {
-    // console.log('Popping up...');
     const dialogRef = this.matDialog.open(DiagramPopupComponent, {
       width: '100%',
       height: '100%',
@@ -60,7 +50,6 @@ export class DiagramTabComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
       this.diagramComponent.diagramComponent = result.diagramComponent;
       this.diagramComponent.diagramService = result.diagramComponent.diagramService;
       this.diagramComponent.resetPaper();

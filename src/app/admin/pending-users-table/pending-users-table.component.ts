@@ -15,19 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren, ViewChild, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
- // import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { Title } from '@angular/platform-browser';
-import {MdmPaginatorComponent} from '@mdm/shared/mdm-paginator/mdm-paginator';
-import {merge} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { merge } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-pending-users-table',
@@ -39,32 +37,27 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-  filterEvent = new EventEmitter<string>();
   hideFilters = true;
   isLoadingResults: boolean;
   totalItemCount = 0;
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
 
   records: any[] = [];
-  displayedColumns = ['firstName', 'lastName', 'emailAddress', 'organisation', 'actions'];
-
-  // dataSource = new MatTableDataSource<any>();
+  displayedColumns = ['fullName', 'emailAddress', 'organisation', 'actions'];
 
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
     private broadcastSvc: BroadcastService,
     private dialog: MatDialog,
-    private title: Title
+    private title: Title,
+    private gridService: GridService,
+    private changeRef: ChangeDetectorRef
   ) {
-   // this.dataSource = new MatTableDataSource(this.records);
   }
 
   ngOnInit() {
-    // this.pendingUsersFetch();
-    // this.broadcastSvc.subscribe('pendingUserUpdated', () => {
-    //   this.pendingUsersFetch();
-    // });
     this.title.setTitle('Pending users');
   }
 
@@ -73,68 +66,41 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-        this.isLoadingResults = true;
+      this.isLoadingResults = true;
 
-        return this.pendingUsersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
-      }),
+      return this.pendingUsersFetch(this.paginator.pageSize, this.paginator.pageOffset, this.sort.active, this.sort.direction, this.filter);
+    }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
         this.isLoadingResults = false;
         return data.body.items;
-        //
-        // this.records = data.body.items;
-        // this.totalItemCount = this.records.length;
       }),
       catchError(() => {
         this.isLoadingResults = false;
         return [];
       })).subscribe(data => {
-      this.records = data;
-
-    });
+        this.records = data;
+      });
+    this.changeRef.detectChanges();
   }
   pendingUsersFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy,
-      sortType
-    };
-    options.filters += '&disabled=false';
-    return this.resourcesService.catalogueUser.get(null, 'pending', options);
-  }
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+    options['disabled'] = false;
 
-  pendingUsersFetchold(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy,
-      sortType
-    };
-    options.filters += '&disabled=false';
-    this.resourcesService.catalogueUser.get(null, 'pending', options).subscribe(resp => {
-        this.records = resp.body.items;
-        this.totalItemCount = this.records.length;
-        this.refreshDataSource();
-      }, err => {
-        this.messageHandler.showError('There was a problem loading pending users.', err);
-      });
+    return this.resourcesService.catalogueUser.pending(options);
   }
 
   refreshDataSource() {
-  //  this.dataSource.data = this.records;
+    //  this.dataSource.data = this.records;
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -145,81 +111,67 @@ export class PendingUsersTableComponent implements OnInit, AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  askForSoftApproval = (row) => {
-    const promise = new Promise((resolve, reject) => {
-      const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+  askForSoftApproval = (row: { firstName: string; lastName: string }) => {
+    const message = `Are you sure you want to approve <em><strong>${row.firstName} ${row.lastName}</strong></em>?`;
+
+    this.dialog
+      .openConfirmationAsync({
         data: {
           title: 'Approve user',
           okBtnTitle: 'Approve',
           btnType: 'accent',
           message
         }
-      });
+      })
+      .subscribe(() => this.approveUser(row));
+  };
 
-      dialog.afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return promise;
-        }
-        this.approveUser(row);
-      });
-    });
-    return promise;
-  }
-  askForSoftRejection = (row) => {
-    const promise = new Promise((resolve, reject) => {
-      const message = `Are you sure you want to reject <em><strong>${row.firstName} ${row.lastName}</strong></em>?
+  askForSoftRejection = (row: { firstName: string; lastName: string }) => {
+    const message = `Are you sure you want to reject <em><strong>${row.firstName} ${row.lastName}</strong></em>?
                       <br> <strong>Note:</strong> Rejected users will not be removed;
                       <br> Instead they will be <span class='warning'>disabled</span>`;
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmationAsync({
         data: {
           title: 'Reject user',
           okBtnTitle: 'Reject',
           btnType: 'warn',
           message
         }
-      });
-
-      dialog.afterClosed().subscribe(result => {
-        console.log(result);
-        if (result?.status !== 'ok') {
-          return promise;
-        }
-        this.rejectUser(row);
-      });
-    });
-    return promise;
-  }
+      })
+      .subscribe(() => this.rejectUser(row));
+  };
 
   approveUser = (row) => {
-    this.resourcesService.catalogueUser.put(row.id, 'approveRegistration', {}).subscribe(() => {
-        this.messageHandler.showSuccess('User approved successfully');
-        this.broadcastSvc.broadcast('pendingUserUpdated');
-        this.pendingUsersFetch().subscribe(data => {
+    this.resourcesService.catalogueUser.approve(row.id, null).subscribe(() => {
+      this.messageHandler.showSuccess('User approved successfully');
+      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.pendingUsersFetch().subscribe(data => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
       }, err => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
       });
-      }, (error) => {
-        this.messageHandler.showError('There was a problem approving this user.', error);
-      });
+    }, (error) => {
+      this.messageHandler.showError('There was a problem approving this user.', error);
+    });
   };
 
   rejectUser = (row) => {
-    this.resourcesService.catalogueUser.put(row.id, 'rejectRegistration', {}).subscribe(() => {
-        this.messageHandler.showSuccess('User rejected successfully');
-        this.broadcastSvc.broadcast('pendingUserUpdated');
-        this.pendingUsersFetch().subscribe(data => {
+    this.resourcesService.catalogueUser.reject(row.id, null).subscribe(() => {
+      this.messageHandler.showSuccess('User rejected successfully');
+      this.broadcastSvc.broadcast('pendingUserUpdated');
+      this.pendingUsersFetch().subscribe(data => {
         this.records = data.body.items;
         this.totalItemCount = this.records.length;
         this.refreshDataSource();
       }, err => {
         this.messageHandler.showError('There was a problem loading pending users.', err);
       });
-      }, (error) => {
-        this.messageHandler.showError('There was a problem approving this user.', error);
+    }, (error) => {
+      this.messageHandler.showError('There was a problem approving this user.', error);
     });
   };
 }

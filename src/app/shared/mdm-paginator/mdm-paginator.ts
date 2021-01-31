@@ -15,16 +15,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'mdm-paginator',
-  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]=\'length\' showFirstLastButtons (page)="changed($event)"></mat-paginator>'
+  template: '<mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [length]="length" showFirstLastButtons (page)="changed($event)"></mat-paginator>'
 })
-export class MdmPaginatorComponent extends MatPaginator {
+export class MdmPaginatorComponent extends MatPaginator implements OnInit {
   pageSize = 20;
-  pageSizeOptions = [5, 10, 20, 50]
+  pageSizeOptions = [5, 10, 20, 50];
   ngOnInit(): void {
     super.ngOnInit();
     const settings = JSON.parse(localStorage.getItem('userSettings'));

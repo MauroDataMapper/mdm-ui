@@ -19,7 +19,7 @@ export class DataClassResult {
   id: string;
   domainType: string;
   label: string;
-  dataModel: string;
+  model: string;
   breadcrumbs: Breadcrumb[];
   aliases: any[] = [];
   semanticLinks: SemanticLink[];
@@ -73,8 +73,6 @@ export class Classifiers {
 }
 
 export class EditableDataClass {
-  constructor() {}
-
   deletePending: boolean;
   label: string;
   description: string;
@@ -84,7 +82,9 @@ export class EditableDataClass {
   waiting: boolean;
   validationError: boolean;
 
-  show() {}
-  cancel() {}
-  save(parent: any) {}
+  constructor() { }
+  show() { }
+  cancel() { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  save(parent: any) { }
 }

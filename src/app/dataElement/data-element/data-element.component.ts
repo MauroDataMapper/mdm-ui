@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -24,14 +24,18 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { DataElementResult } from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-element',
   templateUrl: './data-element.component.html',
   styleUrls: ['./data-element.component.sass']
 })
-export class DataElementComponent implements OnInit {
-  dataElement: DataElementResult;
+export class DataElementComponent extends BaseComponent implements OnInit, AfterViewInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  dataElementOutput: DataElementResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -42,89 +46,64 @@ export class DataElementComponent implements OnInit {
   activeTab: any;
   dataClass = { id: null };
   dataModel = { id: null };
+  isDataLoaded = false;
 
-  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
-    private stateHandler: StateHandlerService
-  ) {
-    if (
-      !this.stateService.params.id ||
-      !this.stateService.params.dataModelId ||
-      !this.stateService.params.dataClassId
-    ) {
+    private stateHandler: StateHandlerService,
+    private title: Title,
+    private editingService: EditingService) {
+    super();
+    // tslint:disable-next-line: deprecation
+    if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId || !this.stateService.params.dataClassId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    if (
-      this.stateService.params.id &&
-      this.stateService.params.dataModelId &&
-      this.stateService.params.dataModelId.trim() !== ''
-    ) {
+
+    // tslint:disable-next-line: deprecation
+    if (this.stateService.params.id && this.stateService.params.dataModelId && this.stateService.params.dataModelId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.dataModel = { id: this.stateService.params.dataModelId };
     }
 
-    if (
-      this.stateService.params.id &&
-      this.stateService.params.dataClassId &&
-      this.stateService.params.dataClassId.trim() !== ''
-    ) {
+    // tslint:disable-next-line: deprecation
+    if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
+      // tslint:disable-next-line: deprecation
       this.dataClass = { id: this.stateService.params.dataClassId };
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
   }
 
-   ngOnInit() {
-    this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
-    ).index;
+  ngOnInit() {
+    // tslint:disable-next-line: deprecation
+    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
 
-    this.showExtraTabs =
-       this.sharedService.isLoggedIn() ;
-    /// this.parentId = this.stateService.params.id;
-    // this.resourcesService.dataModel.get(this.stateService.params.id).subscribe(x => { this.dataModel = x.body });
+    this.showExtraTabs = this.sharedService.isLoggedIn();
+    this.title.setTitle('Data Element');
+    // tslint:disable-next-line: deprecation
+    this.dataElementDetails(this.stateService.params.dataModelId, this.dataClass.id, this.stateService.params.id);
+    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
+      this.showSearch = message;
+    });
+    this.afterSave = () => this.dataElementDetails(this.dataModel.id, this.dataClass.id, this.dataElementOutput.id);
+  }
 
-    // if(this.stateService.params.edit === "true"){ //Call this if using message service.
-    //     // this.editMode = true;
-    //     this.messageService.showEditMode(true);
-    // }
-    // else
-    //     this.messageService.showEditMode(false);
-    window.document.title = 'Data Element';
-    this.dataElementDetails(
-      this.stateService.params.dataModelId,
-      this.dataClass.id,
-      this.stateService.params.id
-    );
-    // this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-    //   this.showSecuritySection = message;
-    // });
-    this.subscription = this.messageService.changeSearch.subscribe(
-      (message: boolean) => {
-        this.showSearch = message;
-      }
-    );
-    this.afterSave = (result: { body: { id: any } }) =>
-      this.dataElementDetails(
-        this.stateService.params.dataModelId,
-        this.dataClass.id,
-        result.body.id
-      );
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'content':
         return { index: 0, name: 'content' };
-      // case 'dataClasses':  return {index:0, name:'dataClasses'};
-      // case 'dataElements': return {index:1, name:'dataElements'};
       case 'properties':
         return { index: 1, name: 'properties' };
       case 'comments':
@@ -135,36 +114,29 @@ export class DataElementComponent implements OnInit {
         return { index: 4, name: 'summaryMetadata' };
       case 'attachments':
         return { index: 5, name: 'attachments' };
-      // case 'history': 	 return {index:4, name:'history'     , fetchUrl:null};
-      // default: 			 return {index:0, name:'dataClasses', fetchUrl:'dataClasses'};
       default:
         return { index: 0, name: 'content' };
     }
   }
 
   dataElementDetails(dataModelId: any, dataClassId, id) {
-    this.resourcesService.dataElement
-      .get(dataModelId, dataClassId, id, null, null)
-      .subscribe((result: { body: DataElementResult }) => {
-        this.dataElement = result.body;
-        // this.dataClass.parentDataModel = dataModelId;
-        // this.dataClass.parentDataClass = parentDataClassId;
-        // this.parentDataModel = {
-        //   id: dataModelId,
-        //   editable: this.dataClass.editable,
-        //   finalised: this.dataClass.breadcrumbs[0].finalised
-        // };
-        this.messageService.FolderSendMessage(this.dataElement);
-        this.messageService.dataChanged(this.dataElement);
+    this.resourcesService.dataElement.get(dataModelId, dataClassId, id).subscribe((result: { body: DataElementResult }) => {
+      this.dataElementOutput = result.body;
 
-        if (this.dataElement) {
-          // this.tabGroup.realignInkBar();
-          this.activeTab = this.getTabDetailByName(
-            this.stateService.params.tabView
-          ).index;
-          this.tabSelected(this.activeTab);
-        }
-      });
+      this.dataModel.id = result.body.model;
+      this.dataClass.id = result.body.dataClass;
+
+      this.messageService.FolderSendMessage(this.dataElementOutput);
+      this.messageService.dataChanged(this.dataElementOutput);
+
+      if (this.dataElementOutput) {
+        // tslint:disable-next-line: deprecation
+        this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+        this.tabSelected(this.activeTab);
+      }
+
+      this.isDataLoaded = true;
+    });
   }
 
   toggleShowSearch() {

@@ -38,6 +38,7 @@ tr td.mat-footer-cell,
 tr th.mat-header-cell {
   padding: 0.75em;
   border-bottom: 0.07rem solid #ebedf2;
+  vertical-align: top;
 }
 
 .detailsRowHeader {
@@ -64,65 +65,6 @@ td.mat-cell:last-of-type {
 }
 .table-responsive {
   position: relative;
-}
-table.mdm--table-responsive {
-  border: 1px solid #ccc;
-
-  tr {
-    border: 1px solid #f3f3f3;
-    // padding: .35em;
-  }
-
-  td,
-  th {
-    padding: 0.5em;
-  }
-
-  .mdm--td-cell {
-    display: none;
-  }
-
-  @include respond-to($desktop) {
-    border: 0;
-
-    &.table-stripped tbody tr:nth-of-type(odd) {
-      background-color: #fff;
-    }
-
-    th.mat-header-cell:first-of-type,
-    td.mat-cell:first-of-type,
-    td.mat-footer-cell:first-of-type {
-      padding: 0.5rem 0.75rem;
-    }
-
-    thead {
-      display: none;
-    }
-
-    tr {
-      border-bottom: 8px solid #f3f3f3;
-      display: block;
-      height: auto;
-      min-height: 40px;
-      margin-bottom: 24px;
-      border-radius: 5px;
-    }
-    td {
-      border-bottom: 1px solid #f3f3f3;
-      display: block;
-      height: auto;
-      min-height: 40px;
-      text-align: right !important;
-    }
-    td:last-child {
-      border-bottom: 0;
-    }
-    .mdm--td-cell {
-      display: inline;
-      float: left;
-      font-weight: bold;
-    }
-  }
 }
 
 .mdm--mat-pagination,
@@ -153,7 +95,8 @@ table.table thead {
 
 table.mat-table .mat-header-cell, table.mat-table .mat-header-row td {
     font-size: $defaultFontSize;
-    font-weight: 500;
+    font-weight: 700;
+    color: #333;
     vertical-align: middle;
     border-bottom: 2px solid #e9ecef;
   }
@@ -167,3 +110,7 @@ table.mat-table .mat-header-row td {
   background-color: rgba(255, 215, 0, 0.12)!important;
 }
 
+
+mdm-paginator .mat-form-field-appearance-legacy .mat-form-field-infix {
+   padding: 0;
+}

@@ -1,0 +1,142 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container">
+    <h4 *ngIf="importType === 'dataModels'">Import a new Data Model </h4>
+    <h4 *ngIf="importType === 'codeSets'">Import a new Code Set </h4>
+    <h4 *ngIf="importType === 'referenceDataModels'">Import CSV files </h4>
+    <h4 *ngIf="importType === 'terminologies'">Import a new Terminology </h4>
+    <i class="fas fa-info-circle helpIcon" (click)="loadHelp()" matTooltip="Help"></i>
+</div>
+<div *ngIf="importers" style="margin-top: 16px;">
+    <h4 class="marginless">
+        Select an importer<sup class="required">*</sup>
+        <i *ngIf="importerHelp" class="fas fa-info-circle helpIcon" (click)="loadImporterHelp()" matTooltip="Help"></i>
+    </h4>
+
+    <mat-form-field appearance="outline" class="mb-2 full-width">
+        <mat-label>Select importer</mat-label>
+        <mat-select aria-label="selectedImporterStr" [(ngModel)]="selectedImporterStr" placeholder="Select..." (selectionChange)="importerChanged()">
+          <mat-option *ngFor="let item of importers" [value]="item">{{item.displayName}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<div *ngIf="step >= 2 && selectedImporterGroups && selectedImporterGroups.length > 0">
+    <form #userForm="ngForm" id="userForm" (ngSubmit)="submitForm(userForm.valid)" novalidate enctype="multipart/form-data" method="POST">
+
+        <div *ngFor="let group of selectedImporterGroups">
+            <h4>{{group.name}}</h4>
+            <div *ngFor="let option of group.parameters" class="mb-2">
+                <div class="import-folder" *ngIf="option.type === 'Folder'">
+                    <span>Folder location</span>
+                    <mdm-model-selector-tree [treeSearchDomainType]="'Folder'"
+                                             [justShowFolders]="true"
+                                             [ngModel]="option.value"
+                                             name="Folder"
+                                             (ngModelChange)="option.value = $event"
+                                             [accepts]="['Folder']"
+                                             ngDefaultControl
+                                             [showValidationError]="option.optional === false"
+                                             [isRequired]="option.optional == false">
+                    </mdm-model-selector-tree>
+                </div>
+
+                <div class="import-dataModel" *ngIf="option.type === 'DataModel'">
+                    <mdm-model-selector-tree [treeSearchDomainType]="'DataModel'"
+                                             [ngModel]="option.value"
+                                             name="DataModel"
+                                             [accepts]="['DataModel']"
+                                             (ngModelChange)="option.value = $event"
+                                             ngDefaultControl
+                                             [showValidationError]="option.optional === false"
+                                             [isRequired]="option.optional == false">
+                    </mdm-model-selector-tree>
+                </div>
+
+                <div class="import-text" *ngIf="option.type === 'Text'">
+                    <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}">
+                        <textarea [(ngModel)]="option.value" name="{{option.name}}" [required]="option.optional == false" rows="5" class="form-control outlined-input"></textarea>
+                    </div>
+                </div>
+
+                <div *ngIf="option.type !== 'Folder' && option.type !== 'DataModel' && option.type != 'Text'">
+
+                    <div [ngClass]="{'has-error' : userForm.form.get(option.name)?.invalid && userForm.form.get(option.name)?.touched}" class="topping">
+                        <div *ngIf="formOptionsMap[option.type] === 'checkbox'">
+                            <mat-checkbox [(ngModel)]="option.value" name="{{option.name}}" [required]="option.optional === false">
+                                <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
+                            </mat-checkbox>
+                        </div>
+
+                        <div *ngIf="formOptionsMap[option.type] != 'checkbox' && formOptionsMap[option.type] != 'file'">
+                            <span>{{option.displayName}}<span [hidden]="option.optional">*</span></span>
+                            <input type="{{formOptionsMap[option.type]}}" name="{{option.name}}" [(ngModel)]="option.value" [ngClass]="{'outlined-input form-control' : formOptionsMap[option.type] != 'checkbox'}" [required]="option.optional === false">
+                        </div>
+                        <div *ngIf="formOptionsMap[option.type] === 'file'">
+                            <input type="{{formOptionsMap[option.type]}}"
+                                   name="{{option.name}}"
+                                   [(ngModel)]="option.value"
+                                   id="{{option.name}}"
+                                   [ngClass]="{'form-control' : formOptionsMap[option.type] != 'checkbox'}"
+                                   [required]="option.optional === false"
+                                   [attr.valid-file]="formOptionsMap[option.type] == 'file'">
+                        </div>
+                    </div>
+                </div>
+                <small class="block">{{option.description}}</small>
+                <div class="has-error">
+                    <div *ngIf="userForm.form.get(option.name)?.errors?.number && option.type == 'Integer'">
+                        <span class="control-label">This is not a valid number.</span>
+                    </div>
+                    <div *ngIf="userForm.form.get(option.name)?.errors?.required && userForm.form.get(option.name)?.touched">
+                        <span class="control-label">This field is required.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="full-width mt-2">
+            <div *ngIf="importingInProgress">
+                <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+            </div>
+        </div>
+        <div>
+            <button mat-button color="warn" type="reset" [disabled]="importingInProgress" style="margin-right: 8px;">Reset</button>
+            <button mat-flat-button color="primary" type="submit" class="custom" [disabled]="userForm.invalid || importingInProgress">
+                Import Model(s)
+            </button>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="importCompleted && importResult.count > 1">
+    <hr>
+    <span><strong>The following Data Models ({{importResult.count}}) are imported successfully:</strong></span>
+    <div *ngFor="let import of importResult.items">
+        <div>
+            <mdm-element-link [element]="import"></mdm-element-link>
+        </div>
+    </div>
+</div>
+<div *ngIf="importHasError && importErrors?.length > 0">
+    <div class="alert alert-danger">
+        <strong>Import Errors ({{importErrors.length}})</strong>
+        <div *ngFor="let error of importErrors">
+            <div>{{error.message}}</div>
+        </div>
+    </div>
+</div>

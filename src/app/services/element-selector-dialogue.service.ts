@@ -16,41 +16,24 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ElementSelectorComponent } from '../utility/element-selector.component';
-import { MatDialog, DialogPosition } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ElementSelectorDialogueService {
-  constructor(public dialog: MatDialog, private sanitizer: DomSanitizer) {}
+  constructor(public dialog: MatDialog) { }
 
-  open(
-    validTypesToSelect,
-    notAllowedToSelectIds,
-    name: string,
-    position: DialogPosition
-  ) {
+  open(validTypesToSelect, notAllowedToSelectIds) {
     if (!validTypesToSelect || (validTypesToSelect && validTypesToSelect.length === 0)) {
-      validTypesToSelect = [
-        'Folder',
-        'DataModel',
-        'DataClass',
-        'DataType',
-        'DataElement',
-        'Term'
-      ];
+      validTypesToSelect = ['CodeSet', 'DataModel', 'DataClass', 'DataType', 'DataElement', 'Term'];
     }
 
     const dg = this.dialog.open(ElementSelectorComponent, {
       data: { validTypesToSelect, notAllowedToSelectIds },
       panelClass: 'element-selector-modal'
     });
-    // close: function (event, ui) {
-    //   var selectedElement = jQuery(this).data("selectedElement");
-    //   deferred.resolve(selectedElement);
-    // },
 
     return dg;
   }

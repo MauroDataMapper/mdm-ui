@@ -21,12 +21,12 @@ SPDX-License-Identifier: Apache-2.0
 
 export const environment = {
   production: false,
-  version: '4.0.2',
+  version: '5.0.0',
   apiEndpoint: 'http://localhost:8080/api',
   HDFLink: '',
-  appTitle: 'Metadata Catalogue',
-  appDescription: 'Data models and terminologies',
-  catalogueDisplayName: 'Metadata Catalogue',
+  appTitle: 'Mauro Data Mapper',
+  appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
+  catalogueDisplayName: 'Mauro Data Mapper',
   youTrack: {
     url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
     project: 'MC'

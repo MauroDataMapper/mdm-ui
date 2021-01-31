@@ -15,8 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
+<div *ngIf="showDropTopPlaceHolder" class="mdm-folders-tree dnd-top-placeholder" (dragenter)="dragEnterTop($event)" (dragover)="dragOverTop($event)" (dragleave)="dragLeave($event)" (drop)="dropTop($event)" (dragend)="dragEnd()">Top Level Dropzone</div>
+<mat-tree #foldersTree [dataSource]="dataSource" [treeControl]="treeControl" (contextmenu)="noop($event)" aria-label="Folders tree">
+   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="25">
         <button mat-icon-button disabled aria-label="Disabled button">
             <mat-icon class="mat-icon-rtl-mirror"></mat-icon>
         </button>
@@ -24,8 +25,7 @@ SPDX-License-Identifier: Apache-2.0
         <!-- Use #nodeContentTemplate ng-template and pass in node as default context. -->
         <ng-container *ngTemplateOutlet="nodeContentTemplate; context:{$implicit: node}"></ng-container>
     </mat-tree-node>
-
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25" (contextmenu)="noop($event)">
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="25">
         <!-- Do not show expansion icon if node's domain type not in expandOnNodeClickFor list  -->
         <ng-container *ngIf="!hasChild(-1,node)">
             <button mat-icon-button disabled aria-label="Disabled button">
@@ -59,8 +59,8 @@ SPDX-License-Identifier: Apache-2.0
             <button mat-menu-item class="tree-context-menu-item" (click)="handleAddCodeSet(node)">Add Code Set</button>
             <ng-container *ngIf="isUserAdmin">
                 <mat-divider></mat-divider>
-                <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button>
-                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanenly</span></button>
+                <!-- <button mat-menu-item class="tree-context-menu-item" *ngIf="!node.deleted" (click)="handleDeleteFolder(node, false)">Mark as deleted</button> -->
+                <button mat-menu-item class="tree-context-menu-item" (click)="handleDeleteFolder(node, true)">Delete <span class="warning">permanently</span></button>
             </ng-container>
         </ng-container>
         <ng-container *ngIf="node.domainType === 'DataModel'">
@@ -100,11 +100,22 @@ SPDX-License-Identifier: Apache-2.0
 
 <!-- Template for tree node content. Assumed an $implicit node is provided in context. -->
 <ng-template #nodeContentTemplate let-node>
-    <div class="mat-tree-node-content" [ngClass]="{'mat-tree-node-active': node === selectedNode}">
-        <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
-        <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet', 'Classification'].includes(node.domainType)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
-        <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
-        <span *ngIf="node.superseded" style='font-size: 11px'>({{node.documentationVersion}})</span>
-        <i style="font-size: 10px;" class="fas fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>
+    <div class="mat-tree-node-content"  [ngClass]="{'mat-tree-node-active': node === selectedNode}" [draggable]="enableDragAndDrop && draggableDomains.includes(node.domainType)" (dragstart)="dragStart(node, $event)" (drop)="drop(node, $event)" (dragenter)="dragEnter(node, $event)" (dragover)="dragOver(node, $event)" (dragleave)="dragLeave($event)" (dragend)="dragEnd()">
+        <!-- <div> -->
+          <mat-checkbox *ngIf="showCheckboxFor && showCheckboxFor.indexOf(node.domainType) != -1" [(ngModel)]="node.checked" (ngModelChange)="nodeChecked(node)" [disabled]="node.disableChecked"></mat-checkbox>
+          <mat-icon *ngIf="['Folder', 'DataModel', 'Terminology', 'CodeSet', 'Classification', 'ReferenceDataModel'].includes(node.domainType)" fontSet="fas" [fontIcon]="getIcon(node)" [ngClass]="getCssClass(node)" [attr.aria-label]="node.type + ' icon'"></mat-icon>
+          <span (contextmenu)="onContextMenu(node, $event)" title="{{node.label}} {{favourites[node.id] ? '(favorited)':''}}" (click)="handleClick(node)" (dblclick)="handleDbClick(node)" [ngClass]="{'mat-tree-node-active': node === selectedNode, 'testcss node-title': node !== selectedNode, 'favouritesIcon addedToFavourite': favourites[node.id], 'comparisonTree': isComparisonTree, 'created': node.created, 'deleted': node.deleted, 'selected': node.selected, 'isGhost': node.isGhost, 'modified': node.modified}" [innerHTML]="node.label | mchighlighter:searchCriteria"></span>
+          <i style="font-size: 10px;" class="fas fa-star favouritesIcon addedToFavourite" *ngIf="favourites[node.id]"></i>
+        <!-- </div> -->
+        <small *ngIf="node.branchName" class="ml-1 text-muted">
+          <span> | </span>
+          <i class="fas fa-code-branch"></i>
+          {{node.branchName}}
+        </small>
+        <small *ngIf="node.modelVersion" class="ml-1 text-muted">
+            <span> | </span>
+            <i class="fas fa-file-alt"></i>
+            {{node.modelVersion}}
+          </small>
     </div>
 </ng-template>

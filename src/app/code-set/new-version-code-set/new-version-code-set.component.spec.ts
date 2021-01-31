@@ -18,7 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewVersionCodeSetComponent } from './new-version-code-set.component';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import { StateService } from '@uirouter/core';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('NewVersionCodeSetComponent', () => {
   let component: NewVersionCodeSetComponent;
@@ -26,8 +36,31 @@ describe('NewVersionCodeSetComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[TestModule],
-      declarations: [ NewVersionCodeSetComponent ]
+      imports: [
+        MatRadioModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        MatCheckboxModule,
+        MatProgressBarModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: StateService,
+          useValue: {
+            params: {}
+          }
+        },
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        ElementLinkComponent,
+        NewVersionCodeSetComponent
+      ]
     })
     .compileComponents();
   }));

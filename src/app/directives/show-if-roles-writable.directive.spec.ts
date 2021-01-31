@@ -20,7 +20,7 @@ import { ShowIfRolesWritableDirective } from './show-if-roles-writable.directive
 
 describe('ShowIfRolesWritableDirective', () => {
   it('should create an instance', () => {
-    const directive = new ShowIfRolesWritableDirective(null,null);
+    const directive = new ShowIfRolesWritableDirective(null, null);
     expect(directive).toBeTruthy();
   });
 });

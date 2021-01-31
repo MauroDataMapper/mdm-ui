@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
                         <span class="dataModelTypeIcon">
                             <i matTooltip="Folder" class="fas fa-folder"></i>
                         </span>
-                        <mdm-inline-text-edit  [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
+                        <mdm-inline-text-edit [readOnly]="false" [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
                     </h4>
                     <span class="inline-block">
                         <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
@@ -58,7 +58,10 @@ SPDX-License-Identifier: Apache-2.0
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
                         <div *ngIf="hasResult">
-                            <mdm-markdown-text-area [editableForm]="editableForm" [element]="result" [property]="'description'"></mdm-markdown-text-area>
+                            <mdm-content-editor [editableForm]="editableForm" 
+                                                [element]="result" 
+                                                [property]="'description'">
+                            </mdm-content-editor>
                         </div>
                     </td>
                 </tr>
@@ -68,8 +71,8 @@ SPDX-License-Identifier: Apache-2.0
                             <button mat-stroked-button
                                     color="warn"
                                     type="button"
-                                    matTooltip="Delete"
-                                    aria-label="Delete"
+                                    matTooltip="Delete Folder"
+                                    aria-label="Delete Folder"
                                     class="paddingless dropdown-toggle"
                                     [disabled]="deleteInProgress || exporting"
                                     [matMenuTriggerFor]="menu">
@@ -77,11 +80,11 @@ SPDX-License-Identifier: Apache-2.0
                             </button>
 
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!result?.deleted">
+                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result?.deleted">
                                     Mark as deleted
                                 </button>
-                                <button mat-menu-item (click)="askForPermanentDelete()">
-                                    Delete <span class="errorMessage">permanently</span>
+                                <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
+                                    Delete <span class="warning">permanently</span>
                                 </button>
                             </mat-menu>
                         </div>
@@ -92,8 +95,8 @@ SPDX-License-Identifier: Apache-2.0
                                         color="primary"
                                         type="button"
                                         [disabled]="deleteInProgress || exporting || result.finalised"
-                                        matTooltip="Edit"
-                                        aria-label="Edit"
+                                        matTooltip="Edit Folder"
+                                        aria-label="Edit Folder"
                                         (click)="showForm();">
                                         <i class="fas fa-pencil-alt"></i>
                                 </button>
@@ -104,7 +107,8 @@ SPDX-License-Identifier: Apache-2.0
                         </div>
 
                         <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button
+
+                         <button mat-stroked-button
                                     color="primary"
                                     type="button"
                                     class="paddingless"
@@ -114,7 +118,7 @@ SPDX-License-Identifier: Apache-2.0
                                     (click)="toggleShowSearch()" >
                                 <i class="fas fa-search"></i>
                             </button>
-                            <button mat-stroked-button
+                             <button mat-stroked-button
                                     color="primary"
                                     type="button"
                                     class="paddingless"

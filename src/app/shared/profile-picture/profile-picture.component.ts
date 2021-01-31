@@ -23,13 +23,13 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./profile-picture.component.sass']
 })
 export class ProfilePictureComponent implements OnInit {
-  constructor() {}
-
   @Input() user: any;
   image: any;
   dynamicTooltipText: string;
+  constructor() {}
 
   ngOnInit() {
+    /* eslint-disable @typescript-eslint/restrict-plus-operands */
     this.dynamicTooltipText =
       '<div>' +
       (this.user.firstName ? this.user.firstName : '') +

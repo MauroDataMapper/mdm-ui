@@ -16,8 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-help-dialog',
@@ -25,11 +24,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 })
 export class HelpDialogComponent {
-
-    constructor(public dialogRef: MatDialogRef<HelpDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-    closeHelp(): void {
-        this.dialogRef.close();
-    }
-
+  constructor(public dialogRef: MatDialogRef<HelpDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+  closeHelp(): void {
+    this.dialogRef.close();
+  }
 }

@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { from } from 'rxjs';
@@ -28,11 +28,6 @@ import { Categories } from '@mdm/model/dataModelModel';
   styleUrls: ['./element-data-type.component.sass']
 })
 export class ElementDataTypeComponent implements OnInit {
-  constructor(
-    private stateHandler: StateHandlerService,
-    private elementTypes: ElementTypesService
-  ) {}
-
   @Input() elementDataType: any;
   @Input() hideName: boolean;
   @Input() onlyShowRefDataClass: boolean;
@@ -57,13 +52,19 @@ export class ElementDataTypeComponent implements OnInit {
   showCount = 5;
   toggleShowEnums = false;
 
+  constructor(
+    private stateHandler: StateHandlerService,
+    private elementTypes: ElementTypesService
+  ) {}
+
+
   ngOnInit() {
     if (this.elementDataType !== null && this.elementDataType !== undefined) {
       let parentDataModelId = this.mcParentDataModel
         ? this.mcParentDataModel.id
         : null;
       if (!parentDataModelId) {
-        parentDataModelId = this.elementDataType.dataModel;
+        parentDataModelId = this.elementDataType.model;
       }
 
       if (
@@ -80,7 +81,7 @@ export class ElementDataTypeComponent implements OnInit {
       this.link = this.elementTypes.getLinkUrl(this.elementDataType);
     }
 
-    if (this.elementDataType.enumerationValues !== null) {
+    if (this.elementDataType.enumerationValues) {
       if (
         this.elementDataType &&
         this.elementDataType.domainType === 'EnumerationType'
@@ -121,8 +122,6 @@ export class ElementDataTypeComponent implements OnInit {
 
           this.allRecordsWithGroups = [];
           categoryNames.forEach(category => {
-            // categories[category] = categories[category].sortBy('index');
-
             if (category !== null) {
               this.categories.push({ key: category, value: category });
             }
@@ -157,7 +156,7 @@ export class ElementDataTypeComponent implements OnInit {
       for (const elem of elements) {
         elem.classList.remove('hiddenMoreEnumerationKeyValue');
       }
-      element.innerHTML = `hide <i class='fas fa-caret-down fa-xs'></i>`;
+      element.innerHTML = 'hide <i class=\'fas fa-caret-down fa-xs\'></i>';
     } else {
       const elements = element.parentElement.offsetParent.getElementsByClassName(
         'moreEnumerationKeyValue'
@@ -165,12 +164,12 @@ export class ElementDataTypeComponent implements OnInit {
       for (const elem of elements) {
         elem.classList.add('hiddenMoreEnumerationKeyValue');
       }
-      element.innerHTML = `... more <i class='fas fa-caret-down fa-xs'></i>`;
+      element.innerHTML = '... more <i class=\'fas fa-caret-down fa-xs\'></i>';
     }
     this.showing = !this.showing;
   };
 
   showEnums = () => {
     this.toggleShowEnums = !this.toggleShowEnums;
-  }
+  };
 }

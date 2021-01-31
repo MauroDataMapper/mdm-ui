@@ -237,3 +237,5 @@ $RECYCLE.BIN/
 *.lnk
 /test-report.xml
 /test-report
+junit.xml
+yarn.lock

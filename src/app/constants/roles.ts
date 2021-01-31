@@ -20,8 +20,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ROLES {
-  constructor() {}
-
   map = {
     ADMINISTRATOR: 'Administrator',
     EDITOR: 'Editor',
@@ -36,4 +34,5 @@ export class ROLES {
     { value: 'ADMINISTRATOR', text: 'Administrator' },
     { value: 'EDITOR', text: 'Editor' }
   ];
+  constructor() {}
 }

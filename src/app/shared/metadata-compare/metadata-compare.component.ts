@@ -15,18 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mdm-metadata-compare',
   templateUrl: './metadata-compare.component.html',
   styleUrls: ['./metadata-compare.component.scss']
 })
-export class MetadataCompareComponent implements OnInit {
+export class MetadataCompareComponent {
   @Input() diffs: any;
   @Input() diffColumnWidth: any;
 
   constructor() {}
 
-  ngOnInit() {}
 }

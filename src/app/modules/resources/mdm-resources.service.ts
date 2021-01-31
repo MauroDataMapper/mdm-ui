@@ -26,20 +26,30 @@ import {
   MdmTerminologyResource,
   MdmTermResource,
   MdmCatalogueUserResource,
-  MdmTreeResource,
+  MdmSecurityResource,
+  MdmProviderResource,
+  MdmSessionResource,
   MdmImporterResource,
   MdmAdminResource,
-  MdmUserGroupResource,
-  MdmAuthenticationResource,
   MdmDataModelResource,
   MdmDataFlowResource,
-  MdmHierarchyResource,
   MdmEnumerationValuesResource,
   MdmDataTypeResource,
-  MdmPublicResource,
   MdmCodeSetResource,
   MdmFacetsResource,
-  MdmMetadataResource
+  MdmMetadataResource,
+  MdmSummaryMetadataResource,
+  MdmTreeItemResource,
+  MdmEditResource,
+  MdmSecurableResource,
+  MdmUserGroupsResource,
+  MdmVersionLinkResource,
+  MdmUserImageFileResource,
+  MdmReferenceDataModelResource,
+  MdmReferenceDataElementResource,
+  MdmReferenceDataTypeResource,
+  MdmReferenceDataValueResource,
+  MdmVersioningResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -53,7 +63,6 @@ export class MdmResourcesService {
    * @param resourcesConfig Customize apiEndpoint.
    * @param restHandler Custom rest requests handler. In this case injecting rest handler that uses Angular's HttpClient.
    */
-  constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) {}
 
   classifier = new MdmClassifierResource(this.resourcesConfig, this.restHandler);
   terminology = new MdmTerminologyResource(this.resourcesConfig, this.restHandler);
@@ -61,20 +70,32 @@ export class MdmResourcesService {
   folder = new MdmFolderResource(this.resourcesConfig, this.restHandler);
   catalogueUser = new MdmCatalogueUserResource(this.resourcesConfig, this.restHandler);
   catalogueItem = new MdmCatalogueItemResource(this.resourcesConfig, this.restHandler);
-  userGroup = new MdmUserGroupResource(this.resourcesConfig, this.restHandler);
   enumerationValues = new MdmEnumerationValuesResource(this.resourcesConfig, this.restHandler);
-  authentication = new MdmAuthenticationResource(this.resourcesConfig, this.restHandler);
-  tree = new MdmTreeResource(this.resourcesConfig, this.restHandler);
+  security = new MdmSecurityResource(this.resourcesConfig, this.restHandler);
+  session = new MdmSessionResource(this.resourcesConfig, this.restHandler);
+  tree = new MdmTreeItemResource(this.resourcesConfig, this.restHandler);
   metadata = new MdmMetadataResource(this.resourcesConfig, this.restHandler);
   facets = new MdmFacetsResource(this.resourcesConfig, this.restHandler);
   dataModel = new MdmDataModelResource(this.resourcesConfig, this.restHandler);
-  hierarchy = new MdmHierarchyResource(this.resourcesConfig, this.restHandler);
   dataFlow = new MdmDataFlowResource(this.resourcesConfig, this.restHandler);
-  dataClass: MdmDataClassResource = new MdmDataClassResource(this.resourcesConfig, this.restHandler);
+  dataClass = new MdmDataClassResource(this.resourcesConfig, this.restHandler);
   dataType = new MdmDataTypeResource(this.resourcesConfig, this.restHandler);
-  public = new MdmPublicResource(this.resourcesConfig, this.restHandler);
   admin = new MdmAdminResource(this.resourcesConfig, this.restHandler);
-  dataElement: MdmDataElementResource = new MdmDataElementResource(this.resourcesConfig, this.restHandler);
+  dataElement = new MdmDataElementResource(this.resourcesConfig, this.restHandler);
   importer = new MdmImporterResource(this.resourcesConfig, this.restHandler);
   codeSet = new MdmCodeSetResource(this.resourcesConfig, this.restHandler);
+  provider = new MdmProviderResource(this.resourcesConfig, this.restHandler);
+  edit = new MdmEditResource(this.resourcesConfig, this.restHandler);
+  summaryMetadata = new MdmSummaryMetadataResource(this.resourcesConfig, this.restHandler);
+  userGroups = new MdmUserGroupsResource(this.resourcesConfig, this.restHandler);
+  securableResource = new MdmSecurableResource(this.resourcesConfig, this.restHandler);
+  versionLink = new MdmVersionLinkResource(this.resourcesConfig, this.restHandler);
+  userImage = new MdmUserImageFileResource(this.resourcesConfig, this.restHandler);
+  versioning = new MdmVersioningResource(this.resourcesConfig, this.restHandler);
+  referenceDataModel = new MdmReferenceDataModelResource(this.resourcesConfig, this.restHandler);
+  referenceDataElement = new MdmReferenceDataElementResource(this.resourcesConfig, this.restHandler);
+  referenceDataType = new MdmReferenceDataTypeResource(this.resourcesConfig, this.restHandler);
+  referenceDataValue = new MdmReferenceDataValueResource(this.resourcesConfig, this.restHandler);
+
+  constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 }

@@ -17,6 +17,20 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+
+export interface ConfirmationModalConfig {
+  title?: string;
+  message: string;
+  okBtnTitle?: string;
+  cancelBtnTitle?: string;
+  cancelShown?: boolean;
+  btnType?: string;
+}
+
+export interface ConfirmationModalResult {
+  status: ModalDialogStatus;
+}
 
 @Component({
   selector: 'mdm-confirmation-modal',
@@ -26,17 +40,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ConfirmationModalComponent implements OnInit {
   title: string;
   message: string;
-  username: string;
-  password: string;
   okTitle: string;
   cancelTitle: string;
   cancelShown: boolean;
   btnType: string;
 
   constructor(
-    private dialogRef: MatDialogRef<ConfirmationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+    private dialogRef: MatDialogRef<ConfirmationModalComponent, ConfirmationModalResult>,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmationModalConfig
+  ) { }
 
   ngOnInit() {
     this.okTitle = this.data.okBtnTitle ? this.data.okBtnTitle : 'OK';
@@ -44,20 +56,10 @@ export class ConfirmationModalComponent implements OnInit {
     this.cancelTitle = this.data.cancelBtnTitle ? this.data.cancelBtnTitle : 'Cancel';
     this.title = this.data.title;
     this.message = this.data.message;
-    // this.username = securityHandler.getEmailFromStorage();
-    this.password = '';
     this.cancelShown = this.data.cancelShown != null ? this.data.cancelShown : true;
   }
 
-  ok() {
-    this.dialogRef.close({ status: 'ok' });
-  }
+  ok = () => this.dialogRef.close({ status: ModalDialogStatus.Ok });
 
-  cancel() {
-    this.dialogRef.close({ status: 'cancel' });
-  }
-
-  close() {
-    this.dialogRef.close({ status: 'close' });
-  }
+  cancel = () => this.dialogRef.close({ status: ModalDialogStatus.Cancel });
 }

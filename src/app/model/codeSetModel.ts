@@ -16,68 +16,66 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 export class CodeSetResult {
-    id: string;
-    domainType: string;
-    label: string;
-    documentationVersion: any[];
-    description: string;
-    editable: boolean;
-    lastUpdated: string;
-    classifiers: Classifiers[];
-    type: string;
-    finalised: boolean;
-    author: string;
-    organisation: string;
-    dateFinalised: string;
-    aliases: any[];
-    semanticLinks: any[];
-    deleted = false;
+  id: string;
+  domainType: string;
+  label: string;
+  documentationVersion: any[];
+  description: string;
+  editable: boolean;
+  lastUpdated: string;
+  classifiers: Classifiers[];
+  type: string;
+  finalised: boolean;
+  author: string;
+  organisation: string;
+  dateFinalised: string;
+  aliases: any[];
+  semanticLinks: any[];
+  deleted = false;
   readableByEveryone: any;
+  branchName: string;
 
 }
 
 
-
 export class Classifiers {
-    id: string;
-    label: string;
-    lastUpdated: string;
+  id: string;
+  label: string;
+  lastUpdated: string;
 
 }
 
 
 export class EditableDataModel {
 
-    constructor() {}
+  deletePending: boolean;
+  label: string;
+  description: string;
+  classifiers: Classifiers[] = [];
+  aliases: any[] = [];
+  visible: boolean;
+  waiting: boolean;
+  author: any;
+  organisation: any;
+  validationError: boolean;
 
-    deletePending: boolean;
-    label: string;
-    description: string;
-    classifiers: Classifiers[] = [];
-    aliases: any[] = [];
-    visible: boolean;
-    waiting: boolean;
-    author: any;
-    organisation: any;
-    validationError: boolean;
+  constructor() { }
 
+  show() {
 
-    show() {
+  }
+  cancel() {
 
-    }
-    cancel() {
-
-    }
-    save(parent: any) {
-
-    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  save(parent: any) { }
 
 }
 
 export class Categories {
-    index: number;
-    id: string;
-    key: string;
-    value: string;
-    category: string;
+  index: number;
+  id: string;
+  key: string;
+  value: string;
+  category: string;
 }

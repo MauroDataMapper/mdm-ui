@@ -23,7 +23,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class CapitalizePipe implements PipeTransform {
 
     transform(value: string): any {
-        return (!!value) ? value.charAt(0).toUpperCase() + value.substr(1) : '';
+        return (value) ? value.charAt(0).toUpperCase() + value.substr(1) : '';
   }
 
 }

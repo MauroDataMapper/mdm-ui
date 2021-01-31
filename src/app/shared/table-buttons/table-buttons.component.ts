@@ -15,14 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-table-buttons',
   templateUrl: './table-buttons.component.html',
   styleUrls: ['./table-buttons.component.sass']
 })
-export class TableButtonsComponent implements OnInit {
+export class TableButtonsComponent {
   @Input() record: any;
   @Input() index: any;
   @Input() hideDelete: boolean;
@@ -36,9 +37,7 @@ export class TableButtonsComponent implements OnInit {
   @Output() delete = new EventEmitter<any>();
   @Output() save = new EventEmitter<any>();
 
-  constructor() {}
-
-  ngOnInit() {}
+  constructor(private editingService: EditingService) {}
 
   saveClicked(record, index) {
     if (!this.validate) {
@@ -60,19 +59,25 @@ export class TableButtonsComponent implements OnInit {
   }
 
   editCancelled(record, index) {
-    record.inEdit = undefined;
-    record.edit = undefined;
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
 
-    if (this.cancelEdit) {
-      this.cancelEdit.emit([record, index]);
-    }
+      record.inEdit = undefined;
+      record.edit = undefined;
+
+      if (this.cancelEdit) {
+        this.cancelEdit.emit([record, index]);
+      }
+    });
   }
 
-  deleteClicked(record, index) {
+  deleteClicked(record) {
     record.inDelete = true;
   }
 
-  deleteCancelled(record, index) {
+  deleteCancelled(record) {
     record.inDelete = undefined;
   }
 

@@ -21,22 +21,47 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
   providedIn: 'root'
 })
 export class GridService {
-  @Output() reloadEvent = new EventEmitter<string>();
+  @Output() reloadEvent = new EventEmitter<any>();
 
-  constructor() {}
+  constructor() { }
 
   applyFilter = (filters: any[]) => {
-    let filter: any = '';
+    const filter = {};
     if (filters) {
       filters.forEach((x: any) => {
         const name = x.nativeElement.name;
         const value = x.nativeElement.value;
 
         if (value !== '') {
-          filter += name + '=' + value;
+          filter[name] = value;
         }
       });
       this.reloadEvent.emit(filter);
     }
   };
+
+  constructOptions(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+    const options = {};
+
+    if (pageSize) {
+      options['max'] = pageSize;
+    }
+    if (pageIndex) {
+      options['offset'] = pageIndex;
+    }
+    if (sortBy) {
+      options['sort'] = sortBy;
+    }
+    if (sortType) {
+      options['order'] = sortType;
+    }
+
+    if (filters) {
+      Object.keys(filters).map(key => {
+        options[key] = filters[key];
+      });
+    }
+
+    return options;
+  }
 }

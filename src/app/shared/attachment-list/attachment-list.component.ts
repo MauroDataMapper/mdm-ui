@@ -15,7 +15,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, AfterViewInit, Input, ViewChildren, ViewChild, ElementRef, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  ViewChildren,
+  ViewChild,
+  ElementRef,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { merge } from 'rxjs';
@@ -23,56 +32,56 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { SharedService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-attachment-list',
   templateUrl: './attachment-list.component.html',
-  styleUrls: ['./attachment-list.component.sass']
+  styleUrls: ['./attachment-list.component.sass'],
 })
 export class AttachmentListComponent implements AfterViewInit {
-  constructor(
-    private changeRef: ChangeDetectorRef,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private securityHandler: SecurityHandlerService
-  ) {}
-
   @Input() parent: any;
+  @Input() domainType: any;
   @ViewChildren('filters', { read: ElementRef })
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-
-  reloadEvent = new EventEmitter<string>();
+  @ViewChild(MdmPaginatorComponent, { static: true })
+  paginator: MdmPaginatorComponent;
+  reloadEvent = new EventEmitter<any>();
   hideFilters = true;
   displayedColumns: string[] = ['fileName', 'fileSize', 'lastUpdated', 'other'];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filter: string;
-
+  filter: {};
   currentUser: any;
   access: any;
-
   records: any[] = [];
+  apiEndpoint: any;
+  constructor(
+    private changeRef: ChangeDetectorRef,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private securityHandler: SecurityHandlerService,
+    private sharedService: SharedService,
+    private editingService: EditingService) { }
 
   ngAfterViewInit() {
     this.currentUser = this.securityHandler.getCurrentUser();
     this.access = this.securityHandler.elementAccess(this.parent);
+    this.apiEndpoint = this.sharedService.backendURL;
 
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
+    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
           this.isLoadingResults = true;
 
-          return this.attachmentFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
+          return this.attachmentFetch();
         }),
         map((data: any) => {
           this.totalItemCount = data.body.count;
@@ -83,7 +92,8 @@ export class AttachmentListComponent implements AfterViewInit {
           this.isLoadingResults = false;
           return [];
         })
-      ).subscribe(data => {
+      )
+      .subscribe((data) => {
         this.records = data;
       });
 
@@ -91,13 +101,12 @@ export class AttachmentListComponent implements AfterViewInit {
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -108,43 +117,38 @@ export class AttachmentListComponent implements AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
-  attachmentFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
-    return this.resources.facets.get(this.parent.id, 'referenceFiles', options);
+  attachmentFetch = () => {
+    return this.resources.catalogueItem.listReferenceFiles(
+      this.domainType,
+      this.parent.id
+    );
   };
 
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
+      this.records = [].concat(this.records);
     }
+
+    this.editingService.setFromCollection(this.records);
   };
 
-  getFile = inputFileName => {
+  getFile = (inputFileName) => {
     const element: any = document.getElementById(inputFileName);
     return element && element.files ? element.files[0] : '';
   };
 
-  download = record => {
-    return this.resources.facets.downloadLinkReferenceFile(
-      this.parent.id,
-      record.id
-    );
+  download = (record) => {
+    return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
   };
 
-  delete = record => {
-    this.resources.facets.delete(this.parent.id, 'referenceFiles/' + record.id, null).subscribe(() => {
-        this.messageHandler.showSuccess('Attachment deleted successfully.');
-        this.reloadEvent.emit();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem deleting the attachment.', error);
-      });
+  delete = (record) => {
+    this.resources.catalogueItem.removeReferenceFile(this.domainType, this.parent.id, record.id).subscribe(() => {
+      this.messageHandler.showSuccess('Attachment deleted successfully.');
+      this.reloadEvent.emit();
+    }, (error) => {
+      this.messageHandler.showError('There was a problem deleting the attachment.', error);
+    });
   };
 
   add = () => {
@@ -154,23 +158,50 @@ export class AttachmentListComponent implements AfterViewInit {
       edit: {
         id: '',
         fileName: '',
-        formData: new FormData()
+        formData: new FormData(),
       },
       inEdit: true,
-      isNew: true
+      isNew: true,
     };
     this.records = [].concat([newRecord]).concat(this.records);
+    this.editingService.setFromCollection(this.records);
   };
 
+
   save = (record, index) => {
-    const fileName = 'File' + index;
-    record.edit.formData.append('file', this.getFile(fileName));
-    this.resources.facets.attachReferenceFile(this.parent.id, record.edit.formData).subscribe(() => {
+    const fileName = `File${index}`;
+    const file = this.getFile(fileName);
+    const reader = new FileReader();
+
+    reader.readAsArrayBuffer(file);
+
+    reader.onload = () => {
+      const res: any = reader.result;
+      const array: any = new Int8Array(res);
+      const fileByteArray = [];
+
+      // tslint:disable-next-line: prefer-for-of
+      for (let i = 0; i < array.length; i++) {
+        fileByteArray.push(array[i]);
+      }
+
+      const data = {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+        fileContents: fileByteArray
+      };
+
+      this.resources.catalogueItem.saveReferenceFiles(this.domainType, this.parent.id, data).subscribe(() => {
         this.messageHandler.showSuccess('Attachment uploaded successfully.');
+
+        record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
+
         this.reloadEvent.emit();
-      },
-      error => {
+      }, (error) => {
         this.messageHandler.showError('There was a problem saving the attachment.', error);
       });
-  }
+    };
+  };
 }

@@ -18,11 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModelSelectorTreeComponent } from './model-selector-tree.component';
-import { HttpClientModule } from '@angular/common/http';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { FormsModule } from '@angular/forms';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { empty } from 'rxjs';
 
 describe('ModelSelectorTreeComponent', () => {
   let component: ModelSelectorTreeComponent;
@@ -30,8 +36,34 @@ describe('ModelSelectorTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      providers: [ElementTypesService]})
+      imports: [
+        NgxSkeletonLoaderModule,
+        FormsModule,
+        FoldersTreeModule,
+        MatTooltipModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            tree: {
+              // tslint:disable-next-line: deprecation
+              list: () => empty(),
+              // tslint:disable-next-line: deprecation
+              get: () => empty()
+            }
+          }
+        },
+        ElementTypesService
+      ],
+      declarations: [
+        ByteArrayToBase64Pipe,
+        ProfilePictureComponent,
+        ModelSelectorTreeComponent
+      ]
+    })
     .compileComponents();
   }));
 

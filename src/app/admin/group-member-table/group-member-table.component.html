@@ -16,27 +16,37 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
-    <h4 class="marginless">
-        Members
-        <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-    </h4>
+    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+      <div fxFlex  fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-start center">
+      <h4 class="marginless">
+              Members
+              <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+          </h4>
+      </div>
+      <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+          <button mat-flat-button color="primary" type="button" (click)="add()">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              Add Member
+          </button>
+      </div>
+  </div>
 </div>
 <div class="table-responsive">
-    <table mat-table matSort [dataSource]="records" class="mdm--mat-table table table-striped marginless">
+    <table mat-table matSort #table [dataSource]="records" class="mdm--mat-table table-striped marginless">
         <ng-container matColumnDef="disabled">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
+            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;">
                 Status
             </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                <span *ngIf="!record.isNew && record.disabled" style="color: #a94442;">Disabled</span>
-                <span *ngIf="!record.isNew && !record.disabled">Active</span>
+            <td mat-cell *matCellDef="let record" style="text-align: center;">
+                <span *ngIf="record.isNew && record.disabled" class="pill-card--red">Disabled</span>
+                <span *ngIf="!record.isNew && !record.disabled" class="pill-card--green">Active</span>
             </td>
         </ng-container>
         <ng-container matColumnDef="emailAddress">
             <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
                 Email
             </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
+            <td mat-cell *matCellDef="let record">
                 <div *ngIf="!record.isNew">
                     <a uiSref="appContainer.adminArea({ id: record.id })">{{record.emailAddress}}</a>
                 </div>
@@ -51,7 +61,7 @@ SPDX-License-Identifier: Apache-2.0
                             [displayProperty]="'emailAddress'"
                             [searchProperty]="'emailAddress'"
                             [pagination]="pagination"
-                            (selectEvent)="onUserSelect">
+                            (selectEvent)="onUserSelect($event[0],$event[1])">
                         <div>
                             <ng-template #lineContent let-item>
                                 <div>{{item.emailAddress}}</div>
@@ -61,45 +71,20 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </td>
         </ng-container>
-        <ng-container matColumnDef="firstName">
+        <ng-container matColumnDef="fullName">
             <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                First Name
+                Full name
             </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{record.firstName}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="lastName">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Last Name
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{record.lastName}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="organisation">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Organisation
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{record.organisation}}
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="userRole">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: left;">
-                Role
-            </th>
-            <td mat-cell *matCellDef="let record" style="max-width: 3%; width: 3%; text-align: left;">
-                {{ROLES[record.userRole]}}
+            <td mat-cell *matCellDef="let record">
+                {{record.firstName}} {{record.lastName}}
             </td>
         </ng-container>
         <ng-container matColumnDef="empty">
-            <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: right;">
-            </th>
-            <td mat-cell *matCellDef="let record; let i = index" style="max-width: 3%; width: 3%; text-align: right;">
+            <td mat-header-cell *matHeaderCellDef style="max-width: 3%;width: 3%;"></td>
+            <td mat-cell *matCellDef="let record; let i = index" style="max-width: 3%; width: 3%; text-align: center;">
                 <div *ngIf="parent.createdBy && parent.createdBy.id != record.id">
                     <div *ngIf="record.isNew">
-                        <button mat-stroked-button
+                        <button mat-icon-button
                                 color="warn"
                                 type="button"
                                 class="paddingless"
@@ -108,50 +93,25 @@ SPDX-License-Identifier: Apache-2.0
                                 (click)="cancelEdit(record, i)">
                             <i class="fas fa-times"></i>
                         </button>
-                        <button mat-button
+                        <button mat-stroked-button
                                 color="accent"
                                 type="submit"
                                 matTooltip="Confirm member"
                                 aria-label="Confirm member"
                                 (click)="confirmAddMember(record, i)">
-                            <i class="fas fa-check"></i>
+                                <i class="fas fa-check"></i>
                         </button>
                     </div>
                     <div *ngIf="!record.isNew">
-                        <button mat-stroked-button
-                                color="warn"
-                                *ngIf="!record.deletePending"
-                                type="button"
-                                matTooltip="Remove from Group"
-                                aria-label="Remove from Group"
-                                (click)="removeMember(record)">
-                            <i class="far fa-trash-alt"></i>
-                        </button>
-
-                        <div *ngIf="record.deletePending">
-                        <small>Are you sure?</small>
-                            <!-- Confirm Delete -->
-                            <button mat-button
-                                type="button"
-                                color="accent"
-                                matTooltip="Confirm removal"
-                                aria-label="Confirm removal"
-                                class="block"
-                                (click)="confirmRemove(record,i)">
-                                <i class="fas fa-check"></i>
-                            </button>
-                            <!-- Cancel Delete-->
-                            <button mat-button
-                                type="button"
-                                color="warn"
-                                matTooltip="Cancel edit"
-                                aria-label="Cancel edit"
-                                class="block"
-                                (click)="cancelRemove(record)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-
+                      <button mat-icon-button
+                              type="button"
+                              color="warn"
+                              *ngIf="!record.deletePending"
+                              matTooltip="Remove from Group"
+                              aria-label="Remove from Group"
+                              (click)="askForDelete(record)">
+                          <i class="far fa-trash-alt"></i>
+                      </button>
                     </div>
                 </div>
                 <div style="font-style: italic;" *ngIf="parent.createdBy && parent.createdBy.id == record.id">
@@ -167,6 +127,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </mat-card>
+
 <div class="mdm--mat-pagination">
     <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

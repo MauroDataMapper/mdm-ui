@@ -34,6 +34,10 @@ import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
+import { GridService } from '@mdm/services/grid.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatTable } from '@angular/material/table';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -46,42 +50,41 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   @Input() mcDataClass: any;
   @Input() type: any;
   @Input() childDataClasses: any;
+  @Input() isEditable: any;
 
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
   processing: boolean;
   failCount: number;
   total: number;
-
   showStaticRecords: any;
-
+  dataSource: any;
   records: any[] = [];
-
   hideFilters = true;
   displayedColumns: string[];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filterEvent = new EventEmitter<string>();
-  filter: string;
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   deleteInProgress: boolean;
-
   checkAllCheckbox = false;
-  bulkActionsVisibile = 0;
+  bulkActionsVisible = 0;
 
   constructor(
     private changeRef: ChangeDetectorRef,
     private resources: MdmResourcesService,
     private stateHandler: StateHandlerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private gridService: GridService,
+    private messageHandler: MessageHandlerService,
   ) { }
 
   ngOnInit(): void {
-    // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    // Add 'implements OnInit' to the class.
-    if (this.parentDataModel.editable && !this.parentDataModel.finalised) {
+    if (this.isEditable && !this.parentDataModel.finalised) {
       this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
     } else {
       this.displayedColumns = ['name', 'description', 'multiplicity'];
@@ -89,31 +92,21 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+    merge(this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
-
-      return this.dataClassesFetch(
-        this.paginator.pageSize,
-        this.paginator.pageOffset,
-        this.sort.active,
-        this.sort.direction,
-        this.filter
-      );
+      return this.dataClassesFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
     }), map((data: any) => {
-        this.totalItemCount = data.body.count;
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return data.body.items;
-      }), catchError(() => {
-        this.isLoadingResults = false;
-        this.changeRef.detectChanges();
-        return [];
-      })
-    ).subscribe(data => {
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return [];
+    })).subscribe(data => {
       this.records = data;
     });
   }
@@ -123,13 +116,12 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
   };
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -140,27 +132,27 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.hideFilters = !this.hideFilters;
   };
 
-  dataClassesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
-    const options = { pageSize, pageIndex, sortBy, sortType, filters };
+  dataClassesFetch(pageSize?, pageIndex?, filters?): Observable<any> {
+    const sortBy = 'idx';
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, filters);
 
     if (!this.parentDataClass.id) {
-      return this.resources.dataModel.get(this.parentDataModel.id, 'dataClasses', options);
+      return this.resources.dataClass.list(this.parentDataModel.id, options);
     }
-
-    return this.resources.dataClass.get(this.parentDataModel.id, null, this.parentDataClass.id, 'dataClasses', options);
+    return this.resources.dataClass.listChildDataClasses(this.parentDataModel.id, this.parentDataClass.id, options);
   }
 
   onChecked = () => {
     this.records.forEach(x => (x.checked = this.checkAllCheckbox));
     this.listChecked();
-  }
+  };
 
   toggleDelete = (record) => {
     this.records.forEach(x => (x.checked = false));
-    this.bulkActionsVisibile = 0;
+    this.bulkActionsVisible = 0;
     record.checked = true;
     this.bulkDelete();
-  }
+  };
 
   listChecked = () => {
     let count = 0;
@@ -169,8 +161,8 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         count++;
       }
     }
-    this.bulkActionsVisibile = count;
-  }
+    this.bulkActionsVisible = count;
+  };
 
   bulkDelete = () => {
     const dataElementIdLst = [];
@@ -198,10 +190,41 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     });
     promise.then(() => {
       this.records.forEach(x => (x.checked = false));
-      this.records = this.records;
+      // this.records = this.records;
       this.checkAllCheckbox = false;
-      this.bulkActionsVisibile = 0;
+      this.bulkActionsVisible = 0;
       this.filterEvent.emit();
-    });
+    }).catch(() => console.warn('error'));
+  };
+
+  // Drag and drop
+  dropTable(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.records, event.previousIndex, event.currentIndex);
+    const prevRec = this.records[event.currentIndex];
+    if (prevRec === undefined) {
+      return;
+    }
+    this.updateOrder(event.item, event.currentIndex);
+    this.table.renderRows();
   }
+
+  updateOrder = (item, newPosition) => {
+    const resource = {
+      index: newPosition
+    };
+
+    if (!this.parentDataClass.id) {
+      this.resources.dataClass.update(this.parentDataModel.id, item.data.id, resource).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class reorderedsuccessfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      });
+    } else {
+      this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.data.id, resource).subscribe(() => {
+        this.messageHandler.showSuccess('Data Class reorderedsuccessfully.');
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Data Class.', error);
+      });
+    }
+  };
 }

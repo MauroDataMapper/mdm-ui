@@ -15,23 +15,27 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {TestBed, async} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {RestHandlerService} from './rest-handler.service';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { RestHandlerService } from './rest-handler.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
 describe('RestHandlerService', () => {
   let errorCode = 200;
   let spyClient: HttpClient;
 
   beforeEach(() => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+    // jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
     /**
      * Create a spy for HttpClient
      */
     spyClient = {
-      request(method: string, url: string, options: {}) {
+      request(method: string, url: string) {
         const observable$ = new Observable(observer => {
           if (url) {
             if (errorCode === 200) {
@@ -54,15 +58,20 @@ describe('RestHandlerService', () => {
       }
     } as HttpClient;
     TestBed.configureTestingModule({
+      imports: [
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot(),
+        HttpClientTestingModule
+      ],
       providers: [
         RestHandlerService,
-        {provide: HttpClient, useValue: spyClient}
+        { provide: HttpClient, useValue: spyClient }
       ]
     }).compileComponents();
   });
 
-  function makeRequest(errorNumber: number, expectSuccess: boolean,
-                       options?: any) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function makeRequest(errorNumber: number, expectSuccess: boolean, options?: any) {
 
     if (!options) {
       options = {
@@ -78,15 +87,14 @@ describe('RestHandlerService', () => {
     let somethingHappened = false;
     errorCode = errorNumber;
 
-    service.restHandler(options).subscribe(
-      value => {
+    service.restHandler(options).subscribe(() => {
         if (!expectSuccess) {
           fail('Should not have succeeded');
         } else {
           somethingHappened = true;
         }
       },
-      err => {
+     () => {
         if (expectSuccess) {
           fail('Should not have received an error');
         } else {
@@ -104,8 +112,8 @@ describe('RestHandlerService', () => {
     const service: RestHandlerService = TestBed.inject(RestHandlerService);
     expect(service).toBeTruthy();
   });
-  
-  //COMMENTED OUT UNTIL MOCKS CREATED
+
+  // COMMENTED OUT UNTIL MOCKS CREATED
   // it('should work', async(() => {
   //   makeRequest(200, true);
   //   // expect(spyLink.broadcast).not.toHaveBeenCalled();

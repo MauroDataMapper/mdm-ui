@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
 			<tr *ngIf="showClassification">
 				<td class="detailsRowHeader">Classifications</td>
 				<td>
-					<mdm-element-classifications name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}">
+					<mdm-element-classifications [readOnly]="false" name="classifiers" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}">
 					</mdm-element-classifications>
 				</td>
 			</tr>
@@ -56,7 +56,7 @@ SPDX-License-Identifier: Apache-2.0
 					<div class="mdm--form-input">
 						<mat-form-field appearance="outline" class="full-width">
 							<mat-select name="dataModelType"  [(ngModel)]="model.domainType" required (ngModelChange)="onTypeSelect()">
-								<mat-option [value]="dt.id" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
+                        <mat-option [value]="dt.id" *ngFor="let dt of allDataTypes" [hidden]="dt.displayLabel === 'ModelDataType'">{{dt.displayLabel}}</mat-option>
 							</mat-select>
 						</mat-form-field>
 					</div>
@@ -67,13 +67,15 @@ SPDX-License-Identifier: Apache-2.0
 					<span *ngIf="model.domainType === 'EnumerationType'">Enumeration (key,value) *</span>
 					<span *ngIf="model.domainType === 'ReferenceType'">Reference *</span>
 					<span *ngIf="model.domainType === 'TerminologyType'">Terminology *</span>
+					<span *ngIf="model.domainType === 'CodeSetType'">Code Set *</span>
+					<span *ngIf="model.domainType === 'ReferenceDataModelType'">Reference Data Model *</span>
 					<div style="font-weight: normal;font-style: italic;  padding-top: 8px; color: #c7254e;">
 						<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass">
 							Please select the reference DataClass.
 						</div>
 
-						<div *ngIf="model.domainType === 'TerminologyType' && !model.referencedTerminology && !terminologies">
-							There are not any Terminologies available, so you can not define Terminology DataType!
+						<div *ngIf="model.domainType === 'Terminology' && !model.referencedTerminology && !terminologies">
+							There are no Terminologies available, so you cannot define Terminology DataType!
 						</div>
 
 						<div *ngIf="model.domainType === 'ReferenceType' && !model.referencedDataClass">
@@ -89,34 +91,70 @@ SPDX-License-Identifier: Apache-2.0
 					<div *ngIf="model.domainType === 'TerminologyType' && terminologies">
 						<mdm-select [width]="'100%'"
                         name="newDataTypeSelect"
-									[acceptTypedInput]="false"
-									[valueType]="'static'"
-									[staticValues]="terminologies"
-									[minInputLength]="1"
-									[hasError]="false"
-									[idProperty]="'id'"
-									[displayProperty]="'label'"
-									[searchProperty]="'label'"
-									(selectEvent)="onTerminologySelect($event[0],$event[1])">
+                        [acceptTypedInput]="false"
+                        [valueType]="'static'"
+                        [staticValues]="terminologies"
+                        [minInputLength]="1"
+                        [hasError]="false"
+                        [idProperty]="'id'"
+                        [displayProperty]="'label'"
+                        [searchProperty]="'label'"
+                        (selectEvent)="onTerminologySelect($event[0])">
 							<ng-template #lineContent let-item>
 								<div>{{item.label}}</div>
 							</ng-template>
 						</mdm-select>
-					</div>
+               </div>
+               <div *ngIf="model.domainType === 'CodeSetType' && codesets">
+						<mdm-select [width]="'100%'"
+                        name="newDataTypeSelect"
+                        [acceptTypedInput]="false"
+                        [valueType]="'static'"
+                        [staticValues]="codesets"
+                        [minInputLength]="1"
+                        [hasError]="false"
+                        [idProperty]="'id'"
+                        [displayProperty]="'label'"
+                        [searchProperty]="'label'"
+                        (selectEvent)="onTerminologySelect($event[0])">
+							<ng-template #lineContent let-item>
+								<div>{{item.label}}</div>
+							</ng-template>
+						</mdm-select>
+               </div>
+               <div *ngIf="model.domainType === 'ReferenceDataModelType' && referenceDataModels">
+						<mdm-select [width]="'100%'"
+                        name="newDataTypeSelect"
+                        [acceptTypedInput]="false"
+                        [valueType]="'static'"
+                        [staticValues]="referenceDataModels"
+                        [minInputLength]="1"
+                        [hasError]="false"
+                        [idProperty]="'id'"
+                        [displayProperty]="'label'"
+                        [searchProperty]="'label'"
+                        (selectEvent)="onTerminologySelect($event[0])">
+							<ng-template #lineContent let-item>
+								<div>{{item.label}}</div>
+							</ng-template>
+						</mdm-select>
+               </div>
 					<div *ngIf="model.domainType === 'ReferenceType'">
 						<mdm-model-selector-tree name="newDataTypeClassSelect"
-										(ngModelChange)="onDataClassSelect($event)"
-						[defaultElements]="model.referencedDataClass"
-												[root]="parentDataModel"
-												[placeholder]="'Select Data Class'"
-												[readOnlySearchInput]="true"
-												[accepts]="['DataClass']">
+                                    (ngModelChange)="onDataClassSelect($event)"
+                                    [defaultElements]="model.referencedDataClass"
+                                    [root]="parentDataModel"
+                                    [placeholder]="'Select Data Class'"
+                                    [readOnlySearchInput]="true"
+                                    [accepts]="['DataClass']">
 						</mdm-model-selector-tree>
 					</div>
 					<div *ngIf="model.domainType === 'EnumerationType'" style="margin-top: 5px;">
-						<mdm-mc-enumeration-list-with-category name="newDataTypeEnumType" [onUpdate]="onEnumListUpdated"
-																[clientSide]="true"
-																[enumerationValues]="model.enumerationValues"></mdm-mc-enumeration-list-with-category>
+                  <mdm-mc-enumeration-list-with-category name="newDataTypeEnumType"
+                                                         [onUpdate]="onEnumListUpdated"
+                                                         [clientSide]="true"
+                                                         [enumerationValues]="model.enumerationValues">
+                  </mdm-mc-enumeration-list-with-category>
 					</div>
 				</td>
 			</tr>

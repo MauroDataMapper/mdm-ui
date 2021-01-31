@@ -39,6 +39,7 @@ import { SharedService } from './services/shared.service';
 import { StateRoleAccessService } from './services/utility/state-role-access.service';
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
+import '@mdm/utility/extensions/mat-dialog.extensions';
 
 @NgModule({
   declarations: [AppComponent],
@@ -52,7 +53,10 @@ import { UiViewComponent } from './shared/ui-view/ui-view.component';
     ModalModule,
     UIRouterModule.forRoot({ useHash: true }),
     HttpClientModule,
-    MdmResourcesModule.forRoot({ apiEndpoint: environment.apiEndpoint })
+    MdmResourcesModule.forRoot({
+      defaultHttpRequestOptions: { withCredentials: true },
+      apiEndpoint: environment.apiEndpoint
+    })
   ],
   providers: [
     { provide: MAT_TABS_CONFIG, useValue: { animationDuration: '0ms' } },

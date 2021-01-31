@@ -50,20 +50,17 @@ export class ConfigurationComponent implements OnInit {
 
   ngOnInit() {
     this.getConfig();
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
   }
 
   getConfig() {
-    this.resourcesService.admin.get('properties', null).subscribe((result: { body: any }) => {
+    this.resourcesService.admin.properties().subscribe((result: { body: any }) => {
         this.properties = result.body;
-        // this.propertiesTemp = this.propertyRenamingService.renameKeys(result.body);
-        // this.properties = this.propertiesTemp;
-
         this.oldConfiguration = Object.assign({}, this.properties);
-      },
-      err => {
+      }, err => {
         this.messageHandler.showError('There was a problem getting the configuration properties.', err);
       });
   }
@@ -72,9 +69,8 @@ export class ConfigurationComponent implements OnInit {
   submitConfig() {
     this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
 
-    from(this.resourcesService.admin.post('editProperties', {resource: this.resource})).subscribe(() => {
+    from(this.resourcesService.admin.editProperties(this.resource)).subscribe(() => {
         this.messageHandler.showSuccess('Configuration properties updated successfully.');
-        // refresh the page
         this.getConfig();
       },
       error => {
@@ -113,19 +109,18 @@ export class ConfigurationComponent implements OnInit {
   rebuildIndex() {
     this.indexingStatus = 'start';
 
-    this.resourcesService.admin.post('rebuildLuceneIndexes', null).subscribe(() => {
+    this.resourcesService.admin.rebuildLuceneIndexes(null).subscribe(() => {
         this.indexingStatus = 'success';
       },
       error => {
         if (error.status === 418) {
           this.indexingStatus = 'success';
           if (error.error && error.error.timeTaken) {
-            this.indexingTime = 'in ' + error.error.timeTaken;
+            this.indexingTime = `in ${error.error.timeTaken}`;
           }
         } else {
           this.indexingStatus = 'error';
         }
-      }
-    );
+    });
   }
 }

@@ -1,0 +1,68 @@
+<!--
+Copyright 2020 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<h4 mat-dialog-title>
+  {{ title }}
+</h4>
+<hr>
+<mat-dialog-content class="mat-typography">
+  <div class="full-width">
+    <form role="form" class="mb-2">
+      <span [innerHtml]="message"></span>
+      <mat-radio-group name="versionList" [(value)]="data.versionList" [(ngModel)]="data.versionList" (ngModelChange)="onVersionChange()" class="mb-0">
+
+        <mat-radio-button value="Major" [checked]="data.versionList == 'Major'">Major <small><i>(default)</i></small></mat-radio-button>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionMajor"></span></small></div>
+
+        <mat-radio-button value="Minor" [checked]="data.versionList == 'Minor'">Minor</mat-radio-button>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionMinor"></span></small></div>
+
+        <mat-radio-button value="Patch" [checked]="data.versionList == 'Patch'">Patch</mat-radio-button>
+        <div class="mb-1" style="margin-left: 29px;"><small class="text-muted"><span [innerHtml]="versionPatch"></span></small></div>
+
+        <mat-radio-button value="Custom" [checked]="data.versionList == 'Custom'">Custom version</mat-radio-button>
+        <div style="margin-left: 29px;"><small class="text-muted">Define your custom version </small></div>
+      </mat-radio-group>
+
+      <div [ngClass]="{'is-hidden':!showCustomVersion}" style="margin-left: 29px">
+        <mat-form-field appearance="outline" class="paddingless">
+          <mat-label>Version number</mat-label>
+          <input matInput name="version" [(ngModel)]="version" />
+        </mat-form-field>
+      </div>
+    </form>
+
+
+    <p><strong>Note 1:</strong> The latest version of this model is currently set to <strong>{{currentVersion}}</strong></p>
+
+    <p class='marginless'><strong>Note 2:</strong> Once you finalise this record, you can not edit it anymore!</p>
+    <p>However, you can create a new version of it.</p>
+
+    <p class="marginless">To find out more about Semantic Versioning, please visit the</p>
+    <p><a href="https://semver.org/" target="_blank" rel="noopener">https://semver.org/</a> website.</p>
+  </div>
+  <hr class="marginless">
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pt-2 pb-2">
+  <hr>
+  <button mat-button color="warn" *ngIf="cancelShown" class="mr-1" type="button" (click)="close()">
+    {{ cancelTitle }}
+  </button>
+  <button mat-flat-button color="{{ btnType }}" type="button" (click)="ok()">
+    {{ okTitle }}
+  </button>
+</mat-dialog-actions>

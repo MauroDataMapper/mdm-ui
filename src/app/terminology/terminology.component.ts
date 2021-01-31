@@ -15,29 +15,23 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
-import { SharedService } from '../services/shared.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-terminology',
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
-export class TerminologyComponent implements OnInit {
-  constructor(
-    private sharedService: SharedService,
-    private stateHandler: StateHandlerService,
-    private stateService: StateService,
-    private title: Title,
-    private resources: MdmResourcesService,
-    private broadcastSvc: BroadcastService
-  ) {}
+export class TerminologyComponent implements OnInit, AfterViewInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   terminology: any;
   diagram: any;
@@ -45,38 +39,38 @@ export class TerminologyComponent implements OnInit {
   loadingData: boolean;
   searchTerm: any;
   pagination: McSelectPagination;
-
-
   showEditForm = false;
   editForm = null;
 
-  ngOnInit() {
-    const id = this.stateService.params.id;
+  constructor(
+    private stateHandler: StateHandlerService,
+    private stateService: StateService,
+    private title: Title,
+    private resources: MdmResourcesService,
+    private broadcastSvc: BroadcastService,
+    private editingService: EditingService) { }
 
+  ngOnInit() {
+    // tslint:disable-next-line: deprecation
+    const id = this.stateService.params.id;
     if (!id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-
     this.terminology = null;
     this.diagram = null;
-
     this.title.setTitle('Terminology');
-
-    this.resources.terminology.get(id, null).subscribe(result => {
+    this.resources.terminology.get(id).subscribe(result => {
       const data = result.body;
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
-      if (this.sharedService.isLoggedIn()) {
-        // this.resources.terminology.get(id, 'permissions').subscribe((result) => {
-        //    const permissions = result.body;
-        //    permissions.forEach((attrName) => {
-        //        this.terminology[attrName] = permissions[attrName];
-        //    });
-        // });
-      }
+      // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   getTabDetail = tabName => {
@@ -121,18 +115,16 @@ export class TerminologyComponent implements OnInit {
       { notify: false, location: tab.index !== 0 }
     );
     this[tab.name] = [];
-
     this.activeTab = tab.index;
 
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resources.dataModel
-        .get(this.stateService.params.id, this.activeTab.fetchUrl)
-        .then(data => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
+      // tslint:disable-next-line: deprecation
+      this.resources.dataModel.get(this.stateService.params.id, this.activeTab.fetchUrl).then(data => {
+        this[this.activeTab.name] = data || [];
+        this.loadingData = false;
+      });
     }
   };
 
@@ -147,33 +139,18 @@ export class TerminologyComponent implements OnInit {
   };
 
   fetch = (text, loadAll, offset, limit) => {
-    // var deferred = $q.defer();
-
     limit = limit ? limit : 30;
     offset = offset ? offset : 0;
-
-
     this.pagination = {
-        limit,
-        offset
-      };
+      limit,
+      offset
+    };
 
     this.searchTerm = text;
-
-    return this.resources.terminology.get(this.terminology.id, 'terms/search', {
-      queryStringParams: {
-        search: encodeURIComponent(text),
-        limit,
-        offset
-      }
-    });
+    return this.resources.terminology.terms.search(this.terminology.id, { search: encodeURIComponent(text), limit, offset });
   };
 
   onTermSelect = term => {
-    this.stateHandler.NewWindow(
-      'term',
-      { terminologyId: term.terminology, id: term.id },
-      null
-    );
-  }
+    this.stateHandler.NewWindow('term', { terminologyId: term.terminology, id: term.id }, null);
+  };
 }

@@ -16,7 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 .heading-container {
-  padding: 14px 24px;
+  // padding: 14px 24px;
+  padding: 10px 24px;
   border-bottom: none;
   position: relative;
   border: 1px solid #f3f3f3;
@@ -106,9 +107,13 @@ mat-radio-group {
   margin: 15px 0;
 }
 
-mdm-settings .mat-checkbox-layout {
-  white-space: normal;
-}
+.mat-checkbox-layout {
+   white-space: normal !important;
+ }
+
+ .mat-checkbox-inner-container {
+   margin: 4px 8px auto 0 !important;
+ }
 
 #sidenav {
   #sidenav-content {

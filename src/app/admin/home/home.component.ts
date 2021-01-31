@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
     this.appVersion = this.shared.appVersion;
     this.title.setTitle('Dashboard');

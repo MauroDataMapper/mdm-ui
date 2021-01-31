@@ -18,7 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataElementStep1Component } from './data-element-step1.component';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { ModelSelectorTreeComponent } from '@mdm/model-selector-tree/model-selector-tree.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FoldersTreeModule } from '@mdm/folders-tree/folders-tree.module';
+import { FormsModule } from '@angular/forms';
 
 describe('DataElementStep1Component', () => {
   let component: DataElementStep1Component;
@@ -26,8 +31,17 @@ describe('DataElementStep1Component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ DataElementStep1Component ]
+      imports: [
+        MatRadioModule,
+        MatTooltipModule,
+        FoldersTreeModule,
+        FormsModule
+      ],
+      declarations: [
+        ElementLinkComponent,
+        ModelSelectorTreeComponent,
+        DataElementStep1Component
+      ]
     })
     .compileComponents();
   }));

@@ -222,7 +222,13 @@ a {
     background-color: #028821;
 }
 
-.mat-checkbox-layout { white-space: normal !important; }
+.mat-checkbox-layout {
+   white-space: normal !important;
+ }
+
+ .mat-checkbox-inner-container {
+   margin: 6px 8px auto 0 !important;
+ }
 
 // Background colour for mchighlighter pipe
 span.mchighlighter {
@@ -264,4 +270,9 @@ ngx-skeleton-loader .loader {
     justify-content: center;
     vertical-align: middle;
     margin: 0px 3px;
+}
+
+
+.mat-tab-label, .mat-tab-link {
+  color: rgba(0, 0, 0, 0.97)!important;
 }

@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, HostListener, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
+import { EditingService } from './services/editing.service';
 import { SharedService } from './services/shared.service';
 
 @Component({
@@ -29,8 +30,22 @@ export class AppComponent implements OnInit {
 
   constructor(
     private userIdle: UserIdleService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private editingService: EditingService
   ) {}
+
+  @HostListener('window:mousemove', ['$event'])
+  onMouseMove() {
+    this.userIdle.resetTimer();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event) {
+    if (!this.editingService.confirmLeave()) {
+      event.preventDefault();
+      event.returnValue = 'Your data will be lost';
+    }
+  }
 
   ngOnInit() {
     // Start watching for user inactivity.
@@ -41,16 +56,10 @@ export class AppComponent implements OnInit {
     this.userIdle.onTimeout().subscribe(() => {
       const now: any = new Date();
       if (now - lastDigestRun > 300000) {// 5 min
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.sharedService.handleExpiredSession(), this.userIdle.resetTimer();
-
       }
       lastDigestRun = now;
-
     });
-  }
-
-  @HostListener('window:mousemove', ['$event'])
-  onMouseMove(e) {
-    this.userIdle.resetTimer();
   }
 }

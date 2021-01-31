@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
                               <i matTooltip="Terminology" class="fas fa-book"></i>
                           </span>
                           <span [innerHTML]="mcTerminology.label" class="dataModelDetailsLabel">
-                              <!-- TODO ADD SEARCH CRITERA PIPE -->
+                              <!-- TODO ADD SEARCH CRITERIA PIPE -->
                           </span>
                       </h4>
                       <mdm-element-status [result]="mcTerminology"></mdm-element-status>
@@ -55,9 +55,15 @@ SPDX-License-Identifier: Apache-2.0
                   </div>
 
                   <div class="text-muted" *ngIf="mcTerminology">
+                    <small>
+                        <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+                        <span><strong>Branch: </strong> <span class="branch-name">{{mcTerminology.branchName}}</span></span>
+                    </small>
+                  </div>
+                  <div class="text-muted" *ngIf="mcTerminology">
                       <small>
-                          <i class="fas fa-code-branch" matTooltip="Version"></i>
-                          <span><strong>Version: </strong>{{mcTerminology.documentationVersion}}</span>
+                          <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+                          <span><strong>Documentation Version: </strong>{{mcTerminology.documentationVersion}}</span>
                       </small>
                   </div>
 
@@ -81,8 +87,7 @@ SPDX-License-Identifier: Apache-2.0
                   <tr>
                       <td class="detailsRowHeader">Aliases</td>
                       <td>
-                          <mdm-element-alias [inEditMode]="editableForm.visible" [aliases]="editableForm?.aliases">
-                          </mdm-element-alias>
+                          <mdm-element-alias [readOnly]="true" [inEditMode]="editableForm.visible" [aliases]="editableForm?.aliases"></mdm-element-alias>
                       </td>
                   </tr>
                   <tr>
@@ -96,16 +101,16 @@ SPDX-License-Identifier: Apache-2.0
                   <tr>
                       <td class="detailsRowHeader">Description</td>
                       <td class="elementDetailDescription">
-                          <mdm-markdown-text-area [editableForm]="editableForm"
-                                                  [element]="mcTerminology"
-                                                  [property]="'description'">
-                          </mdm-markdown-text-area>
+                        <mdm-content-editor [editableForm]="editableForm" 
+                                            [element]="mcTerminology" 
+                                            [property]="'description'">
+                        </mdm-content-editor>                          
                       </td>
                   </tr>
                   <tr>
                       <td class="detailsRowHeader">Classifications</td>
                       <td>
-                          <mdm-element-classifications [classifications]="mcTerminology.classifiers"
+                          <mdm-element-classifications [readOnly]='true' [classifications]="mcTerminology.classifiers"
                                                         [editableForm]="editableForm">
                           </mdm-element-classifications>
                       </td>
@@ -127,10 +132,10 @@ SPDX-License-Identifier: Apache-2.0
                                   </button>
 
                                   <mat-menu #menu="matMenu">
-                                      <button mat-menu-item (click)="askForSoftDelete()" *ngIf="!mcTerminology?.deleted">
+                                      <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !mcTerminology?.deleted">
                                           Mark as deleted
                                       </button>
-                                      <button mat-menu-item (click)="askForPermanentDelete()">
+                                      <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
                                           Delete <span class="warning">permanently</span>
                                       </button>
                                   </mat-menu>
@@ -150,6 +155,43 @@ SPDX-License-Identifier: Apache-2.0
                                       <i class="fas fa-user-lock"></i>
                               </button>
                           </div>
+
+                          <div style="position: relative; float: right; margin-right:4px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
+                            <button mat-stroked-button
+                                    color="primary"
+                                    type="button"
+                                    *ngIf="isLoggedIn"
+                                    class="paddingless dropdown-toggle"
+                                    [disabled]="processing || deleteInProgress"
+                                    [matMenuTriggerFor]="exporterList"
+                                    matTooltip="Export as JSON, XML,..."
+                                    aria-label="Export as JSON, XML,...">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <mat-menu #exporterList="matMenu">
+                                <div *ngIf="exportList && exportList.length > 0">
+                                    <div *ngFor="let exporter of exportList">
+                                        <button type="button" mat-menu-item (click)="export(exporter)">
+                                            {{exporter.displayName}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-menu>
+                        </div>
+
+                        <div style="position: relative; float: right; margin-right:8px;">
+                            <div id="exportFileDownload" #aLink></div>
+                        </div>
+                        <div style="clear: both;" *ngIf="processing">
+                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
+                        </div>
+                        <div style="text-align: left" *ngIf="exportError">
+                            <div style="padding-top: 25px;">
+                                <div class="alert alert-danger">
+                                    <strong>Error!</strong> {{exportError}}
+                                </div>
+                            </div>
+                        </div>
                       </td>
                   </tr>
               </tbody>
@@ -160,9 +202,6 @@ SPDX-License-Identifier: Apache-2.0
 
       <mdm-share-with [mcElement]="mcTerminology" [mcDomainType]="'Terminology'"></mdm-share-with>
       <div>
-          <div style="margin-top: 10px">
-              <mdm-user-access-new [parent]="mcTerminology" [parentType]="'Terminology'"></mdm-user-access-new>
-          </div>
           <div style="margin-top: 10px">
               <mdm-group-access-new [parent]="mcTerminology" [parentType]="'Terminology'"></mdm-group-access-new>
           </div>

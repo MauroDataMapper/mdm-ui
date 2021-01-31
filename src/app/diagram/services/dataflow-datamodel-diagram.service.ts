@@ -16,11 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import * as joint from 'jointjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { DataflowDataclassDiagramService } from './dataflow-dataclass-diagram.service';
 
 
 export class DataflowDatamodelDiagramService extends BasicDiagramService {
@@ -34,7 +33,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
 
   getDiagramContent(params: any): Observable<any> {
     this.parentId = params.parent.id;
-    return this.resourcesService.dataFlow.getAllFlows(this.parentId);
+    return this.resourcesService.dataFlow.list(this.parentId);
   }
 
   render(data: any): void {
@@ -54,18 +53,21 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
     data.body.items.forEach((flow) => {
       const link = new joint.shapes.standard.Link({
         id: flow.id,
-        source: {id: flow.source.id},
-        target: {id: flow.target.id},
+        source: { id: flow.source.id },
+        target: { id: flow.target.id },
       });
       link.id = flow.id as string;
-      link.connector('rounded', {radius: 40});
+      link.connector('rounded', { radius: 40 });
       link.appendLabel({
         attrs: {
           text: {
-            text: joint.util.breakText(flow.label, {width: 150}),
+            text: joint.util.breakText(flow.label, { width: 150 }),
             fill: '#222222',
             fontSize: 10,
             fontWeight: 'normal'
+          },
+          line: {
+            stroke: this.linkColor
           }
         },
         position: {
@@ -78,7 +80,7 @@ export class DataflowDatamodelDiagramService extends BasicDiagramService {
   }
 
   configurePaper(paper: joint.dia.Paper): void {
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView) => {
       // console.log('clicked');
       const result: any = {
         flowId: cellView.model.id as string,

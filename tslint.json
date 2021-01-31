@@ -60,13 +60,13 @@
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
-    "no-use-before-declare": true,
     "no-var-requires": false,
     "object-literal-key-quotes": [
       true,
       "as-needed"
     ],
     "object-literal-sort-keys": false,
+    "no-string-literal": false,
     "ordered-imports": false,
     "quotemark": [
       true,
@@ -74,7 +74,7 @@
     ],
     "trailing-comma": false,
     "no-conflicting-lifecycle": true,
-    "no-host-metadata-property": true,
+    "no-host-metadata-property": false,
     "no-input-rename": true,
     "no-inputs-metadata-property": true,
     "no-output-native": true,
@@ -83,14 +83,15 @@
     "no-outputs-metadata-property": true,
     "template-banana-in-box": true,
     "template-no-negated-async": true,
+    "use-host-property-decorator": false,
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
     "semicolon": [
-      true, 
-      "always", 
+      true,
+      "always",
       "ignore-bound-class-methods"
     ],
-    
+
     "template-accessibility-alt-text": true,
     "template-accessibility-elements-content": true,
     "template-accessibility-label-for": true,

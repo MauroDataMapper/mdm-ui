@@ -15,17 +15,16 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mdm-enumeration-compare',
   templateUrl: './enumeration-compare.component.html',
   styleUrls: ['./enumeration-compare.component.scss']
 })
-export class EnumerationCompareComponent implements OnInit {
+export class EnumerationCompareComponent {
   @Input() diffs: any;
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
 }

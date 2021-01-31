@@ -59,7 +59,7 @@ import { MatInputModule } from '@angular/material/input';
     HighlighterPipe,
     StringifyPipe,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
   ],
   providers: [
     FolderService

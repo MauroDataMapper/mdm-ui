@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ViewChildren, EventEmitter, AfterViewInit } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
@@ -25,6 +25,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { Title } from '@angular/platform-browser';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-groups-table',
@@ -36,10 +37,9 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
 
-
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   isLoadingResults: boolean;
-  filter: string;
   totalItemCount = 0;
   hideFilters = true;
 
@@ -52,7 +52,8 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
     private messageHandlerService: MessageHandlerService,
     private resourcesService: MdmResourcesService,
     private stateHandlerService: StateHandlerService,
-    private title: Title
+    private title: Title,
+    private gridService: GridService
   ) {
     this.dataSource = new MatTableDataSource(this.records);
   }
@@ -75,8 +76,8 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
         this.sort.active,
         this.sort.direction,
         this.filter
-        );
-      }),
+      );
+    }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
         this.isLoadingResults = false;
@@ -86,50 +87,25 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
         this.isLoadingResults = false;
         return [];
       })
-      ).subscribe(data => {
-        this.records = data;
-        this.dataSource.data = this.records;
-      });
-  }
-
-  // TODO: sorting, paging and filtering without backend call
-  groupsFetch2() {
-    this.resourcesService.userGroup.get(null, null, null).subscribe(resp => {
-      this.records = resp.body.items;
-      this.totalItemCount = this.records.length;
+    ).subscribe(data => {
+      this.records = data;
       this.dataSource.data = this.records;
-    },
-      err => {
-        this.messageHandlerService.showError('There was a problem loading groups.', err);
-      });
+    });
   }
 
-  groupsFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
-  ): Observable<any> {
-    const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy,
-      sortType
-    };
+  groupsFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?): Observable<any> {
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
-    return this.resourcesService.userGroup.get(null, null, options);
+    return this.resourcesService.userGroups.list(options);
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value + '&';
+        filter[name] = value;
       }
     });
     this.filter = filter;
@@ -147,21 +123,21 @@ export class GroupsTableComponent implements OnInit, AfterViewInit {
   }
 
   deleteUser(row) {
-    this.resourcesService.userGroup.delete(row.id, null).subscribe(resp => {
+    this.resourcesService.userGroups.remove(row.id).subscribe(() => {
       this.messageHandlerService.showSuccess('Group deleted successfully.');
-
       this.groupsFetch(this.paginator.pageSize, this.paginator.pageIndex, this.sort.active, this.sort.direction, this.filter).subscribe(data => {
         this.records = data.body.items;
+        this.totalItemCount = data.body.count;
         this.dataSource.data = this.records;
       }, err => {
-          this.messageHandlerService.showError('There was a problem loading the groups.', err);
-        });
-    }, err => {
-        this.messageHandlerService.showError('There was a problem deleting the group.', err);
+        this.messageHandlerService.showError('There was a problem loading the groups.', err);
       });
+    }, err => {
+      this.messageHandlerService.showError('There was a problem deleting the group.', err);
+    });
   }
 
   add = () => {
     this.stateHandlerService.Go('admin.group', { id: null }, null);
-  }
+  };
 }

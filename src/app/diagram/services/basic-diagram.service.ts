@@ -22,25 +22,32 @@ import dagre from 'dagre';
 import graphlib from 'graphlib';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { LayoutConfigOptions } from '@angular/flex-layout';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
 })
 
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export abstract class BasicDiagramService {
 
-  darkBackground = '#b3bdc8';
+  fontColorWhite = '#ffffff';
+  darkBackground = '#4a708b';
   lightBackground = '#e0e5e9';
+  lightOrangeBackground = '#f7a900';
+  shadedOrange = '#fec994';
+  linkColor: '#949494';
 
   hierarchy: any;
   public graph: joint.dia.Graph;
   protected clickSubject = new Subject<any>();
   protected goUpSubject = new Subject<any>();
+  protected dataComponentSubject = new BehaviorSubject('');
+  public currentComponent = this.dataComponentSubject.asObservable();
 
   public constructor(protected resourcesService: MdmResourcesService,
-                     protected messageHandler: MessageHandlerService) {
+    protected messageHandler: MessageHandlerService) {
 
     this.graph = new joint.dia.Graph();
   }
@@ -55,9 +62,14 @@ export abstract class BasicDiagramService {
 
   abstract configurePaper(paper: joint.dia.Paper): void;
 
-  public onDrag(cellView: joint.dia.CellView, event): void {
+
+  public updateDataClassComponentLevel(data: any): void { }
+
+  public updateDataElementLevel(data: any): void { }
+
+  public onDrag(cellView: joint.dia.CellView): void {
     if (cellView instanceof joint.dia.ElementView) {
-      this.adjustVertices(this.graph, (cellView as joint.dia.ElementView).model);
+      this.adjustVertices(this.graph, (cellView).model);
     }
 
   }
@@ -65,6 +77,7 @@ export abstract class BasicDiagramService {
   public layoutNodes(rankDir: 'TB' | 'BT' | 'LR' | 'RL' = 'LR'): void {
     let nodeSep = 100;
     let rankSep = 400;
+
     if (rankDir === 'TB') {
       nodeSep = 100;
       rankSep = 250;
@@ -88,29 +101,72 @@ export abstract class BasicDiagramService {
   protected addCylinderCell(id: string, label: string): joint.dia.Cell {
     const cylinder = new joint.shapes.standard.Cylinder({
       id,
-      size: {width: 120, height: 80},
+      size: { width: 120, height: 80 },
     });
-    cylinder.attr('label/text', joint.util.breakText(label, {width: 110}));
+    cylinder.attr('label/text', joint.util.breakText(label, { width: 110 }));
     // cylinder.attr('label/text', label);
     cylinder.attr('label/fontWeight', 'bold');
     cylinder.attr('label/fontSize', 12);
+    cylinder.attr('label/fill', this.fontColorWhite);
     cylinder.attr('body/fill', this.darkBackground);
+    cylinder.attr('body/strokeWidth', 0);
     cylinder.attr('top/fill', this.lightBackground);
+
 
     cylinder.attr('text/ref-y', -50);
     this.graph.addCell(cylinder);
     return cylinder;
   }
 
-  protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80): joint.dia.Cell {
+  protected addRectangleCell(id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
-      size: {width, height}
+      size: { width, height }
     });
-    rectangle.attr('label/text', joint.util.breakText(label, {width: 110}));
+    rectangle.attr('label/text', joint.util.breakText(label, { width: textWidth }));
     rectangle.attr('label/fontWeight', 'bold');
     rectangle.attr('label/fontSize', 12);
+    rectangle.attr('label/fill', this.fontColorWhite);
     rectangle.attr('body/fill', this.darkBackground);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
+
+    // rectangle.attr('text/ref-y', -50);
+    this.graph.addCell(rectangle);
+    return rectangle;
+  }
+
+  protected addColoredRectangleCell(textColor: string, rectangleColor: string, id: string, label: string, width: number = 120, height: number = 80, textWidth: number = 110): joint.dia.Cell {
+    const rectangle = new joint.shapes.standard.Rectangle({
+      id,
+      size: { width, height }
+    });
+    rectangle.attr('label/text', joint.util.breakText(label, { width: textWidth }));
+    rectangle.attr('label/fontWeight', 'bold');
+    rectangle.attr('label/fontSize', 12);
+    rectangle.attr('label/fill', textColor);
+    rectangle.attr('body/fill', rectangleColor);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
+
+    this.graph.addCell(rectangle);
+    return rectangle;
+  }
+
+  protected addSmallRectangleCell(id: string, label: string): joint.dia.Cell {
+    const rectangle = new joint.shapes.standard.Rectangle({
+      id,
+      size: { width: 150, height: 40 }
+    });
+    rectangle.attr('label/text', joint.util.breakText(label, { width: 130 }));
+    rectangle.attr('label/fontWeight', 'bold');
+    rectangle.attr('label/fontSize', 12);
+    rectangle.attr('body/fill', this.lightBackground);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
 
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
@@ -118,15 +174,33 @@ export abstract class BasicDiagramService {
 
   }
 
-  protected addSmallRectangleCell(id: string, label: string): joint.dia.Cell {
+  protected addLink(id: string, sourceId: string, targetId: string): joint.dia.Link {
+    const link = new joint.shapes.standard.Link({
+      id,
+      source: { id: sourceId },
+      target: { id: targetId }
+    });
+
+    link.attr('line/stroke', this.darkBackground);
+    link.connector('rounded', { radius: 40 });
+    link.toBack();
+
+    this.graph.addCell(link);
+    return link;
+  }
+
+  protected addSmallColorfulRectangleCell(id: string, label: string): joint.dia.Cell {
     const rectangle = new joint.shapes.standard.Rectangle({
       id,
-      size: {width: 150, height: 40}
+      size: { width: 150, height: 40 }
     });
-    rectangle.attr('label/text', joint.util.breakText(label, {width: 130}));
+    rectangle.attr('label/text', joint.util.breakText(label, { width: 130 }));
     rectangle.attr('label/fontWeight', 'bold');
     rectangle.attr('label/fontSize', 12);
-    rectangle.attr('body/fill', this.lightBackground);
+    rectangle.attr('body/fill', this.lightOrangeBackground);
+    rectangle.attr('body/strokeWidth', 0);
+    rectangle.attr('body/rx', 10);
+    rectangle.attr('body/ry', 10);
 
     // rectangle.attr('text/ref-y', -50);
     this.graph.addCell(rectangle);
@@ -135,11 +209,11 @@ export abstract class BasicDiagramService {
   }
 
   protected addUmlClassCell(id: string, label: string, attributes: Array<any>,
-                            @Optional() position: joint.g.Point = null,
-                            @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
+    @Optional() position: joint.g.Point = null,
+    @Optional() existingClassBox: joint.shapes.standard.Rectangle): joint.dia.Cell {
     const cells: Array<joint.dia.Cell> = [];
     if (!position) {
-      position = new joint.g.Point({x: 0, y: 0});
+      position = new joint.g.Point({ x: 0, y: 0 });
     }
 
     let classBox = null;
@@ -154,7 +228,7 @@ export abstract class BasicDiagramService {
         id,
         position,
         z: 2,
-        size: {width: 300, height: attributes.length * 25 + 31},
+        size: { width: 300, height: attributes.length * 25 + 31 },
         attrs: {
           body: {
             fill: this.lightBackground,
@@ -166,20 +240,22 @@ export abstract class BasicDiagramService {
       cells.push(classBox);
     }
 
-
     const classNameBox = new joint.shapes.standard.Rectangle({
       id: id + '-name',
       position,
-      size: {width: 300, height: 30},
+      size: { width: 300, height: 30 },
       z: 1,
       attrs: {
         label: {
-          text: joint.util.breakText(label, {width: 290}),
+          text: joint.util.breakText(label, { width: 290 }),
           fontWeight: 'bold',
+          fill: this.fontColorWhite,
           fontSize: 13
         },
         body: {
-          fill: this.darkBackground
+          fill: this.darkBackground,
+          strokeWidth: 0,
+          stroke: this.darkBackground
         }
       }
     });
@@ -188,13 +264,13 @@ export abstract class BasicDiagramService {
     attributes.forEach((attribute, idx) => {
 
       const attributeBox = new joint.shapes.standard.Rectangle({
-        position: {x: position.x , y: position.y + 31 + idx * 25},
+        position: { x: position.x, y: position.y + 31 + idx * 25 },
         id: attribute.id,
-        size: {width: 300, height: 25},
+        size: { width: 300, height: 25 },
         z: 1,
         attrs: {
           label: {
-            text: joint.util.breakText(attribute.label + ' : ' + attribute.dataType.label, {width: 280}),
+            text: joint.util.breakText(`${attribute.label} : ${attribute.dataType.label}`, { width: 280 }),
             fontWeight: 'normal',
             fontSize: 12,
             textAnchor: 'left',
@@ -217,16 +293,16 @@ export abstract class BasicDiagramService {
 
   }
 
-/*
-private adjustAllVertices(graph: joint.dia.Graph) {
-  graph.getCells().forEach((cell) => {
-    if (cell instanceof joint.dia.Link) {
-      this.adjustVertices(graph, cell);
-    }
-  });
+  /*
+  private adjustAllVertices(graph: joint.dia.Graph) {
+    graph.getCells().forEach((cell) => {
+      if (cell instanceof joint.dia.Link) {
+        this.adjustVertices(graph, cell);
+      }
+    });
 
-}
-*/
+  }
+  */
 
   private adjustVertices(graph: joint.dia.Graph, cell: joint.dia.Cell) {
 
@@ -309,12 +385,12 @@ private adjustAllVertices(graph: joint.dia.Graph) {
 
         // constant
         // the maximum distance between two sibling links
-        const GAP = 30;
+        const gap = 30;
 
         siblings.forEach((sibling, index) => {
 
           // we want offset values to be calculated as 0, 20, 20, 40, 40, 60, 60 ...
-          let offset = GAP * Math.ceil(index / 2);
+          let offset = gap * Math.ceil(index / 2);
 
           // place the vertices at points which are `offset` pixels perpendicularly away
           // from the first link
@@ -331,7 +407,7 @@ private adjustAllVertices(graph: joint.dia.Graph) {
           // to assure symmetry, if there is an even number of siblings
           // shift all vertices leftward perpendicularly away from the centerline
           if ((numSiblings % 2) === 0) {
-            offset -= ((GAP / 2) * sign);
+            offset -= ((gap / 2) * sign);
           }
 
           // make reverse links count the same as non-reverse
@@ -356,6 +432,11 @@ private adjustAllVertices(graph: joint.dia.Graph) {
     return this.goUpSubject;
   }
 
+  getComponentSubject(): Subject<any> {
+    return this.dataComponentSubject;
+  }
 
-
+  changeComponent(dataClassComponent: any) {
+    this.dataComponentSubject.next(dataClassComponent);
+  }
 }

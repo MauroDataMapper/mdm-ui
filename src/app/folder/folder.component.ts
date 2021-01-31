@@ -16,52 +16,54 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {FolderResult} from '../model/folderModel';
-import {Component, OnInit, Input, EventEmitter, Output, Inject, OnDestroy} from '@angular/core';
-import {StateService} from '@uirouter/core';
-import {MessageService} from '../services/message.service';
-import {Subscription} from 'rxjs';
-import {SharedService} from '../services/shared.service';
-import {ToastrService} from 'ngx-toastr';
-import {StateHandlerService} from '../services/handlers/state-handler.service';
+import { FolderResult } from '../model/folderModel';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { StateService } from '@uirouter/core';
+import { MessageService } from '../services/message.service';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../services/shared.service';
+import { StateHandlerService } from '../services/handlers/state-handler.service';
+import { Title } from '@angular/platform-browser';
+import { BaseComponent } from '@mdm/shared/base/base.component';
 
 @Component({
   selector: 'mdm-folder',
   templateUrl: './folder.component.html',
-  styleUrls: ['./folder.component.css']
+  styleUrls: ['./folder.component.css'],
 })
-export class FolderComponent implements OnInit, OnDestroy {
+export class FolderComponent extends BaseComponent implements OnInit, OnDestroy {
   result: FolderResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  afterSave: (result: { body: { id: any; }; }) => void;
+  afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   activeTab: any;
 
-  constructor(private resourcesService: MdmResourcesService, private messageService: MessageService, private sharedService: SharedService, private stateService: StateService, private stateHandler: StateHandlerService) {
-    // this.toaster.success('toast test');
+  constructor(
+    private resourcesService: MdmResourcesService,
+    private messageService: MessageService,
+    private sharedService: SharedService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private title: Title
+  ) {
+    super();
   }
 
   ngOnInit() {
-
-    if (!this.stateService.params.id) {
-      this.stateHandler.NotFound({location: false});
+    if (this.isGuid(this.stateService.params.id) && !this.stateService.params.id) {
+      this.stateHandler.NotFound({ location: false });
       return;
     }
 
+    // tslint:disable-next-line: deprecation
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-
-    // if(this.stateService.params.edit === "true"){ //Call this if using message service.
-    //     // this.editMode = true;
-    //     this.messageService.showEditMode(true);
-    // }
-    // else
-    //     this.messageService.showEditMode(false);
-    window.document.title = 'Folder';
+    this.title.setTitle('Folder');
+    // tslint:disable-next-line: deprecation
     this.folderDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;
@@ -69,13 +71,14 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any; }; }) => this.folderDetails(result.body.id);
+    this.afterSave = (result: { body: { id: any } }) => this.folderDetails(result.body.id);
 
+    // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
   }
 
   folderDetails(id: any) {
-    this.resourcesService.folder.get(id, null, null).subscribe((result: { body: FolderResult; }) => {
+    this.resourcesService.folder.get(id).subscribe((result: { body: FolderResult }) => {
       this.result = result.body;
 
       this.parentId = this.result.id;
@@ -89,8 +92,8 @@ export class FolderComponent implements OnInit, OnDestroy {
   }
 
   folderPermissions(id: any) {
-    this.resourcesService.folder.get(id, 'permissions', null).subscribe((permissions: { body: { [x: string]: any; }; }) => {
-      Object.keys(permissions.body).forEach(attrname => {
+    this.resourcesService.security.permissions('folders', id).subscribe((permissions: { body: { [x: string]: any } }) => {
+      Object.keys(permissions.body).forEach((attrname) => {
         this.result[attrname] = permissions.body[attrname];
       });
       // Send it to message service to receive in child components
@@ -103,18 +106,6 @@ export class FolderComponent implements OnInit, OnDestroy {
     this.messageService.toggleSearch();
   }
 
-  // Use this if we want to Make API call from resource file & child component read from the resource file too
-  //     FolderGet():any { //NG
-  //         this.resourcesService.FoldersGet();
-  //     }
-  //     function getTabDetail(tabName) { TODO, check if we need to add Tab from tabView from stateService.
-  //         switch (tabName) {
-  //             case 'access': 	 return {index:0, name:'access'};
-  //             case 'history':  return {index:1, name:'history'};
-  //             default: 		 return {index:0, name:'access'};
-  //         }
-  //     }
-
   ngOnDestroy() {
     if (this.subscription) {
       // unsubscribe to ensure no memory leaks
@@ -124,30 +115,32 @@ export class FolderComponent implements OnInit, OnDestroy {
 
   tabSelected(itemsName) {
     const tab = this.getTabDetail(itemsName);
-    this.stateHandler.Go('folder', {tabView: tab.name}, {notify: false, location: tab.index !== 0});
+    this.stateHandler.Go(
+      'folder',
+      { tabView: tab.name },
+      { notify: false, location: tab.index !== 0 }
+    );
   }
 
   getTabDetail(tabIndex) {
-
     switch (tabIndex) {
       case 0:
-        return {index: 0, name: 'access'};
+        return { index: 0, name: 'access' };
       case 1:
-        return {index: 1, name: 'history'};
+        return { index: 1, name: 'history' };
       default:
-        return {index: 0, name: 'access'};
+        return { index: 0, name: 'access' };
     }
   }
 
   getTabDetailByName(tabName) {
-
     switch (tabName) {
       case 'access':
-        return {index: 0, name: 'access'};
+        return { index: 0, name: 'access' };
       case 'history':
-        return {index: 1, name: 'history'};
+        return { index: 1, name: 'history' };
       default:
-        return {index: 0, name: 'access'};
+        return { index: 0, name: 'access' };
     }
   }
 }

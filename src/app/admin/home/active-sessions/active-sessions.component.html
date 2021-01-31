@@ -16,107 +16,214 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="mdm--shadow-block">
-    <div class="heading-container">
-        <h4 [ngPlural]="totalItemCount" class="marginless">
-          <ng-template ngPluralCase="=1">
-            There is <span class="mdm--badge mdm--element-count">1</span> active session in this repository.
-          </ng-template>
-          <ng-template ngPluralCase="other">
-            There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> active sessions in this repository.
-          </ng-template>
-        </h4>
-    </div>
-    <div class="table-responsive">
-        <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped marginless">
-            <ng-container matColumnDef="userEmailAddress">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; max-width: 40%; width: 40%;" columnName="userEmailAddress">
-                    <span [hidden]="!hideFilters">Email</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" floatLabel="never">
-                            <mat-label>Email</mat-label>
-                            <input #filters matInput name="userEmailAddress" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 40%; width: 40%; text-align: left; word-wrap: break-word;">
-                    <div>
-                        <i class="fas fa-circle onlineUser" aria-hidden="true" matTooltip="Online"></i>
-                        {{ record.userEmailAddress }}
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="userName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 25%; width: 25%;" columnName="userName">
-                    <span [hidden]="!hideFilters">Name</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-                            <mat-label>Name</mat-label>
-                            <input #filters matInput name="userName" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 25%; width: 25%; text-align: left; word-wrap: break-word;">
-                    <div>
-                        {{record.userName}}
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="userOrganisation">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header="userOrganisation" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="userOrganisation">
-                    <span [hidden]="!hideFilters">Organisation</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-                            <mat-label>Organisation</mat-label>
-                            <input #filters matInput name="userOrganisation" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word;">
-                    <div>
-                        {{record.userOrganisation}}
-                    </div>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="start">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%;" columnName="start">
-                    <span [hidden]="!hideFilters">Start</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-                            <mat-label>Start</mat-label>
-                            <input #filters matInput name="start" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-                    <span *ngIf="isToday(record.start)">
-                        {{record.start | date: 'h:mm a' }}
-                    </span>
-                    <span *ngIf="!isToday(record.start)">
-                        {{record.start | date: 'dd/MM/yyyy h:mm a'}}
-                    </span>
-                </td>
-            </ng-container>
-            <ng-container matColumnDef="lastAccess">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 13%; width: 13%;" columnName="lastAccess">
-                    <span [hidden]="!hideFilters">Last Access</span>
-                    <div [hidden]="hideFilters">
-                        <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
-                            <mat-label>Last Access</mat-label>
-                            <input #filters matInput name="last" (keyup)="applyFilter()">
-                        </mat-form-field>
-                    </div>
-                </th>
-                <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
-                    <span *ngIf="isToday(record.last)">
-                        {{record.last | date: 'h:mm a' }}
-                    </span>
-                    <span *ngIf="!isToday(record.last)">
-                        {{record.last | date: 'dd/MM/yyyy h:mm a'}}
-                    </span>
-                </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
-        </table>
-    </div>
+  <div class="heading-container">
+    <h4 class="marginless">
+      Active sessions <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+    </h4>
+  </div>
+  <div class="table-responsive">
+    <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table table table-striped marginless">
+      <ng-container matColumnDef="userEmailAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 35%; width: 35%;" columnName="userEmailAddress">
+          <span [hidden]="!hideFilters">Email</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Email</mat-label>
+              <input #filters matInput name="userEmailAddress" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record"
+          style="max-width: 35%; width: 35%; text-align: left; word-wrap: break-word;">
+          <div>
+            <i class="fas fa-circle onlineUser" aria-hidden="true" matTooltip="Online"></i>
+            {{ record.userEmailAddress }}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 20%; width: 20%;" columnName="userName">
+          <span [hidden]="!hideFilters">Name</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Name</mat-label>
+              <input #filters matInput name="userName" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record"
+          style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
+          <div>
+            {{record.userName}}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userOrganisation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userOrganisation" [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 22%; width: 22%;" columnName="userOrganisation">
+          <span [hidden]="!hideFilters">Organisation</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Organisation</mat-label>
+              <input #filters matInput name="userOrganisation" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record"
+          style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word;">
+          <div>
+            {{record.userOrganisation}}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 10%; width: 10%;" columnName="start">
+          <span [hidden]="!hideFilters">Start</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Start</mat-label>
+              <input #filters matInput name="start" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record"
+          style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+          <span *ngIf="isToday(record.creationDateTime)">
+            {{record.creationDateTime | date: 'h:mm a' }}
+          </span>
+          <span *ngIf="!isToday(record.creationDateTime)">
+            {{record.creationDateTime | date: 'dd/MM/yyyy h:mm a'}}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="lastAccess">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 20%; width: 20%;" columnName="lastAccess">
+          <span [hidden]="!hideFilters">Last Access</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Last Access</mat-label>
+              <input #filters matInput name="last" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record"
+          style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
+          <span *ngIf="isToday(record.lastAccessedDateTime)">
+            {{record.lastAccessedDateTime | date: 'h:mm a' }}
+          </span>
+          <span *ngIf="!isToday(record.lastAccessedDateTime)">
+            {{record.lastAccessedDateTime | date: 'dd/MM/yyyy h:mm a'}}
+          </span>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
+
+
+<div class="mdm--shadow-block" *ngIf="unauthorisedCount > 0">
+  <div class="heading-container">
+    <h4 class="marginless">
+      Non-authenticated session <span class="mdm--badge mdm--element-count">{{unauthorisedCount}}</span>
+    </h4>
+  </div>
+  <div class="table-responsive">
+    <table mat-table matSort [dataSource]="unauthorised" class="mdm--mat-table table table-striped marginless">
+      <ng-container matColumnDef="userEmailAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userEmailAddress" [disabled]="!hideFilters" style="cursor: pointer; max-width: 35%; width: 35%;" columnName="userEmailAddress">
+          <span [hidden]="!hideFilters">Email</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Email</mat-label>
+              <input #filters matInput name="userEmailAddress" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 35%; width: 35%; text-align: left; word-wrap: break-word;">
+          <div>
+            <i class="fas fa-circle onlineUser" aria-hidden="true" matTooltip="Online"></i>
+            {{ record.userEmailAddress }}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userName" [disabled]="!hideFilters" style="cursor: pointer; max-width: 20%; width: 20%;" columnName="userName">
+          <span [hidden]="!hideFilters">Name</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Name</mat-label>
+              <input #filters matInput name="userName" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
+          <div>
+            {{record.userName}}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userOrganisation">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="userOrganisation" [disabled]="!hideFilters" style="cursor: pointer; max-width: 22%; width: 22%;" columnName="userOrganisation">
+          <span [hidden]="!hideFilters">Organisation</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Organisation</mat-label>
+              <input #filters matInput name="userOrganisation" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 22%; width: 22%; text-align: left; word-wrap: break-word;">
+          <div>
+            {{record.userOrganisation}}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 10%; width: 10%;" columnName="start">
+          <span [hidden]="!hideFilters">Start</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Start</mat-label>
+              <input #filters matInput name="start" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 10%; width: 10%; text-align: left; word-wrap: break-word;">
+          <span *ngIf="isToday(record.creationDateTime)">
+            {{record.creationDateTime | date: 'h:mm a' }}
+          </span>
+          <span *ngIf="!isToday(record.creationDateTime)">
+            {{record.creationDateTime | date: 'dd/MM/yyyy h:mm a'}}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="lastAccess">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 20%; width: 20%;" columnName="lastAccess">
+          <span [hidden]="!hideFilters">Last Access</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" [style.width.px]="100" floatLabel="never">
+              <mat-label>Last Access</mat-label>
+              <input #filters matInput name="last" (keyup)="applyFilter()">
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let record" style="max-width: 20%; width: 20%; text-align: left; word-wrap: break-word;">
+          <span *ngIf="isToday(record.lastAccessedDateTime)">
+            {{record.lastAccessedDateTime | date: 'h:mm a' }}
+          </span>
+          <span *ngIf="!isToday(record.lastAccessedDateTime)">
+            {{record.lastAccessedDateTime | date: 'dd/MM/yyyy h:mm a'}}
+          </span>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsUnauthorised"></tr>
+      <tr mat-row *matRowDef="let record; columns: displayedColumnsUnauthorised;"></tr>
+    </table>
+  </div>
 </div>

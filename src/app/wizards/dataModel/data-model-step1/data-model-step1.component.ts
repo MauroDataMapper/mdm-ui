@@ -28,23 +28,23 @@ import { Subscription } from 'rxjs';
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
 export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit {
-  constructor(
-    private helpDialogueHandler: HelpDialogueHandlerService,
-    private resources: MdmResourcesService
-  ) {}
-
+  @ViewChild('myForm', { static: false }) myForm: NgForm;
   allDataModelTypes: any;
   step: any;
   model: any;
 
   formChangesSubscription: Subscription;
-  @ViewChild('myForm', { static: false }) myForm: NgForm;
+  constructor(
+    private helpDialogueHandler: HelpDialogueHandlerService,
+    private resources: MdmResourcesService
+  ) {}
 
   ngOnInit() {
-    this.resources.dataModel.get(null, 'types').toPromise().then(dataTypes => {
-        this.allDataModelTypes = dataTypes.body;
-    });
+
     this.model = this.step.scope.model;
+    this.resources.dataModel.types().toPromise().then(dataTypes => {
+      this.allDataModelTypes = dataTypes.body;
+  });
   }
 
   ngOnDestroy() {
@@ -58,6 +58,6 @@ export class DataModelStep1Component implements OnInit, OnDestroy, AfterViewInit
   }
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Create_a_new_model', null);
+    this.helpDialogueHandler.open('Create_a_new_model');
   };
 }

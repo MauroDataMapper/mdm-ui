@@ -17,18 +17,17 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import * as marked from 'marked';
-import {LinkCreatorService} from '@mdm/utility/markdown/markdown-parser/link-creator.service';
 @Injectable({
   providedIn: 'root'
 })
 export class CustomTextRendererService extends marked.Renderer {
 
-  constructor(private linkCreatorService: LinkCreatorService) {
+  constructor() {
     super();
   }
 
   // render just the text of a link
-  code = (code, language, escaped) => {
+  code = (code) => {
     return code;
   };
 
@@ -46,22 +45,22 @@ export class CustomTextRendererService extends marked.Renderer {
     return text;
   };
 
-  html = (html) => {
+  html = () => {
     return '';
   };
 
   // render just the text of a paragraph
   paragraph = text => {
-    return this.htmlEscapeToText(text) + '\r\n';
+    return `${this.htmlEscapeToText(text)}\\r\\n`;
   };
 
-  // render just the text of a heading element, but indecate level
-  heading = (text, level) => {
+  // render just the text of a heading element, but indicate level
+  heading = (text) => {
     return text;
   };
 
   // render nothing for images
-  image = (href, title, text) => {
+  image = () => {
     return '';
   };
 
@@ -69,7 +68,9 @@ export class CustomTextRendererService extends marked.Renderer {
     let table = '<br>[';
     const reg = /<th>(.*?)<\/th>/g;
     let match;
+    // tslint:disable-next-line: no-conditional-assignment
     while ((match = reg.exec(header))) {
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       table += (match[1] ? match[1] : '...') + ', ';
     }
     table += '...]';
@@ -78,6 +79,7 @@ export class CustomTextRendererService extends marked.Renderer {
 
   // &#63; to ? helper
   public htmlEscapeToText(text) {
+    // eslint-disable-next-line no-useless-escape
     return text.replace(/\&\#[0-9]*;|&amp;/g, (escapeCode) => {
       if (escapeCode.match(/amp/)) {
         return '&';

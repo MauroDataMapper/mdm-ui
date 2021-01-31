@@ -37,16 +37,25 @@ SPDX-License-Identifier: Apache-2.0
             </mat-checkbox>
         </div>
         <div>
-            <small>
-                <mdm-more-description description="If checked, description will be expanded automatically regardless of its characters count."></mdm-more-description>
-            </small>
+            <small>If checked, description will be expanded automatically regardless of its characters count.</small>
         </div>
     </div>
+    <!-- <div class="mb-2">
+        <mat-checkbox name="includeModelSuperseded" [(ngModel)]="includeModelSuperseded" labelPosition="after">
+            Show Superseded Models
+        </mat-checkbox>
+    </div> -->
     <div class="mb-2">
-        <mat-checkbox name="includeSupersededModels" [(ngModel)]="includeSupersededModels" labelPosition="after">
-            Include Superseded Document Models in Data Model Tree
+        <mat-checkbox name="includeDocumentSuperseded" [(ngModel)]="includeDocumentSuperseded" labelPosition="after">
+            Show Superseded Documents
         </mat-checkbox>
     </div>
+
+    <div class="mb-2" *ngIf="isAdmin()">
+      <mat-checkbox name="includeDeleted" [(ngModel)]="includeDeleted" labelPosition="after">
+          Show Deleted Models
+      </mat-checkbox>
+  </div>
     <div>
         <button mat-flat-button class="custom save-email-config" color="primary" aria-label="Save preferences">
             Save preferences

@@ -18,7 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MultipleTermsSelectorComponent } from './multiple-terms-selector.component';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { McPagedListComponent } from '../mc-paged-list/mc-paged-list.component';
+import { ElementLinkComponent } from '../element-link/element-link.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { McSelectComponent } from '../mc-select/mc-select.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { empty } from 'rxjs';
 
 describe('MultipleTermsSelectorComponent', () => {
   let component: MultipleTermsSelectorComponent;
@@ -26,8 +36,31 @@ describe('MultipleTermsSelectorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ MultipleTermsSelectorComponent ]
+      imports: [
+        MatTableModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {
+            terminology: {
+              // tslint:disable-next-line: deprecation
+              list: () => empty()
+            }
+          }
+        }
+      ],
+      declarations: [
+        McPagedListComponent,
+        ElementLinkComponent,
+        McSelectComponent,
+        MultipleTermsSelectorComponent
+      ]
     })
     .compileComponents();
   }));

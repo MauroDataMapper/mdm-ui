@@ -36,7 +36,8 @@ export class DataModelStep2Component implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.resources.public.get('defaultDataTypeProviders').subscribe(result => {
+
+    this.resources.dataModel.defaultDataTypes().subscribe(result => {
         this.defaultDataTypeProviders = result.body;
       },
       error => {
@@ -57,5 +58,5 @@ export class DataModelStep2Component implements OnInit {
       items: this.step.scope.model.selectedDataTypeProvider[0].dataTypes
     };
     this.loadingData = false;
-  }
+  };
 }

@@ -18,25 +18,25 @@ SPDX-License-Identifier: Apache-2.0
 import {
   AfterViewInit,
   Component,
-  ContentChildren,
   ElementRef,
   Input,
   OnInit,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewChildren
 } from '@angular/core';
 import { TermResult, EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { BroadcastService } from '@mdm/services/broadcast.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-term-details',
@@ -44,12 +44,22 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./term-details.component.scss']
 })
 export class TermDetailsComponent implements OnInit, AfterViewInit {
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
+  @Input() afterSave: any;
+  @Input() editMode = false;
+  @Input() mcTerminology: any;
+  @Input() hideEditButton: any;
+  @Input() openEditForm: any;
+  @ViewChildren('editableText') editForm: QueryList<any>;
+  download: any;
+  downloadLink: any;
+  urlText: any;
+
+  mcTerm: TermResult;
   securitySection = false;
   processing = false;
   exportError = null;
   exportList = [];
-  // isAdminUser = $rootScope.isAdmin();
-  // isLoggedIn = securityHandler.isLoggedIn();
   exportedFileIsReady = false;
   addedToFavourite = false;
   hasResult = false;
@@ -69,30 +79,18 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
   showNewVersion = false;
   compareToList = [];
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  download: any;
-  downloadLink: any;
-  urlText: any;
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  mcTerm: TermResult;
-  @Input() mcTerminology: any;
-  @Input() hideEditButton: any;
-  @Input() openEditForm: any;
 
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChildren('editableTextAuthor') editFormAuthor: QueryList<any>;
-  @ViewChildren('editableTextOrganisation') editFormOrganisation: QueryList<any>;
-
-  @ContentChildren(MarkdownTextAreaComponent) editForm1: QueryList<any>;
   constructor(
     private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
     private sharedService: SharedService,
     private helpDialogueService: HelpDialogueHandlerService,
     private favouriteHandler: FavouriteHandlerService,
-    private title: Title
-  ) {
+    private title: Title,
+    private messageHandler: MessageHandlerService,
+    private resourcesService: MdmResourcesService,
+    private broadcastSvc: BroadcastService,
+    private editingService: EditingService) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.TermDetails();
@@ -114,6 +112,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
@@ -131,53 +130,46 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
         });
       }
     };
-
-    // this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
-    //   this.showSecuritySection = message;
-    // });
-    // this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-    //   this.showSearch = message;
-    // });
   }
 
   TermDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
-        this.mcTerm = serverResult;
+      this.mcTerm = serverResult;
 
-        this.editableForm.url = this.mcTerm.url;
-        this.editableForm.description = this.mcTerm.description;
-        if (this.mcTerm.classifiers) {
-          this.mcTerm.classifiers.forEach(item => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.mcTerm.aliases) {
-          this.mcTerm.aliases.forEach(item => {
-            this.editableForm.aliases.push(item);
-          });
-        }
-        if (this.mcTerm.semanticLinks) {
-          this.mcTerm.semanticLinks.forEach(link => {
-            if (link.linkType === 'New Version Of') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.mcTerm.semanticLinks) {
-          this.mcTerm.semanticLinks.forEach(link => {
-            if (link.linkType === 'Superseded By') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
-
-        if (this.mcTerm != null) {
-          this.hasResult = true;
-          this.watchDataModelObject();
-        }
-        this.title.setTitle(`Term - ${this.mcTerm?.label}`);
+      this.editableForm.url = this.mcTerm.url;
+      this.editableForm.description = this.mcTerm.description;
+      if (this.mcTerm.classifiers) {
+        this.mcTerm.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
       }
+      if (this.mcTerm.aliases) {
+        this.mcTerm.aliases.forEach(item => {
+          this.editableForm.aliases.push(item);
+        });
+      }
+      if (this.mcTerm.semanticLinks) {
+        this.mcTerm.semanticLinks.forEach(link => {
+          if (link.linkType === 'New Version Of') {
+            this.compareToList.push(link.target);
+          }
+        });
+      }
+
+      if (this.mcTerm.semanticLinks) {
+        this.mcTerm.semanticLinks.forEach(link => {
+          if (link.linkType === 'Superseded By') {
+            this.compareToList.push(link.target);
+          }
+        });
+      }
+
+      if (this.mcTerm != null) {
+        this.hasResult = true;
+        this.watchDataModelObject();
+      }
+      this.title.setTitle(`Term - ${this.mcTerm?.label}`);
+    }
     );
   }
 
@@ -195,9 +187,8 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Subscription emits changes properly from component creation onward & correctly invokes `this.invokeInlineEditor` if this.inlineEditorToInvokeName is defined && the QueryList has members
-    this.editForm.changes.subscribe((queryList: QueryList<any>) => {
+    this.editForm.changes.subscribe(() => {
       this.invokeInlineEditor();
-      // setTimeout work-around prevents Angular change detection `ExpressionChangedAfterItHasBeenCheckedError` https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
 
       if (this.editMode) {
         this.editForm.forEach(x =>
@@ -211,7 +202,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  formBeforeSave = function() {
+  formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
 
@@ -233,36 +224,23 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
       classifiers
     };
 
-    this.resourcesService.term
-      .put(this.mcTerm.terminology.id, resource.id, null, { resource })
-      .subscribe(
-        result => {
-          if (this.afterSave) {
-            this.afterSave(this.mcTerm);
-          }
-          this.messageHandler.showSuccess('Term updated successfully.');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem updating the Term.',
-            error
-          );
-        }
-      );
+    this.resourcesService.term.update(this.mcTerm.terminology.id, resource.id, resource).subscribe(() => {
+      if (this.afterSave) {
+        this.afterSave(this.mcTerm);
+      }
+      this.messageHandler.showSuccess('Term updated successfully.');
+      this.editingService.stop();
+      this.editableForm.visible = false;
+      this.editForm.forEach(x => x.edit({ editing: false }));
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
+    }, error => {
+      this.messageHandler.showError('There was a problem updating the Term.', error);
+    }
+    );
   };
 
-  private invokeInlineEditor(): void {
-    const inlineEditorToInvoke = this.editForm.find(
-      (inlineEditorComponent: any) => {
-        return inlineEditorComponent.name === 'editableText';
-      }
-    );
-  }
-
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 
@@ -273,9 +251,13 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   }
 
   public loadHelp() {
-    this.helpDialogueService.open('Term_details', {
-      my: 'right top',
-      at: 'bottom'
-    } as DialogPosition);
+    this.helpDialogueService.open('Term_details');
+  }
+
+  private invokeInlineEditor(): void {
+    this.editForm.find((inlineEditorComponent: any) => {
+        return inlineEditorComponent.name === 'editableText';
+      }
+    );
   }
 }

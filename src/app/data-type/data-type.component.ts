@@ -15,19 +15,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
+import { BaseComponent } from '@mdm/shared/base/base.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-data-type',
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent implements OnInit {
+export class DataTypeComponent extends BaseComponent implements OnInit, AfterViewInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+
   dataType: any;
   dataModelId: any;
   dataModel: any;
@@ -45,15 +50,20 @@ export class DataTypeComponent implements OnInit {
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private resource: MdmResourcesService,
-    private sharedService: SharedService
-  ) {}
+    private sharedService: SharedService,
+    private editingService: EditingService) {
+    super();
+  }
 
   ngOnInit() {
+    // tslint:disable-next-line: deprecation
     this.id = this.stateService.params.id;
+    // tslint:disable-next-line: deprecation
     this.dataModelId = this.stateService.params.dataModelId;
+    // tslint:disable-next-line: deprecation
     this.tabView = this.stateService.params.tabView;
 
-    if (!this.id || !this.dataModelId) {
+    if (this.isGuid(this.id) && (!this.id || !this.dataModelId)) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
@@ -62,20 +72,25 @@ export class DataTypeComponent implements OnInit {
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
-    this.resource.dataType.get(this.dataModelId, this.id, null, null).subscribe(
-      result => {
-        const data = result.body;
-        this.dataType = data;
-        this.dataType.classifiers = this.dataType.classifiers || [];
-        this.loadingData = false;
-        this.activeTab = this.getTabDetail(this.tabView);
-        this.showExtraTabs =
-          !this.sharedService.isLoggedIn() || !this.dataType.editable;
-      },
-      error => {
-        this.loadingData = false;
-      }
-    );
+    this.resource.dataType.get(this.dataModelId, this.id).subscribe(result => {
+      const data = result.body;
+
+      // If the Id is a path get the actual Id
+      this.dataModelId = data.model;
+      this.id = data.id;
+
+      this.dataType = data;
+      this.dataType.classifiers = this.dataType.classifiers || [];
+      this.loadingData = false;
+      this.activeTab = this.getTabDetail(this.tabView);
+      this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.dataType.editable;
+    }, () => {
+      this.loadingData = false;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
   tabSelected = itemsName => {
@@ -91,12 +106,10 @@ export class DataTypeComponent implements OnInit {
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resource.dataType
-        .get(this.dataModelId, this.id, this.activeTab.fetchUrl, null)
-        .subscribe(data => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
+      this.resource.dataType.get(this.dataModelId, this.id).subscribe(data => {
+        this[this.activeTab.name] = data || [];
+        this.loadingData = false;
+      });
     }
   };
 
@@ -119,13 +132,8 @@ export class DataTypeComponent implements OnInit {
     }
   };
 
-  Save = () => {
-    // TODO
-  };
-
-
   openEditForm = (formName: any) => {
     this.showEditForm = true;
     this.editForm = formName;
-  }
+  };
 }

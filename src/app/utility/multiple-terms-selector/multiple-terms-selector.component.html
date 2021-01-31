@@ -24,7 +24,7 @@ SPDX-License-Identifier: Apache-2.0
                 [idProperty]="'id'"
                 [displayProperty]="'label'"
                 [searchProperty]="'label'"
-                (selectEvent)="onTerminologySelect($event[0],$event[1])">
+                (selectEvent)="onTerminologySelect($event[0])">
         <ng-template #lineContent let-item>
             <div>{{item.label}}</div>
         </ng-template>

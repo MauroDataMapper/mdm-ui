@@ -19,13 +19,8 @@ SPDX-License-Identifier: Apache-2.0
     <div class="heading-container">
         <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
             <div fxFlex fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="80" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-                <h4 [ngPlural]="totalItemCount" class="marginless">
-                  <ng-template ngPluralCase="=1">
-                    There is <span class="mdm--badge mdm--element-count">1</span> group in this repository.
-                  </ng-template>
-                  <ng-template ngPluralCase="other">
-                    There are <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span> groups in this repository.
-                  </ng-template>
+                <h4 class="marginless">
+                  Groups <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
                 </h4>
                 <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
             </div>
@@ -34,55 +29,50 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </div>
     </div>
-    <table mat-table [dataSource]="dataSource" matSort class="mdm--table mdm--table-responsive table table-striped">
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer;" columnName="label">
-                <span [hidden]="!hideFilters">Name</span>
-                <div [hidden]="hideFilters">
-                    <mat-form-field class="filter" floatLabel="never">
-                        <mat-label>Name</mat-label>
-                        <input #filters matInput name="label" (keyup)="applyFilter()">
-                    </mat-form-field>
-                </div>
-            </th>
-            <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                <div class="mdm--td-cell">
-                    Name
-                </div>
-                <span>{{record.label}}</span>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="cursor: pointer;" columnName="description">
-                <span [hidden]="!hideFilters">Description</span>
-            </th>
-            <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                <div class="mdm--td-cell">
-                    Description
-                </div>
-                <span>{{record.description}}</span>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="icons">
-            <td mat-header-cell *matHeaderCellDef columnName="icons"></td>
-            <td mat-cell *matCellDef="let record; let i = index" style="text-align: right; word-wrap: break-word;">
-                <button mat-stroked-button color="primary" [matMenuTriggerFor]="actions">
-                    Actions
-                    <i class="fas fa-chevron-down fa-xs"></i>
-                </button>
-                <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
-                    <button mat-menu-item (click)="editUser(record)">
-                        <i class="fas fa-pencil-alt"></i> Edit group
-                    </button>
-                    <button mat-menu-item (click)="deleteUser(record)">
-                        <i class="far fa-trash-alt warning"></i> Delete group
-                    </button>
-                </mat-menu>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
-    </table>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="mdm--mat-table table table-striped marginless">
+          <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [disabled]="!hideFilters" style="cursor: pointer; max-width: 40%;" columnName="name">
+                  <span [hidden]="!hideFilters">Name</span>
+                  <div [hidden]="hideFilters">
+                      <mat-form-field class="filter" floatLabel="never">
+                          <mat-label>Name</mat-label>
+                          <input #filters matInput name="name" (keyup)="applyFilter()">
+                      </mat-form-field>
+                  </div>
+              </th>
+              <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+                {{record.name}}
+              </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef columnName="description" style="max-width: 50%;">
+                  <span [hidden]="!hideFilters">Description</span>
+              </th>
+              <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
+                {{record.description}}
+              </td>
+          </ng-container>
+          <ng-container matColumnDef="icons">
+              <td mat-header-cell *matHeaderCellDef columnName="icons" style="width: 7%; text-align: center;"></td>
+              <td mat-cell *matCellDef="let record; let i = index" style="text-align: center; word-wrap: break-word;">
+                  <button mat-icon-button color="primary" [matMenuTriggerFor]="actions">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
+                      <button mat-menu-item (click)="editUser(record)">
+                          <i class="fas fa-pencil-alt"></i> Edit group
+                      </button>
+                      <button mat-menu-item (click)="deleteUser(record)">
+                          <i class="far fa-trash-alt warning"></i> Delete group
+                      </button>
+                  </mat-menu>
+              </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let record; columns: displayedColumns;"></tr>
+      </table>
+    </div>
     <div class="mdm--mat-pagination">
         <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
     </div>

@@ -24,8 +24,8 @@ import { filter, map } from 'rxjs/operators';
 })
 export class BroadcastService {
 
-  constructor() { }
   private handler: Subject<Message> = new Subject<Message>();
+  constructor() { }
 
   broadcast(type: string, payload: any = null) {
     this.handler.next({ type, payload });

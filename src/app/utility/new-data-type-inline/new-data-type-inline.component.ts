@@ -15,25 +15,25 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, Input, Output, EventEmitter,  ViewChild, AfterViewInit} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import {NgForm} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mdm-data-type-inline',
   templateUrl: './new-data-type-inline.component.html',
   styleUrls: ['./new-data-type-inline.component.sass']
 })
-export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
+export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   @Output() validationStatusEvent = new EventEmitter<string>();
 
   @Input() parentDataModel;
   @Input() showParentDataModel = false;
   @Input() showClassification = false;
-  formDataTypeChangesSubscription: Subscription;
-  @ViewChild('myFormNewDataType', {static: false}) myFormNewDataType: NgForm;
+
+  @ViewChild('myFormNewDataType', { static: false }) myFormNewDataType: NgForm;
   @Input() model: any = {
     label: '',
     description: '',
@@ -42,13 +42,14 @@ export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
     referencedTerminology: ''
   };
 
-  childDataClasses: any; // TODO - FIGURE OUT IF NEEDED
-
   @Input() parentScopeHandler;
+  formDataTypeChangesSubscription: Subscription;
   allDataTypes;
   isValid = false;
   reloading = false;
   terminologies: any;
+  codesets: any;
+  referenceDataModels: any;
 
   constructor(
     private resourceService: MdmResourcesService,
@@ -57,6 +58,8 @@ export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
     this.allDataTypes = this.elementTypes.getAllDataTypesArray();
     if (this.allDataTypes) { this.model.domainType = this.allDataTypes[0]; }
     this.loadTerminologies();
+    this.loadCodeSets();
+    this.loadReferenceModels();
   }
 
   sendValidationStatus() {
@@ -93,41 +96,34 @@ export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
     if (newValue !== undefined) {
       this.model.label = newValue.label;
       this.model.domainType = newValue.dataModelType;
-      }
+    }
     if (!this.model.label || this.model.label.trim().length === 0) {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
-    if (
-      this.model.domainType === 'EnumerationType' &&
-      this.model.enumerationValues.length === 0
-    ) {
+    if (this.model.domainType === 'EnumerationType' && this.model.enumerationValues.length === 0) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
-    if (
-      this.model.domainType === 'ReferenceType' &&
-      (!this.model.referencedDataClass || this.model.referencedDataClass.id === '')
-    ) {
+    if (this.model.domainType === 'ReferenceType' && (!this.model.referencedDataClass || this.model.referencedDataClass.id === '')) {
       isValid = false;
     }
-
-    if (
-      this.model.domainType === 'Primitive' ) {
+    if (this.model.domainType === 'Primitive') {
       isValid = true;
     }
-
     // Check if for TerminologyType, the terminology is selected
-    if (
-      this.model.domainType === 'TerminologyType' &&
-      (!this.model.referencedTerminology ||
-        this.model.referencedTerminology.id === '')
-    ) {
+    if (this.model.domainType === 'TerminologyType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
       isValid = false;
     }
 
-    this.isValid = isValid;
+    if (this.model.domainType === 'CodeSetType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+      isValid = false;
+    }
 
+    if (this.model.domainType === 'ReferenceDataModelType' && (!this.model.referencedTerminology || this.model.referencedTerminology.id === '')) {
+      isValid = false;
+    }
+    this.isValid = isValid;
     this.sendValidationStatus();
   }
 
@@ -144,27 +140,44 @@ export class NewDataTypeInlineComponent implements OnInit,  AfterViewInit {
 
   loadTerminologies() {
     this.reloading = true;
-    this.resourceService.terminology.get(null, null, null).subscribe(
-      data => {
-        this.terminologies = data.body.items;
-        this.reloading = false;
-      },
-      function() {
-        this.reloading = false;
-      }
-    );
+    this.resourceService.terminology.list().subscribe(data => {
+      this.terminologies = data.body.items;
+      this.reloading = false;
+    }, () => {
+      this.reloading = false;
+    });
   }
 
-  onTerminologySelect(terminology: any, record: any) {
+  onTerminologySelect(terminology: any) {
     this.model.referencedTerminology = terminology;
     this.model.terminology = terminology;
     this.validate();
     this.sendValidationStatus();
   }
 
+  loadCodeSets() {
+   this.reloading = true;
+   this.resourceService.codeSet.list().subscribe(data => {
+     this.codesets = data.body.items;
+     this.reloading = false;
+   }, () => {
+     this.reloading = false;
+   });
+ }
+
+ loadReferenceModels() {
+   this.reloading = true;
+   this.resourceService.referenceDataModel.list().subscribe(data => {
+     this.referenceDataModels = data.body.items;
+     this.reloading = false;
+   }, () => {
+     this.reloading = false;
+   });
+ }
+
   onEnumListUpdated = newEnumList => {
     this.model.enumerationValues = newEnumList;
     this.validate();
     this.sendValidationStatus();
-  }
+  };
 }

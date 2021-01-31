@@ -16,10 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { BasicDiagramService } from './basic-diagram.service';
-import { forkJoin, Observable, pipe } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import * as joint from 'jointjs';
-import { flatMap, map } from 'rxjs/operators';
-import { forEach } from '@uirouter/core';
+import { mergeMap } from 'rxjs/operators';
 
 
 export class DataflowDataelementDiagramService extends BasicDiagramService {
@@ -27,43 +26,52 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   classes: object = {};
   dataFlows: any = {};
 
+  selDataElementComponentId: string;
   parentId: string;
   flowId: string;
+  flowComponentId: string;
 
   getDiagramContent(params: any): Observable<any> {
+
     this.parentId = params.parent.id;
     this.flowId = params.flowId;
+    this.flowComponentId = params.flowComponentId;
     const classGetters = [];
-    return (this.resourcesService.dataFlow.getFlowComponents(params.parent.id, params.flowId, params.flowComponentId) as Observable<any>).pipe(
-      flatMap(data => {
+
+    this.changeComponent(null);
+
+    const flowComponents: Observable<any> = this.resourcesService.dataFlow.dataElementComponents.list(params.parent.id, params.flowId, params.flowComponentId);
+    return (flowComponents).pipe(
+      mergeMap(data => {
         this.dataFlows = data.body;
         data.body.items.forEach((dataFlowComponent) => {
-          dataFlowComponent.sourceElements.forEach((element) => {
+          dataFlowComponent.sourceDataElements.forEach((element) => {
             this.classes[element.dataClass] = element.breadcrumbs;
           });
-          dataFlowComponent.targetElements.forEach((element) => {
+          dataFlowComponent.targetDataElements.forEach((element) => {
             this.classes[element.dataClass] = element.breadcrumbs;
           });
         });
-        const options = {sort: 'label', order: 'asc', all: true};
+        const options = { sort: 'label', order: 'asc', all: true };
         Object.keys(this.classes).forEach((classId) => {
           const dataModelId: string = this.classes[classId][0].id;
-          let parentClassId: string = null;
-          if (this.classes[classId].length > 2) {
-            parentClassId = this.classes[classId][this.classes[classId].length - 2].id;
-          }
+          // let parentClassId: string = null;
+          // if (this.classes[classId].length > 2) {
+          //   parentClassId = this.classes[classId][this.classes[classId].length - 2].id;
+          // }
           classGetters.push(
-            this.resourcesService.dataClass.get(dataModelId, null, classId, 'dataElements', options)
+            this.resourcesService.dataClass.content(dataModelId, classId, options)
           );
         });
         return forkJoin(classGetters);
       })
     );
-
   }
 
   render(result: any): void {
-    // console.log(result);
+
+    this.changeComponent(null);
+
     const classAttributes: object = {};
     Object.keys(this.classes).forEach((classId) => {
       const classBreadcrumb = this.classes[classId][this.classes[classId].length - 1];
@@ -84,44 +92,44 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
       this.addSmallRectangleCell(flowComponent.id, flowComponent.label);
 
-      flowComponent.sourceElements.forEach((sourceElement) => {
+      flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
         const link1 = new joint.shapes.standard.Link({
-          id: sourceElement.id + '/' + flowComponent.id,
+          id: `${sourceElement.id}/${flowComponent.id}`,
           source: {
             // id: sourceElement.id,
             id: sourceElement.dataClass,
-            /*anchor: {
+            /* anchor: {
               name: 'right'
             }*/
           },
           target: {
             id: flowComponent.id,
-            /*anchor: {
+            /* anchor: {
               name: 'left'
             }*/
           }
         });
-        link1.connector('rounded', {radius: 40});
+        link1.connector('rounded', { radius: 40 });
         this.graph.addCell(link1);
       });
-      flowComponent.targetElements.forEach((targetElement) => {
+      flowComponent.targetDataElements.forEach((targetElement) => {
         const link2 = new joint.shapes.standard.Link({
-          id: targetElement.id + '/' + flowComponent.id,
+          id: `${targetElement.id}/${flowComponent.id}`,
           source: {
             id: flowComponent.id,
-            /*anchor: {
+            /* anchor: {
               name: 'right'
             }*/
           },
           target: {
             id: targetElement.dataClass,
-            /*anchor: {
+            /* anchor: {
               name: 'left'
             }*/
           }
         });
-        link2.connector('rounded', {radius: 40});
+        link2.connector('rounded', { radius: 40 });
         this.graph.addCell(link2);
       });
     });
@@ -135,7 +143,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
       this.graph.removeCells([rectCell]);
 
       // console.log((this.graph.getCell(classId) as joint.dia.Element).position());
-      const umlClassCell = this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text'), classAttributes[classId], new joint.g.Point({
+      this.addUmlClassCell(rectCell.id as string, rectCell.attr('label/text'), classAttributes[classId], new joint.g.Point({
         x: oldPosition.x,
         y: oldPosition.y
       }), null);
@@ -146,10 +154,10 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
 
       this.addSmallRectangleCell(flowComponent.id, flowComponent.label);
 
-      flowComponent.sourceElements.forEach((sourceElement) => {
+      flowComponent.sourceDataElements.forEach((sourceElement) => {
         // console.log(sourceElement);
         const link1 = new joint.shapes.standard.Link({
-          id: sourceElement.id + '/' + flowComponent.id,
+          id: `${sourceElement.id}/${flowComponent.id}`,
           source: {
             id: sourceElement.id,
             // id: sourceElement.dataClass,
@@ -164,12 +172,12 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }
           }
         });
-        link1.connector('rounded', {radius: 40});
+        link1.connector('rounded', { radius: 40 });
         this.graph.addCell(link1);
       });
-      flowComponent.targetElements.forEach((targetElement) => {
+      flowComponent.targetDataElements.forEach((targetElement) => {
         const link2 = new joint.shapes.standard.Link({
-          id: targetElement.id + '/' + flowComponent.id,
+          id: `${targetElement.id}/${flowComponent.id}`,
           source: {
             id: flowComponent.id,
             anchor: {
@@ -183,7 +191,7 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
             }
           }
         });
-        link2.connector('rounded', {radius: 40});
+        link2.connector('rounded', { radius: 40 });
         this.graph.addCell(link2);
       });
     });
@@ -191,13 +199,34 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
   }
 
   configurePaper(paper: joint.dia.Paper): void {
-    paper.on('link:pointerdblclick', (cellView: joint.dia.CellView, event) => {
+
+    paper.on('cell:pointerclick', (cellView: joint.dia.CellView) => {
+
+      if (cellView.model.id !== undefined && cellView.model.id !== null) {
+
+        const arrMergedId: any[] = cellView.model.id.toString().split('/');
+
+        if (arrMergedId.length > 1) {
+
+          this.selDataElementComponentId = arrMergedId[1];
+
+          const options = { sort: 'label', order: 'asc', all: true };
+          this.resourcesService.dataFlow.dataElementComponents.get(this.parentId, this.flowId, this.flowComponentId, arrMergedId[1], options).subscribe(result => {
+            if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+              this.changeComponent(result.body);
+            }
+          }, () => {
+            console.log(`cell pointerclick ${cellView.model.id} was clicked`);
+          });
+        }
+      }
+    });
+
+    paper.on('link:pointerdblclick', () => {
       // this.flowComponentId = cellView.model.attributes.source.id as string;
       // this.drawDiagram();
       // console.log(cellView.model.attributes.source.id as string);
       // console.log(this);
-
-
     });
 
   }
@@ -223,4 +252,14 @@ export class DataflowDataelementDiagramService extends BasicDiagramService {
     this.clickSubject.complete();
   }
 
+  updateDataElementLevel = (data) => {
+    const options = { sort: 'label', order: 'asc', all: true };
+    this.resourcesService.dataFlow.dataElementComponents.update(this.parentId, this.flowId, this.flowComponentId, this.selDataElementComponentId, data, options).subscribe(result => {
+      if (result !== undefined && result !== null && result.body !== undefined && result.body !== null) {
+        this.changeComponent(result.body);
+      }
+    }, (error) => {
+      this.messageHandler.showError('There was a problem updating the Data Element Component.', error);
+    });
+  };
 }

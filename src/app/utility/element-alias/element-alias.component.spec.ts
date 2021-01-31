@@ -18,6 +18,9 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ElementAliasComponent } from './element-alias.component';
+import { MatInputModule } from '@angular/material/input';
+import { PropertiesDirective } from '@mdm/directives/properties.directive';
+import { FormsModule } from '@angular/forms';
 
 describe('ElementAliasComponent', () => {
   let component: ElementAliasComponent;
@@ -25,7 +28,14 @@ describe('ElementAliasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ElementAliasComponent ]
+      imports: [
+        FormsModule,
+        MatInputModule
+      ],
+      declarations: [
+        PropertiesDirective,
+        ElementAliasComponent
+      ]
     })
     .compileComponents();
   }));

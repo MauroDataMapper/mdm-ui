@@ -15,26 +15,26 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 
 @Component({
   selector: 'mdm-element-link',
-  templateUrl: './element-link.component.html'
+  templateUrl: './element-link.component.html',
 })
 export class ElementLinkComponent implements OnInit {
   @Input() hideVersionNumber: boolean;
   @Input() justShowCodeForTerm: boolean;
   @Input() showTypeTitle: boolean;
- // @Input() element: any;
+  // @Input() element: any;
   @Input() newWindow: boolean;
   @Input() parentDataModel: any;
   @Input() parentDataClass: any;
   @Input() showHref = true;
   @Input() showParentDataModelName: boolean;
   @Input() showLink = true;
-  elementVal: any;
   @Output() selectedElementsChange = new EventEmitter<any[]>();
+  elementVal: any;
 
   linkUrl: string;
 
@@ -67,14 +67,12 @@ export class ElementLinkComponent implements OnInit {
     this.linkUrl = this.elementTypes.getLinkUrl(this.element);
 
     if (!this.hideVersionNumber) {
-      this.versionNumber = this.element?.documentationVersion
-        ? 'Documentation Version: ' + this.element.documentationVersion
-        : '';
+      this.versionNumber = this.element?.documentationVersion ? `Documentation Version: ${this.element.documentationVersion}` : '';
     }
 
     this.label = this.element?.label || this.element?.definition;
     if (this.element?.domainType === 'Term' && !this.justShowCodeForTerm) {
-      this.label = this.element.code + ' : ' + this.element.definition;
+      this.label = `${this.element.code} : ${this.element.definition}`;
     }
     if (this.element?.domainType === 'Term' && this.justShowCodeForTerm) {
       this.label = this.element.code;
@@ -84,17 +82,9 @@ export class ElementLinkComponent implements OnInit {
       this.label = this.replaceLabelBy;
     }
 
-    if (
-      this.showParentDataModelName &&
-      this.element?.domainType !== 'DataModel' &&
-      this.element?.domainType !== 'Term' &&
-      this.element?.domainType !== 'Terminology'
-    ) {
-      const parentDM =
-        this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0
-          ? this.element?.breadcrumbs[0]
-          : null;
-      this.label = parentDM?.label ? (parentDM?.label + ' : ' + this.label) : this.label;
+    if (this.showParentDataModelName && this.element?.domainType !== 'DataModel' && this.element?.domainType !== 'Term' && this.element?.domainType !== 'Terminology') {
+      const parentDM = this.element?.breadcrumbs && this.element?.breadcrumbs.length > 0 ? this.element?.breadcrumbs[0] : null;
+      this.label = parentDM?.label ? (`${parentDM?.label} : ${this.label}`) : this.label;
       if (this.label === 'undefined : undefined') {
         this.label = '';
       }
@@ -132,5 +122,4 @@ export class ElementLinkComponent implements OnInit {
       this.showLink = true;
     }
   }
-
 }

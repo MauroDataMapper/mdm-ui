@@ -30,6 +30,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 export class FavouritesComponent implements OnInit {
   @Output() favouriteClick = new EventEmitter<any>();
   @Output() favouriteDbClick = new EventEmitter<any>();
+  @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
 
   reloading = false;
   allFavourites: any;
@@ -43,7 +44,6 @@ export class FavouritesComponent implements OnInit {
 
   contextMenuPosition = { x: '0px', y: '0px' };
 
-  @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
 
   constructor(
     private resources: MdmResourcesService,
@@ -145,15 +145,15 @@ export class FavouritesComponent implements OnInit {
       this.menuOptions = this.dataModelContextMenu(favourite);
     }
     event.preventDefault();
-    this.contextMenuPosition.x = event.clientX + 'px';
-    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenuPosition.x = `${event.clientX}px`;
+    this.contextMenuPosition.y = `${event.clientY}px`;
     this.contextMenu.menuData = { favourite };
     this.contextMenu.menu.focusFirstItem('mouse');
 
     this.contextMenu.openMenu();
   };
 
-  onSearchInputKeyDown = $event => {
+  onSearchInputKeyDown = () => {
     this.search();
   };
 
@@ -162,5 +162,5 @@ export class FavouritesComponent implements OnInit {
       Object.assign([], this.allFavourites),
       this.formData.filterCriteria
     );
-  }
+  };
 }

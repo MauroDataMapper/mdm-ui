@@ -21,12 +21,8 @@ import { MatDatepicker } from '@angular/material/datepicker';
 @Component({
   selector: 'mdm-date-from-to',
   templateUrl: './date-from-to.component.html'
-  // providers: [
-  //   //  { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-  // ]
 })
 export class DateFromToComponent implements OnInit {
-  constructor() {}
   @Output() selectEvent = new EventEmitter<DateEventInfo>();
 
   @ViewChild('dp1', { static: false }) datePicker1: MatDatepicker<Date>;
@@ -37,7 +33,6 @@ export class DateFromToComponent implements OnInit {
   oldVal: any;
 
   date1Options = {
-    // dateDisabled: disabled,
     formatYear: 'yy',
     maxDate: null,
     minDate: null,
@@ -48,7 +43,6 @@ export class DateFromToComponent implements OnInit {
   };
 
   date2Options = {
-    // dateDisabled: disabled,
     formatYear: 'yy',
     maxDate: null,
     minDate: null,
@@ -58,7 +52,9 @@ export class DateFromToComponent implements OnInit {
     showButtonBar: false
   };
 
-  ngOnInit(): void {}
+  constructor() { }
+
+  ngOnInit(): void { }
 
   datePicker1Changed(newValue, oldValue): any {
     // init for the first time, so NO Action
@@ -67,6 +63,7 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       this.selectEvent.emit(new DateEventInfo(newValue, this.dtTo));
     }
 
@@ -82,7 +79,7 @@ export class DateFromToComponent implements OnInit {
     }
 
     if (this.selectEvent) {
-      // this.onSelect(this.dtFrom, newValue);
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       this.selectEvent.emit(new DateEventInfo(this.dtFrom, newValue));
     }
 
@@ -114,11 +111,10 @@ export class DateFromToComponent implements OnInit {
 }
 
 class DateEventInfo {
+  public from: Date;
+  public to: Date;
   constructor(from: Date, to: Date) {
     this.from = from;
     this.to = to;
   }
-
-  public from: Date;
-  public to: Date;
 }

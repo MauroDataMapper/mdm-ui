@@ -17,32 +17,21 @@ SPDX-License-Identifier: Apache-2.0
 */
 import {
   Component,
-  ElementRef,
   Inject,
-  Input,
   OnInit,
   Optional,
-  Pipe,
-  PipeTransform,
   ViewChild,
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import * as SvgPanZoom from 'svg-pan-zoom';
-import * as _ from 'lodash';
-import * as joint from 'jointjs';
-import { forkJoin } from 'rxjs';
 import {
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA,
-  MAT_DIALOG_DEFAULT_OPTIONS,
+  MAT_DIALOG_DATA
 } from '@angular/material/dialog';
-import { BasicDiagramService } from '../services/basic-diagram.service';
-import { DataflowDatamodelDiagramService } from '../services/dataflow-datamodel-diagram.service';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { DiagramToolbarComponent } from '../diagram-toolbar/diagram-toolbar.component';
-import { MatDrawer, MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'mdm-diagram-popup',
@@ -64,21 +53,8 @@ export class DiagramPopupComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  ngOnInit(): void
-  {
+  ngOnInit(): void {
     this.loadTree();
-  }
-
-  private loadTree() {
-    this.node = null;
-    this.resourcesService.tree
-      .get(this.data.diagramComponent.parent.id)
-      .subscribe((result) => {
-        this.node = {
-          children: result.body,
-          isRoot: true,
-        };
-      });
   }
 
   popDown(): void {
@@ -88,7 +64,7 @@ export class DiagramPopupComponent implements OnInit {
 
   showFilterTree(): void {
     this.drawer.toggle();
-    //this.diagramComponent.filter(this.data.diagramComponent.parent)
+    // this.diagramComponent.filter(this.data.diagramComponent.parent)
   }
 
   onNodeChecked(node, parent, checkedList): void {
@@ -96,12 +72,12 @@ export class DiagramPopupComponent implements OnInit {
   }
 
   filterClick(): void {
-    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList)
+    this.diagramComponent.filter(this.data.diagramComponent.parent, this.filterList, this.data.diagramComponent.mode);
   }
 
   clearFilterClick(): void {
     this.loadTree();
-    this.diagramComponent.filter(this.data.diagramComponent.parent, [])
+    this.diagramComponent.filter(this.data.diagramComponent.parent, [], this.data.diagramComponent.mode);
   }
 
   toolbarClick(buttonName: string) {
@@ -115,5 +91,16 @@ export class DiagramPopupComponent implements OnInit {
       default:
         this.diagramComponent.toolbarClick(buttonName);
     }
+  }
+
+  private loadTree() {
+    this.node = null;
+    this.resourcesService.tree.get('folders', this.data.diagramComponent.parent.domainType, this.data.diagramComponent.parent.id)
+      .subscribe((result) => {
+        this.node = {
+          children: result.body,
+          isRoot: true,
+        };
+      });
   }
 }

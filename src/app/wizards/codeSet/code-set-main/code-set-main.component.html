@@ -15,24 +15,44 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="heading-container">
+<div class="heading-container" style="max-width: 800px;">
     <h4 class="marginless">New Code Set</h4>
 </div>
-<mat-vertical-stepper #stepper>
-    <mat-step *ngFor="let step of steps; let i = index">
-        <ng-template matStepLabel>{{step.title}}</ng-template>
-        <mdm-dcl-wrapper [type]="step.component" [step]="steps[i]"></mdm-dcl-wrapper>
-        <div fxFlex fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="24px">
-            <div fxFlex  fxLayout="row" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100"></div>
-            <div fxFlex fxLayout="row-reverse" fxLayout.md="column" fxLayout.sm="column" fxLayout.xs="column" fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
-                <button mat-flat-button type="button" color="primary" class="custom" *ngIf="(i+1) === steps.length" [disabled]="step.invalid || savingInProgress || model.terms.length == 0" (click)="save()">Submit Code Set</button>
-                <span *ngIf="step.isProcessComplete">  
-                    <button mat-button color="warn" class="primary" (click)="cancelWizard()">Close</button>
-                </span>
-                <button mat-button color="warn" class="custom" (click)="cancelWizard()">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </mat-step>
-</mat-vertical-stepper>
+<form class="mdm--form mdm--form-configuration">
+    <div class="mb-2 mt-2">
+        <strong>Selected folder: </strong>
+        <mdm-element-link [showTypeTitle]="true" [newWindow]="true" [element]="model.parentFolder"></mdm-element-link>
+    </div>
+
+    <span>Please enter the Code Set details:</span>
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Label</mat-label>
+            <input matInput type="text" [(ngModel)]="model.label" name="label" required>
+        </mat-form-field>
+    </div>
+
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Author</mat-label>
+            <input matInput type="text" [(ngModel)]="model.author" name="author" required>
+        </mat-form-field>
+    </div>
+
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Organisation</mat-label>
+            <input matInput type="text" [(ngModel)]="model.organisation" name="organisation" required>
+        </mat-form-field>
+    </div>
+
+    <div class="mdm--form-input">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput type="text" name="description" [(ngModel)]="model.description"></textarea>
+        </mat-form-field>
+    </div>
+    <mdm-element-classifications [readOnly]="false" (classificationsChanged)="model.classifiers = $event" [editableForm]="{visible :true}" class="mb-2"></mdm-element-classifications>
+    <mdm-multiple-terms-selector (selectedTermsChange)="model.terms = $event"></mdm-multiple-terms-selector>
+</form>
+<button mat-flat-button type="button" color="primary" class="custom" [disabled]="!(model.label.length && model.author.length && model.organisation.length && model.terms.length > 0)" (click)="save()">Submit Code Set</button>

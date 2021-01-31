@@ -52,10 +52,7 @@ SPDX-License-Identifier: Apache-2.0
                 <div class="userAccess"
                         style="margin: 10px 0px 50px 0px">
                     <mdm-share-with [mcElement]="'folder'" [mcDomainType]="'Folder'"></mdm-share-with>
-                    <div>
-                        <div style="margin-top: 10px">
-                            <mdm-user-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-user-access-new>
-                        </div>
+                    <div>    
                         <div style="margin-top: 10px">
                             <mdm-group-access-new [parent]="'folder'" [parentType]="'Folder'"></mdm-group-access-new>
                         </div>
@@ -65,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
         </mat-tab>
         <mat-tab label="History">
             <div class="full-width">
-                <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId></mdm-history>
+                <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId [domainType]="'folders'"></mdm-history>
             </div>
         </mat-tab>
     </mat-tab-group>

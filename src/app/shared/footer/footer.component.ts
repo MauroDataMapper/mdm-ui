@@ -24,13 +24,13 @@ import { SharedService } from '@mdm/services/shared.service';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  constructor(private sharedService: SharedService) {}
-
   year = new Date().getFullYear();
   showWikiLink = true;
   showYouTrackLink = true;
   wiki = this.sharedService.wiki;
   youTrack = this.sharedService.youTrack;
+
+  constructor(private sharedService: SharedService) {}
 
   ngOnInit() {
     if (

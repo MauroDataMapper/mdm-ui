@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { SharedService } from '../services/shared.service';
 
@@ -24,13 +24,12 @@ import { SharedService } from '../services/shared.service';
   templateUrl: './app-container.component.html',
   styleUrls: ['./app-container.component.sass']
 })
-export class AppContainerComponent implements OnInit {
+export class AppContainerComponent {
   constructor(
     private securityHandler: SecurityHandlerService,
     private sharedService: SharedService
   ) {}
 
-  ngOnInit() {}
 
   isLoggedOn = () => {
     return this.securityHandler.isLoggedIn();
@@ -42,5 +41,5 @@ export class AppContainerComponent implements OnInit {
 
   logout = () => {
     return this.sharedService.logout();
-  }
+  };
 }

@@ -16,9 +16,15 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ErrorComponent } from './error.component';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ErrorComponent', () => {
   let component: ErrorComponent;
@@ -26,7 +32,18 @@ describe('ErrorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
+      imports: [
+        NgxSkeletonLoaderModule,
+        MatProgressSpinnerModule,
+        MatSlideToggleModule,
+        NgxJsonViewerModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot(),
+        HttpClientTestingModule
+      ],
+      providers: [
+        { provide: MdmResourcesService, useValue: {} }
+      ],
       declarations: [ ErrorComponent ]
     })
     .compileComponents();

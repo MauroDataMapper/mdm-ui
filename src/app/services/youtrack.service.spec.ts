@@ -18,23 +18,30 @@ SPDX-License-Identifier: Apache-2.0
 import {TestBed} from '@angular/core/testing';
 
 import { YoutrackService } from './youtrack.service';
-import { HttpClientModule } from '@angular/common/http';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {SharedService} from '@mdm/services/shared.service';
-import {SecurityHandlerService} from '@mdm/services/handlers/security-handler.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('YoutrackService', () => {
   let service: YoutrackService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule,
-                UIRouterModule.forRoot({ useHash: true }),
-                ToastrModule.forRoot()],
-      providers: [ElementTypesService]});
+      imports: [
+        HttpClientTestingModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {}
+        },
+        ElementTypesService
+      ]
+    });
     service = TestBed.inject(YoutrackService);
   });
 

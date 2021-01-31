@@ -625,7 +625,9 @@ small.simpleView.elementType {
 mat-tab-label {
   min-width: 50px !important;
 }
-
+.mat-tab-label, .mat-tab-link {
+  color: rgba(0,0,0,.97);
+}
 
 .mat-menu-panel {
   min-height: 32px !important;

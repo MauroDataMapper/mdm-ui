@@ -24,7 +24,6 @@ import { DataElementBulkEditDialogService } from '@mdm/services/data-element-bul
   styleUrls: ['./data-type-list-buttons.component.sass']
 })
 export class DataTypeListButtonsComponent implements OnInit {
-  constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
   @Output() deleteRows = new EventEmitter<any>();
   @Input() add: any;
@@ -41,6 +40,8 @@ export class DataTypeListButtonsComponent implements OnInit {
   textLocation: string;
   deleteWarning: string;
   message: boolean;
+
+  constructor(private dataElementBulkEditDialogService: DataElementBulkEditDialogService) { }
 
 
   ngOnInit() {
@@ -73,5 +74,5 @@ export class DataTypeListButtonsComponent implements OnInit {
 
   cancelDeleteClicked = () => {
     this.deletePending = false;
-  }
+  };
 }

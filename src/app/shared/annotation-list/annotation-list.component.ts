@@ -24,6 +24,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -31,14 +32,11 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
   styleUrls: ['./annotation-list.component.sass']
 })
 export class AnnotationListComponent implements AfterViewInit {
-  constructor(
-    private securityHandler: SecurityHandlerService,
-    private resources: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private changeRef: ChangeDetectorRef
-  ) {}
-
   @Input() parent: any;
+  @Input() domainType: any;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @ViewChild('childEditor', { static: false })
 
   access: any;
   currentUser: any;
@@ -46,63 +44,56 @@ export class AnnotationListComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   childEditor: MarkdownTextAreaComponent;
+  reloadEvent = new EventEmitter<string>();
+  records: any[];
+  canAddAnnotation = false;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  constructor(
+    private securityHandler: SecurityHandlerService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private changeRef: ChangeDetectorRef,
+    private editingService: EditingService) { }
 
-  @ViewChild('childEditor', { static: false })
+
   set content(content: MarkdownTextAreaComponent) {
     this.childEditor = content;
   }
-
-  reloadEvent = new EventEmitter<string>();
-
-  records: any[];
 
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
     this.access = this.securityHandler.elementAccess(this.parent);
+    this.canAddAnnotation = this.access.canAddAnnotation;
     this.changeRef.detectChanges();
     this.currentUser = this.securityHandler.getCurrentUser();
 
     merge(this.sort.sortChange, this.paginator.page, this.reloadEvent).pipe(startWith({}), switchMap(() => {
-          this.isLoadingResults = true;
-          this.changeRef.detectChanges();
+      this.isLoadingResults = true;
+      this.changeRef.detectChanges();
 
-          return this.annotationFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction
-          );
-        }), map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          this.changeRef.detectChanges();
-          return data.body.items;
-        }), catchError(() => {
-          this.isLoadingResults = false;
-          // this.changeRef.detectChanges();
-          return [];
-        })
-      ).subscribe(data => {
-        this.records = data;
-      });
+      return this.annotationFetch();
+    }), map((data: any) => {
+      this.totalItemCount = data.body.count;
+      this.isLoadingResults = false;
+      this.changeRef.detectChanges();
+      return data.body.items;
+    }), catchError(() => {
+      this.isLoadingResults = false;
+      return [];
+    })
+    ).subscribe(data => {
+      this.records = data;
+    });
 
     this.changeRef.detectChanges();
   }
 
-  annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
-    return this.resources.facets.get(this.parent.id, 'annotations', options);
+  // annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
+  // const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
+  annotationFetch() {
+    return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
   }
 
   add = () => {
@@ -125,27 +116,38 @@ export class AnnotationListComponent implements AfterViewInit {
       isNew: true
     };
     this.records = [].concat([newRecord]).concat(this.records);
+
+    this.editingService.setFromCollection(this.records);
   };
 
-  cancelEdit = (record, index) => {
-    if (record.isNew) {
-      this.records.splice(index, 1);
-    }
+  cancelEdit(record, index) {
+    this.editingService.confirmCancelAsync().subscribe(confirm => {
+      if (!confirm) {
+        return;
+      }
+
+      if (record.isNew) {
+        this.records.splice(index, 1);
+        this.records = [].concat(this.records);
+      }
+
+      this.editingService.setFromCollection(this.records);
+    });
   };
 
-  saveParent = (record, index) => {
+  saveParent = (record) => {
     const resource = {
       label: record.edit.label,
       description: record.edit.description
     };
-    this.resources.facets.post(this.parent.id, 'annotations', { resource }).subscribe(() => {
-          this.messageHandler.showSuccess('Comment saved successfully.');
-          this.reloadEvent.emit();
-        },
-        error => {
-          this.messageHandler.showError('There was a problem adding the comment.', error);
-        }
-      );
+    this.resources.catalogueItem.saveAnnotations(this.domainType, this.parent.id, resource).subscribe(() => {
+      record.inEdit = false;
+      this.editingService.setFromCollection(this.records);
+      this.messageHandler.showSuccess('Comment saved successfully.');
+      this.reloadEvent.emit();
+    }, error => {
+      this.messageHandler.showError('There was a problem adding the comment.', error);
+    });
   };
 
   addChild = annotation => {
@@ -153,20 +155,19 @@ export class AnnotationListComponent implements AfterViewInit {
       description: annotation.newChildText
     };
 
-    this.resources.facets.post(this.parent.id, 'annotations/' + annotation.id + '/annotations', {resource}).toPromise().then(response => {
-          annotation.childAnnotations = annotation.childAnnotations || [];
-          annotation.childAnnotations.push(response.body);
-          annotation.newChildText = '';
-          this.messageHandler.showSuccess('Comment saved successfully.');
-        },
-        error => {
-          this.messageHandler.showError('There was a problem saving the comment.', error);
-          // element not found
-          if (error.status === 400) {
-            // viewError
-          }
-        }
-      );
+    this.resources.catalogueItem.saveAnnotationChildren(this.domainType, this.parent.id, annotation.id, resource).toPromise().then(response => {
+      annotation.childAnnotations = annotation.childAnnotations || [];
+      annotation.childAnnotations.push(response.body);
+      annotation.newChildText = '';
+      this.messageHandler.showSuccess('Comment saved successfully.');
+    }, error => {
+      this.messageHandler.showError('There was a problem saving the comment.', error);
+      // element not found
+      if (error.status === 400) {
+        // viewError
+      }
+    }
+    );
   };
 
   showChildren = annotation => {
@@ -176,5 +177,5 @@ export class AnnotationListComponent implements AfterViewInit {
       annotation.newChildText = '';
       annotation.show = true;
     }
-  }
+  };
 }

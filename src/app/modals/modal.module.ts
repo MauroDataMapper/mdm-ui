@@ -30,6 +30,15 @@ import { ForgotPasswordModalComponent } from './forgot-password-modal/forgot-pas
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
 import { ModalService } from './modal.service';
 import { InputModalComponent } from './input-modal/input-modal.component';
+import { NewFolderModalComponent } from './new-folder-modal/new-folder-modal.component';
+import { MaterialModule } from '@mdm/modules/material/material.module';
+import { FinaliseModalComponent } from './finalise-modal/finalise-modal.component';
+import { CheckInModalComponent } from './check-in-modal/check-in-modal.component';
+import { ResolveMergeConflictModalComponent } from './resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
+import { SharedModule } from '@mdm/modules/shared/shared.module';
+import { AddRuleRepresentationModalComponent } from './add-rule-representation-modal/add-rule-representation-modal.component';
+import { AddRuleModalComponent } from './add-rule-modal/add-rule-modal.component';
+import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
 
 @NgModule({
   imports: [
@@ -40,14 +49,23 @@ import { InputModalComponent } from './input-modal/input-modal.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatPasswordStrengthModule
+    MatPasswordStrengthModule,
+    MaterialModule,
+    SharedModule
   ],
   declarations: [
     RegisterModalComponent,
     LoginModalComponent,
     ForgotPasswordModalComponent,
     ConfirmationModalComponent,
-    InputModalComponent
+    InputModalComponent,
+    NewFolderModalComponent,
+    FinaliseModalComponent,
+    CheckInModalComponent,
+    ResolveMergeConflictModalComponent,
+    AddRuleRepresentationModalComponent,
+    AddRuleModalComponent,
+    ApiKeysModalComponent
   ],
   providers: [
     ModalService

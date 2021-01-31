@@ -16,12 +16,33 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { TestBed } from '@angular/core/testing';
-
 import { ExportHandlerService } from './export-handler.service';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('ExportHandlerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({imports:[TestModule]}));
+  beforeEach(() => TestBed.configureTestingModule({
+    imports: [
+      NgxSkeletonLoaderModule,
+      MatTooltipModule,
+      UIRouterModule.forRoot({ useHash: true }),
+      ToastrModule.forRoot()
+    ],
+    providers: [
+      {
+        provide: MdmResourcesService, useValue: {}
+      }
+    ],
+    declarations: [
+      ProfilePictureComponent,
+      ByteArrayToBase64Pipe
+    ]
+  }));
 
   it('should be created', () => {
     const service: ExportHandlerService = TestBed.inject(ExportHandlerService);

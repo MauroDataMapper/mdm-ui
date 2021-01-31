@@ -28,9 +28,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/jodit/build/jodit.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jodit/build/jodit.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -52,7 +55,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -80,21 +83,7 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": []
-          }
+          "builder": "@angular-builders/jest:run"
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",

@@ -26,8 +26,8 @@ SPDX-License-Identifier: Apache-2.0
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-            <div *ngIf="parent.editable && !parent.finalised" class="mt-1">
-                <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="dataTypeBulkActions" *ngIf="bulkActionsVisibile > 0">
+            <div *ngIf="isEditable && !parent.finalised" class="mt-1">
+                <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="dataTypeBulkActions" *ngIf="bulkActionsVisible > 0">
                   Bulk actions
                   <i class="fas fa-caret-down fa-xs" style="margin-left: 2px;"></i>
               </button>
@@ -45,7 +45,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
     </div>
 </div>
-<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
+<div class="table-responsive">
     <table mat-table matSort [dataSource]="type === 'static'? dataSource : records" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="checkbox">
             <th mat-header-cell *matHeaderCellDef style="cursor:pointer;width: 50px;text-align: center;">
@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0
             </th>
             <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
                 <div>
-                    <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}"></mdm-element-link>
+                    <mdm-element-link [element]="record" [parentDataModel]="{id:record.model}"></mdm-element-link>
                 </div>
             </td>
         </ng-container>
@@ -96,15 +96,20 @@ SPDX-License-Identifier: Apache-2.0
                 <span [hidden]="!hideFilters">Type</span>
                 <div [hidden]="hideFilters">
                     <mat-label>Type</mat-label>
-                    <mat-select [(value)]="domainType" name="domainType" [(ngModel)]="domainType" (ngModelChange)="applyMatSelectFilter($event, 'domainType')">
+                    <mat-select [(value)]="domainType" name="domainType" [(ngModel)]="domainType" (ngModelChange)="applyMatSelectFilter()">
                         <mat-option [value]="dt" *ngFor="let dt of allDataTypes">{{dt.displayLabel}}</mat-option>
                     </mat-select>
                 </div>
             </th>
             <td mat-cell *matCellDef="let record">
-                <div>
-                    {{allDataTypesMap[record.domainType]["displayLabel"]}}
-                </div>
+
+                <div *ngIf='allDataTypesMap[record?.domainType]?.displayLabel'>
+                  {{ allDataTypesMap[record?.domainType]["displayLabel"] }}
+                 </div>
+
+                 <div *ngIf='!allDataTypesMap[record?.domainType]?.displayLabel'>
+                  {{ allDataTypesMap[record.modelResourceDomainType]["displayLabel"] }}
+                 </div>
                 <div class="full-width">
                     <mdm-element-data-type [elementDataType]="record" [hideName]="true" [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
                 </div>
@@ -117,10 +122,10 @@ SPDX-License-Identifier: Apache-2.0
                 <i class="fas fa-ellipsis-v"></i>
               </button>
               <mat-menu #dataTypeRowActions="matMenu" yPosition="below" xPosition="before" class="mdm--mat-menu--actions">
-                  <button mat-menu-item color="accent" type="button" *ngIf="parent?.editable" (click)="openEdit(record)">
+                  <button mat-menu-item color="accent" type="button" *ngIf="isEditable" (click)="openEdit(record)">
                       <i class="fas fa-pencil-alt"></i> Edit
                   </button>
-                  <mat-divider *ngIf="parent?.editable"></mat-divider>
+                  <mat-divider *ngIf="isEditable"></mat-divider>
                   <button mat-menu-item color="warn" type="button" (click)="toggleCheckbox(record)" class="warning">
                       <i class="far fa-trash-alt"></i> Delete
                   </button>
@@ -137,18 +142,18 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="isLoadingResults">
     <table class="mdm--mat-table mdm--skeleton-table">
       <tr>
-        <th style="width: 3%;" *ngIf="parent.editable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
+        <th style="width: 3%;" *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'24px'}"></ngx-skeleton-loader></th>
         <th style="width: 25%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
         <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
         <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-        <td style="width: 10%;" *ngIf="parent.editable && !parent.finalised"></td>
+        <td style="width: 10%;" *ngIf="isEditable && !parent.finalised"></td>
     </tr>
     <tr>
-        <td *ngIf="parent.editable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'100%'}"></ngx-skeleton-loader></td>
+        <td *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width':'100%'}"></ngx-skeleton-loader></td>
         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
         <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-        <td style="display: flex; justify-content: flex-end" *ngIf="parent.editable && !parent.finalised"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '10px'}"></ngx-skeleton-loader></td>
+        <td style="display: flex; justify-content: flex-end" *ngIf="isEditable && !parent.finalised"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '10px'}"></ngx-skeleton-loader></td>
       </tr>
     </table>
 </div>

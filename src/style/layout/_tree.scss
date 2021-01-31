@@ -25,6 +25,8 @@ mat-tree-node.mat-tree-node {
 
   .mat-tree-node-content {
     display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .mat-tree-node-content mat-icon.mat-icon {
@@ -69,9 +71,18 @@ mat-tree-node.mat-tree-node {
       font-size: 15px;
     }
     .mat-icon {
-      line-height: 26px;
+      // line-height: 26px;
+      line-height: 20px;
     }
   }
+
+}
+.branch-name {
+  padding: 0px 6px;
+  color: #4F575F !important;
+  border: 1px solid #b7d4ef;
+  background-color: #eaf5ff;
+  border-radius: 6px;
 }
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
@@ -130,7 +141,10 @@ div.mat-tab-label {
   height: 38px;
 }
 .table td, .table th, tr td.mat-cell, tr td.mat-footer-cell, tr th.mat-header-cell {
-  padding: .5rem .75rem;
+  padding: .45rem .75rem;
+}
+tr th.mat-header-cell {
+   padding: .3rem .75rem;
 }
 
 /* Styles for the active tab label */
@@ -151,6 +165,7 @@ div.mat-tab-label {
   background-color:#FFF;
   width:100%;
   z-index: 900;
+  min-height: 200px;
 }
 
 
@@ -254,7 +269,7 @@ ul.favourites li:focus {
   color: #076528;
   border: 1px solid rgba(10, 133, 53, 0.5);
   border-radius: 5px;
-  padding: 4px;
+  padding: 1px 6px;
   display: inline-block;
   vertical-align: middle;
 }

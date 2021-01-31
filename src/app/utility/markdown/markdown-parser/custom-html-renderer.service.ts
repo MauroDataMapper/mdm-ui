@@ -30,26 +30,23 @@ export class CustomHtmlRendererService extends marked.Renderer {
   }
 
   link = (href: string, title: any, text: string) => {
-    if (href && href.indexOf('MC|') === 0) {
-      const link = this.linkCreatorService.createLink(href, title, text);
-      return `<a href='${link}'>${text}</a>`;
+    if (href) {
+      const createdLink = this.linkCreatorService.createLink(href, title, text);
+
+      return `<a href='${createdLink}'>${text}</a>`;
     }
     // return the actual format if it does not star with MC
     return `<a href='${href}' target="_blank">${text}</a>`;
   };
 
   // just reduce header tags for one level
-  heading = (text, level, rawtext) => {
+  heading = (text, level) => {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     const l = level + 1;
     return `<h${l}>${text}</h${l}>`;
   };
 
   table = (header, body) => {
-    let table = `<table class='table table-bordered'>`;
-    table += header + body;
-    table += `</table>`;
-    return table;
+    return `<table class='table table-bordered'> ${header} ${body}</table>`;
   };
-
-
 }

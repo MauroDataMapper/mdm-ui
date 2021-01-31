@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -25,10 +25,11 @@ import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
+import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -38,13 +39,32 @@ import { Title } from '@angular/platform-browser';
 export class TerminologyDetailsComponent implements OnInit {
   @Input() mcTerminology: any;
   @Input() hideEditButton: boolean;
-
   @Output() afterSave = new EventEmitter<any>();
+  @Output() openEditFormChanged = new EventEmitter<any>();
+  @ViewChild('aLink', { static: false }) aLink: ElementRef;
 
   openEditFormVal: any;
-  @Output() openEditFormChanged = new EventEmitter<any>();
-  @Input()
-  get openEditForm() {
+  securitySection = false;
+  processing = false;
+  exportError = null;
+  exportList = [];
+  isAdminUser = this.sharedService.isAdminUser();
+  isLoggedIn = this.securityHandler.isLoggedIn();
+  exportedFileIsReady = false;
+  addedToFavourite = false;
+  deleteInProgress = false;
+  editableForm: EditableDataModel;
+  showEdit: boolean;
+  showPermission: boolean;
+  showNewVersion: boolean;
+  showFinalise: boolean;
+  showDelete: boolean;
+  showSoftDelete: boolean;
+  showPermDelete: boolean;
+  errorMessage: string;
+  exporting: boolean;
+
+  @Input() get openEditForm() {
     return this.openEditFormVal;
   }
   set openEditForm(val) {
@@ -63,26 +83,9 @@ export class TerminologyDetailsComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
     private favouriteHandler: FavouriteHandlerService,
-    private title: Title
-  ) {}
-
-  securitySection = false;
-  processing = false;
-  exportError = null;
-  exportList = [];
-  isAdminUser = this.sharedService.isAdminUser();
-  isLoggedIn = this.securityHandler.isLoggedIn();
-  exportedFileIsReady = false;
-  addedToFavourite = false;
-  deleteInProgress = false;
-  editableForm: EditableDataModel;
-  showEdit: boolean;
-  showPermission: boolean;
-  showNewVersion: boolean;
-  showFinalise: boolean;
-  showDelete: boolean;
-  errorMessage: string;
-  exporting: boolean;
+    private title: Title,
+    private renderer: Renderer2,
+    private editingService: EditingService) {}
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -94,13 +97,16 @@ export class TerminologyDetailsComponent implements OnInit {
     this.showPermission = access.showPermission;
     this.showNewVersion = access.showNewVersion;
     this.showFinalise = access.showFinalise;
-    this.showDelete = access.showDelete;
+    this.showDelete = access.showSoftDelete || access.showPermanentDelete;
+    this.showSoftDelete = access.showSoftDelete;
+    this.showPermDelete = access.showPermanentDelete;
 
     this.editableForm.show = () => {
       this.editableForm.visible = true;
     };
 
     this.editableForm.cancel = () => {
+      this.editingService.stop();
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
@@ -139,7 +145,7 @@ export class TerminologyDetailsComponent implements OnInit {
       })
     };
 
-    this.resources.terminology.put(resource.id, null, { resource }).subscribe(res => {
+    this.resources.terminology.update(resource.id, resource).subscribe(res => {
         const result = res.body;
 
         if (this.afterSave) {
@@ -147,6 +153,8 @@ export class TerminologyDetailsComponent implements OnInit {
         }
         this.mcTerminology.aliases = Object.assign({}, result.aliases || []);
         this.mcTerminology.editAliases = Object.assign({}, this.mcTerminology.aliases);
+
+        this.editingService.stop();
 
         this.messageHandler.showSuccess('Terminology updated successfully.');
         this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -160,100 +168,93 @@ export class TerminologyDetailsComponent implements OnInit {
     this.securitySection = !this.securitySection;
   };
 
-  export = exporter => {
+  export(exporter) {
     this.exportError = null;
     this.processing = true;
     this.exportedFileIsReady = false;
+    this.exportHandler.exportDataModel([this.mcTerminology], exporter, 'terminologies').subscribe(result => {
+      if (result != null) {
+        this.exportedFileIsReady = true;
+        const label = [this.mcTerminology].length === 1 ? [this.mcTerminology][0].label : 'data_models';
+        const fileName = this.exportHandler.createFileName(label, exporter);
+        const file = new Blob([result.body], { type: exporter.fileType });
+        const link = this.exportHandler.createBlobLink(file, fileName);
 
-    this.exportHandler.exportDataModel([this.mcTerminology], exporter).subscribe(res => {
-          const result = res.body;
-          this.exportedFileIsReady = true;
-
-          this.exportHandler.createBlobLink(result.fileBlob, result.fileName);
-          this.processing = false;
-        }, () => {
-          this.processing = false;
-          this.exportError = 'An error occurred when processing the request.';
-        }
-      );
-  };
+        this.processing = false;
+        this.renderer.appendChild(this.aLink.nativeElement, link);
+      } else {
+        this.processing = false;
+        this.messageHandler.showError('There was a problem exporting this Terminology.', '');
+      }
+    }, error => {
+      this.processing = false;
+      this.messageHandler.showError('There was a problem exporting this Terminology.', error);
+    });
+  }
 
   resetExportError = () => {
     this.exportError = null;
   };
 
-  delete = (permanent?) => {
-    if (!this.sharedService.isAdminUser()) {
+  delete = (permanent) => {
+    if (!this.showDelete) {
       return;
     }
-    const queryString = permanent ? 'permanent=true' : null;
     this.deleteInProgress = true;
-    this.resources.terminology.delete(this.mcTerminology.id, null, queryString).subscribe(() => {
-          if (permanent) {
-            this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
-          } else {
-            this.stateHandler.reload();
-          }
-          this.broadcastSvc.broadcast('$elementDeleted', () => {
-           // this.mcTerminology, permanent;  TODO
-          });
-        }, error => {
-          this.deleteInProgress = false;
-          this.messageHandler.showError('There was a problem deleting the Terminology.', error);
-        });
+    this.resources.terminology.remove(this.mcTerminology.id, { permanent }).subscribe(() => {
+        if (permanent) {
+          this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);
+        } else {
+          this.stateHandler.reload();
+        }
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        this.broadcastSvc.broadcast('$elementDeleted');
+      }, error => {
+        this.deleteInProgress = false;
+        this.messageHandler.showError('There was a problem deleting the Terminology.', error);
+      });
   };
 
   askForSoftDelete = () => {
-    if (!this.sharedService.isAdminUser()) {
+    if (!this.showSoftDelete) {
       return;
     }
-    this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openConfirmationAsync({
         data: {
-          title: `Are you sure you want to delete this Terminology?`,
+          title: 'Are you sure you want to delete this Terminology?',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
           message: `<p class="marginless">This Terminology will be marked as deleted and will not be viewable by users </p>
                     <p class="marginless">except Administrators.</p>`
         }
-    }).afterClosed().subscribe(result => {
-      if (result != null && result.status === 'ok') {
-        this.delete();
-      } else {
-        return;
-      }
-    });
+      })
+      .subscribe(() => this.delete(false));
   };
 
   askForPermanentDelete = () => {
-    if (!this.sharedService.isAdminUser()) {
+    if (!this.showPermDelete) {
       return;
     }
-    this.dialog.open(ConfirmationModalComponent, {
+
+    this.dialog
+      .openDoubleConfirmationAsync({
         data: {
           title: 'Permanent deletion',
           okBtnTitle: 'Yes, delete',
           btnType: 'warn',
-          message: `Are you sure you want to <span class='warning'>permanently</span> delete this Terminology?`
+          message: 'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Terminology?'
         }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
+      }, {
+        data: {
+          title: 'Confirm permanent deletion',
+          okBtnTitle: 'Confirm deletion',
+          btnType: 'warn',
+          message: '<strong>Note: </strong>All its \'Terms\' will be deleted <span class=\'warning\'>permanently</span>.'
         }
-        this.dialog.open(ConfirmationModalComponent, {
-            data: {
-              title: `Confirm permanent deletion`,
-              okBtnTitle: 'Confirm deletion',
-              btnType: 'warn',
-              message: `<strong>Note: </strong>All its 'Terms' will be deleted <span class='warning'>permanently</span>.`
-            }
-          }).afterClosed().subscribe(result2 => {
-            if (result2 != null && result.status === 'ok') {
-              this.delete(true);
-            } else {
-              return;
-            }
-          });
-      });
+      })
+      .subscribe(() => this.delete(true));
   };
 
   openEditClicked = formName => {
@@ -267,28 +268,37 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   finalise = () => {
-    this.dialog.open(ConfirmationModalComponent, {
-        data: {
-          title: 'Are you sure you want to finalise this Terminology?',
-          okBtnTitle: 'Finalise Terminology',
-          btnType: 'accent',
-          message: `<p class='marginless'>Once you finalise a Terminology, you can not edit it anymore!</p>
-                    <p class='marginless'>but you can create new version of it.</p>`
-        }
-      }).afterClosed().subscribe(result => {
-        if (result?.status !== 'ok') {
-          return;
-        }
-        this.processing = true;
-        this.resources.terminology.put(this.mcTerminology.id, 'finalise', null).subscribe(() => {
+    this.resources.terminology.latestModelVersion(this.mcTerminology.id).subscribe(response => {
+      this.dialog.open(FinaliseModalComponent, {
+          data: {
+            title: 'Finalise Terminology',
+            modelVersion: response.body.modelVersion,
+            okBtnTitle: 'Finalise Terminology',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Terminology</p>
+                      <p>to be finalised with: </p>`
+          }
+        }).afterClosed().subscribe(result => {
+          if (result?.status !== 'ok') {
+            return;
+          }
+          this.processing = true;
+          const data = {};
+          if (result.data.versionList !== 'Custom') {
+            data['versionChangeType'] = result.data.versionList;
+          } else {
+            data['version'] = result.data.versionNumber;
+          }
+
+          this.resources.terminology.finalise(this.mcTerminology.id, data).subscribe(() => {
               this.processing = false;
               this.messageHandler.showSuccess('Terminology finalised successfully.');
               this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
             }, error => {
               this.processing = false;
               this.messageHandler.showError('There was a problem finalising the Terminology.', error);
-            }
-          );
+          });
+        });
       });
   };
 
@@ -298,16 +308,16 @@ export class TerminologyDetailsComponent implements OnInit {
 
   loadExporterList = () => {
     this.exportList = [];
-    this.securityHandler.isValidSession().subscribe(result => {
+    this.securityHandler.isAuthenticated().subscribe(result => {
       if (result.body === false) {
         return;
       }
-      this.resources.public.dataModelExporterPlugins().subscribe(result2 => {
-          this.exportList = result2;
-        }, error => {
-          this.messageHandler.showError('There was a problem loading exporters list.', error);
-        }
-      );
+      this.resources.terminology.exporters().subscribe(result2 => {
+        this.exportList = result2.body;
+      },
+      error => {
+        this.messageHandler.showError('There was a problem loading exporters list.', error);
+      });
     });
   };
 
@@ -318,10 +328,11 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   loadHelp = () => {
-    this.helpDialogueHandler.open('Terminology_details', {});
+    this.helpDialogueHandler.open('Terminology_details');
   };
 
   showForm() {
+    this.editingService.start();
     this.editableForm.show();
   }
 }

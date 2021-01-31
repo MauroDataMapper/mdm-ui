@@ -29,6 +29,7 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { GridService } from '@mdm/services/grid.service';
 
 @Component({
   selector: 'mdm-modules',
@@ -51,8 +52,9 @@ export class ModulesComponent implements OnInit, AfterViewInit {
   constructor(
     private messageHandler: MessageHandlerService,
     private resourcesService: MdmResourcesService,
-    private shared: SharedService
-  ) {}
+    private shared: SharedService,
+    private gridService: GridService
+  ) { }
 
   ngOnInit() {
     this.appVersion = this.shared.appVersion;
@@ -67,30 +69,25 @@ export class ModulesComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  applyFilter = () => {};
+  applyFilter = () => { };
 
   modulesFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-    const options = {
-      pageSize,
-      pageIndex,
-      filters,
-      sortBy: 'name',
-      sortType: 'asc'
-    };
 
-    this.resourcesService.admin.get('modules', options).subscribe(resp => {
-        this.records = resp.body;
-        this.records.push({
-          id: '0',
-          name: 'UI',
-          version: this.appVersion,
-          isUI: true
-        });
-        this.totalItemCount = this.records.length;
-        this.dataSource.data = this.records;
-      }, err => {
-        this.messageHandler.showError('There was a problem loading the modules.', err);
-      }
+    const options = this.gridService.constructOptions(pageSize, pageIndex, 'name', 'asc', filters);
+
+    this.resourcesService.admin.modules(options).subscribe(resp => {
+      this.records = resp.body;
+      this.records.push({
+        id: '0',
+        name: 'UI',
+        version: this.appVersion,
+        isUI: true
+      });
+      this.totalItemCount = this.records.length;
+      this.dataSource.data = this.records;
+    }, err => {
+      this.messageHandler.showError('There was a problem loading the modules.', err);
+    }
     );
   }
 }

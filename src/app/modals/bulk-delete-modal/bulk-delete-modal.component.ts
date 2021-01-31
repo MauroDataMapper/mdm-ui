@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectorRef, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -27,14 +27,12 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
   templateUrl: './bulk-delete-modal.component.html',
   styleUrls: ['./bulk-delete-modal.component.scss'],
 })
-export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
+export class BulkDeleteModalComponent implements AfterViewInit {
   parentDataModel: any;
   parentDataClass: any;
-
   records: any[] = [];
   successCount = 0;
   failCount = 0;
-
   processing = false;
   isProcessComplete = false;
   finalResult = {};
@@ -49,19 +47,16 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef,
   ) { }
 
-  ngOnInit(): void { }
-
   ngAfterViewInit() {
     this.parentDataModel = this.data.parentDataModel;
     this.parentDataClass = this.data.parentDataClass;
-
     this.getData();
   }
 
   getData = () => {
     this.data.dataElementIdLst.forEach((item: any) => {
       if (item.domainType === 'DataElement') {
-        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+        this.resources.dataElement.get(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -69,7 +64,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
           this.messageHandler.showError('There was a problem getting the Data Elements.', err);
         });
       } else if (item.domainType === 'DataClass') {
-        this.resources.dataClass.get(this.parentDataModel.id, this.parentDataClass.id, item.id, null, null).subscribe((result: { body: any }) => {
+        this.resources.dataClass.getChildDataClass(this.parentDataModel.id, this.parentDataClass.id, item.id).subscribe((result: { body: any }) => {
           if (result !== undefined) {
             this.records.push(result.body);
           }
@@ -86,7 +81,7 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
       }
     });
     this.changeRef.detectChanges();
-  }
+  };
 
   closeAndRefresh = () => {
     this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -98,37 +93,37 @@ export class BulkDeleteModalComponent implements OnInit, AfterViewInit {
     this.isProcessComplete = false;
 
     let promise = Promise.resolve();
-    this.records.forEach((item: any) => { promise = promise.then(() => {
-          this.successCount++;
-          this.finalResult[item.id] = {
-            result: `Success`,
-            hasError: false
-          };
-          if (item.domainType === 'DataClass') {
-            return this.resources.dataClass.delete(item.dataModel, item.parentDataClass, item.id).toPromise();
-          }
-          if (item.domainType === 'DataElement') {
-            return this.resources.dataElement.delete(item.dataModel, item.dataClass, item.id).toPromise();
-          }
-          if (item.domainType === 'DataType') {
-            return this.resources.dataType.delete(item.dataModel, item.id).toPromise();
-          }
-        }).catch(() => {
-          this.failCount++;
-          this.finalResult[item.id] = {
-            result: `Failed`,
-            hasError: true
-          };
-        });
+    this.records.forEach((item: any) => {
+      promise = promise.then(() => {
+        this.successCount++;
+        this.finalResult[item.id] = {
+          result: 'Success',
+          hasError: false
+        };
+        if (item.domainType === 'DataClass') {
+          return this.resources.dataClass.removeChildDataClass(item.model, item.parentDataClass, item.id).toPromise();
+        }
+        if (item.domainType === 'DataElement') {
+          return this.resources.dataElement.remove(item.model, item.dataClass, item.id).toPromise();
+        }
+        if (item.domainType === 'DataType') {
+          return this.resources.dataType.remove(item.dataModel, item.id).toPromise();
+        }
+      }).catch(() => {
+        this.failCount++;
+        this.finalResult[item.id] = {
+          result: 'Failed',
+          hasError: true
+        };
       });
+    });
 
     promise.then(() => {
-        this.processing = false;
-        this.isProcessComplete = true;
-      }).catch(() => {
-          this.processing = false;
-          this.isProcessComplete = true;
-          // this.dialogRef.close();
-      });
+      this.processing = false;
+      this.isProcessComplete = true;
+    }).catch(() => {
+      this.processing = false;
+      this.isProcessComplete = true;
+    });
   };
 }

@@ -17,14 +17,14 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
     <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-        <div fxFlex  fxLayout="row" fxFlex="80" fxFlex.md="80" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="start center">
+        <div fxFlex  fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="65" fxFlex.xs="100" fxLayoutAlign="start center">
             <h4 class="marginless">
                 Terms
                 <span class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-                <i class="fas fa-filter themeColor" (click)="filterClick()" style="cursor: pointer;margin-left: 2px;"></i>
+                <i class="fas fa-filter" (click)="filterClick()"></i>
             </h4>
         </div>
-        <div fxFlex fxLayout="row" fxFlex="20" fxFlex.md="20" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
+        <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="35" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
             <div *ngIf="(access && access.showEdit) || clientSide">
                 <button mat-flat-button color="primary" (click)="toggleAddTermsSection()" *ngIf="!showAddTerm">
                     <i class="fas fa-plus"></i>
@@ -54,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0
             </th>
             <td mat-cell *matCellDef="let record" style="width: 30%;text-align: left;word-wrap: break-word;">
                 <mdm-element-link
-                    [element]="{id:record.terminology, label:record.terminologyLabel, domainType:'Terminology'}">
+                    [element]="{id:record.breadcrumbs[0].id, label:record.breadcrumbs[0].label, domainType:'Terminology'}">
                 </mdm-element-link>
             </td>
         </ng-container>
@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </th>
             <td mat-cell *matCellDef="let record" style="width: 25%;text-align: left;word-wrap: break-word;">
-                <mdm-element-link [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClass}" [element]="record"></mdm-element-link>
+                <mdm-element-link [parentDataModel]="{id:record.model}" [parentDataClass]="{id:record.dataClass}" [element]="record"></mdm-element-link>
             </td>
         </ng-container>
         <ng-container matColumnDef="definition">
@@ -88,7 +88,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
 
                 <div>
-                    <mdm-element-alias [aliases]="record.aliases"></mdm-element-alias>
+                    <mdm-element-alias [readOnly]="true" [aliases]="record.aliases"></mdm-element-alias>
                 </div>
             </td>
         </ng-container>
@@ -104,10 +104,24 @@ SPDX-License-Identifier: Apache-2.0
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
-<mat-card *ngIf="isLoadingResults" class="mdm--progress-spinner">
-    <mat-progress-spinner color="primary" mode="indeterminate"> </mat-progress-spinner>
-</mat-card>
 
-<div class="mdm--mat-pagination">
-    <mdm-paginator  [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
+<div class="item" *ngIf="isLoadingResults">
+  <table class="mdm--mat-table mdm--skeleton-table">
+    <tr>
+      <th style="width: 30%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
+      <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
+      <th style="width: 35%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+      <th style="width: 10%;" *ngIf="access && access.showEdit"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
+  </tr>
+  <tr>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <td style="display: flex; justify-content: flex-end" *ngIf="access && access.showEdit"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '10px'}"></ngx-skeleton-loader></td>
+    </tr>
+  </table>
+</div>
+
+<div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
+    <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>
 </div>

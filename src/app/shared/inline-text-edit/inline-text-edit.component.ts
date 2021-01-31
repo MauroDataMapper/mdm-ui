@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, Output,  EventEmitter, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -25,6 +25,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       useExisting: forwardRef(() => InlineTextEditComponent),
       multi: true
     }
@@ -34,13 +35,13 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   @Output() editableFormChanged = new EventEmitter<any>();
 
   @Input() inEditMode: boolean;
+  @Input() readOnly = true;
   @Input() isRequired: boolean;
   @Input() styleCss: any;
   @Input() name: any;
-
-  constructor() {}
-
   val: any;
+  constructor() { }
+
 
   writeValue(obj: any): void {
     this.ngValue = obj;
@@ -49,8 +50,10 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   registerOnChange(fn: any): void {
     this.propChange = fn;
   }
-  registerOnTouched(fn: any): void {}
-  setDisabledState?(isDisabled: boolean): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  registerOnTouched(fn: any): void { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setDisabledState?(isDisabled: boolean): void { }
 
   ngOnInit() {
     if (!this.inEditMode) {
@@ -59,7 +62,6 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
   }
 
   set ngValue(val) {
-    // this value is updated by programmatic changes if( val !== undefined && this.val !== val){
     this.val = val;
     this.propChange(val);
   }
@@ -68,5 +70,5 @@ export class InlineTextEditComponent implements ControlValueAccessor, OnInit {
     return this.val;
   }
 
-  propChange: any = () => {};
+  propChange: any = () => { };
 }

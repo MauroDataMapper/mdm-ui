@@ -23,11 +23,12 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
-import { SemanticLinkHandlerService } from '@mdm/services/handlers/semantic-link-handler.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
+import { GridService } from '@mdm/services/grid.service';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-element-link-list',
@@ -35,38 +36,26 @@ import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
   styleUrls: ['./element-link-list.component.sass']
 })
 export class ElementLinkListComponent implements AfterViewInit {
-  constructor(
-    public elementTypes: ElementTypesService,
-    private securityHandler: SecurityHandlerService,
-    private messageHandler: MessageHandlerService,
-    private resources: MdmResourcesService,
-    private stateHandler: StateHandlerService,
-    private semanticLinkHandler: SemanticLinkHandlerService,
-    private changeRef: ChangeDetectorRef,
-    private elementSelector: ElementSelectorDialogueService
-  ) {}
-
   @Input() parent: any;
   @Input() searchCriteria: any;
   @Input() type: any;
   @Input() afterSave: any;
+  @Input() domainType: any;
 
   @ViewChild(MatTable, { static: false }) table: MatTable<any>;
   @ViewChildren('filters', { read: ElementRef })
   filters: ElementRef[];
   @ViewChild(MatSort, { static: false })
   sort: MatSort;
-  // @ViewChild(MatPaginator, { static: false })
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
-  // paginator: MatPaginator;
 
-  filterEvent = new EventEmitter<string>();
+  filterEvent = new EventEmitter<any>();
+  filter: {};
   hideFilters = true;
   displayedColumns: string[] = ['source', 'link', 'target', 'other'];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
-  filter: string;
   clientSide: boolean;
 
   semanticLinkTypes: any[];
@@ -78,6 +67,18 @@ export class ElementLinkListComponent implements AfterViewInit {
 
   access: any;
 
+  constructor(
+    public elementTypes: ElementTypesService,
+    private securityHandler: SecurityHandlerService,
+    private messageHandler: MessageHandlerService,
+    private resources: MdmResourcesService,
+    private stateHandler: StateHandlerService,
+    private changeRef: ChangeDetectorRef,
+    private elementSelector: ElementSelectorDialogueService,
+    private gridService: GridService,
+    private editingService: EditingService) { }
+
+
   ngAfterViewInit() {
     this.access = this.securityHandler.elementAccess(this.parent);
     this.semanticLinkTypes = this.elementTypes.getSemanticLinkTypes();
@@ -86,48 +87,43 @@ export class ElementLinkListComponent implements AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingResults = true;
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
+      this.isLoadingResults = true;
 
-          return this.semanticLinkFetch(
-            this.paginator.pageSize,
-            this.paginator.pageOffset,
-            this.sort.active,
-            this.sort.direction,
-            this.filter
-          );
-        }),
-        map((data: any) => {
-          this.totalItemCount = data.body.count;
-          this.isLoadingResults = false;
-          return data.body.items;
-        }),
-        catchError(() => {
-          this.isLoadingResults = false;
-          return [];
-        })
-      )
-      .subscribe(data => {
-        data.forEach( element => {
-         element.status = element.source.id === this.parent.id ? 'source' : 'target';
-        });
-
-        this.records = data;
+      return this.semanticLinkFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction,
+        this.filter
+      );
+    }),
+      map((data: any) => {
+        this.totalItemCount = data.body.count;
+        this.isLoadingResults = false;
+        return data.body.items;
+      }),
+      catchError(() => {
+        this.isLoadingResults = false;
+        return [];
+      })
+    ).subscribe(data => {
+      data.forEach(element => {
+        element.status = element.sourceCatalogueItem.id === this.parent.id ? 'source' : 'target';
       });
+
+      this.records = data;
+    });
     this.changeRef.detectChanges();
   }
 
   applyFilter = () => {
-    let filter: any = '';
+    const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
       const value = x.nativeElement.value;
-
       if (value !== '') {
-        filter += name + '=' + value;
+       filter[name] = value;
       }
     });
     this.filter = filter;
@@ -139,28 +135,9 @@ export class ElementLinkListComponent implements AfterViewInit {
   };
 
   semanticLinkFetch = (pageSize, pageIndex, sortBy, sortType, filters) => {
-    const options = {
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    };
+    const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
 
-    if (this.parent.domainType === 'Term') {
-      return this.resources.term.get(
-        this.terminology,
-        this.parent.id,
-        'semanticLinks',
-        options
-      );
-    } else {
-      return this.resources.catalogueItem.get(
-        this.parent.id,
-        'semanticLinks',
-        options
-      );
-    }
+    return this.resources.catalogueItem.listSemanticLinks(this.domainType, this.parent.id, options);
   };
 
   handleShowLinkSuggestion = element => {
@@ -180,7 +157,7 @@ export class ElementLinkListComponent implements AfterViewInit {
     if (this.parent.domainType === 'DataElement') {
       params = {
         sourceDEId: this.parent.id,
-        sourceDMId: this.parent.dataModel,
+        sourceDMId: this.parent.model,
         sourceDCId: this.parent.dataClass
       };
     }
@@ -192,26 +169,18 @@ export class ElementLinkListComponent implements AfterViewInit {
       this.records.splice($index, 0);
       return;
     }
-    this.resources.catalogueItem
-      .delete(this.parent.id, 'semanticLinks', record.id)
-      .subscribe(
-        () => {
-          if (this.type === 'static') {
-            this.records.splice($index, 1);
-            this.messageHandler.showSuccess('Link deleted successfully.');
-          } else {
-            this.records.splice($index, 1);
-            this.messageHandler.showSuccess('Link deleted successfully.');
-            this.filterEvent.emit();
-          }
-        },
-        error => {
-          this.messageHandler.showError(
-            'There was a problem deleting the link.',
-            error
-          );
-        }
-      );
+    this.resources.catalogueItem.removeSemanticLink(this.parent.domainType, this.parent.id, record.id).subscribe(() => {
+      if (this.type === 'static') {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Link deleted successfully.');
+      } else {
+        this.records.splice($index, 1);
+        this.messageHandler.showSuccess('Link deleted successfully.');
+        this.filterEvent.emit();
+      }
+    }, error => {
+      this.messageHandler.showError('There was a problem deleting the link.', error);
+    });
   };
 
   add = () => {
@@ -233,24 +202,27 @@ export class ElementLinkListComponent implements AfterViewInit {
     };
 
     this.records = [].concat([newRecord]).concat(this.records);
-    return;
+    this.editingService.setFromCollection(this.records);
   };
 
-  onEdit = (record, index) => {};
+  onEdit = () => {
+    this.editingService.setFromCollection(this.records);
+  };
 
   cancelEdit = (record, index) => {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.table.renderRows();
     }
+
+    this.editingService.setFromCollection(this.records);
   };
 
-  validate = (record, index) => {
+  validate = (record) => {
     let isValid = true;
     record.edit.errors = [];
 
-    if (this.type === 'static') {
-    } else if (!record.edit.target) {
+    if (!record.edit.target) {
       record.edit.errors.target = 'Target can\'t be empty!';
       isValid = false;
     }
@@ -269,42 +241,58 @@ export class ElementLinkListComponent implements AfterViewInit {
 
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
-      // resources.catalogueItem.put($scope.parent.id, "semanticLinks", record.id, {resource: resource})
+      const body = {
+        targetCatalogueItemDomainType: `${record.edit.target.domainType}`,
+        targetCatalogueItemId: `${record.edit.target.id}`,
+        domainType: 'SemanticLink',
+        linkType: record.edit.linkType,
+      };
 
-      this.semanticLinkHandler.put(this.parent, record.edit.target, record.id, record.edit.linkType).subscribe(res => {
-          if (this.afterSave) {
-            this.afterSave(resource);
-          }
+      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(() => {
+        if (this.afterSave) {
+          this.afterSave(resource);
+        }
+        // this.filterEvent.emit();
 
-          const result = res.body;
-          record.source = result.source;
-          record.target = Object.assign({}, result.target);
-          record.edit.target = Object.assign({}, result.target);
-          record.linkType = result.linkType;
-          record.inEdit = false;
+        // const result = res.body;
+        // record.source = result.source;
+        // record.target = Object.assign({}, result.target);
+        // record.edit.target = Object.assign({}, result.target);
+        // record.linkType = result.linkType;
+        record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
+        this.table.renderRows();
 
-          this.messageHandler.showSuccess('Link updated successfully.');
+        this.messageHandler.showSuccess('Link updated successfully.');
       }, err => {
-          this.messageHandler.showError('There was a problem updating the link.', err);
-        });
+        this.messageHandler.showError('There was a problem updating the link.', err);
+      });
     } else {
-      // resources.catalogueItem.post($scope.parent.id, "semanticLinks", {resource: resource})
-      this.semanticLinkHandler.post(this.parent, record.edit.target, record.edit.linkType).subscribe(response => {
-            record = Object.assign({}, response);
-            record.status = 'source';
+      const body = {
+        targetCatalogueItemDomainType: `${record.edit.target.domainType}`,
+        targetCatalogueItemId: `${record.edit.target.id}`,
+        domainType: 'SemanticLink',
+        linkType: record.edit.linkType,
+      };
 
-            if (this.type === 'static') {
-              this.records[index] = record;
-              this.messageHandler.showSuccess('Link saved successfully.');
-            } else {
-              this.records[index] = record;
-              this.messageHandler.showSuccess('Link saved successfully.');
-              this.filterEvent.emit();
-            }
-          }, error => {
-            this.messageHandler.showError('There was a problem saving link.', error);
-          }
-        );
+      this.resources.catalogueItem.saveSemanticLinks(this.domainType, this.parent.id, body).subscribe(response => {
+        record = Object.assign({}, response);
+        record.status = 'source';
+
+        record.inEdit = false;
+        this.editingService.setFromCollection(this.records);
+
+        if (this.type === 'static') {
+          this.records[index] = record;
+          this.messageHandler.showSuccess('Link saved successfully.');
+        } else {
+          this.records[index] = record;
+          this.messageHandler.showSuccess('Link saved successfully.');
+          this.filterEvent.emit();
+        }
+      }, error => {
+        this.messageHandler.showError('There was a problem saving link.', error);
+      });
     }
   };
 
@@ -338,37 +326,16 @@ export class ElementLinkListComponent implements AfterViewInit {
       domainTypes = ['Term', 'DataType'];
     }
 
-    this.elementSelector
-      .open(domainTypes, notAllowedToSelectIds, 'Element Selector', null)
-      .afterClosed()
-      .subscribe(selectedElement => {
-        if (!selectedElement) {
-          return;
-        }
-
-        record.edit.target = selectedElement;
-        // if target has value, then remove any validation error which already exists
-        if (
-          selectedElement &&
-          record.edit.errors &&
-          record.edit.errors.target
-        ) {
-          delete record.edit.errors.target;
-        }
-      });
-
+    this.elementSelector.open(domainTypes, notAllowedToSelectIds).afterClosed().subscribe(selectedElement => {
+      if (!selectedElement) {
+        return;
+      }
+      record.edit.target = selectedElement;
+      // if target has value, then remove any validation error which already exists
+      if (selectedElement && record.edit.errors && record.edit.errors.target) {
+        delete record.edit.errors.target;
+      }
+    });
     this.changeRef.detectChanges();
-
-    // elementSelectorDialogue.open(domainTypes, notAllowedToSelectIds).then(function (selectedElement) {
-    //    if (!selectedElement) {
-    //        return;
-    //    }
-    //    record.edit.target = selectedElement;
-    //    //if target has value, then remove any validation error which already exists
-    //    if (selectedElement && record.edit.errors && record.edit.errors['target']) {
-    //        delete record.edit.errors['target'];
-    //    }
-
-    // });
-  }
+  };
 }

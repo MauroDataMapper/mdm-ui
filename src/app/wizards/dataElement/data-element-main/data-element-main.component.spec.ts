@@ -18,7 +18,16 @@ SPDX-License-Identifier: Apache-2.0
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DataElementMainComponent } from './data-element-main.component';
-import { TestModule } from '@mdm/modules/test/test.module';
+import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatStepperModule } from '@angular/material/stepper';
+import { DclWrapperComponent } from '@mdm/wizards/dcl-wrapper.component';
+import { StateService } from '@uirouter/core';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 describe('DataElementMainComponent', () => {
   let component: DataElementMainComponent;
@@ -26,8 +35,30 @@ describe('DataElementMainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule],
-      declarations: [ DataElementMainComponent ]
+      imports: [
+        NgxSkeletonLoaderModule,
+        MatTooltipModule,
+        MatStepperModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: StateService,
+          useValue: {
+            params: {}
+          }
+        },
+        {
+          provide: MdmResourcesService, useValue: {}
+        }
+      ],
+      declarations: [
+        ProfilePictureComponent,
+        DclWrapperComponent,
+        ByteArrayToBase64Pipe,
+        DataElementMainComponent
+      ]
     })
     .compileComponents();
   }));

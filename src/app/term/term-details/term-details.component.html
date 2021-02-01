@@ -18,23 +18,49 @@ SPDX-License-Identifier: Apache-2.0
 <div class="panel panel-default mdm--shadow-block">
     <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
         <div class="panel-body">
-            <div *ngIf="mcTerm">
+            <div class="full-width" style="clear: both;" *ngIf="mcTerm">
+                <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px; bottom: 6px;">
+                   <i class="fas fa-ellipsis-v"></i>
+                </button>
+    
+                <!--First level Menu-->
+                <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+                   <button mat-menu-item type="button" *ngIf="showEdit"(click)="showForm()">
+                      <i class="fas fa-pencil-alt"></i> Edit Title
+                   </button>
+                   <mat-divider></mat-divider>
+                   <button mat-menu-item *ngIf="showDelete" color="warn" type="button" (click)="askForPermanentDelete()" class="warning">
+                      <i class="far fa-trash-alt warning"></i> Delete
+                   </button>
+                </mat-menu>
+               <!-- End of first level menu -->
+           
+             </div>
+
+             <div *ngIf="mcTerm">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                    <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': mcTerm?.deleted}">
-                        <span *ngIf="mcTerm.label" [innerHtml]="mcTerm.label" class="dataModelDetailsLabel"></span>
-                    </h4>
-                    <span class="inline-block">
-                        <small *ngIf="mcTerm && mcTerm.deleted" class="warning"> | Deleted</small>
-                    </span>
-                    <div class="detail-icons--cta">
-                        <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-                        <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}" (click)="toggleFavourite()" matTooltip="Favourite"></i>
-                    </div>
+                   <h4 class="inline-block marginless">
+                     {{ parentLabel }}:
+                      <mdm-inline-text-edit  [readOnly]="false" [inEditMode]="editableForm.visible" [(ngModel)]="this.mcTerm.definition" [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"> </mdm-inline-text-edit>
+                      <mdm-editable-form-buttons
+                      *ngIf="editableForm"
+                      [hidden]="!editableForm.visible"
+                      [onCancelEdit]="onCancelEdit"
+                      [editable]="editableForm"
+                      [textLocation]="'left'"
+                      [hideDelete]="true"
+                      [hideCancel]="false"
+                    ></mdm-editable-form-buttons>
+                     </h4>
+                   <td>
+                      <mdm-model-path [path]="mcTerm.breadcrumbs"></mdm-model-path>
+                    </td>
                 </div>
                 <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                    <span class="help-block">{{errorMessage}}</span>
+                   <span class="help-block">{{errorMessage}}</span>
                 </div>
-            </div>
+             </div>
+
 
             <div class="detail-icons">
                 <div class="text-muted">
@@ -43,74 +69,7 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Item type: </strong><span class="item-type">Term</span></span>
                     </small>
                 </div>
-                <div class="text-muted" *ngIf="mcTerm?.readableByEveryone">
-                    <small>
-                        <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
-                        <span><strong>Availability: </strong>Publicly Readable</span>
-                    </small>
-                </div>
-                <div class="text-muted" *ngIf="mcTerm && mcTerm.dateCreated">
-                    <small>
-                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                        <span><strong>Created on </strong> {{mcTerm.dateCreated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        <table class="table table-bordered mdm--table-fixed">
-            <tbody>
-                <tr>
-                    <td class="detailsRowHeader">Aliases</td>
-                    <td>
-                        <div style="width:50%" *ngIf="mcTerm">
-                            <mdm-element-alias [readOnly]="true" [inEditMode]="editableForm.visible" [aliases]="mcTerm.aliases"
-                                [editableForm]="editableForm" [property]="'aliases'"></mdm-element-alias>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detailsRowHeader">Terminology</td>
-                    <td *ngIf="mcTerm?.terminology">
-                        <span *ngIf="mcTerm.terminology">
-                            <small><span *ngIf="!mcTerm.terminology.finalised" class="badge badge-warning ml-1">Draft</span></small>
-                            <small><span *ngIf="mcTerm.terminology.finalised" class="badge badge-success ml-1">Finalised</span> </small>
-
-                        </span>
-                        <mdm-element-link [element]="mcTerm.terminology" [showLink]="true" [newWindow]="false"></mdm-element-link>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detailsRowHeader">Description</td>
-                    <td class="elementDetailDescription">
-                        <div *ngIf="hasResult">
-                            <mdm-content-editor [editableForm]="editableForm" 
-                                                [element]="mcTerm" 
-                                                [property]="'description'">
-                            </mdm-content-editor>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detailsRowHeader">URL</td>
-                    <td *ngIf="mcTerm?.url">
-                        <mdm-inline-text-edit [readOnly]="true" [inEditMode]="editableForm.visible" [(ngModel)]="mcTerm.url"
-                            [name]="'moduleNameUrl'" size="20" [styleCss]="'dataModelDetailsLabel'">
-                        </mdm-inline-text-edit>
-                    </td>
-                    <td *ngIf="!mcTerm?.url"></td>
-                </tr>
-
-                <tr>
-                    <td class="detailsRowHeader">Classifications</td>
-                    <td *ngIf="mcTerm?.classifiers">
-                        <mdm-element-classifications [readOnly]='true' [classifications]="mcTerm.classifiers"
-                            [editableForm]="editableForm" [element]="mcTerm" [property]="'classifiers'">
-                        </mdm-element-classifications>
-
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+             </div>
+        </div>       
     </form>
 </div>

@@ -28,12 +28,16 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { TermResult } from '@mdm/model/termModel';
+import { EditableTerm, TermResult } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { EditingService } from '@mdm/services/editing.service';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-term',
@@ -56,16 +60,23 @@ export class TermComponent implements OnInit, AfterViewInit {
   hasResult = false;
   showEditForm = false;
   editForm = null;
+  editableForm: EditableTerm;
+  descriptionView = 'default';
+  allUsedProfiles: any[] = [];
+  allUnUsedProfiles: any[] = [];
+  currentProfileDetails: any;
 
   constructor(
     private resources: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
+    private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
+    private dialog: MatDialog,
     private editingService: EditingService) { }
 
   ngOnInit() {
@@ -85,7 +96,6 @@ export class TermComponent implements OnInit, AfterViewInit {
     this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
       this.showSearch = message;
     });
-    this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
   }
 
   ngAfterViewInit(): void {
@@ -108,6 +118,9 @@ export class TermComponent implements OnInit, AfterViewInit {
         this.term.semanticLinks = resp.body.items;
       });
 
+      this.DataModelUsedProfiles(this.term.id);
+      this.DataModelUnUsedProfiles(this.term.id);
+
       this.term.finalised = this.terminology.finalised;
       this.term.editable = this.terminology.editable;
 
@@ -117,6 +130,40 @@ export class TermComponent implements OnInit, AfterViewInit {
         // tslint:disable-next-line: deprecation
         this.stateService.params.tabView
       );
+
+      this.editableForm = new EditableTerm();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.editForm.forEach(x =>
+        x.edit({
+          editing: true,
+          focus: x._name === 'moduleName' ? true : false
+        })
+      );
+      this.editableForm.visible = true;
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editForm.forEach(x => x.edit({ editing: false }));
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.editableForm.description = this.term.description;
+      this.editableForm.url = this.term.url;
+      if (this.term.classifiers) {
+        this.term.classifiers.forEach(item => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+      if (this.term.aliases) {
+        this.term.aliases.forEach(item => {
+          this.editableForm.aliases.push(item);
+        });
+      }
+    };
+
       this.result = this.term;
       if (this.result.terminology) { this.hasResult = true; }
       this.messageService.FolderSendMessage(this.result);
@@ -157,6 +204,158 @@ export class TermComponent implements OnInit, AfterViewInit {
     this.showEditForm = false;
     this.editForm = null;
   };
+
+  loadProfile() {
+    const splitDescription = this.descriptionView.split('/');
+    this.resources.profile
+      .profile(
+        'Term',
+        this.term.id,
+        splitDescription[0],
+        splitDescription[1]
+      )
+      .subscribe((body) => {
+        this.currentProfileDetails = body.body;
+      });
+  }
+
+  changeProfile() {
+    if (
+      this.descriptionView !== 'default' &&
+      this.descriptionView !== 'other' &&
+      this.descriptionView !== 'addnew'
+    ) {
+      this.loadProfile();
+    } else if (this.descriptionView === 'addnew') {
+      const dialog = this.dialog.open(AddProfileModalComponent, {
+        data: {
+          domainType: 'Term',
+          domainId: this.term.id
+        },
+        height: '250px'
+      });
+
+      this.editingService.configureDialogRef(dialog);
+
+
+      dialog.afterClosed().subscribe((newProfile) => {
+        if (newProfile) {
+          const splitDescription = newProfile.split('/');
+          this.resources.profile
+            .profile(
+              'Term',
+              this.term.id,
+              splitDescription[0],
+              splitDescription[1],
+              ''
+            )
+            .subscribe(
+              (body) => {
+                this.descriptionView = newProfile;
+                this.currentProfileDetails = body.body;
+                this.editProfile(true);
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        }
+      });
+    } else {
+      this.currentProfileDetails = null;
+    }
+  }
+
+  editProfile = (isNew: Boolean) => {
+    this.editingService.start();
+    if (this.descriptionView === 'default') {
+         this.editableForm.show();
+    } else {
+      let prof = this.allUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
+
+      if (!prof) {
+        prof = this.allUnUsedProfiles.find(
+          (x) => x.value === this.descriptionView
+        );
+      }
+
+      const dialog = this.dialog.open(EditProfileModalComponent, {
+        data: {
+          profile: this.currentProfileDetails,
+          profileName: prof.display
+        },
+        disableClose: true,
+        panelClass: 'full-width-dialog'
+      });
+
+      this.editingService.configureDialogRef(dialog);
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result) {
+          const splitDescription = prof.value.split('/');
+          const data = JSON.stringify(result);
+          this.resources.profile
+            .saveProfile(
+              'Term',
+              this.term.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.editingService.stop();
+                this.loadProfile();
+                if (isNew) {
+                  this.messageHandler.showSuccess('Profile Added');
+                  this.DataModelUsedProfiles(this.term.id);
+                } else {
+                  this.messageHandler.showSuccess(
+                    'Profile Edited Successfully'
+                  );
+                }
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        } else if (isNew) {
+          this.descriptionView = 'default';
+          this.changeProfile();
+        }
+      });
+    }
+  };
+
+  async DataModelUsedProfiles(id: any) {
+    await this.resources.profile
+      .usedProfiles('term', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUsedProfiles.push(prof);
+        });
+      });
+  }
+
+  async DataModelUnUsedProfiles(id: any) {
+    await this.resources.profile
+      .unusedProfiles('term', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUnUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUnUsedProfiles.push(prof);
+        });
+      });
+  }
 
   getTabDetailByIndex(index) {
     switch (index) {

@@ -16,14 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-    <form editable-form name="form" disable-submit-on-enter>
+    <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
         <div class="panel-body">
             <h4 class="marginless">
                 <span class="dataModelTypeIcon">
                     <i matTooltip="Data Standard" class="fas fa-rss"></i>
                 </span>
-                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
-                    [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
+                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editableForm.label" name="labelName"
+                    [inEditMode]="editableForm.visible" [styleCss]="'dataTypeDetailsLabel'">
                 </mdm-inline-text-edit>
             </h4>
             <div class="detail-icons">
@@ -33,6 +33,12 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Item type: </strong><span class="item-type">Subscribed Catalogue</span></span>
                     </small>
                 </div>
+                <!-- <div class="text-muted">
+                    <small>
+                    <i class="far fa-calendar-check" matTooltip="Last update"></i>
+                    <span><strong>Last Update:</strong> {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                  </small>
+                </div> -->
             </div>
         </div>
         <table class="table table-bordered mdm--table-fixed">
@@ -40,11 +46,59 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
-                        <mdm-content-editor [editableForm]="editable.form" [element]="subscribedCatalogue"
+                        <mdm-content-editor [editableForm]="editableForm" [element]="subscribedCatalogue"
                             [property]="'description'">
                         </mdm-content-editor>
                     </td>
-                </tr>                
+                </tr>
+                <!-- <tr>
+                    <td colspan="2" style="text-align: right;">
+                      <div *ngIf="mcDataTypeObject">
+                          <div style="float: right">
+                              <mdm-editable-form-buttons
+                                      [hideEdit]="true"
+                                      [hideDelete]="true"
+                                      [onCancelEdit]="onCancelEdit"
+                                      [editable]="editableForm"
+                                      [textLocation]="'left'">
+                              </mdm-editable-form-buttons>
+                          </div>
+                          <div *ngIf="showDelete" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-right:4px; margin-left: 4px; float: right">
+                              <button mat-stroked-button
+                                      color="warn"
+                                      type="button"
+                                      matTooltip="Delete Data Type"
+                                      aria-label="Delete Data Type"
+                                      class="paddingless"
+                                      (click)="askToDelete()"
+                                      *ngIf="!editableForm.visible && !editableForm.deletePending">
+                                  <i class="far fa-trash-alt warning" aria-hidden="true"></i>
+                              </button>
+                          </div>
+                          <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
+                            <button mat-stroked-button
+                                    color="primary"
+                                    type="button"
+                                    class="paddingless dropdown-toggle warning"
+                                    matTooltip="Edit Data Type"
+                                    aria-label="Edit Data Type"
+                                    [matMenuTriggerFor]="editMenu"
+                                    [hidden]="editableForm.visible">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+
+                            <mat-menu #editMenu>
+                                <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                                    Edit Data Type details
+                                </button>
+                                <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                                    Edit Description only
+                                </button>
+                            </mat-menu>
+                          </div>
+                        </div>
+                    </td>
+                </tr> -->
             </tbody>
         </table>
     </form>

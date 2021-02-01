@@ -340,7 +340,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     NewFederatedSubscriptionModalComponent,
     ApiPropertyComponent,
     SubscribedCatalogueMainComponent,
-    SubscribedCatalogueDetailComponent
+    SubscribedCatalogueDetailComponent,
+    FederatedDataModelMainComponent,
+    FederatedDataModelDetailComponent
   ],
   imports: [
     AdminModule,

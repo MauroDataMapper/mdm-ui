@@ -174,6 +174,8 @@ import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loadin
 
 import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { SubscribedCatalogueDetailComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-detail/subscribed-catalogue-detail.component';
+import { FederatedDataModelMainComponent } from '@mdm/subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
+import { FederatedDataModelDetailComponent } from '@mdm/subscribed-catalogues/federated-data-model-detail/federated-data-model-detail.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
 import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
@@ -329,7 +331,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     ApiPropertyComponent
     ConstraintsRulesComponent,
     SubscribedCatalogueMainComponent,
-    SubscribedCatalogueDetailComponent
+    SubscribedCatalogueDetailComponent,
+    FederatedDataModelMainComponent,
+    FederatedDataModelDetailComponent
   ],
   imports: [
     AdminModule,
@@ -496,7 +500,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     SubscribedCatalogueDetailComponent,
     ConstraintsRulesComponent,
     LoadingIndicatorComponent,
-    ApiPropertyTableComponent
+    ApiPropertyTableComponent,
+    FederatedDataModelMainComponent,
+    FederatedDataModelDetailComponent
   ]
 })
 export class CatalogueModule { }

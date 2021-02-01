@@ -17,31 +17,31 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Editable } from '@mdm/model/editable-forms';
-import { SubscribedCatalogue, SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
+import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
 import { EditingService } from '@mdm/services/editing.service';
+import { Editable } from '@mdm/model/editable-forms';
 
 @Component({
-  selector: 'mdm-subscribed-catalogue-detail',
-  templateUrl: './subscribed-catalogue-detail.component.html',
-  styleUrls: ['./subscribed-catalogue-detail.component.scss']
+  selector: 'mdm-federated-data-model-detail',
+  templateUrl: './federated-data-model-detail.component.html',
+  styleUrls: ['./federated-data-model-detail.component.scss']
 })
-export class SubscribedCatalogueDetailComponent implements OnInit {
+export class FederatedDataModelDetailComponent implements OnInit {
 
-  @Input() subscribedCatalogue: SubscribedCatalogue;
+  @Input() dataModel: FederatedDataModel;
 
-  editable: Editable<SubscribedCatalogue, SubscribedCatalogueForm>;
+  editable: Editable<FederatedDataModel, FederatedDataModelForm>;
 
   constructor(
     private editingService: EditingService,
-    private title: Title) { }  
+    private title: Title) { }
 
-  ngOnInit(): void {     
-    this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
+  ngOnInit(): void {
+    this.title.setTitle(`Federated Data Model - ${this.dataModel.label}`);
 
     this.editable = new Editable(
-      this.subscribedCatalogue,
-      new SubscribedCatalogueForm());
+      this.dataModel, 
+      new FederatedDataModelForm());
 
     this.editable.onCancel.subscribe(() => {
       this.editingService.stop();      
@@ -49,6 +49,6 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
   }
 
   formBeforeSave() {
-    
+
   }
 }

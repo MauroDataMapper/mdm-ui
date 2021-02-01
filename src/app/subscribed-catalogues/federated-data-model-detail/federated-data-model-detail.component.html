@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="panel-body">
             <h4 class="marginless">
                 <span class="dataModelTypeIcon">
-                    <i matTooltip="Data Standard" class="fas fa-rss"></i>
+                    <i matTooltip="Data Standard" class="fas fa-external-link-alt"></i>
                 </span>
                 <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
                     [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
                 <div class="text-muted">
                     <small>
                         <i class="fas fa-cube" matTooltip="Item type"></i>
-                        <span><strong>Item type: </strong><span class="item-type">Subscribed Catalogue</span></span>
+                        <span><strong>Item type: </strong><span class="item-type">Federated Data Model</span></span>
                     </small>
                 </div>
                 <!-- <div class="text-muted">
@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                     <th class="detailsRowHeader">Description</th>
                     <td class="elementDetailDescription">
-                        <mdm-content-editor [editableForm]="editable.form" [element]="subscribedCatalogue"
+                        <mdm-content-editor [editableForm]="editable.form" [element]="dataModel"
                             [property]="'description'">
                         </mdm-content-editor>
                     </td>

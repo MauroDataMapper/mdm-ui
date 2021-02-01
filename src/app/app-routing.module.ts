@@ -59,6 +59,7 @@ import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-v
 import { StateObject, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
+import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -281,6 +282,12 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
       url: '/subscribedCatalogue/:id/{tabView:string}',
       component: SubscribedCatalogueMainComponent,
+      params: { tabView: { dynamic: true, value: null, squash: true } }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
+      url: '/federatedDataModel/:id/{tabView:string}',
+      component: FederatedDataModelMainComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
     },
   ]

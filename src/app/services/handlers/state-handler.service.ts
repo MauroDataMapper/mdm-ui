@@ -44,6 +44,7 @@ export class StateHandlerService {
         term: 'appContainer.mainApp.twoSidePanel.catalogue.term',
 
         subscribedcatalogue: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
+        federateddatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
 
         newcodeset: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
         newdatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',

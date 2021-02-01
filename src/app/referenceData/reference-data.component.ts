@@ -165,7 +165,7 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  editProfile = (isNew: Boolean) => {
+  editProfile = (isNew: boolean) => {
     if (this.descriptionView === 'default') {
          this.editableForm.show();
     } else {

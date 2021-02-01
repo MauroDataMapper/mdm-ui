@@ -148,8 +148,8 @@ export class ModelMergingComponent implements OnInit {
     return model;
   }
 
-  private getChildren(model: any) {
-    const prom = new Promise((resolve) => {
+  getChildren(model: any) {
+    const prom = new Promise<void>((resolve) => {
       const promiseColl: Array<any> = [];
 
       model.children.forEach((child) => {
@@ -218,7 +218,7 @@ export class ModelMergingComponent implements OnInit {
     localDiff.push(this.createMetadataElements(model));
 
     const props = this.createPropertiesElements(model);
-    for (let index = 0; index < props.length; index++) {
+    for (const index of props) {
       const element = props[index];
       localDiff.push(element);
     }

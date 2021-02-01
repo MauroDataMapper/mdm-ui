@@ -266,7 +266,7 @@ export class TermComponent implements OnInit, AfterViewInit {
     }
   }
 
-  editProfile = (isNew: Boolean) => {
+  editProfile = (isNew: boolean) => {
     this.editingService.start();
     if (this.descriptionView === 'default') {
          this.editableForm.show();

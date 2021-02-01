@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
       </mat-form-field>
    </div>
    <div *ngIf="data.language.toLowerCase() === 'sql'" class="mdm--form-input">
-      <label>Representation</label>
+      <span>Representation</span>
       <ngx-codemirror
          matInput
          [(ngModel)]="data.representation"
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
       </ngx-codemirror>
    </div>
    <div  [ngStyle]="{'visibility':data.language.toLowerCase() === 'dmn' ? 'visible' : 'hidden'}" class="mdm--form-input">
-      <label>Representation</label>
+      <span>Representation</span>
       <div id="dmn" #dmn></div>
    </div>
 </div>

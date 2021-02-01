@@ -205,7 +205,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  editProfile = (isNew: Boolean) => {
+  editProfile = (isNew: boolean) => {
     let prof = this.allUsedProfiles.find(
       (x) => x.value === this.descriptionView
     );

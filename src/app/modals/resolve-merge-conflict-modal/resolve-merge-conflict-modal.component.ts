@@ -27,6 +27,11 @@ import DiffMatchPatch from 'diff-match-patch';
 })
 export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
+
+  mergeString:any;
+  mergeDiffrl: any;
+  mergeDifflr: any;
+
   private mergeViewrl : ElementRef;
   private mergeViewlr : ElementRef;
 
@@ -38,10 +43,6 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     this.mergeViewlr = content;
   }
 
-  mergeString:any;
-  mergeDiffrl: any;
-  mergeDifflr: any;
-
   constructor(
     private dialogRef: MatDialogRef<ResolveMergeConflictModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -50,18 +51,18 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.data.diffs) {
       const diffs = this.data.diffs;
-      const diffrl = this.diff_lineMode(diffs.right, diffs.left);
-      const difflr = this.diff_lineMode(diffs.left, diffs.right);
+      const diffrl = this.diffLineMode(diffs.right, diffs.left);
+      const difflr = this.diffLineMode(diffs.left, diffs.right);
 
 
-      this.mergeViewrl.nativeElement.innerHTML = this.diff_prettyPlain(diffrl);
-      this.mergeViewlr.nativeElement.innerHTML = this.diff_prettyPlain(difflr);
+      this.mergeViewrl.nativeElement.innerHTML = this.diffPrettyPlain(diffrl);
+      this.mergeViewlr.nativeElement.innerHTML = this.diffPrettyPlain(difflr);
 
       this.mergeViewrl.nativeElement.querySelectorAll('button').forEach(x => x.addEventListener('click', this.onMergeConflictPress.bind(this)));
       this.mergeViewlr.nativeElement.querySelectorAll('button').forEach(x => x.addEventListener('click', this.onMergeConflictPress.bind(this)));
 
 
-      this.mergeString = this.diff_into_prettyPlain(difflr);
+      this.mergeString = this.diffIntoPrettyPlain(difflr);
     }
   }
 
@@ -83,11 +84,11 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     this.mergeString = this.mergeString.replace(regex,`<span id="loc${id}">${value}`);
   }
 
-  diff_prettyPlain = (diffs:any) =>
+  diffPrettyPlain = (diffs:any) =>
   {
 
-    const DIFF_DELETE = -1;
-    const DIFF_EQUAL = 0;
+    const diffDelete = -1;
+    const diffEqual = 0;
 
     const html = [];
     for (let x = 0; x < diffs.length; x++) {
@@ -95,13 +96,13 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
       const data = diffs[x][1];  // Text of change.
       const text = data;
       switch (op) {
-        case DIFF_DELETE:{
+        case diffDelete:{
           const encodedText = encodeURI(text);
           const obj = {id: x, loc:'left', value:encodedText};
           html[x] = `<button id="${x}" test=${JSON.stringify(obj)} class="diffAdded"><ins>${text}</ins></button>`;
           break;
         }
-        case DIFF_EQUAL:{
+        case diffEqual:{
           html[x] = `<span>${text}</span>`;
           break;
         }
@@ -111,11 +112,11 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
   };
 
-  diff_into_prettyPlain = (diffs:any) =>
+  diffIntoPrettyPlain = (diffs:any) =>
   {
 
-    const DIFF_DELETE = -1;
-    const DIFF_EQUAL = 0;
+    const diffDelete = -1;
+    const diffEqual = 0;
 
     const html = [];
     for (let x = 0; x < diffs.length; x++) {
@@ -123,10 +124,10 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
       const data = diffs[x][1];  // Text of change.
       const text = data;
       switch (op) {
-        case DIFF_DELETE:
+        case diffDelete:
            html[x] = `<span id="loc${x}"></span>`;
           break;
-        case DIFF_EQUAL:
+        case diffEqual:
           html[x] = `<span>${text}</span>`;
           break;
       }
@@ -135,9 +136,9 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
   };
 
-  diff_lineMode(text1, text2) {
+  diffLineMode(text1, text2) {
     const dmp = new DiffMatchPatch();
-    const a = this.diff_linesToChars_(text1, text2);
+    const a = this.diffLinesToChars(text1, text2);
     const lineText1 = a.chars1;
     const lineText2 = a.chars2;
     const lineArray = a.lineArray;
@@ -146,7 +147,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     return diffs;
   }
 
-  diff_linesToChars_ = (text1, text2) => {
+  diffLinesToChars = (text1, text2) => {
     const lineArray = [];  // e.g. lineArray[4] == 'Hello\n'
     const lineHash = {};   // e.g. lineHash['Hello\n'] == 4
 
@@ -166,13 +167,13 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
     // Allocate 2/3rds of the space for text1, the rest for text2.
     let maxLines = 40000;
-    const chars1 = this.diff_linesToCharsMunge(text1, lineArray, lineHash, maxLines);
+    const chars1 = this.diffLinesToCharsMunge(text1, lineArray, lineHash, maxLines);
     maxLines = 65535;
-    const chars2 = this.diff_linesToCharsMunge(text2, lineArray, lineHash, maxLines);
+    const chars2 = this.diffLinesToCharsMunge(text2, lineArray, lineHash, maxLines);
     return {chars1, chars2, lineArray};
   };
 
-  diff_linesToCharsMunge = (text, lineArray, lineHash, maxLines) => {
+  diffLinesToCharsMunge = (text, lineArray, lineHash, maxLines) => {
     let chars = '';
     // Walk the text, pulling out a substring for each line.
     // text.split('\n') would would temporarily double our memory footprint.

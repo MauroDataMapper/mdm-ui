@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { MdmResourcesIndexResponse, MdmResourcesResponse } from "@mdm/modules/resources/mdm-resources.models";
+import { Subject } from "rxjs";
 
 export interface SubscribedCatalogue {
   id?: string;  
@@ -49,3 +50,44 @@ export type SubscribedCatalogueResponse = MdmResourcesResponse<SubscribedCatalog
  * @see SubscribedCatalogueResponse
  */
 export type SubscribedCatalogueIndexResponse = MdmResourcesIndexResponse<SubscribedCatalogue>;
+
+/**
+ * Class to represent an editable `SubscribedCatalogue` for form entry.
+ * 
+ * Construct this object using an existing `SubscribedCatalogue` and subscribe to the events that
+ * occur on certain actions.
+ */
+export class EditableSubscribedCatalogue {
+  private onShowSource = new Subject<void>();
+  private onCancelSource = new Subject<void>();
+
+  onShow = this.onShowSource.asObservable();
+  onCancel = this.onCancelSource.asObservable();
+
+  deletePending: boolean;
+  visible: boolean;
+  label: string;
+  description: string;
+
+  constructor(private original: SubscribedCatalogue) {
+    this.deletePending = false;
+    this.visible = false;
+    this.reset();
+  }
+
+  reset() {
+    this.label = this.original.label;
+    this.description = this.original.description;
+  }
+
+  show() {
+    this.visible = true;
+    this.onShowSource.next();
+  }
+
+  cancel() {
+    this.visible = false;
+    this.reset();
+    this.onCancelSource.next();
+  }
+}

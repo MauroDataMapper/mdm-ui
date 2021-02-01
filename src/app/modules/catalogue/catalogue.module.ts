@@ -172,6 +172,8 @@ import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.compon
 import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
+import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
+import { SubscribedCatalogueDetailComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-detail/subscribed-catalogue-detail.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
 import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
@@ -325,6 +327,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     LoadingIndicatorComponent,
     ApiPropertyTableComponent,
     ApiPropertyComponent
+    ConstraintsRulesComponent,
+    SubscribedCatalogueMainComponent,
+    SubscribedCatalogueDetailComponent
   ],
   imports: [
     AdminModule,
@@ -486,6 +491,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     EnumerationValuesDetailsComponent,
     HtmlEditorComponent,
     ContentEditorComponent,
+    ConstraintsRulesComponent,
+    SubscribedCatalogueMainComponent,
+    SubscribedCatalogueDetailComponent,
     ConstraintsRulesComponent,
     LoadingIndicatorComponent,
     ApiPropertyTableComponent

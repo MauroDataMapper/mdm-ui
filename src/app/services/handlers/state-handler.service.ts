@@ -43,6 +43,8 @@ export class StateHandlerService {
         terminology: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
         term: 'appContainer.mainApp.twoSidePanel.catalogue.term',
 
+        subscribedcatalogue: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
+
         newcodeset: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
         newdatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
         newdataclass: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',

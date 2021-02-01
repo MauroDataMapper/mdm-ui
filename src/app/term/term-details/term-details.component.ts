@@ -41,7 +41,7 @@ import { EditingService } from '@mdm/services/editing.service';
 @Component({
   selector: 'mdm-term-details',
   templateUrl: './term-details.component.html',
-  styleUrls: ['./term-details.component.scss'] 
+  styleUrls: ['./term-details.component.scss']
 })
 export class TermDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
@@ -133,7 +133,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
       this.editableForm.url = this.mcTerm.url;
       this.editableForm.description = this.mcTerm.description;
-      
+
       if(this.mcTerm.domainType === 'Term') {
         this.resourcesService.terminology.get(this.mcTerm.model).subscribe(result => {
           this.parentLabel = result.body.label;

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { FolderResult } from '../model/folderModel';
+import { Editable, FolderResult } from '../model/folderModel';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -26,6 +26,10 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
+import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
+import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
+import { MessageHandlerService } from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-classification',
@@ -54,6 +58,12 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
   loading = false;
   catalogueItems: any;
 
+  descriptionView = 'default';
+  editableForm: Editable;
+  allUsedProfiles: any[] = [];
+  allUnUsedProfiles: any[] = [];
+  currentProfileDetails: any;
+
   constructor(
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
@@ -61,7 +71,9 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private editingService: EditingService) { }
+    private editingService: EditingService,
+    private messageHandler: MessageHandlerService,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -78,43 +90,27 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     // tslint:disable-next-line: deprecation
     this.classifierDetails(this.stateService.params.id);
 
-    // const promises = [];
-    // promises.push(this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id))
-    // this.resourcesService.classifier.get(
-    //   this.stateService.params.id,
-    //   'catalogueItems',
-    //   null
-    // )
-    // );
-    // promises.push([]
-    // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
-    // this.resourcesService.classifier.get(
-    //   this.stateService.params.id,
-    //   'terminologies',
-    //   null
-    // )
-    // );
-    // promises.push(this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id));
-    // this.resourcesService.classifier.get(this.stateService.params.id, 'terms', null)
-    // promises.push(
-    //   // this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
-    //   // this.resourcesService.classifier.get(this.stateService.params.id, 'codeSets', null)
-    // );
+    this.editableForm = new Editable();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
 
-    // forkJoin(promises).subscribe((results: any) => {
-    //   console.log(results);
-    //   this.catalogueItemsCount = results[0].body.count;
-    //   this.terminologiesCount = results[1].body.count;
-    //   this.termsCount = results[2].body.count;
-    //   this.codeSetsCount = results[3].body.count;
+    this.editableForm.show = () => {
+      this.editableForm.visible = true;
+    };
 
-    //   this.loading = false;
-    //   this.activeTab = this.getTabDetail('classifiedElements');
-    // });
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.label = this.result.label;
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.editableForm.description = this.result.description;
+    };
 
-    // this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id).subscribe(result => {
-
-    // });
+    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
+      (message: boolean) => {
+        this.showSecuritySection = message;
+      }
+    );
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
@@ -136,11 +132,26 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
+  showForm() {
+    this.editingService.start();
+    this.editableForm.show();
+  }
+
+  onCancelEdit() {
+    this.editMode = false; // Use Input editor whe adding a new folder.
+  }
+
   classifierDetails(id: any) {
     this.resourcesService.classifier.get(id).subscribe((response: { body: FolderResult }) => {
       this.result = response.body;
 
       this.parentId = this.result.id;
+      this.editableForm.description = this.result.description;
+
+      // Will Be added later
+      // this.ClassifierUsedProfiles(this.result.id);
+      // this.ClassifierUnUsedProfiles(this.result.id);
+
       if (this.sharedService.isLoggedIn(true)) {
         this.classifierPermissions(id);
       } else {
@@ -174,6 +185,175 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
   tabSelected(itemsName) {
     this.getTabDetail(itemsName);
     // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
+  }
+
+  async ClassifierUsedProfiles(id: any) {
+    await this.resourcesService.profile
+      .usedProfiles('classifiers', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUsedProfiles.push(prof);
+        });
+      });
+  }
+
+  async ClassifierUnUsedProfiles(id: any) {
+    await this.resourcesService.profile
+      .unusedProfiles('classifiers', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        this.allUnUsedProfiles = [];
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUnUsedProfiles.push(prof);
+        });
+      });
+  }
+
+  formBeforeSave = () => {
+    this.editMode = false;
+
+    const resource = {
+      description: this.editableForm.description
+    };
+
+      this.resourcesService.classifier.update(this.result.id, resource).subscribe((result) => {
+        this.messageHandler.showSuccess('Classifier updated successfully.');
+        this.editingService.stop();
+        this.editableForm.visible = false;
+        this.result = result.body;
+      }, error => {
+        this.messageHandler.showError('There was a problem updating the Classifier.', error);
+      });
+  };
+
+  changeProfile() {
+    if (
+      this.descriptionView !== 'default' &&
+      this.descriptionView !== 'other' &&
+      this.descriptionView !== 'addnew'
+    ) {
+      this.loadProfile();
+    } else if (this.descriptionView === 'addnew') {
+      const dialog = this.dialog.open(AddProfileModalComponent, {
+        data: {
+          domainType: 'classifiers',
+          domainId: this.classifier.id
+        },
+        height: '250px'
+      });
+
+      this.editingService.configureDialogRef(dialog);
+
+
+      dialog.afterClosed().subscribe((newProfile) => {
+        if (newProfile) {
+          const splitDescription = newProfile.split('/');
+          this.resourcesService.profile
+            .profile(
+              'classifiers',
+              this.classifier.id,
+              splitDescription[0],
+              splitDescription[1],
+              ''
+            )
+            .subscribe(
+              (body) => {
+                this.descriptionView = newProfile;
+                this.currentProfileDetails = body.body;
+                this.editProfile(true);
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        }
+      });
+    } else {
+      this.currentProfileDetails = null;
+    }
+  }
+
+  editProfile = (isNew: boolean) => {
+    this.editingService.start();
+    if (this.descriptionView === 'default') {
+         this.editableForm.show();
+    } else {
+      let prof = this.allUsedProfiles.find(
+        (x) => x.value === this.descriptionView
+      );
+
+      if (!prof) {
+        prof = this.allUnUsedProfiles.find(
+          (x) => x.value === this.descriptionView
+        );
+      }
+
+      const dialog = this.dialog.open(EditProfileModalComponent, {
+        data: {
+          profile: this.currentProfileDetails,
+          profileName: prof.display
+        },
+        disableClose: true,
+        panelClass: 'full-width-dialog'
+      });
+
+      this.editingService.configureDialogRef(dialog);
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result) {
+          const splitDescription = prof.value.split('/');
+          const data = JSON.stringify(result);
+          this.resourcesService.profile
+            .saveProfile(
+              'classifiers',
+              this.classifier.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.editingService.stop();
+                this.loadProfile();
+                if (isNew) {
+                  this.messageHandler.showSuccess('Profile Added');
+                  this.ClassifierUsedProfiles(this.classifier.id);
+                } else {
+                  this.messageHandler.showSuccess(
+                    'Profile Edited Successfully'
+                  );
+                }
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        } else if (isNew) {
+          this.descriptionView = 'default';
+          this.changeProfile();
+        }
+      });
+    }
+  };
+
+  loadProfile() {
+    const splitDescription = this.descriptionView.split('/');
+    this.resourcesService.profile
+      .profile(
+        'Classifier',
+        this.classifier.id,
+        splitDescription[0],
+        splitDescription[1]
+      )
+      .subscribe((body) => {
+        this.currentProfileDetails = body.body;
+      });
   }
 
   getTabDetail(tabIndex) {

@@ -205,6 +205,7 @@ export enum DOMAIN_TYPE {
     // TODO: UI only domains for prototyping, consider making them part of backend
     Root = 'Root',
     LocalCatalogue = 'LocalCatalogue',
+    ExternalCatalogues = 'ExternalCatalogues',
     SubscribedCatalogue = 'SubscribedCatalogue',
     FederatedDataModel = 'FederatedDataModel'
 }

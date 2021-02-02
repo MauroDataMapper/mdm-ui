@@ -72,7 +72,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       [DOMAIN_TYPE.Classification, () => 'fa-tags'],
       //[DOMAIN_TYPE.Term, () => 'fa-code'],
       [DOMAIN_TYPE.ReferenceDataModel, () => 'fa-file-contract'],
-      [DOMAIN_TYPE.LocalCatalogue, () => 'fa-server'],
+      [DOMAIN_TYPE.LocalCatalogue, () => 'fa-desktop'],
+      [DOMAIN_TYPE.ExternalCatalogues, () => 'fa-network-wired'],
       [DOMAIN_TYPE.SubscribedCatalogue, () => 'fa-rss'],
       [DOMAIN_TYPE.FederatedDataModel, () => 'fa-external-link-alt']
    ]);

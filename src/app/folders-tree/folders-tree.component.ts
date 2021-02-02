@@ -20,7 +20,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { Observable, of, Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
@@ -29,8 +29,7 @@ import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { SubscribedCatalogueDataModel } from '@mdm/model/subscribed-catalogue-model';
-import { map } from 'rxjs/operators';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -162,7 +161,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       protected messageHandler: MessageHandlerService,
       private broadcastSvc: BroadcastService,
       public dialog: MatDialog,
-      private editingService: EditingService) {
+      private editingService: EditingService,
+      private modelTree: ModelTreeService) {
       this.loadFavourites();
       this.subscriptions.add(this.messages.on('favourites', () => {
          this.loadFavourites();
@@ -305,8 +305,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
                const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
                return termResponse.body;
             case DOMAIN_TYPE.SubscribedCatalogue:
-               // TODO: refactor subscribed catalogue models
-               return await this.getSubscribedCatalogueModelNodes().toPromise();
+               return await this.modelTree.getSubscribedCatalogueModelNodes(node.id).toPromise();
             default:
                return [];
          }
@@ -314,31 +313,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          console.error(error);
          return [];
       }
-   }
-
-   // TODO: move this to somewhere more logical, like a service
-   private getSubscribedCatalogueModelNodes(): Observable<Node[]> {
-      // TODO: use actual Subscribed Catalogue endpoint, this is just dummy data
-      return of<SubscribedCatalogueDataModel[]>([
-         {
-            id: 'aa827529-59ac-4a72-a30a-25467b819f92',
-            label: 'Federated Data Model 1'
-         },
-         {
-            id: '95bab4fc-5681-4f82-bb02-a190e33615f6',
-            label: 'Federated Data Model 2'
-         }
-      ])
-      .pipe(
-         map(models => models.map(item => Object.assign<{}, Node>({}, {
-            id: item.id,
-            domainType: DOMAIN_TYPE.FederatedDataModel,
-            label: item.label,
-            hasChildren: false,
-            children: []
-         })))
-      );
-   }
+   }   
 
    noop(event: Event) {
       event.preventDefault();

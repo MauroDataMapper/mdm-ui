@@ -36,6 +36,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 @Component({
   selector: 'mdm-models',
@@ -228,47 +229,34 @@ export class ModelsComponent implements OnInit, OnDestroy {
   loadModelsTree = (noCache?: boolean) => {
     this.reloading = true;
 
+    // Fetch tree information from two potential sources - local folder tree and possible (external)
+    // subscribed catalogues
     combineLatest([
-      this.getLocalCatalogueTreeNodes(noCache),
-      this.getSubscribedCatalogueTreeNodes()])
-      .pipe(
-        map(([local, subscribed]) => {
-          // If no subscribed catalogues exist, ensure the root of the tree are the folders from the current instance
-          // A "LocalCatalogue" domain type root node is not required in this scenario
-          const children = ((subscribed?.length ?? 0) === 0 && (local?.length ?? 0) >= 1 && local[0].domainType === DOMAIN_TYPE.LocalCatalogue)
-            ? local[0].children
-            : local.concat(subscribed);
-
-          return Object.assign<{}, Node>({}, {
-            id: '',
-            domainType: DOMAIN_TYPE.Root,
-            children,
-            hasChildren: true,
-            isRoot: true
-          })
-        })
-      )
-      .subscribe(node => {
-        this.allModels = node;
-        this.filteredModels = node;
-        this.reloading = false;
-      }, error => {
-        this.messageHandler.showError('There was a problem loading the model tree.', error);
-        this.reloading = false;
-      })
-  };
-
-  private getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
-    let options: any = {};
-    if (this.sharedService.isLoggedIn()) {
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded: this.userSettingsHandler.get('includeDocumentSuperseded') || false,
-          // includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
-          includeModelSuperseded: true,
-          includeDeleted: this.userSettingsHandler.get('includeDeleted') || false
+      this.modelTree.getLocalCatalogueTreeNodes(noCache),
+      this.modelTree.getSubscribedCatalogueTreeNodes()
+    ])
+    .pipe(
+      map(([local, subscribed]) => {
+        if ((subscribed?.length ?? 0) === 0) {
+          // Display only local catalogue folders/models
+          return this.modelTree.createRootNode(local);
         }
-      };
+
+        // Combine sub tree nodes with new parent nodes to build up roots
+        const localParent = this.modelTree.createLocalCatalogueNode(local);
+        const externalParent = this.modelTree.createExternalCataloguesNode(subscribed);
+        return this.modelTree.createRootNode([localParent, externalParent]);
+      })
+    )
+    .subscribe(node => {
+      this.allModels = node;
+      this.filteredModels = node;
+      this.reloading = false;
+    }, error => {
+      this.messageHandler.showError('There was a problem loading the model tree.', error);
+      this.reloading = false;
+    });
+  };
     }
     if (noCache) {
       options.queryStringParams.noCache = true;

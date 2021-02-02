@@ -58,7 +58,7 @@ export class CodeSetMainComponent implements OnInit {
         this.title.setTitle('New Code Set');
     }
 
-    save = async () => {
+    async save() {
         if (this.model.label && this.model.author && this.model.organisation && this.model.terms.length > 0) {
             const resource = {
                 label: this.model.label,
@@ -69,13 +69,14 @@ export class CodeSetMainComponent implements OnInit {
                 folder: this.model.parentFolderId,
                 terms: this.model.terms
             };
-            await this.resources.folder.addCondeSets(this.model.parentFolderId, resource).subscribe(result => {
-                this.messageHandler.showSuccess('Code Set created successfully.');
-                this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
-                this.broadcastSvc.broadcast('$reloadFoldersTree');
-            }, (error) => {
-                this.messageHandler.showError('There was a problem creating the Code Set.', error);
-            });
+
+            try {
+               let result = await this.resources.folder.addCondeSets(this.model.parentFolderId, resource).toPromise();
+               this.messageHandler.showSuccess('Code Set created successfully.');
+               this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
+            } catch (error) {
+               this.messageHandler.showError('There was a problem creating the Code Set.', error);
+            }
         }
     };
 }

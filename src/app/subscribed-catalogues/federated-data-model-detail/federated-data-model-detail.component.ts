@@ -126,6 +126,19 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         this.messageHandler.showSuccess('Successfully subscribed to data model.');
         this.reloading.emit();
       });
+
+    // After subscribing to the "onReset" observable, trigger a reset to get all required details
+    this.editable.reset();
+  }
+
+  private setFolderLabelToForm(data: FederatedDataModel) {
+    if (!data.folderId) {
+      return;
+    }
+
+    this.resources.folder
+      .get(data.folderId)
+      .subscribe((response: FolderResultResponse) => this.editable.form.folderLabel = response.body.label);
   }
 
   unsubscribeFromModel() {

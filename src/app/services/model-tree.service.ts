@@ -146,7 +146,7 @@ export class ModelTreeService {
           hasChildren: false,
           label: item.label,
           dataModel: item,
-          parentId: catalogueId
+          parentId: item.catalogueId
         })))
       )
   }

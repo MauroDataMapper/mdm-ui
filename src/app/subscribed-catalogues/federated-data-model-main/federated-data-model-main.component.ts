@@ -42,19 +42,14 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
   }
 
   ngOnInit(): void {
-    const dataModelId: string = this.uiRouterGlobals.params.id;
-    if (!dataModelId || !this.isGuid(dataModelId)) {
+    const dataModel: FederatedDataModel = this.uiRouterGlobals.params.dataModel;
+    if (!dataModel) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     this.title.setTitle('Federated Data Model');
 
-    // TODO: replace with API endpoint to fetch data
-    this.dataModel = {
-      id: dataModelId,
-      label: 'Federated Data Model',
-      description: 'Test description'
-    };
+    this.dataModel = dataModel;
   }
 }

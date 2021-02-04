@@ -17,8 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
-import { SubscribedCatalogue, SubscribedCatalogueIndexResponse, SubscribedCatalogueModel, SubscribedCatalogueModelIndexResponse } from '@mdm/model/subscribed-catalogue-model';
+import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SharedService } from './shared.service';
@@ -32,7 +33,8 @@ export class ModelTreeService {
   constructor(
     private resources: MdmResourcesService,
     private sharedService: SharedService,
-    private userSettingsHandler: UserSettingsHandlerService) { }
+    private userSettingsHandler: UserSettingsHandlerService,
+    private subscribedCatalogues: SubscribedCataloguesService) { }
 
   getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
     let options: any = {};
@@ -106,18 +108,29 @@ export class ModelTreeService {
     });
   }
 
-  getSubscribedCatalogueModelNodes(catalogueId: string): Observable<Node[]>
-  {
-    return this.resources.subscribedCatalogues
-      .listAvailableModels(catalogueId)
+  /**
+   * Gets all external, federated data models available and returns them as `Node` objects for the model tree.
+   * 
+   * @param catalogueId The UUID of the subscribed catalogue to search under.
+   * 
+   * Each returned `Node` object will contain a `FederatedDataModel` inside the `Node.dataModel` property. It is
+   * required that the model tree pass this on to the detail component views during UI state transitions because
+   * there is no endpoint available for getting a single `FederatedDataModel` - this assignment will reduce
+   * roundtrips back to the server.
+   * 
+   * @see FederatedDataModel
+   */
+  getFederatedDataModelNodes(catalogueId: string): Observable<Node[]> {
+    return this.subscribedCatalogues
+      .getFederatedDataModels(catalogueId)
       .pipe(
-        map((response: SubscribedCatalogueModelIndexResponse) => response.body.items ?? []),
-        map((models: SubscribedCatalogueModel[]) => models.map(item => Object.assign<{}, Node>({}, {
+        map(models => models.map(item => Object.assign<{}, Node>({}, {
           id: item.modelId,
           domainType: DOMAIN_TYPE.FederatedDataModel,
           hasChildren: false,
-          label: item.label
+          label: item.label,
+          dataModel: item
         })))
-      );
+      )
   }
 }

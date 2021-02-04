@@ -22,6 +22,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
+import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
 
 @Component({
   selector: 'mdm-federated-data-model-main',
@@ -37,19 +38,36 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
+    private subscribedCatalogues: SubscribedCataloguesService,
     private title: Title) { 
     super();
   }
 
   ngOnInit(): void {
-    const dataModel: FederatedDataModel = this.uiRouterGlobals.params.dataModel;
-    if (!dataModel) {
-      this.stateHandler.NotFound({ location: false });
+    this.title.setTitle('Federated Data Model');
+
+    // First check if dataModel was provided in state transition
+    const dataModel = this.uiRouterGlobals.params.dataModel;
+    if (dataModel) {
+      this.dataModel = dataModel;
       return;
     }
 
-    this.title.setTitle('Federated Data Model');
+    // If not from tree, fetch from the server again
+    const parentId: string = this.uiRouterGlobals.params.parentId;
+    if (!parentId || !this.isGuid(parentId)) {
+      this.stateHandler.NotFound({ location: false });
+    }
 
-    this.dataModel = dataModel;
+    const modelId: string = this.uiRouterGlobals.params.id;
+    if (!modelId || !this.isGuid(modelId)) {
+      this.stateHandler.NotFound({ location: false });
+    }    
+
+    this.subscribedCatalogues
+      .getFederatedDataModels(parentId)
+      .subscribe(
+        models => this.dataModel = models.find(model => model.modelId === modelId),
+        errors => this.messageHandler.showError('There was a problem getting the Federated Data Model', errors));
   }
 }

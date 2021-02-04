@@ -15,6 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { DOMAIN_TYPE } from "@mdm/folders-tree/flat-node";
 import { Resetable } from "@mdm/model/editable-forms";
 import { MdmResourcesIndexResponse } from "@mdm/modules/resources";
 
@@ -22,7 +23,7 @@ export interface AvailableDataModel {
   modelId?: string;
   label: string;
   description?: string;
-  modelType: string
+  modelType: DOMAIN_TYPE
 }
 
 export interface SubscribedDataModel {
@@ -34,7 +35,7 @@ export class FederatedDataModel {
   modelId?: string;
   label: string;
   description?: string;
-  modelType?: string;
+  modelType?: DOMAIN_TYPE;
   subscriptionId?: string;
   folderId?: string;
   

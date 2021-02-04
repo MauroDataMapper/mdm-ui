@@ -266,7 +266,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
       dataModelId: node.modelId,
       dataClassId: node.parentId || '',
       terminologyId: node.modelId || node.model,
-      dataModel: node.dataModel
+      dataModel: node.dataModel,
+      parentId: node.parentId
     }).then(
       () => $event.setSelectedNode($event.next),
       () => $event.setSelectedNode($event.current));

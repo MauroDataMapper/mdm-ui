@@ -20,6 +20,7 @@ import { Title } from '@angular/platform-browser';
 import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
 import { EditingService } from '@mdm/services/editing.service';
 import { Editable } from '@mdm/model/editable-forms';
+import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
@@ -46,6 +47,10 @@ export class FederatedDataModelDetailComponent implements OnInit {
     this.editable.onCancel.subscribe(() => {
       this.editingService.stop();      
     });
+  }
+
+  getModelTypeIcon() {
+    return getDomainTypeIcon(this.dataModel.modelType);
   }
 
   formBeforeSave() {

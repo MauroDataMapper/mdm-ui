@@ -18,14 +18,17 @@ SPDX-License-Identifier: Apache-2.0
 <div class="panel panel-default mdm--shadow-block">
     <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
         <div class="panel-body">
-            <h4 class="marginless">
+            <h4 class="inline-block marginless">
                 <span class="dataModelTypeIcon">
                     <i matTooltip="Data Standard" class="fas fa-external-link-alt"></i>
                 </span>
                 <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
                     [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
-                </mdm-inline-text-edit>
-            </h4>
+                </mdm-inline-text-edit>                                
+            </h4>            
+            <small *ngIf="dataModel.isSubscribed">
+                <span class="badge badge-success ml-1">Subscribed</span>                        
+            </small>
             <div class="detail-icons">
                 <div class="text-muted">
                     <small>
@@ -33,12 +36,12 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Item type: </strong><span class="item-type">Federated Data Model</span></span>
                     </small>
                 </div>
-                <!-- <div class="text-muted">
+                <div class="text-muted">
                     <small>
-                    <i class="far fa-calendar-check" matTooltip="Last update"></i>
-                    <span><strong>Last Update:</strong> {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                  </small>
-                </div> -->
+                        <i class="fas fa-file-code" matTooltip="Model type"></i>
+                        <span><strong>Model type: </strong><i class="fas {{getModelTypeIcon()}}" matTooltip="Model type"></i>{{dataModel.modelType}}</span>
+                    </small>
+                </div>                
             </div>
         </div>
         <table class="table table-bordered mdm--table-fixed">

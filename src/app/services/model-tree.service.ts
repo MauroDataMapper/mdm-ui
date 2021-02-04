@@ -145,7 +145,8 @@ export class ModelTreeService {
           domainType: DOMAIN_TYPE.FederatedDataModel,
           hasChildren: false,
           label: item.label,
-          dataModel: item
+          dataModel: item,
+          parentId: catalogueId
         })))
       )
   }

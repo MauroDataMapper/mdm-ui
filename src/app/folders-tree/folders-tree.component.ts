@@ -48,36 +48,12 @@ export class NodeConfirmClickEvent {
    setSelectedNode = (node: FlatNode) => this.broadcastSvc.broadcast('$folderTreeNodeSelection', node);
 }
 
-type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
-
 @Component({
    selector: 'mdm-folders-tree',
    templateUrl: './folders-tree.component.html',
    styleUrls: ['./folders-tree.component.scss']
 })
 export class FoldersTreeComponent implements OnChanges, OnDestroy {
-
-   readonly domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
-      [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
-      [DOMAIN_TYPE.DataModel, (fnode, _) =>  {
-         if (fnode.type === 'Data Standard') {
-            return 'fa-file-alt';
-         }
-         if (fnode.type === 'Data Asset') {
-            return 'fa-database'
-         }
-         return null;
-      }],
-      [DOMAIN_TYPE.Terminology, () => 'fa-book'],
-      [DOMAIN_TYPE.CodeSet, () => 'fa-list'],
-      [DOMAIN_TYPE.Classification, () => 'fa-tags'],
-      //[DOMAIN_TYPE.Term, () => 'fa-code'],
-      [DOMAIN_TYPE.ReferenceDataModel, () => 'fa-file-contract'],
-      [DOMAIN_TYPE.LocalCatalogue, () => 'fa-desktop'],
-      [DOMAIN_TYPE.ExternalCatalogues, () => 'fa-network-wired'],
-      [DOMAIN_TYPE.SubscribedCatalogue, () => 'fa-rss'],
-      [DOMAIN_TYPE.FederatedDataModel, () => 'fa-external-link-alt']
-   ]);
 
    @Input() node: any;
    @Input() searchCriteria: string;
@@ -230,11 +206,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
    /** Determine which tree node icon to use based on given node's domain type */
    getIcon(fnode: FlatNode) {
-      if (!this.domainTypeIcons.has(fnode.domainType)) {
-         return null;
-      }
+      return getDomainTypeIcon(fnode.domainType, fnode, this.treeControl);
+   }
 
-      return this.domainTypeIcons.get(fnode.domainType)(fnode, this.treeControl);
+   hasIcon(fnode: FlatNode) {
+      return getDomainTypeIcon(fnode.domainType, fnode, this.treeControl) !== null;
    }
 
    /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */

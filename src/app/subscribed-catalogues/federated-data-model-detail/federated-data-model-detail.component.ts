@@ -157,6 +157,11 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
           return this.messageHandler.showError('There was a problem unsubscribing from the data model.', error);
         });
   }
+  getModelTypeIcon() {
+    return getDomainTypeIcon(this.dataModel.modelType);
+  }
+
+  formBeforeSave() {
 
   federate() {
     this.processing = true;

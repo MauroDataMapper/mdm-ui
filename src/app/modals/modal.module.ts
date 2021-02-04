@@ -43,6 +43,10 @@ import { SecurityModalComponent } from './security-modal/security-modal.componen
 import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
+import { AceComponent, AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
+
+const DefaultAceConfig: AceConfigInterface = {
+};
 
 @NgModule({
   imports: [
@@ -56,6 +60,7 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
     MatPasswordStrengthModule,
     MaterialModule,
     SharedModule,
+    AceModule,
     CatalogueModule
   ],
   declarations: [
@@ -77,7 +82,11 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
     EditProfileModalComponent
   ],
   providers: [
-    ModalService
+    ModalService,
+    {
+      provide: ACE_CONFIG,
+      useValue: DefaultAceConfig
+    }
   ],
   exports: [
     RegisterModalComponent,

@@ -23,16 +23,31 @@ SPDX-License-Identifier: Apache-2.0
    <div class="mdm--form-input">
       <mat-form-field appearance="outline" class="full-width paddingless">
          <mat-label>Language</mat-label>
-         <input matInput [(ngModel)]="data.language" />
+         <mat-select
+            class="authorize-click"
+            aria-label="selectedImporterStr"
+            [(ngModel)]="selectedLanguage"
+         >
+            <mat-option *ngFor="let item of supportedLanguage" [value]="item">{{
+               item.displayName
+            }}</mat-option>
+         </mat-select>
       </mat-form-field>
    </div>
 
-   <div *ngIf="data.language.toLowerCase() !== 'sql' && data.language.toLowerCase() !== 'dmn'" class="mdm--form-input">
-      <mat-form-field appearance="outline" class="full-width paddingless">
-         <mat-label>Representation</mat-label>
-         <input matInput [(ngModel)]="data.representation" />
-      </mat-form-field>
-   </div>
+      <div
+         *ngIf="
+            selectedLanguage.value !== 'sql' &&
+            selectedLanguage.value !== 'dmn' &&
+            selectedLanguage.value !== 'drools'
+         "
+         class="mdm--form-input"
+      >
+         <mat-form-field appearance="outline" class="full-width paddingless">
+            <mat-label>Representation</mat-label>
+            <input matInput [(ngModel)]="data.representation" />
+         </mat-form-field>
+      </div>
    <div *ngIf="data.language.toLowerCase() === 'sql'" class="mdm--form-input">
       <span>Representation</span>
       <ngx-codemirror
@@ -40,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
          [(ngModel)]="data.representation"
          [options]="{ lineNumbers: true, theme: 'default', mode: 'text/x-sql' }"      >
       </ngx-codemirror>
-   </div>
+      </div>
    <div  [ngStyle]="{'visibility':data.language.toLowerCase() === 'dmn' ? 'visible' : 'hidden'}" class="mdm--form-input">
       <span>Representation</span>
       <div id="dmn" #dmn></div>
@@ -50,12 +65,7 @@ SPDX-License-Identifier: Apache-2.0
    <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
       {{ cancelBtn }}
    </button>
-   <button
-      mat-flat-button
-      color="{{ btnType }}"
-      type="button"
-      (click)="save()"
-   >
+   <button mat-flat-button color="{{ btnType }}" type="button" (click)="save()">
       {{ okBtn }}
    </button>
 </div>

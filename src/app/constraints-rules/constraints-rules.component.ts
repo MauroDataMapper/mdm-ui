@@ -57,7 +57,7 @@ import {
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddRuleModalComponent } from '@mdm/modals/add-rule-modal/add-rule-modal.component';
-import { AddRuleRepresentationModalComponent } from '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component';
+import { AddRuleRepresentationModalComponent, RuleLanguages } from '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
@@ -100,7 +100,8 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
    ) {
       super();
 
-      this.languages = [ {displayName:'SQL', value:'sql'}, {displayName:'DMN',value:'dmn'}, {displayName:'All',value:'all'} ];
+      this.languages = RuleLanguages.supportedLanguages;
+      this.languages.push({displayName:'All',value:'all'});
       this.isLoadingResults = true;
       this.displayedColumns = ['name', 'description', 'rule', 'actions'];
       this.isEditable = true;

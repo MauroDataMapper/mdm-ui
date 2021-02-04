@@ -307,7 +307,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
                const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
                return termResponse.body;
             case DOMAIN_TYPE.SubscribedCatalogue:
-               return await this.modelTree.getSubscribedCatalogueModelNodes(node.id).toPromise();
+               return await this.modelTree.getFederatedDataModelNodes(node.id).toPromise();
             default:
                return [];
          }

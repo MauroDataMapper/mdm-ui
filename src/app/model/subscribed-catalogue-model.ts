@@ -28,13 +28,6 @@ export interface SubscribedCatalogue {
   refreshPeriod?: number;
 }
 
-export interface SubscribedCatalogueModel {
-  modelId: string;
-  label: string;
-  description?: string;
-  modelType: string;
-}
-
 /**
  * Type alias for an operation for the Subscribed Catalogues API endpoint.
  *
@@ -52,13 +45,6 @@ export type SubscribedCatalogueResponse = MdmResourcesResponse<SubscribedCatalog
  * @see SubscribedCatalogueResponse
  */
 export type SubscribedCatalogueIndexResponse = MdmResourcesIndexResponse<SubscribedCatalogue>;
-
-/**
- * Type alias for an index/list operation for the Subscribed Catalogues Models API endpoint.
- *
- * This type alias represents a response with a multiple `SubscribedCatalogueModel` elements in.
- */
-export type SubscribedCatalogueModelIndexResponse = MdmResourcesIndexResponse<SubscribedCatalogueModel>;
 
 /**
  * Represents the editable form state of a `SubscribedCatalogue`

@@ -24,10 +24,10 @@ SPDX-License-Identifier: Apache-2.0
                 </span>
                 <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
                     [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
-                </mdm-inline-text-edit>                                
-            </h4>            
+                </mdm-inline-text-edit>
+            </h4>
             <small *ngIf="dataModel.isSubscribed">
-                <span class="badge badge-success ml-1">Subscribed</span>                        
+                <span class="badge badge-success ml-1">Subscribed</span>
             </small>
             <div class="detail-icons">
                 <div class="text-muted">
@@ -39,9 +39,10 @@ SPDX-License-Identifier: Apache-2.0
                 <div class="text-muted">
                     <small>
                         <i class="fas fa-file-code" matTooltip="Model type"></i>
-                        <span><strong>Model type: </strong><i class="fas {{getModelTypeIcon()}}" matTooltip="Model type"></i>{{dataModel.modelType}}</span>
+                        <span><strong>Model type: </strong><i class="fas {{getModelTypeIcon()}}"
+                                matTooltip="Model type"></i>{{dataModel.modelType}}</span>
                     </small>
-                </div>                
+                </div>
             </div>
         </div>
         <table class="table table-bordered mdm--table-fixed">
@@ -54,54 +55,30 @@ SPDX-License-Identifier: Apache-2.0
                         </mdm-content-editor>
                     </td>
                 </tr>
-                <!-- <tr>
+                <tr *ngIf="dataModel.folderId">
+                    <th class="detailsRowHeader">Folder</th>
+                    <td class="elementDetailDescription">
+                        <mdm-inline-text-edit [readOnly]="true" [inEditMode]="editable.isEditing"
+                            [(ngModel)]="editable.form.folderLabel" class="dataModelDetailsLabel" name="folder">
+                        </mdm-inline-text-edit>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="2" style="text-align: right;">
-                      <div *ngIf="mcDataTypeObject">
-                          <div style="float: right">
-                              <mdm-editable-form-buttons
-                                      [hideEdit]="true"
-                                      [hideDelete]="true"
-                                      [onCancelEdit]="onCancelEdit"
-                                      [editable]="editableForm"
-                                      [textLocation]="'left'">
-                              </mdm-editable-form-buttons>
-                          </div>
-                          <div *ngIf="showDelete" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-right:4px; margin-left: 4px; float: right">
-                              <button mat-stroked-button
-                                      color="warn"
-                                      type="button"
-                                      matTooltip="Delete Data Type"
-                                      aria-label="Delete Data Type"
-                                      class="paddingless"
-                                      (click)="askToDelete()"
-                                      *ngIf="!editableForm.visible && !editableForm.deletePending">
-                                  <i class="far fa-trash-alt warning" aria-hidden="true"></i>
-                              </button>
-                          </div>
-                          <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
-                            <button mat-stroked-button
-                                    color="primary"
-                                    type="button"
-                                    class="paddingless dropdown-toggle warning"
-                                    matTooltip="Edit Data Type"
-                                    aria-label="Edit Data Type"
-                                    [matMenuTriggerFor]="editMenu"
-                                    [hidden]="editableForm.visible">
-                                <i class="fas fa-pencil-alt"></i>
+                        <div *ngIf="!dataModel.isSubscribed" class="mr-1">
+                            <button mat-stroked-button color="accent" type="button" class=" warning"
+                                matTooltip="Subscribe" aria-label="Subscribe" (click)="subscribeToModel()">
+                                <i class="fas fa-plus"></i><span class="ml-1">Subscribe</span>
                             </button>
-
-                            <mat-menu #editMenu>
-                                <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
-                                    Edit Data Type details
-                                </button>
-                                <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
-                                    Edit Description only
-                                </button>
-                            </mat-menu>
-                          </div>
+                        </div>
+                        <div *ngIf="dataModel.isSubscribed" class="mr-1">
+                            <button mat-stroked-button color="warn" type="button" class=" warning"
+                                matTooltip="Unsubscribe" aria-label="Unsubscribe" (click)="unsubscribeFromModel()">
+                                <i class="fas fa-minus"></i><span class="ml-1">Unsubscribe</span>
+                            </button>
                         </div>
                     </td>
-                </tr> -->
+                </tr>
             </tbody>
         </table>
     </form>

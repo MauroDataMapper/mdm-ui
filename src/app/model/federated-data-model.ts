@@ -32,6 +32,7 @@ export interface SubscribedDataModel {
   folderId: string
 }
 export class FederatedDataModel {
+  catalogueId: string;
   modelId?: string;
   label: string;
   description?: string;
@@ -40,8 +41,10 @@ export class FederatedDataModel {
   folderId?: string;
   
   constructor(
+    catalogueId: string,
     available?: AvailableDataModel, 
     subscription?: SubscribedDataModel) { 
+      this.catalogueId = catalogueId;
       this.modelId = available?.modelId;
       this.label = available?.label;
       this.description = available?.description;
@@ -75,10 +78,13 @@ export type SubscribedDataModelIndexResponse = MdmResourcesIndexResponse<Subscri
 export class FederatedDataModelForm implements Resetable<FederatedDataModel> {
   label: string;
   description: string;
+  folderId?: string;
+  folderLabel?: string;
 
   reset(original: FederatedDataModel) {
     this.label = original.label;
     this.description = original.description;
+    this.folderId = original.folderId;
   }
 }
 

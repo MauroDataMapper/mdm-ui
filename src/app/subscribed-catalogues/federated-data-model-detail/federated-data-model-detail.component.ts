@@ -21,6 +21,11 @@ import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated
 import { EditingService } from '@mdm/services/editing.service';
 import { Editable } from '@mdm/model/editable-forms';
 import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { FolderResultResponse } from '@mdm/model/folderModel';
+import { MatDialog } from '@angular/material/dialog';
+import { switchMap } from 'rxjs/operators';
+import { BroadcastService, MessageHandlerService, StateHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
@@ -34,7 +39,12 @@ export class FederatedDataModelDetailComponent implements OnInit {
   editable: Editable<FederatedDataModel, FederatedDataModelForm>;
 
   constructor(
+    private resources: MdmResourcesService,
     private editingService: EditingService,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService,
+    private broadcastSvc: BroadcastService,
     private title: Title) { }
 
   ngOnInit(): void {
@@ -44,9 +54,24 @@ export class FederatedDataModelDetailComponent implements OnInit {
       this.dataModel, 
       new FederatedDataModelForm());
 
+    this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
+
     this.editable.onCancel.subscribe(() => {
       this.editingService.stop();      
     });
+
+    // After subscribing to the "onReset" observable, trigger a reset to get all required details
+    this.editable.reset();
+  }
+
+  private setFolderLabelToForm(data: FederatedDataModel) {
+    if (!data.folderId) {
+      return;
+    }
+
+    this.resources.folder
+      .get(data.folderId)
+      .subscribe((response: FolderResultResponse) => this.editable.form.folderLabel = response.body.label);
   }
 
   getModelTypeIcon() {
@@ -55,5 +80,33 @@ export class FederatedDataModelDetailComponent implements OnInit {
 
   formBeforeSave() {
 
+  }
+
+  subscribeToModel() {
+
+  }
+  
+  unsubscribeFromModel() {
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Confirm unsubscribe',
+          okBtnTitle: 'Yes, unsubscribe',
+          btnType: 'warn',
+          message: 'Are you sure you want to unsubscribe from this data model?'
+        }
+      })
+      .pipe(
+        switchMap(() => this.resources.subscribedCatalogues.removeSubscribedModel(
+          this.dataModel.catalogueId, 
+          this.dataModel.subscriptionId))
+      )
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess('Successfully unsubscribed from data model.');
+          this.stateHandler.reload();
+          this.broadcastSvc.broadcast('$reloadFoldersTree');
+        },
+        error => this.messageHandler.showError('There was a problem unsubscribing from the data model.', error));
   }
 }

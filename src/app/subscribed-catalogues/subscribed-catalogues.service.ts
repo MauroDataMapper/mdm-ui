@@ -43,7 +43,7 @@ export class SubscribedCataloguesService {
       map(([availableModels, subscribedModels]) => {
         return availableModels.map(available => {
           const subscribed = subscribedModels.find(item => item.subscribedModelId === (available.modelId ?? ''))
-          return new FederatedDataModel(available, subscribed);
+          return new FederatedDataModel(catalogueId, available, subscribed);
         });
       })
     );

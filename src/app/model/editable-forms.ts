@@ -39,6 +39,7 @@ export interface Resetable<T> {
 export class Editable<T, F extends Resetable<T>> {
   private onShowSource = new Subject<void>();
   private onCancelSource = new Subject<void>();
+  private onResetSource = new Subject<T>();
 
   /**
    * Observable to subscribe to when the editable object state is being shown.
@@ -49,6 +50,14 @@ export class Editable<T, F extends Resetable<T>> {
    * Observable to subscribe to when the editable object state is being cancelled.
    */
   onCancel = this.onCancelSource.asObservable();  
+
+  /**
+   * Observable to subscribe to when the editable object state is being reset.
+   * 
+   * Use this when it is required to set further data to `F` that `T` provides only the basis of, for instance
+   * `T` may provide an `id` property but `F` requires the data object associated with that ID.
+   */
+  onReset = this.onResetSource.asObservable();
 
   /**
    * Determine if form data is being deleted.
@@ -70,6 +79,7 @@ export class Editable<T, F extends Resetable<T>> {
 
   reset() {
     this.form.reset(this.original);
+    this.onResetSource.next(this.original);
   }
 
   show() {

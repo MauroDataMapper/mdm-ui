@@ -25,7 +25,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService, MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge, Observable } from 'rxjs';
-import { catchError, map, mergeMap, startWith, switchMap } from 'rxjs/operators';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-subscribed-catalogues',
@@ -62,7 +62,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     this.dataSource.sort = this.sort;
 
-    this.refreshList();    
+    this.refreshList();
   }
 
   refreshList() {
@@ -106,12 +106,12 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
       sortBy,
       sortType);
 
-    return this.resources.subscribedCatalogues.list(options);   
+    return this.resources.subscribedCatalogues.list(options);
   }
 
   addSubscription = () => {
     this.stateHandlerService.Go('appContainer.adminArea.subscribedCatalogue', { id: null });
-  }
+  };
 
   editSubscription(record: SubscribedCatalogue) {
     if (!record) {

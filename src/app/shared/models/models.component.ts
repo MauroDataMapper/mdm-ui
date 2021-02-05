@@ -26,7 +26,7 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';

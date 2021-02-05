@@ -129,7 +129,7 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         this.processing = false;
         this.messageHandler.showSuccess('Successfully subscribed to data model.');
         this.reloading.emit();
-      });
+        });
 
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
     this.editable.reset();

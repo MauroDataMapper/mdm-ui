@@ -270,18 +270,22 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
                } else {
                   return node.children;
                }
-            case DOMAIN_TYPE.DataModel:
+            case DOMAIN_TYPE.DataModel: {
                const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
                return dataModelResponse.body;
-            case DOMAIN_TYPE.DataClass:
+            }
+            case DOMAIN_TYPE.DataClass: {
                const dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
                return dataClassResponse.body;
-            case DOMAIN_TYPE.Terminology:
+            }
+            case DOMAIN_TYPE.Terminology: {
                const terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
                return terminologyResponse.body;
-            case DOMAIN_TYPE.Term:
+            }
+            case DOMAIN_TYPE.Term: {
                const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
                return termResponse.body;
+            }
             case DOMAIN_TYPE.SubscribedCatalogue:
                return await this.modelTree.getFederatedDataModelNodes(node.id).toPromise();
             default:

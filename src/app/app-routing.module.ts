@@ -289,7 +289,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
       url: '/subscribedCatalogue/:parentId/federatedDataModel/:id/{tabView:string}',
       component: FederatedDataModelMainComponent,
-      params: { 
+      params: {
         tabView: { dynamic: true, value: null, squash: true },
         dataModel: null
       }

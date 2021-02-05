@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FederatedDataModel } from '@mdm/model/federated-data-model';
-import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';
 import { UIRouterGlobals } from '@uirouter/angular';
@@ -31,10 +30,11 @@ import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
 })
 export class FederatedDataModelMainComponent extends BaseComponent implements OnInit {
 
+  catalogueId: string;
+  modelId: string;
   dataModel: FederatedDataModel;
 
   constructor(
-    private resources: MdmResourcesService,
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
@@ -44,6 +44,16 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
   }
 
   ngOnInit(): void {
+    this.catalogueId = this.uiRouterGlobals.params.parentId;
+    if (!this.catalogueId || !this.isGuid(this.catalogueId)) {
+      this.stateHandler.NotFound({ location: false });
+    }
+
+    this.modelId = this.uiRouterGlobals.params.id;
+    if (!this.modelId || !this.isGuid(this.modelId)) {
+      this.stateHandler.NotFound({ location: false });
+    }
+
     this.title.setTitle('Federated Data Model');
 
     // First check if dataModel was provided in state transition
@@ -54,20 +64,36 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     }
 
     // If not from tree, fetch from the server again
-    const parentId: string = this.uiRouterGlobals.params.parentId;
-    if (!parentId || !this.isGuid(parentId)) {
-      this.stateHandler.NotFound({ location: false });
-    }
+    this.getFederatedDataModel();          
+  }
 
-    const modelId: string = this.uiRouterGlobals.params.id;
-    if (!modelId || !this.isGuid(modelId)) {
-      this.stateHandler.NotFound({ location: false });
-    }    
+  onReloading() {
+    this.getFederatedDataModel(true);
+  }
 
+  private getFederatedDataModel(reloadView?: boolean) {
     this.subscribedCatalogues
-      .getFederatedDataModels(parentId)
+      .getFederatedDataModels(this.catalogueId)
       .subscribe(
-        models => this.dataModel = models.find(model => model.modelId === modelId),
+        models => {
+          this.dataModel = models.find(model => model.modelId === this.modelId);
+          if (reloadView) {
+            this.reloadView();
+          }
+        },
         errors => this.messageHandler.showError('There was a problem getting the Federated Data Model', errors));
+  }
+
+  private reloadView() {
+    this.stateHandler.Go(
+      'federateddatamodel', 
+      { 
+        parentId: this.catalogueId, 
+        id: this.modelId,
+        dataModel: this.dataModel
+      },
+      {
+        reload: true
+      });
   }
 }

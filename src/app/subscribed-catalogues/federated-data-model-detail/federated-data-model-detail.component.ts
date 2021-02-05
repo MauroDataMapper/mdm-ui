@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
 import { EditingService } from '@mdm/services/editing.service';
@@ -24,28 +24,30 @@ import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { FolderResultResponse } from '@mdm/model/folderModel';
 import { MatDialog } from '@angular/material/dialog';
-import { switchMap } from 'rxjs/operators';
-import { BroadcastService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { filter, switchMap } from 'rxjs/operators';
+import { MessageHandlerService } from '@mdm/services';
+import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
   templateUrl: './federated-data-model-detail.component.html',
   styleUrls: ['./federated-data-model-detail.component.scss']
 })
-export class FederatedDataModelDetailComponent implements OnInit {
+export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
   @Input() dataModel: FederatedDataModel;
+  @Output() reloading = new EventEmitter();
 
   editable: Editable<FederatedDataModel, FederatedDataModelForm>;
+  processing: boolean = false;
 
   constructor(
     private resources: MdmResourcesService,
     private editingService: EditingService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private stateHandler: StateHandlerService,
-    private broadcastSvc: BroadcastService,
-    private title: Title) { }
+    private title: Title) { }  
 
   ngOnInit(): void {
     this.title.setTitle(`Federated Data Model - ${this.dataModel.label}`);
@@ -56,13 +58,18 @@ export class FederatedDataModelDetailComponent implements OnInit {
 
     this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
 
-    this.editable.onCancel.subscribe(() => {
-      this.editingService.stop();      
-    });
+    this.editable.onCancel.subscribe(() => this.editingService.stop());
 
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
     this.editable.reset();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.dataModel && changes.dataModel.previousValue && changes.dataModel.currentValue) {
+      // Refresh computed properties after changes
+      this.editable.reset(this.dataModel);
+    }
+  }  
 
   private setFolderLabelToForm(data: FederatedDataModel) {
     if (!data.folderId) {
@@ -83,7 +90,41 @@ export class FederatedDataModelDetailComponent implements OnInit {
   }
 
   subscribeToModel() {
-
+    this.dialog
+      .open<NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse>(
+        NewFederatedSubscriptionModalComponent,
+        {
+          data: {            
+            modalTitle: 'Subscribe to Data Model',
+            btnType: 'primary',
+            inputLabel: 'Folder name',
+            message: 'Please select the folder to subscribe this data model to.'
+          }
+        }
+      )
+      .afterClosed()
+      .pipe(
+        filter(response => response.status === ModalDialogStatus.Ok),
+        switchMap(response => {
+          this.processing = true;
+          return this.resources.subscribedCatalogues.saveSubscribedModel(
+            this.dataModel.catalogueId,
+            {
+              subscribedModelId: this.dataModel.modelId,
+              folderId: response.folder.id
+            });
+        })
+      )
+      .subscribe(
+        () => {
+          this.processing = false;
+          this.messageHandler.showSuccess('Successfully subscribed to data model.');
+          this.reloading.emit();
+        },
+        error => {
+          this.processing = false;
+          return this.messageHandler.showError('There was a problem subscribing to the data model.', error);
+        });      
   }
   
   unsubscribeFromModel() {
@@ -97,16 +138,22 @@ export class FederatedDataModelDetailComponent implements OnInit {
         }
       })
       .pipe(
-        switchMap(() => this.resources.subscribedCatalogues.removeSubscribedModel(
-          this.dataModel.catalogueId, 
-          this.dataModel.subscriptionId))
+        switchMap(() => {
+          this.processing = true;
+          return this.resources.subscribedCatalogues.removeSubscribedModel(
+            this.dataModel.catalogueId,
+            this.dataModel.subscriptionId);
+        })
       )
       .subscribe(
         () => {
+          this.processing = false;
           this.messageHandler.showSuccess('Successfully unsubscribed from data model.');
-          this.stateHandler.reload();
-          this.broadcastSvc.broadcast('$reloadFoldersTree');
+          this.reloading.emit();
         },
-        error => this.messageHandler.showError('There was a problem unsubscribing from the data model.', error));
+        error => {
+          this.processing = false;
+          return this.messageHandler.showError('There was a problem unsubscribing from the data model.', error);
+        });
   }
 }

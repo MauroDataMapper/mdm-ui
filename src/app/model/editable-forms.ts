@@ -70,14 +70,24 @@ export class Editable<T, F extends Resetable<T>> {
   isEditing: boolean;
 
   constructor(
-    private readonly original: T,
+    private original: T,
     public form: F) {
     this.deletePending = false;
     this.isEditing = false;
     this.reset();
   }
 
-  reset() {
+  /**
+   * Reset the form state of this object.
+   * 
+   * @param next The next `T` object to set to `original` if overriding the original value. If not provided, the value
+   * currently stored in `original` will be used.
+   */
+  reset(next?: T) {
+    if (next) {
+      this.original = next;
+    }
+
     this.form.reset(this.original);
     this.onResetSource.next(this.original);
   }

@@ -216,16 +216,8 @@ export enum DOMAIN_TYPE {
 type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
 
 const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
-    [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
-    [DOMAIN_TYPE.DataModel, (fnode, _) =>  {
-       if (fnode.type === 'Data Standard') {
-          return 'fa-file-alt';
-       }
-       if (fnode.type === 'Data Asset') {
-          return 'fa-database'
-       }
-       return null;
-    }],
+    [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
+    [DOMAIN_TYPE.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
     [DOMAIN_TYPE.Terminology, () => 'fa-book'],
     [DOMAIN_TYPE.CodeSet, () => 'fa-list'],
     [DOMAIN_TYPE.Classification, () => 'fa-tags'],

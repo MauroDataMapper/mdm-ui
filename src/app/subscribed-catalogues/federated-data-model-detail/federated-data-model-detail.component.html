@@ -67,17 +67,20 @@ SPDX-License-Identifier: Apache-2.0
                     <td colspan="2" style="text-align: right;">
                         <div *ngIf="!dataModel.isSubscribed" class="mr-1">
                             <button mat-stroked-button color="accent" type="button" class=" warning"
-                                matTooltip="Subscribe" aria-label="Subscribe" (click)="subscribeToModel()">
+                                matTooltip="Subscribe" aria-label="Subscribe" [disabled]="processing" (click)="subscribeToModel()">
                                 <i class="fas fa-plus"></i><span class="ml-1">Subscribe</span>
                             </button>
                         </div>
                         <div *ngIf="dataModel.isSubscribed" class="mr-1">
                             <button mat-stroked-button color="warn" type="button" class=" warning"
-                                matTooltip="Unsubscribe" aria-label="Unsubscribe" (click)="unsubscribeFromModel()">
+                                matTooltip="Unsubscribe" aria-label="Unsubscribe" [disabled]="processing" (click)="unsubscribeFromModel()">
                                 <i class="fas fa-minus"></i><span class="ml-1">Unsubscribe</span>
                             </button>
                         </div>
-                    </td>
+                        <div style="clear: both;" *ngIf="processing">
+                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
+                        </div>
+                    </td>                    
                 </tr>
             </tbody>
         </table>

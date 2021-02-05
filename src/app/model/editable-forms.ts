@@ -61,7 +61,7 @@ export class Editable<T, F extends Resetable<T>> {
 
   /**
    * Observable to subscribe to when the editable object state is being reset.
-   * 
+   *
    * Use this when it is required to set further data to `F` that `T` provides only the basis of, for instance
    * `T` may provide an `id` property but `F` requires the data object associated with that ID.
    */

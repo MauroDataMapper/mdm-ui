@@ -56,6 +56,10 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
     this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
 
+    this.editable.onCancel.subscribe(() => {
+      this.editingService.stop();
+    });
+
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
     this.editable.reset();
   }

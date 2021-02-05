@@ -19,7 +19,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Editable } from '@mdm/model/editable-forms';
 import { SubscribedCatalogue, SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
-import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-subscribed-catalogue-detail',
@@ -32,9 +31,7 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
 
   editable: Editable<SubscribedCatalogue, SubscribedCatalogueForm>;
 
-  constructor(
-    private editingService: EditingService,
-    private title: Title) { }  
+  constructor(private title: Title) { }  
 
   ngOnInit(): void {     
     this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
@@ -42,13 +39,5 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
     this.editable = new Editable(
       this.subscribedCatalogue,
       new SubscribedCatalogueForm());
-
-    this.editable.onCancel.subscribe(() => {
-      this.editingService.stop();      
-    });
-  }
-
-  formBeforeSave() {
-    
-  }
+  }  
 }

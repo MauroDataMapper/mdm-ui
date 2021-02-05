@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
-import { EditingService } from '@mdm/services/editing.service';
 import { Editable } from '@mdm/model/editable-forms';
 import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -44,7 +43,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
   constructor(
     private resources: MdmResourcesService,
-    private editingService: EditingService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private title: Title) { }  
@@ -57,8 +55,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
       new FederatedDataModelForm());
 
     this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
-
-    this.editable.onCancel.subscribe(() => this.editingService.stop());
 
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
     this.editable.reset();
@@ -83,11 +79,7 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
   getModelTypeIcon() {
     return getDomainTypeIcon(this.dataModel.modelType);
-  }
-
-  formBeforeSave() {
-
-  }
+  }  
 
   subscribeToModel() {
     this.dialog

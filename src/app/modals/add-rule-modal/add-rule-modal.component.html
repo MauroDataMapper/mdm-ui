@@ -35,5 +35,5 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div class="modal-footer pxy-2">
     <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>{{cancelBtn}}</button>
-    <button mat-flat-button color="{{btnType}}" type="button" [disabled]="data.name.length === 0" [mat-dialog-close]="data">{{okBtn}}</button>
+    <button mat-flat-button color="{{btnType}}" type="button" [disabled]="data.name.length === 0 ||  data.description.length === 0" [mat-dialog-close]="data">{{okBtn}}</button>
 </div>

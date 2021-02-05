@@ -34,38 +34,41 @@ SPDX-License-Identifier: Apache-2.0
          </mat-select>
       </mat-form-field>
    </div>
-
-      <div
-         *ngIf="
-            selectedLanguage.value !== 'sql' &&
-            selectedLanguage.value !== 'dmn' &&
-            selectedLanguage.value !== 'drools'
-         "
-         class="mdm--form-input"
-      >
-         <mat-form-field appearance="outline" class="full-width paddingless">
-            <mat-label>Representation</mat-label>
-            <input matInput [(ngModel)]="data.representation" />
-         </mat-form-field>
-      </div>
-   <div *ngIf="data.language.toLowerCase() === 'sql'" class="mdm--form-input">
-      <span>Representation</span>
-      <ngx-codemirror
-         matInput
-         [(ngModel)]="data.representation"
-         [options]="{ lineNumbers: true, theme: 'default', mode: 'text/x-sql' }"      >
-      </ngx-codemirror>
-      </div>
-   <div  [ngStyle]="{'visibility':data.language.toLowerCase() === 'dmn' ? 'visible' : 'hidden'}" class="mdm--form-input">
-      <span>Representation</span>
+   <div *ngIf="showAceEditor()" class="mdm--form-input">
+      <label>Representation</label>
+      <ace
+         [mode]="selectedLanguage.aceValue"
+         style="height: 500px; width: 500px"
+         [theme]="'github'"
+         [(value)]="data.representation"
+      ></ace>
+   </div>
+   <div
+      [ngStyle]="{
+         display: selectedLanguage.value === 'dmn' ? 'block' : 'none'
+      }"
+      class="mdm--form-input"
+   >
+      <label>Representation</label>
       <div id="dmn" #dmn></div>
    </div>
-</div>
-<div class="modal-footer pxy-2">
-   <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
-      {{ cancelBtn }}
-   </button>
-   <button mat-flat-button color="{{ btnType }}" type="button" (click)="save()">
-      {{ okBtn }}
-   </button>
+   <div class="modal-footer pxy-2">
+      <button
+         mat-button
+         color="warn"
+         class="mr-1"
+         type="button"
+         mat-dialog-close
+      >
+         {{ cancelBtn }}
+      </button>
+      <button
+         mat-flat-button
+         color="{{ btnType }}"
+         type="button"
+         (click)="save()"
+      >
+         {{ okBtn }}
+      </button>
+   </div>
 </div>

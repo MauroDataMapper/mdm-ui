@@ -100,12 +100,12 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
    ) {
       super();
 
-      this.languages = RuleLanguages.supportedLanguages;
+      this.languages = Object.assign([], RuleLanguages.supportedLanguages);
       this.languages.push({displayName:'All',value:'all'});
       this.isLoadingResults = true;
       this.displayedColumns = ['name', 'description', 'rule', 'actions'];
       this.isEditable = true;
-      this.selectedLanguage = this.languages[2];
+      this.selectedLanguage = this.languages.find(x => x.value === 'all');
    }
 
    ngOnInit(): void {
@@ -281,7 +281,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
          data: {
             language: '',
             representation: '',
-            modalTitle: 'Add New Rule Representation',
+            modalTitle: 'Add Representation',
             okBtn: 'Add',
             btnType: 'primary'
          },
@@ -333,6 +333,10 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
 
    filterClick = () =>{
       this.filteredOpen = !this.filteredOpen;
+   };
+
+   exportRule = (rule:any) => {
+            this.messageHandler.showSuccess(rule.name);
    };
 
    selectedLanguageChange = () => {

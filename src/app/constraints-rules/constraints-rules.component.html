@@ -68,6 +68,16 @@ SPDX-License-Identifier: Apache-2.0
                            [showDeleteButton]="false"
                            [add]="add"
                         ></mdm-data-type-list-buttons>
+                        <button
+                        mat-flat-button
+                      color="primary"
+                      style="margin-left: 5px;"
+                        type="button"
+                        *ngIf="isEditable"
+                        (click)="exportRule(null)" 
+                     >
+                        <i class="fas fa-download"></i> Export
+                     </button>
                      </div>
                   </div>
                </mat-panel-title>
@@ -187,8 +197,18 @@ SPDX-License-Identifier: Apache-2.0
                         *ngIf="isEditable"
                         (click)="addRepresentation(record)"
                      >
-                        <i class="fas fa-pencil-alt"></i> Add Rule
+                        <i class="fas fa-plus"></i> Add Representation
                      </button>
+                     <mat-divider></mat-divider>
+                     <button
+                     mat-menu-item
+                     color="accent"
+                     type="button"
+                     *ngIf="isEditable"
+                     (click)="exportRule(record)"
+                  >
+                     <i class="fas fa-download"></i> Export
+                  </button>
                      <mat-divider *ngIf="isEditable"></mat-divider>
                      <button
                         mat-menu-item

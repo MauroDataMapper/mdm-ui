@@ -19,14 +19,16 @@ SPDX-License-Identifier: Apache-2.0
 export class RuleLanguages {
    static supportedLanguages = [
       { displayName: 'SQL', value: 'sql', aceValue: 'sql' },
-      { displayName: 'C#', value: 'c#', aceValue: 'c#' },
+      { displayName: 'C#', value: 'c#', aceValue: 'csharp' },
       {
          displayName: 'JavaScript',
          value: 'javascript',
          aceValue: 'javascript'
       },
       { displayName: 'Java', value: 'java', aceValue: 'java' },
+      { displayName: 'Typescript', value: 'typescript', aceValue: 'typescript' },
       { displayName: 'Drools', value: 'drools', aceValue: 'drools' },
+      { displayName: 'Text', value: 'text', aceValue: 'text' },
       { displayName: 'DMN', value: 'dmn', aceValue: '' }
    ];
 }
@@ -43,6 +45,11 @@ import DmnModeler from 'dmn-js/lib/Modeler';
 import 'brace';
 import 'brace/mode/drools';
 import 'brace/mode/sql';
+import 'brace/mode/java';
+import 'brace/mode/javascript';
+import 'brace/mode/typescript';
+import 'brace/mode/csharp';
+import 'brace/mode/text';
 import 'brace/theme/github';
 
 @Component({
@@ -115,6 +122,11 @@ export class AddRuleRepresentationModalComponent implements OnInit {
             canvas.zoom('fit-viewport');
          });
       });
+   }
+
+   showAceEditor()
+   {
+      return this.selectedLanguage.aceValue.length > 0;
    }
 
    save() {

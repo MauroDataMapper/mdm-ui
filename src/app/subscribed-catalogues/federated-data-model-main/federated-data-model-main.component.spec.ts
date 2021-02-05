@@ -16,6 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
+import { of } from 'rxjs';
+import { SubscribedCataloguesService } from '../subscribed-catalogues.service';
 
 import { FederatedDataModelMainComponent } from './federated-data-model-main.component';
 
@@ -25,6 +30,24 @@ describe('FederatedDataModelMainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, 
+          useValue: { }
+        },
+        {
+          provide: SubscribedCataloguesService,
+          useValue: { 
+            getFederatedDataModels: (catalogueId: string) => {
+              return of();
+            }
+          }
+        }
+      ],
       declarations: [ FederatedDataModelMainComponent ]
     })
     .compileComponents();

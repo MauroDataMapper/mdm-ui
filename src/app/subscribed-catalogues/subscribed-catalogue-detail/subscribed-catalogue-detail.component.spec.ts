@@ -33,6 +33,7 @@ describe('SubscribedCatalogueDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SubscribedCatalogueDetailComponent);
     component = fixture.componentInstance;
+    component.subscribedCatalogue = { url: '', label: '' };
     fixture.detectChanges();
   });
 

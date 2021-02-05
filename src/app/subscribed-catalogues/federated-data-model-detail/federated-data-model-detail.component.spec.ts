@@ -16,6 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { ToastrModule } from 'ngx-toastr';
 
 import { FederatedDataModelDetailComponent } from './federated-data-model-detail.component';
 
@@ -25,6 +28,20 @@ describe('FederatedDataModelDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MatDialogModule,
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, 
+          useValue: {}
+        },
+        { 
+          provide: MatDialog, 
+          useValue: {} 
+        },
+      ],
       declarations: [ FederatedDataModelDetailComponent ]
     })
     .compileComponents();
@@ -33,6 +50,7 @@ describe('FederatedDataModelDetailComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FederatedDataModelDetailComponent);
     component = fixture.componentInstance;
+    component.dataModel = { catalogueId: '', label: '', isSubscribed: false };
     fixture.detectChanges();
   });
 

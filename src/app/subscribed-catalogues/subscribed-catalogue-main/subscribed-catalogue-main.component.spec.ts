@@ -16,6 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { ToastrModule } from 'ngx-toastr';
 
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogue-main.component';
 
@@ -25,6 +28,16 @@ describe('SubscribedCatalogueComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, 
+          useValue: { }
+        }
+      ],
       declarations: [ SubscribedCatalogueMainComponent ]
     })
     .compileComponents();

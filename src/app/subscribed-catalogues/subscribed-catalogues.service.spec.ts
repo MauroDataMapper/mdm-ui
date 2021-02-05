@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { TestBed } from '@angular/core/testing';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 import { SubscribedCataloguesService } from './subscribed-catalogues.service';
 
@@ -23,7 +24,14 @@ describe('SubscribedCataloguesService', () => {
   let service: SubscribedCataloguesService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: {}
+        }
+      ]
+    });
     service = TestBed.inject(SubscribedCataloguesService);
   });
 

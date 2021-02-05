@@ -31,13 +31,13 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
 
   editable: Editable<SubscribedCatalogue, SubscribedCatalogueForm>;
 
-  constructor(private title: Title) { }  
+  constructor(private title: Title) { }
 
-  ngOnInit(): void {     
+  ngOnInit(): void {
     this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
 
     this.editable = new Editable(
       this.subscribedCatalogue,
       new SubscribedCatalogueForm());
-  }  
+  }
 }

@@ -37,8 +37,8 @@ export class SubscribedCatalogueMainComponent extends BaseComponent implements O
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
-    private title: Title) { 
-      super()
+    private title: Title) {
+      super();
     }
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { MdmResourcesResponse } from "@mdm/modules/resources";
+import { MdmResourcesResponse } from '@mdm/modules/resources';
 
 /*
 Copyright 2020 University of Oxford

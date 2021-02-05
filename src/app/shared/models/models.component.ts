@@ -26,15 +26,14 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { Node } from '@mdm/folders-tree/flat-node'
-import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
+import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 @Component({
@@ -254,8 +253,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }, error => {
       this.messageHandler.showError('There was a problem loading the model tree.', error);
       this.reloading = false;
-    });    
-  };  
+    });
+  };
 
   onNodeConfirmClick($event: NodeConfirmClickEvent) {
     const node = $event.next.node;

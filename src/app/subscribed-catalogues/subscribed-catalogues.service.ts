@@ -31,7 +31,7 @@ export class SubscribedCataloguesService {
   /**
    * Combines the endpoint responses from `listAvailableModels()` and `listSubscribedModels()` to produce a collection of
    * `FederatedDataModel` objects to provide external data models and their subscription status.
-   * 
+   *
    * @param catalogueId The UUID of the subscribed catalogue to search under.
    */
   getFederatedDataModels(catalogueId: string): Observable<FederatedDataModel[]> {
@@ -42,7 +42,7 @@ export class SubscribedCataloguesService {
     .pipe(
       map(([availableModels, subscribedModels]) => {
         return availableModels.map(available => {
-          const subscribed = subscribedModels.find(item => item.subscribedModelId === (available.modelId ?? ''))
+          const subscribed = subscribedModels.find(item => item.subscribedModelId === (available.modelId ?? ''));
           return new FederatedDataModel(catalogueId, available, subscribed);
         });
       })
@@ -54,7 +54,7 @@ export class SubscribedCataloguesService {
       .listAvailableModels(catalogueId)
       .pipe(
         map((response: AvailableDataModelIndexResponse) => response.body.items ?? [])
-      )
+      );
   }
 
   listSubscribedModels(catalogId: string): Observable<SubscribedDataModel[]> {

@@ -39,7 +39,7 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
     private subscribedCatalogues: SubscribedCataloguesService,
-    private title: Title) { 
+    private title: Title) {
     super();
   }
 
@@ -64,7 +64,7 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
     }
 
     // If not from tree, fetch from the server again
-    this.getFederatedDataModel();          
+    this.getFederatedDataModel();
   }
 
   onReloading() {
@@ -86,9 +86,9 @@ export class FederatedDataModelMainComponent extends BaseComponent implements On
 
   private reloadView() {
     this.stateHandler.Go(
-      'federateddatamodel', 
-      { 
-        parentId: this.catalogueId, 
+      'federateddatamodel',
+      {
+        parentId: this.catalogueId,
         id: this.modelId,
         dataModel: this.dataModel
       },

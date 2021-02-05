@@ -55,7 +55,7 @@ export class ModelTreeService {
     return this.resources.tree
       .list('folders', options.queryStringParams)
       .pipe(
-        map((response: any) => <Node[]>response.body)
+        map((response: any) => response.body as Node[])
       );
   }
 
@@ -110,14 +110,14 @@ export class ModelTreeService {
 
   /**
    * Gets all external, federated data models available and returns them as `Node` objects for the model tree.
-   * 
+   *
    * @param catalogueId The UUID of the subscribed catalogue to search under.
-   * 
+   *
    * Each returned `Node` object will contain a `FederatedDataModel` inside the `Node.dataModel` property. It is
    * required that the model tree pass this on to the detail component views during UI state transitions because
    * there is no endpoint available for getting a single `FederatedDataModel` - this assignment will reduce
    * roundtrips back to the server.
-   * 
+   *
    * @see FederatedDataModel
    */
   getFederatedDataModelNodes(catalogueId: string): Observable<Node[]> {
@@ -132,6 +132,6 @@ export class ModelTreeService {
           dataModel: item,
           parentId: item.catalogueId
         })))
-      )
+      );
   }
 }

@@ -15,11 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 /**
  * Interface to define a type as resetable.
- * 
+ *
  * @typedef T The type of the object to reset state to.
  */
 export interface Resetable<T> {
@@ -32,7 +32,7 @@ export interface Resetable<T> {
 
 /**
  * Represents the state of a form that can be edited.
- * 
+ *
  * @typedef T The type of the original data object.
  * @typedef F The type representing the form data to edit. Must implement the `Resetable<T>` interface.
  */
@@ -49,11 +49,11 @@ export class Editable<T, F extends Resetable<T>> {
   /**
    * Observable to subscribe to when the editable object state is being cancelled.
    */
-  onCancel = this.onCancelSource.asObservable();  
+  onCancel = this.onCancelSource.asObservable();
 
   /**
    * Observable to subscribe to when the editable object state is being reset.
-   * 
+   *
    * Use this when it is required to set further data to `F` that `T` provides only the basis of, for instance
    * `T` may provide an `id` property but `F` requires the data object associated with that ID.
    */
@@ -79,7 +79,7 @@ export class Editable<T, F extends Resetable<T>> {
 
   /**
    * Reset the form state of this object.
-   * 
+   *
    * @param next The next `T` object to set to `original` if overriding the original value. If not provided, the value
    * currently stored in `original` will be used.
    */

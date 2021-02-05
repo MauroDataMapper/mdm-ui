@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { FlatTreeControl } from "@angular/cdk/tree";
+import { FlatTreeControl } from '@angular/cdk/tree';
 
 /** (Partial) Structure of source node */
 export interface Node {
@@ -221,7 +221,7 @@ const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
     [DOMAIN_TYPE.Terminology, () => 'fa-book'],
     [DOMAIN_TYPE.CodeSet, () => 'fa-list'],
     [DOMAIN_TYPE.Classification, () => 'fa-tags'],
-    //[DOMAIN_TYPE.Term, () => 'fa-code'],
+    // [DOMAIN_TYPE.Term, () => 'fa-code'],
     [DOMAIN_TYPE.ReferenceDataModel, () => 'fa-file-contract'],
     [DOMAIN_TYPE.LocalCatalogue, () => 'fa-desktop'],
     [DOMAIN_TYPE.ExternalCatalogues, () => 'fa-network-wired'],
@@ -229,10 +229,10 @@ const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
     [DOMAIN_TYPE.FederatedDataModel, () => 'fa-external-link-alt']
  ]);
 
- export function getDomainTypeIcon(type: DOMAIN_TYPE, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) {
+ export const getDomainTypeIcon = (type: DOMAIN_TYPE, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {
     if (!domainTypeIcons.has(type)) {
         return null;
      }
 
      return domainTypeIcons.get(type)(fnode, treeControl);
- }
+ };

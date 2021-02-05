@@ -30,8 +30,8 @@ export interface NewFederatedSubscriptionModalConfig {
 }
 
 export interface NewFederatedSubscriptionModalResponse {
-  status: ModalDialogStatus,
-  folder?: FolderResult
+  status: ModalDialogStatus;
+  folder?: FolderResult;
 }
 
 @Component({
@@ -68,15 +68,15 @@ export class NewFederatedSubscriptionModalComponent implements OnInit {
     this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
-  }  
+  }
 
   confirm() {
     if (this.folder) {
-      this.dialogRef.close({ status: ModalDialogStatus.Ok, folder: this.folder });      
-    }    
+      this.dialogRef.close({ status: ModalDialogStatus.Ok, folder: this.folder });
+    }
   }
 
   cancel() {
     this.dialogRef.close({ status: ModalDialogStatus.Cancel });
-  }  
+  }
 }

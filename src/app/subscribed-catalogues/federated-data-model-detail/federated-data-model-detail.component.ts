@@ -39,19 +39,19 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
   @Output() reloading = new EventEmitter();
 
   editable: Editable<FederatedDataModel, FederatedDataModelForm>;
-  processing: boolean = false;
+  processing = false;
 
   constructor(
     private resources: MdmResourcesService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private title: Title) { }  
+    private title: Title) { }
 
   ngOnInit(): void {
     this.title.setTitle(`Federated Data Model - ${this.dataModel.label}`);
 
     this.editable = new Editable(
-      this.dataModel, 
+      this.dataModel,
       new FederatedDataModelForm());
 
     this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
@@ -65,7 +65,7 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
       // Refresh computed properties after changes
       this.editable.reset(this.dataModel);
     }
-  }  
+  }
 
   private setFolderLabelToForm(data: FederatedDataModel) {
     if (!data.folderId) {
@@ -79,14 +79,14 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
   getModelTypeIcon() {
     return getDomainTypeIcon(this.dataModel.modelType);
-  }  
+  }
 
   subscribeToModel() {
     this.dialog
       .open<NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse>(
         NewFederatedSubscriptionModalComponent,
         {
-          data: {            
+          data: {
             modalTitle: 'Subscribe to Data Model',
             btnType: 'primary',
             inputLabel: 'Folder name',
@@ -116,9 +116,9 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         error => {
           this.processing = false;
           return this.messageHandler.showError('There was a problem subscribing to the data model.', error);
-        });      
+        });
   }
-  
+
   unsubscribeFromModel() {
     this.dialog
       .openConfirmationAsync({

@@ -15,6 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
 import { EditingService } from './services/editing.service';
@@ -29,10 +30,14 @@ export class AppComponent implements OnInit {
   title = 'mdm-ui';
   isLoading = false;
 
+  themeName = 'default-theme';
+
   constructor(
     private userIdle: UserIdleService,
     private sharedService: SharedService,
-    private editingService: EditingService) {}
+    private editingService: EditingService,
+    private overlayContainer: OverlayContainer
+  ) {}
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove() {
@@ -48,6 +53,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular Material. Have to manually
+    // set the correct theme class to this container too
+    this.overlayContainer.getContainerElement().classList.add(this.themeName);
+
     // Start watching for user inactivity.
     this.userIdle.startWatching();
     this.userIdle.onTimerStart().subscribe();

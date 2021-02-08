@@ -16,11 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div [class]="themeName">
-    <mdm-navbar></mdm-navbar>
+    <div class="mat-typography">
+        <mdm-navbar></mdm-navbar>
 
-    <main ui-view></main>
+        <main ui-view></main>
 
-    <mdm-footer></mdm-footer>
+        <mdm-footer></mdm-footer>
 
-    <mdm-loading-indicator></mdm-loading-indicator>
+        <mdm-loading-indicator></mdm-loading-indicator>
+    </div>
 </div>

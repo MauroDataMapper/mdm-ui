@@ -32,10 +32,10 @@ $custom-typography: mat-typography-config(
   $button: mat-typography-level(20px, 26px, 600),
   $input: mat-typography-level(16px, 1, 500)
 );
+// Include the common styles for Angular Material. Only required to include this once!
+@include mat-core();
 
-@include angular-material-typography($custom-typography);
-@include mat-core($custom-typography);
-
+/* Themes */
 @import "style/themes/default.scss";
 
 /* import custom styling */

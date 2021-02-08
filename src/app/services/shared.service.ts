@@ -22,12 +22,15 @@ import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
+const defaultThemeName = 'default-theme';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
   backendURL = environment.apiEndpoint;
   appVersion = environment.version;
+  themeName = environment.themeName ?? defaultThemeName;
   appTitle = environment.appTitle;
   youTrack = environment.youTrack;
   wiki = environment.wiki;

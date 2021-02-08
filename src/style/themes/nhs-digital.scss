@@ -1,0 +1,151 @@
+/*
+Copyright 2021 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+*/
+@import "~@angular/material/theming";
+
+/*
+NHS branding guidelines taken from https://www.england.nhs.uk/nhsidentity/applying-the-identity/
+*/
+
+/* Primary values */
+$nhs-digital-palette-primary: (
+  50: #e6eff8,
+  100: #ccdff1,
+  200: #99bfe3,
+  300: #669ed4,
+  400: #337ec6,
+  500: #005EB8, // NHS Blue
+  600: #004b93,
+  700: #00386e,
+  800: #001325,
+  900: #000912,
+  A100: #5d7fff,
+  A200: #2a57ff,
+  A400: #0034f6,
+  A700: #002edc,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff
+  )
+);
+
+/* Accent values */
+$nhs-digital-palette-accent: (
+    50 : #e6f5eb,
+    100 : #ccead7,
+    200 : #99d5b0,
+    300 : #66c088,
+    400 : #33ab61,
+    500 : #009639, // NHS Green
+    600 : #00782e,
+    700 : #005a22,
+    800 : #003c17,
+    900 : #001e0b,
+    A100 : #9aff9d,
+    A200 : #67ff6b,
+    A400 : #34ff3a,
+    A700 : #1aff21,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+/* Warn values */
+$nhs-digital-palette-warn: (
+  50: #f3e8eb,
+  100: #e8d0d7,
+  200: #d0a1af,
+  300: #b97388,
+  400: #a14460,
+  500: #8A1538, // NHS Dark Red
+  600: #6e112d,
+  700: #530d22,
+  800: #370816,
+  900: #1c040b,
+  A100: #ffa8ac,
+  A200: #ff757b,
+  A400: #ff424a,
+  A700: #ff2832,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff
+  )
+);
+
+$nhs-digital-theme-primary: mat-palette($nhs-digital-palette-primary);
+$nhs-digital-theme-accent: mat-palette($nhs-digital-palette-accent);
+$nhs-digital-theme-warn: mat-palette($nhs-digital-palette-warn);
+
+$nhs-digital-theme: mat-light-theme(
+  $nhs-digital-theme-primary,
+  $nhs-digital-theme-accent,
+  $nhs-digital-theme-warn
+);
+
+$nhs-digital-typography: mat-typography-config(
+  $font-family: "Frutiger, Arial, sans-serif",
+  $body-1: mat-typography-level(17px, 26px, 500),
+  $body-2: mat-typography-level(18px, 26px, 500),
+  $headline: mat-typography-level(36px, 42px, 600),
+  $title: mat-typography-level(32px, 38px, 600),
+  $subheading-2: mat-typography-level(26px, 32px, 600),
+  $subheading-1: mat-typography-level(22px, 28px, 600),
+  $button: mat-typography-level(20px, 26px, 600),
+  $input: mat-typography-level(18px, 1.125, 500)
+);
+
+.nhs-digital-theme {
+  @include angular-material-theme($nhs-digital-theme);    
+  @include angular-material-typography($nhs-digital-typography);
+}

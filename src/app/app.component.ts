@@ -53,9 +53,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular Material. Have to manually
-    // set the correct theme class to this container too
-    this.overlayContainer.getContainerElement().classList.add(this.themeName);
+    this.setTheme();
 
     // Start watching for user inactivity.
     this.userIdle.startWatching();
@@ -71,5 +69,13 @@ export class AppComponent implements OnInit {
       }
       lastDigestRun = now;
     });
+  }
+
+  private setTheme() {
+    this.themeName = this.sharedService.themeName;
+
+    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular Material. Have to manually
+    // set the correct theme class to this container too
+    this.overlayContainer.getContainerElement().classList.add(this.themeName);
   }
 }

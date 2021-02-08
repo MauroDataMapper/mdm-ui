@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
-import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { LoginModalComponent } from '@mdm/modals/login-modal/login-modal.component';
 import { ForgotPasswordModalComponent } from '@mdm/modals/forgot-password-modal/forgot-password-modal.component';
 import { SharedService } from '@mdm/services/shared.service';
@@ -100,7 +99,7 @@ export class NavbarComponent implements OnInit {
           return;
         }
         this.profile = user;
-        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });        
+        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
       }
     });
   };
@@ -124,7 +123,7 @@ export class NavbarComponent implements OnInit {
           return;
         }
         this.profile = user;
-        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });        
+        this.broadcastSvc.broadcast('userLoggedIn', { goTo: 'appContainer.mainApp.twoSidePanel.catalogue.allDataModel' });
       }
     });
   };

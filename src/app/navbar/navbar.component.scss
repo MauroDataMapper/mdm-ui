@@ -1,4 +1,4 @@
-// 
+/*
   Copyright 2020 University of Oxford
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,3 +14,17 @@
   limitations under the License.
 
   SPDX-License-Identifier: Apache-2.0
+*/
+@import '~@angular/material/theming';
+
+@mixin mdm-navbar-theme($theme) {
+  $primary: map-get($theme, primary);
+
+  header#mdm--header {
+    background-color: mat-color($primary);
+  }
+
+  .mdm--navbar-user {
+    background-color: mat-color($primary);
+  }
+}

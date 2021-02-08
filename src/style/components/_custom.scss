@@ -1,5 +1,5 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2021 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-$defaultFontSize: 17px;
-$defaultFontColour: #333;
-$defaultLinkColour: #337AB7;
+@import "~@angular/material/theming";
 
-$mobile-xs: 460px;
-$mobile: 768px;
-$tablet: 992px;
-$desktop: 1600px;
+/* Import all custom components SASS files to access their mixins */
+@import "../../app/navbar/navbar.component.scss";
+@import "../../app//shared/models/models.component.scss";
 
-$fa-font-path: "assets/webfonts";
+/* Combine all custom component theme mixins into one */
+@mixin mdm-custom-components-theme($theme) {
+  @include mdm-navbar-theme($theme);
+  @include mdm-models-tree-theme($theme);
+}

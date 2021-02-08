@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 @import "~@angular/material/theming";
+@import "../components/custom";
 
 /*
 NHS branding guidelines taken from https://www.england.nhs.uk/nhsidentity/applying-the-identity/
@@ -148,4 +149,5 @@ $nhs-digital-typography: mat-typography-config(
 .nhs-digital-theme {
   @include angular-material-theme($nhs-digital-theme);    
   @include angular-material-typography($nhs-digital-typography);
+  @include mdm-custom-components-theme($nhs-digital-theme);
 }

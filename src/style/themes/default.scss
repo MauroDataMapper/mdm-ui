@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 @import "~@angular/material/theming";
+@import "../components/custom";
 
 /* Primary values */
 $default-palette-primary: (
@@ -144,4 +145,5 @@ $default-typography: mat-typography-config(
 .default-theme {
   @include angular-material-theme($default-theme);    
   @include angular-material-typography($default-typography);
+  @include mdm-custom-components-theme($default-theme);
 }

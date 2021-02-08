@@ -220,16 +220,6 @@ export class SecurityHandlerService {
     });
   }
 
-  saveLatestURL(url) {
-    localStorage.setItem('latestURL', url);
-  }
-  getLatestURL() {
-    return localStorage.getItem('latestURL');
-  }
-  removeLatestURL() {
-    localStorage.removeItem('latestURL');
-  }
-
   dataModelAccess(element) {
     return {
       showEdit: element.availableActions.includes('update'),

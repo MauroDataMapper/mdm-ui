@@ -39,7 +39,7 @@ import { ModelTreeService } from '@mdm/services/model-tree.service';
 @Component({
   selector: 'mdm-models',
   templateUrl: './models.component.html',
-  styleUrls: ['./models.component.sass']
+  styleUrls: ['./models.component.scss']
 })
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};

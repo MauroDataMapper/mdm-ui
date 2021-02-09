@@ -33,8 +33,8 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 <div class="mdm--navbar-user">
                     <div *ngIf="!isLoggedIn">
-                        <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary">Register</button> TODO -->
-                        <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary">Log in</button>
+                        <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary-A700">Register</button> TODO -->
+                        <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary-A700">Log in</button>
                     </div>
                     <div *ngIf="isLoggedIn">
                         <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign="center center" style="width: 185px;">

@@ -16,14 +16,23 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <footer>
-    <div class="container text-center">
-        <hr>
-        <div class="mb-2 footer--links">
-            <a *ngIf="wiki && wiki.length>0 && showWikiLink" href="{{wiki}}" target="_blank" rel="noopener">Wiki</a>
-            <a *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" href="{{youTrack.url}}/newIssue" target="_blank" rel="noopener">Report Issue</a>
-        </div>
-        <div class="mb-2">
-            <p class="text-muted">Copyright &copy; {{year}} Clinical Informatics, NIHR Oxford Biomedical Research Centre</p>
-        </div>
+    <div class="container">
+        <div class="footer--container" flex fxLayout="row" fxLayoutAlign="space-between">
+            <div class="footer--logo">
+                <p class="text-muted">Powered by:</p>
+                <img class="mdm-logo" src="assets/images/mdm-logo.png" alt="Mauro Data Mapper logo" />
+            </div>
+            <div>
+                <div class="footer--box" flex fxLayout="column" fxLayoutAlign="space-between">
+                    <div class="footer--links">
+                        <a *ngIf="wiki && wiki.length>0 && showWikiLink" href="{{wiki}}" target="_blank" rel="noopener">Wiki</a>
+                        <a *ngIf="youTrack && youTrack.url && youTrack.url.length>0 && showYouTrackLink" href="{{youTrack.url}}/newIssue" target="_blank" rel="noopener">Report Issue</a>                        
+                    </div>
+                </div>
+                <div class="footer--box">
+                    <p class="text-muted">Copyright &copy; {{year}} Clinical Informatics, NIHR Oxford Biomedical Research Centre</p>
+                </div>
+            </div>
+        </div>        
     </div>
 </footer>

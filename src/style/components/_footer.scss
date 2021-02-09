@@ -19,11 +19,39 @@ mdm-footer {
     margin-top: 32px;
     flex-shrink: 0;
 }
-.footer--links {
-    a:first-child {
-        margin-right: 8px;
+
+footer {
+
+    .footer--container {
+        padding: 16px 0px;
+        margin-top: 8px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
-    a:last-child {
-        margin-left: 8px;
+
+    .footer--logo {
+        margin-right: 16px;
+    }
+
+    .mdm-logo {
+        max-width: 70%;
+        background-color: #002147;
+        padding: 10px;
+
+        @include respond-to($mobile-xs) {
+            max-width: 100%;
+        }
+    }
+
+    .footer--box {
+        margin-bottom: 16px;
+    }
+
+    .footer--links {
+        a:first-child {
+            margin-right: 8px;
+        }
+        a:last-child {
+            margin-left: 8px;
+        }
     }
 }

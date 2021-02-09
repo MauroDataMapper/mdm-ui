@@ -26,6 +26,7 @@ import { RegisterModalComponent } from '@mdm/modals/register-modal/register-moda
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { ThemingService } from '@mdm/services/theming.service';
 
 @Component({
   selector: 'mdm-navbar',
@@ -36,6 +37,7 @@ export class NavbarComponent implements OnInit {
 
   profilePictureReloadIndex = 0;
   profile: any;
+  logoUrl: string;
   backendURL: any;
   imgChanged: boolean;
   simpleViewSupport: any;
@@ -52,7 +54,8 @@ export class NavbarComponent implements OnInit {
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
     private messageService: MessageService,
-    private editingService: EditingService) { }
+    private editingService: EditingService,
+    private theming: ThemingService) { }
 
   ngOnInit() {
     this.subscription = this.messageService.loggedInChanged$.subscribe(result => {
@@ -65,6 +68,7 @@ export class NavbarComponent implements OnInit {
       // }
     }
     this.backendURL = this.sharedService.backendURL;
+    this.logoUrl = this.theming.getAssetPath('logo.png');
     this.imgChanged = false;
     this.HDFLink = this.sharedService.HDFLink;
     this.current = this.sharedService.current;

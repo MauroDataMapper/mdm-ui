@@ -20,6 +20,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
 import { EditingService } from './services/editing.service';
 import { SharedService } from './services/shared.service';
+import { ThemingService } from './services/theming.service';
 
 @Component({
   selector: 'mdm-root',
@@ -29,13 +30,13 @@ import { SharedService } from './services/shared.service';
 export class AppComponent implements OnInit {
   title = 'mdm-ui';
   isLoading = false;
-
-  themeName = 'default-theme';
+  themeCssSelector: string;
 
   constructor(
     private userIdle: UserIdleService,
     private sharedService: SharedService,
     private editingService: EditingService,
+    private theming: ThemingService,
     private overlayContainer: OverlayContainer
   ) {}
 
@@ -72,10 +73,7 @@ export class AppComponent implements OnInit {
   }
 
   private setTheme() {
-    this.themeName = this.sharedService.themeName;
-
-    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular Material. Have to manually
-    // set the correct theme class to this container too
-    this.overlayContainer.getContainerElement().classList.add(this.themeName);
+    this.themeCssSelector = this.theming.themeCssSelector;
+    this.theming.addThemeToOverlay(this.overlayContainer);
   }
 }

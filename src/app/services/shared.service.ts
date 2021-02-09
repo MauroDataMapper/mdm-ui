@@ -30,7 +30,6 @@ const defaultThemeName = 'default-theme';
 export class SharedService {
   backendURL = environment.apiEndpoint;
   appVersion = environment.version;
-  themeName = environment.themeName ?? defaultThemeName;
   appTitle = environment.appTitle;
   youTrack = environment.youTrack;
   wiki = environment.wiki;

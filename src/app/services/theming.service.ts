@@ -15,7 +15,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 
@@ -32,16 +31,6 @@ export class ThemingService {
   constructor() {     
     this.themeName = environment?.themeName ?? defaultThemeName;
     this.themeCssSelector = `${this.themeName}-theme`;
-  }
-
-  addThemeToOverlay(overlayContainer: OverlayContainer) {
-    if (!overlayContainer) {
-      return;
-    }
-
-    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular 
-    // Material. Have to manually set the correct theme class to this container too
-    overlayContainer.getContainerElement().classList.add(this.themeName);
   }
 
   getAssetPath(relativePath: string) {

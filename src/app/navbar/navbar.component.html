@@ -18,13 +18,12 @@ SPDX-License-Identifier: Apache-2.0
 <header id="mdm--header">
     <div class="container">
         <mat-toolbar id="mdm--navbar" color="primary" class="mb-0">
-            <div class="mdm--navbar-brand">
-                <a id="mdm-logo" uiSref="appContainer.mainApp.home">
-                    <img src="assets/images/logo.png" alt="Mauro Data Mapper logo">
-                </a>
-            </div>
-
             <nav id="mdm--navbar-desktop" flex fxLayout="row" fxLayoutAlign="space-between">
+                <div class="mdm--navbar-brand">
+                    <a id="mdm-logo" uiSref="appContainer.mainApp.home">
+                        <img src="assets/themes/nhs-digital/logo.png" alt="Mauro Data Mapper logo">
+                    </a>
+                </div>
                 <div class="mdm--navbar-items">
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.home" uiSrefActive="active">Home</a>
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel" uiSrefActive="active">Browse</a>

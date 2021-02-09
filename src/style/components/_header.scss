@@ -34,7 +34,6 @@ header#mdm--header {
   }
   .mdm--navbar-items {
     display: flex;
-    margin-left: 72px;
     align-items: center;
     @include respond-to($tablet) {
       display: none !important;

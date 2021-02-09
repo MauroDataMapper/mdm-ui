@@ -35,7 +35,10 @@ $custom-typography: mat-typography-config(
 // Include the common styles for Angular Material. Only required to include this once!
 @include mat-core();
 
-/* Themes */
+/* 
+Themes 
+Import more theme SASS files here to make them available to the app
+*/
 @import "style/themes/default.scss";
 @import "style/themes/nhs-digital.scss";
 

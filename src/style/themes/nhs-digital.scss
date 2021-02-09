@@ -150,4 +150,25 @@ $nhs-digital-typography: mat-typography-config(
   @include angular-material-theme($nhs-digital-theme);    
   @include angular-material-typography($nhs-digital-typography);
   @include mdm-custom-components-theme($nhs-digital-theme);
+
+  /* Style overrides for the NHS Digital theme */
+
+  .mdm-app-component {
+    background-color: #f0f4f5;  // NHS Digital background
+  }
+
+  form.mdm--form {
+    padding: 20px;
+  }
+
+  .mdm--shadow-block {
+    padding: 10px;
+  }
+
+  span.tree-top-actions, span.import-folder-actions {
+    
+    button {
+      background-color: #fff;
+    }
+  }
 }

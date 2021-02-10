@@ -75,7 +75,7 @@ export class AppComponent implements OnInit {
   private setTheme() {
     this.themeCssSelector = this.theming.themeCssSelector;
 
-    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular 
+    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular
     // Material. Have to manually set the correct theme class to this container too
     this.overlayContainer.getContainerElement().classList.add(this.themeCssSelector);
     this.overlayContainer.getContainerElement().classList.add('overlay-container');

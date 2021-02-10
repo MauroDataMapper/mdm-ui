@@ -25,7 +25,7 @@ export const environment = {
   apiEndpoint: 'http://localhost:8080/api',
   HDFLink: '',
   themeName: 'nhs-digital',
-  //themeName: 'default',
+  // themeName: 'default',
   appTitle: 'Mauro Data Mapper',
   appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',

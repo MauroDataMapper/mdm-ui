@@ -22,8 +22,6 @@ import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
 
-const defaultThemeName = 'default-theme';
-
 @Injectable({
   providedIn: 'root'
 })

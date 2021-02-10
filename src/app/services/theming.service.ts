@@ -28,7 +28,7 @@ export class ThemingService {
   readonly themeName: string;
   readonly themeCssSelector: string;
 
-  constructor() {     
+  constructor() {
     this.themeName = environment?.themeName ?? defaultThemeName;
     this.themeCssSelector = `${this.themeName}-theme`;
   }

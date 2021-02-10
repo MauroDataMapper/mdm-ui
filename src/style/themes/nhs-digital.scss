@@ -22,6 +22,12 @@ SPDX-License-Identifier: Apache-2.0
 NHS branding guidelines taken from https://www.england.nhs.uk/nhsidentity/applying-the-identity/
 */
 
+$nhs-blue: #005EB8;
+$nhs-green: #009639;
+$nhs-dark-red: #8A1538;
+$nhs-dark-grey: #425563;
+$nhs-digital-background-color: #f0f4f5;
+
 /* Primary values */
 $nhs-digital-palette-primary: (
   50: #e6eff8,
@@ -29,7 +35,7 @@ $nhs-digital-palette-primary: (
   200: #99bfe3,
   300: #669ed4,
   400: #337ec6,
-  500: #005EB8, // NHS Blue
+  500: $nhs-blue,
   600: #004b93,
   700: #00386e,
   800: #001325,
@@ -63,7 +69,7 @@ $nhs-digital-palette-accent: (
     200 : #99d5b0,
     300 : #66c088,
     400 : #33ab61,
-    500 : #009639, // NHS Green
+    500 : $nhs-green,
     600 : #00782e,
     700 : #005a22,
     800 : #003c17,
@@ -97,7 +103,7 @@ $nhs-digital-palette-warn: (
   200: #d0a1af,
   300: #b97388,
   400: #a14460,
-  500: #8A1538, // NHS Dark Red
+  500: $nhs-dark-red,//#8A1538, // NHS Dark Red
   600: #6e112d,
   700: #530d22,
   800: #370816,
@@ -154,7 +160,7 @@ $nhs-digital-typography: mat-typography-config(
   /* Style overrides for the NHS Digital theme */
 
   .mdm-app-component {
-    background-color: #f0f4f5;  // NHS Digital background
+    background-color: $nhs-digital-background-color;
   }
 
   form.mdm--form {
@@ -169,6 +175,14 @@ $nhs-digital-typography: mat-typography-config(
     
     button {
       background-color: #fff;
+    }
+  }
+
+  footer {
+    background-color: $nhs-dark-grey;
+
+    a, .text-muted {
+      color: #fff !important;
     }
   }
 }

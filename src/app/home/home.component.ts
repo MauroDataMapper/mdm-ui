@@ -23,6 +23,8 @@ import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/fo
 import { BroadcastService } from '../services/broadcast.service';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-home',
@@ -34,10 +36,19 @@ export class HomeComponent implements OnInit {
   profile: any;
   isLoggedIn = false;
 
+  introLeftContent: string;
+  introRightContent: string;
+  detailHeading: string;
+  detailColumn1: string;
+  detailColumn2: string;
+  detailColumn3: string;
+
   constructor(
     public dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
     private title: Title
   ) {
     this.broadcastSvc.subscribe('userLoggedOut', () => {
@@ -52,8 +63,18 @@ export class HomeComponent implements OnInit {
       this.profile = this.securityHandler.getCurrentUser();
     }
     this.title.setTitle('Mauro Data Mapper - Home');
-  }
 
+    this.resources.admin.properties().subscribe((response: { body: any}) => {
+      this.introLeftContent = response.body['pageContent.home.intro.left'];
+      this.introRightContent = response.body['pageContent.home.intro.right'];
+      this.detailHeading = response.body['pageContent.home.detail.heading'];
+      this.detailColumn1 = response.body['pageContent.home.detail.column1'];
+      this.detailColumn2 = response.body['pageContent.home.detail.column2'];
+      this.detailColumn3 = response.body['pageContent.home.detail.column3'];
+    }, errors => {
+      this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+    });
+  }
 
   login = () => {
     this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {

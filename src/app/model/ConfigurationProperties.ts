@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 export class ConfigurationPropertiesResult {
+  pageContentHome: string;
   emailAdminConfirmRegistrationSubject: string;
   emailForgottenPasswordSubject: string;
   emailPasswordResetSubject: string;

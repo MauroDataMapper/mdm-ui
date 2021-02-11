@@ -33,12 +33,6 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Item type: </strong><span class="item-type">Subscribed Catalogue</span></span>
                     </small>
                 </div>
-                <!-- <div class="text-muted">
-                    <small>
-                    <i class="far fa-calendar-check" matTooltip="Last update"></i>
-                    <span><strong>Last Update:</strong> {{ mcDataTypeObject.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                  </small>
-                </div> -->
             </div>
         </div>
         <table class="table table-bordered mdm--table-fixed">
@@ -51,54 +45,19 @@ SPDX-License-Identifier: Apache-2.0
                         </mdm-content-editor>
                     </td>
                 </tr>
-                <!-- <tr>
+                <tr>
                     <td colspan="2" style="text-align: right;">
-                      <div *ngIf="mcDataTypeObject">
-                          <div style="float: right">
-                              <mdm-editable-form-buttons
-                                      [hideEdit]="true"
-                                      [hideDelete]="true"
-                                      [onCancelEdit]="onCancelEdit"
-                                      [editable]="editableForm"
-                                      [textLocation]="'left'">
-                              </mdm-editable-form-buttons>
-                          </div>
-                          <div *ngIf="showDelete" [hidden]="editableForm.visible || editableForm.deletePending" style="margin-right:4px; margin-left: 4px; float: right">
-                              <button mat-stroked-button
-                                      color="warn"
-                                      type="button"
-                                      matTooltip="Delete Data Type"
-                                      aria-label="Delete Data Type"
-                                      class="paddingless"
-                                      (click)="askToDelete()"
-                                      *ngIf="!editableForm.visible && !editableForm.deletePending">
-                                  <i class="far fa-trash-alt warning" aria-hidden="true"></i>
-                              </button>
-                          </div>
-                          <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" class="mr-1">
-                            <button mat-stroked-button
-                                    color="primary"
-                                    type="button"
-                                    class="paddingless dropdown-toggle warning"
-                                    matTooltip="Edit Data Type"
-                                    aria-label="Edit Data Type"
-                                    [matMenuTriggerFor]="editMenu"
-                                    [hidden]="editableForm.visible">
-                                <i class="fas fa-pencil-alt"></i>
+                        <div class="mr-1">
+                            <button mat-stroked-button color="primary" type="button"
+                                matTooltip="Federate and sync data models" aria-label="Federate" [disabled]="processing" (click)="federate()">
+                                <i class="fas fa-sync"></i><span class="ml-1">Federate</span>
                             </button>
-
-                            <mat-menu #editMenu>
-                                <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
-                                    Edit Data Type details
-                                </button>
-                                <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
-                                    Edit Description only
-                                </button>
-                            </mat-menu>
-                          </div>
+                        </div>                        
+                        <div style="clear: both;" *ngIf="processing">
+                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </td>
-                </tr> -->
+                </tr>
             </tbody>
         </table>
     </form>

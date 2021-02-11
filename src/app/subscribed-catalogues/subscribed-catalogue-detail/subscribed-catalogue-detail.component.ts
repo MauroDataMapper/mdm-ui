@@ -19,6 +19,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Editable } from '@mdm/model/editable-forms';
 import { SubscribedCatalogue, SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-subscribed-catalogue-detail',
@@ -30,8 +32,12 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
   @Input() subscribedCatalogue: SubscribedCatalogue;
 
   editable: Editable<SubscribedCatalogue, SubscribedCatalogueForm>;
+  processing = false;
 
-  constructor(private title: Title) { }
+  constructor(
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
+    private title: Title) { }
 
   ngOnInit(): void {
     this.title.setTitle(`Subscribed Catalogue - ${this.subscribedCatalogue.label}`);
@@ -39,5 +45,20 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
     this.editable = new Editable(
       this.subscribedCatalogue,
       new SubscribedCatalogueForm());
+  }
+
+  federate() {
+    this.processing = true;
+    this.resources.subscribedCatalogues
+      .federate(this.subscribedCatalogue.id)
+      .subscribe(
+        () => {
+          this.processing = false;
+          this.messageHandler.showSuccess('Triggered federation of subscribed data models. Changes will occur momentarily.');
+        },
+        errors => {
+          this.processing = false;
+          this.messageHandler.showError('Unable to start federation of subscribed data models.', errors);
+        });
   }
 }

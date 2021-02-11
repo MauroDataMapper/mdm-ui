@@ -44,7 +44,7 @@ import { EditingService } from '@mdm/services/editing.service';
 })
 export class McDataSetMetadataComponent implements AfterViewInit {
   @Input() parent: any;
-  @Input() type: any;
+  @Input() type: 'static' | 'dynamic';
   @Input() metaDataItems: any;
   @Input() loadingData: any;
   @Input() clientSide: any;
@@ -88,35 +88,40 @@ export class McDataSetMetadataComponent implements AfterViewInit {
       this.changeDetectorRefs.detectChanges();
 
       if (this.type === 'dynamic') {
-        this.resources.metadata.namespaces().toPromise().then((result) => {
-            this.namespaces = result.body.filter((n) => n.defaultNamespace === false);
-            this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-            this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
-            merge(this.sort.sortChange, this.paginator.page, this.filterEvent).pipe(startWith({}), switchMap(() => {
-                  this.isLoadingResults = true;
-                  this.changeDetectorRefs.detectChanges();
-                  return this.metadataFetch(
-                    this.paginator.pageSize,
-                    this.paginator.pageOffset,
-                    this.sort.active,
-                    this.sort.direction,
-                    this.filter
-                  );
-                }),
-                map((data: any) => {
-                  this.totalItemCount = data.body.count;
-                  this.isLoadingResults = false;
-                  this.changeDetectorRefs.detectChanges();
-                  return data.body.items;
-                }),
-                catchError(() => {
-                  this.isLoadingResults = false;
-                  this.changeDetectorRefs.detectChanges();
-                  return [];
-                })
-              ).subscribe((data) => {
-                this.records = data;
-              });
+        this.loadNamespaces();
+
+        this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+        this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
+
+        merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
+          .pipe(
+            startWith({}),
+            switchMap(() => {
+              this.isLoadingResults = true;
+              this.changeDetectorRefs.detectChanges();
+              return this.metadataFetch(
+                this.paginator.pageSize,
+                this.paginator.pageOffset,
+                this.sort.active,
+                this.sort.direction,
+                this.filter
+              );
+            }),
+            map((data: any) => {
+              this.totalItemCount = data.body.count;
+              this.isLoadingResults = false;
+              this.changeDetectorRefs.detectChanges();
+              return data.body.items;
+            }),
+            catchError((error) => {
+              this.isLoadingResults = false;
+              this.changeDetectorRefs.detectChanges();
+              this.messageHandler.showError('There was a problem loading the metadata.', error);
+              return [];
+            })
+          )
+          .subscribe((data) => {
+            this.records = data;
           });
       }
 
@@ -138,11 +143,14 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   }
 
   loadNamespaces() {
-    this.resources.metadata.namespaces().toPromise().then((result) => {
-        this.namespaces = result.body.filter((n) => {
-          return n.defaultNamespace === false;
-        });
-      });
+    this.resources.metadata
+      .namespaces()
+      .pipe(
+        map((response: any) => response.body.filter((n) => n.defaultNamespace === false))
+      )
+      .subscribe(
+        data => this.namespaces = data,
+        errors => this.messageHandler.showError('There was a problem getting the namespace list.', errors));
   }
 
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
@@ -322,14 +330,14 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         this.editingService.setFromCollection(this.records);
         this.messageHandler.showSuccess('Property updated successfully.');
       }, (error) => {
-          // duplicate namespace + key
-          if (error.status === 422) {
-            record.edit.errors = [];
-            record.edit.errors.key = 'Key already exists';
-            return;
-          }
-          this.messageHandler.showError('There was a problem updating the property.', error);
+        // duplicate namespace + key
+        if (error.status === 422) {
+          record.edit.errors = [];
+          record.edit.errors.key = 'Key already exists';
+          return;
         }
+        this.messageHandler.showError('There was a problem updating the property.', error);
+      }
       );
     } else {
       this.resources.catalogueItem.saveMetadata(this.domainType, this.parent.id, resource).subscribe((response) => {

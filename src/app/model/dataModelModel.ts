@@ -70,3 +70,16 @@ export class Categories {
   value: string;
   category: string;
 }
+
+export interface DataType {
+  domainType: string;
+  label: string;
+  description?: string;
+}
+
+export interface DataTypeProvider {
+  name: string;
+  displayName: string;
+  version: string;
+  dataTypes: DataType[];
+}

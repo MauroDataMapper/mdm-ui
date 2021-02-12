@@ -23,7 +23,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
 import { Step } from '@mdm/model/stepModel';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -42,7 +41,6 @@ export class DataModelMainComponent implements OnInit {
     classifiers: []
   };
   constructor(
-    private broadcastSvc: BroadcastService,
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
@@ -107,19 +105,19 @@ export class DataModelMainComponent implements OnInit {
       resource.dialect = this.model.dialect;
     }
 
-    // let queryStringParams = null;
-    // if (this.model.selectedDataTypeProvider) {
-    //   queryStringParams = {
-    //     defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
-    //   };
-    // }
+    let queryStringParams = null;
+    if (this.model.selectedDataTypeProvider) {
+      queryStringParams = {
+        defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
+      };
+    }
 
-   try {
+    try {
       const response = await this.resources.dataModel.addToFolder(this.parentFolderId, resource).toPromise();
       this.messageHandler.showSuccess('Data Model saved successfully.');
       this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
-   } catch (error) {
+    } catch (error) {
       this.messageHandler.showError('There was a problem saving the Data Model.', error);
-   }
+    }
   };
 }

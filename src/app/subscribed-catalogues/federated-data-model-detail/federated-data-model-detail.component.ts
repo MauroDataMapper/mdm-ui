@@ -127,9 +127,13 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
       )
       .subscribe(() => {
         this.processing = false;
+          this.messageHandler.showError('There was a problem subscribing to the data model.', error);
+          return [];
+        }),
+        switchMap(() => {
         this.messageHandler.showSuccess('Successfully subscribed to data model.');
         this.reloading.emit();
-        });
+      });
 
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
     this.editable.reset();

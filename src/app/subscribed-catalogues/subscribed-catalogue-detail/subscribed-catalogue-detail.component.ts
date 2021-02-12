@@ -52,7 +52,7 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
       .subscribe(
         () => {
           this.processing = false;
-          this.messageHandler.showSuccess('Triggered federation of subscribed data models. Changes will occur momentarily.');
+          this.messageHandler.showSuccess('Triggered federation of subscribed data models. Synchronisation will occur momentarily.');
         },
         errors => {
           this.processing = false;

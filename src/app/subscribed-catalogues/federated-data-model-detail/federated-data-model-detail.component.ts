@@ -17,13 +17,13 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
+import { FederatedDataModel, FederatedDataModelForm, SubscribedDataModelIndexResponse } from '@mdm/model/federated-data-model';
 import { Editable } from '@mdm/model/editable-forms';
 import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { FolderResultResponse } from '@mdm/model/folderModel';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, switchMap } from 'rxjs/operators';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -105,18 +105,27 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
               subscribedModelId: this.dataModel.modelId,
               folderId: response.folder.id
             });
-        })
-      )
-      .subscribe(
-        () => {
+        }),
+        catchError(error => {
           this.processing = false;
+          this.messageHandler.showError('There was a problem subscribing to the data model.', error);
+          return [];
+        }),
+        switchMap(() => {
           this.messageHandler.showSuccess('Successfully subscribed to data model.');
           this.reloading.emit();
-        },
-        error => {
+          return this.resources.subscribedCatalogues.federate(this.dataModel.catalogueId);
+        }),
+        catchError(error => {
           this.processing = false;
-          return this.messageHandler.showError('There was a problem subscribing to the data model.', error);
-        });
+          this.messageHandler.showError('Unable to start federation of subscribed data models.', error);
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.processing = false;
+        this.messageHandler.showSuccess('Triggered federation of subscribed data models. Synchronisation will occur momentarily.');
+      });
   }
 
   unsubscribeFromModel() {

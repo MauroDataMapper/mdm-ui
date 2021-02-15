@@ -15,6 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
+<!-- Loading spinner -->
+<div *ngIf="isLoading" class="loading-container flex-content-center">
+    <mat-progress-spinner color="accent" mode="indeterminate" diameter="24">
+    </mat-progress-spinner>
+    <span class="loading-container__message">Working...</span>
+  </div>
+
 <mdm-navbar></mdm-navbar>
 
 <main ui-view></main>

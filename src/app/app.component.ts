@@ -17,22 +17,25 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, HostListener, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
+import { delay } from 'rxjs/operators';
 import { EditingService } from './services/editing.service';
+import { LoadingService } from './services/loading.service';
 import { SharedService } from './services/shared.service';
 
 @Component({
   selector: 'mdm-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   title = 'mdm-ui';
+  isLoading = false;
 
   constructor(
     private userIdle: UserIdleService,
     private sharedService: SharedService,
-    private editingService: EditingService
-  ) {}
+    private editingService: EditingService,
+    private loading: LoadingService) {}
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove() {
@@ -48,9 +51,16 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading.isLoading
+      .pipe(delay(0))
+      .subscribe((value) => {
+        this.isLoading = value;
+      });
+
     // Start watching for user inactivity.
     this.userIdle.startWatching();
     this.userIdle.onTimerStart().subscribe();
+
     // Start watch when time is up.
     let lastDigestRun: any = new Date();
     this.userIdle.onTimeout().subscribe(() => {

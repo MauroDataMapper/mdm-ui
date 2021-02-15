@@ -16,11 +16,11 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import { LoadingService } from "./loading.service";
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { LoadingService } from './loading.service';
 
 /**
  * HTTP interceptor to track progress of each HTTP request.
@@ -37,17 +37,17 @@ export class HttpRequestProgressInterceptor implements HttpInterceptor {
       .pipe(
         catchError(error => {
           this.loading.setHttpLoading(false, request.url);
-          return error;          
+          return error;
         })
       )
       .pipe(
         map((event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {
             this.loading.setHttpLoading(false, request.url);
-          }          
+          }
           return event;
         })
-      )
+      );
   }
 
 }

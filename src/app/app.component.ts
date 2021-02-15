@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit() {  
+  ngOnInit() {
     // Start watching for user inactivity.
     this.userIdle.startWatching();
     this.userIdle.onTimerStart().subscribe();

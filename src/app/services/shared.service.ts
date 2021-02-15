@@ -76,7 +76,6 @@ export class SharedService {
 
     this.securityHandler.isCurrentSessionExpired().then(result => {
       if (result === true) {
-        this.securityHandler.saveLatestURL(window.location.href);
         this.toaster.error('Your session has expired! Please log in.');
 
         this.securityHandler.logout();

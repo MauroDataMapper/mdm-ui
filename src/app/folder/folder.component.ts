@@ -32,7 +32,10 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
   styleUrls: ['./folder.component.css'],
 })
 export class FolderComponent extends BaseComponent implements OnInit, OnDestroy {
-  result: FolderResult;
+
+  readonly domainType = 'folders';
+
+  folder: FolderResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -40,6 +43,7 @@ export class FolderComponent extends BaseComponent implements OnInit, OnDestroy 
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   activeTab: any;
+  showExtraTabs = false;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -63,6 +67,7 @@ export class FolderComponent extends BaseComponent implements OnInit, OnDestroy 
       this.editMode = true;
     }
     this.title.setTitle('Folder');
+    this.showExtraTabs = this.sharedService.isLoggedIn();
     // tslint:disable-next-line: deprecation
     this.folderDetails(this.stateService.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
@@ -79,14 +84,14 @@ export class FolderComponent extends BaseComponent implements OnInit, OnDestroy 
 
   folderDetails(id: any) {
     this.resourcesService.folder.get(id).subscribe((result: { body: FolderResult }) => {
-      this.result = result.body;
+      this.folder = result.body;
 
-      this.parentId = this.result.id;
+      this.parentId = this.folder.id;
       if (this.sharedService.isLoggedIn(true)) {
         this.folderPermissions(id);
       } else {
-        this.messageService.FolderSendMessage(this.result);
-        this.messageService.dataChanged(this.result);
+        this.messageService.FolderSendMessage(this.folder);
+        this.messageService.dataChanged(this.folder);
       }
     });
   }
@@ -94,11 +99,11 @@ export class FolderComponent extends BaseComponent implements OnInit, OnDestroy 
   folderPermissions(id: any) {
     this.resourcesService.security.permissions('folders', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach((attrname) => {
-        this.result[attrname] = permissions.body[attrname];
+        this.folder[attrname] = permissions.body[attrname];
       });
       // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.result);
-      this.messageService.dataChanged(this.result);
+      this.messageService.FolderSendMessage(this.folder);
+      this.messageService.dataChanged(this.folder);
     });
   }
 

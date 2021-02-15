@@ -22,6 +22,7 @@ import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
 import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 
 @Injectable({
   providedIn: 'root',
@@ -303,19 +304,22 @@ export class SecurityHandlerService {
   }
 
   elementAccess(element) {
-    if (element.domainType === 'DataModel' || element.domainType === 'Terminology' || element.domainType === 'CodeSet' || element.domainType === 'ReferenceDataModel') {
+    if (element.domainType === DOMAIN_TYPE.DataModel || 
+      element.domainType === DOMAIN_TYPE.Terminology || 
+      element.domainType === DOMAIN_TYPE.CodeSet || 
+      element.domainType === DOMAIN_TYPE.ReferenceDataModel) {
       return this.dataModelAccess(element);
     }
 
-    if (element.domainType === 'Term') {
+    if (element.domainType === DOMAIN_TYPE.Term) {
       return this.termAccess(element);
     }
 
-    if (element.domainType === 'DataElement') {
+    if (element.domainType === DOMAIN_TYPE.DataElement) {
       return this.dataElementAccess(element);
     }
 
-    if (element.domainType === 'DataClass') {
+    if (element.domainType === DOMAIN_TYPE.DataClass) {
       return this.dataClassAccess(element);
     }
 
@@ -327,6 +331,10 @@ export class SecurityHandlerService {
     if (element.domainType === 'DataFlow') {
       return this.datFlowAccess(element);
     }
+
+    if (element.domainType === DOMAIN_TYPE.Folder) {
+      return this.folderAccess(element);
+    }
   }
 
   folderAccess(folder) {
@@ -335,6 +343,8 @@ export class SecurityHandlerService {
       showPermission: folder.availableActions.includes('update') || this.isAdmin(),
       showSoftDelete: folder.availableActions.includes('softDelete'),
       showPermanentDelete: folder.availableActions.includes('delete'),
+      canAddMetadata: folder.availableActions.includes('update'),
+      canAddAnnotation: folder.availableActions.includes('comment')
     };
   }
 }

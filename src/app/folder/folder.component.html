@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </div>
             <div class="panel-body panel-table">
-                <mdm-advanced-search-bar [parent]="result"
+                <mdm-advanced-search-bar [parent]="folder"
                                          [showRestrictTo]="false"
                                          [doNotShowDataModelInModelPath]="false"
                                          [doNotDisplayModelPathStatus]="false"
@@ -62,8 +62,39 @@ SPDX-License-Identifier: Apache-2.0
         </mat-tab>
         <mat-tab label="History">
             <div class="full-width">
-                <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId [domainType]="'folders'"></mdm-history>
+                <mdm-history [parent]="'folder'" [parentType]="'Folder'" [parentId]=parentId [domainType]="domainType"></mdm-history>
             </div>
         </mat-tab>
     </mat-tab-group>
 </div>
+
+<mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">    
+    <mat-tab label="Properties">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-data-set-metadata *ngIf="folder" [parent]="folder" [type]="'dynamic'" [domainType]="domainType"></mdm-data-set-metadata>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Comments">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-annotation-list *ngIf="folder" [parent]="folder" [domainType]="domainType"></mdm-annotation-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="History">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-history *ngIf="folder" [parent]="'folder'" [parentType]="'Folder'" [parentId]="parentId" [domainType]="domainType"></mdm-history>
+            </div>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Attachments" *ngIf="showExtraTabs">
+        <ng-template matTabContent>
+            <div class="full-width">
+                <mdm-attachment-list *ngIf="folder" [parent]="folder" [domainType]="domainType"></mdm-attachment-list>
+            </div>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

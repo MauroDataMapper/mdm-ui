@@ -169,6 +169,7 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 import { JoditAngularModule } from 'jodit-angular';
 import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.component';
 import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
+import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
@@ -317,7 +318,8 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
     EnumerationValuesDetailsComponent,
     HtmlEditorComponent,
     ContentEditorComponent,
-    ConstraintsRulesComponent
+    ConstraintsRulesComponent,
+    LoadingIndicatorComponent
   ],
   imports: [
     AdminModule,
@@ -479,7 +481,8 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
     EnumerationValuesDetailsComponent,
     HtmlEditorComponent,
     ContentEditorComponent,
-    ConstraintsRulesComponent
+    ConstraintsRulesComponent,
+    LoadingIndicatorComponent
   ]
 })
 export class CatalogueModule { }

@@ -36,13 +36,13 @@ describe('FederatedDataModelMainComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, 
+          provide: MdmResourcesService,
           useValue: { }
         },
         {
           provide: SubscribedCataloguesService,
-          useValue: { 
-            getFederatedDataModels: (catalogueId: string) => {
+          useValue: {
+            getFederatedDataModels: (_: string) => {
               return of();
             }
           }

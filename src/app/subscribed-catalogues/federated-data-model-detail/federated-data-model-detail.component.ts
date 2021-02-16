@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { FederatedDataModel, FederatedDataModelForm, SubscribedDataModelIndexResponse } from '@mdm/model/federated-data-model';
+import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
 import { Editable } from '@mdm/model/editable-forms';
 import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';

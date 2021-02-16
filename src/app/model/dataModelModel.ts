@@ -1,3 +1,5 @@
+import { Authority } from './common';
+
 /*
 Copyright 2020 University of Oxford
 
@@ -18,6 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 export class DataModelResult {
   id: string;
   domainType: string;
+  authority?: Authority;
   label: string;
   documentationVersion: any[];
   description: string;

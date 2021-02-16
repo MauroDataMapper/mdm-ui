@@ -34,7 +34,7 @@ describe('SubscribedCatalogueComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, 
+          provide: MdmResourcesService,
           useValue: { }
         }
       ],

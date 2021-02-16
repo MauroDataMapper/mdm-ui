@@ -34,12 +34,12 @@ describe('FederatedDataModelDetailComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, 
+          provide: MdmResourcesService,
           useValue: {}
         },
-        { 
-          provide: MatDialog, 
-          useValue: {} 
+        {
+          provide: MatDialog,
+          useValue: {}
         },
       ],
       declarations: [ FederatedDataModelDetailComponent ]

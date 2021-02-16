@@ -103,7 +103,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.codeSetModel.editable || this.codeSetModel.finalised;
       if (this.sharedService.isLoggedIn(true)) {
-        this.CodeSetPermissions(this.parentId);
+        this.CodeSetPermissions();
       } else {
         this.messageService.FolderSendMessage(this.codeSetModel);
         this.messageService.dataChanged(this.codeSetModel);
@@ -116,8 +116,8 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  CodeSetPermissions(id: any) {
-    this.resourcesService.security.permissions('codeSets', id).subscribe((permissions: { body: { [x: string]: any } }) => {
+  CodeSetPermissions() {
+    this.resourcesService.security.permissions('codeSets', this.codeSetModel.id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach((attrname) => {
         this.codeSetModel[attrname] = permissions.body[attrname];
       });

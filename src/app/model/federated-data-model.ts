@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { Resetable } from '@mdm/model/editable-forms';
-import { MdmResourcesIndexResponse } from '@mdm/modules/resources';
+import { MdmResourcesIndexResponse, MdmResourcesResponse } from '@mdm/modules/resources';
 
 export interface AvailableDataModel {
   modelId?: string;
@@ -64,6 +64,11 @@ export class FederatedDataModel {
  * This type alias represents a response with a multiple `AvailableDataModel` elements in.
  */
 export type AvailableDataModelIndexResponse = MdmResourcesIndexResponse<AvailableDataModel>;
+
+/**
+ * Type alias for an operation for the Subscribed Catalogues subscribed models API endpoint.
+ */
+export type SubscribedDataModelResponse = MdmResourcesResponse<SubscribedDataModel>;
 
 /**
  * Type alias for an index/list operation for the Subscribed Catalogues subscribed models API endpoint.

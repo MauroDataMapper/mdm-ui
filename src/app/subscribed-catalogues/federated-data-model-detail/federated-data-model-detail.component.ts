@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
+import { FederatedDataModel, FederatedDataModelForm, SubscribedDataModelResponse } from '@mdm/model/federated-data-model';
 import { Editable } from '@mdm/model/editable-forms';
 import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -103,7 +103,8 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
             this.dataModel.catalogueId,
             {
               subscribedModelId: this.dataModel.modelId,
-              folderId: response.folder.id
+              folderId: response.folder.id,
+              subscribedModelType: this.dataModel.modelType
             });
         }),
         catchError(error => {
@@ -111,20 +112,19 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
           this.messageHandler.showError('There was a problem subscribing to the data model.', error);
           return [];
         }),
-        switchMap(() => {
-          this.messageHandler.showSuccess('Successfully subscribed to data model.');
-          this.reloading.emit();
-          return this.resources.subscribedCatalogues.federate(this.dataModel.catalogueId);
+        switchMap((response: SubscribedDataModelResponse) => {
+          return this.resources.subscribedCatalogues.federate(response.body.id);
         }),
         catchError(error => {
           this.processing = false;
-          this.messageHandler.showError('Unable to start federation of subscribed data models.', error);
+          this.messageHandler.showError('There was a problem synchronising a data model.', error);
           return [];
         })
       )
       .subscribe(() => {
         this.processing = false;
-        this.messageHandler.showSuccess('Triggered federation of subscribed data models. Synchronisation will occur momentarily.');
+        this.messageHandler.showSuccess('Successfully subscribed to data model.');
+        this.reloading.emit();
       });
   }
 
@@ -155,6 +155,22 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         error => {
           this.processing = false;
           return this.messageHandler.showError('There was a problem unsubscribing from the data model.', error);
+        });
+  }
+
+  federate() {
+    this.processing = true;
+    this.resources.subscribedCatalogues
+      .federate(this.dataModel.subscriptionId)
+      .subscribe(
+        () => {
+          this.processing = false;
+          this.messageHandler.showSuccess(`Synchronised the data model '${this.dataModel.label}' successfully.`);
+          this.reloading.emit();
+        },
+        errors => {
+          this.processing = false;
+          this.messageHandler.showError('There was a problem synchronising a data model.', errors);
         });
   }
 }

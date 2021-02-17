@@ -41,5 +41,5 @@ export class SubscribedCatalogueDetailComponent implements OnInit {
     this.editable = new Editable(
       this.subscribedCatalogue,
       new SubscribedCatalogueForm());
-  }  
+  }
 }

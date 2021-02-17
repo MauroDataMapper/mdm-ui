@@ -44,20 +44,7 @@ SPDX-License-Identifier: Apache-2.0
                             [property]="'description'">
                         </mdm-content-editor>
                     </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: right;">
-                        <div class="mr-1">
-                            <button mat-stroked-button color="primary" type="button"
-                                matTooltip="Synchronise subscribed data models" aria-label="Synchronise" [disabled]="processing" (click)="federate()">
-                                <i class="fas fa-sync"></i>
-                            </button>
-                        </div>                        
-                        <div style="clear: both;" *ngIf="processing">
-                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
-                        </div>
-                    </td>
-                </tr>
+                </tr>                
             </tbody>
         </table>
     </form>

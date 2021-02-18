@@ -38,31 +38,35 @@ SPDX-License-Identifier: Apache-2.0
             {{ field.fieldName }}
           </td>
           <td class="elementDetailDescription">
-            <textarea
-              [(ngModel)]="field.currentValue"
-              name="{{ field.fieldName }} + {{ section.sectionName }}"
-              [required]="field.optional == false"
-              rows="5"
+           
+
+            <mdm-content-editor
+            [(description)]="field.currentValue"
               id="{{ field.fieldName }}"
-              class="form-control outlined-input"
-              matInput
-              matTooltip="{{ field.description }}"
-              *ngIf="field.dataType === 'Text'"
-            ></textarea>
+              matTooltip="{{ field.description }}"            
+              [inEditMode]="true"
+              *ngIf="field.dataType === 'text'"
+            ></mdm-content-editor>
+
             <input
               type="checkbox"
-              style="width: 20px; height: 20px; position: relative; vertical-align: middle;"
+              style="
+                width: 20px;
+                height: 20px;
+                position: relative;
+                vertical-align: middle;
+              "
               *ngIf="formOptionsMap[field.dataType] === 'checkbox'"
               [checked]="field.currentValue === 'true'"
               (change)="field.currentValue = $event.target.checked"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
-              [required]="field.optional === false" 
+              [required]="field.optional === false"
             />
             <input
               *ngIf="
                 field.dataType !== 'Folder' &&
                 field.dataType !== 'datamodel' &&
-                field.dataType != 'Text' &&
+                field.dataType != 'text' &&
                 field.dataType != 'date' &&
                 field.dataType != 'datetime' &&
                 field.dataType != 'boolean' &&

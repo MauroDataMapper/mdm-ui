@@ -26,7 +26,11 @@ export class RuleLanguages {
          aceValue: 'javascript'
       },
       { displayName: 'Java', value: 'java', aceValue: 'java' },
-      { displayName: 'Typescript', value: 'typescript', aceValue: 'typescript' },
+      {
+         displayName: 'Typescript',
+         value: 'typescript',
+         aceValue: 'typescript'
+      },
       { displayName: 'Drools', value: 'drools', aceValue: 'drools' },
       { displayName: 'Text', value: 'text', aceValue: 'text' },
       { displayName: 'DMN', value: 'dmn', aceValue: '' }
@@ -61,7 +65,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
    @ViewChild('dmn') dmn: ElementRef;
 
    initialDiagram =
-      '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="definitions_{{ ID }}" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
+      '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="REQUIRED" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
    okBtn: string;
    cancelBtn: string;
    btnType: string;
@@ -99,34 +103,47 @@ export class AddRuleRepresentationModalComponent implements OnInit {
          }
       });
 
-      this.modeler = new DmnModeler({
-         container: '#dmn',
-         width: '100%',
-         height: '600px'
-      });
-
-      const xml =
-         this.data.language === 'dmn' && this.data.representation.length > 0
-            ? this.data.representation
-            : this.initialDiagram;
-
-      const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
-      migrateDiagram(xml).then((migratedXML) => {
-         this.modeler.importXML(migratedXML, (err) => {
-            if (err) {
-               alert(err);
-            }
-
-            const activeEditor = this.modeler.getActiveViewer();
-            const canvas = activeEditor.get('canvas');
-            canvas.zoom('fit-viewport');
-         });
-      });
+      if (this.data.language === 'dmn') {
+         this.createDMNWindow();
+      }
    }
 
-   showAceEditor()
-   {
+   showAceEditor() {
       return this.selectedLanguage.aceValue.length > 0;
+   }
+
+   languageSelected(lang: any) {
+      if (lang.value === 'dmn') {
+         this.createDMNWindow();
+      }
+   }
+
+  createDMNWindow() {
+      setTimeout(() => {
+         this.modeler = new DmnModeler({
+            container: '#dmn',
+            width: '100%',
+            height: '600px'
+         });
+
+         const xml =
+            this.data.language === 'dmn' && this.data.representation.length > 0
+               ? this.data.representation
+               : this.initialDiagram;
+
+         const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
+         migrateDiagram(xml).then((migratedXML) => {
+            this.modeler.importXML(migratedXML, (err) => {
+               if (err) {
+                  alert(err);
+               }
+
+               const activeEditor = this.modeler.getActiveViewer();
+               const canvas = activeEditor.get('canvas');
+               canvas.zoom('fit-viewport');
+            });
+         });
+      }, 1000);
    }
 
    save() {

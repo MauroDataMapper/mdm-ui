@@ -27,6 +27,7 @@ SPDX-License-Identifier: Apache-2.0
             class="authorize-click"
             aria-label="selectedImporterStr"
             [(ngModel)]="selectedLanguage"
+            (selectionChange)="languageSelected($event.value)"
          >
             <mat-option *ngFor="let item of supportedLanguage" [value]="item">{{
                item.displayName
@@ -44,10 +45,7 @@ SPDX-License-Identifier: Apache-2.0
       ></ace>
    </div>
    <div
-      [ngStyle]="{
-         display: selectedLanguage.value === 'dmn' ? 'block' : 'none'
-      }"
-      class="mdm--form-input"
+   *ngIf="selectedLanguage.value === 'dmn'"  
    >
       <label>Representation</label>
       <div id="dmn" #dmn></div>

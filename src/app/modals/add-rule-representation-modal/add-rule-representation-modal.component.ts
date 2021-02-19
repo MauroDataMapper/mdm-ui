@@ -17,35 +17,36 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 export class RuleLanguages {
-   static supportedLanguages = [
-      { displayName: 'SQL', value: 'sql', aceValue: 'sql' },
-      { displayName: 'C#', value: 'c#', aceValue: 'csharp' },
-      {
-         displayName: 'JavaScript',
-         value: 'javascript',
-         aceValue: 'javascript'
-      },
-      { displayName: 'Java', value: 'java', aceValue: 'java' },
-      {
-         displayName: 'Typescript',
-         value: 'typescript',
-         aceValue: 'typescript'
-      },
-      { displayName: 'Drools', value: 'drools', aceValue: 'drools' },
-      { displayName: 'Text', value: 'text', aceValue: 'text' },
-      { displayName: 'DMN', value: 'dmn', aceValue: '' }
-   ];
+  static supportedLanguages = [
+    { displayName: 'SQL', value: 'sql', aceValue: 'sql' },
+    { displayName: 'C#', value: 'c#', aceValue: 'csharp' },
+    {
+      displayName: 'JavaScript',
+      value: 'javascript',
+      aceValue: 'javascript'
+    },
+    { displayName: 'Java', value: 'java', aceValue: 'java' },
+    {
+      displayName: 'Typescript',
+      value: 'typescript',
+      aceValue: 'typescript'
+    },
+    { displayName: 'Drools', value: 'drools', aceValue: 'drools' },
+    { displayName: 'Text', value: 'text', aceValue: 'text' },
+    { displayName: 'DMN', value: 'dmn', aceValue: '' }
+  ];
 }
 
 import {
-   Component,
-   ElementRef,
-   Inject,
-   OnInit,
-   ViewChild
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import DmnModeler from 'dmn-js/lib/Modeler';
+
 import 'brace';
 import 'brace/mode/drools';
 import 'brace/mode/sql';
@@ -57,105 +58,124 @@ import 'brace/mode/text';
 import 'brace/theme/github';
 
 @Component({
-   selector: 'mdm-add-rule-representation-modal',
-   templateUrl: './add-rule-representation-modal.component.html',
-   styleUrls: ['./add-rule-representation-modal.component.scss']
+  selector: 'mdm-add-rule-representation-modal',
+  templateUrl: './add-rule-representation-modal.component.html',
+  styleUrls: ['./add-rule-representation-modal.component.scss']
 })
 export class AddRuleRepresentationModalComponent implements OnInit {
-   @ViewChild('dmn') dmn: ElementRef;
+  @ViewChild('dmn') set content(content: ElementRef) {
+    if (content) {
+      // initially setter gets called with undefined
+      this.dmnCanvas = content;
+      this.createDMNWindow();
+    }
+  }
 
-   initialDiagram =
-      '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="REQUIRED" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
-   okBtn: string;
-   cancelBtn: string;
-   btnType: string;
-   inputValue: { label: string; groups: any[] };
-   modalTitle: string;
-   message: string;
-   inputLabel: string;
-   allGroups = [];
-   selectedGroups = [];
-   modeler: DmnModeler;
-   supportedLanguage = RuleLanguages.supportedLanguages;
-   selectedLanguage = this.supportedLanguage[0];
+  dmnCanvas: ElementRef;
 
-   constructor(
-      private dialogRef: MatDialogRef<AddRuleRepresentationModalComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any
-   ) {}
+  initialDiagram =
+    '<?xml version="1.0" encoding="UTF-8"?>\n<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" id="REQUIRED" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">\n  <decision id="decision_{{ ID }}" name="">\n    <decisionTable id="decisionTable_{{ ID }}">\n      <input id="input1" label="">\n        <inputExpression id="inputExpression1" typeRef="string">\n          <text></text>\n        </inputExpression>\n      </input>\n      <output id="output1" label="" name="" typeRef="string" />\n    </decisionTable>\n  </decision>\n</definitions>';
+  okBtn: string;
+  cancelBtn: string;
+  btnType: string;
+  inputValue: { label: string; groups: any[] };
+  modalTitle: string;
+  message: string;
+  inputLabel: string;
+  allGroups = [];
+  selectedGroups = [];
+  modeler: DmnModeler;
+  supportedLanguage = RuleLanguages.supportedLanguages;
+  selectedLanguage = this.supportedLanguage[0];
+  myFilename = 'Import DMN File';
 
-   ngOnInit(): void {
-      this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
-      this.btnType = this.data.btnType ? this.data.btnType : 'primary';
-      this.cancelBtn = this.data.cancelBtn ? this.data.cancelBtn : 'Cancel';
-      this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
-      this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
-      this.message = this.data.message;
+  constructor(
+    private dialogRef: MatDialogRef<AddRuleRepresentationModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
-      this.inputValue = {
-         label: '',
-         groups: []
-      };
+  ngOnInit(): void {
+    this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
+    this.btnType = this.data.btnType ? this.data.btnType : 'primary';
+    this.cancelBtn = this.data.cancelBtn ? this.data.cancelBtn : 'Cancel';
+    this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
+    this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
+    this.message = this.data.message;
 
-      this.supportedLanguage.forEach((x) => {
-         if (x.value === this.data.language) {
-            this.selectedLanguage = x;
-         }
+    this.inputValue = {
+      label: '',
+      groups: []
+    };
+
+    this.supportedLanguage.forEach((x) => {
+      if (x.value === this.data.language) {
+        this.selectedLanguage = x;
+      }
+    });
+
+    if (this.data.language === 'dmn') {
+      this.createDMNWindow();
+    }
+  }
+
+  showAceEditor() {
+    return this.selectedLanguage.aceValue.length > 0;
+  }
+
+  createDMNWindow(content?: any) {
+    setTimeout(() => {
+      if (!this.modeler) {
+        this.modeler = new DmnModeler({
+          container: '#dmn',
+          width: '100%',
+          height: '600px'
+        });
+      }
+
+      let xml = content;
+
+      if (!xml) {
+        xml =
+          this.data.language === 'dmn' && this.data.representation.length > 0
+            ? this.data.representation
+            : this.initialDiagram;
+      }
+      const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
+      migrateDiagram(xml).then((migratedXML) => {
+        this.modeler.importXML(migratedXML, (err) => {
+          if (err) {
+            alert(err);
+          }
+
+          const activeEditor = this.modeler.getActiveViewer();
+          const canvas = activeEditor.get('canvas');
+          canvas.zoom('fit-viewport');
+        });
       });
+    }, 1000);
+  }
 
-      if (this.data.language === 'dmn') {
-         this.createDMNWindow();
-      }
-   }
+  dmnFileAdded(fileInput: any) {
+    if (fileInput.target.files && fileInput.target.files[0]) {
+      this.myFilename = fileInput.target.files[0].name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.createDMNWindow(reader.result);
+      };
+      reader.readAsText(fileInput.target.files[0]);
+    }
+  }
 
-   showAceEditor() {
-      return this.selectedLanguage.aceValue.length > 0;
-   }
-
-   languageSelected(lang: any) {
-      if (lang.value === 'dmn') {
-         this.createDMNWindow();
-      }
-   }
-
-  createDMNWindow() {
-      setTimeout(() => {
-         this.modeler = new DmnModeler({
-            container: '#dmn',
-            width: '100%',
-            height: '600px'
-         });
-
-         const xml =
-            this.data.language === 'dmn' && this.data.representation.length > 0
-               ? this.data.representation
-               : this.initialDiagram;
-
-         const { migrateDiagram } = require('@bpmn-io/dmn-migrate');
-         migrateDiagram(xml).then((migratedXML) => {
-            this.modeler.importXML(migratedXML, (err) => {
-               if (err) {
-                  alert(err);
-               }
-
-               const activeEditor = this.modeler.getActiveViewer();
-               const canvas = activeEditor.get('canvas');
-               canvas.zoom('fit-viewport');
-            });
-         });
-      }, 1000);
-   }
-
-   save() {
-      this.data.language = this.selectedLanguage.value;
-      if (this.data.language === 'dmn') {
-         this.modeler.saveXML({ format: true }, (err, xml) => {
-            if (err) {
-               return;
-            }
-            this.data.representation = xml;
-         });
-      }
-      this.dialogRef.close(this.data);
-   }
+  save() {
+    this.data.language = this.selectedLanguage.value;
+    if (this.data.language === 'dmn') {
+      this.modeler.saveXML({ format: true }, (err, xml) => {
+        if (err) {
+          return;
+        }
+        this.data.representation = xml;
+      });
+    }
+    this.dialogRef.close(this.data);
+  }
 }

@@ -16,57 +16,70 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="modal-header pxy-2">
-   <h4 class="modal-title marginless">{{ modalTitle }}</h4>
+  <h4 class="modal-title marginless">{{ modalTitle }}</h4>
 </div>
 <div class="modal-body pxy-2">
-   <p [innerHtml]="message"></p>
-   <div class="mdm--form-input">
-      <mat-form-field appearance="outline" class="full-width paddingless">
-         <mat-label>Language</mat-label>
-         <mat-select
-            class="authorize-click"
-            aria-label="selectedImporterStr"
-            [(ngModel)]="selectedLanguage"
-            (selectionChange)="languageSelected($event.value)"
-         >
-            <mat-option *ngFor="let item of supportedLanguage" [value]="item">{{
-               item.displayName
-            }}</mat-option>
-         </mat-select>
-      </mat-form-field>
-   </div>
-   <div *ngIf="showAceEditor()" class="mdm--form-input">
-      <label>Representation</label>
-      <ace
-         [mode]="selectedLanguage.aceValue"
-         style="height: 500px; width: 500px"
-         [theme]="'github'"
-         [(value)]="data.representation"
-      ></ace>
-   </div>
-   <div
-   *ngIf="selectedLanguage.value === 'dmn'"  
-   >
-      <label>Representation</label>
-      <div id="dmn" #dmn></div>
-   </div>
-   <div class="modal-footer pxy-2">
-      <button
-         mat-button
-         color="warn"
-         class="mr-1"
-         type="button"
-         mat-dialog-close
+  <p [innerHtml]="message"></p>
+  <div class="mdm--form-input">
+    <mat-form-field appearance="outline" class="full-width paddingless">
+      <mat-label>Language</mat-label>
+      <mat-select
+        class="authorize-click"
+        aria-label="selectedImporterStr"
+        [(ngModel)]="selectedLanguage"
       >
-         {{ cancelBtn }}
-      </button>
-      <button
-         mat-flat-button
-         color="{{ btnType }}"
-         type="button"
-         (click)="save()"
-      >
-         {{ okBtn }}
-      </button>
-   </div>
+        <mat-option *ngFor="let item of supportedLanguage" [value]="item">{{
+          item.displayName
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div *ngIf="showAceEditor()" class="mdm--form-input">
+    <label>Representation</label>
+    <ace
+      [mode]="selectedLanguage.aceValue"
+      style="height: 500px; width: 500px"
+      [theme]="'github'"
+      [(value)]="data.representation"
+    ></ace>
+  </div>
+  <div *ngIf="selectedLanguage.value === 'dmn'">
+    <label>Representation</label>
+
+    <mat-form-field appearance="outline" class="full-width paddingless">
+      <div class="myfilebrowser">
+        <mat-toolbar>
+          <!-- Readonly Input to show File names -->
+          <input style="font-size: large" matInput [(ngModel)]="myFilename" readonly name="memberContactNo" />
+
+          <!-- Browse Button -->
+          <button mat-flat-button color="primary">Browse</button>
+        </mat-toolbar>
+
+        <!-- Fetch selected filed on change -->
+        <input
+          type="file"
+          #UploadFileInput
+          id="fileUpload"
+          (change)="dmnFileAdded($event)"
+          name="fileUpload"
+        />
+      </div>
+    </mat-form-field>
+
+    <div id="dmn" #dmn></div>
+  </div>
+  <div class="modal-footer pxy-2">
+    <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
+      {{ cancelBtn }}
+    </button>
+    <button
+      mat-flat-button
+      color="{{ btnType }}"
+      type="button"
+      (click)="save()"
+    >
+      {{ okBtn }}
+    </button>
+  </div>
 </div>

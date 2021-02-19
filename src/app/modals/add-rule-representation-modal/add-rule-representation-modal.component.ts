@@ -56,6 +56,7 @@ import 'brace/mode/typescript';
 import 'brace/mode/csharp';
 import 'brace/mode/text';
 import 'brace/theme/github';
+import { MessageHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-add-rule-representation-modal',
@@ -91,7 +92,8 @@ export class AddRuleRepresentationModalComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<AddRuleRepresentationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private messageHandler : MessageHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -144,12 +146,14 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       migrateDiagram(xml).then((migratedXML) => {
         this.modeler.importXML(migratedXML, (err) => {
           if (err) {
-            alert(err);
+            this.messageHandler.showError(err);
+            this.createDMNWindow(this.data.representation);
           }
-
+          else{
           const activeEditor = this.modeler.getActiveViewer();
           const canvas = activeEditor.get('canvas');
           canvas.zoom('fit-viewport');
+          }
         });
       });
     }, 1000);

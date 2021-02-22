@@ -322,6 +322,16 @@ SPDX-License-Identifier: Apache-2.0
                       >
                         <i class="fas fa-pencil-alt"></i> Edit
                       </button>
+                      <mat-divider></mat-divider>
+                      <button
+                        mat-menu-item
+                        color="accent"
+                        type="button"
+                        *ngIf="isEditable"
+                        (click)="exportRuleRepresentation(record)"
+                      >
+                        <i class="fas fa-download"></i> Export
+                      </button>
                       <mat-divider *ngIf="isEditable"></mat-divider>
                       <button
                         mat-menu-item

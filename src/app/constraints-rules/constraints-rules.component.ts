@@ -391,6 +391,18 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     this.filteredOpen = !this.filteredOpen;
   };
 
+  exportRuleRepresentation = (ruleRep: RuleRepresentation) => {
+    try {
+      const myFilename = `${ruleRep.rule.name}.${
+        this.fileExtensions[ruleRep.language]
+      }`;
+      const content = new Blob([ruleRep.representation]);
+      FileSaver.saveAs(content, myFilename);
+    } catch (error) {
+      this.messageHandler.showError('Error Exporting', error);
+    }
+  };
+
   exportRule = (rule: any) => {
     const zip = new JSZip();
     let count = 0;
@@ -398,7 +410,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
 
     try {
       rule.ruleRepresentations.forEach((ruleRep) => {
-        const myFilename = `${rule.name}-${ruleRep.language}-${count}`;
+        const myFilename = `${rule.name}`;
         zip.file(
           `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
           ruleRep.representation
@@ -426,7 +438,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
       this.records.forEach((rule) => {
         if (rule.ruleRepresentations) {
           rule.ruleRepresentations.forEach((ruleRep) => {
-            const myFilename = `${rule.name}-${ruleRep.language}-${count}`;
+            const myFilename = `${rule.name}`;
             zip
               .folder(`${rule.name}`)
               .file(
@@ -434,9 +446,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
                 ruleRep.representation
               );
           });
-        } else {
-          zip.folder(`${rule.name}`);
-        }
+         }
 
         count++;
         if (count === this.records.length) {

@@ -163,5 +163,41 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     category: 'Email',
     editType: ApiPropertyEditType.Text,
     isSystem: true
-  }
+  },
+  {
+    key: 'pageContent.home.intro.left',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true
+  },
+  {
+    key: 'pageContent.home.intro.right',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true
+  },
+  {
+    key: 'pageContent.home.detail.heading',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true
+  },
+  {
+    key: 'pageContent.home.detail.column1',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true
+  },
+  {
+    key: 'pageContent.home.detail.column2',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true
+  },
+  {
+    key: 'pageContent.home.detail.column3',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true
+  },
 ];

@@ -38,6 +38,10 @@ export class ConfigurationComponent implements OnInit {
   indexingStatus: string;
   indexingTime: string;
 
+  EditType = ApiPropertyEditType;
+
+  displayedColumns = ['label', 'value', 'icons'];
+
   constructor(
     private resources: MdmResourcesService,
     private uiRouterGlobals: UIRouterGlobals,

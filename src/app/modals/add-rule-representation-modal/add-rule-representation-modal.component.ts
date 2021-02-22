@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 export class RuleLanguages {
   static supportedLanguages = [
-    { displayName: 'SQL', value: 'sql', aceValue: 'sql' },
+    { displayName: 'SQL', value: 'sql', aceValue: 'sql'},
     { displayName: 'C#', value: 'c#', aceValue: 'csharp' },
     {
       displayName: 'JavaScript',

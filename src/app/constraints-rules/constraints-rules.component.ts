@@ -17,352 +17,463 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 export class BaseDataGrid {
-   displayedColumns: string[];
-   records: Array<any>;
-   totalItemCount: any;
+  displayedColumns: string[];
+  records: Array<any>;
+  totalItemCount: any;
 }
 
 export class RuleRepresentation {
-   id:any;
-   rule: RuleModel;
-   language: any;
-   representation: any;
+  id: any;
+  rule: RuleModel;
+  language: any;
+  representation: any;
 }
 
 export class RuleModel {
-   rule: Array<RuleRepresentation>;
-   name: any;
-   description: any;
-   id:any;
+  ruleRepresentations: Array<RuleRepresentation>;
+  name: any;
+  description: any;
+  id: any;
 
-   constructor(rule: Array<RuleRepresentation>, name: any, description: any) {
-      this.rule = rule;
-      this.name = name;
-      this.description = description;
-   }
+  constructor(rule: Array<RuleRepresentation>, name: any, description: any) {
+    this.ruleRepresentations = rule;
+    this.name = name;
+    this.description = description;
+  }
 }
 
 export class RuleLanguage {
-   displayName:any;
-   value:any;
+  displayName: any;
+  value: any;
 }
 
 import {
-   trigger,
-   state,
-   style,
-   transition,
-   animate
+  trigger,
+  state,
+  style,
+  transition,
+  animate
 } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddRuleModalComponent } from '@mdm/modals/add-rule-modal/add-rule-modal.component';
-import { AddRuleRepresentationModalComponent, RuleLanguages } from '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component';
+import {
+  AddRuleRepresentationModalComponent,
+  RuleLanguages
+} from '@mdm/modals/add-rule-representation-modal/add-rule-representation-modal.component';
 import { ConfirmationModalComponent } from '@mdm/modals/confirmation-modal/confirmation-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 
 @Component({
-   selector: 'mdm-constraints-rules',
-   templateUrl: './constraints-rules.component.html',
-   styleUrls: ['./constraints-rules.component.scss'],
-   animations: [
-      trigger('detailExpand', [
-         state(
-            'collapsed',
-            style({ height: '0px', minHeight: '0', display: 'none' })
-         ),
-         state('expanded', style({ height: '*' })),
-         transition(
-            'expanded <=> collapsed',
-            animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-         )
-      ])
-   ]
+  selector: 'mdm-constraints-rules',
+  templateUrl: './constraints-rules.component.html',
+  styleUrls: ['./constraints-rules.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state(
+        'collapsed',
+        style({ height: '0px', minHeight: '0', display: 'none' })
+      ),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ])
+  ]
 })
 export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
-   @Input() parent: any;
-   @Input() domainType: string;
+  @Input() parent: any;
+  @Input() domainType: string;
 
-   isLoadingResults: boolean;
-   expandedElement: any;
-   isEditable: boolean;
-   languages:  Array<RuleLanguage>;
-   selectedLanguage: RuleLanguage;
+  isLoadingResults: boolean;
+  expandedElement: any;
+  isEditable: boolean;
+  languages: Array<RuleLanguage>;
+  selectedLanguage: RuleLanguage;
 
-   clickButton = false;
-   filteredOpen = false;
+  clickButton = false;
+  filteredOpen = false;
 
-   constructor(
-      public dialog: MatDialog,
-      protected resourcesService: MdmResourcesService,
-      protected messageHandler: MessageHandlerService
-   ) {
-      super();
+  fileExtensions = {
+    'c#': 'cs',
+    dmn: 'dmn',
+    java: 'java',
+    javascript: 'js',
+    typescript: 'ts',
+    text: 'txt',
+    drools: 'drools',
+    sql: 'sql'
+  };
 
-      this.languages = Object.assign([], RuleLanguages.supportedLanguages);
-      this.languages.push({displayName:'All',value:'all'});
-      this.isLoadingResults = true;
-      this.displayedColumns = ['name', 'description', 'rule', 'actions'];
-      this.isEditable = true;
-      this.selectedLanguage = this.languages.find(x => x.value === 'all');
-   }
+  constructor(
+    public dialog: MatDialog,
+    protected resourcesService: MdmResourcesService,
+    protected messageHandler: MessageHandlerService
+  ) {
+    super();
 
-   ngOnInit(): void {
-      this.loadRules();
-   }
+    this.languages = Object.assign([], RuleLanguages.supportedLanguages);
+    this.languages.push({ displayName: 'All', value: 'all' });
+    this.isLoadingResults = true;
+    this.displayedColumns = ['name', 'description', 'rule', 'actions'];
+    this.isEditable = true;
+    this.selectedLanguage = this.languages.find((x) => x.value === 'all');
+  }
 
-   expandRow = (record:RuleModel) => {
-      this.expandedElement = record;
-      this.resourcesService.catalogueItem.listRuleRepresentations(this.domainType,this.parent.id,record.id).subscribe(result => {
+  ngOnInit(): void {
+    this.loadRules();
+  }
 
-         const tempList : Array<RuleRepresentation> = [];
+  expandRow = (record: RuleModel) => {
+    this.expandedElement = record;
+    this.resourcesService.catalogueItem
+      .listRuleRepresentations(this.domainType, this.parent.id, record.id)
+      .subscribe((result) => {
+        const tempList: Array<RuleRepresentation> = [];
 
-         result.body.items.forEach(element => {
-             element['rule'] = record;
-             if(this.selectedLanguage.value === 'all' || this.selectedLanguage.value === element.language)
-             {
-               tempList.push(element);
-             }
-         });
+        result.body.items.forEach((element) => {
+          element['rule'] = record;
+          if (
+            this.selectedLanguage.value === 'all' ||
+            this.selectedLanguage.value === element.language
+          ) {
+            tempList.push(element);
+          }
+        });
 
-         record.rule = tempList;
+        record.ruleRepresentations = tempList;
       });
-   };
+  };
 
-   add = () => {
-      this.clickButton = true;
-      const dialog = this.dialog.open(AddRuleModalComponent, {
-         data: {
-            name: '',
-            description: '',
-            modalTitle: 'Add New Rule',
-            okBtn: 'Add',
-            btnType: 'primary'
-         },
-         height: '1000px',
-         width: '1000px'
-      });
+  add = () => {
+    this.clickButton = true;
+    const dialog = this.dialog.open(AddRuleModalComponent, {
+      data: {
+        name: '',
+        description: '',
+        modalTitle: 'Add New Rule',
+        okBtn: 'Add',
+        btnType: 'primary'
+      },
+      height: '1000px',
+      width: '1000px'
+    });
 
-      dialog.afterClosed().subscribe((dialogResult) => {
-         this.clickButton = false;
-         if (dialogResult) {
-            const data = {
-               name: dialogResult.name,
-               description: dialogResult.description
-            };
-            this.resourcesService.catalogueItem.saveRule(this.domainType,this.parent.id,data).subscribe(
-               (result) => {
-                 const temp = Object.assign([],this.records);
-                 temp.push(result.body);
-                 this.records = temp;
-                 this.totalItemCount = this.records.length;
-               },
-               (error) =>{
-                  this.messageHandler.showError(error);
-               }
-            );
-         } else {
-            return;
-         }
-      });
-   };
-
-  loadRules() {
-      this.resourcesService.catalogueItem
-         .listRules(this.domainType, this.parent.id)
-         .subscribe(
+    dialog.afterClosed().subscribe((dialogResult) => {
+      this.clickButton = false;
+      if (dialogResult) {
+        const data = {
+          name: dialogResult.name,
+          description: dialogResult.description
+        };
+        this.resourcesService.catalogueItem
+          .saveRule(this.domainType, this.parent.id, data)
+          .subscribe(
             (result) => {
-               this.records = result.body.items;
-               this.totalItemCount = result.body.count;
-               this.isLoadingResults = false;
+              const temp = Object.assign([], this.records);
+              temp.push(result.body);
+              this.records = temp;
+              this.totalItemCount = this.records.length;
             },
             (error) => {
-               this.messageHandler.showError(error);
-               this.isLoadingResults = false;
+              this.messageHandler.showError(error);
             }
-         );
-   }
-
-   openEdit(record: RuleModel): void {
-      if (record) {
-         const dialog = this.dialog.open(AddRuleModalComponent, {
-            data: {
-               name: record.name,
-               description: record.description,
-               modalTitle: 'Edit Rule',
-               okBtn: 'Apply',
-               btnType: 'primary'
-            },
-            height: '1000px',
-            width: '1000px'
-         });
-
-         dialog.afterClosed().subscribe((dialogResult) => {
-            if (dialogResult) {
-               const data = {
-                  name: dialogResult.name,
-                  description: dialogResult.description
-               };
-               this.resourcesService.catalogueItem.updateRule(this.domainType,this.parent.id, record.id,data).subscribe(
-                  () => {
-                     this.messageHandler.showSuccess('Successfully Updated');
-                     this.loadRules();
-                  },
-                  (error) =>{
-                     this.messageHandler.showError(error);
-                  }
-               );
-            } else {
-               return;
-            }
-         });
+          );
+      } else {
+        return;
       }
-   }
+    });
+  };
 
-   openEditRepresentation(rep: RuleRepresentation)
-   {
-      const dialog = this.dialog.open(AddRuleRepresentationModalComponent, {
-         data: {
-            language: rep.language,
-            representation: rep.representation,
-            modalTitle: 'Edit Rule Representation',
-            okBtn: 'Apply',
-            btnType: 'primary'
-         },
-         height: '1000px',
-         width: '1000px'
+  loadRules() {
+    this.resourcesService.catalogueItem
+      .listRules(this.domainType, this.parent.id)
+      .subscribe(
+        (result) => {
+          this.records = result.body.items;
+          this.totalItemCount = result.body.count;
+          this.isLoadingResults = false;
+        },
+        (error) => {
+          this.messageHandler.showError(error);
+          this.isLoadingResults = false;
+        }
+      );
+  }
+
+  openEdit(record: RuleModel): void {
+    if (record) {
+      const dialog = this.dialog.open(AddRuleModalComponent, {
+        data: {
+          name: record.name,
+          description: record.description,
+          modalTitle: 'Edit Rule',
+          okBtn: 'Apply',
+          btnType: 'primary'
+        },
+        height: '1000px',
+        width: '1000px'
       });
 
       dialog.afterClosed().subscribe((dialogResult) => {
-         if (dialogResult) {
-            const data = {
-               language: dialogResult.language,
-               representation: dialogResult.representation
-            };
-            this.resourcesService.catalogueItem.updateRulesRepresentation(this.domainType,this.parent.id,data, rep.rule.id, rep.id).subscribe(() => {
-               this.messageHandler.showSuccess('Successfully Updated');
-               this.expandRow(rep.rule);
-            },
-            error => {
-               this.messageHandler.showError(error);
-            });
-         } else {
-            return;
-         }
+        if (dialogResult) {
+          const data = {
+            name: dialogResult.name,
+            description: dialogResult.description
+          };
+          this.resourcesService.catalogueItem
+            .updateRule(this.domainType, this.parent.id, record.id, data)
+            .subscribe(
+              () => {
+                this.messageHandler.showSuccess('Successfully Updated');
+                this.loadRules();
+              },
+              (error) => {
+                this.messageHandler.showError(error);
+              }
+            );
+        } else {
+          return;
+        }
       });
-   }
+    }
+  }
 
-   deleteRule = (record: RuleModel): void => {
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
-         data: {
-           title: 'Delete permanently',
-           okBtnTitle: 'Yes, delete',
-           btnType: 'warn',
-           message : 'Are you sure you wish delete?',
-         },
-       });
+  openEditRepresentation(rep: RuleRepresentation) {
+    const dialog = this.dialog.open(AddRuleRepresentationModalComponent, {
+      data: {
+        language: rep.language,
+        representation: rep.representation,
+        modalTitle: 'Edit Rule Representation',
+        okBtn: 'Apply',
+        btnType: 'primary'
+      },
+      height: '1000px',
+      width: '1000px'
+    });
 
-       dialog.afterClosed().subscribe((result) => {
-         if (result?.status !== 'ok') {
-           return;
-         }
-         this.resourcesService.catalogueItem.removeRule(this.domainType,this.parent.id,record.id).subscribe(() => {
+    dialog.afterClosed().subscribe((dialogResult) => {
+      if (dialogResult) {
+        const data = {
+          language: dialogResult.language,
+          representation: dialogResult.representation
+        };
+        this.resourcesService.catalogueItem
+          .updateRulesRepresentation(
+            this.domainType,
+            this.parent.id,
+            data,
+            rep.rule.id,
+            rep.id
+          )
+          .subscribe(
+            () => {
+              this.messageHandler.showSuccess('Successfully Updated');
+              this.expandRow(rep.rule);
+            },
+            (error) => {
+              this.messageHandler.showError(error);
+            }
+          );
+      } else {
+        return;
+      }
+    });
+  }
+
+  deleteRule = (record: RuleModel): void => {
+    const dialog = this.dialog.open(ConfirmationModalComponent, {
+      data: {
+        title: 'Delete permanently',
+        okBtnTitle: 'Yes, delete',
+        btnType: 'warn',
+        message: 'Are you sure you wish delete?'
+      }
+    });
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result?.status !== 'ok') {
+        return;
+      }
+      this.resourcesService.catalogueItem
+        .removeRule(this.domainType, this.parent.id, record.id)
+        .subscribe(
+          () => {
             this.messageHandler.showSuccess('Successfully Deleted');
             this.loadRules();
-         },error => {
+          },
+          (error) => {
             this.messageHandler.showError(error.message);
-         });
-       });
-   };
+          }
+        );
+    });
+  };
 
-   addRepresentation(rule: any): void {
-      const dialog = this.dialog.open(AddRuleRepresentationModalComponent, {
-         data: {
-            language: '',
-            representation: '',
-            modalTitle: 'Add Representation',
-            okBtn: 'Add',
-            btnType: 'primary'
-         },
-         height: '1000px',
-         width: '1000px'
-      });
+  addRepresentation(rule: any): void {
+    const dialog = this.dialog.open(AddRuleRepresentationModalComponent, {
+      data: {
+        language: '',
+        representation: '',
+        modalTitle: 'Add Representation',
+        okBtn: 'Add',
+        btnType: 'primary'
+      },
+      height: '1000px',
+      width: '1000px'
+    });
 
-      dialog.afterClosed().subscribe((dialogResult) => {
-         if (dialogResult) {
-            const data = {
-               language: dialogResult.language,
-               representation: dialogResult.representation
-            };
-            this.resourcesService.catalogueItem.saveRulesRepresentation(this.domainType,this.parent.id,data,rule.id).subscribe(() => {
+    dialog.afterClosed().subscribe((dialogResult) => {
+      if (dialogResult) {
+        const data = {
+          language: dialogResult.language,
+          representation: dialogResult.representation
+        };
+        this.resourcesService.catalogueItem
+          .saveRulesRepresentation(
+            this.domainType,
+            this.parent.id,
+            data,
+            rule.id
+          )
+          .subscribe(
+            () => {
               this.messageHandler.showSuccess('Rule Added Successfully');
               this.expandRow(rule);
             },
-            error => {
-               this.messageHandler.showError(error);
-            });
-         } else {
-            return;
-         }
-      });
-   }
+            (error) => {
+              this.messageHandler.showError(error);
+            }
+          );
+      } else {
+        return;
+      }
+    });
+  }
 
-   deleteRepresentation(record:RuleRepresentation){
-      const dialog = this.dialog.open(ConfirmationModalComponent, {
-         data: {
-           title: 'Delete permanently',
-           okBtnTitle: 'Yes, delete',
-           btnType: 'warn',
-           message : 'Are you sure you wish delete?',
-         },
-       });
+  deleteRepresentation(record: RuleRepresentation) {
+    const dialog = this.dialog.open(ConfirmationModalComponent, {
+      data: {
+        title: 'Delete permanently',
+        okBtnTitle: 'Yes, delete',
+        btnType: 'warn',
+        message: 'Are you sure you wish delete?'
+      }
+    });
 
-       dialog.afterClosed().subscribe((result) => {
-         if (result?.status !== 'ok') {
-           return;
-         }
-         this.resourcesService.catalogueItem.removeRulesRepresentation(this.domainType,this.parent.id,record.rule.id, record.id).subscribe(() => {
+    dialog.afterClosed().subscribe((result) => {
+      if (result?.status !== 'ok') {
+        return;
+      }
+      this.resourcesService.catalogueItem
+        .removeRulesRepresentation(
+          this.domainType,
+          this.parent.id,
+          record.rule.id,
+          record.id
+        )
+        .subscribe(
+          () => {
             this.messageHandler.showSuccess('Successfully Deleted');
             this.expandRow(record.rule);
-         },error => {
+          },
+          (error) => {
             this.messageHandler.showError(error.message);
-         });
-       });
-   }
+          }
+        );
+    });
+  }
 
-   filterClick = () =>{
-      this.filteredOpen = !this.filteredOpen;
-   };
+  filterClick = () => {
+    this.filteredOpen = !this.filteredOpen;
+  };
 
-   exportRule = (rule:any) => {
-            this.messageHandler.showSuccess(rule.name);
-   };
+  exportRule = (rule: any) => {
+    const zip = new JSZip();
+    let count = 0;
+    const zipFilename = `${rule.name}.zip`;
 
-   selectedLanguageChange = () => {
+    try {
+      rule.ruleRepresentations.forEach((ruleRep) => {
+        const myFilename = `${rule.name}-${ruleRep.language}-${count}`;
+        zip.file(
+          `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
+          ruleRep.representation
+        );
 
-      if(this.selectedLanguage.value === 'all')
-      {
-         this.loadRules();
-         return;
-      }
+        count++;
+        if (count === rule.ruleRepresentations.length) {
+          zip.generateAsync({ type: 'blob' }).then((content) => {
+            FileSaver.saveAs(content, zipFilename);
+            this.messageHandler.showSuccess(`${rule.name} Exported`);
+          });
+        }
+      });
+    } catch (error) {
+      this.messageHandler.showError('Error Exporting', error);
+    }
+  };
 
-      const data = {
-         language: this.selectedLanguage.value
-      };
+  exportAllRules = () => {
+    this.clickButton = true;
+    const zip = new JSZip();
+    let count = 0;
+    const zipFilename = `${this.parent.label} Rules.zip`;
+    try {
+      this.records.forEach((rule) => {
+        if (rule.ruleRepresentations) {
+          rule.ruleRepresentations.forEach((ruleRep) => {
+            const myFilename = `${rule.name}-${ruleRep.language}-${count}`;
+            zip
+              .folder(`${rule.name}`)
+              .file(
+                `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
+                ruleRep.representation
+              );
+          });
+        } else {
+          zip.folder(`${rule.name}`);
+        }
 
-      this.resourcesService.catalogueItem
-         .listRules(this.domainType, this.parent.id,data)
-         .subscribe(
-            (result) => {
-               this.records = result.body.items;
-               this.totalItemCount = result.body.count;
-               this.isLoadingResults = false;
-            },
-            (error) => {
-               this.messageHandler.showError(error);
-               this.isLoadingResults = false;
-            }
-         );
-   };
+        count++;
+        if (count === this.records.length) {
+          zip.generateAsync({ type: 'blob' }).then((content) => {
+            FileSaver.saveAs(content, zipFilename);
+            this.clickButton = false;
+            this.messageHandler.showSuccess('All Rules Exported');
+          });
+        }
+      });
+    } catch (error) {
+      this.messageHandler.showError('Error Exporting', error);
+    }
+  };
+
+  selectedLanguageChange = () => {
+    if (this.selectedLanguage.value === 'all') {
+      this.loadRules();
+      return;
+    }
+
+    const data = {
+      language: this.selectedLanguage.value
+    };
+
+    this.resourcesService.catalogueItem
+      .listRules(this.domainType, this.parent.id, data)
+      .subscribe(
+        (result) => {
+          this.records = result.body.items;
+          this.totalItemCount = result.body.count;
+          this.isLoadingResults = false;
+        },
+        (error) => {
+          this.messageHandler.showError(error);
+          this.isLoadingResults = false;
+        }
+      );
+  };
 }

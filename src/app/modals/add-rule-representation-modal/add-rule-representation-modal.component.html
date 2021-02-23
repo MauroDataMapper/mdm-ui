@@ -35,7 +35,7 @@ SPDX-License-Identifier: Apache-2.0
     </mat-form-field>
   </div>
   <div *ngIf="showAceEditor()" class="mdm--form-input">
-    <label>Representation</label>
+    <span>Representation</span>
     <ace
       [mode]="selectedLanguage.aceValue"
       style="height: 500px; width: 500px"
@@ -44,7 +44,7 @@ SPDX-License-Identifier: Apache-2.0
     ></ace>
   </div>
   <div *ngIf="selectedLanguage.value === 'dmn'">
-    <label>Representation</label>
+    <span>Representation</span>
 
     <mat-form-field appearance="outline" class="full-width paddingless">
       <div class="myfilebrowser">

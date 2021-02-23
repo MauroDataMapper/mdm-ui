@@ -44,6 +44,8 @@ import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.
 import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { AceComponent, AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
+import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
+import { AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 
 const DefaultAceConfig: AceConfigInterface = {
 };

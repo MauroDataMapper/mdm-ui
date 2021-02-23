@@ -448,14 +448,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         return { index: 3, name: 'context' };
       case 'history':
         return { index: 4, name: 'history' };
-        }
-        return { index: 3, name: 'history' };
-      case 'context':
-        if (this.dataModel.type === 'Data Asset') {
-          return { index: 3, name: 'context' };
-        }
       case 'rulesConstraints' : {
-        return { index: 10, name: 'rulesConstraints' };
+        return { index: 5, name: 'rulesConstraints' };
       }
       default:
         return { index: 0, name: 'description' };
@@ -475,10 +469,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       case 4: {
         return { index: 4, name: 'history' };
       }
-        break;
-      }
-      case 10 : {
-        return { index: 10, name: 'rulesConstraints' };
+      case 5 : {
+        return { index: 5, name: 'rulesConstraints' };
       }
       default:
         return { index: 0, name: 'description' };

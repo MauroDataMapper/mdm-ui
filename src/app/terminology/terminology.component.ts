@@ -15,7 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  OnDestroy,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
@@ -36,7 +42,9 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
-export class TerminologyComponent implements OnInit, OnDestroy {
+export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+
   terminology: any;
   diagram: any;
   activeTab: any;
@@ -63,7 +71,8 @@ export class TerminologyComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService) { }
+    private editingService: EditingService
+  ) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -78,7 +87,7 @@ export class TerminologyComponent implements OnInit, OnDestroy {
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resources.terminology.get(id).subscribe(result => {
+    this.resources.terminology.get(id).subscribe((result) => {
       const data = result.body;
 
       this.DataModelUsedProfiles(id);
@@ -130,12 +139,23 @@ export class TerminologyComponent implements OnInit, OnDestroy {
   }
 
   changeProfile() {
-    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+    if (
+      this.descriptionView !== 'default' &&
+      this.descriptionView !== 'other' &&
+      this.descriptionView !== 'addnew'
+    ) {
       const splitDescription = this.descriptionView.split('/');
-      this.resources.profile.profile('terminology', this.terminology.id, splitDescription[0], splitDescription[1]).subscribe(body => {
-        this.currentProfileDetails = body.body;
-       });
-    }  else if (this.descriptionView === 'addnew') {
+      this.resources.profile
+        .profile(
+          'terminology',
+          this.terminology.id,
+          splitDescription[0],
+          splitDescription[1]
+        )
+        .subscribe((body) => {
+          this.currentProfileDetails = body.body;
+        });
+    } else if (this.descriptionView === 'addnew') {
       const dialog = this.dialog.open(AddProfileModalComponent, {
         data: {
           domainType: 'Terminology',
@@ -239,7 +259,11 @@ export class TerminologyComponent implements OnInit, OnDestroy {
       });
   }
 
-  getTabDetail = tabName => {
+  ngAfterViewInit(): void {
+    this.editingService.setTabGroupClickEvent(this.tabGroup);
+  }
+
+  getTabDetail = (tabName) => {
     switch (tabName) {
       case 'properties':
         return { index: 0, name: 'properties' };
@@ -249,12 +273,14 @@ export class TerminologyComponent implements OnInit, OnDestroy {
         return { index: 2, name: 'attachments' };
       case 'history':
         return { index: 3, name: 'history' };
+      case 'rules':
+        return { index: 4, name: 'rules' };
       default:
         return { index: 0, name: 'properties' };
     }
   };
 
-  getTabDetailIndex = tabIndex => {
+  getTabDetailIndex = (tabIndex) => {
     switch (tabIndex) {
       case 0:
         return { index: 0, name: 'properties' };
@@ -264,6 +290,8 @@ export class TerminologyComponent implements OnInit, OnDestroy {
         return { index: 2, name: 'attachments' };
       case 3:
         return { index: 3, name: 'history' };
+      case 4:
+        return { index: 4, name: 'rules' };
       default:
         return { index: 0, name: 'properties' };
     }
@@ -273,7 +301,7 @@ export class TerminologyComponent implements OnInit, OnDestroy {
     this.broadcastSvc.broadcast('$elementDetailsUpdated', updatedResource);
   };
 
-  tabSelected = tabIndex => {
+  tabSelected = (tabIndex) => {
     const tab = this.getTabDetailIndex(tabIndex);
     this.stateHandler.Go(
       'terminologyNew',
@@ -287,14 +315,16 @@ export class TerminologyComponent implements OnInit, OnDestroy {
       this[this.activeTab.name] = [];
       this.loadingData = true;
       // tslint:disable-next-line: deprecation
-      this.resources.dataModel.get(this.stateService.params.id, this.activeTab.fetchUrl).then(data => {
-        this[this.activeTab.name] = data || [];
-        this.loadingData = false;
-      });
+      this.resources.dataModel
+        .get(this.stateService.params.id, this.activeTab.fetchUrl)
+        .then((data) => {
+          this[this.activeTab.name] = data || [];
+          this.loadingData = false;
+        });
     }
   };
 
-  openEditForm = formName => {
+  openEditForm = (formName) => {
     this.showEditForm = true;
     this.editForm = formName;
   };
@@ -317,13 +347,20 @@ export class TerminologyComponent implements OnInit, OnDestroy {
     };
 
     this.searchTerm = text;
-    return this.resources.terminology.terms.search(this.terminology.id, { search: encodeURIComponent(text), limit, offset });
+    return this.resources.terminology.terms.search(this.terminology.id, {
+      search: encodeURIComponent(text),
+      limit,
+      offset
+    });
   };
 
-  onTermSelect = term => {
-    this.stateHandler.NewWindow('term', { terminologyId: term.terminology, id: term.id }, null);
+  onTermSelect = (term) => {
+    this.stateHandler.NewWindow(
+      'term',
+      { terminologyId: term.terminology, id: term.id },
+      null
+    );
   };
-
 
   ngOnDestroy() {
     if (this.subscription) {

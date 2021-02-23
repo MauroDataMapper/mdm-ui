@@ -177,5 +177,12 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </ng-template>
         </mat-tab>
+        <mat-tab label="Rules">
+            <ng-template matTabContent>
+                <div class="full-width">
+                    <mdm-constraints-rules *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-constraints-rules>
+                </div>
+            </ng-template>
+        </mat-tab>
     </mat-tab-group>
 </div>

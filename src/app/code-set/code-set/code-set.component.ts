@@ -15,7 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { CodeSetResult } from '@mdm/model/codeSetModel';
@@ -35,7 +41,7 @@ import { EditingService } from '@mdm/services/editing.service';
 @Component({
   selector: 'mdm-code-set',
   templateUrl: './code-set.component.html',
-  styleUrls: ['./code-set.component.scss'],
+  styleUrls: ['./code-set.component.scss']
 })
 export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
@@ -67,8 +73,9 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     private editingService: EditingService,
     private title: Title,
     private dialog: MatDialog,
-    private messageHandler: MessageHandlerService
-  ) { }
+    private messageHandler: MessageHandlerService,
+    private editingService: EditingService
+  ) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -86,9 +93,11 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     this.title.setTitle('Code Set');
     this.codeSetDetails(this.parentId);
 
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
   }
 
   ngAfterViewInit(): void {
@@ -97,55 +106,64 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
   codeSetDetails(id: any) {
     let arr = [];
-    this.resourcesService.codeSet.get(id).subscribe(async (result: { body: CodeSetResult }) => {
+    this.resourcesService.codeSet
+      .get(id)
+      .subscribe(async (result: { body: CodeSetResult }) => {
+        // Get the guid
+        this.codeSetModel = result.body;
+        // this.parentId = this.codeSetModel.id;
 
-      // Get the guid
-      this.codeSetModel = result.body;
-      // this.parentId = this.codeSetModel.id;
+        this.editableForm = new EditableDataModel();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
 
-      this.editableForm = new EditableDataModel();
-      this.editableForm.visible = false;
-      this.editableForm.deletePending = false;
+        this.codeSetUsedProfiles(id);
+        this.codsetUnUsedProfiles(id);
 
-      this.codeSetUsedProfiles(id);
-      this.codsetUnUsedProfiles(id);
-
-      await this.resourcesService.versionLink.list('codeSets', this.codeSetModel.id).subscribe(response => {
-        if (response.body.count > 0) {
-          arr = response.body.items;
-          for (const val in arr) {
-            if (this.codeSetModel.id !== arr[val].targetModel.id) {
-              this.semanticLinks.push(arr[val]);
+        await this.resourcesService.versionLink
+          .list('codeSets', this.codeSetModel.id)
+          .subscribe((response) => {
+            if (response.body.count > 0) {
+              arr = response.body.items;
+              for (const val in arr) {
+                if (this.codeSetModel.id !== arr[val].targetModel.id) {
+                  this.semanticLinks.push(arr[val]);
+                }
+              }
             }
-          }
-        }
-      });
+          });
 
-
-      this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.codeSetModel.editable || this.codeSetModel.finalised;
-      if (this.sharedService.isLoggedIn(true)) {
+        this.showExtraTabs =
+          !this.sharedService.isLoggedIn() ||
+          !this.codeSetModel.editable ||
+          this.codeSetModel.finalised;
+        if (this.sharedService.isLoggedIn(true)) {
         this.CodeSetPermissions();
-      } else {
-        this.messageService.FolderSendMessage(this.codeSetModel);
-        this.messageService.dataChanged(this.codeSetModel);
-      }
+        } else {
+          this.messageService.FolderSendMessage(this.codeSetModel);
+          this.messageService.dataChanged(this.codeSetModel);
+        }
 
-      this.tabGroup.realignInkBar();
-      // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
-      this.tabSelected(this.activeTab);
-    });
+        this.tabGroup.realignInkBar();
+        // tslint:disable-next-line: deprecation
+        this.activeTab = this.getTabDetailByName(
+          this.stateService.params.tabView
+        ).index;
+        this.tabSelected(this.activeTab);
+      });
   }
 
   async codeSetUsedProfiles(id: any) {
-    await this.resourcesService.profile.usedProfiles('codeSets', id).subscribe((profiles: { body: { [x: string]: any } }) => {
-      profiles.body.forEach(profile => {
-        const prof: any = [];
-        prof['display'] = profile.displayName;
-        prof['value'] = `${profile.namespace}/${profile.name}`;
-        this.allUsedProfiles.push(prof);
+    await this.resourcesService.profile
+      .usedProfiles('codeSets', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUsedProfiles.push(prof);
+        });
       });
-    });
   }
 
   async codsetUnUsedProfiles(id: any) {
@@ -163,11 +181,22 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   changeProfile() {
-    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+    if (
+      this.descriptionView !== 'default' &&
+      this.descriptionView !== 'other' &&
+      this.descriptionView !== 'addnew'
+    ) {
       const splitDescription = this.descriptionView.split('/');
-      this.resourcesService.profile.profile('codeSets', this.codeSetModel.id, splitDescription[0], splitDescription[1]).subscribe(body => {
-        this.currentProfileDetails = body.body;
-       });
+      this.resourcesService.profile
+        .profile(
+          'codeSets',
+          this.codeSetModel.id,
+          splitDescription[0],
+          splitDescription[1]
+        )
+        .subscribe((body) => {
+          this.currentProfileDetails = body.body;
+        });
     } else if (this.descriptionView === 'addnew') {
       const dialog = this.dialog.open(AddProfileModalComponent, {
         data: {
@@ -273,14 +302,16 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   CodeSetPermissions(id: any) {
-    this.resourcesService.security.permissions('codeSets', id).subscribe((permissions: { body: { [x: string]: any } }) => {
-      Object.keys(permissions.body).forEach((attrname) => {
-        this.codeSetModel[attrname] = permissions.body[attrname];
+    this.resourcesService.security
+      .permissions('codeSets', id)
+      .subscribe((permissions: { body: { [x: string]: any } }) => {
+        Object.keys(permissions.body).forEach((attrname) => {
+          this.codeSetModel[attrname] = permissions.body[attrname];
+        });
+        // Send it to message service to receive in child components
+        this.messageService.FolderSendMessage(this.codeSetModel);
+        this.messageService.dataChanged(this.codeSetModel);
       });
-      // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.codeSetModel);
-      this.messageService.dataChanged(this.codeSetModel);
-    });
   }
 
   toggleShowSearch() {
@@ -308,6 +339,8 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
         return { index: 4, name: 'links' };
       case 'attachments':
         return { index: 5, name: 'attachments' };
+      case 'rules':
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'terminology' };
     }
@@ -327,6 +360,8 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
         return { index: 4, name: 'links' };
       case 5:
         return { index: 5, name: 'attachments' };
+      case 6:
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'terminology' };
     }

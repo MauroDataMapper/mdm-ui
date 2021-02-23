@@ -289,6 +289,8 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
         return { index: 5, name: 'history' };
       case 'attachments':
         return { index: 6, name: 'attachments' };
+        case 'rules':
+          return { index: 7, name: 'rules' };
       default:
         return { index: 0, name: 'elements' };
     }
@@ -310,6 +312,8 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
         return { index: 5, name: 'history' };
       case 6:
         return { index: 6, name: 'attachments' };
+        case 7:
+          return { index: 7, name: 'rules' };
       default:
         return { index: 0, name: 'elements' };
     }

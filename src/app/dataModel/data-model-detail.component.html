@@ -19,136 +19,14 @@ SPDX-License-Identifier: Apache-2.0
    <form editable-form name="form" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
       <div class="panel-body">
 
-      <div class="detail-icons">
-        <div class="text-muted" *ngIf="result?.type === 'Data Asset' || result?.type === 'Data Standard'">
-          <small class="block">
-            <div>
-              <i class="fas fa-cube" matTooltip="Item type"></i>
-              <strong>Item type: </strong>
-              <span class="item-type" *ngIf="result?.type === 'Data Asset'">Data Asset</span>
-              <span class="item-type" *ngIf="result?.type === 'Data Standard'">Data Standard</span>
-            </div>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result?.readableByEveryone">
-          <small>
-            <i class="fas fa-globe-europe globe" aria-hidden="true" matTooltip="Availability"></i>
-            <span><strong>Availability: </strong>Publicly Readable</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result">
-          <small>
-            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-            <span><strong>Branch: </strong> <span class="branch-name">{{result.branchName}}</span></span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result">
-          <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-            <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result?.modelVersion">
-          <small>
-            <i matTooltip="Model Version" class="fas fa-file-alt"></i>
-            <span><strong>Model Version: </strong>{{result.modelVersion}}</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result?.authority">
-          <small>
-            <i matTooltip="Authority" class="fas fa-key"></i>
-            <span><strong>Authority: </strong>{{result.authority.label}}</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result">
-          <small>
-            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-            <span><strong>Last update: </strong>{{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
-          <small>
-            <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-            <span><strong>Finalised on: </strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-          </small>
-        </div>
-      </div>
-    </div>
-
-    <table class="table table-bordered mdm--table-fixed">
-      <tbody>
-        <tr>
-          <td class="detailsRowHeader">Aliases</td>
-          <td>
-                        <mdm-element-alias [readOnly]='showEditDescription'
-                                           [inEditMode]="editableForm.visible"
-                               [aliases]="result?.aliases"
-                               [editableForm]="editableForm"
-                               [property]="'aliases'"></mdm-element-alias>
-          </td>
-        </tr>
-        <tr>
-          <td class="detailsRowHeader">Author</td>
-          <td *ngIf="result">
-
-                        <mdm-inline-text-edit [readOnly]='showEditDescription'
-                                              [inEditMode]="editableForm.visible"
-                                              [(ngModel)]="editableForm.author"
-                                              class="dataModelDetailsLabel"
-                                              name="moduleNameAuthor"></mdm-inline-text-edit>
-          </td>
-        </tr>
-        <tr>
-          <td class="detailsRowHeader">Organisation</td>
-          <td *ngIf="result">
-                        <mdm-inline-text-edit [readOnly]='showEditDescription'
-                                              [inEditMode]="editableForm.visible"
-                                  [(ngModel)]="editableForm.organisation" class="dataModelDetailsLabel"
-                                              name="moduleNameOrganisation"
-                                              size="20"></mdm-inline-text-edit>
-          </td>
-        </tr>
-        <tr>
-          <td class="detailsRowHeader">Description</td>
-          <td class="elementDetailDescription">
-            <div *ngIf="hasResult">
-              <mdm-content-editor [editableForm]="editableForm"
-                                  [element]="result"
-                                  [property]="'description'">
-              </mdm-content-editor>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="detailsRowHeader">Type</td>
-          <td *ngIf="result">
-            <span [innerHTML]="result.type"></span>
-          </td>
-        </tr>
-        <tr>
-          <td class="detailsRowHeader">Classifications</td>
-          <td *ngIf="result">
-                        <mdm-element-classifications [readOnly]='showEditDescription'
-                                                     [classifications]="result.classifiers"
-                                                     [editableForm]="editableForm"
-                                                     [element]="result"
-                                                     [property]="'classifiers'">
-            </mdm-element-classifications>
-
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" style="text-align: right;">
-            <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-              <button mat-stroked-button
-                      type="button"
-                      color="warn"
-                                    matTooltip="Delete Data Model"
-                                    aria-label="Delete Data Model"
-                      class="paddingless dropdown-toggle warning"
-                      [disabled]="deleteInProgress || exporting"
-                      [matMenuTriggerFor]="menu">
-                <i class="far fa-trash-alt"></i>
+         <div class="full-width" style="clear: both;" *ngIf="result">
+            <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px;">
+               <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+            </button>
+            <!--First level Menu-->
+            <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+               <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
+                  <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
                </button>
                <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" [matMenuTriggerFor]="editMenu">
                   <i class="fas fa-pencil-alt"></i> Edit Data Model

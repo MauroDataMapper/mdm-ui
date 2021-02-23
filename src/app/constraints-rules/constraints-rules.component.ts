@@ -414,18 +414,31 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
 
     try {
       rule.ruleRepresentations.forEach((ruleRep) => {
-        const myFilename = `${rule.name}`;
-        zip.file(
-          `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
-          ruleRep.representation
-        );
+        if (
+          this.selectedLanguage.value === ruleRep.language ||
+          this.selectedLanguage.value === 'all'
+        ) {
+          let myFilename = `${rule.name}`;
 
-        count++;
-        if (count === rule.ruleRepresentations.length) {
-          zip.generateAsync({ type: 'blob' }).then((content) => {
-            FileSaver.saveAs(content, zipFilename);
-            this.messageHandler.showSuccess(`${rule.name} Exported`);
-          });
+          let fileCount = 1;
+          while (
+            zip.files[`${myFilename}.${this.fileExtensions[ruleRep.language]}`]
+          ) {
+            myFilename = `${myFilename}(${fileCount})`;
+            fileCount++;
+          }
+
+          zip.file(
+            `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
+            ruleRep.representation
+          );
+          count++;
+          if (count === rule.ruleRepresentations.length) {
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+              FileSaver.saveAs(content, zipFilename);
+              this.messageHandler.showSuccess(`${rule.name} Exported`);
+            });
+          }
         }
       });
     } catch (error) {
@@ -442,13 +455,31 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
       this.records.forEach((rule) => {
         if (rule.ruleRepresentations) {
           rule.ruleRepresentations.forEach((ruleRep) => {
-            const myFilename = `${rule.name}`;
-            zip
-              .folder(`${rule.name}`)
-              .file(
-                `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
-                ruleRep.representation
-              );
+            if (
+              this.selectedLanguage.value === ruleRep.language ||
+              this.selectedLanguage.value === 'all'
+            ) {
+              let myFilename = `${rule.name}`;
+
+              let fileCount = 1;
+              while (
+                zip.files[
+                  `${rule.name}/${myFilename}.${
+                    this.fileExtensions[ruleRep.language]
+                  }`
+                ]
+              ) {
+                myFilename = `${myFilename}(${fileCount})`;
+                fileCount++;
+              }
+
+              zip
+                .folder(`${rule.name}`)
+                .file(
+                  `${myFilename}.${this.fileExtensions[ruleRep.language]}`,
+                  ruleRep.representation
+                );
+            }
           });
         }
 

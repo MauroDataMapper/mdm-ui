@@ -139,6 +139,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
         return { index: 4, name: 'summaryMetadata' };
       case 'attachments':
         return { index: 5, name: 'attachments' };
+        case 'rules':
+          return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'content' };
     }
@@ -231,6 +233,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
         return { index: 4, name: 'context' };
       case 5:
         return { index: 5, name: 'data' };
+        case 6:
+          return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }

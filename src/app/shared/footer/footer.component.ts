@@ -16,7 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
+import { ApiPropertyIndexResponse } from '@mdm/model/api-properties';
+import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '@mdm/services/shared.service';
+import { catchError } from 'rxjs/operators';
+
+const defaultFooterCopyright = 'Copyright &copy; 2021 Clinical Informatics, NIHR Oxford Biomedical Research Centre';
 
 @Component({
   selector: 'mdm-footer',
@@ -24,13 +29,15 @@ import { SharedService } from '@mdm/services/shared.service';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  year = new Date().getFullYear();
+  copyright: string = defaultFooterCopyright;
   showWikiLink = true;
   showYouTrackLink = true;
   wiki = this.sharedService.wiki;
   youTrack = this.sharedService.youTrack;
 
-  constructor(private sharedService: SharedService) {}
+  constructor(
+    private sharedService: SharedService,
+    private resources: MdmResourcesService) {}
 
   ngOnInit() {
     if (
@@ -46,5 +53,17 @@ export class FooterComponent implements OnInit {
     ) {
       this.showYouTrackLink = false;
     }
+
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError(() => {
+          this.copyright = defaultFooterCopyright;
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {   
+        this.copyright = response.body.items.find(p => p.key === 'footer.copyright')?.value ?? defaultFooterCopyright;
+      });
   }
 }

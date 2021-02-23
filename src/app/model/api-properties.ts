@@ -168,36 +168,49 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     key: 'pageContent.home.intro.left',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
-    isSystem: true
+    isSystem: true,
+    publiclyVisible: true
   },
   {
     key: 'pageContent.home.intro.right',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
-    isSystem: true
+    isSystem: true,
+    publiclyVisible: true
   },
   {
     key: 'pageContent.home.detail.heading',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
-    isSystem: true
+    isSystem: true,
+    publiclyVisible: true
   },
   {
     key: 'pageContent.home.detail.column1',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
-    isSystem: true
+    isSystem: true,
+    publiclyVisible: true
   },
   {
     key: 'pageContent.home.detail.column2',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
-    isSystem: true
+    isSystem: true,
+    publiclyVisible: true
   },
   {
     key: 'pageContent.home.detail.column3',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
-    isSystem: true
+    isSystem: true,
+    publiclyVisible: true
   },
+  {
+    key: 'footer.copyright',
+    category: 'Content',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
+  }
 ];

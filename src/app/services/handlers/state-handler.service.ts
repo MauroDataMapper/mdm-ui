@@ -63,6 +63,7 @@ export class StateHandlerService {
 
         'admin.group': 'appContainer.adminArea.group',
         'admin.groups': 'appContainer.adminArea.groups',
+
         dataflowtransformation: 'appContainer.mainApp.dataFlowTransformation',
         dataflowdm2dm: 'appContainer.mainApp.dataFlowDM2DM',
         dataflowchain: 'appContainer.mainApp.dataFlowChain',

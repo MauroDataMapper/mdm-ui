@@ -124,5 +124,5 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
           sortType: this.sort.direction
         });
       });
-  }
+  }  
 }

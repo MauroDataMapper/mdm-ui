@@ -129,24 +129,28 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
   }
 
   expandRow = (record: RuleModel) => {
-    this.expandedElement = record;
-    this.resourcesService.catalogueItem
-      .listRuleRepresentations(this.domainType, this.parent.id, record.id)
-      .subscribe((result) => {
-        const tempList: Array<RuleRepresentation> = [];
+    if (this.expandedElement === record) {
+      this.expandedElement = null;
+    } else {
+      this.expandedElement = record;
+      this.resourcesService.catalogueItem
+        .listRuleRepresentations(this.domainType, this.parent.id, record.id)
+        .subscribe((result) => {
+          const tempList: Array<RuleRepresentation> = [];
 
-        result.body.items.forEach((element) => {
-          element['rule'] = record;
-          if (
-            this.selectedLanguage.value === 'all' ||
-            this.selectedLanguage.value === element.language
-          ) {
-            tempList.push(element);
-          }
+          result.body.items.forEach((element) => {
+            element['rule'] = record;
+            if (
+              this.selectedLanguage.value === 'all' ||
+              this.selectedLanguage.value === element.language
+            ) {
+              tempList.push(element);
+            }
+          });
+
+          record.ruleRepresentations = tempList;
         });
-
-        record.ruleRepresentations = tempList;
-      });
+    }
   };
 
   add = () => {
@@ -446,7 +450,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
                 ruleRep.representation
               );
           });
-         }
+        }
 
         count++;
         if (count === this.records.length) {

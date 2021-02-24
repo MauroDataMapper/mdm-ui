@@ -60,7 +60,7 @@ describe('ApiPropertyComponent', () => {
       ],
       declarations: [ ApiPropertyComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

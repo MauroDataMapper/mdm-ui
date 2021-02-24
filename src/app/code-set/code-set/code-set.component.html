@@ -16,173 +16,301 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
-    <mdm-code-set-details></mdm-code-set-details>
+  <mdm-code-set-details></mdm-code-set-details>
 </div>
 
 <div *ngIf="!showSearch">
   <div *ngIf="codeSetModel && semanticLinks && semanticLinks.length > 0">
-      <div class="mdm--shadow-block bordered">
-          <div class="heading-container">
-              <h4 class="marginless">Links</h4>
-          </div>
-          <div class="pxy-2">
-              <mdm-all-links-in-paged-list [showLoadingSpinner]="true"
-                                           [parent]="semanticLinks"
-                                           [showDescription]="true"
-                                           [showNoLinksMessage]="true"
-                                           [type]="'static'">
-              </mdm-all-links-in-paged-list>
-          </div>
+    <div class="mdm--shadow-block bordered">
+      <div class="heading-container">
+        <h4 class="marginless">Links</h4>
       </div>
+      <div class="pxy-2">
+        <mdm-all-links-in-paged-list
+          [showLoadingSpinner]="true"
+          [parent]="semanticLinks"
+          [showDescription]="true"
+          [showNoLinksMessage]="true"
+          [type]="'static'"
+        >
+        </mdm-all-links-in-paged-list>
+      </div>
+    </div>
   </div>
 </div>
 
 <div>
-    <mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-        <mat-tab label="Description">
-            <ng-template matTabContent>
-              <div class="mb-2 full-width">
-                <div class="heading-container">
-                    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-                        <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
-                           <mat-form-field appearance="outline" class="paddingless" style="max-width: 230px; width: 100%;">
-                            <mat-select [(ngModel)]="descriptionView" name="descriptionView" (ngModelChange)="changeProfile()">
-                                <mat-option value="default">Default profile</mat-option>
-                                <mat-divider></mat-divider>
-                                <mat-option *ngFor="let option of allUsedProfiles" [value]="option.value">{{option.display}}</mat-option>
-                                <mat-divider></mat-divider>
-                                <mat-option value="other">Other properties</mat-option>
-                                <mat-divider></mat-divider>
-                                <mat-option value="addnew">Add new profile...</mat-option>
-                            </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-                            <button mat-flat-button color="primary" type="button" class="mr-1" (click)="editProfile(false)">
-                              <i class="fas fa-pencil-alt"></i>
-                               Edit
-                            </button>
-                         </div>
-                    </div>
-                </div>
-                
-                <mdm-profile-details *ngIf="this.currentProfileDetails" [currentProfileDetails]="this.currentProfileDetails"></mdm-profile-details>
-                
-                <div class="full-width">
-                    <mdm-data-set-metadata *ngIf="this.descriptionView === 'other'" [parent]="codeSetModel" [type]="'dynamic'" [domainType]="'codeSets'" [isProfileView]="true"></mdm-data-set-metadata>
-                  </div>
-        
-        
-                  <table *ngIf="this.descriptionView === 'default'" class="table table-bordered mdm--table-fixed">
-                    <tbody>
-                        <tr>
-                            <td class="detailsRowHeader">Aliases</td>
-                            <td>
-                                <mdm-element-alias  [readOnly]='true'
-                                                    [inEditMode]="editableForm.visible"
-                                                    [aliases]="codeSetModel?.aliases"
-                                                    [editableForm]="editableForm"
-                                                    [property]="'aliases'"></mdm-element-alias>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="detailsRowHeader">Author</td>
-                            <td *ngIf="codeSetModel">
-                                <mdm-inline-text-edit [readOnly]='true'
-                                                      [inEditMode]="editableForm.visible"
-                                                      [(ngModel)]="codeSetModel.author"
-                                                      [name]="'moduleNameAuthor'"
-                                                      size="20"
-                                                      [styleCss]="'dataModelDetailsLabel'">
-                                </mdm-inline-text-edit>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="detailsRowHeader">Organisation</td>
-                            <td *ngIf="codeSetModel">
-                                <mdm-inline-text-edit [readOnly]='true'
-                                                      [inEditMode]="editableForm.visible"
-                                                      [(ngModel)]="codeSetModel.organisation"
-                                                      [name]="'moduleNameOrganisation'"
-                                                      size="20"
-                                                      [styleCss]="'dataModelDetailsLabel'">
-                                </mdm-inline-text-edit>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="detailsRowHeader">Description</td>
-                            <td class="elementDetailDescription">
-                                <div *ngIf="codeSetModel">
-                                    <mdm-markdown-text-area [editableForm]="editableForm"
-                                                            [element]="codeSetModel"
-                                                            [property]="'description'">
-                                    </mdm-markdown-text-area>
-                                </div>
-                            </td>
-                        </tr>
-        
-                        <tr>
-                            <td class="detailsRowHeader">Classifications</td>
-                            <td *ngIf="codeSetModel">
-                                <mdm-element-classifications  [readOnly]='true'
-                                                              [classifications]="codeSetModel.classifiers"
-                                                              name="classifiers"
-                                                              [editableForm]="editableForm"
-                                                              [element]="codeSetModel"
-                                                              [property]="'classifiers'">
-                                </mdm-element-classifications>
-        
-                            </td>
-                        </tr>                       
-                    </tbody>
-                   </table>  
+  <mat-tab-group
+    #tab
+    animationDuration="0ms"
+    [selectedIndex]="activeTab"
+    (selectedIndexChange)="tabSelected($event)"
+  >
+    <mat-tab label="Description">
+      <ng-template matTabContent>
+        <div class="mb-2 full-width">
+          <div class="heading-container">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayout.md="row"
+              fxLayout.sm="row"
+              fxLayout.xs="column"
+              fxLayoutAlign="space-around"
+            >
+              <div
+                fxFlex
+                fxLayout="row"
+                fxFlex="50"
+                fxFlex.md="50"
+                fxFlex.sm="100"
+                fxFlex.xs="100"
+                fxLayoutAlign="flex-start center"
+                fxLayoutAlign.xs="flex-start center"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  class="paddingless"
+                  style="max-width: 230px; width: 100%"
+                >
+                  <mat-select
+                    [(ngModel)]="descriptionView"
+                    name="descriptionView"
+                    (ngModelChange)="changeProfile()"
+                  >
+                    <mat-option value="default">Default profile</mat-option>
+                    <mat-divider></mat-divider>
+                    <mat-option
+                      *ngFor="let option of allUsedProfiles"
+                      [value]="option.value"
+                      >{{ option.display }}</mat-option
+                    >
+                    <mat-divider></mat-divider>
+                    <mat-option value="other">Other properties</mat-option>
+                    <mat-divider></mat-divider>
+                    <mat-option value="addnew">Add new profile...</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-            </ng-template>
-          </mat-tab>
-       
-        <mat-tab label="Terms">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-code-set-terms-table *ngIf="codeSetModel" [codeSet]="codeSetModel" [type]="'dynamic'"></mdm-code-set-terms-table>
-                </div>
-            </ng-template>
-        </mat-tab>
+              <div
+                fxFlex
+                fxLayout="row"
+                fxFlex="50"
+                fxFlex.md="50"
+                fxFlex.sm="100"
+                fxFlex.xs="100"
+                fxLayoutAlign="flex-end center"
+                fxLayoutAlign.xs="flex-start center"
+              >
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="button"
+                  class="mr-1"
+                  (click)="editProfile(false)"
+                >
+                  <i class="fas fa-pencil-alt"></i>
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
 
-        <mat-tab label="Comments">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-annotation-list *ngIf="codeSetModel" [parent]="codeSetModel" [domainType]="'codeSets'"></mdm-annotation-list>
-                </div>
-            </ng-template>
-        </mat-tab>
-        <mat-tab label="History">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-history *ngIf="codeSetModel" [parent]="codeSetModel" [parentType]="'CodeSet'" [domainType]="'codeSets'"></mdm-history>
-                </div>
-            </ng-template>
-        </mat-tab>
+          <mdm-profile-details
+            *ngIf="this.currentProfileDetails"
+            [currentProfileDetails]="this.currentProfileDetails"
+          ></mdm-profile-details>
 
-        <mat-tab label="Links">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-element-link-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-element-link-list>
-                </div>
-            </ng-template>
-        </mat-tab>
-        <mat-tab label="Attachments">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-attachment-list *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-attachment-list>
-                </div>
-            </ng-template>
-        </mat-tab>
-        <mat-tab label="Rules">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-constraints-rules *ngIf="codeSetModel" [parent]="codeSetModel" type="'dynamic'" [domainType]="'codeSets'"></mdm-constraints-rules>
-                </div>
-            </ng-template>
-        </mat-tab>
-    </mat-tab-group>
+          <div class="full-width">
+            <mdm-data-set-metadata
+              *ngIf="this.descriptionView === 'other'"
+              [parent]="codeSetModel"
+              [type]="'dynamic'"
+              [domainType]="'codeSets'"
+              [isProfileView]="true"
+            ></mdm-data-set-metadata>
+          </div>
+
+          <table
+            *ngIf="this.descriptionView === 'default'"
+            class="table table-bordered mdm--table-fixed"
+          >
+            <tbody>
+              <tr>
+                <td class="detailsRowHeader">Aliases</td>
+                <td>
+                  <mdm-element-alias
+                    [readOnly]="true"
+                    [inEditMode]="editableForm.visible"
+                    [aliases]="codeSetModel?.aliases"
+                    [editableForm]="editableForm"
+                    [property]="'aliases'"
+                  ></mdm-element-alias>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Author</td>
+                <td *ngIf="codeSetModel">
+                  <mdm-inline-text-edit
+                    [readOnly]="true"
+                    [inEditMode]="editableForm.visible"
+                    [(ngModel)]="codeSetModel.author"
+                    [name]="'moduleNameAuthor'"
+                    size="20"
+                    [styleCss]="'dataModelDetailsLabel'"
+                  >
+                  </mdm-inline-text-edit>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Organisation</td>
+                <td *ngIf="codeSetModel">
+                  <mdm-inline-text-edit
+                    [readOnly]="true"
+                    [inEditMode]="editableForm.visible"
+                    [(ngModel)]="codeSetModel.organisation"
+                    [name]="'moduleNameOrganisation'"
+                    size="20"
+                    [styleCss]="'dataModelDetailsLabel'"
+                  >
+                  </mdm-inline-text-edit>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Description</td>
+                <td class="elementDetailDescription">
+                  <div *ngIf="codeSetModel">
+                    <mdm-markdown-text-area
+                      [editableForm]="editableForm"
+                      [element]="codeSetModel"
+                      [property]="'description'"
+                    >
+                    </mdm-markdown-text-area>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="detailsRowHeader">Classifications</td>
+                <td *ngIf="codeSetModel">
+                  <mdm-element-classifications
+                    [readOnly]="true"
+                    [classifications]="codeSetModel.classifiers"
+                    name="classifiers"
+                    [editableForm]="editableForm"
+                    [element]="codeSetModel"
+                    [property]="'classifiers'"
+                  >
+                  </mdm-element-classifications>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Terms
+        <span *ngIf="isLoadingTerms" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ termsItemCount }})
+      </ng-template>
+      <div class="full-width">
+        <mdm-code-set-terms-table
+          *ngIf="codeSetModel"
+          [codeSet]="codeSetModel"
+          [type]="'dynamic'"
+          (totalCount)="termsCountEmitter($event)"
+        ></mdm-code-set-terms-table>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Comments">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-annotation-list
+            *ngIf="codeSetModel"
+            [parent]="codeSetModel"
+            [domainType]="'codeSets'"
+          ></mdm-annotation-list>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="History">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-history
+            *ngIf="codeSetModel"
+            [parent]="codeSetModel"
+            [parentType]="'CodeSet'"
+            [domainType]="'codeSets'"
+          ></mdm-history>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Links">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-element-link-list
+            *ngIf="codeSetModel"
+            [parent]="codeSetModel"
+            type="'dynamic'"
+            [domainType]="'codeSets'"
+          ></mdm-element-link-list>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Attachments">
+      <ng-template matTabContent>
+        <div class="full-width">
+          <mdm-attachment-list
+            *ngIf="codeSetModel"
+            [parent]="codeSetModel"
+            type="'dynamic'"
+            [domainType]="'codeSets'"
+          ></mdm-attachment-list>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Rules
+        <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader
+            count="1"
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '31px',
+              width: '28px',
+              'background-color': '#b7bbc5'
+            }"
+          ></ngx-skeleton-loader>
+        </span>
+        ({{ rulesItemCount }})
+      </ng-template>
+      <div class="full-width">
+        <mdm-constraints-rules
+          *ngIf="codeSetModel"
+          [parent]="codeSetModel"
+          type="'dynamic'"
+          [domainType]="'codeSets'"
+          (totalCount)="rulesCountEmitter($event)"
+        ></mdm-constraints-rules>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

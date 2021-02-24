@@ -151,12 +151,29 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
             </ng-template>
         </mat-tab>
-        <mat-tab label="Rules">
-            <ng-template matTabContent>
-                <div class="full-width">
-                    <mdm-constraints-rules  *ngIf="terminology" [parent]="terminology" [domainType]="'terminologies'"></mdm-constraints-rules>
-                </div>
+        <mat-tab>
+            <ng-template mat-tab-label>
+              Rules
+              <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+                <ngx-skeleton-loader
+                  count="1"
+                  appearance="circle"
+                  [theme]="{
+                    'border-radius': '5px',
+                    height: '31px',
+                    width: '28px',
+                    'background-color': '#b7bbc5'
+                  }"
+                ></ngx-skeleton-loader>
+              </span>
+              ({{ rulesItemCount }})
             </ng-template>
-        </mat-tab>
+            <div class="full-width">
+              <mdm-constraints-rules
+              *ngIf="terminology" [parent]="terminology" [domainType]="'terminologies'"
+                (totalCount)="rulesCountEmitter($event)"
+              ></mdm-constraints-rules>
+            </div>
+          </mat-tab>
     </mat-tab-group>
 </div>

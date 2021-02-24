@@ -54,7 +54,7 @@ import {
   transition,
   animate
 } from '@angular/animations';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddRuleModalComponent } from '@mdm/modals/add-rule-modal/add-rule-modal.component';
 import {
@@ -88,6 +88,7 @@ import FileSaver from 'file-saver';
 export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
   @Input() parent: any;
   @Input() domainType: string;
+  @Output() totalCount = new EventEmitter<string>();
 
   isLoadingResults: boolean;
   expandedElement: any;
@@ -200,6 +201,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
         (result) => {
           this.records = result.body.items;
           this.totalItemCount = result.body.count;
+          this.totalCount.emit(String(result.body.count));
           this.isLoadingResults = false;
         },
         (error) => {

@@ -21,6 +21,7 @@ import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { Output } from '@angular/core';
 
 @Component({
    selector: 'mdm-reference-data-values',
@@ -29,6 +30,7 @@ import { GridService } from '@mdm/services/grid.service';
 })
 export class ReferenceDataValuesComponent implements AfterViewInit {
    @Input() parent: any;
+   @Output() totalCount = new EventEmitter<string>();
    @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
    @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
    records: any[] = [];
@@ -58,6 +60,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
          return this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
       }), map((data: any) => {
          this.totalItemCount = data.body.count;
+         this.totalCount.emit(String(data.body.count));
          this.isLoadingResults = false;
          return data.body.rows;
       }), catchError(() => {

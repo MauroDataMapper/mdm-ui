@@ -62,6 +62,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   descriptionView = 'default';
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
+  rulesItemCount = 0;
+  isLoadingRules = true;
+  termsItemCount = 0;
+  isLoadingTerms = true;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -375,5 +379,15 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
       { notify: false, location: tab.index !== 0 }
     );
     this.activeTab = tab.index;
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
+
+  termsCountEmitter($event) {
+    this.isLoadingTerms = false;
+    this.termsItemCount = $event;
   }
 }

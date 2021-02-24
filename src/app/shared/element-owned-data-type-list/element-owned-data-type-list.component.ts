@@ -230,7 +230,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         });
       }
     });
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },
         panelClass: 'bulk-delete-modal'

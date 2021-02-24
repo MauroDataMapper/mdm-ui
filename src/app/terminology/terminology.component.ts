@@ -60,6 +60,8 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   editableForm: EditableTerm;
   showSearch = false;
   subscription: Subscription;
+  rulesItemCount = 0;
+  isLoadingRules = true;
 
 
   constructor(
@@ -367,5 +369,10 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       // unsubscribe to ensure no memory leaks
       this.subscription.unsubscribe();
     }
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
   }
 }

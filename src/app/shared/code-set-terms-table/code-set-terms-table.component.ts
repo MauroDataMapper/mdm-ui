@@ -23,7 +23,7 @@ import {
   ElementRef,
   ViewChild,
   EventEmitter,
-  AfterViewInit, ChangeDetectorRef
+  AfterViewInit, ChangeDetectorRef, Output
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -43,6 +43,7 @@ import { GridService } from '@mdm/services/grid.service';
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   @Input() codeSet: any;
   @Input() type: any; // static, dynamic
+  @Output() totalCount = new EventEmitter<string>();
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
@@ -92,6 +93,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
+        this.totalCount.emit(String(data.body.count));
         this.isLoadingResults = false;
         return data.body.items;
       }),

@@ -57,6 +57,17 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
 
+  typesItemCount = 0;
+  isLoadingTypes = true;
+  dataItemCount = 0;
+  isLoadingData = true;
+  elementsItemCount = 0;
+  isLoadingElements = true;
+  rulesItemCount = 0;
+  isLoadingRules = true;
+
+
+
   constructor(private resourcesService: MdmResourcesService,
               private sharedService: SharedService,
               private messageService: MessageService,
@@ -84,6 +95,26 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
+  }
+
+  typesCountEmitter($event) {
+    this.isLoadingTypes = false;
+    this.typesItemCount = $event;
+  }
+
+  dataCountEmitter($event) {
+    this.isLoadingData = false;
+    this.dataItemCount = $event;
+  }
+
+  elementsCountEmitter($event) {
+    this.isLoadingElements = false;
+    this.elementsItemCount = $event;
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
   }
 
   referenceModelDetails(id: any) {

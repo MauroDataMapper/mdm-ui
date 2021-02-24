@@ -45,6 +45,8 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
 
   @Output() readonly viewChange = new EventEmitter<ApiPropertyTableViewChange>();
 
+  @Output() valueCleared = new EventEmitter();
+
   dataSource = new MatTableDataSource<ApiPropertyEditableState>();
   readonly displayedColumns = ['key', 'category', 'value', 'icons'];
 

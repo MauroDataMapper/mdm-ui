@@ -27,6 +27,9 @@ import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { ThemingService } from '@mdm/services/theming.service';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { catchError, map } from 'rxjs/operators';
+import { ApiProperty, ApiPropertyIndexResponse } from '@mdm/model/api-properties';
 
 @Component({
   selector: 'mdm-navbar',
@@ -38,6 +41,7 @@ export class NavbarComponent implements OnInit {
   profilePictureReloadIndex = 0;
   profile: any;
   logoUrl: string;
+  logoWidth?: string;
   backendURL: any;
   imgChanged: boolean;
   simpleViewSupport: any;
@@ -55,7 +59,8 @@ export class NavbarComponent implements OnInit {
     private broadcastSvc: BroadcastService,
     private messageService: MessageService,
     private editingService: EditingService,
-    private theming: ThemingService) { }
+    private theming: ThemingService,
+    private resources: MdmResourcesService) { }
 
   ngOnInit() {
     this.subscription = this.messageService.loggedInChanged$.subscribe(result => {
@@ -68,7 +73,9 @@ export class NavbarComponent implements OnInit {
       // }
     }
     this.backendURL = this.sharedService.backendURL;
-    this.logoUrl = this.theming.getAssetPath('logo.png');
+    
+    this.setupLogo();
+
     this.imgChanged = false;
     this.HDFLink = this.sharedService.HDFLink;
     this.current = this.sharedService.current;
@@ -82,6 +89,30 @@ export class NavbarComponent implements OnInit {
         this.imgChanged = false;
       }, 1000);
     });
+  }
+
+  setupLogo() {
+    // First default to the static asset, then try to override with a custom API property if available
+    this.logoUrl = this.theming.getAssetPath('logo.png');
+
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        map((response: ApiPropertyIndexResponse) => response.body.items.filter(p => p.key.startsWith('logo.'))),
+        catchError(() => [])        
+      )
+      .subscribe((properties: ApiProperty[]) => {
+        const logoUrl = properties.find(p => p.key === 'logo.url');
+        const logoWidth = properties.find(p => p.key === 'logo.width');
+
+        if (logoUrl) {
+          this.logoUrl = logoUrl.value;
+        }
+
+        if (logoWidth) {
+          this.logoWidth = logoWidth.value;
+        }
+      });
   }
 
   getPendingUsers = () => {

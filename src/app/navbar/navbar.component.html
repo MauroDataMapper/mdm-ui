@@ -20,8 +20,8 @@ SPDX-License-Identifier: Apache-2.0
         <mat-toolbar id="mdm--navbar" color="primary" class="mb-0">
             <nav id="mdm--navbar-desktop" flex fxLayout="row" fxLayoutAlign="space-between">
                 <div class="mdm--navbar-brand">
-                    <a id="mdm-logo" uiSref="appContainer.mainApp.home">
-                        <img [src]="logoUrl" alt="logo">
+                    <a id="mdm-logo" class="mdm-navbar__brand--logo" uiSref="appContainer.mainApp.home">
+                        <img [src]="logoUrl" [style.width]="logoWidth" alt="logo">
                     </a>
                 </div>
                 <div class="mdm--navbar-items">

@@ -163,6 +163,13 @@ $nhs-digital-typography: mat-typography-config(
     background-color: $nhs-digital-background-color;
   }
 
+  .mdm-navbar__brand--logo {
+    img {
+      max-width: 120px;
+      width: 80px;
+    }
+  }
+
   form.mdm--form {
     padding: 20px;
   }

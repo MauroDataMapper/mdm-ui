@@ -41,20 +41,6 @@ header#mdm--header {
   }
   .mdm--navbar-brand {
     z-index: 100;
-    #mdm-logo {
-      image-rendering: -webkit-optimize-contrast;
-      @include size(255px, auto);
-      @include respond-to($mobile-xs) {
-        position: relative;
-        display: block;
-        @include size(160px, 40px);
-      }
-    }
-    img {
-      @include respond-to ($mobile-xs){
-        max-width: 100%;
-      }
-    }
   }
   .nav-link {
     display: inline-block;

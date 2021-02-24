@@ -212,5 +212,19 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     editType: ApiPropertyEditType.Value,
     isSystem: true,
     publiclyVisible: true
+  },
+  {
+    key: 'logo.url',
+    category: 'Content',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'logo.width',
+    category: 'Content',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
   }
 ];

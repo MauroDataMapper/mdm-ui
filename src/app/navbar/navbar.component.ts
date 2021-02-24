@@ -73,7 +73,7 @@ export class NavbarComponent implements OnInit {
       // }
     }
     this.backendURL = this.sharedService.backendURL;
-    
+
     this.setupLogo();
 
     this.imgChanged = false;
@@ -99,7 +99,7 @@ export class NavbarComponent implements OnInit {
       .listPublic()
       .pipe(
         map((response: ApiPropertyIndexResponse) => response.body.items.filter(p => p.key.startsWith('logo.'))),
-        catchError(() => [])        
+        catchError(() => [])
       )
       .subscribe((properties: ApiProperty[]) => {
         const logoUrl = properties.find(p => p.key === 'logo.url');

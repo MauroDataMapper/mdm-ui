@@ -116,7 +116,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  ngOnInit() {    
+  ngOnInit() {
     if (this.securityHandler.isLoggedIn()) {
       this.isLoggedIn = true;
       this.profile = this.securityHandler.getCurrentUser();
@@ -135,9 +135,9 @@ export class HomeComponent implements OnInit {
           return [];
         })
       )
-      .subscribe((response: ApiPropertyIndexResponse) => {   
-        this.loadContent(response.body.items);  
-        this.isLoadingContent = false;      
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadContent(response.body.items);
+        this.isLoadingContent = false;
       });
   }
 

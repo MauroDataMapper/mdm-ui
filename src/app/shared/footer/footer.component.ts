@@ -62,7 +62,7 @@ export class FooterComponent implements OnInit {
           return [];
         })
       )
-      .subscribe((response: ApiPropertyIndexResponse) => {   
+      .subscribe((response: ApiPropertyIndexResponse) => {
         this.copyright = response.body.items.find(p => p.key === 'footer.copyright')?.value ?? defaultFooterCopyright;
       });
   }

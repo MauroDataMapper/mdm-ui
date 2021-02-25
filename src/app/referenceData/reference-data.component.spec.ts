@@ -75,7 +75,6 @@ describe('ReferenceDataModelsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ReferenceDataComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

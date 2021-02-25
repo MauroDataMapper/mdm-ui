@@ -134,7 +134,6 @@ describe('CodeSetComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CodeSetComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

@@ -76,6 +76,7 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     private dialog: MatDialog) { }
 
   ngOnInit() {
+
     // tslint:disable-next-line: deprecation
     if (!this.stateService.params.id) {
       this.stateHandler.NotFound({ location: false });
@@ -86,9 +87,7 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
-    this.title.setTitle('Classifier');
-    // tslint:disable-next-line: deprecation
-    this.classifierDetails(this.stateService.params.id);
+
 
     this.editableForm = new Editable();
     this.editableForm.visible = false;
@@ -105,6 +104,11 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
       this.editableForm.validationError = false;
       this.editableForm.description = this.result.description;
     };
+
+
+    this.title.setTitle('Classifier');
+    // tslint:disable-next-line: deprecation
+    this.classifierDetails(this.stateService.params.id);
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {

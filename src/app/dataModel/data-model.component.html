@@ -454,18 +454,34 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </ng-template>
   </mat-tab>
-  <mat-tab label="History">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-history
-          *ngIf="dataModel"
-          [parent]="'dataModel'"
-          [parentType]="'DataModel'"
-          [parentId]="parentId"
-          [domainType]="'dataModels'"
-        ></mdm-history>
-      </div>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      History
+      <span *ngIf="isLoadingHistory" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ historyItemCount }})
     </ng-template>
+
+    <div class="full-width">
+      <mdm-history
+        (totalCount)="historyCountEmitter($event)"
+        *ngIf="dataModel"
+        [parent]="'dataModel'"
+        [parentType]="'DataModel'"
+        [parentId]="parentId"
+        [domainType]="'dataModels'"
+      ></mdm-history>
+    </div>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>

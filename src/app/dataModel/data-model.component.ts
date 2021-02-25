@@ -77,6 +77,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoadingTypes = true;
   rulesItemCount = 0;
   isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -437,6 +439,11 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 
   addDataClass = () => {

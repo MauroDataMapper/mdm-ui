@@ -62,6 +62,8 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription: Subscription;
   rulesItemCount = 0;
   isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
 
 
   constructor(
@@ -374,5 +376,10 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
   }
 }

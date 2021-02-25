@@ -361,7 +361,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   onTermSelect = (term) => {
     this.stateHandler.NewWindow(
       'term',
-      { terminologyId: term.terminology, id: term.id },
+      { terminologyId: term.model, id: term.id },
       null
     );
   };

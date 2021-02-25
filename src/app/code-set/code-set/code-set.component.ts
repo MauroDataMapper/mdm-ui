@@ -35,7 +35,7 @@ import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -66,6 +66,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoadingRules = true;
   termsItemCount = 0;
   isLoadingTerms = true;
+  showEdit:boolean;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -78,7 +79,8 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     private title: Title,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private securityHandler: SecurityHandlerService
   ) {}
 
   ngOnInit() {
@@ -123,6 +125,9 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.codeSetUsedProfiles(id);
         this.codsetUnUsedProfiles(id);
+
+        const access: any = this.securityHandler.elementAccess(this.codeSetModel);
+        this.showEdit = access.showEdit;
 
         await this.resourcesService.versionLink
           .list('codeSets', this.codeSetModel.id)

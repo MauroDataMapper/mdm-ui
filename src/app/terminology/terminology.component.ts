@@ -32,7 +32,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MessageHandlerService, MessageService } from '@mdm/services';
+import { MessageHandlerService, MessageService, SecurityHandlerService } from '@mdm/services';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -64,10 +64,12 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoadingRules = true;
   historyItemCount = 0;
   isLoadingHistory = true;
+  showEdit: boolean;
 
 
   constructor(
     private stateHandler: StateHandlerService,
+    private securityHandler: SecurityHandlerService,
     private stateService: StateService,
     private title: Title,
     private resources: MdmResourcesService,
@@ -94,6 +96,8 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.resources.terminology.get(id).subscribe((result) => {
       const data = result.body;
 
+      const access: any = this.securityHandler.elementAccess(data);
+      this.showEdit = access.showEdit;
       this.DataModelUsedProfiles(id);
       this.DataModelUnUsedProfiles(id);
 

@@ -37,7 +37,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { BroadcastService, MessageHandlerService } from '@mdm/services';
+import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-data-model',
@@ -59,6 +59,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   editMode = false;
   isEditable: boolean;
   showExtraTabs = false;
+  showEdit = false;
   activeTab: any;
   dataModel4Diagram: any;
   cells: any;
@@ -86,6 +87,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
+    private securityHandler: SecurityHandlerService,
     private title: Title,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
@@ -125,6 +127,13 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
+  watchDataModelObject() {
+    const access: any = this.securityHandler.elementAccess(this.dataModel);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+    }
+  }
+
   dataModelDetails(id: any) {
     let arr = [];
 
@@ -133,7 +142,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(async (result: { body: DataModelResult }) => {
         console.log(result.body);
         this.dataModel = result.body;
-
+        this.watchDataModelObject();
         id = result.body.id;
 
         this.isEditable = this.dataModel['availableActions'].includes('update');

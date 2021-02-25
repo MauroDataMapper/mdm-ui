@@ -87,6 +87,7 @@ SPDX-License-Identifier: Apache-2.0
                 type="button"
                 class="mr-1"
                 (click)="editProfile(false)"
+                *ngIf="this.ReferenceModelPermissions['showEdit']"
               >
                 <i class="fas fa-pencil-alt"></i>
                 Edit

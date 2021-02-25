@@ -117,6 +117,7 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
     this.rulesItemCount = $event;
   }
 
+
   referenceModelDetails(id: any) {
     this.resourcesService.referenceDataModel.get(id).subscribe((result: { body: ReferenceModelResult }) => {
       this.referenceModel = result.body;

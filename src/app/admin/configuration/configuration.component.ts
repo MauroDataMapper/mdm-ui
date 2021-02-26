@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -24,59 +24,59 @@ import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationPropertie
 import { from } from 'rxjs';
 import { ObjectEnhancerService } from '@mdm/services/utility/object-enhancer.service';
 import { Title } from '@angular/platform-browser';
+import { ApiPropertyEditableState, ApiPropertyGroup, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-configuration',
   templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.sass']
+  styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
-  propertiesTemp: any;
-  properties: ConfigurationPropertiesResult;
-  oldConfiguration: ConfigurationPropertiesResult;
   activeTab: any;
-  resource: any;
+  emailTemplateApiProperties: ApiPropertyEditableState[] = [];
   indexingStatus: string;
   indexingTime: string;
 
   constructor(
-    private resourcesService: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private stateService: StateService,
+    private resources: MdmResourcesService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
-    private objectEnhancer: ObjectEnhancerService,
+    private messageHandler: MessageHandlerService,
     private title: Title
   ) {}
 
   ngOnInit() {
-    this.getConfig();
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+    this.getApiProperties();
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
   }
 
-  getConfig() {
-    this.resourcesService.admin.properties().subscribe((result: { body: any }) => {
-        this.properties = result.body;
-        this.oldConfiguration = Object.assign({}, this.properties);
-      }, err => {
-        this.messageHandler.showError('There was a problem getting the configuration properties.', err);
-      });
-  }
+  getApiProperties() {
+    this.resources.apiProperties
+      .list()
+      .pipe(
+        map((response: ApiPropertyIndexResponse) => {
+          return propertyMetadata.map<ApiPropertyEditableState>(metadata => {
+            return {
+              metadata,
+              original: response.body.items?.find(p => p.key === metadata.key)
+            };
+          });
+        }),
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((data: ApiPropertyEditableState[]) => {      
+        this.emailTemplateApiProperties = data.filter(p => p.metadata.group === ApiPropertyGroup.EmailTemplates);
+      })
+  }  
 
-  // Create or edit a configuration property
-  submitConfig() {
-    this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
-
-    from(this.resourcesService.admin.editProperties(this.resource)).subscribe(() => {
-        this.messageHandler.showSuccess('Configuration properties updated successfully.');
-        this.getConfig();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem updating the configuration properties.', error);
-      }
-    );
+  apiPropertyCleared() {
+    this.getApiProperties();
   }
 
   tabSelected(itemsName) {
@@ -109,7 +109,7 @@ export class ConfigurationComponent implements OnInit {
   rebuildIndex() {
     this.indexingStatus = 'start';
 
-    this.resourcesService.admin.rebuildLuceneIndexes(null).subscribe(() => {
+    this.resources.admin.rebuildLuceneIndexes(null).subscribe(() => {
         this.indexingStatus = 'success';
       },
       error => {

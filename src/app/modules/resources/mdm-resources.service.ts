@@ -1,5 +1,5 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2021 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ import {
   MdmReferenceDataElementResource,
   MdmReferenceDataTypeResource,
   MdmReferenceDataValueResource,
-  MdmVersioningResource
+  MdmVersioningResource,
+  MdmApiPropertyResources
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 
@@ -96,6 +97,7 @@ export class MdmResourcesService {
   referenceDataElement = new MdmReferenceDataElementResource(this.resourcesConfig, this.restHandler);
   referenceDataType = new MdmReferenceDataTypeResource(this.resourcesConfig, this.restHandler);
   referenceDataValue = new MdmReferenceDataValueResource(this.resourcesConfig, this.restHandler);
+  apiProperties = new MdmApiPropertyResources(this.resourcesConfig, this.restHandler);
 
   constructor(private resourcesConfig: MdmResourcesConfiguration, private restHandler: MdmRestHandlerService) { }
 }

@@ -72,10 +72,10 @@ export class ElementLinkComponent implements OnInit {
 
     this.label = this.element?.label || this.element?.definition;
     if (this.element?.domainType === 'Term' && !this.justShowCodeForTerm) {
-      this.label = `${this.element.code} : ${this.element.definition}`;
+      this.label = `${this.element.label}`;
     }
     if (this.element?.domainType === 'Term' && this.justShowCodeForTerm) {
-      this.label = this.element.code;
+      this.label = this.element.label;
     }
 
     if (this.replaceLabelBy) {

@@ -30,7 +30,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-label>Key</mat-label>
         <input matInput name="key" [(ngModel)]="property.metadata.key" readonly>
     </mat-form-field>
-    <mat-form-field *ngIf="property.metadata.editType === EditTypes.String" appearance="outline">
+    <mat-form-field *ngIf="property.metadata.editType === EditTypes.Value" appearance="outline">
         <mat-label>Value</mat-label>
         <input matInput name="value" [(ngModel)]="propertyValue" />
     </mat-form-field>

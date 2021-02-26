@@ -43,7 +43,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges {
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private dialog: MatDialog,
-    private messageHandler: MessageHandlerService) { }  
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.properties);
@@ -85,6 +85,6 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges {
       .subscribe(() => {
         this.messageHandler.showSuccess('Successfully cleared the property value.');
         this.valueCleared.emit();
-      })
+      });
   }
 }

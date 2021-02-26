@@ -33,7 +33,7 @@ export class ApiPropertyComponent implements OnInit {
 
   id: string;
   key: string;
-  editExisting: boolean = false;
+  editExisting = false;
   property: ApiPropertyEditableState;
   propertyValue: string;
 
@@ -52,7 +52,7 @@ export class ApiPropertyComponent implements OnInit {
 
     this.id = this.uiRouterGlobals.params.id;
     this.key = this.uiRouterGlobals.params.key;
-    this.editExisting = this.id !== undefined && this.id !== null;   
+    this.editExisting = this.id !== undefined && this.id !== null;
 
     if (this.editExisting) {
       this.title.setTitle('Configuration - Edit Property');
@@ -74,7 +74,7 @@ export class ApiPropertyComponent implements OnInit {
           return {
             metadata,
             original
-          }
+          };
         }),
         catchError(errors => {
           this.messageHandler.showError('There was a problem getting the property.', errors);
@@ -84,7 +84,7 @@ export class ApiPropertyComponent implements OnInit {
       .subscribe((data: ApiPropertyEditableState) => {
         this.property = data;
         this.propertyValue = this.property.original.value;
-      })
+      });
   }
 
   private loadMetadata() {
@@ -105,7 +105,7 @@ export class ApiPropertyComponent implements OnInit {
 
   save() {
     if (this.editExisting) {
-      let updated = Object.assign({}, this.property.original);
+      const updated = Object.assign({}, this.property.original);
       updated.value = this.propertyValue;
 
       this.resources.apiProperties
@@ -147,7 +147,7 @@ export class ApiPropertyComponent implements OnInit {
     this.editing.stop();
 
     let tabView = '';
-    switch (this.property?.metadata?.group) {      
+    switch (this.property?.metadata?.group) {
       case ApiPropertyGroup.EmailTemplates:
         tabView = 'email';
         break;

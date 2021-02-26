@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MdmResourcesIndexResponse, MdmResourcesResponse } from "@mdm/modules/resources/mdm-resources.models";
+import { MdmResourcesIndexResponse, MdmResourcesResponse } from '@mdm/modules/resources/mdm-resources.models';
 
 /**
  * Represents an API property.
@@ -43,7 +43,7 @@ export enum ApiPropertyGroup {
 }
 
 export enum ApiPropertyEditType {
-  String,
+  Value,
   Text,
   Html
 }
@@ -61,30 +61,30 @@ export interface ApiPropertyEditableState {
   original?: ApiProperty;
 }
 
-export const propertyMetadata: ApiPropertyMetadata[] = [  
+export const propertyMetadata: ApiPropertyMetadata[] = [
   {
     key: 'site.url',
     label: 'Site URL',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.from.address',
     label: 'From address - Email',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.from.name',
     label: 'From address - Name',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.admin_confirm_registration.subject',
     label: 'Admin confirm user registration email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.admin_confirm_registration.body',
@@ -96,7 +96,7 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     key: 'email.admin_register.subject',
     label: 'Admin registered user email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.admin_register.body',
@@ -108,7 +108,7 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     key: 'email.invite_edit.subject',
     label: 'User invited to edit email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.invite_edit.body',
@@ -120,48 +120,48 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     key: 'email.invite_view.subject',
     label: 'User invited to view email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.invite_view.body',
     label: 'User invited to view email - Body',
     group: ApiPropertyGroup.EmailTemplates,
     editType: ApiPropertyEditType.Text
-  },      
+  },
   {
     key: 'email.self_register.subject',
     label: 'User self registered email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.self_register.body',
     label: 'User self registered email - Body',
     group: ApiPropertyGroup.EmailTemplates,
     editType: ApiPropertyEditType.Text
-  },      
+  },
   {
     key: 'email.forgotten_password.subject',
     label: 'Forgotten password email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.forgotten_password.body',
     label: 'Forgotten password email - Body',
     group: ApiPropertyGroup.EmailTemplates,
     editType: ApiPropertyEditType.Text
-  },          
+  },
   {
     key: 'email.password_reset.subject',
     label: 'Reset password email - Subject',
     group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.String
+    editType: ApiPropertyEditType.Value
   },
   {
     key: 'email.password_reset.body',
     label: 'Reset password email - Body',
     group: ApiPropertyGroup.EmailTemplates,
     editType: ApiPropertyEditType.Text
-  }      
+  }
 ];

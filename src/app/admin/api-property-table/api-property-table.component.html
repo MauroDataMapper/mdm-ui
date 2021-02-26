@@ -31,10 +31,10 @@ SPDX-License-Identifier: Apache-2.0
                 <span>Value</span>                          
             </th>
             <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                <span *ngIf="record.metadata.editType !== EditType.String" class="mdm-api-property-table__value--content">
+                <span *ngIf="record.metadata.editType !== EditType.Value" class="mdm-api-property-table__value--content">
                     Content
                 </span>
-                <span *ngIf="record.metadata.editType === EditType.String">{{record.original?.value}}</span>
+                <span *ngIf="record.metadata.editType === EditType.Value">{{record.original?.value}}</span>
             </td>
         </ng-container>                  
           <ng-container matColumnDef="icons">

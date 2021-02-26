@@ -16,13 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationProperties';
-import { from } from 'rxjs';
-import { ObjectEnhancerService } from '@mdm/services/utility/object-enhancer.service';
 import { Title } from '@angular/platform-browser';
 import { ApiPropertyEditableState, ApiPropertyGroup, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
 import { catchError, map } from 'rxjs/operators';
@@ -70,10 +67,10 @@ export class ConfigurationComponent implements OnInit {
           return [];
         })
       )
-      .subscribe((data: ApiPropertyEditableState[]) => {      
+      .subscribe((data: ApiPropertyEditableState[]) => {
         this.emailTemplateApiProperties = data.filter(p => p.metadata.group === ApiPropertyGroup.EmailTemplates);
-      })
-  }  
+      });
+  }
 
   apiPropertyCleared() {
     this.getApiProperties();

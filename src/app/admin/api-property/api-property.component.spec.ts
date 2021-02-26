@@ -16,6 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from '@mdm/modules/material/material.module';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { UIRouterModule } from '@uirouter/angular';
+import { UIRouterGlobals } from '@uirouter/core';
+import { ToastrModule } from 'ngx-toastr';
 
 import { ApiPropertyComponent } from './api-property.component';
 
@@ -25,6 +32,27 @@ describe('ApiPropertyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MaterialModule,
+        NoopAnimationsModule,
+        FormsModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService,
+          useValue: { }
+        },
+        {
+          provide: UIRouterGlobals,
+          useValue: {
+            params: {
+              key: 'site.url'
+            }
+          }
+        }
+      ],
       declarations: [ ApiPropertyComponent ]
     })
     .compileComponents();

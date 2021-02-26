@@ -18,22 +18,30 @@ SPDX-License-Identifier: Apache-2.0
 
 export class RuleLanguages {
   static supportedLanguages = [
-    { displayName: 'SQL', value: 'sql', aceValue: 'sql'},
-    { displayName: 'C#', value: 'c#', aceValue: 'csharp' },
+    { displayName: 'SQL', value: 'sql', aceValue: 'sql', fileExt: 'sql' },
+    { displayName: 'C#', value: 'c#', aceValue: 'csharp', fileExt: 'cs' },
     {
       displayName: 'JavaScript',
       value: 'javascript',
-      aceValue: 'javascript'
+      aceValue: 'javascript',
+      fileExt: 'js'
     },
-    { displayName: 'Java', value: 'java', aceValue: 'java' },
+
+    { displayName: 'Java', value: 'java', aceValue: 'java', fileExt: 'java' },
     {
       displayName: 'Typescript',
       value: 'typescript',
-      aceValue: 'typescript'
+      aceValue: 'typescript',
+      fileExt: 'ts'
     },
-    { displayName: 'Drools', value: 'drools', aceValue: 'drools' },
-    { displayName: 'Text', value: 'text', aceValue: 'text' },
-    { displayName: 'DMN', value: 'dmn', aceValue: '' }
+    {
+      displayName: 'Drools',
+      value: 'drools',
+      aceValue: 'drools',
+      fileExt: 'drools'
+    },
+    { displayName: 'Text', value: 'text', aceValue: 'text', fileExt: 'txt' },
+    { displayName: 'DMN', value: 'dmn', aceValue: '', fileExt: 'dmn' }
   ];
 }
 
@@ -89,11 +97,13 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   supportedLanguage = RuleLanguages.supportedLanguages;
   selectedLanguage = this.supportedLanguage[0];
   myFilename = 'Import DMN File';
+  otherFilename = 'Import File';
+  options:any = { showPrintMargin  : false};
 
   constructor(
     private dialogRef: MatDialogRef<AddRuleRepresentationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private messageHandler : MessageHandlerService
+    private messageHandler: MessageHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -129,7 +139,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
       if (!this.modeler) {
         this.modeler = new DmnModeler({
           container: '#dmn',
-          width: '100%',
+          width: '600px',
           height: '600px'
         });
       }
@@ -148,25 +158,40 @@ export class AddRuleRepresentationModalComponent implements OnInit {
           if (err) {
             this.messageHandler.showError(err);
             this.createDMNWindow(this.data.representation);
-          }
-          else{
-          const activeEditor = this.modeler.getActiveViewer();
-          const canvas = activeEditor.get('canvas');
-          canvas.zoom('fit-viewport');
+          } else {
+            const activeEditor = this.modeler.getActiveViewer();
+            const canvas = activeEditor.get('canvas');
+            canvas.zoom('fit-viewport');
           }
         });
       });
     }, 1000);
   }
 
-  dmnFileAdded(fileInput: any) {
+  otherFileAdded(fileInput: any) {
     if (fileInput.target.files && fileInput.target.files[0]) {
       this.myFilename = fileInput.target.files[0].name;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.createDMNWindow(reader.result);
-      };
-      reader.readAsText(fileInput.target.files[0]);
+      const lang = this.supportedLanguage.find(
+        (x) => x.fileExt === this.myFilename.split('.')[1]
+      );
+
+      if (lang) {
+        this.selectedLanguage = lang;
+        const reader = new FileReader();
+        reader.onload = () => {
+          if(lang.value === 'dmn')
+          {
+            this.createDMNWindow(reader.result);
+          }
+          else{
+          this.data.representation = reader.result;
+          }
+        };
+        reader.readAsText(fileInput.target.files[0]);
+      }
+      else{
+        this.messageHandler.showError('Unable in import file please copy and paste');
+      }
     }
   }
 

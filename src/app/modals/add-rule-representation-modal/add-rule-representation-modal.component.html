@@ -34,14 +34,46 @@ SPDX-License-Identifier: Apache-2.0
       </mat-select>
     </mat-form-field>
   </div>
+  <mat-form-field
+    *ngIf="showAceEditor()"
+    appearance="outline"
+    class="full-width paddingless"
+  >
+    <div class="myfilebrowser">
+      <mat-toolbar>
+        <!-- Readonly Input to show File names -->
+        <input
+          style="font-size: large"
+          matInput
+          [(ngModel)]="otherFilename"
+          readonly
+          name="memberContactNo"
+        />
+
+        <!-- Browse Button -->
+        <button mat-flat-button color="primary">Browse</button>
+      </mat-toolbar>
+
+      <!-- Fetch selected filed on change -->
+      <input
+        type="file"
+        #UploadFileInput
+        id="fileUpload"
+        (change)="otherFileAdded($event)"
+        name="fileUpload"
+      />
+    </div>
+  </mat-form-field>
+
   <div *ngIf="showAceEditor()" class="mdm--form-input">
     <span>Representation</span>
     <ace
       [mode]="selectedLanguage.aceValue"
-      style="height: 500px; width: 500px"
+      style="height: 500px; width: 800px"
       [theme]="'github'"
       [(value)]="data.representation"
-    ></ace>
+      [config]="options"
+   ></ace>
   </div>
   <div *ngIf="selectedLanguage.value === 'dmn'">
     <span>Representation</span>
@@ -50,7 +82,13 @@ SPDX-License-Identifier: Apache-2.0
       <div class="myfilebrowser">
         <mat-toolbar>
           <!-- Readonly Input to show File names -->
-          <input style="font-size: large" matInput [(ngModel)]="myFilename" readonly name="memberContactNo" />
+          <input
+            style="font-size: large"
+            matInput
+            [(ngModel)]="myFilename"
+            readonly
+            name="memberContactNo"
+          />
 
           <!-- Browse Button -->
           <button mat-flat-button color="primary">Browse</button>
@@ -61,7 +99,7 @@ SPDX-License-Identifier: Apache-2.0
           type="file"
           #UploadFileInput
           id="fileUpload"
-          (change)="dmnFileAdded($event)"
+          (change)="otherFileAdded($event)"
           name="fileUpload"
         />
       </div>

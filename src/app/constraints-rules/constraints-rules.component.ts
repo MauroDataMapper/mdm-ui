@@ -118,6 +118,7 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     super();
 
     this.languages = Object.assign([], RuleLanguages.supportedLanguages);
+    this.languages.sort((a:any,b:any) => {return a - b;});
     this.languages.push({ displayName: 'All', value: 'all' });
     this.isLoadingResults = true;
     this.displayedColumns = ['name', 'description', 'rule', 'actions'];

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { APP_BASE_HREF, HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MAT_TABS_CONFIG } from '@angular/material/tabs';
@@ -40,6 +40,7 @@ import { StateRoleAccessService } from './services/utility/state-role-access.ser
 import { UserSettingsHandlerService } from './services/utility/user-settings-handler.service';
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
+import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -65,7 +66,8 @@ import '@mdm/utility/extensions/mat-dialog.extensions';
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: MatDialogRef, useValue: {} },
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, autoFocus: false} }
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true, autoFocus: false} },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpRequestProgressInterceptor, multi: true}
 ],
   bootstrap: [UiViewComponent]
 })

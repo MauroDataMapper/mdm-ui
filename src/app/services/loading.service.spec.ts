@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2020 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<mdm-navbar></mdm-navbar>
+*/
+import { TestBed } from '@angular/core/testing';
 
-<main ui-view></main>
+import { LoadingService } from './loading.service';
 
-<mdm-footer></mdm-footer>
+describe('LoadingService', () => {
+  let service: LoadingService;
 
-<mdm-loading-indicator></mdm-loading-indicator>
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(LoadingService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

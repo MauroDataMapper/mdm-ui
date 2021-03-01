@@ -32,10 +32,17 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
-import { MessageHandlerService, MessageService, SecurityHandlerService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  MessageService,
+  SecurityHandlerService
+} from '@mdm/services';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTabGroup } from '@angular/material/tabs';
+import { EditingService } from '@mdm/services/editing.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
 
 @Component({
   selector: 'mdm-terminology',
@@ -57,7 +64,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   allUnUsedProfiles: any[] = [];
   descriptionView = 'default';
   currentProfileDetails: any;
-  editableForm: EditableTerm;
+  editableForm: EditableDataModel;
   showSearch = false;
   subscription: Subscription;
   rulesItemCount = 0;
@@ -87,9 +94,26 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    this.editableForm = new EditableTerm();
+    this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.editableForm.visible = true;
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.editableForm.description = this.terminology.description;
+      if (this.terminology.classifiers) {
+        this.terminology.classifiers.forEach((item) => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+    };
+
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
@@ -201,56 +225,114 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   editProfile = (isNew: boolean) => {
-    let prof = this.allUsedProfiles.find(
-      (x) => x.value === this.descriptionView
-    );
-
-    if (!prof) {
-      prof = this.allUnUsedProfiles.find(
+    this.editingService.start();
+    if (this.descriptionView === 'default') {
+      this.editableForm.show();
+    } else {
+      let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
       );
-    }
 
-    const dialog = this.dialog.open(EditProfileModalComponent, {
-      data: {
-        profile: this.currentProfileDetails,
-        profileName: prof.display
-      },
-      disableClose: true,
-      panelClass: 'full-width-dialog'
-    });
-
-    dialog.afterClosed().subscribe((result) => {
-      if (result) {
-        const splitDescription = prof.value.split('/');
-        const data = JSON.stringify(result);
-        this.resources.profile
-          .saveProfile(
-            'Terminology',
-            this.terminology.id,
-            splitDescription[0],
-            splitDescription[1],
-            data
-          )
-          .subscribe(
-            () => {
-              this.loadProfile();
-              if (isNew) {
-                this.messageHandler.showSuccess('Profile Added');
-                this.DataModelUsedProfiles(this.terminology.id);
-              } else {
-                this.messageHandler.showSuccess('Profile Edited Successfully');
-              }
-            },
-            (error) => {
-              this.messageHandler.showError('error saving', error.message);
-            }
-          );
-      } else if (isNew) {
-        this.descriptionView = 'default';
-        this.changeProfile();
+      if (!prof) {
+        prof = this.allUnUsedProfiles.find(
+          (x) => x.value === this.descriptionView
+        );
       }
-    });
+
+      const dialog = this.dialog.open(EditProfileModalComponent, {
+        data: {
+          profile: this.currentProfileDetails,
+          profileName: prof.display
+        },
+        disableClose: true,
+        panelClass: 'full-width-dialog'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result) {
+          const splitDescription = prof.value.split('/');
+          const data = JSON.stringify(result);
+          this.resources.profile
+            .saveProfile(
+              'Terminology',
+              this.terminology.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.loadProfile();
+                if (isNew) {
+                  this.messageHandler.showSuccess('Profile Added');
+                  this.DataModelUsedProfiles(this.terminology.id);
+                } else {
+                  this.messageHandler.showSuccess(
+                    'Profile Edited Successfully'
+                  );
+                }
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        } else if (isNew) {
+          this.descriptionView = 'default';
+          this.changeProfile();
+        }
+      });
+    }
+  };
+
+  formBeforeSave = () => {
+    const resource = {
+      id: this.terminology.id,
+      label: this.editableForm.label,
+      description: this.editableForm.description,
+      author: this.editableForm.author,
+      organisation: this.editableForm.organisation,
+      type: this.terminology.type,
+      domainType: this.terminology.domainType,
+      aliases: this.terminology.editAliases,
+
+      classifiers: this.terminology.classifiers.map((cls) => {
+        return { id: cls.id };
+      })
+    };
+
+    this.resources.terminology.update(resource.id, resource).subscribe(
+      (res) => {
+        const result = res.body;
+
+        this.terminology = result;
+        this.terminology.aliases = Object.assign({}, result.aliases || []);
+        this.terminology.editAliases = Object.assign(
+          {},
+          this.terminology.aliases
+        );
+
+        this.editableForm.visible = false;
+        this.editingService.stop();
+
+        this.messageHandler.showSuccess('Terminology updated successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Terminology.',
+          error
+        );
+      }
+    );
+  };
+
+  onCancelEdit = () => {
+    if (this.terminology) {
+      this.terminology.editAliases = Object.assign(
+        {},
+        this.terminology.aliases
+      );
+    }
   };
 
   loadProfile() {

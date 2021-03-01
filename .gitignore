@@ -239,3 +239,5 @@ $RECYCLE.BIN/
 /test-report
 junit.xml
 yarn.lock
+eslint_report.json
+.scannerwork

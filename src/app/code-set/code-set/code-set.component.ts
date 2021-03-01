@@ -96,6 +96,31 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
 
+    this.editableForm = new EditableDataModel();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.editableForm.visible = true;
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.editableForm.description = this.codeSetModel.description;
+      if (this.codeSetModel.classifiers) {
+        this.codeSetModel.classifiers.forEach((item) => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+      if (this.codeSetModel.aliases) {
+        this.codeSetModel.aliases.forEach((item) => {
+          this.editableForm.aliases.push(item);
+        });
+      }
+    };
+
     this.title.setTitle('Code Set');
     this.codeSetDetails(this.parentId);
 
@@ -109,6 +134,46 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
+
+  formBeforeSave = async () => {
+    this.editMode = false;
+
+    const classifiers = [];
+    this.editableForm.classifiers.forEach((cls) => {
+      classifiers.push(cls);
+    });
+    const aliases = [];
+    this.editableForm.aliases.forEach((alias) => {
+      aliases.push(alias);
+    });
+
+    const resource = {
+      id: this.codeSetModel.id,
+      label: this.codeSetModel.label,
+      description: this.editableForm.description || '',
+      author: this.codeSetModel.author,
+      organisation: this.codeSetModel.organisation,
+      aliases,
+      classifiers
+    };
+
+    await this.resourcesService.codeSet
+      .update(this.codeSetModel.id, resource)
+      .subscribe(
+        (res) => {
+          this.editingService.stop();
+          this.messageHandler.showSuccess('Code Set updated successfully.');
+          this.editableForm.visible = false;
+          this.codeSetModel.description = res.body.description;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Code Set.',
+            error
+          );
+        }
+      );
+  };
 
   codeSetDetails(id: any) {
     let arr = [];
@@ -173,6 +238,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
           this.allUsedProfiles.push(prof);
         });
       });
+  }
+
+  onCancelEdit() {
+    this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
   async codsetUnUsedProfiles(id: any) {
@@ -244,56 +313,63 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editProfile = (isNew: boolean) => {
-    let prof = this.allUsedProfiles.find(
-      (x) => x.value === this.descriptionView
-    );
-
-    if (!prof) {
-      prof = this.allUnUsedProfiles.find(
+    this.editingService.start();
+    if (this.descriptionView === 'default') {
+      this.editableForm.show();
+    } else {
+      let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
       );
-    }
 
-    const dialog = this.dialog.open(EditProfileModalComponent, {
-      data: {
-        profile: this.currentProfileDetails,
-        profileName: prof.display
-      },
-      disableClose: true,
-      panelClass: 'full-width-dialog'
-    });
-
-    dialog.afterClosed().subscribe((result) => {
-      if (result) {
-        const splitDescription = prof.value.split('/');
-        const data = JSON.stringify(result);
-        this.resourcesService.profile
-          .saveProfile(
-            'codeSets',
-            this.codeSetModel.id,
-            splitDescription[0],
-            splitDescription[1],
-            data
-          )
-          .subscribe(
-            () => {
-              this.loadProfile();
-              if (isNew) {
-                this.messageHandler.showSuccess('Profile Added');
-                this.codeSetUsedProfiles(this.codeSetModel.id);
-              } else {
-                this.messageHandler.showSuccess('Profile Edited Successfully');
-              }
-            },
-            (error) => {
-              this.messageHandler.showError('error saving', error.message);
-            }
-          );
-      } else if (isNew) {
-        this.descriptionView = 'default';
-        this.changeProfile();
+      if (!prof) {
+        prof = this.allUnUsedProfiles.find(
+          (x) => x.value === this.descriptionView
+        );
       }
-    });
+
+      const dialog = this.dialog.open(EditProfileModalComponent, {
+        data: {
+          profile: this.currentProfileDetails,
+          profileName: prof.display
+        },
+        disableClose: true,
+        panelClass: 'full-width-dialog'
+      });
+
+      dialog.afterClosed().subscribe((result) => {
+        if (result) {
+          const splitDescription = prof.value.split('/');
+          const data = JSON.stringify(result);
+          this.resourcesService.profile
+            .saveProfile(
+              'codeSets',
+              this.codeSetModel.id,
+              splitDescription[0],
+              splitDescription[1],
+              data
+            )
+            .subscribe(
+              () => {
+                this.loadProfile();
+                if (isNew) {
+                  this.messageHandler.showSuccess('Profile Added');
+                  this.codeSetUsedProfiles(this.codeSetModel.id);
+                } else {
+                  this.messageHandler.showSuccess(
+                    'Profile Edited Successfully'
+                  );
+                }
+              },
+              (error) => {
+                this.messageHandler.showError('error saving', error.message);
+              }
+            );
+        } else if (isNew) {
+          this.descriptionView = 'default';
+          this.changeProfile();
+        }
+      });
+    }
   };
 
   loadProfile() {

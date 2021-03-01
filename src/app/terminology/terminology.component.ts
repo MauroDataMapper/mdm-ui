@@ -28,9 +28,6 @@ import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
-import { MatTabGroup } from '@angular/material/tabs';
-import { EditingService } from '@mdm/services/editing.service';
-import { EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
 import {
   MessageHandlerService,

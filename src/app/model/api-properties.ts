@@ -25,6 +25,7 @@ export interface ApiProperty {
   key: string;
   value: string;
   publiclyVisible?: boolean;
+  category?: string;
   lastUpdated?: string;
 }
 
@@ -38,10 +39,6 @@ export type ApiPropertyResponse = MdmResourcesResponse<ApiProperty>;
  */
 export type ApiPropertyIndexResponse = MdmResourcesIndexResponse<ApiProperty>;
 
-export enum ApiPropertyGroup {
-  EmailTemplates = 'email-templates'
-}
-
 export enum ApiPropertyEditType {
   Value,
   Text,
@@ -50,10 +47,10 @@ export enum ApiPropertyEditType {
 
 export interface ApiPropertyMetadata {
   key: string;
-  label: string;
-  group: ApiPropertyGroup;
+  category: string;
   editType: ApiPropertyEditType;
   publiclyVisible?: boolean;
+  isSystem: boolean;
 }
 
 export interface ApiPropertyEditableState {
@@ -64,104 +61,104 @@ export interface ApiPropertyEditableState {
 export const propertyMetadata: ApiPropertyMetadata[] = [
   {
     key: 'site.url',
-    label: 'Site URL',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Site',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.from.address',
-    label: 'From address - Email',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.from.name',
-    label: 'From address - Name',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.admin_confirm_registration.subject',
-    label: 'Admin confirm user registration email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.admin_confirm_registration.body',
-    label: 'Admin confirm user registration email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   },
   {
     key: 'email.admin_register.subject',
-    label: 'Admin registered user email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.admin_register.body',
-    label: 'Admin registered user email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   },
   {
     key: 'email.invite_edit.subject',
-    label: 'User invited to edit email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.invite_edit.body',
-    label: 'User invited to edit email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   },
   {
     key: 'email.invite_view.subject',
-    label: 'User invited to view email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.invite_view.body',
-    label: 'User invited to view email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   },
   {
     key: 'email.self_register.subject',
-    label: 'User self registered email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.self_register.body',
-    label: 'User self registered email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   },
   {
     key: 'email.forgotten_password.subject',
-    label: 'Forgotten password email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.forgotten_password.body',
-    label: 'Forgotten password email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   },
   {
     key: 'email.password_reset.subject',
-    label: 'Reset password email - Subject',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Value
+    category: 'Email',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true
   },
   {
     key: 'email.password_reset.body',
-    label: 'Reset password email - Body',
-    group: ApiPropertyGroup.EmailTemplates,
-    editType: ApiPropertyEditType.Text
+    category: 'Email',
+    editType: ApiPropertyEditType.Text,
+    isSystem: true
   }
 ];

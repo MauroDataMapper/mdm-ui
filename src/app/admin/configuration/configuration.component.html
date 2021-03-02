@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth>
-    <mat-tab label="Email template">
-        <mdm-api-property-table [properties]="emailTemplateApiProperties" (valueCleared)="apiPropertyCleared()"></mdm-api-property-table>        
+    <mat-tab label="Properties">
+        <mdm-api-property-table [properties]="apiProperties" (viewChange)="apiPropertiesViewChange($event)" (valueCleared)="apiPropertyCleared()"></mdm-api-property-table>
     </mat-tab>
 
     <mat-tab label="Lucene">

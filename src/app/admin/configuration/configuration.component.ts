@@ -21,8 +21,11 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { ApiPropertyEditableState, ApiPropertyGroup, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
-import { catchError, map } from 'rxjs/operators';
+import { ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
+import { catchError, filter, map } from 'rxjs/operators';
+import { GridService } from '@mdm/services';
+import { Sort } from '@angular/material/sort';
+import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
 
 @Component({
   selector: 'mdm-configuration',
@@ -30,8 +33,8 @@ import { catchError, map } from 'rxjs/operators';
   styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
-  activeTab: any;
-  emailTemplateApiProperties: ApiPropertyEditableState[] = [];
+  activeTab: any;  
+  apiProperties: ApiPropertyEditableState[] = [];
   indexingStatus: string;
   indexingTime: string;
 
@@ -40,7 +43,8 @@ export class ConfigurationComponent implements OnInit {
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private messageHandler: MessageHandlerService,
-    private title: Title
+    private title: Title,
+    private gridService: GridService
   ) {}
 
   ngOnInit() {
@@ -50,15 +54,30 @@ export class ConfigurationComponent implements OnInit {
     this.title.setTitle('Configuration');
   }
 
-  getApiProperties() {
+  getApiProperties(
+    category?: string,
+    sortBy?: string, 
+    sortType?: string) {
+    const options = this.gridService.constructOptions(null, null, sortBy, sortType, null);
+
     this.resources.apiProperties
-      .list()
+      .list(options)
       .pipe(
-        map((response: ApiPropertyIndexResponse) => {
-          return propertyMetadata.map<ApiPropertyEditableState>(metadata => {
+        map((response: ApiPropertyIndexResponse) => {          
+          return response.body.items.map<ApiPropertyEditableState>(item => {
+            let metadata = propertyMetadata.find(m => m.key === item.key);
+            if (!metadata) {
+              metadata = {
+                key: item.key,
+                category: item.category,
+                editType: ApiPropertyEditType.Value,
+                isSystem: false
+              };
+            }
+
             return {
               metadata,
-              original: response.body.items?.find(p => p.key === metadata.key)
+              original: item
             };
           });
         }),
@@ -68,8 +87,17 @@ export class ConfigurationComponent implements OnInit {
         })
       )
       .subscribe((data: ApiPropertyEditableState[]) => {
-        this.emailTemplateApiProperties = data.filter(p => p.metadata.group === ApiPropertyGroup.EmailTemplates);
+        if (category) {
+          this.apiProperties = data.filter(p => p.metadata.category === category);
+          return;
+        }
+
+        this.apiProperties = data;
       });
+  }
+
+  apiPropertiesViewChange(change: ApiPropertyTableViewChange) {
+    this.getApiProperties(change.category, change.sortBy, change.sortType);
   }
 
   apiPropertyCleared() {
@@ -84,22 +112,22 @@ export class ConfigurationComponent implements OnInit {
   getTabDetail(tabIndex) {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: 'email' };
-      case 1:
+        return { index: 0, name: 'properties' };
+      case 2:
         return { index: 1, name: 'lucene' };
       default:
-        return { index: 0, name: 'email' };
+        return { index: 0, name: 'properties' };
     }
   }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'email':
-        return { index: 0, name: 'email' };
+      case 'properties':
+        return { index: 0, name: 'properties' };
       case 'lucene':
         return { index: 1, name: 'lucene' };
       default:
-        return { index: 0, name: 'email' };
+        return { index: 0, name: 'properties' };
     }
   }
 

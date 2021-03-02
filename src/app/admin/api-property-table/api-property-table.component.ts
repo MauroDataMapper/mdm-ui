@@ -15,27 +15,45 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiPropertyEditableState, ApiPropertyEditType } from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { catchError, switchMap } from 'rxjs/operators';
 
+export interface ApiPropertyTableViewChange {
+  category?: string;
+  sortBy?: string;
+  sortType?: string;
+}
+
 @Component({
   selector: 'mdm-api-property-table',
   templateUrl: './api-property-table.component.html',
   styleUrls: ['./api-property-table.component.scss']
 })
-export class ApiPropertyTableComponent implements OnInit, OnChanges {
+export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewInit {
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() properties: ApiPropertyEditableState[] = [];
 
-  @Output() valueCleared = new EventEmitter();
+  @Output() readonly viewChange = new EventEmitter<ApiPropertyTableViewChange>();
+  @Output() readonly valueCleared = new EventEmitter();
 
   dataSource = new MatTableDataSource<ApiPropertyEditableState>();
-  displayedColumns = ['label', 'value', 'icons'];
+  readonly displayedColumns = ['key', 'category', 'value', 'icons'];
+  
+  totalItemCount = 0;
+  selectedCategory = '';
+  categories = [
+    'Email',
+    'Site'
+  ];
 
   EditType = ApiPropertyEditType;
 
@@ -43,16 +61,37 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges {
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private dialog: MatDialog,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService) { }  
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.properties);
   }
 
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe((sort: Sort) => this.viewChange.emit({
+      category: this.selectedCategory,
+      sortBy: sort.active,
+      sortType: sort.direction
+    }));
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.properties) {
       this.dataSource.data = this.properties;
+      this.totalItemCount = this.properties.length;
     }
+  } 
+
+  categoryChanged(change: MatSelectChange) {
+    this.viewChange.emit({ 
+      category: change.value,
+      sortBy: this.sort.active,
+      sortType: this.sort.direction
+    });
+  }
+
+  add() {
+
   }
 
   edit(record: ApiPropertyEditableState) {
@@ -71,7 +110,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges {
           title: 'Are you sure?',
           okBtnTitle: 'Yes',
           btnType: 'warn',
-          message: `<p>Are you sure you want to clear the value from the property "${record.metadata.label}"?</p>
+          message: `<p>Are you sure you want to clear the value from the property "${record.metadata.key}"?</p>
           <p>Once cleared, this property will revert back to its default value.</p>`
         }
       })

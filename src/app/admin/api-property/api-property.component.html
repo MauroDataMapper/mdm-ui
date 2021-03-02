@@ -21,14 +21,18 @@ SPDX-License-Identifier: Apache-2.0
         <span *ngIf="!editExisting">Add Property</span>
     </h4>
 </div>
-<form name="editableForm" class="mdm--form mb-2">
-    <mat-form-field appearance="outline">
-        <mat-label>Label</mat-label>
-        <input matInput name="label" [(ngModel)]="property.metadata.label" readonly>
-    </mat-form-field>
+<form name="editableForm" class="mdm--form mb-2" *ngIf="property">
+    <div *ngIf="property.metadata.isSystem" class="mdm-api-property__system-message">
+        <i class="fas fa-cog"></i>
+        <span class="ml-2">This is a system property, you may only change the value.</span>
+    </div>
     <mat-form-field appearance="outline">
         <mat-label>Key</mat-label>
-        <input matInput name="key" [(ngModel)]="property.metadata.key" readonly>
+        <input matInput name="key" [(ngModel)]="property.metadata.key" [readonly]="property.metadata.isSystem">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <input matInput name="category" [(ngModel)]="property.metadata.category" [readonly]="property.metadata.isSystem">
     </mat-form-field>
     <mat-form-field *ngIf="property.metadata.editType === EditTypes.Value" appearance="outline">
         <mat-label>Value</mat-label>

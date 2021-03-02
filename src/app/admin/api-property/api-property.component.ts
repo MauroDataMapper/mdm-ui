@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ApiProperty, ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyGroup, ApiPropertyResponse, propertyMetadata } from '@mdm/model/api-properties';
+import { ApiProperty, ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyResponse, propertyMetadata } from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -125,7 +125,8 @@ export class ApiPropertyComponent implements OnInit {
       const data: ApiProperty = {
         key: this.property.metadata.key,
         value: this.propertyValue,
-        publiclyVisible: this.property.metadata.publiclyVisible ?? false
+        publiclyVisible: this.property.metadata.publiclyVisible ?? false,
+        category: this.property.metadata.category
       };
 
       this.resources.apiProperties
@@ -145,14 +146,6 @@ export class ApiPropertyComponent implements OnInit {
 
   private navigateToParent() {
     this.editing.stop();
-
-    let tabView = '';
-    switch (this.property?.metadata?.group) {
-      case ApiPropertyGroup.EmailTemplates:
-        tabView = 'email';
-        break;
-    }
-
-    this.stateHandler.Go('appContainer.adminArea.configuration', { tabView });
+    this.stateHandler.Go('appContainer.adminArea.configuration', { tabView: 'properties' });
   }
 }

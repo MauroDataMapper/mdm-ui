@@ -18,4 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 .mdm-api-property__html-container {
     margin: .25em 0;
     padding-bottom: 1.3em;
-} 
+}
+
+.mdm-api-property__system-message {
+    margin: 16px;
+    padding: 16px;
+    border: 1px solid #b7d4ef;
+    color: #4F575F;
+    background-color: #eaf5ff;
+    border-radius: 6px;;
+}

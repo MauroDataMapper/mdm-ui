@@ -87,17 +87,16 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
     });
   }
 
-  add() {
-
+  add = () => {
+    this.stateHandler.Go('appContainer.adminArea.apiPropertyAdd');
   }
 
   edit(record: ApiPropertyEditableState) {
-    if (record.original) {
-      this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', { id: record.original.id });
+    if (!record.original) {
       return;
     }
 
-    this.stateHandler.Go('appContainer.adminArea.apiPropertyAdd', { key: record.metadata.key });
+    this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', { id: record.original.id });
   }
 
   clear(record: ApiPropertyEditableState) {

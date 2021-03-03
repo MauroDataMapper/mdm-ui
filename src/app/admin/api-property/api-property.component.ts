@@ -16,8 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
-import { ApiProperty, ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyResponse, propertyMetadata } from '@mdm/model/api-properties';
+import { ApiProperty, ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyIndexResponse, ApiPropertyMetadata, ApiPropertyResponse, propertyMetadata } from '@mdm/model/api-properties';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -32,10 +34,29 @@ import { catchError, map } from 'rxjs/operators';
 export class ApiPropertyComponent implements OnInit {
 
   id: string;
-  key: string;
+  isNew: boolean;
   editExisting = false;
   property: ApiPropertyEditableState;
-  propertyValue: string;
+  systemProperties: ApiPropertyMetadata[];
+  selectedSystemProperty: ApiPropertyMetadata;
+
+  formGroup: FormGroup;
+  
+  get key() {
+    return this.formGroup.get('key');
+  }
+  
+  get category() {
+    return this.formGroup.get('category');
+  }
+
+  get publiclyVisible() {
+    return this.formGroup.get('publiclyVisible');
+  }
+
+  get value() {
+    return this.formGroup.get('value');
+  }
 
   EditTypes = ApiPropertyEditType;
 
@@ -51,17 +72,35 @@ export class ApiPropertyComponent implements OnInit {
     this.editing.start();
 
     this.id = this.uiRouterGlobals.params.id;
-    this.key = this.uiRouterGlobals.params.key;
     this.editExisting = this.id !== undefined && this.id !== null;
 
     if (this.editExisting) {
       this.title.setTitle('Configuration - Edit Property');
       this.loadExistingProperty();
-      return;
     }
+    else {
+      this.title.setTitle('Configuration - Add Property');
+      this.loadAvailableSystemProperties();
+    }
+  }
 
-    this.title.setTitle('Configuration - Add Property');
-    this.loadMetadata();
+  private createFormGroup() {
+    this.formGroup = new FormGroup({
+      key: new FormControl(this.property.metadata.key, [ Validators.required ]),
+      category: new FormControl(this.property.metadata.category, [ Validators.required ]),
+      publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disable: this.property.metadata.isSystem }),
+      value: new FormControl(this.property.original?.value, [ Validators.required ])
+    });
+  }
+
+  private getBlankMetadata() {
+    return {
+      key: '',
+      category: '',
+      publiclyVisible: false,
+      editType: ApiPropertyEditType.Value,
+      isSystem: false
+    };
   }
 
   private loadExistingProperty() {
@@ -70,7 +109,14 @@ export class ApiPropertyComponent implements OnInit {
       .pipe(
         map((response: ApiPropertyResponse): ApiPropertyEditableState => {
           const original = response.body;
-          const metadata = propertyMetadata.find(p => p.key === original.key);
+          const metadata = propertyMetadata.find(p => p.key === original.key) ?? {
+            key: original.key,
+            category: original.category,
+            isSystem: false,
+            publiclyVisible: original.publiclyVisible,
+            editType: ApiPropertyEditType.Value           
+          };
+
           return {
             metadata,
             original
@@ -83,16 +129,49 @@ export class ApiPropertyComponent implements OnInit {
       )
       .subscribe((data: ApiPropertyEditableState) => {
         this.property = data;
-        this.propertyValue = this.property.original.value;
+        this.createFormGroup();
       });
   }
 
-  private loadMetadata() {
-    const metadata = propertyMetadata.find(p => p.key === this.key);
-    this.property = {
-      metadata
-    };
-    this.propertyValue = '';
+  private loadAvailableSystemProperties() {
+    this.resources.apiProperties
+      .list()
+      .pipe(
+        map((response: ApiPropertyIndexResponse) => {
+          return response.body.items;
+        }),
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((data: ApiProperty[]) => {
+        this.systemProperties = propertyMetadata.filter(m => data.every(p => p.key !== m.key));
+        this.property = {
+          metadata: this.getBlankMetadata()
+        };
+        this.createFormGroup();
+      });
+  }
+
+  systemPropertyChanged(change: MatSelectChange) {
+    if (change.value) {
+      this.property.metadata = propertyMetadata.find(m => m.key === change.value);
+    }
+    else {
+      this.property.metadata = this.getBlankMetadata();
+    }
+
+    this.key.setValue(this.property.metadata.key);
+    this.category.setValue(this.property.metadata.category);
+    this.publiclyVisible.setValue(this.property.metadata.isSystem);
+    
+    if (this.property.metadata.isSystem) {
+      this.publiclyVisible.disable();
+    }
+    else {
+      this.publiclyVisible.enable();
+    }
   }
 
   cancel() {
@@ -104,9 +183,16 @@ export class ApiPropertyComponent implements OnInit {
   }
 
   save() {
+    if (this.formGroup.invalid) {
+      return;
+    }
+
     if (this.editExisting) {
       const updated = Object.assign({}, this.property.original);
-      updated.value = this.propertyValue;
+      updated.key = this.key?.value;
+      updated.category = this.category?.value;
+      updated.publiclyVisible = this.publiclyVisible?.value;
+      updated.value = this.value?.value;
 
       this.resources.apiProperties
         .update(this.property.original.id, updated)
@@ -123,10 +209,10 @@ export class ApiPropertyComponent implements OnInit {
     }
     else {
       const data: ApiProperty = {
-        key: this.property.metadata.key,
-        value: this.propertyValue,
-        publiclyVisible: this.property.metadata.publiclyVisible ?? false,
-        category: this.property.metadata.category
+        key: this.key?.value,
+        value: this.value?.value,
+        publiclyVisible: this.publiclyVisible?.value ?? false,
+        category: this.category?.value
       };
 
       this.resources.apiProperties

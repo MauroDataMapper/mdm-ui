@@ -88,7 +88,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.adminArea.apiPropertyAdd',
-      url: '/property/add/:key',
+      url: '/property/add',
       component: ApiPropertyComponent
     },
     {

@@ -44,12 +44,19 @@ SPDX-License-Identifier: Apache-2.0
           <input matInput name="version" [(ngModel)]="version" />
         </mat-form-field>
       </div>
+      <div class="mt-4">
+        <p>Optionally also provide a tag name to help identify this version.</p>
+        <p>e.g. "January Release"</p>
+        <mat-form-field appearance="outline">
+          <mat-label>Tag name</mat-label>
+          <input matInput name="versionTag" [(ngModel)]="versionTag" />
+        </mat-form-field>
+      </div>
     </form>
-
 
     <p><strong>Note 1:</strong> The latest version of this model is currently set to <strong>{{currentVersion}}</strong></p>
 
-    <p class='marginless'><strong>Note 2:</strong> Once you finalise this record, you can not edit it anymore!</p>
+    <p class="marginless"><strong>Note 2:</strong> Once you finalise this record, you can not edit it anymore!</p>
     <p>However, you can create a new version of it.</p>
 
     <p class="marginless">To find out more about Semantic Versioning, please visit the</p>

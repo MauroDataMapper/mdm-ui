@@ -41,6 +41,7 @@ export class FinaliseModalComponent implements OnInit {
   versionPatch = '';
   currentVersion = '0.0.0';
   modelVersion = '0.0.0';
+  versionTag: string;
 
   constructor(public dialogRef: MatDialogRef<FinaliseModalComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -83,10 +84,22 @@ export class FinaliseModalComponent implements OnInit {
   }
 
   ok() {
-    if (this.data.versionList === 'Custom') {
-      this.data.versionNumber = this.version;
+    let request: any = { };
+    if (this.data.versionList !== 'Custom') {
+      request.versionChangeType = this.data.versionList;
+    } 
+    else {
+      request.version = this.version;
     }
-    this.dialogRef.close({ status: 'ok', data: this.data });
+
+    if (this.versionTag) {
+      request.versionTag = this.versionTag;
+    }
+
+    this.dialogRef.close({ 
+      status: 'ok', 
+      request
+    });
   }
   cancel() {
     this.dialogRef.close({ status: 'cancel' });

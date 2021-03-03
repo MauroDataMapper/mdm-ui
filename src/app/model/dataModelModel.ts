@@ -38,6 +38,7 @@ export class DataModelResult {
   deleted: boolean;
   branchName: string;
   modelVersion: any;
+  modelVersionTag?: string;
 }
 
 export class Classifiers {

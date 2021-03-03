@@ -143,6 +143,22 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
                     </small>
                 </div>
+                <div class="text-muted" *ngIf="result?.modelVersion">
+                    <small>
+                        <i matTooltip="Model Version" class="fas fa-file-alt"></i>
+                        <span><strong>Model Version: </strong>{{result.modelVersion}}</span>
+                        <span *ngIf="result.modelVersionTag" class="tag-name">
+                            <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+                            <span>{{result.modelVersionTag}}</span>
+                        </span>
+                    </small>
+                </div>
+                <div class="text-muted" *ngIf="result">
+                    <small>
+                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                        <span><strong>Last update: </strong>{{ result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    </small>
+                </div>
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
                     <small>
                         <i class="far fa-calendar-check" matTooltip="Finalised on"></i>

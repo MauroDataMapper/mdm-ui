@@ -21,8 +21,8 @@ pipeline {
       stage('Jenkins Clean') {
          steps {
             sh 'rm -f junit.xml'
-            sh 'rm -f test-report'
-            sh 'rm -f coverage'
+            sh 'rm -rf test-report'
+            sh 'rm -ff coverage'
             sh 'rm -f eslint_report.json'
          }
       }

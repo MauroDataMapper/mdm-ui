@@ -71,7 +71,8 @@ export class ConfigurationComponent implements OnInit {
                 key: item.key,
                 category: item.category,
                 editType: ApiPropertyEditType.Value,
-                isSystem: false
+                isSystem: false,
+                publiclyVisible: item.publiclyVisible
               };
             }
 
@@ -107,10 +108,6 @@ export class ConfigurationComponent implements OnInit {
 
   apiPropertiesViewChange(change: ApiPropertyTableViewChange) {
     this.getApiProperties(change.category, change.sortBy, change.sortType);
-  }
-
-  apiPropertyCleared() {
-    this.getApiProperties();
   }
 
   tabSelected(itemsName) {

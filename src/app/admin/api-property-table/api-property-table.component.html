@@ -45,6 +45,9 @@ SPDX-License-Identifier: Apache-2.0
                 <span *ngIf="record.metadata.isSystem" class="ml-2">
                     <i class="fas fa-cog" matTooltip="System property"></i>
                 </span>
+                <span *ngIf="record.metadata.publiclyVisible" class="ml-2">
+                    <i class="fas fa-globe" matTooltip="Publicly visible"></i>
+                </span>
               </td>
           </ng-container>
           <ng-container matColumnDef="category">
@@ -76,8 +79,8 @@ SPDX-License-Identifier: Apache-2.0
                       <button mat-menu-item (click)="edit(record)">
                           <i class="fas fa-pencil-alt"></i> Edit
                       </button>
-                      <button *ngIf="record.original && record.metadata.isSystem" mat-menu-item (click)="clear(record)">
-                          <i class="fas fa-eraser warning"></i> Clear
+                      <button mat-menu-item (click)="delete(record)">
+                          <i class="far fa-trash-alt warning"></i> Delete
                       </button>
                   </mat-menu>
               </td>

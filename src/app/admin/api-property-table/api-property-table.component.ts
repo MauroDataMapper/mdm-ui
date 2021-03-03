@@ -44,7 +44,6 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
   @Input() categories: string[] = [];
 
   @Output() readonly viewChange = new EventEmitter<ApiPropertyTableViewChange>();
-  @Output() readonly valueCleared = new EventEmitter();
 
   dataSource = new MatTableDataSource<ApiPropertyEditableState>();
   readonly displayedColumns = ['key', 'category', 'value', 'icons'];
@@ -99,27 +98,31 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
     this.stateHandler.Go('appContainer.adminArea.apiPropertyEdit', { id: record.original.id });
   }
 
-  clear(record: ApiPropertyEditableState) {
+  delete(record: ApiPropertyEditableState) {
     this.dialog
       .openConfirmationAsync({
         data: {
           title: 'Are you sure?',
           okBtnTitle: 'Yes',
           btnType: 'warn',
-          message: `<p>Are you sure you want to clear the value from the property "${record.metadata.key}"?</p>
-          <p>Once cleared, this property will revert back to its default value.</p>`
+          message: `<p>Are you sure you want to delete the property "${record.metadata.key}"?</p>
+          <p>Once deleted, this property and value cannot be retrieved.</p>`
         }
       })
       .pipe(
         switchMap(() => this.resources.apiProperties.remove(record.original.id)),
         catchError(errors => {
-          this.messageHandler.showError('There was a problem clearing the property value.', errors);
+          this.messageHandler.showError('There was a problem deleting the property.', errors);
           return [];
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess('Successfully cleared the property value.');
-        this.valueCleared.emit();
+        this.messageHandler.showSuccess(`Successfully deleted the property ${record.metadata.key}.`);
+        this.viewChange.emit({
+          category: this.selectedCategory,
+          sortBy: this.sort.active,
+          sortType: this.sort.direction
+        });
       });
   }
 }

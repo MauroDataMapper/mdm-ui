@@ -88,7 +88,7 @@ export class ApiPropertyComponent implements OnInit {
     this.formGroup = new FormGroup({
       key: new FormControl(this.property.metadata.key, [ Validators.required ]),
       category: new FormControl(this.property.metadata.category, [ Validators.required ]),
-      publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disable: this.property.metadata.isSystem }),
+      publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
       value: new FormControl(this.property.original?.value, [ Validators.required ])
     });
   }

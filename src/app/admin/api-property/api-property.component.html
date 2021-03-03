@@ -54,18 +54,21 @@ SPDX-License-Identifier: Apache-2.0
             Publicly visible
         </mat-checkbox>    
     </div>
-    <mat-form-field appearance="outline">
+    <mat-form-field *ngIf="property.metadata.editType !== EditTypes.Html" appearance="outline">
         <mat-label>Value</mat-label>
         <input *ngIf="property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
-        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>
+        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>                
         <mat-error *ngIf="value?.errors?.required">
             Value is required
         </mat-error>
     </mat-form-field>    
-    <!-- <div *ngIf="property.metadata.editType === EditTypes.Html" class="mdm-api-property__html-container">
-        <mdm-html-editor [(description)]="propertyValue" [inEditMode]="true">
+    <div *ngIf="property.metadata.editType === EditTypes.Html" class="mdm-api-property__html-container">
+        <mdm-html-editor [description]="value.value" (descriptionChange)="htmlValueChanged($event)" [inEditMode]="true">
         </mdm-html-editor>
-    </div>     -->
+        <mat-error *ngIf="value?.errors?.required">
+            Value is required
+        </mat-error>
+    </div>
     <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
         Cancel
     </button>

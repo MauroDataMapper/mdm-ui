@@ -174,6 +174,10 @@ export class ApiPropertyComponent implements OnInit {
     }
   }
 
+  htmlValueChanged(value: string) {
+    this.value.setValue(value);
+  }
+
   cancel() {
     this.editing.confirmCancelAsync().subscribe(confirm => {
       if (confirm) {

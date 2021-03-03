@@ -41,6 +41,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() properties: ApiPropertyEditableState[] = [];
+  @Input() categories: string[] = [];
 
   @Output() readonly viewChange = new EventEmitter<ApiPropertyTableViewChange>();
   @Output() readonly valueCleared = new EventEmitter();
@@ -50,10 +51,6 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
   
   totalItemCount = 0;
   selectedCategory = '';
-  categories = [
-    'Email',
-    'Site'
-  ];
 
   EditType = ApiPropertyEditType;
 

@@ -17,7 +17,12 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <mat-tab-group [selectedIndex]="activeTab.index" (selectedIndexChange)="tabSelected($event)" dynamicHeight dynamicWidth>
     <mat-tab label="Properties">
-        <mdm-api-property-table [properties]="apiProperties" (viewChange)="apiPropertiesViewChange($event)" (valueCleared)="apiPropertyCleared()"></mdm-api-property-table>
+        <mdm-api-property-table 
+            [properties]="apiProperties" 
+            [categories]="apiPropertyCategories" 
+            (viewChange)="apiPropertiesViewChange($event)" 
+            (valueCleared)="apiPropertyCleared()">
+        </mdm-api-property-table>
     </mat-tab>
 
     <mat-tab label="Lucene">

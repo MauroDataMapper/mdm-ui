@@ -22,9 +22,8 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
 import { ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
-import { catchError, filter, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
-import { Sort } from '@angular/material/sort';
 import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
 
 @Component({
@@ -35,6 +34,7 @@ import { ApiPropertyTableViewChange } from '../api-property-table/api-property-t
 export class ConfigurationComponent implements OnInit {
   activeTab: any;  
   apiProperties: ApiPropertyEditableState[] = [];
+  apiPropertyCategories: string[] = [];
   indexingStatus: string;
   indexingTime: string;
 
@@ -93,6 +93,15 @@ export class ConfigurationComponent implements OnInit {
         }
 
         this.apiProperties = data;
+
+        const backendCategories = data
+          .map(prop => prop.metadata.category)
+          .filter(cat => cat && cat.length > 0)
+
+        const knownCategories = propertyMetadata
+          .map(prop => prop.category);
+
+        this.apiPropertyCategories = [...new Set(backendCategories.concat(knownCategories).sort())];
       });
   }
 

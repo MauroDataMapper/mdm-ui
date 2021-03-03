@@ -58,6 +58,9 @@ export interface ApiPropertyEditableState {
   original?: ApiProperty;
 }
 
+/**
+ * List of known API properties that the Mauro system depends on, including relevant metadata to describe them.
+ */
 export const propertyMetadata: ApiPropertyMetadata[] = [
   {
     key: 'site.url',

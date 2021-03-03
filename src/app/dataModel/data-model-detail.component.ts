@@ -421,7 +421,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           if (dialogResult?.status !== 'ok') {
             return;
           }
-          this.processing = true;      
+          this.processing = true;
           this.resourcesService.dataModel.finalise(this.result.id, dialogResult.request).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Data Model finalised successfully.');

@@ -84,10 +84,10 @@ export class FinaliseModalComponent implements OnInit {
   }
 
   ok() {
-    let request: any = { };
+    const request: any = { };
     if (this.data.versionList !== 'Custom') {
       request.versionChangeType = this.data.versionList;
-    } 
+    }
     else {
       request.version = this.version;
     }
@@ -96,8 +96,8 @@ export class FinaliseModalComponent implements OnInit {
       request.versionTag = this.versionTag;
     }
 
-    this.dialogRef.close({ 
-      status: 'ok', 
+    this.dialogRef.close({
+      status: 'ok',
       request
     });
   }

@@ -1,6 +1,6 @@
 {
   "name": "mdm-ui",
-  "version": "5.1.0-SNAPSHOT",
+  "version": "5.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

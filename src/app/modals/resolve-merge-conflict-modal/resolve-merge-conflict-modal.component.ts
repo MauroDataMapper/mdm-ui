@@ -78,9 +78,9 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     const id = obj.id;
     const value = decodeURI(obj.value);
 
-    document.querySelector(`span#loc' ${id}`).innerHTML = '';
+    document.querySelector(`span#loc${id}`).innerHTML = '';
 
-    const regex = new RegExp(`<span id="loc'${id}">`, 'g');
+    const regex = new RegExp(`<span id="loc${id}">`, 'g');
     this.mergeString = this.mergeString.replace(regex,`<span id="loc${id}">${value}`);
   }
 

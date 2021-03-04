@@ -180,6 +180,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         this.editableForm = new EditableDataModel();
         this.editableForm.visible = false;
         this.editableForm.deletePending = false;
+        this.setEditableFormData();
 
         this.editableForm.show = () => {
           this.editForm.forEach((x) =>

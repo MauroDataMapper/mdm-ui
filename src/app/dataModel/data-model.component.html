@@ -191,21 +191,23 @@ SPDX-License-Identifier: Apache-2.0
           disable-submit-on-enter
         >
           <table
-            *ngIf="this.descriptionView === 'default'"
+            *ngIf="this.descriptionView === 'default' && editableForm"
             class="table table-bordered mdm--table-fixed"
           >
             <tbody>
               <tr>
                 <td class="detailsRowHeader">Aliases</td>
                 <td>
+                  <div *ngIf="dataModel">
                   <mdm-element-alias
-                    [readOnly]="true"
-                    [inEditMode]="editableForm?.visible"
-                    [aliases]="dataModel?.aliases"
+                    [inEditMode]="editableForm.visible"
+                    [aliases]="dataModel.aliases"
                     [editableForm]="editableForm"
                     [property]="'aliases'"
+                    [readOnly]="false"
                   >
                   </mdm-element-alias>
+                  </div>
                 </td>
               </tr>
               <tr>
@@ -224,7 +226,7 @@ SPDX-License-Identifier: Apache-2.0
                 <td class="detailsRowHeader">Classifications</td>
                 <td *ngIf="dataModel">
                   <mdm-element-classifications
-                   [classifications]="dataModel.classifiers"
+                    [classifications]="dataModel.classifiers"
                     [editableForm]="editableForm"
                     [element]="dataModel"
                     [property]="'classifiers'"

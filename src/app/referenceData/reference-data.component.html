@@ -120,7 +120,7 @@ SPDX-License-Identifier: Apache-2.0
               <td class="detailsRowHeader">Aliases</td>
               <td>
                 <mdm-element-alias
-                  [readOnly]="true"
+                  [readOnly]="false"
                   [inEditMode]="editableForm?.visible"
                   [aliases]="referenceModel?.aliases"
                   [editableForm]="editableForm"
@@ -133,7 +133,7 @@ SPDX-License-Identifier: Apache-2.0
               <td class="detailsRowHeader">Author</td>
               <td>
                 <mdm-inline-text-edit
-                  [readOnly]="true"
+                  [readOnly]="false"
                   [inEditMode]="editableForm.visible"
                   [(ngModel)]="editableForm.author"
                   class="dataModelDetailsLabel"
@@ -145,7 +145,7 @@ SPDX-License-Identifier: Apache-2.0
               <td class="detailsRowHeader">Organisation</td>
               <td>
                 <mdm-inline-text-edit
-                  [readOnly]="true"
+                [readOnly]="false"
                   [inEditMode]="editableForm.visible"
                   [(ngModel)]="editableForm.organisation"
                   class="dataModelDetailsLabel"

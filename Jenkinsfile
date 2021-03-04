@@ -22,7 +22,7 @@ pipeline {
          steps {
             sh 'rm -f junit.xml'
             sh 'rm -rf test-report'
-            sh 'rm -ff coverage'
+            sh 'rm -rf coverage'
             sh 'rm -f eslint_report.json'
          }
       }

@@ -6,11 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "jest",
-     "test-with-coverage": "jest --coverage",
+    "test-with-coverage": "jest --coverage",
     "test-watch": "jest --watch",
     "lint": "ng lint",
     "eslint": "tsc --noEmit && eslint . --ext ts --quiet --fix",
-     "eslint-report": "eslint . --ext ts --fix -f json -o eslint_report.json",
+    "eslint-report": "eslint . --ext ts --fix -f json -o eslint_report.json",
     "e2e": "ng e2e",
     "postinstall": "ngcc",
     "sonar": "sonar-scanner -Dsonar.projectVersion=$npm_package_version"

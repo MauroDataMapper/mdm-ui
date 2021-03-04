@@ -41,11 +41,11 @@ export class ApiPropertyComponent implements OnInit {
   selectedSystemProperty: ApiPropertyMetadata;
 
   formGroup: FormGroup;
-  
+
   get key() {
     return this.formGroup.get('key');
   }
-  
+
   get category() {
     return this.formGroup.get('category');
   }
@@ -86,10 +86,10 @@ export class ApiPropertyComponent implements OnInit {
 
   private createFormGroup() {
     this.formGroup = new FormGroup({
-      key: new FormControl(this.property.metadata.key, [ Validators.required ]),
-      category: new FormControl(this.property.metadata.category, [ Validators.required ]),
+      key: new FormControl(this.property.metadata.key, [ Validators.required ]),  // eslint-disable-line @typescript-eslint/unbound-method
+      category: new FormControl(this.property.metadata.category, [ Validators.required ]),  // eslint-disable-line @typescript-eslint/unbound-method
       publiclyVisible: new FormControl({ value: this.property.metadata.publiclyVisible, disabled: this.property.metadata.isSystem }),
-      value: new FormControl(this.property.original?.value, [ Validators.required ])
+      value: new FormControl(this.property.original?.value, [ Validators.required ])  // eslint-disable-line @typescript-eslint/unbound-method
     });
   }
 
@@ -114,7 +114,7 @@ export class ApiPropertyComponent implements OnInit {
             category: original.category,
             isSystem: false,
             publiclyVisible: original.publiclyVisible,
-            editType: ApiPropertyEditType.Value           
+            editType: ApiPropertyEditType.Value
           };
 
           return {
@@ -165,7 +165,7 @@ export class ApiPropertyComponent implements OnInit {
     this.key.setValue(this.property.metadata.key);
     this.category.setValue(this.property.metadata.category);
     this.publiclyVisible.setValue(this.property.metadata.isSystem);
-    
+
     if (this.property.metadata.isSystem) {
       this.publiclyVisible.disable();
     }

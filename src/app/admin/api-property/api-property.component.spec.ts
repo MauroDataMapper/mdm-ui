@@ -23,6 +23,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { UIRouterModule } from '@uirouter/angular';
 import { UIRouterGlobals } from '@uirouter/core';
 import { ToastrModule } from 'ngx-toastr';
+import { of } from 'rxjs';
 
 import { ApiPropertyComponent } from './api-property.component';
 
@@ -42,7 +43,11 @@ describe('ApiPropertyComponent', () => {
       providers: [
         {
           provide: MdmResourcesService,
-          useValue: { }
+          useValue: { 
+            apiProperties: {
+              list: jest.fn(() => of())
+            }
+          }
         },
         {
           provide: UIRouterGlobals,

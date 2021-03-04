@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -47,7 +47,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
 
   dataSource = new MatTableDataSource<ApiPropertyEditableState>();
   readonly displayedColumns = ['key', 'category', 'value', 'icons'];
-  
+
   totalItemCount = 0;
   selectedCategory = '';
 
@@ -57,7 +57,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
     private stateHandler: StateHandlerService,
     private resources: MdmResourcesService,
     private dialog: MatDialog,
-    private messageHandler: MessageHandlerService) { }  
+    private messageHandler: MessageHandlerService) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.properties);
@@ -76,10 +76,10 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
       this.dataSource.data = this.properties;
       this.totalItemCount = this.properties.length;
     }
-  } 
+  }
 
   categoryChanged(change: MatSelectChange) {
-    this.viewChange.emit({ 
+    this.viewChange.emit({
       category: change.value,
       sortBy: this.sort.active,
       sortType: this.sort.direction
@@ -88,7 +88,7 @@ export class ApiPropertyTableComponent implements OnInit, OnChanges, AfterViewIn
 
   add = () => {
     this.stateHandler.Go('appContainer.adminArea.apiPropertyAdd');
-  }
+  };
 
   edit(record: ApiPropertyEditableState) {
     if (!record.original) {

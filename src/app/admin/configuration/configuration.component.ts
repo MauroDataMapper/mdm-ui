@@ -32,7 +32,7 @@ import { ApiPropertyTableViewChange } from '../api-property-table/api-property-t
   styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
-  activeTab: any;  
+  activeTab: any;
   apiProperties: ApiPropertyEditableState[] = [];
   apiPropertyCategories: string[] = [];
   indexingStatus: string;
@@ -56,14 +56,14 @@ export class ConfigurationComponent implements OnInit {
 
   getApiProperties(
     category?: string,
-    sortBy?: string, 
+    sortBy?: string,
     sortType?: string) {
     const options = this.gridService.constructOptions(null, null, sortBy, sortType, null);
 
     this.resources.apiProperties
       .list(options)
       .pipe(
-        map((response: ApiPropertyIndexResponse) => {          
+        map((response: ApiPropertyIndexResponse) => {
           return response.body.items.map<ApiPropertyEditableState>(item => {
             let metadata = propertyMetadata.find(m => m.key === item.key);
             if (!metadata) {
@@ -97,7 +97,7 @@ export class ConfigurationComponent implements OnInit {
 
         const backendCategories = data
           .map(prop => prop.metadata.category)
-          .filter(cat => cat && cat.length > 0)
+          .filter(cat => cat && cat.length > 0);
 
         const knownCategories = propertyMetadata
           .map(prop => prop.category);

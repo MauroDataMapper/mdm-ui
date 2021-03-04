@@ -361,6 +361,8 @@ export class ElementTypesService {
         parentDataClass = element.parentDataClass;
       } else if (element.breadcrumbs && element.breadcrumbs.length >= 2) {
         parentDataClass = element.breadcrumbs[element.breadcrumbs.length - 1].id;
+      } else if (element.modelId) {
+        parentDataModel = element.modelId;
       }
     }
 

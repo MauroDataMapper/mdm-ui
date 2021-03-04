@@ -26,7 +26,8 @@ module.exports = {
   reporters: [
     'default',
     'jest-junit',
-    ['jest-html-reporter', { pageTitle: 'Test Report' }]
+    ['jest-html-reporter', { pageTitle: 'Test Report' }],
+     ['jest-sonar',{outputDirectory: 'test-report'}]
   ],
   watchPathIgnorePatterns: [
     'test-report/',

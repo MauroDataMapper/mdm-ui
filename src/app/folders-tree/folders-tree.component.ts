@@ -366,7 +366,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       event.preventDefault();
       event.stopPropagation();
 
-      if (!this.enableContextMenu || fnode.domainType === DOMAIN_TYPE.Term) {
+      if (!this.enableContextMenu || fnode.domainType === DOMAIN_TYPE.CodeSet || fnode.domainType === DOMAIN_TYPE.Term) {
          return;
       }
 

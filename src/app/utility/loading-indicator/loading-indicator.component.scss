@@ -1,5 +1,5 @@
-<!--
-Copyright 2020 University of Oxford
+/*
+Copyright 2021 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,11 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
--->
-<mdm-navbar></mdm-navbar>
+*/
+.loading-container {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 10;
+    margin: 20px;
+    padding: 10px;
 
-<main ui-view></main>
+    background: rgba(187, 248, 222, 0.3);
+    color: #076528;
+    border: 1px solid rgba(10, 133, 53, 0.5);
+    border-radius: 5px;
+    vertical-align: middle;
 
-<mdm-footer></mdm-footer>
+    z-index: 5000;
 
-<mdm-loading-indicator></mdm-loading-indicator>
+    .loading-container__message {        
+        margin-left: 10px;
+    }
+}

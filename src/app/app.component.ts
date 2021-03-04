@@ -23,16 +23,16 @@ import { SharedService } from './services/shared.service';
 @Component({
   selector: 'mdm-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   title = 'mdm-ui';
+  isLoading = false;
 
   constructor(
     private userIdle: UserIdleService,
     private sharedService: SharedService,
-    private editingService: EditingService
-  ) {}
+    private editingService: EditingService) {}
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove() {
@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
     // Start watching for user inactivity.
     this.userIdle.startWatching();
     this.userIdle.onTimerStart().subscribe();
+
     // Start watch when time is up.
     let lastDigestRun: any = new Date();
     this.userIdle.onTimeout().subscribe(() => {

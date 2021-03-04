@@ -94,11 +94,11 @@ export class ResetPasswordComponent implements OnInit {
 
     this.processing = true;
 
-    this.resources.catalogueUser.changePassword(this.uid, resource).subscribe(() => {
+    this.resources.catalogueUser.resetPassword(this.uid, resource).subscribe(() => {
       this.message = 'success';
       this.stateHandler.Go('home');
-    }, () => {
-      this.message = 'error';
+    }, response => {
+      this.message = response.error.errors[0].message;
       this.processing = false;
       this.confirmed = false;
     });

@@ -98,12 +98,12 @@ export class NavbarComponent implements OnInit {
     this.resources.apiProperties
       .listPublic()
       .pipe(
-        map((response: ApiPropertyIndexResponse) => response.body.items.filter(p => p.key.startsWith('logo.'))),
+        map((response: ApiPropertyIndexResponse) => response.body.items.filter(p => p.key.startsWith('theme.logo.'))),
         catchError(() => [])
       )
       .subscribe((properties: ApiProperty[]) => {
-        const logoUrl = properties.find(p => p.key === 'logo.url');
-        const logoWidth = properties.find(p => p.key === 'logo.width');
+        const logoUrl = properties.find(p => p.key === 'theme.logo.url');
+        const logoWidth = properties.find(p => p.key === 'theme.logo.width');
 
         if (logoUrl) {
           this.logoUrl = logoUrl.value;

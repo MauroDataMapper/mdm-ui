@@ -21,7 +21,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '@mdm/services/shared.service';
 import { catchError } from 'rxjs/operators';
 
-const defaultFooterCopyright = 'Copyright &copy; 2021 Clinical Informatics, NIHR Oxford Biomedical Research Centre';
+const defaultFooterCopyright = 'Copyright © 2021 Clinical Informatics, NIHR Oxford Biomedical Research Centre';
 
 @Component({
   selector: 'mdm-footer',
@@ -63,7 +63,7 @@ export class FooterComponent implements OnInit {
         })
       )
       .subscribe((response: ApiPropertyIndexResponse) => {
-        this.copyright = response.body.items.find(p => p.key === 'footer.copyright')?.value ?? defaultFooterCopyright;
+        this.copyright = response.body.items.find(p => p.key === 'content.footer.copyright')?.value ?? defaultFooterCopyright;
       });
   }
 }

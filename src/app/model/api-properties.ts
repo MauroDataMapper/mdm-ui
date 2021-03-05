@@ -165,64 +165,64 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     isSystem: true
   },
   {
-    key: 'pageContent.home.intro.left',
+    key: 'content.home.intro.left',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'pageContent.home.intro.right',
+    key: 'content.home.intro.right',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'pageContent.home.detail.heading',
+    key: 'content.home.detail.heading',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'pageContent.home.detail.column1',
+    key: 'content.home.detail.column1',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'pageContent.home.detail.column2',
+    key: 'content.home.detail.column2',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'pageContent.home.detail.column3',
+    key: 'content.home.detail.column3',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'footer.copyright',
+    key: 'content.footer.copyright',
     category: 'Content',
     editType: ApiPropertyEditType.Value,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'logo.url',
-    category: 'Content',
+    key: 'theme.logo.url',
+    category: 'Theme',
     editType: ApiPropertyEditType.Value,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'logo.width',
-    category: 'Content',
+    key: 'theme.logo.width',
+    category: 'Theme',
     editType: ApiPropertyEditType.Value,
     isSystem: true,
     publiclyVisible: true

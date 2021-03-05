@@ -41,10 +41,9 @@ import { UserSettingsHandlerService } from './services/utility/user-settings-han
 import { UiViewComponent } from './shared/ui-view/ui-view.component';
 import '@mdm/utility/extensions/mat-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
-import { ApiPropertyComponent } from './admin/api-property/api-property.component';
 
 @NgModule({
-  declarations: [AppComponent, ApiPropertyComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     CatalogueModule,

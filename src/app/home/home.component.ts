@@ -30,24 +30,24 @@ import { catchError } from 'rxjs/operators';
 
 const defaultHtmlContent = [
   {
-    key: 'page_content.home.intro.left',
+    key: 'content.home.intro.left',
     value: `<h3>Use the <strong>Mauro Data Mapper</strong> platform to create shared documentation for your data, and to collaborate on the definition of new data models</h3>
     <p>Automatically import your existing schemas; link, annotate and share them; use these definitions in the creation of new software components.</p>
     <p>Mauro was previously known as the Metadata Catalogue, and has been built at the University of Oxford with support from the National Institute for Health Research, and NHS Digital.</p>`
   },
   {
-    key: 'page_content.home.intro.right',
+    key: 'content.home.intro.right',
     value: `<div class="text-center bdi--hero-header__image mt-3">
     <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
 </div>`
   },
   {
-    key: 'page_content.home.detail.heading',
+    key: 'content.home.detail.heading',
     value: `<h5 class="text-center marginless text-muted">Features</h5>
     <h3 class="text-center marginless">Benefits of using the Mauro Data Mapper</h3>`
   },
   {
-    key: 'page_content.home.detail.column_one',
+    key: 'content.home.detail.column_one',
     value: `<div class="text-center">
     <span class="feature-icon feature-icon--1 mt-3 mb-2">
         <i class="fas fa-recycle fa-2x"></i>
@@ -59,7 +59,7 @@ const defaultHtmlContent = [
 </div>`
   },
   {
-    key: 'page_content.home.detail.column_two',
+    key: 'content.home.detail.column_two',
     value: `<div class="text-center">
     <span class="feature-icon feature-icon--2 mt-3 mb-2">
         <i class="fas fa-balance-scale-right fa-2x"></i>
@@ -71,7 +71,7 @@ const defaultHtmlContent = [
 </div>`
   },
   {
-    key: 'page_content.home.detail.column_three',
+    key: 'content.home.detail.column_three',
     value: `<div class="text-center">
     <span class="feature-icon feature-icon--3 mt-3 mb-2">
         <i class="fas fa-cogs fa-2x"></i>
@@ -142,12 +142,12 @@ export class HomeComponent implements OnInit {
   }
 
   private loadContent(properties: ApiProperty[]) {
-    this.introLeftContent = this.getContentProperty(properties, 'page_content.home.intro.left');
-    this.introRightContent = this.getContentProperty(properties, 'page_content.home.intro.right');
-    this.detailHeading = this.getContentProperty(properties, 'page_content.home.detail.heading');
-    this.detailColumn1 = this.getContentProperty(properties, 'page_content.home.detail.column_one');
-    this.detailColumn2 = this.getContentProperty(properties, 'page_content.home.detail.column_two');
-    this.detailColumn3 = this.getContentProperty(properties, 'page_content.home.detail.column_three');
+    this.introLeftContent = this.getContentProperty(properties, 'content.home.intro.left');
+    this.introRightContent = this.getContentProperty(properties, 'content.home.intro.right');
+    this.detailHeading = this.getContentProperty(properties, 'content.home.detail.heading');
+    this.detailColumn1 = this.getContentProperty(properties, 'content.home.detail.column_one');
+    this.detailColumn2 = this.getContentProperty(properties, 'content.home.detail.column_two');
+    this.detailColumn3 = this.getContentProperty(properties, 'content.home.detail.column_three');
   }
 
   private getContentProperty(properties: ApiProperty[], key: string): string {

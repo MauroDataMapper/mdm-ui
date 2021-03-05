@@ -311,6 +311,7 @@ export class ReferenceDataComponent
 
   editProfile = (isNew: boolean) => {
     if (this.descriptionView === 'default') {
+      this.showEditDescription = false;
       this.editableForm.show();
     } else {
       let prof = this.allUsedProfiles.find(

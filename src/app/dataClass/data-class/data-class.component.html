@@ -184,7 +184,7 @@ SPDX-License-Identifier: Apache-2.0
            <mdm-editable-form-buttons
            *ngIf="editableForm"
            [hidden]="!editableForm.visible"
-           [onCancelEdit]="onCancelEdit"
+           [onCancelEdit]="onCancelEdit()"
            [editable]="editableForm"
            [textLocation]="'left'"
            [hideDelete]="true"

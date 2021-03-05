@@ -107,7 +107,7 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
       this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
- 
+
       this.error = '';
 
       this.setEditableForm();

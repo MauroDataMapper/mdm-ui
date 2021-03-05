@@ -106,6 +106,9 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
       this.dataModelId = data.model;
       this.id = data.id;
 
+      this.DataModelUnUsedProfiles(data.id);
+      this.DataModelUsedProfiles(data.id);
+
       this.dataType = data;
 
       this.watchDataTypeObject();
@@ -289,7 +292,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
       const dialog = this.dialog.open(AddProfileModalComponent, {
         data: {
           domainType: 'DataType',
-          domainId: this.dataModel.id
+          domainId: this.dataType.id
         },
         height: '250px'
       });
@@ -303,7 +306,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
           this.resource.profile
             .profile(
               'DataType',
-              this.dataModel.id,
+              this.dataType.id,
               splitDescription[0],
               splitDescription[1],
               ''
@@ -357,8 +360,8 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
           const data = JSON.stringify(result);
           this.resource.profile
             .saveProfile(
-              'DataModel',
-              this.dataModel.id,
+              'dataType',
+              this.dataType.id,
               splitDescription[0],
               splitDescription[1],
               data
@@ -369,7 +372,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
                 this.loadProfile();
                 if (isNew) {
                   this.messageHandler.showSuccess('Profile Added');
-                  this.DataModelUsedProfiles(this.dataModel.id);
+                  this.DataModelUsedProfiles(this.dataType.id);
                 } else {
                   this.messageHandler.showSuccess(
                     'Profile Edited Successfully'

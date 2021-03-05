@@ -16,7 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  AfterViewInit
+} from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { ReferenceModelResult } from '@mdm/model/referenceModelModel';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -38,7 +44,8 @@ import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-p
   templateUrl: './reference-data.component.html',
   styleUrls: ['./reference-data.component.scss']
 })
-export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ReferenceDataComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   referenceModel: ReferenceModelResult;
   showSecuritySection: boolean;
@@ -65,16 +72,16 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
   isLoadingElements = true;
   rulesItemCount = 0;
   isLoadingRules = true;
+  showEditDescription = false;
 
-
-
-  constructor(private resourcesService: MdmResourcesService,
-              private sharedService: SharedService,
-              private messageService: MessageService,
-              private stateService: StateService,
-              private stateHandler: StateHandlerService,
-              private dialog: MatDialog,
-              private messageHandler: MessageHandlerService,
+  constructor(
+    private resourcesService: MdmResourcesService,
+    private sharedService: SharedService,
+    private messageService: MessageService,
+    private stateService: StateService,
+    private stateHandler: StateHandlerService,
+    private dialog: MatDialog,
+    private messageHandler: MessageHandlerService,
               private title: Title,
               private editingService: EditingService) { }
 
@@ -117,48 +124,82 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
     this.rulesItemCount = $event;
   }
 
-
   referenceModelDetails(id: any) {
-    this.resourcesService.referenceDataModel.get(id).subscribe((result: { body: ReferenceModelResult }) => {
-      this.referenceModel = result.body;
-      this.isEditable = this.referenceModel['availableActions'].includes('update');
-      this.parentId = this.referenceModel.id;
+    this.resourcesService.referenceDataModel
+      .get(id)
+      .subscribe((result: { body: ReferenceModelResult }) => {
+        this.referenceModel = result.body;
+        this.isEditable = this.referenceModel['availableActions'].includes(
+          'update'
+        );
+        this.parentId = this.referenceModel.id;
 
-      this.editableForm = new EditableDataModel();
-      this.editableForm.visible = false;
-      this.editableForm.deletePending = false;
+        this.editableForm = new EditableDataModel();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
 
-      this.DataModelUsedProfiles(this.referenceModel.id);
-      this.DataModelUnUsedProfiles(this.referenceModel.id);
+        this.editableForm.show = () => {
+          this.editableForm.visible = true;
+        };
 
-      if (this.sharedService.isLoggedIn(true)) {
-        this.ReferenceModelPermissions(id);
-      } else {
+        this.editableForm.cancel = () => {
+          this.editingService.stop();
+
+          this.editableForm.visible = false;
+          this.editableForm.validationError = false;
+          this.errorMessage = '';
+          this.setEditableFormData();
+          if (this.referenceModel.classifiers) {
+            this.referenceModel.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          if (this.referenceModel.aliases) {
+            this.referenceModel.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+        };
+
+        this.DataModelUsedProfiles(this.referenceModel.id);
+        this.DataModelUnUsedProfiles(this.referenceModel.id);
+
+        if (this.sharedService.isLoggedIn(true)) {
+          this.ReferenceModelPermissions(id);
+        } else {
+          this.messageService.dataChanged(this.referenceModel);
+          this.messageService.FolderSendMessage(this.referenceModel);
+        }
         this.messageService.dataChanged(this.referenceModel);
-        this.messageService.FolderSendMessage(this.referenceModel);
-      }
-      this.messageService.dataChanged(this.referenceModel);
 
-      this.tabGroup.realignInkBar();
-      // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
-      this.tabSelected(this.activeTab);
-    });
+        this.tabGroup.realignInkBar();
+        // tslint:disable-next-line: deprecation
+        this.activeTab = this.getTabDetailByName(
+          this.stateService.params.tabView
+        ).index;
+        this.tabSelected(this.activeTab);
+      });
   }
 
   ReferenceModelPermissions(id: any) {
-    this.resourcesService.security.permissions('referenceDataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
-      Object.keys(permissions.body).forEach(attrname => {
-        this.referenceModel[attrname] = permissions.body[attrname];
+    this.resourcesService.security
+      .permissions('referenceDataModels', id)
+      .subscribe((permissions: { body: { [x: string]: any } }) => {
+        Object.keys(permissions.body).forEach((attrname) => {
+          this.referenceModel[attrname] = permissions.body[attrname];
+        });
+        // Send it to message service to receive in child components
+        this.messageService.FolderSendMessage(this.referenceModel);
+        this.messageService.dataChanged(this.referenceModel);
       });
-      // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.referenceModel);
-      this.messageService.dataChanged(this.referenceModel);
-    });
   }
 
-    changeProfile() {
-    if(this.descriptionView !== 'default' && this.descriptionView !== 'other' && this.descriptionView !== 'addnew') {
+  changeProfile() {
+    if (
+      this.descriptionView !== 'default' &&
+      this.descriptionView !== 'other' &&
+      this.descriptionView !== 'addnew'
+    ) {
       this.loadProfile();
     } else if (this.descriptionView === 'addnew') {
       const dialog = this.dialog.open(AddProfileModalComponent, {
@@ -197,9 +238,80 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
+  onCancelEdit() {
+    this.errorMessage = '';
+    this.showEditDescription = false;
+  }
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  setEditableFormData() {
+    this.editableForm.description = this.referenceModel.description;
+    this.editableForm.label = this.referenceModel.label;
+    this.editableForm.organisation = this.referenceModel.organisation;
+    this.editableForm.author = this.referenceModel.author;
+  }
+
+  formBeforeSave = () => {
+    this.errorMessage = '';
+
+    const classifiers = [];
+    this.editableForm.classifiers.forEach((cls) => {
+      classifiers.push(cls);
+    });
+    const aliases = [];
+    this.editableForm.aliases.forEach((alias) => {
+      aliases.push(alias);
+    });
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.referenceModel.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.referenceModel.type,
+        domainType: this.referenceModel.domainType,
+        aliases,
+        classifiers
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.referenceModel.id,
+        description: this.editableForm.description || ''
+      };
+    }
+
+    this.resourcesService.referenceDataModel
+      .update(this.referenceModel.id, resource)
+      .subscribe(
+        (res) => {
+          this.referenceModel.description = res.body.description;
+          this.messageHandler.showSuccess(
+            'Reference Data Model updated successfully.'
+          );
+          this.editingService.stop();
+          this.editableForm.visible = false;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Reference Data Model.',
+            error
+          );
+        }
+      );
+  };
+
   editProfile = (isNew: boolean) => {
     if (this.descriptionView === 'default') {
-         this.editableForm.show();
+      this.editableForm.show();
     } else {
       let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
@@ -271,14 +383,16 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   async DataModelUsedProfiles(id: any) {
-    await this.resourcesService.profile.usedProfiles('referenceDataModels', id).subscribe((profiles: { body: { [x: string]: any } }) => {
-      profiles.body.forEach(profile => {
-        const prof: any = [];
-        prof['display'] = profile.displayName;
-        prof['value'] = `${profile.namespace}/${profile.name}`;
-        this.allUsedProfiles.push(prof);
+    await this.resourcesService.profile
+      .usedProfiles('referenceDataModels', id)
+      .subscribe((profiles: { body: { [x: string]: any } }) => {
+        profiles.body.forEach((profile) => {
+          const prof: any = [];
+          prof['display'] = profile.displayName;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
+          this.allUsedProfiles.push(prof);
+        });
       });
-    });
   }
 
   async DataModelUnUsedProfiles(id: any) {
@@ -321,8 +435,8 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
         return { index: 5, name: 'history' };
       case 'attachments':
         return { index: 6, name: 'attachments' };
-        case 'rules':
-          return { index: 7, name: 'rules' };
+      case 'rules':
+        return { index: 7, name: 'rules' };
       default:
         return { index: 0, name: 'elements' };
     }
@@ -344,8 +458,8 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
         return { index: 5, name: 'history' };
       case 6:
         return { index: 6, name: 'attachments' };
-        case 7:
-          return { index: 7, name: 'rules' };
+      case 7:
+        return { index: 7, name: 'rules' };
       default:
         return { index: 0, name: 'elements' };
     }
@@ -353,7 +467,11 @@ export class ReferenceDataComponent implements OnInit, AfterViewInit, OnDestroy 
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go('referencedatamodel', { tabView: tab.name }, { notify: false });
+    this.stateHandler.Go(
+      'referencedatamodel',
+      { tabView: tab.name },
+      { notify: false }
+    );
     this.activeTab = tab.index;
   }
 }

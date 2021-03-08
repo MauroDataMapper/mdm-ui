@@ -59,7 +59,6 @@ export class TermComponent implements OnInit, AfterViewInit {
   result: TermResult;
   hasResult = false;
   showEditForm = false;
-  editForm = null;
   editableForm: EditableTerm;
   descriptionView = 'default';
   allUsedProfiles: any[] = [];
@@ -77,7 +76,8 @@ export class TermComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef,
     private title: Title,
     private dialog: MatDialog,
-    private editingService: EditingService) { }
+    private editingService: EditingService
+  ) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -93,30 +93,41 @@ export class TermComponent implements OnInit, AfterViewInit {
     this.parentId = this.stateService.params.id;
     this.title.setTitle('Term');
     this.termDetails(this.parentId);
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  termDetails = id => {
+  termDetails = (id) => {
     const terms = [];
 
     // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
+    terms.push(
+      this.resources.terminology.get(this.stateService.params.terminologyId)
+    );
     // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, id));
+    terms.push(
+      this.resources.terminology.terms.get(
+        this.stateService.params.terminologyId,
+        id
+      )
+    );
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;
       this.term = results[1].body;
 
-      this.resources.catalogueItem.listSemanticLinks(DOMAIN_TYPE.Term, this.term.id).subscribe(resp => {
-        this.term.semanticLinks = resp.body.items;
-      });
+      this.resources.catalogueItem
+        .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
+        .subscribe((resp) => {
+          this.term.semanticLinks = resp.body.items;
+        });
 
       this.DataModelUsedProfiles(this.term.id);
       this.DataModelUnUsedProfiles(this.term.id);
@@ -132,49 +143,51 @@ export class TermComponent implements OnInit, AfterViewInit {
       );
 
       this.editableForm = new EditableTerm();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x._name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
       this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.editableForm.description = this.term.description;
-      this.editableForm.url = this.term.url;
-      if (this.term.classifiers) {
-        this.term.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.term.aliases) {
-        this.term.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
+      this.editableForm.deletePending = false;
+      this.setEditableForm();
+
+      this.editableForm.show = () => {
+        this.editableForm.visible = true;
+      };
+
+      this.editableForm.cancel = () => {
+        this.editingService.stop();
+        this.setEditableForm();
+      };
 
       this.result = this.term;
-      if (this.result.terminology) { this.hasResult = true; }
+      if (this.result.terminology) {
+        this.hasResult = true;
+      }
       this.messageService.FolderSendMessage(this.result);
       this.messageService.dataChanged(this.result);
       this.changeRef.detectChanges();
     });
 
     // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+    this.activeTab = this.getTabDetailByName(
+      this.stateService.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
   };
+
+   setEditableForm() {
+    this.editableForm.visible = false;
+    this.editableForm.validationError = false;
+    this.editableForm.description = this.term.description;
+    this.editableForm.url = this.term.url;
+    if (this.term.classifiers) {
+      this.term.classifiers.forEach((item) => {
+        this.editableForm.classifiers.push(item);
+      });
+    }
+    if (this.term.aliases) {
+      this.term.aliases.forEach((item) => {
+        this.editableForm.aliases.push(item);
+      });
+    }
+  }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
@@ -195,25 +208,11 @@ export class TermComponent implements OnInit, AfterViewInit {
   Save(updatedResource) {
     this.broadcast.broadcast('$elementDetailsUpdated', updatedResource);
   }
-  openEditForm = (formName) => {
-    this.showEditForm = true;
-    this.editForm = formName;
-  };
-
-  closeEditForm = () => {
-    this.showEditForm = false;
-    this.editForm = null;
-  };
 
   loadProfile() {
     const splitDescription = this.descriptionView.split('/');
     this.resources.profile
-      .profile(
-        'Term',
-        this.term.id,
-        splitDescription[0],
-        splitDescription[1]
-      )
+      .profile('Term', this.term.id, splitDescription[0], splitDescription[1])
       .subscribe((body) => {
         this.currentProfileDetails = body.body;
       });
@@ -236,7 +235,6 @@ export class TermComponent implements OnInit, AfterViewInit {
       });
 
       this.editingService.configureDialogRef(dialog);
-
 
       dialog.afterClosed().subscribe((newProfile) => {
         if (newProfile) {
@@ -269,7 +267,7 @@ export class TermComponent implements OnInit, AfterViewInit {
   editProfile = (isNew: boolean) => {
     this.editingService.start();
     if (this.descriptionView === 'default') {
-         this.editableForm.show();
+      this.editableForm.show();
     } else {
       let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
@@ -381,4 +379,40 @@ export class TermComponent implements OnInit, AfterViewInit {
     );
     this.activeTab = tab.index;
   }
+
+  onCancelEdit() {
+    this.editMode = false; // Use Input editor whe adding a new folder.
+  }
+
+  formBeforeSave = () => {
+    this.editMode = false;
+
+    const classifiers = [];
+    this.editableForm.classifiers.forEach((cls) => {
+      classifiers.push(cls);
+    });
+    const aliases = [];
+    this.editableForm.aliases.forEach((alias) => {
+      aliases.push(alias);
+    });
+
+    this.term['aliases'] = aliases;
+    this.term['classifiers'] = classifiers;
+
+    this.resources.term
+      .update(this.term.terminology.id, this.term.id, this.term)
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess('Term updated successfully.');
+          this.editingService.stop();
+          this.editableForm.visible = false;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Term.',
+            error
+          );
+        }
+      );
+  };
 }

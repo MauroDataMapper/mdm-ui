@@ -15,7 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
@@ -25,7 +32,11 @@ import { BaseComponent } from '@mdm/shared/base/base.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
-import { ElementTypesService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import {
+  ElementTypesService,
+  MessageHandlerService,
+  SecurityHandlerService
+} from '@mdm/services';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,9 +46,10 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class DataTypeComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  @ViewChildren('editableText') editForm: QueryList<any>;
 
   dataType: any;
   dataModelId: any;
@@ -62,10 +74,10 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
   allUnUsedProfiles: any[] = [];
   currentProfileDetails: any;
   showEdit: boolean;
+  showEditDescription = false;
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
-
 
   constructor(
     private title: Title,
@@ -77,7 +89,8 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     private securityHandler: SecurityHandlerService,
     private dialog: MatDialog,
     private elementTypes: ElementTypesService,
-    private editingService: EditingService) {
+    private editingService: EditingService
+  ) {
     super();
   }
 
@@ -98,79 +111,90 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
+    this.resource.dataType.get(this.dataModelId, this.id).subscribe(
+      (result) => {
+        const data = result.body;
 
-    this.resource.dataType.get(this.dataModelId, this.id).subscribe(result => {
-      const data = result.body;
+        // If the Id is a path get the actual Id
+        this.dataModelId = data.model;
+        this.id = data.id;
 
-      // If the Id is a path get the actual Id
-      this.dataModelId = data.model;
-      this.id = data.id;
+        this.DataModelUnUsedProfiles(data.id);
+        this.DataModelUsedProfiles(data.id);
 
-      this.DataModelUnUsedProfiles(data.id);
-      this.DataModelUsedProfiles(data.id);
+        this.dataType = data;
 
-      this.dataType = data;
+        this.watchDataTypeObject();
 
-      this.watchDataTypeObject();
+        this.editableForm = new EditableDataModel();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
+        this.editableForm.description = this.dataType.description;
+        this.editableForm.label = this.dataType.label;
+        this.title.setTitle(`Data Type - ${this.dataType?.label}`);
 
-      this.editableForm = new EditableDataModel();
-      this.editableForm.visible = false;
-      this.editableForm.deletePending = false;
-      this.editableForm.description = this.dataType.description;
-      this.editableForm.label = this.dataType.label;
-      this.title.setTitle(`Data Type - ${this.dataType?.label}`);
+        this.editableForm.cancel = () => {
+          this.editingService.stop();
+          this.editableForm.visible = false;
+          this.editableForm.validationError = false;
+          this.errorMessage = '';
+          this.editableForm.description = this.dataType.description;
+          this.editableForm.label = this.dataType.label;
+          if (this.dataType.classifiers) {
+            this.dataType.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          if (this.dataType.aliases) {
+            this.dataType.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+        };
 
+        this.editableForm.show = () => {
+          this.editableForm.visible = true;
+        };
 
+        if (
+          this.dataType.domainType === 'ModelDataType' &&
+          this.dataType.modelResourceDomainType === 'Terminology'
+        ) {
+          this.resource.terminology
+            .get(this.dataModelId.modelResourceId)
+            .subscribe((termResult) => {
+              this.elementType = termResult.body;
+            });
+        } else if (
+          this.dataType.domainType === 'ModelDataType' &&
+          this.dataType.modelResourceDomainType === 'CodeSet'
+        ) {
+          this.resource.codeSet
+            .get(this.dataType.modelResourceId)
+            .subscribe((elmResult) => {
+              this.elementType = elmResult.body;
+            });
+        } else if (
+          this.dataType.domainType === 'ModelDataType' &&
+          this.dataType.modelResourceDomainType === 'ReferenceDataModel'
+        ) {
+          this.resource.referenceDataModel
+            .get(this.dataType.modelResourceId)
+            .subscribe((dataTypeResult) => {
+              this.elementType = dataTypeResult.body;
+            });
+        }
 
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.editableForm.description = this.dataType.description;
-      this.editableForm.label = this.dataType.label;
-      if (this.dataType.classifiers) {
-        this.dataType.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
+        this.dataType.classifiers = this.dataType.classifiers || [];
+        this.loadingData = false;
+        this.activeTab = this.getTabDetail(this.tabView);
+        this.showExtraTabs =
+          !this.sharedService.isLoggedIn() || !this.dataType.editable;
+      },
+      () => {
+        this.loadingData = false;
       }
-      if (this.dataType.aliases) {
-        this.dataType.aliases.forEach(item => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
-
-      this.editableForm.show = () => {
-        this.editForm.forEach(x => x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false,
-        }));
-        this.editableForm.visible = true;
-      };
-
-      if (this.dataType.domainType === 'ModelDataType' && this.dataType.modelResourceDomainType === 'Terminology') {
-        this.resource.terminology.get(this.dataModelId.modelResourceId).subscribe(termResult => {
-          this.elementType = termResult.body;
-        });
-      } else if (this.dataType.domainType === 'ModelDataType' && this.dataType.modelResourceDomainType === 'CodeSet') {
-        this.resource.codeSet.get(this.dataType.modelResourceId).subscribe(elmResult => {
-          this.elementType = elmResult.body;
-        });
-      } else if (this.dataType.domainType === 'ModelDataType' && this.dataType.modelResourceDomainType === 'ReferenceDataModel') {
-        this.resource.referenceDataModel.get(this.dataType.modelResourceId).subscribe(dataTypeResult => {
-          this.elementType = dataTypeResult.body;
-        });
-      }
-
-      this.dataType.classifiers = this.dataType.classifiers || [];
-      this.loadingData = false;
-      this.activeTab = this.getTabDetail(this.tabView);
-      this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.dataType.editable;
-    }, () => {
-      this.loadingData = false;
-    });
+    );
   }
 
   ngAfterViewInit(): void {
@@ -184,8 +208,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     }
   }
 
-
-  tabSelected = itemsName => {
+  tabSelected = (itemsName) => {
     const tab = this.getTabDetail(itemsName);
     this.stateHandler.Go(
       'dataType',
@@ -198,14 +221,22 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resource.dataType.get(this.dataModelId, this.id).subscribe(data => {
-        this[this.activeTab.name] = data || [];
-        this.loadingData = false;
-      });
+      this.resource.dataType
+        .get(this.dataModelId, this.id)
+        .subscribe((data) => {
+          this[this.activeTab.name] = data || [];
+          this.loadingData = false;
+        });
     }
   };
 
-  getTabDetail = tabName => {
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  getTabDetail = (tabName) => {
     switch (tabName) {
       case 'properties':
         return { index: 0, name: 'properties' };
@@ -224,11 +255,6 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     }
   };
 
-  openEditForm = (formName: any) => {
-    this.showEditForm = true;
-    this.editForm = formName;
-  };
-
   rulesCountEmitter($event) {
     this.isLoadingRules = false;
     this.rulesItemCount = $event;
@@ -236,6 +262,7 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
 
   onCancelEdit = () => {
     this.dataType.editAliases = Object.assign([], this.dataType.aliases);
+    this.showEditDescription = false;
   };
 
   async DataModelUsedProfiles(id: any) {
@@ -280,7 +307,6 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
       });
   }
 
-
   changeProfile() {
     if (
       this.descriptionView !== 'default' &&
@@ -298,7 +324,6 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
       });
 
       this.editingService.configureDialogRef(dialog);
-
 
       dialog.afterClosed().subscribe((newProfile) => {
         if (newProfile) {
@@ -331,7 +356,8 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
   editProfile = (isNew: boolean) => {
     this.editingService.start();
     if (this.descriptionView === 'default') {
-         this.editableForm.show();
+      this.showEditDescription = false;
+      this.editableForm.show();
     } else {
       let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
@@ -393,11 +419,14 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
 
   formBeforeSave = () => {
     const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
+    this.editableForm.aliases.forEach((alias) => {
       aliases.push(alias);
     });
 
-    const resource = {
+
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
         id: this.dataType.id,
         label: this.editableForm.label,
         description: this.editableForm.description || '',
@@ -405,23 +434,35 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
         domainType: this.dataType.domainType,
         classifiers: this.dataType.classifiers.map(cls => ({ id: cls.id }))
       };
-
-
-    this.resource.dataType.update(this.dataModel.id, this.dataType.id, resource).subscribe((res) => {
-      const result = res.body;
-
-      this.dataType.aliases = Object.assign([], result.aliases);
-      this.dataType.editAliases = Object.assign([], this.dataType.aliases);
-      this.dataType.label = result.label;
-      this.dataType.description = result.description;
-      this.dataType.showSuccess('Data Type updated successfully.');
-      this.editingService.stop();
-      this.editableForm.visible = false;
-    }, error => {
-      this.messageHandler.showError('There was a problem updating the Data Type.', error);
     }
-    );
 
+    if (this.showEditDescription) {
+      resource = {
+        id: this.dataType.id,
+        description: this.editableForm.description || ''
+      };
+    }
 
+    this.resource.dataType
+      .update(this.dataModel.id, this.dataType.id, resource)
+      .subscribe(
+        (res) => {
+          const result = res.body;
+
+          this.dataType.aliases = Object.assign([], result.aliases);
+          this.dataType.editAliases = Object.assign([], this.dataType.aliases);
+          this.dataType.label = result.label;
+          this.dataType.description = result.description;
+          this.messageHandler.showSuccess('Data Type updated successfully.');
+          this.editingService.stop();
+          this.editableForm.visible = false;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Type.',
+            error
+          );
+        }
+      );
   };
 }

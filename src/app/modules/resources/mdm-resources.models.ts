@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 /**
  * Represents a response from an `mdm-resources` API endpoint.
  *
- * @typedef T The type to represent the body of the response.
  */
 export interface MdmResourcesResponse<T = any> {
     /**
@@ -30,7 +29,6 @@ export interface MdmResourcesResponse<T = any> {
 /**
  * Represents the body of a `mdm-resources` response for an index/list request.
  *
- * @typedef T The type to represent each item in the list.
  */
 export interface MdmResourcesIndexBody<T = any> {
     /**
@@ -47,6 +45,5 @@ export interface MdmResourcesIndexBody<T = any> {
 /**
  * Type alias for an `mdm-resources` API endpoint response for an index/list request.
  *
- * @typedef T The type to represent each item in the list.
  */
 export type MdmResourcesIndexResponse<T = any> = MdmResourcesResponse<MdmResourcesIndexBody<T>>;

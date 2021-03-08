@@ -62,11 +62,13 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   descriptionView = 'default';
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
+  compareToList = [];
   rulesItemCount = 0;
   isLoadingRules = true;
   termsItemCount = 0;
   isLoadingTerms = true;
   showEdit:boolean;
+  canEditDescription:  boolean;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -96,30 +98,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
 
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
 
-    this.editableForm.show = () => {
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.editableForm.description = this.codeSetModel.description;
-      if (this.codeSetModel.classifiers) {
-        this.codeSetModel.classifiers.forEach((item) => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.codeSetModel.aliases) {
-        this.codeSetModel.aliases.forEach((item) => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
 
     this.title.setTitle('Code Set');
     this.codeSetDetails(this.parentId);
@@ -191,7 +170,65 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
         this.codeSetUsedProfiles(id);
         this.codsetUnUsedProfiles(id);
 
-        const access: any = this.securityHandler.elementAccess(this.codeSetModel);
+        this.editableForm = new EditableDataModel();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
+
+        this.editableForm.description = this.codeSetModel.description;
+        if (this.codeSetModel.classifiers) {
+          this.codeSetModel.classifiers.forEach(item => {
+            this.editableForm.classifiers.push(item);
+          });
+        }
+        if (this.codeSetModel.aliases) {
+          this.codeSetModel.aliases.forEach(item => {
+            this.editableForm.aliases.push(item);
+          });
+        }
+        if (this.codeSetModel.semanticLinks) {
+          this.codeSetModel.semanticLinks.forEach(link => {
+            if (link.linkType === 'New Version Of') {
+              this.compareToList.push(link.target);
+            }
+          });
+        }
+
+        if (this.codeSetModel.semanticLinks) {
+          this.codeSetModel.semanticLinks.forEach(link => {
+            if (link.linkType === 'Superseded By') {
+              this.compareToList.push(link.target);
+            }
+          });
+        }
+
+        if (this.codeSetModel != null) {
+          this.watchDataModelObject();
+        }
+
+        this.editableForm.show = () => {
+          this.editableForm.visible = true;
+        };
+
+        this.editableForm.cancel = () => {
+          this.editingService.stop();
+          this.editableForm.visible = false;
+          this.editableForm.validationError = false;
+          this.editableForm.description = this.codeSetModel.description;
+          if (this.codeSetModel.classifiers) {
+            this.codeSetModel.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          if (this.codeSetModel.aliases) {
+            this.codeSetModel.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+        };
+
+        const access: any = this.securityHandler.elementAccess(
+          this.codeSetModel
+        );
         this.showEdit = access.showEdit;
 
         await this.resourcesService.versionLink
@@ -470,5 +507,13 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   termsCountEmitter($event) {
     this.isLoadingTerms = false;
     this.termsItemCount = $event;
+  }
+
+  watchDataModelObject() {
+    const access: any = this.securityHandler.elementAccess(this.codeSetModel);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.canEditDescription = access.canEditDescription;
+    }
   }
 }

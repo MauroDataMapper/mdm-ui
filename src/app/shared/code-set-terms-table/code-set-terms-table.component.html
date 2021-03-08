@@ -87,8 +87,8 @@ SPDX-License-Identifier: Apache-2.0
                     <span [innerHTML]="record.definition"></span>
                 </div>
 
-                <div>
-                    <mdm-element-alias [readOnly]="true" [aliases]="record.aliases"></mdm-element-alias>
+                <div  *ngIf="record.aliases">
+                    <mdm-element-alias [editableForm]="editableForm" property="'aliases'" [readOnly]="true" [aliases]="record.aliases"></mdm-element-alias>
                 </div>
             </td>
         </ng-container>

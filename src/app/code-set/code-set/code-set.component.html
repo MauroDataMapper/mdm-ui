@@ -144,14 +144,14 @@ SPDX-License-Identifier: Apache-2.0
               <tbody>
                 <tr>
                   <td class="detailsRowHeader">Aliases</td>
-                  <td>
-                    <mdm-element-alias
+                  <td *ngIf="codeSetModel">                 
+                    <!-- <mdm-element-alias
                       [readOnly]="false"
                       [inEditMode]="editableForm.visible"
                       [aliases]="codeSetModel?.aliases"
                       [editableForm]="editableForm"
                       [property]="'aliases'"
-                    ></mdm-element-alias>
+                    ></mdm-element-alias> -->
                   </td>
                 </tr>
                 <tr>

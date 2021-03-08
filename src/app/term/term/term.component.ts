@@ -398,6 +398,7 @@ export class TermComponent implements OnInit, AfterViewInit {
 
     this.term['aliases'] = aliases;
     this.term['classifiers'] = classifiers;
+    this.term['description'] = this.editableForm.description;
 
     this.resources.term
       .update(this.term.terminology.id, this.term.id, this.term)

@@ -34,6 +34,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -63,6 +64,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   filterValue: any;
   filterName: any;
   showAddTerm: any;
+  editableForm: EditableDataModel;
 
   constructor(private messageHandler: MessageHandlerService, private gridService: GridService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
   }
@@ -73,6 +75,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     } else {
       this.displayedColumns = ['terminology', 'term', 'definition'];
     }
+    this.editableForm = new EditableDataModel();
     this.isLoadingResults = false;
   }
 

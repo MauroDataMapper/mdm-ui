@@ -270,25 +270,25 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  getModelGraph = (modelId) => {
+  getModelGraph = (codesetId) => {
     this.currentBranch = this.result.branchName;
     this.branchGraph = [
       {
         branchName: 'main',
         label: this.result.label,
-        modelId,
+        codesetId,
         newBranchModelVersion: false,
         newDocumentationVersion: false,
         newFork: false
       }
     ];
 
-    // this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(res => {
-    //   this.currentBranch = this.result.branchName;
-    //   this.branchGraph = res.body;
-    // }, error => {
-    //   this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
-    // });
+    this.resourcesService.codeSet.modelVersionTree(codesetId).subscribe(res => {
+      this.currentBranch = this.result.branchName;
+      this.branchGraph = res.body;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
+    });
   };
 
   onModelChange = () => {

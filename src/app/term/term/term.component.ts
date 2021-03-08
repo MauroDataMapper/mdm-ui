@@ -64,6 +64,7 @@ export class TermComponent implements OnInit, AfterViewInit {
   allUsedProfiles: any[] = [];
   allUnUsedProfiles: any[] = [];
   currentProfileDetails: any;
+  showEditDescription = false;
 
   constructor(
     private resources: MdmResourcesService,

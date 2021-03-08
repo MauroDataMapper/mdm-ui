@@ -80,6 +80,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoadingRules = true;
   historyItemCount = 0;
   isLoadingHistory = true;
+  showEditDescription = false;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -321,7 +322,9 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       aliases.push(alias);
     });
 
-    const resource =  {
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
         id: this.dataModel.id,
         label: this.editableForm.label,
         description: this.editableForm.description || '',
@@ -332,6 +335,14 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         aliases,
         classifiers
       };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.dataModel.id,
+        description: this.editableForm.description || ''
+      };
+    }
 
       this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe(res => {
         this.messageHandler.showSuccess('Data Model updated successfully.');
@@ -348,7 +359,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   onCancelEdit() {
     this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
-
+    this.showEditDescription = false;
   }
 
   editProfile = (isNew: boolean) => {
@@ -458,6 +469,12 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addDataClass = () => {
     // this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null);
+  };
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
   };
 
   getTabDetailByName(tabName) {

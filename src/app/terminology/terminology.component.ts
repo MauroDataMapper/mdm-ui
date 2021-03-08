@@ -69,6 +69,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   historyItemCount = 0;
   isLoadingHistory = true;
   showEdit: boolean;
+  showEditDescription = false;
 
 
   constructor(
@@ -96,6 +97,8 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editableForm.deletePending = false;
 
     this.editableForm.show = () => {
+      this.setEditableForm();
+
       this.editableForm.visible = true;
     };
 
@@ -103,12 +106,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.editingService.stop();
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
-      this.editableForm.description = this.terminology.description;
-      if (this.terminology.classifiers) {
-        this.terminology.classifiers.forEach((item) => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
+      this.setEditableForm();
     };
 
     this.terminology = null;
@@ -124,6 +122,15 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
 
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
+
+      this.editableForm.description = this.terminology.description;
+
+      if (this.terminology.aliases) {
+        this.terminology.aliases.forEach((item) => {
+          this.editableForm.aliases.push(item);
+        });
+      }
+
       // tslint:disable-next-line: deprecation
       this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
@@ -133,6 +140,15 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showSearch = message;
       }
     );
+  }
+
+  setEditableForm() {
+    this.editableForm.description = this.terminology.description;
+    if (this.terminology.classifiers) {
+      this.terminology.classifiers.forEach((item) => {
+        this.editableForm.classifiers.push(item);
+      });
+    }
   }
 
   async DataModelUsedProfiles(id: any) {
@@ -225,6 +241,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editingService.start();
     if (this.descriptionView === 'default') {
       this.editableForm.show();
+      this.showEditDescription = false;
     } else {
       let prof = this.allUsedProfiles.find(
         (x) => x.value === this.descriptionView
@@ -282,20 +299,32 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   formBeforeSave = () => {
-    const resource = {
-      id: this.terminology.id,
-      label: this.editableForm.label,
-      description: this.editableForm.description,
-      author: this.editableForm.author,
-      organisation: this.editableForm.organisation,
-      type: this.terminology.type,
-      domainType: this.terminology.domainType,
-      aliases: this.terminology.editAliases,
+    let resource: any = {};
 
-      classifiers: this.terminology.classifiers.map((cls) => {
-        return { id: cls.id };
-      })
-    };
+    if (!this.showEditDescription) {
+      const aliases = [];
+      this.editableForm.aliases.forEach((alias) => {
+        aliases.push(alias);
+      });
+      resource = {
+        id: this.terminology.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description,
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.terminology.type,
+        domainType: this.terminology.domainType,
+        classifiers: this.terminology.classifiers.map((cls) => {
+          return { id: cls.id };
+        }),
+        aliases
+      };
+    } else {
+      resource = {
+        id: this.terminology.id,
+        description: this.editableForm.description || ''
+      };
+    }
 
     this.resources.terminology.update(resource.id, resource).subscribe(
       (res) => {
@@ -329,6 +358,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
         {},
         this.terminology.aliases
       );
+      this.showEditDescription = false;
     }
   };
 
@@ -465,4 +495,10 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoadingHistory = false;
     this.historyItemCount = $event;
   }
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
 }

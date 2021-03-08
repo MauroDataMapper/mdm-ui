@@ -128,17 +128,29 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign="flex-end center"
                 fxLayoutAlign.xs="flex-start center"
               >
-                <button
-                  mat-flat-button
-                  color="primary"
-                  type="button"
-                  class="mr-1"
-                  (click)="editProfile(false)"
-                  *ngIf="showEdit"
-                >
-                  <i class="fas fa-pencil-alt"></i>
-                  Edit
-                </button>
+              <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              class="mr-1"
+              *ngIf="showEdit"
+              [matMenuTriggerFor]="editMenu"
+            >
+              Edit
+            </button>
+
+            <mat-menu #editMenu="matMenu">
+              <button
+                *ngIf="this.descriptionView === 'default'"
+                mat-menu-item
+                (click)="showDescription()"
+              >
+                <i class="fas fa-pencil-alt"></i> Edit Description
+              </button>
+              <button mat-menu-item (click)="editProfile(false)">
+                <i class="fas fa-pencil-alt"></i>Edit
+              </button>
+            </mat-menu>
               </div>
             </div>
           </div>
@@ -172,9 +184,11 @@ SPDX-License-Identifier: Apache-2.0
                 <td class="detailsRowHeader">Aliases</td>
                 <td>
                   <mdm-element-alias
-                    [readOnly]="false"
+                    [readOnly]="showEditDescription"
                     [inEditMode]="editableForm.visible"
                     [aliases]="editableForm?.aliases"
+                    [editableForm]="editableForm"
+                    [property]="'aliases'"
                   ></mdm-element-alias>
                 </td>
               </tr>
@@ -201,7 +215,7 @@ SPDX-License-Identifier: Apache-2.0
                 <td class="detailsRowHeader">Classifications</td>
                 <td>
                   <mdm-element-classifications
-                    [readOnly]="true"
+                    [readOnly]="showEditDescription"
                     [classifications]="terminology.classifiers"
                     [editableForm]="editableForm"
                   >

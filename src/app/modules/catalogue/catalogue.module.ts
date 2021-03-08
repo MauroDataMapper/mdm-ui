@@ -505,7 +505,8 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     ApiPropertyTableComponent,
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
-    NewFederatedSubscriptionModalComponent
+    NewFederatedSubscriptionModalComponent,
+    ProfileDetailsComponent
   ]
 })
 export class CatalogueModule { }

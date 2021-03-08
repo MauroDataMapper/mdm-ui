@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -37,21 +37,20 @@ import { MessageHandlerService, ValidatorService } from '@mdm/services';
   templateUrl: './data-class.component.html',
   styleUrls: ['./data-class.component.sass']
 })
-export class DataClassComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class DataClassComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  @ViewChildren('editableText') editForm: QueryList<any>;
   dataClass: DataClassResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
-  editMode = false;
   showExtraTabs = false;
   activeTab: any;
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
 
-  showEditDescription = false;
   max: any;
   min: any;
   error = '';
@@ -64,6 +63,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
   currentProfileDetails: any[];
 
   descriptionView = 'default';
+
+  showEditDescription = false;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -81,90 +82,46 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
   }
 
   ngOnInit() {
-    this.editableForm = new EditableDataClass();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-      if (this.min === '*') {
-        this.min = '-1';
-      }
-
-      if (this.max === '*') {
-        this.max = '-1';
-      }
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach(x => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-
-      this.error = '';
-
-      this.setEditableForm();
-
-      if (this.dataClass.classifiers) {
-        this.dataClass.classifiers.forEach(item => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      this.editableForm.aliases = [];
-      this.aliases = [];
-      if (this.dataClass.aliases) {
-        this.dataClass.aliases.forEach(item => {
-          this.aliases.push(item);
-          this.editableForm.aliases.push(item);
-        });
-      }
-
-      if (this.min === '-1') {
-        this.min = '*';
-      }
-
-      if (this.max === '-1') {
-        this.max = '*';
-      }
-    };
-
     // tslint:disable-next-line: deprecation
-    if (this.isGuid(this.stateService.params.id) && (!this.stateService.params.id || !this.stateService.params.dataModelId)) {
+    if (
+      this.isGuid(this.stateService.params.id) &&
+      (!this.stateService.params.id || !this.stateService.params.dataModelId)
+    ) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
     // tslint:disable-next-line: deprecation
-    if (this.stateService.params.id && this.stateService.params.dataClassId && this.stateService.params.dataClassId.trim() !== '') {
+    if (
+      this.stateService.params.id &&
+      this.stateService.params.dataClassId &&
+      this.stateService.params.dataClassId.trim() !== ''
+    ) {
       // tslint:disable-next-line: deprecation
       this.parentDataClass = { id: this.stateService.params.dataClassId };
     }
 
     // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
-      this.editMode = true;
-    }
-
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+    this.activeTab = this.getTabDetailByName(
+      this.stateService.params.tabView
+    ).index;
 
     this.showExtraTabs = this.sharedService.isLoggedIn();
 
     this.title.setTitle('Data Class');
-    // tslint:disable-next-line: deprecation
-    this.dataClassDetails(this.stateService.params.dataModelId, this.stateService.params.id, this.parentDataClass.id);
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
 
-    this.setEditableForm();
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
+
+    // tslint:disable-next-line: deprecation
+    this.dataClassDetails(
+      this.stateService.params.dataModelId,
+      this.stateService.params.id,
+      this.parentDataClass.id
+    );
   }
 
   ngAfterViewInit(): void {
@@ -185,8 +142,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
         return { index: 4, name: 'summaryMetadata' };
       case 'attachments':
         return { index: 5, name: 'attachments' };
-        case 'rules':
-          return { index: 6, name: 'rules' };
+      case 'rules':
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'content' };
     }
@@ -194,74 +151,134 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
 
   dataClassDetails(model, id, parentDataClass?) {
     if (!parentDataClass) {
-      this.resourcesService.dataClass.get(model, id).subscribe((result: { body: DataClassResult }) => {
-        this.dataClass = result.body;
+      this.resourcesService.dataClass
+        .get(model, id)
+        .subscribe((result: { body: DataClassResult }) => {
+          this.dataClass = result.body;
+          this.isEditable = this.dataClass['availableActions']?.includes(
+            'update'
+          );
 
-        this.DataModelUsedProfiles(id);
-        this.DataModelUnUsedProfiles(id);
+          this.editableForm = new EditableDataClass();
+          this.editableForm.visible = false;
+          this.editableForm.deletePending = false;
 
-        this.parentDataModel = {
-          id: result.body.model,
-          finalised: this.dataClass.breadcrumbs[0].finalised
-        };
-        this.isEditable = this.dataClass['availableActions']?.includes('update');
-        this.messageService.FolderSendMessage(this.dataClass);
-        this.messageService.dataChanged(this.dataClass);
+          this.editableForm.show = () => {
+            this.editableForm.visible = true;
+            if (this.min === '*') {
+              this.min = '-1';
+            }
 
-        if (this.dataClass) {
+            if (this.max === '*') {
+              this.max = '-1';
+            }
+          };
+
+          this.editableForm.cancel = () => {
+            this.editingService.stop();
+            this.editableForm.visible = false;
+            this.editableForm.validationError = false;
+
+            this.error = '';
+
+            this.setEditableForm();
+
+            if (this.dataClass.classifiers) {
+              this.dataClass.classifiers.forEach((item) => {
+                this.editableForm.classifiers.push(item);
+              });
+            }
+            this.editableForm.aliases = [];
+            this.aliases = [];
+            if (this.dataClass.aliases) {
+              this.dataClass.aliases.forEach((item) => {
+                this.aliases.push(item);
+                this.editableForm.aliases.push(item);
+              });
+            }
+
+            if (this.min === '-1') {
+              this.min = '*';
+            }
+
+            if (this.max === '-1') {
+              this.max = '*';
+            }
+          };
+
+          this.parentDataModel = {
+            id: result.body.model,
+            finalised: this.dataClass.breadcrumbs[0].finalised
+          };
+
+          this.DataModelUsedProfiles(id);
+          this.DataModelUnUsedProfiles(id);
+          this.messageService.FolderSendMessage(this.dataClass);
+          this.messageService.dataChanged(this.dataClass);
+
           this.tabGroup.realignInkBar();
           // tslint:disable-next-line: deprecation
-          this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+          this.activeTab = this.getTabDetailByName(
+            this.stateService.params.tabView
+          ).index;
           this.tabSelected(this.activeTab);
-        }
 
-        this.editableForm.description = this.dataClass?.description;
-        this.editableForm.label = this.dataClass.label;
+          if (this.dataClass.classifiers) {
+            this.dataClass.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          this.aliases = [];
+          if (this.dataClass.aliases) {
+            this.dataClass.aliases.forEach((item) => {
+              this.aliases.push(item);
+            });
+          }
 
-        if (this.dataClass.classifiers) {
-          this.dataClass.classifiers.forEach(item => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        this.aliases = [];
-        if (this.dataClass.aliases) {
-          this.dataClass.aliases.forEach(item => {
-            this.aliases.push(item);
-          });
-        }
+          if (
+            this.dataClass.minMultiplicity &&
+            this.dataClass.minMultiplicity === -1
+          ) {
+            this.min = '*';
+          } else {
+            this.min = this.dataClass.minMultiplicity;
+          }
 
-        if (this.dataClass.minMultiplicity && this.dataClass.minMultiplicity === -1) {
-          this.min = '*';
-        } else {
-          this.min = this.dataClass.minMultiplicity;
-        }
+          if (
+            this.dataClass.maxMultiplicity &&
+            this.dataClass.maxMultiplicity === -1
+          ) {
+            this.max = '*';
+          } else {
+            this.max = this.dataClass.maxMultiplicity;
+          }
 
-        if (this.dataClass.maxMultiplicity && this.dataClass.maxMultiplicity === -1) {
-          this.max = '*';
-        } else {
-          this.max = this.dataClass.maxMultiplicity;
-        }
-
-        // this.watchDataClassObject();
-      });
+          // this.watchDataClassObject();
+        });
     } else {
-      this.resourcesService.dataClass.getChildDataClass(model, parentDataClass, id).subscribe((result: { body: DataClassResult }) => {
-        this.dataClass = result.body;
-        this.parentDataModel = {
-          id: result.body.model,
-          finalised: this.dataClass.breadcrumbs[0].finalised
-        };
-        this.isEditable = this.dataClass['availableActions']?.includes('update');
-        this.messageService.FolderSendMessage(this.dataClass);
-        this.messageService.dataChanged(this.dataClass);
+      this.resourcesService.dataClass
+        .getChildDataClass(model, parentDataClass, id)
+        .subscribe((result: { body: DataClassResult }) => {
+          this.dataClass = result.body;
+          this.parentDataModel = {
+            id: result.body.model,
+            finalised: this.dataClass.breadcrumbs[0].finalised
+          };
+          this.isEditable = this.dataClass['availableActions']?.includes(
+            'update'
+          );
+          this.messageService.FolderSendMessage(this.dataClass);
+          this.messageService.dataChanged(this.dataClass);
 
-        if (this.dataClass) {
-          this.tabGroup.realignInkBar();
-          // tslint:disable-next-line: deprecation
-          this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
-          this.tabSelected(this.activeTab);
-        }
-      });
+          if (this.dataClass) {
+            this.tabGroup.realignInkBar();
+            // tslint:disable-next-line: deprecation
+            this.activeTab = this.getTabDetailByName(
+              this.stateService.params.tabView
+            ).index;
+            this.tabSelected(this.activeTab);
+          }
+        });
     }
   }
 
@@ -283,8 +300,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
         return { index: 4, name: 'context' };
       case 5:
         return { index: 5, name: 'data' };
-        case 6:
-          return { index: 6, name: 'rules' };
+      case 6:
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -295,7 +312,7 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
     this.activeTab = tab.index;
   }
 
-   setEditableForm() {
+  setEditableForm() {
     this.editableForm.description = this.dataClass?.description;
     this.editableForm.label = this.dataClass?.label;
     this.min = this.dataClass?.minMultiplicity;
@@ -382,18 +399,22 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
 
   formBeforeSave = () => {
     this.error = '';
-    this.editMode = false;
 
     const classifiers = [];
-    this.editableForm.classifiers.forEach(cls => {
+    this.editableForm.classifiers.forEach((cls) => {
       classifiers.push(cls);
     });
     const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
+    this.editableForm.aliases.forEach((alias) => {
       aliases.push(alias);
     });
     if (this.validateMultiplicity(this.min, this.max)) {
-      if (this.min != null && this.min !== '' && this.max != null && this.max !== '') {
+      if (
+        this.min != null &&
+        this.min !== '' &&
+        this.max != null &&
+        this.max !== ''
+      ) {
         if (this.newMinText === '*') {
           this.newMinText = -1;
         }
@@ -424,29 +445,52 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
       }
 
       if (!this.dataClass.parentDataClass) {
-        this.resourcesService.dataClass.update(this.dataClass.model, this.dataClass.id, resource).subscribe(result => {
-          this.dataClass = result.body;
-          this.messageHandler.showSuccess('Data Class updated successfully.');
-               this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.editingService.stop();
-          this.messageService.dataChanged(result.body);
-          this.setEditableForm();
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Data Class.', error);
-        });
+        this.resourcesService.dataClass
+          .update(this.dataClass.model, this.dataClass.id, resource)
+          .subscribe(
+            (result) => {
+              this.dataClass = result.body;
+              this.messageHandler.showSuccess(
+                'Data Class updated successfully.'
+              );
+              this.editingService.stop();
+              this.editableForm.visible = false;
+              this.messageService.dataChanged(result.body);
+              this.setEditableForm();
+            },
+            (error) => {
+              this.messageHandler.showError(
+                'There was a problem updating the Data Class.',
+                error
+              );
+            }
+          );
       } else {
-        this.resourcesService.dataClass.updateChildDataClass(this.dataClass.model, this.dataClass.parentDataClass, this.dataClass.id, resource).subscribe(result => {
-          this.dataClass = result.body;
-          this.messageHandler.showSuccess('Data Class updated successfully.');
-          this.editableForm.visible = false;
-          this.editForm.forEach(x => x.edit({ editing: false }));
-          this.editingService.stop();
-          this.messageService.dataChanged(result.body);
-          this.setEditableForm();
-        }, error => {
-          this.messageHandler.showError('There was a problem updating the Data Class.', error);
-        });
+        this.resourcesService.dataClass
+          .updateChildDataClass(
+            this.dataClass.model,
+            this.dataClass.parentDataClass,
+            this.dataClass.id,
+            resource
+          )
+          .subscribe(
+            (result) => {
+              this.dataClass = result.body;
+              this.messageHandler.showSuccess(
+                'Data Class updated successfully.'
+              );
+              this.editableForm.visible = false;
+              this.editingService.stop();
+              this.messageService.dataChanged(result.body);
+              this.setEditableForm();
+            },
+            (error) => {
+              this.messageHandler.showError(
+                'There was a problem updating the Data Class.',
+                error
+              );
+            }
+          );
       }
     }
   };
@@ -542,10 +586,8 @@ export class DataClassComponent extends BaseComponent implements OnInit, AfterVi
       });
   }
 
-
   onCancelEdit() {
     this.error = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
     this.showEditDescription = false;
   }
 }

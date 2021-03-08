@@ -19,10 +19,7 @@ import {
   AfterViewInit,
   Component,
   OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
+  ViewChild} from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';

@@ -248,8 +248,7 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
         data: {
           domainType: 'classifiers',
           domainId: this.classifier.id
-        },
-        height: '250px'
+        }
       });
 
       this.editingService.configureDialogRef(dialog);
@@ -363,9 +362,11 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
   getTabDetail(tabIndex) {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: 'access' };
-      case 1:
-        return { index: 1, name: 'history' };
+        return { index: 0, name: 'description' };
+        case 1:
+          return { index:1, name: 'classifiedElements' };
+      case 2:
+        return { index: 2, name: 'history' };
       default:
         return { index: 0, name: 'access' };
     }
@@ -373,44 +374,27 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
 
   getTabDetailByName(tabName) {
     switch (tabName) {
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'classifiedElements':
-        return { index: 0, name: 'classifiedElements' };
-      case 'classifiedTerminologies':
-        return { index: 1, name: 'classifiedTerminologies' };
-      case 'classifiedTerms':
-        return { index: 2, name: 'classifiedTerms' };
-      case 'classifiedCodeSets':
-        return { index: 3, name: 'classifiedCodeSets' };
-      case 'history': {
-        let index = 4;
-        if (this.terminologiesCount === 0) {
-          index--;
-        }
-        if (this.termsCount === 0) {
-          index--;
-        }
-        if (this.codeSetsCount === 0) {
-          index--;
-        }
-        return { index, name: 'history' };
-      }
+        return { index: 1, name: 'classifiedElements' };
+      case 'history':
+        return { index: 2, name: 'history' };
+      default:
+        return { index: 0, name: 'description' };
     }
   }
 
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'classifiedElements' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'classifiedTerminologies' };
+        return { index: 1, name: 'classifiedElements' };
       case 2:
-        return { index: 2, name: 'classifiedTerms' };
-      case 3:
-        return { index: 3, name: 'classifiedCodeSets' };
-      case 4:
-        return { index: 4, name: 'history' };
+        return { index: 2, name: 'history' };
       default:
-        return { index: 0, name: 'classifiedElements' };
+        return { index: 0, name: 'description' };
     }
   }
 }

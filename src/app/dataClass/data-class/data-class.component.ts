@@ -130,22 +130,20 @@ export class DataClassComponent
 
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'content':
-        return { index: 0, name: 'content' };
-      case 'properties':
-        return { index: 1, name: 'properties' };
-      case 'comments':
-        return { index: 2, name: 'comments' };
-      case 'links':
-        return { index: 3, name: 'links' };
-      case 'summaryMetadata':
-        return { index: 4, name: 'summaryMetadata' };
-      case 'attachments':
-        return { index: 5, name: 'attachments' };
+      case 'description':
+        return { index: 0, name: 'description' };
+      case 'elements':
+        return { index: 1, name: 'elements' };
+      case 'context':
+        return { index: 2, name: 'context' };
+      case 'history':
+        return { index: 3, name: 'history' };
+      case 'data':
+        return { index: 4, name: 'data' };
       case 'rules':
-        return { index: 6, name: 'rules' };
+        return { index: 5, name: 'rules' };
       default:
-        return { index: 0, name: 'content' };
+        return { index: 0, name: 'description' };
     }
   }
 
@@ -293,15 +291,13 @@ export class DataClassComponent
       case 1:
         return { index: 1, name: 'elements' };
       case 2:
-        return { index: 2, name: 'constraints' };
+        return { index: 2, name: 'context' };
       case 3:
         return { index: 3, name: 'history' };
       case 4:
-        return { index: 4, name: 'context' };
+        return { index: 4, name: 'data' };
       case 5:
-        return { index: 5, name: 'data' };
-      case 6:
-        return { index: 6, name: 'rules' };
+        return { index: 5, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -507,8 +503,7 @@ export class DataClassComponent
         data: {
           domainType: 'dataClass',
           domainId: this.dataClass.id
-        },
-        height: '250px'
+        }
       });
 
       dialog.afterClosed().subscribe((newProfile) => {

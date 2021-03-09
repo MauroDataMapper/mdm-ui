@@ -148,20 +148,20 @@ export class DataElementComponent extends BaseComponent implements OnInit, After
 
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'content':
-        return { index: 0, name: 'content' };
-      case 'properties':
-        return { index: 1, name: 'properties' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'comments':
-        return { index: 2, name: 'comments' };
+        return { index: 1, name: 'comments' };
       case 'links':
-        return { index: 3, name: 'links' };
+        return { index: 2, name: 'links' };
       case 'summaryMetadata':
-        return { index: 4, name: 'summaryMetadata' };
+        return { index: 3, name: 'summaryMetadata' };
       case 'attachments':
-        return { index: 5, name: 'attachments' };
+        return { index: 4, name: 'attachments' };
+        case 'rules':
+          return { index: 5, name: 'rules' };
       default:
-        return { index: 0, name: 'content' };
+        return { index: 0, name: 'description' };
     }
   }
 
@@ -371,8 +371,7 @@ export class DataElementComponent extends BaseComponent implements OnInit, After
         data: {
           domainType: 'dataElements',
           domainId: this.dataElementOutput.id
-        },
-        height: '250px'
+        }
       });
 
       dialog.afterClosed().subscribe((newProfile) => {
@@ -549,7 +548,7 @@ export class DataElementComponent extends BaseComponent implements OnInit, After
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
       case 1:
         return { index: 1, name: 'comments' };
       case 2:
@@ -558,8 +557,10 @@ export class DataElementComponent extends BaseComponent implements OnInit, After
         return { index: 3, name: 'summaryMetadata' };
       case 4:
         return { index: 4, name: 'attachments' };
+        case 5:
+          return { index: 5, name: 'rules' };
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   }
 

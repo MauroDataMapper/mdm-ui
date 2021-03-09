@@ -172,7 +172,9 @@ export class ReferenceDataComponent
         }
         this.messageService.dataChanged(this.referenceModel);
 
-        this.tabGroup.realignInkBar();
+        if (this.tabGroup) {
+          this.tabGroup.realignInkBar();
+        }
         // tslint:disable-next-line: deprecation
         this.activeTab = this.getTabDetailByName(
           this.stateService.params.tabView
@@ -206,8 +208,7 @@ export class ReferenceDataComponent
         data: {
           domainType: 'referenceDataModels',
           domainId: this.referenceModel.id
-        },
-        height: '250px'
+        }
       });
 
       dialog.afterClosed().subscribe((newProfile) => {
@@ -422,14 +423,14 @@ export class ReferenceDataComponent
 
   getTabDetailByName(tabName) {
     switch (tabName) {
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'elements':
-        return { index: 0, name: 'elements' };
+        return { index: 1, name: 'elements' };
       case 'types':
-        return { index: 1, name: 'types' };
-      case 'values':
-        return { index: 2, name: 'values' };
-      case 'properties':
-        return { index: 3, name: 'properties' };
+        return { index: 2, name: 'types' };
+      case 'data':
+        return { index: 3, name: 'data' };
       case 'comments':
         return { index: 4, name: 'comments' };
       case 'history':
@@ -439,20 +440,20 @@ export class ReferenceDataComponent
       case 'rules':
         return { index: 7, name: 'rules' };
       default:
-        return { index: 0, name: 'elements' };
+        return { index: 0, name: 'description' };
     }
   }
 
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'elements' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'types' };
+        return { index: 1, name: 'elements' };
       case 2:
-        return { index: 2, name: 'values' };
+        return { index: 2, name: 'types' };
       case 3:
-        return { index: 3, name: 'properties' };
+        return { index: 3, name: 'data' };
       case 4:
         return { index: 4, name: 'comments' };
       case 5:
@@ -462,7 +463,7 @@ export class ReferenceDataComponent
       case 7:
         return { index: 7, name: 'rules' };
       default:
-        return { index: 0, name: 'elements' };
+        return { index: 0, name: 'description' };
     }
   }
 

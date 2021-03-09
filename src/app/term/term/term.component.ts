@@ -65,6 +65,8 @@ export class TermComponent implements OnInit, AfterViewInit {
   allUnUsedProfiles: any[] = [];
   currentProfileDetails: any;
   showEditDescription = false;
+  rulesItemCount = 0;
+  isLoadingRules = true;
 
   constructor(
     private resources: MdmResourcesService,
@@ -104,6 +106,12 @@ export class TermComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
+
 
   termDetails = (id) => {
     const terms = [];
@@ -192,17 +200,17 @@ export class TermComponent implements OnInit, AfterViewInit {
 
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
-      case 'comments':
-        return { index: 1, name: 'comments' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'links':
-        return { index: 2, name: 'links' };
+        return { index: 1, name: 'links' };
       case 'attachments':
-        return { index: 3, name: 'attachments' };
+        return { index: 2, name: 'attachments' };
+        case 'rules':
+          return { index: 3, name: 'rules' };
 
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   }
 
@@ -231,8 +239,7 @@ export class TermComponent implements OnInit, AfterViewInit {
         data: {
           domainType: 'Term',
           domainId: this.term.id
-        },
-        height: '250px'
+        }
       });
 
       this.editingService.configureDialogRef(dialog);
@@ -359,15 +366,15 @@ export class TermComponent implements OnInit, AfterViewInit {
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'comments' };
+        return { index: 1, name: 'links' };
       case 2:
-        return { index: 2, name: 'links' };
+        return { index: 2, name: 'attachments' };
       case 3:
-        return { index: 3, name: 'attachments' };
+        return { index: 3, name: 'rules' };
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   }
 

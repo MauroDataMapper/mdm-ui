@@ -67,8 +67,8 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoadingRules = true;
   termsItemCount = 0;
   isLoadingTerms = true;
-  showEdit:boolean;
-  canEditDescription:  boolean;
+  showEdit: boolean;
+  canEditDescription: boolean;
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -97,8 +97,6 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     // tslint:disable-next-line: deprecation
     this.parentId = this.stateService.params.id;
-
-
 
     this.title.setTitle('Code Set');
     this.codeSetDetails(this.parentId);
@@ -176,17 +174,17 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.editableForm.description = this.codeSetModel.description;
         if (this.codeSetModel.classifiers) {
-          this.codeSetModel.classifiers.forEach(item => {
+          this.codeSetModel.classifiers.forEach((item) => {
             this.editableForm.classifiers.push(item);
           });
         }
         if (this.codeSetModel.aliases) {
-          this.codeSetModel.aliases.forEach(item => {
+          this.codeSetModel.aliases.forEach((item) => {
             this.editableForm.aliases.push(item);
           });
         }
         if (this.codeSetModel.semanticLinks) {
-          this.codeSetModel.semanticLinks.forEach(link => {
+          this.codeSetModel.semanticLinks.forEach((link) => {
             if (link.linkType === 'New Version Of') {
               this.compareToList.push(link.target);
             }
@@ -194,7 +192,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         if (this.codeSetModel.semanticLinks) {
-          this.codeSetModel.semanticLinks.forEach(link => {
+          this.codeSetModel.semanticLinks.forEach((link) => {
             if (link.linkType === 'Superseded By') {
               this.compareToList.push(link.target);
             }
@@ -317,8 +315,7 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           domainType: 'codeSets',
           domainId: this.codeSetModel.id
-        },
-        height: '250px'
+        }
       });
 
       dialog.afterClosed().subscribe((newProfile) => {
@@ -449,10 +446,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'terminology':
-        return { index: 1, name: 'terminology' };
       case 'description':
         return { index: 0, name: 'description' };
+      case 'terms':
+        return { index: 1, name: 'terms' };
       case 'comments':
         return { index: 2, name: 'comments' };
       case 'history':
@@ -470,10 +467,10 @@ export class CodeSetComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getTabDetailByIndex(index) {
     switch (index) {
-      case 1:
-        return { index: 1, name: 'terminology' };
       case 0:
         return { index: 0, name: 'description' };
+      case 1:
+        return { index: 1, name: 'terms' };
       case 2:
         return { index: 2, name: 'comments' };
       case 3:

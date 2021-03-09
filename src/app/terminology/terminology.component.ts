@@ -205,8 +205,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
         data: {
           domainType: 'Terminology',
           domainId: this.terminology.id
-        },
-        height: '250px'
+        }
       });
 
       dialog.afterClosed().subscribe((newProfile) => {
@@ -382,8 +381,8 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getTabDetail = (tabName) => {
     switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'comments':
         return { index: 1, name: 'comments' };
       case 'attachments':
@@ -400,7 +399,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   getTabDetailIndex = (tabIndex) => {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
       case 1:
         return { index: 1, name: 'comments' };
       case 2:
@@ -410,7 +409,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       case 4:
         return { index: 4, name: 'rules' };
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   };
 

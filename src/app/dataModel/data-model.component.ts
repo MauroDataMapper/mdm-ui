@@ -277,8 +277,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
         data: {
           domainType: 'DataModel',
           domainId: this.dataModel.id
-        },
-        height: '250px'
+        }
       });
 
       dialog.afterClosed().subscribe((newProfile) => {

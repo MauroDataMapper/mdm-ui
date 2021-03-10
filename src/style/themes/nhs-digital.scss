@@ -159,6 +159,11 @@ $nhs-digital-typography: mat-typography-config(
 
   /* Style overrides for the NHS Digital theme */
 
+  .heading-container {
+    background-color: #fff;
+  }
+
+
   .mdm-app-component {
     background-color: $nhs-digital-background-color;
   }
@@ -170,8 +175,14 @@ $nhs-digital-typography: mat-typography-config(
     }
   }
 
+
+  form {
+    background-color: #fff;
+  }
+
   form.mdm--form {
     padding: 20px;
+    
   }
 
   .mdm--shadow-block {

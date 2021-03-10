@@ -47,7 +47,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       private changeRef: ChangeDetectorRef,
       private resources: MdmResourcesService,
       private gridService: GridService
-   ) { 
+   ) {
       this.dataSource = new MatTableDataSource(this.records);
    }
 
@@ -72,7 +72,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       })).subscribe((values: any[]) => {
          // Flatten the endpoint response to make the table rows tabular and not an object hierarchy
          this.records = values.map(row => {
-            let flattened = { };
+            const flattened = { };
             row.columns.forEach(column => {
                flattened[column.referenceDataElement.label] = column.value;
             });

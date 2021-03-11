@@ -20,9 +20,10 @@ import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { SharedService } from './shared.service';
+import { MessageHandlerService } from './utility/message-handler.service';
 import { UserSettingsHandlerService } from './utility/user-settings-handler.service';
 
 @Injectable({
@@ -34,7 +35,8 @@ export class ModelTreeService {
     private resources: MdmResourcesService,
     private sharedService: SharedService,
     private userSettingsHandler: UserSettingsHandlerService,
-    private subscribedCatalogues: SubscribedCataloguesService) { }
+    private subscribedCatalogues: SubscribedCataloguesService,
+    private messageHandler: MessageHandlerService) { }
 
   getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
     let options: any = {};
@@ -68,6 +70,10 @@ export class ModelTreeService {
     return this.resources.subscribedCatalogues
       .list(options)
       .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
+          return of<Node[]>([]);
+        }),
         map((response: SubscribedCatalogueIndexResponse) => response.body.items ?? []),
         map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, Node>({}, {
           id: item.id,

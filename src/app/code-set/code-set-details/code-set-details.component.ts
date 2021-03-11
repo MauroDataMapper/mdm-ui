@@ -154,6 +154,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   CodeSetDetails(): any {
 
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
+
+      if(serverResult.domainType !== 'CodeSet')
+      {
+        return;
+      }
+
       this.result = serverResult;
 
 
@@ -295,7 +301,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     for (const val in this.branchGraph) {
       if (this.branchGraph[val].branchName === this.currentBranch) {
         this.stateHandler.Go(
-          'codesets',
+          'codeset',
           { id: this.branchGraph[val].modelId },
           { reload: true, location: true }
         );

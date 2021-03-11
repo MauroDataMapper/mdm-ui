@@ -125,20 +125,20 @@ SPDX-License-Identifier: Apache-2.0
                 <tr>
                   <td class="detailsRowHeader">Aliases</td>
                   <td *ngIf="codeSetModel">                 
-                    <!-- <mdm-element-alias
+                    <mdm-element-alias
                       [readOnly]="false"
                       [inEditMode]="editableForm.visible"
                       [aliases]="codeSetModel?.aliases"
                       [editableForm]="editableForm"
                       [property]="'aliases'"
-                    ></mdm-element-alias> -->
+                    ></mdm-element-alias>
                   </td>
                 </tr>
                 <tr>
                   <td class="detailsRowHeader">Author</td>
                   <td *ngIf="codeSetModel">
                     <mdm-inline-text-edit
-                      [readOnly]="true"
+                      [readOnly]="false"
                       [inEditMode]="editableForm.visible"
                       [(ngModel)]="codeSetModel.author"
                       [name]="'moduleNameAuthor'"
@@ -152,7 +152,7 @@ SPDX-License-Identifier: Apache-2.0
                   <td class="detailsRowHeader">Organisation</td>
                   <td *ngIf="codeSetModel">
                     <mdm-inline-text-edit
-                      [readOnly]="true"
+                      [readOnly]="false"
                       [inEditMode]="editableForm.visible"
                       [(ngModel)]="codeSetModel.organisation"
                       [name]="'moduleNameOrganisation'"
@@ -180,7 +180,7 @@ SPDX-License-Identifier: Apache-2.0
                   <td class="detailsRowHeader">Classifications</td>
                   <td *ngIf="codeSetModel">
                     <mdm-element-classifications
-                      [readOnly]="true"
+                      [readOnly]="false"
                       [classifications]="codeSetModel.classifiers"
                       name="classifiers"
                       [editableForm]="editableForm"

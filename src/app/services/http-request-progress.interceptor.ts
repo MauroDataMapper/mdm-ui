@@ -18,7 +18,8 @@ SPDX-License-Identifier: Apache-2.0
 
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 
 /**
@@ -40,11 +41,17 @@ export class HttpRequestProgressInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loaderService.isLoading.next(true);
-    return Observable.create(observer => {
-      const subscription = next.handle(request)
-        .subscribe(
-          event => {
+    this.loading.setHttpLoading(true, request.url);
+    return next
+      .handle(request)
+      .pipe(
+        catchError(error => {
+          this.loading.setHttpLoading(false, request.url);
+          return throwError(error);
+        })
+      )
+      .pipe(
+        map((event: HttpEvent<any>) => {
             if (event instanceof HttpResponse) {
               this.removeRequest(request);
               observer.next(event);

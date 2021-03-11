@@ -47,10 +47,7 @@ export class SharedService {
     private resources: MdmResourcesService
   ) {
     this.isAdmin = this.securityHandler.isAdmin();
-    this.applicationOffline.subscribe(() => {
-      this.toaster.warning('Application is offline!');
-    });
-  }
+   }
 
   logout = () => {
     this.securityHandler.logout();

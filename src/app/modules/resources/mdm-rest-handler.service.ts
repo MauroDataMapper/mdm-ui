@@ -57,8 +57,7 @@ export class MdmRestHandlerService implements IMdmRestHandler {
         }).pipe(
           catchError(response => {
             if (response.status === 0 || response.status === -1) {
-                this.stateHandler.ApplicationOffline();
-                this.broadcastSvc.broadcast('applicationOffline', response);
+                 this.broadcastSvc.broadcast('applicationOffline', response);
             } else if (response.status === 401) {
                 this.messageService.lastError = response;
                 if (options.login === undefined) {

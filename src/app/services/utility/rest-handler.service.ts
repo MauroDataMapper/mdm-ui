@@ -58,7 +58,6 @@ export class RestHandlerService {
         }).pipe(
           catchError(response => {
             if (response.status === 0 || response.status === -1) {
-                this.stateHandler.ApplicationOffline();
                 this.broadcastSvc.broadcast('applicationOffline', response);
             } else if (response.status === 401) {
                 this.messageService.lastError = response;

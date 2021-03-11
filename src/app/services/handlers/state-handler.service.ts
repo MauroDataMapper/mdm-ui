@@ -146,11 +146,6 @@ export class StateHandlerService {
     this.router.stateService.reload();
   }
 
-  ApplicationOffline() {
-    // messageHandler should show a proper message on the main pag
-    this.ngToast.warning('Application is offline!');
-
-  }
   ConnectionError() {
     this.ngToast.warning('Server connection failed');
   }

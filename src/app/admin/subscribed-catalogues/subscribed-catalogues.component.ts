@@ -141,4 +141,15 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
         },
         error => this.messageHandler.showError('There was a problem deleting the subscribed catalogue.', error));
   }
+
+  testSubscription(record: SubscribedCatalogue) {
+    this.messageHandler.showInfo(`Testing connection to "${record.label}"...`);
+
+    this.resources.subscribedCatalogues
+      .listAvailableModels(record.id)
+      .subscribe(
+        () => this.messageHandler.showSuccess(`Subscribed catalogue "${record.label}" is functioning as expected.`),
+        error => this.messageHandler.showError(`There was a problem connecting to the subscribed catalogue "${record.label}", please check the configuration.`, error)
+      );
+  }
 }

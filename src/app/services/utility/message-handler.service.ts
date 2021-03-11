@@ -45,6 +45,10 @@ export class MessageHandlerService {
         this.ngToast.warning(message);
     }
 
+    showInfo(message: string) {
+        this.ngToast.info(message);
+    }
+
     getErrorText(error) {
         let errorText = '';
 

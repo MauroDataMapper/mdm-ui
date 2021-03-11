@@ -72,6 +72,9 @@ SPDX-License-Identifier: Apache-2.0
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <mat-menu #actions="matMenu" yPosition="below" xPosition="after">
+                        <button mat-menu-item (click)="testSubscription(record)">
+                            <i class="fas fa-play success"></i> Test subscription
+                        </button>
                         <button mat-menu-item (click)="editSubscription(record)">
                             <i class="fas fa-pencil-alt"></i> Edit subscription
                         </button>

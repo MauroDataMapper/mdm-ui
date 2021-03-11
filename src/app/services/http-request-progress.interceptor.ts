@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 
 /**
@@ -28,26 +27,43 @@ import { LoadingService } from './loading.service';
 @Injectable()
 export class HttpRequestProgressInterceptor implements HttpInterceptor {
 
-  constructor(private loading: LoadingService) { }
+  private requests: HttpRequest<any>[] = [];
+
+  constructor(private loaderService: LoadingService) { }
+
+  removeRequest(req: HttpRequest<any>) {
+    const i = this.requests.indexOf(req);
+    if (i >= 0) {
+      this.requests.splice(i, 1);
+    }
+    this.loaderService.isLoading.next(this.requests.length > 0);
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loading.setHttpLoading(true, request.url);
-    return next
-      .handle(request)
-      .pipe(
-        catchError(error => {
-          this.loading.setHttpLoading(false, request.url);
-          return error;
-        })
-      )
-      .pipe(
-        map((event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {
-            this.loading.setHttpLoading(false, request.url);
-          }
-          return event;
-        })
-      );
+    this.loaderService.isLoading.next(true);
+    return Observable.create(observer => {
+      const subscription = next.handle(request)
+        .subscribe(
+          event => {
+            if (event instanceof HttpResponse) {
+              this.removeRequest(request);
+              observer.next(event);
+            }
+          },
+          err => {
+            this.removeRequest(request);
+            observer.error(err);
+          },
+          () => {
+            this.removeRequest(request);
+            observer.complete();
+          });
+      // remove request from queue when cancelled
+      return () => {
+        this.removeRequest(request);
+        subscription.unsubscribe();
+      };
+    });
   }
 
 }

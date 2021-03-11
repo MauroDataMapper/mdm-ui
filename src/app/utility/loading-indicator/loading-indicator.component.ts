@@ -31,8 +31,6 @@ export class LoadingIndicatorComponent implements OnInit {
   constructor(private loading: LoadingService) { }
 
   ngOnInit(): void {
-    this.loading.isLoading
-      .pipe(delay(0))
-      .subscribe((value) => this.visible = value);
+    this.loading.isLoading.subscribe((value) => this.visible = value);
   }
 }

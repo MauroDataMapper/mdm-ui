@@ -15,21 +15,17 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export const environment = {
-  production: true,
-  version: appVersion ?? '',
-  apiEndpoint: $ENV.apiEndpoint ?? 'api',
-  HDFLink: '',
-  themeName: $ENV.themeName ?? 'default',
-  appTitle: 'Mauro Data Mapper',
-  appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
-  catalogueDisplayName: 'Mauro Data Mapper',
-  youTrack: {
-    url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
-    project: 'MC'
-  },
-  wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
-  simpleViewSupport: false,
-  name: 'production',
-  appIsEditable: false
+const webpack = require('webpack');
+const package = require('./package.json');
+
+module.exports = {
+  plugins: [
+    new webpack.DefinePlugin({
+      appVersion: JSON.stringify(package.version),
+      $ENV: {
+        apiEndpoint: JSON.stringify(process.env.mdmUiApiEndpoint),
+        themeName: JSON.stringify(process.env.mdmUiThemeName),        
+      }
+    })
+  ]
 };

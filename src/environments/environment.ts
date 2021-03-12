@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 
 export const environment = {
   production: false,
-  version: '5.3.0-SNAPSHOT',
+  version: appVersion ?? '',
   apiEndpoint: 'http://localhost:8080/api',
   HDFLink: '',
   themeName: 'default',

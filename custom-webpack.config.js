@@ -23,8 +23,8 @@ module.exports = {
     new webpack.DefinePlugin({
       appVersion: JSON.stringify(package.version),
       $ENV: {
-        apiEndpoint: JSON.stringify(process.env.mdmUiApiEndpoint),
-        themeName: JSON.stringify(process.env.mdmUiThemeName),        
+        apiEndpoint: JSON.stringify(process.env['MDM_UI_API_ENDPOINT']),
+        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
       }
     })
   ]

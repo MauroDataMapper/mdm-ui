@@ -21,5 +21,4 @@ interface Env {
   themeName: string;
 }
 
-declare var appVersion: string;
 declare var $ENV: Env;

@@ -16,12 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 const webpack = require('webpack');
-const package = require('./package.json');
 
 module.exports = {
   plugins: [
     new webpack.DefinePlugin({
-      appVersion: JSON.stringify(package.version),
       $ENV: {
         apiEndpoint: JSON.stringify(process.env['MDM_UI_API_ENDPOINT']),
         themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])

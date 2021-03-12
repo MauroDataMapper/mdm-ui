@@ -15,9 +15,11 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+const packageFile = require('../../package.json');
+
 export const environment = {
   production: true,
-  version: appVersion ?? '',
+  version: packageFile?.version ?? '',
   apiEndpoint: $ENV.apiEndpoint ?? 'api',
   HDFLink: '',
   themeName: $ENV.themeName ?? 'default',

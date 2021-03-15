@@ -15,32 +15,45 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="modal-header pxy-2">
-  <h4 class="modal-title marginless">Resolve Conflict</h4>
-</div>
 
-<div class="modal-body pxy-2">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-        <div #mergeDifflr></div>
-      </div>
-      <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-        <h4>Parsed</h4>
-        <span [innerHTML]="mergeString | safe: 'html'"></span>
-        <h4>Raw</h4>
-        <textarea style="width: 100%;" rows="10" [(ngModel)]="mergeString"></textarea>
-      </div>
-      <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-        <div #mergeDiffrl></div>
+<h4 mat-dialog-title class="modal-title marginless">Resolve Conflict</h4>
+
+<mat-dialog-content class="mat-typography">
+  <div class="full-width">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+          <h4>Left</h4>
+          <div style="word-break: break-word" #mergeDiffrl></div>
+        </div>
+        <div
+          style="word-break: break-word"
+          class="col-lg-4 col-md-4 col-xs-4 col-sm-4"
+        >
+          <h4>Parsed</h4>
+          <span [innerHTML]="mergeString | safe: 'html'"></span>
+          <h4>Raw</h4>
+          <textarea
+            style="width: 100%"
+            rows="10"
+            [(ngModel)]="mergeString"
+          ></textarea>
+        </div>
+        <div
+          style="word-break: break-word"
+          class="col-lg-4 col-md-4 col-xs-4 col-sm-4"
+        >
+        <h4>Right</h4>
+          <div #mergeDifflr></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</mat-dialog-content>
 
-<div class="modal-footer pxy-2">
+<mat-dialog-actions align="end" class="pt-2 pb-2">
   <button mat-button color="warn" class="mr-1" type="button" mat-dialog-close>
     Cancel
   </button>
   <button mat-flat-button type="button" (click)="accept()">Accept</button>
-</div>
+</mat-dialog-actions>

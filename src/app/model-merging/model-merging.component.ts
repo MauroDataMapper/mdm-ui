@@ -15,18 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '../services/validator.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateService } from '@uirouter/core';
 import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { StateHandlerService } from '@mdm/services';
+import { ElementTypesService, StateHandlerService } from '@mdm/services';
 import { ResolveMergeConflictModalComponent } from '@mdm/modals/resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
 
 @Component({
@@ -37,6 +33,7 @@ import { ResolveMergeConflictModalComponent } from '@mdm/modals/resolve-merge-co
 })
 export class ModelMergingComponent implements OnInit {
   diffMap = {};
+  dataTypes: any;
 
   max = 100;
   dynamic = 100;
@@ -77,11 +74,15 @@ export class ModelMergingComponent implements OnInit {
     private resources: MdmResourcesService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    public dialog: MatDialog  ) {}
+    private elementTypes: ElementTypesService,
+    public dialog: MatDialog
+  ) {}
 
   async ngOnInit() {
     const sourceId = this.stateService.params.sourceId;
     const targetId = this.stateService.params.targetId;
+
+    this.dataTypes = this.elementTypes.getAllDataTypesArray();
 
     if (sourceId) {
       this.sourceModel = await this.loadDataModelDetail(sourceId);
@@ -113,12 +114,10 @@ export class ModelMergingComponent implements OnInit {
       return null;
     }
 
-    const response = await this.resources.dataModel
-      .get(modelId, { forDiff: true })
-      .toPromise();
+    const response = await this.resources.dataModel.get(modelId).toPromise();
     const model = response.body;
     const children = await this.resources.tree
-      .get('dataModels', model.domainType, model.id)
+      .get('dataModels', model.domainType, model.id, { forDiff: true })
       .toPromise();
 
     model.children = children.body;
@@ -218,9 +217,8 @@ export class ModelMergingComponent implements OnInit {
     localDiff.push(this.createMetadataElements(model));
 
     const props = this.createPropertiesElements(model);
-    for (const index of props) {
-      const element = props[index];
-      localDiff.push(element);
+    for (const prop of props) {
+      localDiff.push(prop);
     }
 
     thingRet.diffs = localDiff;
@@ -251,10 +249,6 @@ export class ModelMergingComponent implements OnInit {
       }
     });
 
-    this.diffsMerged.dataElements.forEach((dateElement) => {
-      if (dateElement.leftId === model.id || dateElement.rightId === model.id) {
-      }
-    });
 
     return properties;
   }
@@ -284,7 +278,6 @@ export class ModelMergingComponent implements OnInit {
         }
 
         if (dt.modified) {
-
           const tempMeMod = [];
           const val = {
             fieldName: 'value',
@@ -295,7 +288,7 @@ export class ModelMergingComponent implements OnInit {
 
           const mod = {
             leftId: dt.leftId,
-            diffs:tempMeMod
+            diffs: tempMeMod
           };
           tempMod.push(mod);
         }
@@ -307,7 +300,7 @@ export class ModelMergingComponent implements OnInit {
     return objects;
   }
 
-  createDataTypesElements(model: any) {
+  createDataTypesElements = (model: any) => {
     const objects: any = {};
 
     objects.fieldName = 'dataTypes';
@@ -336,7 +329,7 @@ export class ModelMergingComponent implements OnInit {
     const tempMod = [];
     if (model.children) {
       model.children.forEach((child) => {
-        if (child.domainType === 'PrimitiveType') {
+        if (this.dataTypes.some(x => x.id === child.domainType)) {
           tempMod.push(this.createDiffMap(false, child));
         }
       });
@@ -345,7 +338,7 @@ export class ModelMergingComponent implements OnInit {
     objects.modified = tempMod;
 
     return objects;
-  }
+  };
 
   createDataElementsElements(model: any) {
     const objects: any = {};
@@ -441,7 +434,8 @@ export class ModelMergingComponent implements OnInit {
 
           const data = {
             patch: tr,
-            deleteBranch: result.deleteSourceBranch
+            deleteBranch: result.deleteSourceBranch,
+            commitComment: result.commitComment
           };
 
           this.resources.versioning
@@ -644,7 +638,7 @@ export class ModelMergingComponent implements OnInit {
       );
   };
 
-  private removeNonConflicts(arr: any) {
+  removeNonConflicts(arr: any) {
     for (let i = arr.length - 1; i >= 0; i -= 1) {
       const element = arr[i];
       if (!element.modified && !element.created && !element.deleted) {
@@ -917,7 +911,10 @@ export class ModelMergingComponent implements OnInit {
           index++
         ) {
           const element = this.diffsMerged.properties[index];
-          if (element.property === diff.property && element.leftId === diff.leftId) {
+          if (
+            element.property === diff.property &&
+            element.leftId === diff.leftId
+          ) {
             if (diff.acceptTarget || diff.acceptSource) {
               if (diff.acceptTarget && diff.acceptSource) {
                 const dialog = this.dialog.open(
@@ -1179,16 +1176,6 @@ export class ModelMergingComponent implements OnInit {
           diffMap
         );
       }
-      if (diff.a) {
-        this.findDiffProps(
-          'organisation',
-          result.leftId,
-          result.rightId,
-          diff.organisation,
-          diffMap
-        );
-      }
-
       if (diff.metadata) {
         this.findDiffMetadata(
           result.leftId,
@@ -1329,7 +1316,6 @@ export class ModelMergingComponent implements OnInit {
                 diffMap
               );
               el.modified = true;
-              //  diffMap[parentDC.id].diffs.dataClasses.push(el);
             }
             if (el.rightBreadcrumbs) {
               this.modifiedParents(
@@ -1337,7 +1323,6 @@ export class ModelMergingComponent implements OnInit {
                 diffMap
               );
               el.modified = true;
-              // diffMap[parentDC.id].diffs.dataClasses.push(el);
             }
             if (el.diffs.find((x) => x.dataClasses)) {
               const childDataClasses = {
@@ -1373,7 +1358,6 @@ export class ModelMergingComponent implements OnInit {
             el.created = false;
             el.deleted = false;
             el.domainType = 'DataElement';
-            diffMap[parentDC.id].diffs.dataElements.push(el);
 
             if (el.diffs.find((x) => x.dataElements)) {
               const childDataClasses = {
@@ -1386,13 +1370,14 @@ export class ModelMergingComponent implements OnInit {
           if (diffElement === 'dataTypes' && el.leftBreadcrumbs) {
             this.modifiedParents(el.leftBreadcrumbs, diffMap);
 
-            const parentDM = el.leftBreadcrumbs[0];
-            this.initDiff(parentDM.id, diffMap);
+            const parentDT =
+              el.rightBreadcrumbs[el.leftBreadcrumbs.length - 1];
+            this.initDiff(parentDT.id, diffMap);
+
             el.modified = true;
             el.deleted = false;
             el.created = false;
             el.domainType = 'DataType';
-            diffMap[parentDM.id].diffs.dataTypes.push(el);
 
             if (el.diffs.find((x) => x.dataTypes)) {
               const childDataClasses = {
@@ -1405,13 +1390,15 @@ export class ModelMergingComponent implements OnInit {
           if (diffElement === 'dataTypes' && el.rightBreadcrumbs) {
             this.modifiedParents(el.rightBreadcrumbs, diffMap);
 
-            const parentDM = el.rightBreadcrumbs[0];
-            this.initDiff(parentDM.id, diffMap);
+            const parentDT =
+              el.rightBreadcrumbs[el.rightBreadcrumbs.length - 1];
+            this.initDiff(parentDT.id, diffMap);
+
+            this.initDiff(parentDT.id, diffMap);
             el.modified = true;
             el.deleted = false;
             el.created = false;
             el.domainType = 'DataType';
-            diffMap[parentDM.id].diffs.dataTypes.push(el);
           }
 
           // Run for Element

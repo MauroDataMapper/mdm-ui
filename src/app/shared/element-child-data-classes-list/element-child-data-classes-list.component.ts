@@ -177,7 +177,7 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
         });
       }
     });
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parentDataModel, parentDataClass: this.parentDataClass },
         panelClass: 'bulk-delete-modal'

@@ -62,7 +62,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
       this.mergeViewlr.nativeElement.querySelectorAll('button').forEach(x => x.addEventListener('click', this.onMergeConflictPress.bind(this)));
 
 
-      this.mergeString = this.diffIntoPrettyPlain(difflr);
+      this.mergeString = this.diffIntoPrettyPlain(diffrl);
     }
   }
 
@@ -90,6 +90,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
     const diffDelete = -1;
     const diffEqual = 0;
 
+
     const html = [];
     for (let x = 0; x < diffs.length; x++) {
       const op = diffs[x][0];    // Operation (insert, delete, equal)
@@ -106,7 +107,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
           html[x] = `<span>${text}</span>`;
           break;
         }
-      }
+        }
     }
     return html.join('');
 
@@ -117,6 +118,7 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
 
     const diffDelete = -1;
     const diffEqual = 0;
+    const diffAdded = 1;
 
     const html = [];
     for (let x = 0; x < diffs.length; x++) {
@@ -127,6 +129,9 @@ export class ResolveMergeConflictModalComponent implements AfterViewInit {
         case diffDelete:
            html[x] = `<span id="loc${x}"></span>`;
           break;
+          case diffAdded:
+            html[x] = `<span id="loc${x}"></span>`;
+           break;
         case diffEqual:
           html[x] = `<span>${text}</span>`;
           break;

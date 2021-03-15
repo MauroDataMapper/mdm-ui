@@ -106,8 +106,7 @@ SPDX-License-Identifier: Apache-2.0
   <div *ngIf="diffs" class="row" style="margin-top: 10px">
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
-      style="min-height: 375px; text-align: center; overflow: auto;"
-      
+      style="min-height: 375px; text-align: center; overflow: auto"
     >
       <table class="table table-bordered">
         <thead>
@@ -148,7 +147,9 @@ SPDX-License-Identifier: Apache-2.0
                     <div>
                       <span
                         [innerHTML]="diff.right"
-                        style="border-bottom: 1px dashed #000"
+                        style="
+                          word-break: break-word                         
+                        "
                       ></span>
                     </div>
                   </td>
@@ -345,7 +346,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
-      style="text-align: center; overflow: auto;"
+      style="text-align: center; overflow: auto"
     >
       <table class="table table-bordered">
         <thead>
@@ -380,23 +381,21 @@ SPDX-License-Identifier: Apache-2.0
                       >{{ diff.title }}:</strong
                     >
                     <div>
-                      <span
+                      <mdm-text-diff
                         *ngIf="diff.acceptSource && !diff.acceptTarget"
-                        style="border-bottom: 1px dashed #000"
-                        [innerHTML]="diff.right"
-                      ></span>
-
-                      <span
+                        [left]="diff.left"
+                        [right]="diff.right"
+                      ></mdm-text-diff>
+                      <mdm-text-diff
                         *ngIf="diff.acceptTarget && !diff.acceptSource"
-                        style="border-bottom: 1px dashed #000"
-                        [innerHTML]="diff.left"
-                      ></span>
-
-                      <span
+                        [left]="diff.right"
+                        [right]="diff.right"
+                      ></mdm-text-diff>
+                      <mdm-text-diff
                         *ngIf="diff.acceptTarget && diff.acceptSource"
-                        style="border-bottom: 1px dashed #000"
-                        [innerHTML]="diff.left"
-                      ></span>
+                        [left]="diff.left"
+                        [right]="diff.right"
+                      ></mdm-text-diff>
                     </div>
                   </td>
                 </tr>
@@ -460,23 +459,23 @@ SPDX-License-Identifier: Apache-2.0
                         <span>
                           <strong style="font-style: italic">Value:</strong>
                           <span
-                          *ngIf="diff.acceptSource && !diff.acceptTarget"
-                          style="border-bottom: 1px dashed #000"
-                          [innerHTML]="diff.right"
+                            *ngIf="diff.acceptSource && !diff.acceptTarget"
+                            style="border-bottom: 1px dashed #000"
+                            [innerHTML]="diff.right"
+                          ></span>
+
+                          <span
+                            *ngIf="diff.acceptTarget && !diff.acceptSource"
+                            style="border-bottom: 1px dashed #000"
+                            [innerHTML]="diff.left"
+                          ></span>
+
+                          <span
+                            *ngIf="diff.acceptTarget && diff.acceptSource"
+                            style="border-bottom: 1px dashed #000"
+                            [innerHTML]="diff.left"
+                          ></span
                         ></span>
-  
-                        <span
-                          *ngIf="diff.acceptTarget && !diff.acceptSource"
-                          style="border-bottom: 1px dashed #000"
-                          [innerHTML]="diff.left"
-                        ></span>
-  
-                        <span
-                          *ngIf="diff.acceptTarget && diff.acceptSource"
-                          style="border-bottom: 1px dashed #000"
-                          [innerHTML]="diff.left"
-                        ></span></span
-                        >
                       </div>
                     </div>
                   </td>
@@ -592,7 +591,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
-      style="float: right; overflow: auto;"
+      style="float: right; overflow: auto"
       style="text-align: center"
     >
       <table class="table table-bordered">
@@ -632,7 +631,12 @@ SPDX-License-Identifier: Apache-2.0
                       >{{ diff.title }}:</strong
                     >
                     <div>
-                      <span [innerHTML]="diff.left" style="border-bottom: 1px dashed #000"></span>
+                      <span
+                        [innerHTML]="diff.left"
+                        style="
+                          word-break: break-word;                          
+                        "
+                      ></span>
                     </div>
                   </td>
                 </tr>

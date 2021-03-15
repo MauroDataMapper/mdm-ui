@@ -40,6 +40,7 @@ import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
+import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
     SafePipe,
     ShareWithComponent,
     GroupAccessNewComponent,
+    TextDiffComponent,
     ProfileDetailsComponent
   ],
   imports: [
@@ -93,6 +95,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
     SafePipe,
     ShareWithComponent,
     GroupAccessNewComponent,
+    TextDiffComponent,
     ProfileDetailsComponent
   ]
 })

@@ -245,7 +245,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.resourcesService.dataClass.remove(this.result.model, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting this Data Class.', error);
@@ -254,7 +253,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.resourcesService.dataClass.removeChildDataClass(this.result.model, this.result.parentDataClass, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting this Data Class.', error);

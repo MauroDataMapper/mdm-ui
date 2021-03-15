@@ -251,7 +251,7 @@ export class DataClassComponent
             this.max = this.dataClass.maxMultiplicity;
           }
 
-          // this.watchDataClassObject();
+
         });
     } else {
       this.resourcesService.dataClass
@@ -278,6 +278,56 @@ export class DataClassComponent
           }
         });
     }
+  }
+
+ createEditableForm() {
+    this.editableForm = new EditableDataClass();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+    this.editableForm.description = this.dataClass.description;
+
+    this.editableForm.show = () => {
+      this.editableForm.visible = true;
+      if (this.min === '*') {
+        this.min = '-1';
+      }
+
+      if (this.max === '*') {
+        this.max = '-1';
+      }
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+
+      this.error = '';
+
+      this.setEditableForm();
+
+      if (this.dataClass.classifiers) {
+        this.dataClass.classifiers.forEach((item) => {
+          this.editableForm.classifiers.push(item);
+        });
+      }
+      this.editableForm.aliases = [];
+      this.aliases = [];
+      if (this.dataClass.aliases) {
+        this.dataClass.aliases.forEach((item) => {
+          this.aliases.push(item);
+          this.editableForm.aliases.push(item);
+        });
+      }
+
+      if (this.min === '-1') {
+        this.min = '*';
+      }
+
+      if (this.max === '-1') {
+        this.max = '*';
+      }
+    };
   }
 
   toggleShowSearch() {

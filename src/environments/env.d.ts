@@ -16,9 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-interface Env {
-  apiEndpoint: string,
+interface EnvironmentVariables {
   themeName: string;
 }
 
-declare var $ENV: Env;
+declare var $ENV: EnvironmentVariables;

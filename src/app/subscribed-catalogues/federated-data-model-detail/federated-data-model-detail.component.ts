@@ -23,7 +23,7 @@ import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { FolderResultResponse } from '@mdm/model/folderModel';
 import { MatDialog } from '@angular/material/dialog';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
@@ -112,7 +112,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
             });
         }),
         catchError(error => {
-          this.processing = false;
           this.messageHandler.showError('There was a problem subscribing to the data model.', error);
           return [];
         }),
@@ -120,9 +119,12 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
           return this.resources.subscribedCatalogues.federate(response.body.id);
         }),
         catchError(error => {
-          this.processing = false;
           this.messageHandler.showError('There was a problem synchronising a data model.', error);
           return [];
+        }),
+        finalize(() => {
+          this.processing = false;
+          this.reloading.emit();
         })
       )
       .subscribe(() => {
@@ -132,7 +134,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         }),
         switchMap(() => {
         this.messageHandler.showSuccess('Successfully subscribed to data model.');
-        this.reloading.emit();
       });
 
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
@@ -165,18 +166,15 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
           return this.resources.subscribedCatalogues.removeSubscribedModel(
             this.dataModel.catalogueId,
             this.dataModel.subscriptionId);
+        }),
+        finalize(() => {
+          this.processing = false;
+          this.reloading.emit();
         })
       )
       .subscribe(
-        () => {
-          this.processing = false;
-          this.messageHandler.showSuccess('Successfully unsubscribed from data model.');
-          this.reloading.emit();
-        },
-        error => {
-          this.processing = false;
-          return this.messageHandler.showError('There was a problem unsubscribing from the data model.', error);
-        });
+        () => this.messageHandler.showSuccess('Successfully unsubscribed from data model.'),
+        error => this.messageHandler.showError('There was a problem unsubscribing from the data model.', error));
   }
   getModelTypeIcon() {
     return getDomainTypeIcon(this.dataModel.modelType);
@@ -188,15 +186,14 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
     this.processing = true;
     this.resources.subscribedCatalogues
       .federate(this.dataModel.subscriptionId)
-      .subscribe(
-        () => {
+      .pipe(
+        finalize(() => {
           this.processing = false;
-          this.messageHandler.showSuccess(`Synchronised the data model '${this.dataModel.label}' successfully.`);
           this.reloading.emit();
-        },
-        errors => {
-          this.processing = false;
-          this.messageHandler.showError('There was a problem synchronising a data model.', errors);
-        });
+        })
+      )
+      .subscribe(
+        () => this.messageHandler.showSuccess(`Synchronised the data model '${this.dataModel.label}' successfully.`),
+        errors => this.messageHandler.showError('There was a problem synchronising a data model.', errors));
   }
 }

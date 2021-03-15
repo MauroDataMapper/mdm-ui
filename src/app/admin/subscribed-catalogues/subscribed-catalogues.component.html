@@ -49,12 +49,13 @@ SPDX-License-Identifier: Apache-2.0
                     {{record.description}}
                 </td>
             </ng-container>
-            <ng-container matColumnDef="url">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="url">
-                    <span>URL</span>                    
+            <ng-container matColumnDef="connection">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="cursor: pointer; max-width: 40%;" columnName="connection">
+                    <span>Connection</span>                    
                 </th>
                 <td mat-cell *matCellDef="let record" style="text-align: left; word-wrap: break-word;">
-                    {{record.url}}
+                    <p><strong>URL:</strong> {{record.url}}</p>
+                    <p><strong>Key:</strong> {{record.apiKey}}</p>
                 </td>
             </ng-container>      
             <ng-container matColumnDef="refreshPeriod">

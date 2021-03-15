@@ -129,7 +129,11 @@ export class ModelTreeService {
   getFederatedDataModelNodes(catalogueId: string): Observable<Node[]> {
     return this.subscribedCatalogues
       .getFederatedDataModels(catalogueId)
-      .pipe(
+      .pipe(        
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
+          return [];
+        }),
         map(models => models.map(item => Object.assign<{}, Node>({}, {
           id: item.modelId,
           domainType: DOMAIN_TYPE.FederatedDataModel,

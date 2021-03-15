@@ -40,6 +40,10 @@ export class SubscribedCataloguesService {
       this.listSubscribedModels(catalogueId)
     ])
     .pipe(
+      // catchError(error => {
+      //   this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
+      //   return [];
+      // }),
       map(([availableModels, subscribedModels]) => {
         return availableModels.map(available => {
           const subscribed = subscribedModels.find(item => item.subscribedModelId === (available.modelId ?? ''));

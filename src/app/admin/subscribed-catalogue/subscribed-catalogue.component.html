@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0
         <mat-label>Description</mat-label>
         <input matInput name="description" [(ngModel)]="catalogue.description" />
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" hintLabel="Provide the domain URL to the Mauro system to connect to">
         <mat-label>URL</mat-label>
         <input matInput name="url" [(ngModel)]="catalogue.url" required />
         <mat-error *ngIf="errors && errors.url">

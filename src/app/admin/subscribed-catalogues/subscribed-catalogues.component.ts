@@ -41,7 +41,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<any>();
 
-  displayedColumns = ['label', 'description', 'url', 'refreshPeriod', 'icons'];
+  displayedColumns = ['label', 'description', 'connection', 'refreshPeriod', 'icons'];
   records: SubscribedCatalogue[] = [];
 
   constructor(

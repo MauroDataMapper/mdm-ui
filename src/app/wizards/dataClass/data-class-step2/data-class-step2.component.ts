@@ -216,7 +216,7 @@ export class DataClassStep2Component
     });
 
     promise.then(() => {
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
+
     }).catch(() => console.warn('error')).finally(() => {
       this.processing = false;
       this.step.submitBtnDisabled = false;

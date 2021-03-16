@@ -208,8 +208,7 @@ export class DataClassMainComponent implements AfterViewInit {
           },
           { reload: true, location: true }
         );
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
-      },
+       },
       (error) => {
         this.messageHandler.showError(
           'There was a problem saving the Data Class.',

@@ -36,14 +36,19 @@ SPDX-License-Identifier: Apache-2.0
         <tr *ngFor="let field of section.fields">
           <td class="detailsRowHeader" class="detailsRowHeader">
             {{ field.fieldName }}
+            <i
+            style="float: right"
+            (click)="showInfo(field)"
+            class="fas fa-info"
+          ></i>
+     
           </td>
           <td class="elementDetailDescription">
            
 
             <mdm-content-editor
             [(description)]="field.currentValue"
-              id="{{ field.fieldName }}"
-              matTooltip="{{ field.description }}"            
+              id="{{ field.fieldName }}"                         
               [inEditMode]="true"
               *ngIf="field.dataType === 'text'"
             ></mdm-content-editor>
@@ -71,10 +76,10 @@ SPDX-License-Identifier: Apache-2.0
                 field.dataType != 'datetime' &&
                 field.dataType != 'boolean' &&
                 field.dataType != 'folder' &&
-                field.dataType != 'Boolean'
+                field.dataType != 'Boolean' &&
+                field.dataType != 'enumeration'
               "
-              matInput
-              matTooltip="{{ field.description }}"
+              matInput             
               type="{{ formOptionsMap[field.dataType] }}"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -87,8 +92,7 @@ SPDX-License-Identifier: Apache-2.0
             />
             <input
               *ngIf="field.dataType === 'date'"
-              matInput
-              matTooltip="{{ field.description }}"
+              matInput              
               type="date"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -101,8 +105,7 @@ SPDX-License-Identifier: Apache-2.0
             />
             <input
               *ngIf="field.dataType === 'datetime'"
-              matInput
-              matTooltip="{{ field.description }}"
+              matInput              
               type="datetime-local"
               name="{{ field.fieldName }} + {{ section.sectionName }}"
               [(ngModel)]="field.currentValue"
@@ -117,7 +120,6 @@ SPDX-License-Identifier: Apache-2.0
               <input
                 type="text"
                 matInput
-                matTooltip="{{ field.description }}"
                 type="text"
                 name="{{ field.fieldName }} + {{ section.sectionName }}"
                 [(ngModel)]="field.currentValue"
@@ -138,6 +140,13 @@ SPDX-License-Identifier: Apache-2.0
                 <i class="fas fa-plus"></i>
                 Add Data Model
               </button>
+            </div>
+            <div *ngIf="field.dataType === 'enumeration'">
+             <mat-select [(ngModel)]="field.currentValue" name="{{ field.fieldName }} + {{ section.sectionName }}">
+                <mat-option *ngFor="let value of field.allowedValues" [value]="value.value">
+                  {{value.displayName}}
+                </mat-option>
+              </mat-select>
             </div>
             <div *ngIf="field.dataType === 'folder'">
               <mdm-model-selector-tree

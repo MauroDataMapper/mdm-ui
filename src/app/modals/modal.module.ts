@@ -46,6 +46,7 @@ import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
 import { AceComponent, AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
 import { AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
+import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 
 const DefaultAceConfig: AceConfigInterface = {
 };
@@ -81,7 +82,12 @@ const DefaultAceConfig: AceConfigInterface = {
     SecurityModalComponent
     SecurityModalComponent,
     AddProfileModalComponent,
-    EditProfileModalComponent
+    EditProfileModalComponent,
+    ResolveMergeConflictModalComponent,
+    AddRuleRepresentationModalComponent,
+    AddRuleModalComponent,
+    ApiKeysModalComponent,
+    MarkupDisplayModalComponent
   ],
   providers: [
     ModalService,

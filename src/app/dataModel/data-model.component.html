@@ -127,7 +127,7 @@ SPDX-License-Identifier: Apache-2.0
               <mat-form-field
                 appearance="outline"
                 class="paddingless"
-                style="max-width: 230px; width: 100%"
+                style="max-width: 430px; width: 100%"
               >
                 <mat-select
                   [(ngModel)]="descriptionView"
@@ -158,33 +158,44 @@ SPDX-License-Identifier: Apache-2.0
               fxLayoutAlign="flex-end center"
               fxLayoutAlign.xs="flex-start center"
             >
-            <button
-            mat-flat-button
-            color="primary"
-            type="button"
-            class="mr-1"
-            [matMenuTriggerFor]="editMenu"
-          >
-            Edit
-          </button>
+              <button
+                mat-flat-button
+                *ngIf="this.descriptionView !== 'default'"
+                color="primary"
+                type="button"
+                class="mr-1"
+                (click)="editProfile(false)"
+              >
+                <i class="fas fa-pencil-alt"></i> Edit
+              </button>
 
-          <mat-menu #editMenu="matMenu">
-            <button
-              *ngIf="this.descriptionView === 'default'"
-              mat-menu-item
-              (click)="showDescription()"
-            >
-              <i class="fas fa-pencil-alt"></i> Edit Description
-            </button>
-            <button mat-menu-item (click)="editProfile(false)">
-              <i class="fas fa-pencil-alt"></i>Edit
-            </button>
-          </mat-menu>
+              <button
+                mat-flat-button
+                *ngIf="this.descriptionView === 'default'"
+                color="primary"
+                type="button"
+                class="mr-1"
+                [matMenuTriggerFor]="editMenu"
+              >
+                Edit
+              </button>
+
+              <mat-menu #editMenu="matMenu">
+                <button mat-menu-item (click)="showDescription()">
+                  <i class="fas fa-pencil-alt"></i> Edit Description
+                </button>
+                <button mat-menu-item (click)="editProfile(false)">
+                  <i class="fas fa-pencil-alt"></i>Edit
+                </button>
+              </mat-menu>
             </div>
           </div>
         </div>
 
-        <mdm-profile-details *ngIf="this.currentProfileDetails" [currentProfileDetails]="this.currentProfileDetails"></mdm-profile-details>
+        <mdm-profile-details
+          *ngIf="this.currentProfileDetails"
+          [currentProfileDetails]="this.currentProfileDetails"
+        ></mdm-profile-details>
 
         <div class="full-width">
           <mdm-data-set-metadata
@@ -208,7 +219,7 @@ SPDX-License-Identifier: Apache-2.0
             <tbody>
               <tr>
                 <td class="detailsRowHeader">Aliases</td>
-                <td>   
+                <td>
                   <mdm-element-alias
                     [inEditMode]="editableForm.visible"
                     [aliases]="dataModel.aliases"
@@ -216,7 +227,7 @@ SPDX-License-Identifier: Apache-2.0
                     [property]="'aliases'"
                     [readOnly]="showEditDescription"
                   >
-                  </mdm-element-alias>       
+                  </mdm-element-alias>
                 </td>
               </tr>
               <tr>
@@ -515,7 +526,8 @@ SPDX-License-Identifier: Apache-2.0
     <div class="full-width">
       <mdm-constraints-rules
         *ngIf="dataModel"
-        [parent]="dataModel" [domainType]="'dataModels'"
+        [parent]="dataModel"
+        [domainType]="'dataModels'"
         (totalCount)="rulesCountEmitter($event)"
       ></mdm-constraints-rules>
     </div>

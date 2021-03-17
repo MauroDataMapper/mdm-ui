@@ -24,6 +24,7 @@ import { ProfileModalDataModel } from '@mdm/model/profilerModalDataModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
+import { MarkupDisplayModalComponent } from '../markup-display-modal/markup-display-modal.component';
 @Component({
   selector: 'mdm-edit-profile-modal',
   templateUrl: './edit-profile-modal.component.html',
@@ -95,6 +96,15 @@ export class EditProfileModalComponent implements OnInit {
 
   onCancel() {
     this.dialogRef.close();
+  }
+
+  showInfo(field: any) {
+    this.dialog.open(MarkupDisplayModalComponent, {
+      data: {
+        content: field.description,
+        title: field.fieldName
+      }
+    });
   }
 
   showAddElementToMarkdown = (field) => {

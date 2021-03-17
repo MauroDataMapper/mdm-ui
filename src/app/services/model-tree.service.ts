@@ -62,6 +62,10 @@ export class ModelTreeService {
   }
 
   getSubscribedCatalogueTreeNodes(): Observable<Node[]> {
+    if (!this.sharedService.isLoggedIn(true)) {
+      return of([]);
+    }
+
     const options = {
       sort: 'label',
       order: 'asc'

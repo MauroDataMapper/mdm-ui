@@ -82,17 +82,47 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign="flex-end center"
                 fxLayoutAlign.xs="flex-start center"
               >
-                <button
-                  mat-flat-button
-                  color="primary"
-                  type="button"
-                  class="mr-1"
-                  (click)="editProfile(false)"
-                  *ngIf="showEdit"
-                >
-                  <i class="fas fa-pencil-alt"></i>
-                  Edit
-                </button>
+              <button
+              mat-flat-button
+              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
+              color="primary"
+              type="button"
+              class="mr-1"
+              (click)="editProfile(false)"
+            >
+              <i class="fas fa-pencil-alt"></i> Edit
+            </button>
+
+            <button
+            mat-flat-button
+            *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
+            color="warn"
+            type="button"
+            class="mr-1"
+            (click)="deleteProfile()"
+          >
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+
+            <button
+              mat-flat-button
+              *ngIf="this.descriptionView === 'default'"
+              color="primary"
+              type="button"
+              class="mr-1"
+              [matMenuTriggerFor]="editMenu"
+            >
+              Edit
+            </button>
+
+            <mat-menu #editMenu="matMenu">
+              <button mat-menu-item (click)="showDescription()">
+                <i class="fas fa-pencil-alt"></i> Edit Description
+              </button>
+              <button mat-menu-item (click)="edit()">
+                <i class="fas fa-pencil-alt"></i>Edit
+              </button>
+            </mat-menu>
               </div>
             </div>
           </div>
@@ -126,7 +156,7 @@ SPDX-License-Identifier: Apache-2.0
                   <td class="detailsRowHeader">Aliases</td>
                   <td *ngIf="codeSetModel">                 
                     <mdm-element-alias
-                      [readOnly]="false"
+                      [readOnly]="showEditDescription"
                       [inEditMode]="editableForm.visible"
                       [aliases]="codeSetModel?.aliases"
                       [editableForm]="editableForm"
@@ -138,7 +168,7 @@ SPDX-License-Identifier: Apache-2.0
                   <td class="detailsRowHeader">Author</td>
                   <td *ngIf="codeSetModel">
                     <mdm-inline-text-edit
-                      [readOnly]="false"
+                      [readOnly]="showEditDescription"
                       [inEditMode]="editableForm.visible"
                       [(ngModel)]="codeSetModel.author"
                       [name]="'moduleNameAuthor'"
@@ -152,7 +182,7 @@ SPDX-License-Identifier: Apache-2.0
                   <td class="detailsRowHeader">Organisation</td>
                   <td *ngIf="codeSetModel">
                     <mdm-inline-text-edit
-                      [readOnly]="false"
+                      [readOnly]="showEditDescription"
                       [inEditMode]="editableForm.visible"
                       [(ngModel)]="codeSetModel.organisation"
                       [name]="'moduleNameOrganisation'"
@@ -180,7 +210,7 @@ SPDX-License-Identifier: Apache-2.0
                   <td class="detailsRowHeader">Classifications</td>
                   <td *ngIf="codeSetModel">
                     <mdm-element-classifications
-                      [readOnly]="false"
+                      [readOnly]="showEditDescription"
                       [classifications]="codeSetModel.classifiers"
                       name="classifiers"
                       [editableForm]="editableForm"

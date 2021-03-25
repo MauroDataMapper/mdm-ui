@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
   <h4 mat-dialog-title>Add New Profile</h4>
 </div>
 <div class="modal-body pxy-2" >
-  <div>
+  <div *ngIf="showProfileSelector">
     <mat-form-field style="width: 500px" appearance="outline">
       <mat-label>Select Profile : </mat-label>
       <mat-select [(ngModel)]="data.selectedProfile">
@@ -32,6 +32,9 @@ SPDX-License-Identifier: Apache-2.0
       </mat-select>
     </mat-form-field>
   </div>
+  <div  *ngIf="!showProfileSelector">
+    <p>There are no available profiles</p>
+  </div>
   <div class="modal-footer pxy-2">
     <button
       mat-button
@@ -41,7 +44,7 @@ SPDX-License-Identifier: Apache-2.0
     >
       Cancel
     </button>
-    <button mat-flat-button color="primary" (click)="save()" class="custom">
+    <button mat-flat-button color="primary" (click)="save()" [disabled]="!showProfileSelector" class="custom">
       Save Changes
     </button>
   </div>

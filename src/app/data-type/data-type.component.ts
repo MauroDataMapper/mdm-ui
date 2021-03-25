@@ -15,17 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
-import { BaseComponent } from '@mdm/shared/base/base.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
@@ -34,9 +29,8 @@ import {
   MessageHandlerService,
   SecurityHandlerService
 } from '@mdm/services';
-import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
-import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-data-type',
@@ -44,7 +38,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./data-type.component.scss']
 })
 export class DataTypeComponent
-  extends BaseComponent
+  extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
@@ -67,9 +61,6 @@ export class DataTypeComponent
   editableForm: EditableDataModel;
   errorMessage: any;
   elementType: any;
-  allUsedProfiles: any[] = [];
-  allUnUsedProfiles: any[] = [];
-  currentProfileDetails: any;
   showEdit: boolean;
   showEditDescription = false;
 
@@ -80,15 +71,15 @@ export class DataTypeComponent
     private title: Title,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private resource: MdmResourcesService,
+    resource: MdmResourcesService,
     private sharedService: SharedService,
-    private messageHandler: MessageHandlerService,
+    messageHandler: MessageHandlerService,
     private securityHandler: SecurityHandlerService,
-    private dialog: MatDialog,
+    dialog: MatDialog,
     private elementTypes: ElementTypesService,
-    private editingService: EditingService
+    editingService: EditingService
   ) {
-    super();
+    super(resource, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -108,7 +99,7 @@ export class DataTypeComponent
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
-    this.resource.dataType.get(this.dataModelId, this.id).subscribe(
+    this.resourcesService.dataType.get(this.dataModelId, this.id).subscribe(
       (result) => {
         const data = result.body;
 
@@ -116,10 +107,11 @@ export class DataTypeComponent
         this.dataModelId = data.model;
         this.id = data.id;
 
-        this.DataModelUnUsedProfiles(data.id);
-        this.DataModelUsedProfiles(data.id);
+        this.UnUsedProfiles('dataType', data.id);
+        this.UsedProfiles('dataType', data.id);
 
         this.dataType = data;
+        this.catalogueItem = this.dataType;
 
         this.watchDataTypeObject();
 
@@ -157,7 +149,7 @@ export class DataTypeComponent
           this.dataType.domainType === 'ModelDataType' &&
           this.dataType.modelResourceDomainType === 'Terminology'
         ) {
-          this.resource.terminology
+          this.resourcesService.terminology
             .get(this.dataModelId.modelResourceId)
             .subscribe((termResult) => {
               this.elementType = termResult.body;
@@ -166,7 +158,7 @@ export class DataTypeComponent
           this.dataType.domainType === 'ModelDataType' &&
           this.dataType.modelResourceDomainType === 'CodeSet'
         ) {
-          this.resource.codeSet
+          this.resourcesService.codeSet
             .get(this.dataType.modelResourceId)
             .subscribe((elmResult) => {
               this.elementType = elmResult.body;
@@ -175,7 +167,7 @@ export class DataTypeComponent
           this.dataType.domainType === 'ModelDataType' &&
           this.dataType.modelResourceDomainType === 'ReferenceDataModel'
         ) {
-          this.resource.referenceDataModel
+          this.resourcesService.referenceDataModel
             .get(this.dataType.modelResourceId)
             .subscribe((dataTypeResult) => {
               this.elementType = dataTypeResult.body;
@@ -218,13 +210,18 @@ export class DataTypeComponent
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resource.dataType
+      this.resourcesService.dataType
         .get(this.dataModelId, this.id)
         .subscribe((data) => {
           this[this.activeTab.name] = data || [];
           this.loadingData = false;
         });
     }
+  };
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
   };
 
   showDescription = () => {
@@ -262,164 +259,11 @@ export class DataTypeComponent
     this.showEditDescription = false;
   };
 
-  async DataModelUsedProfiles(id: any) {
-    await this.resource.profile
-      .usedProfiles('DataType', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  async DataModelUnUsedProfiles(id: any) {
-    await this.resource.profile
-      .unusedProfiles('DataType', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUnUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUnUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  loadProfile() {
-    const splitDescription = this.descriptionView.split('/');
-    this.resource.profile
-      .profile(
-        'DataType',
-        this.dataType.id,
-        splitDescription[0],
-        splitDescription[1]
-      )
-      .subscribe((body) => {
-        this.currentProfileDetails = body.body;
-      });
-  }
-
-  changeProfile() {
-    if (
-      this.descriptionView !== 'default' &&
-      this.descriptionView !== 'other' &&
-      this.descriptionView !== 'addnew'
-    ) {
-      this.loadProfile();
-    } else if (this.descriptionView === 'addnew') {
-      const dialog = this.dialog.open(AddProfileModalComponent, {
-        data: {
-          domainType: 'DataType',
-          domainId: this.dataType.id
-        },
-        height: '250px'
-      });
-
-      this.editingService.configureDialogRef(dialog);
-
-      dialog.afterClosed().subscribe((newProfile) => {
-        if (newProfile) {
-          const splitDescription = newProfile.split('/');
-          this.resource.profile
-            .profile(
-              'DataType',
-              this.dataType.id,
-              splitDescription[0],
-              splitDescription[1],
-              ''
-            )
-            .subscribe(
-              (body) => {
-                this.descriptionView = newProfile;
-                this.currentProfileDetails = body.body;
-                this.editProfile(true);
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        }
-      });
-    } else {
-      this.currentProfileDetails = null;
-    }
-  }
-
-  editProfile = (isNew: boolean) => {
-    this.editingService.start();
-    if (this.descriptionView === 'default') {
-      this.showEditDescription = false;
-      this.editableForm.show();
-    } else {
-      let prof = this.allUsedProfiles.find(
-        (x) => x.value === this.descriptionView
-      );
-
-      if (!prof) {
-        prof = this.allUnUsedProfiles.find(
-          (x) => x.value === this.descriptionView
-        );
-      }
-
-      const dialog = this.dialog.open(EditProfileModalComponent, {
-        data: {
-          profile: this.currentProfileDetails,
-          profileName: prof.display
-        },
-        disableClose: true,
-        panelClass: 'full-width-dialog'
-      });
-
-      this.editingService.configureDialogRef(dialog);
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          const splitDescription = prof.value.split('/');
-          const data = JSON.stringify(result);
-          this.resource.profile
-            .saveProfile(
-              'dataType',
-              this.dataType.id,
-              splitDescription[0],
-              splitDescription[1],
-              data
-            )
-            .subscribe(
-              () => {
-                this.editingService.stop();
-                this.loadProfile();
-                if (isNew) {
-                  this.messageHandler.showSuccess('Profile Added');
-                  this.DataModelUsedProfiles(this.dataType.id);
-                } else {
-                  this.messageHandler.showSuccess(
-                    'Profile Edited Successfully'
-                  );
-                }
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        } else if (isNew) {
-          this.descriptionView = 'default';
-          this.changeProfile();
-        }
-      });
-    }
-  };
-
   formBeforeSave = () => {
     const aliases = [];
     this.editableForm.aliases.forEach((alias) => {
       aliases.push(alias);
     });
-
 
     let resource = {};
     if (!this.showEditDescription) {
@@ -429,7 +273,7 @@ export class DataTypeComponent
         description: this.editableForm.description || '',
         aliases,
         domainType: this.dataType.domainType,
-        classifiers: this.dataType.classifiers.map(cls => ({ id: cls.id }))
+        classifiers: this.dataType.classifiers.map((cls) => ({ id: cls.id }))
       };
     }
 
@@ -440,7 +284,7 @@ export class DataTypeComponent
       };
     }
 
-    this.resource.dataType
+    this.resourcesService.dataType
       .update(this.dataModel.id, this.dataType.id, resource)
       .subscribe(
         (res) => {

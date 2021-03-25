@@ -98,7 +98,7 @@ SPDX-License-Identifier: Apache-2.0
               >
               <button
               mat-flat-button
-              *ngIf="this.descriptionView !== 'default'"
+              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
               color="primary"
               type="button"
               class="mr-1"
@@ -106,6 +106,17 @@ SPDX-License-Identifier: Apache-2.0
             >
               <i class="fas fa-pencil-alt"></i> Edit
             </button>
+
+            <button
+            mat-flat-button
+            *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
+            color="warn"
+            type="button"
+            class="mr-1"
+            (click)="deleteProfile()"
+          >
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
 
             <button
               mat-flat-button
@@ -122,7 +133,7 @@ SPDX-License-Identifier: Apache-2.0
               <button mat-menu-item (click)="showDescription()">
                 <i class="fas fa-pencil-alt"></i> Edit Description
               </button>
-              <button mat-menu-item (click)="editProfile(false)">
+              <button mat-menu-item (click)="edit()">
                 <i class="fas fa-pencil-alt"></i>Edit
               </button>
             </mat-menu>
@@ -176,15 +187,6 @@ SPDX-License-Identifier: Apache-2.0
                       [property]="'description'"
                     >
                     </mdm-content-editor>
-                  </td>
-                </tr>
-                <tr>
-                  <th class="detailsRowHeader">DataModel</th>
-                  <td class="elementDetailDescription">
-                    <mdm-model-path
-                      *ngIf="dataType"
-                      [path]="dataType.breadcrumbs"
-                    ></mdm-model-path>
                   </td>
                 </tr>
                 <tr>

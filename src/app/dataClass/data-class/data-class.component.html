@@ -120,29 +120,47 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign="flex-end center"
                 fxLayoutAlign.xs="flex-start center"
               >
-                <button
-                  mat-flat-button
-                  color="primary"
-                  type="button"
-                  class="mr-1"
-                  [matMenuTriggerFor]="editMenu"
-                  *ngIf="isEditable"
-                >
-                  Edit
-                </button>
+              <button
+              mat-flat-button
+              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
+              color="primary"
+              type="button"
+              class="mr-1"
+              (click)="editProfile(false)"
+            >
+              <i class="fas fa-pencil-alt"></i> Edit
+            </button>
 
-                <mat-menu #editMenu="matMenu">
-                  <button
-                    *ngIf="this.descriptionView === 'default'"
-                    mat-menu-item
-                    (click)="showDescription()"
-                  >
-                    <i class="fas fa-pencil-alt"></i> Edit Description
-                  </button>
-                  <button mat-menu-item (click)="editProfile(false)">
-                    <i class="fas fa-pencil-alt"></i>Edit
-                  </button>
-                </mat-menu>
+            <button
+            mat-flat-button
+            *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew'"
+            color="warn"
+            type="button"
+            class="mr-1"
+            (click)="deleteProfile()"
+          >
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+
+            <button
+              mat-flat-button
+              *ngIf="this.descriptionView === 'default'"
+              color="primary"
+              type="button"
+              class="mr-1"
+              [matMenuTriggerFor]="editMenu"
+            >
+              Edit
+            </button>
+
+            <mat-menu #editMenu="matMenu">
+              <button mat-menu-item (click)="showDescription()">
+                <i class="fas fa-pencil-alt"></i> Edit Description
+              </button>
+              <button mat-menu-item (click)="edit()">
+                <i class="fas fa-pencil-alt"></i>Edit
+              </button>
+            </mat-menu>
               </div>
             </div>
           </div>

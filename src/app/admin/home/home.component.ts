@@ -59,6 +59,8 @@ export class DashboardComponent implements OnInit {
         return { index: 0, name: 'Active Sessions' };
       case 1:
         return { index: 1, name: 'Plugins & Modules' };
+      case 2:
+        return { index: 2, name: 'Profiles Dashboard' };
       default:
         return { index: 0, name: 'Active Sessions' };
     }
@@ -70,6 +72,8 @@ export class DashboardComponent implements OnInit {
         return { index: 0, name: 'Active Sessions' };
       case 'Plugins & Modules':
         return { index: 1, name: 'Plugins & Modules' };
+      case 'Profiles Dashboard':
+        return { index: 2, name: 'Profiles Dashboard' };
       default:
         return { index: 0, name: 'Active Sessions' };
     }

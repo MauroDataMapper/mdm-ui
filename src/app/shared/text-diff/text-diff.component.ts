@@ -25,15 +25,15 @@ export class TextDiffComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.right && this.left) {
-      const diffrl = this.diffLineMode(this.right, this.left);
+      const diffrl = this.diffLineMode(this.right.toString(), this.left.toString());
       this.diff.nativeElement.innerHTML = this.diffPrettyPlain(diffrl);
     }
   }
 
   diffPrettyPlain = (diffs: any) => {
-    const diffAdded = -1;
+    const diffAdded = 1;
     const diffEqual = 0;
-    const diffDelete = 1;
+    const diffDelete = -1;
 
     const html = [];
     for (let x = 0; x < diffs.length; x++) {
@@ -42,15 +42,15 @@ export class TextDiffComponent implements AfterViewInit {
       const text = data;
       switch (op) {
         case diffAdded: {
-          html[x] = `<span class="diffAdded" >${text}</span>`;
+          html[x] = `<div class="diffAdded" >${text}</div>`;
           break;
         }
         case diffEqual: {
-          html[x] = `<span>${text}</span>`;
+          html[x] = `<div>${text}</div>`;
           break;
         }
         case diffDelete: {
-          html[x] = `<span class="diffDeleted">${text}</span>`;
+          html[x] = `<div class="diffDeleted">${text}</div>`;
           break;
         }
       }
@@ -69,6 +69,7 @@ export class TextDiffComponent implements AfterViewInit {
     dmp.diff_charsToLines_(diffs, lineArray);
     return diffs;
   }
+
 
   diffLinesToChars = (text1, text2) => {
     const lineArray = []; // e.g. lineArray[4] == 'Hello\n'

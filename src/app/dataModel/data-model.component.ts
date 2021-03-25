@@ -35,16 +35,17 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
-import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-data-model',
   templateUrl: './data-model.component.html',
   styleUrls: ['./data-model.component.scss']
 })
-export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DataModelComponent
+  extends ProfileBaseComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   @ViewChildren('editableText') editForm: QueryList<any>;
   dataModel: DataModelResult;
@@ -52,14 +53,13 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   subscription: Subscription;
   showSearch = false;
   parentId: string;
-  allUsedProfiles: any[] = [];
-  allUnUsedProfiles: any[] = [];
-  currentProfileDetails: any;
+
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   isEditable: boolean;
   showExtraTabs = false;
   showEdit = false;
+  showDelete = false;
   activeTab: any;
   dataModel4Diagram: any;
   cells: any;
@@ -70,7 +70,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   errorMessage = '';
 
   schemaView = 'list';
-  descriptionView = 'default';
+
   contextView = 'default';
   schemaItemCount = 0;
   typesItemCount = 0;
@@ -83,19 +83,19 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
   showEditDescription = false;
 
   constructor(
-    private resourcesService: MdmResourcesService,
+    resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
-    private dialog: MatDialog,
-    private messageHandler: MessageHandlerService,
-    private editingService: EditingService,
-    private messageHandler: MessageHandlerService,
-    private broadcastSvc: BroadcastService
-  ) {}
+    dialog: MatDialog,
+    messageHandler: MessageHandlerService,
+    editingService: EditingService
+  ) {
+    super(resourcesService, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -132,6 +132,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     const access: any = this.securityHandler.elementAccess(this.dataModel);
     if (access !== undefined) {
       this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
     }
   }
 
@@ -143,6 +144,7 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(async (result: { body: DataModelResult }) => {
         console.log(result.body);
         this.dataModel = result.body;
+        this.catalogueItem = this.dataModel;
         this.watchDataModelObject();
         id = result.body.id;
 
@@ -164,8 +166,8 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (this.sharedService.isLoggedIn(true)) {
           this.DataModelPermissions(id);
-          this.DataModelUsedProfiles(id);
-          this.DataModelUnUsedProfiles(id);
+          this.UsedProfiles('dataModels', id);
+          this.UnUsedProfiles('dataModels', id);
         } else {
           this.messageService.FolderSendMessage(this.dataModel);
           this.messageService.dataChanged(this.dataModel);
@@ -237,77 +239,6 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  async DataModelUsedProfiles(id: any) {
-    await this.resourcesService.profile
-      .usedProfiles('dataModel', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  async DataModelUnUsedProfiles(id: any) {
-    await this.resourcesService.profile
-      .unusedProfiles('dataModel', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUnUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUnUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  changeProfile() {
-    if (
-      this.descriptionView !== 'default' &&
-      this.descriptionView !== 'other' &&
-      this.descriptionView !== 'addnew'
-    ) {
-      this.loadProfile();
-    } else if (this.descriptionView === 'addnew') {
-      const dialog = this.dialog.open(AddProfileModalComponent, {
-        data: {
-          domainType: 'DataModel',
-          domainId: this.dataModel.id
-        }
-      });
-
-      dialog.afterClosed().subscribe((newProfile) => {
-        if (newProfile) {
-          const splitDescription = newProfile.split('/');
-          this.resourcesService.profile
-            .profile(
-              'DataModel',
-              this.dataModel.id,
-              splitDescription[0],
-              splitDescription[1],
-              ''
-            )
-            .subscribe(
-              (body) => {
-                this.descriptionView = newProfile;
-                this.currentProfileDetails = body.body;
-                this.editProfile(true);
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        }
-      });
-    } else {
-      this.currentProfileDetails = null;
-    }
-  }
-
   formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
@@ -365,80 +296,6 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showEditDescription = false;
   }
 
-  editProfile = (isNew: boolean) => {
-    this.editingService.start();
-    if (this.descriptionView === 'default') {
-         this.editableForm.show();
-    } else {
-      let prof = this.allUsedProfiles.find(
-        (x) => x.value === this.descriptionView
-      );
-
-      if (!prof) {
-        prof = this.allUnUsedProfiles.find(
-          (x) => x.value === this.descriptionView
-        );
-      }
-
-      const dialog = this.dialog.open(EditProfileModalComponent, {
-        data: {
-          profile: this.currentProfileDetails,
-          profileName: prof.display
-        },
-        disableClose: true,
-        panelClass: 'full-width-dialog'
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          const splitDescription = prof.value.split('/');
-          const data = JSON.stringify(result);
-          this.resourcesService.profile
-            .saveProfile(
-              'DataModel',
-              this.dataModel.id,
-              splitDescription[0],
-              splitDescription[1],
-              data
-            )
-            .subscribe(
-              () => {
-                this.loadProfile();
-                if (isNew) {
-                  this.messageHandler.showSuccess('Profile Added');
-                  this.DataModelUsedProfiles(this.dataModel.id);
-                } else {
-                  this.messageHandler.showSuccess(
-                    'Profile Edited Successfully'
-                  );
-                }
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        } else if (isNew) {
-          this.descriptionView = 'default';
-          this.changeProfile();
-        }
-      });
-    }
-  };
-
-  loadProfile() {
-    const splitDescription = this.descriptionView.split('/');
-    this.resourcesService.profile
-      .profile(
-        'DataModel',
-        this.dataModel.id,
-        splitDescription[0],
-        splitDescription[1]
-      )
-      .subscribe((body) => {
-        this.currentProfileDetails = body.body;
-      });
-  }
-
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
@@ -479,6 +336,11 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showEditDescription = true;
     this.editableForm.show();
   };
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+   };
 
   getTabDetailByName(tabName) {
     switch (tabName) {

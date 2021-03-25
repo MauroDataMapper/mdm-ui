@@ -25,7 +25,6 @@ import {
 import { Subscription, forkJoin } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
-import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { EditableTerm, TermResult } from '@mdm/model/termModel';
@@ -34,17 +33,18 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { EditingService } from '@mdm/services/editing.service';
-import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-term',
   templateUrl: './term.component.html',
   styleUrls: ['./term.component.scss']
 })
-export class TermComponent implements OnInit, AfterViewInit {
+export class TermComponent
+  extends ProfileBaseComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology = null;
   term: TermResult;
@@ -61,26 +61,28 @@ export class TermComponent implements OnInit, AfterViewInit {
   showEditForm = false;
   editableForm: EditableTerm;
   descriptionView = 'default';
-  allUsedProfiles: any[] = [];
-  allUnUsedProfiles: any[] = [];
-  currentProfileDetails: any;
   showEditDescription = false;
   rulesItemCount = 0;
   isLoadingRules = true;
+  showEdit = false;
+  showDelete = false;
+
 
   constructor(
-    private resources: MdmResourcesService,
+    resources: MdmResourcesService,
     private messageService: MessageService,
-    private sharedService: SharedService,
     private stateService: StateService,
-    private messageHandler: MessageHandlerService,
+    messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
-    private dialog: MatDialog,
-    private editingService: EditingService
-  ) {}
+    dialog: MatDialog,
+    editingService: EditingService,
+    private securityHandler: SecurityHandlerService
+  ) {
+    super(resources, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -118,11 +120,13 @@ export class TermComponent implements OnInit, AfterViewInit {
 
     // tslint:disable-next-line: deprecation
     terms.push(
-      this.resources.terminology.get(this.stateService.params.terminologyId)
+      this.resourcesService.terminology.get(
+        this.stateService.params.terminologyId
+      )
     );
     // tslint:disable-next-line: deprecation
     terms.push(
-      this.resources.terminology.terms.get(
+      this.resourcesService.terminology.terms.get(
         this.stateService.params.terminologyId,
         id
       )
@@ -132,14 +136,17 @@ export class TermComponent implements OnInit, AfterViewInit {
       this.terminology = results[0].body;
       this.term = results[1].body;
 
-      this.resources.catalogueItem
+      this.resourcesService.catalogueItem
         .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
         .subscribe((resp) => {
           this.term.semanticLinks = resp.body.items;
         });
 
-      this.DataModelUsedProfiles(this.term.id);
-      this.DataModelUnUsedProfiles(this.term.id);
+      this.catalogueItem = this.term;
+      this.watchTermObject();
+
+      this.UsedProfiles('term', this.term.id);
+      this.UnUsedProfiles('term', this.term.id);
 
       this.term.finalised = this.terminology.finalised;
       this.term.editable = this.terminology.editable;
@@ -198,6 +205,14 @@ export class TermComponent implements OnInit, AfterViewInit {
     }
   }
 
+  watchTermObject() {
+    const access: any = this.securityHandler.elementAccess(this.term);
+    if (access !== undefined) {
+      this.showEdit = access.showEdit;
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    }
+  }
+
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'description':
@@ -218,151 +233,6 @@ export class TermComponent implements OnInit, AfterViewInit {
     this.broadcast.broadcast('$elementDetailsUpdated', updatedResource);
   }
 
-  loadProfile() {
-    const splitDescription = this.descriptionView.split('/');
-    this.resources.profile
-      .profile('Term', this.term.id, splitDescription[0], splitDescription[1])
-      .subscribe((body) => {
-        this.currentProfileDetails = body.body;
-      });
-  }
-
-  changeProfile() {
-    if (
-      this.descriptionView !== 'default' &&
-      this.descriptionView !== 'other' &&
-      this.descriptionView !== 'addnew'
-    ) {
-      this.loadProfile();
-    } else if (this.descriptionView === 'addnew') {
-      const dialog = this.dialog.open(AddProfileModalComponent, {
-        data: {
-          domainType: 'Term',
-          domainId: this.term.id
-        }
-      });
-
-      this.editingService.configureDialogRef(dialog);
-
-      dialog.afterClosed().subscribe((newProfile) => {
-        if (newProfile) {
-          const splitDescription = newProfile.split('/');
-          this.resources.profile
-            .profile(
-              'Term',
-              this.term.id,
-              splitDescription[0],
-              splitDescription[1],
-              ''
-            )
-            .subscribe(
-              (body) => {
-                this.descriptionView = newProfile;
-                this.currentProfileDetails = body.body;
-                this.editProfile(true);
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        }
-      });
-    } else {
-      this.currentProfileDetails = null;
-    }
-  }
-
-  editProfile = (isNew: boolean) => {
-    this.editingService.start();
-    if (this.descriptionView === 'default') {
-      this.editableForm.show();
-    } else {
-      let prof = this.allUsedProfiles.find(
-        (x) => x.value === this.descriptionView
-      );
-
-      if (!prof) {
-        prof = this.allUnUsedProfiles.find(
-          (x) => x.value === this.descriptionView
-        );
-      }
-
-      const dialog = this.dialog.open(EditProfileModalComponent, {
-        data: {
-          profile: this.currentProfileDetails,
-          profileName: prof.display
-        },
-        disableClose: true,
-        panelClass: 'full-width-dialog'
-      });
-
-      this.editingService.configureDialogRef(dialog);
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          const splitDescription = prof.value.split('/');
-          const data = JSON.stringify(result);
-          this.resources.profile
-            .saveProfile(
-              'Term',
-              this.term.id,
-              splitDescription[0],
-              splitDescription[1],
-              data
-            )
-            .subscribe(
-              () => {
-                this.editingService.stop();
-                this.loadProfile();
-                if (isNew) {
-                  this.messageHandler.showSuccess('Profile Added');
-                  this.DataModelUsedProfiles(this.term.id);
-                } else {
-                  this.messageHandler.showSuccess(
-                    'Profile Edited Successfully'
-                  );
-                }
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        } else if (isNew) {
-          this.descriptionView = 'default';
-          this.changeProfile();
-        }
-      });
-    }
-  };
-
-  async DataModelUsedProfiles(id: any) {
-    await this.resources.profile
-      .usedProfiles('term', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  async DataModelUnUsedProfiles(id: any) {
-    await this.resources.profile
-      .unusedProfiles('term', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUnUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUnUsedProfiles.push(prof);
-        });
-      });
-  }
-
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
@@ -380,12 +250,7 @@ export class TermComponent implements OnInit, AfterViewInit {
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go(
-      'term',
-      { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
-    );
-    this.activeTab = tab.index;
+    this.stateHandler.Go('term', { tabView: tab.name }, { notify: false });
   }
 
   onCancelEdit() {
@@ -408,7 +273,7 @@ export class TermComponent implements OnInit, AfterViewInit {
     this.term['classifiers'] = classifiers;
     this.term['description'] = this.editableForm.description;
 
-    this.resources.term
+    this.resourcesService.term
       .update(this.term.terminology.id, this.term.id, this.term)
       .subscribe(
         () => {
@@ -424,4 +289,15 @@ export class TermComponent implements OnInit, AfterViewInit {
         }
       );
   };
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+   };
 }

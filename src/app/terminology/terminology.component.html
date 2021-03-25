@@ -129,28 +129,46 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign.xs="flex-start center"
               >
               <button
+                mat-flat-button
+                *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew' && showEdit"
+                color="primary"
+                type="button"
+                class="mr-1"
+                (click)="editProfile(false)"
+              >
+                <i class="fas fa-pencil-alt"></i> Edit
+              </button>
+
+              <button
               mat-flat-button
-              color="primary"
+              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew' && showDelete"
+              color="warn"
               type="button"
               class="mr-1"
-              *ngIf="showEdit"
-              [matMenuTriggerFor]="editMenu"
+              (click)="deleteProfile()"
             >
-              Edit
+              <i class="fas fa-trash-alt"></i> Delete
             </button>
 
-            <mat-menu #editMenu="matMenu">
               <button
-                *ngIf="this.descriptionView === 'default'"
-                mat-menu-item
-                (click)="showDescription()"
+                mat-flat-button
+                *ngIf="this.descriptionView === 'default' && showEdit"
+                color="primary"
+                type="button"
+                class="mr-1"
+                [matMenuTriggerFor]="editMenu"
               >
-                <i class="fas fa-pencil-alt"></i> Edit Description
+                Edit
               </button>
-              <button mat-menu-item (click)="editProfile(false)">
-                <i class="fas fa-pencil-alt"></i>Edit
-              </button>
-            </mat-menu>
+
+              <mat-menu #editMenu="matMenu">
+                <button mat-menu-item (click)="showDescription()">
+                  <i class="fas fa-pencil-alt"></i> Edit Description
+                </button>
+                <button mat-menu-item (click)="edit()">
+                  <i class="fas fa-pencil-alt"></i>Edit
+                </button>
+              </mat-menu>
               </div>
             </div>
           </div>

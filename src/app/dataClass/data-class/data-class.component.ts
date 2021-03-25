@@ -25,12 +25,10 @@ import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { BaseComponent } from '@mdm/shared/base/base.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
-import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, ValidatorService } from '@mdm/services';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-data-class',
@@ -38,7 +36,7 @@ import { MessageHandlerService, ValidatorService } from '@mdm/services';
   styleUrls: ['./data-class.component.sass']
 })
 export class DataClassComponent
-  extends BaseComponent
+  extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   dataClass: DataClassResult;
@@ -50,35 +48,33 @@ export class DataClassComponent
   parentDataClass = { id: null };
   parentDataModel = {};
   isEditable: boolean;
-
   max: any;
   min: any;
   error = '';
   editableForm: EditableDataClass;
   aliases: any[] = [];
-  allUsedProfiles: any[] = [];
-  allUnUsedProfiles: any[] = [];
+
   newMinText: any;
   newMaxText: any;
-  currentProfileDetails: any[];
+
 
   descriptionView = 'default';
 
   showEditDescription = false;
 
   constructor(
-    private resourcesService: MdmResourcesService,
+    resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private editingService: EditingService,
-    private dialog: MatDialog,
-    private messageHandler: MessageHandlerService,
+    editingService: EditingService,
+    dialog: MatDialog,
+    messageHandler: MessageHandlerService,
     private validator: ValidatorService
   ) {
-    super();
+    super(resourcesService, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -153,6 +149,7 @@ export class DataClassComponent
         .get(model, id)
         .subscribe((result: { body: DataClassResult }) => {
           this.dataClass = result.body;
+          this.catalogueItem = this.dataClass;
           this.isEditable = this.dataClass['availableActions']?.includes(
             'update'
           );
@@ -209,8 +206,8 @@ export class DataClassComponent
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
 
-          this.DataModelUsedProfiles(id);
-          this.DataModelUnUsedProfiles(id);
+          this.UsedProfiles('dataClass',id);
+          this.UnUsedProfiles('dataClass',id);
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
 
@@ -365,66 +362,6 @@ export class DataClassComponent
     this.max = this.dataClass?.maxMultiplicity;
   }
 
-  editProfile = (isNew: boolean) => {
-    if (this.descriptionView === 'default') {
-      this.showEditDescription = false;
-      this.editableForm.show();
-    } else {
-      let prof = this.allUsedProfiles.find(
-        (x) => x.value === this.descriptionView
-      );
-
-      if (!prof) {
-        prof = this.allUnUsedProfiles.find(
-          (x) => x.value === this.descriptionView
-        );
-      }
-
-      const dialog = this.dialog.open(EditProfileModalComponent, {
-        data: {
-          profile: this.currentProfileDetails,
-          profileName: prof.display
-        },
-        disableClose: true,
-        panelClass: 'full-width-dialog'
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          const splitDescription = prof.value.split('/');
-          const data = JSON.stringify(result);
-          this.resourcesService.profile
-            .saveProfile(
-              'dataClass',
-              this.dataClass.id,
-              splitDescription[0],
-              splitDescription[1],
-              data
-            )
-            .subscribe(
-              () => {
-                this.loadProfile();
-                if (isNew) {
-                  this.messageHandler.showSuccess('Profile Added');
-                  this.DataModelUsedProfiles(this.dataClass.id);
-                } else {
-                  this.messageHandler.showSuccess(
-                    'Profile Edited Successfully'
-                  );
-                }
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        } else if (isNew) {
-          this.descriptionView = 'default';
-          this.changeProfile();
-        }
-      });
-    }
-  };
-
   validateMultiplicity(minVal, maxVal) {
     let min = '';
     if (minVal != null && minVal !== undefined) {
@@ -541,98 +478,19 @@ export class DataClassComponent
     }
   };
 
-  changeProfile() {
-    if (
-      this.descriptionView !== 'default' &&
-      this.descriptionView !== 'other' &&
-      this.descriptionView !== 'addnew'
-    ) {
-      this.loadProfile();
-    } else if (this.descriptionView === 'addnew') {
-      const dialog = this.dialog.open(AddProfileModalComponent, {
-        data: {
-          domainType: 'dataClass',
-          domainId: this.dataClass.id
-        }
-      });
-
-      dialog.afterClosed().subscribe((newProfile) => {
-        if (newProfile) {
-          const splitDescription = newProfile.split('/');
-          this.resourcesService.profile
-            .profile(
-              'dataClass',
-              this.dataClass.id,
-              splitDescription[0],
-              splitDescription[1],
-              ''
-            )
-            .subscribe(
-              (body) => {
-                this.descriptionView = newProfile;
-                this.currentProfileDetails = body.body;
-                this.editProfile(true);
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        }
-      });
-    } else {
-      this.currentProfileDetails = null;
-    }
-  }
-
   showDescription = () => {
     this.editingService.start();
     this.showEditDescription = true;
     this.editableForm.show();
   };
 
-  loadProfile() {
-    const splitDescription = this.descriptionView.split('/');
-    this.resourcesService.profile
-      .profile(
-        'dataClass',
-        this.dataClass.id,
-        splitDescription[0],
-        splitDescription[1]
-      )
-      .subscribe((body) => {
-        this.currentProfileDetails = body.body;
-      });
-  }
-
-  async DataModelUsedProfiles(id: any) {
-    await this.resourcesService.profile
-      .usedProfiles('dataClass', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  async DataModelUnUsedProfiles(id: any) {
-    await this.resourcesService.profile
-      .unusedProfiles('dataClass', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUnUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUnUsedProfiles.push(prof);
-        });
-      });
-  }
-
   onCancelEdit() {
     this.error = '';
     this.showEditDescription = false;
   }
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+   };
 }

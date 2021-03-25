@@ -34,19 +34,20 @@ import {
   MessageService,
   SecurityHandlerService
 } from '@mdm/services';
-import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
-import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-terminology',
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
-export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TerminologyComponent
+  extends ProfileBaseComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   terminology: any;
@@ -57,10 +58,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   pagination: McSelectPagination;
   showEditForm = false;
   editForm = null;
-  allUsedProfiles: any[] = [];
-  allUnUsedProfiles: any[] = [];
   descriptionView = 'default';
-  currentProfileDetails: any;
   editableForm: EditableDataModel;
   showSearch = false;
   subscription: Subscription;
@@ -68,7 +66,8 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoadingRules = true;
   historyItemCount = 0;
   isLoadingHistory = true;
-  showEdit: boolean;
+  showEdit = false;
+  showDelete = false;
   showEditDescription = false;
 
 
@@ -77,13 +76,15 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     private securityHandler: SecurityHandlerService,
     private stateService: StateService,
     private title: Title,
-    private resources: MdmResourcesService,
+    resources: MdmResourcesService,
     private broadcastSvc: BroadcastService,
     private messageService: MessageService,
-    private dialog: MatDialog,
-    private messageHandler: MessageHandlerService,
-    private editingService: EditingService
-  ) {}
+    dialog: MatDialog,
+    messageHandler: MessageHandlerService,
+    editingService: EditingService
+  ) {
+    super(resources, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -112,13 +113,16 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resources.terminology.get(id).subscribe((result) => {
+    this.resourcesService.terminology.get(id).subscribe((result) => {
       const data = result.body;
+      this.catalogueItem = data;
 
       const access: any = this.securityHandler.elementAccess(data);
       this.showEdit = access.showEdit;
-      this.DataModelUsedProfiles(id);
-      this.DataModelUnUsedProfiles(id);
+      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+
+      this.UsedProfiles('terminology', id);
+      this.UnUsedProfiles('terminology', id);
 
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
@@ -142,6 +146,11 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+  };
+
   setEditableForm() {
     this.editableForm.description = this.terminology.description;
     if (this.terminology.classifiers) {
@@ -150,152 +159,6 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-
-  async DataModelUsedProfiles(id: any) {
-    await this.resources.profile
-      .usedProfiles('Terminology', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  async DataModelUnUsedProfiles(id: any) {
-    await this.resources.profile
-      .unusedProfiles('Terminology', id)
-      .subscribe((profiles: { body: { [x: string]: any } }) => {
-        this.allUnUsedProfiles = [];
-        profiles.body.forEach((profile) => {
-          const prof: any = [];
-          prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
-          this.allUnUsedProfiles.push(prof);
-        });
-      });
-  }
-
-  ngAfterViewInit(): void {
-    this.editingService.setTabGroupClickEvent(this.tabGroup);
-  }
-
-  changeProfile() {
-    if (
-      this.descriptionView !== 'default' &&
-      this.descriptionView !== 'other' &&
-      this.descriptionView !== 'addnew'
-    ) {
-      const splitDescription = this.descriptionView.split('/');
-      this.resources.profile
-        .profile(
-          'terminology',
-          this.terminology.id,
-          splitDescription[0],
-          splitDescription[1]
-        )
-        .subscribe((body) => {
-          this.currentProfileDetails = body.body;
-        });
-    } else if (this.descriptionView === 'addnew') {
-      const dialog = this.dialog.open(AddProfileModalComponent, {
-        data: {
-          domainType: 'Terminology',
-          domainId: this.terminology.id
-        }
-      });
-
-      dialog.afterClosed().subscribe((newProfile) => {
-        if (newProfile) {
-          const splitDescription = newProfile.split('/');
-          this.resources.profile
-            .profile(
-              'Terminology',
-              this.terminology.id,
-              splitDescription[0],
-              splitDescription[1],
-              ''
-            )
-            .subscribe(
-              (body) => {
-                this.descriptionView = newProfile;
-                this.currentProfileDetails = body.body;
-                this.editProfile(true);
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        }
-      });
-    } else {
-      this.currentProfileDetails = null;
-    }
-  }
-
-  editProfile = (isNew: boolean) => {
-    this.editingService.start();
-    if (this.descriptionView === 'default') {
-      this.editableForm.show();
-      this.showEditDescription = false;
-    } else {
-      let prof = this.allUsedProfiles.find(
-        (x) => x.value === this.descriptionView
-      );
-
-      if (!prof) {
-        prof = this.allUnUsedProfiles.find(
-          (x) => x.value === this.descriptionView
-        );
-      }
-
-      const dialog = this.dialog.open(EditProfileModalComponent, {
-        data: {
-          profile: this.currentProfileDetails,
-          profileName: prof.display
-        },
-        disableClose: true,
-        panelClass: 'full-width-dialog'
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result) {
-          const splitDescription = prof.value.split('/');
-          const data = JSON.stringify(result);
-          this.resources.profile
-            .saveProfile(
-              'Terminology',
-              this.terminology.id,
-              splitDescription[0],
-              splitDescription[1],
-              data
-            )
-            .subscribe(
-              () => {
-                this.loadProfile();
-                if (isNew) {
-                  this.messageHandler.showSuccess('Profile Added');
-                  this.DataModelUsedProfiles(this.terminology.id);
-                } else {
-                  this.messageHandler.showSuccess(
-                    'Profile Edited Successfully'
-                  );
-                }
-              },
-              (error) => {
-                this.messageHandler.showError('error saving', error.message);
-              }
-            );
-        } else if (isNew) {
-          this.descriptionView = 'default';
-          this.changeProfile();
-        }
-      });
-    }
-  };
 
   formBeforeSave = () => {
     let resource: any = {};
@@ -325,7 +188,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       };
     }
 
-    this.resources.terminology.update(resource.id, resource).subscribe(
+    this.resourcesService.terminology.update(resource.id, resource).subscribe(
       (res) => {
         const result = res.body;
 
@@ -360,20 +223,6 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showEditDescription = false;
     }
   };
-
-  loadProfile() {
-    const splitDescription = this.descriptionView.split('/');
-    this.resources.profile
-      .profile(
-        'Terminology',
-        this.terminology.id,
-        splitDescription[0],
-        splitDescription[1]
-      )
-      .subscribe((body) => {
-        this.currentProfileDetails = body.body;
-      });
-  }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
@@ -463,7 +312,7 @@ export class TerminologyComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     this.searchTerm = text;
-    return this.resources.terminology.terms.search(this.terminology.id, {
+    return this.resourcesService.terminology.terms.search(this.terminology.id, {
       search: encodeURIComponent(text),
       limit,
       offset

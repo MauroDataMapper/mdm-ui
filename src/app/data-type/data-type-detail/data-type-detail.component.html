@@ -88,6 +88,9 @@ SPDX-License-Identifier: Apache-2.0
 
 
       </h4>
+      <td *ngIf="mcDataTypeObject">
+        <mdm-model-path [path]="mcDataTypeObject.breadcrumbs"></mdm-model-path>
+      </td>
     </div>
   </form>
 </div>

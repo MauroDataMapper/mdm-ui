@@ -1,5 +1,5 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2021 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,20 +15,22 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export const environment = {
-  production: true,
-  version: '5.2.0',
-  apiEndpoint: 'api',
-  HDFLink: '',
-  appTitle: 'Mauro Data Mapper',
-  appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
-  catalogueDisplayName: 'Mauro Data Mapper',
-  youTrack: {
-    url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
-    project: 'MC'
-  },
-  wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
-  simpleViewSupport: false,
-  name: 'production',
-  appIsEditable: false
-};
+.mdm-api-property__html-container {
+    margin: .25em 0;
+    padding-bottom: 1.3em;
+}
+
+.mdm-api-property__system-message {
+    margin: 16px;
+    padding: 16px;
+    border: 1px solid #b7d4ef;
+    color: #4F575F;
+    background-color: #eaf5ff;
+    border-radius: 6px;;
+}
+
+.mdm-api-property__checkbox {
+    padding: 0 .75em 0.75em;
+    margin-top: -0.25em;
+    position: relative;
+}

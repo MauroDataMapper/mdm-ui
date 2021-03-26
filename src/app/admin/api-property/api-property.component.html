@@ -1,0 +1,81 @@
+<!--
+Copyright 2021 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="heading-container mb-2">
+    <h4>
+        <span *ngIf="editExisting">Edit Property</span>
+        <span *ngIf="!editExisting">Add Property</span>
+    </h4>
+</div>
+<form name="editableForm" class="mdm--form mb-2" *ngIf="property" [formGroup]="formGroup">
+    <div *ngIf="property.metadata.isSystem" class="mdm-api-property__system-message">
+        <i class="fas fa-cog"></i>
+        <span class="ml-2">This is a system property, you may only change the value.</span>
+    </div>
+    <div *ngIf="!editExisting && systemProperties && systemProperties.length > 0">
+        Select the property to add
+        <mat-form-field  appearance="outline">        
+            <mat-select [(value)]="selectedSystemProperty" name="systemProperty" placeholder="Create a new property" (selectionChange)="systemPropertyChanged($event)">
+                <mat-option>Create a new property</mat-option>
+                <mat-option [value]="systemProperty.key" *ngFor="let systemProperty of systemProperties">{{systemProperty.key}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>    
+    <mat-form-field appearance="outline">
+        <mat-label>Key</mat-label>
+        <input matInput formControlName="key" required [readOnly]="property.metadata.isSystem">
+        <mat-error *ngIf="key?.errors?.required">
+            Key is required
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <input matInput formControlName="category" required [readOnly]="property.metadata.isSystem">
+        <mat-error *ngIf="category?.errors?.required">
+            Category is required
+        </mat-error>
+    </mat-form-field>
+    <div class="mdm-api-property__checkbox">
+        <mat-checkbox name="publiclyVisible" color="primary" formControlName="publiclyVisible" labelPosition="after">
+            Publicly visible
+        </mat-checkbox>    
+    </div>
+    <mat-form-field *ngIf="property.metadata.editType !== EditTypes.Html" appearance="outline">
+        <mat-label>Value</mat-label>
+        <input *ngIf="property.metadata.editType === EditTypes.Value" matInput name="value" formControlName="value" required />
+        <textarea *ngIf="property.metadata.editType === EditTypes.Text" matInput name="value" formControlName="value" rows="9" required></textarea>                
+        <mat-error *ngIf="value?.errors?.required">
+            Value is required
+        </mat-error>
+    </mat-form-field>    
+    <div *ngIf="property.metadata.editType === EditTypes.Html" class="mdm-api-property__html-container">
+        <mdm-html-editor [description]="value.value" (descriptionChange)="htmlValueChanged($event)" [inEditMode]="true">
+        </mdm-html-editor>
+        <mat-error *ngIf="value?.errors?.required">
+            Value is required
+        </mat-error>
+    </div>
+    <button mat-button color="warn" type="button" class="mr-1" (click)="cancel()">
+        Cancel
+    </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="editExisting">
+        Update property
+    </button>
+    <button mat-flat-button color="primary" type="submit" (click)="save()" *ngIf="!editExisting">
+        Add property
+    </button>
+</form> 

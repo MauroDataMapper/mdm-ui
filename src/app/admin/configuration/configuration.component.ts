@@ -16,67 +16,98 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { ConfigurationPropertiesResult } from '@mdm/model/ConfigurationProperties';
-import { from } from 'rxjs';
-import { ObjectEnhancerService } from '@mdm/services/utility/object-enhancer.service';
 import { Title } from '@angular/platform-browser';
+import { ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
+import { catchError, map } from 'rxjs/operators';
+import { GridService } from '@mdm/services';
+import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
 
 @Component({
   selector: 'mdm-configuration',
   templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.sass']
+  styleUrls: ['./configuration.component.scss']
 })
 export class ConfigurationComponent implements OnInit {
-  propertiesTemp: any;
-  properties: ConfigurationPropertiesResult;
-  oldConfiguration: ConfigurationPropertiesResult;
   activeTab: any;
-  resource: any;
+  apiProperties: ApiPropertyEditableState[] = [];
+  apiPropertyCategories: string[] = [];
   indexingStatus: string;
   indexingTime: string;
 
   constructor(
-    private resourcesService: MdmResourcesService,
-    private messageHandler: MessageHandlerService,
-    private stateService: StateService,
+    private resources: MdmResourcesService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
-    private objectEnhancer: ObjectEnhancerService,
-    private title: Title
+    private messageHandler: MessageHandlerService,
+    private title: Title,
+    private gridService: GridService
   ) {}
 
   ngOnInit() {
-    this.getConfig();
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+    this.getApiProperties();
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
     this.indexingStatus = '';
     this.title.setTitle('Configuration');
   }
 
-  getConfig() {
-    this.resourcesService.admin.properties().subscribe((result: { body: any }) => {
-        this.properties = result.body;
-        this.oldConfiguration = Object.assign({}, this.properties);
-      }, err => {
-        this.messageHandler.showError('There was a problem getting the configuration properties.', err);
+  getApiProperties(
+    category?: string,
+    sortBy?: string,
+    sortType?: string) {
+    const options = this.gridService.constructOptions(null, null, sortBy, sortType, null);
+
+    this.resources.apiProperties
+      .list(options)
+      .pipe(
+        map((response: ApiPropertyIndexResponse) => {
+          return response.body.items.map<ApiPropertyEditableState>(item => {
+            let metadata = propertyMetadata.find(m => m.key === item.key);
+            if (!metadata) {
+              metadata = {
+                key: item.key,
+                category: item.category,
+                editType: ApiPropertyEditType.Value,
+                isSystem: false,
+                publiclyVisible: item.publiclyVisible
+              };
+            }
+
+            return {
+              metadata,
+              original: item
+            };
+          });
+        }),
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          return [];
+        })
+      )
+      .subscribe((data: ApiPropertyEditableState[]) => {
+        if (category) {
+          this.apiProperties = data.filter(p => p.metadata.category === category);
+          return;
+        }
+
+        this.apiProperties = data;
+
+        const backendCategories = data
+          .map(prop => prop.metadata.category)
+          .filter(cat => cat && cat.length > 0);
+
+        const knownCategories = propertyMetadata
+          .map(prop => prop.category);
+
+        this.apiPropertyCategories = [...new Set(backendCategories.concat(knownCategories).sort())];
       });
   }
 
-  // Create or edit a configuration property
-  submitConfig() {
-    this.resource = this.objectEnhancer.diff(this.properties, this.oldConfiguration);
-
-    from(this.resourcesService.admin.editProperties(this.resource)).subscribe(() => {
-        this.messageHandler.showSuccess('Configuration properties updated successfully.');
-        this.getConfig();
-      },
-      error => {
-        this.messageHandler.showError('There was a problem updating the configuration properties.', error);
-      }
-    );
+  apiPropertiesViewChange(change: ApiPropertyTableViewChange) {
+    this.getApiProperties(change.category, change.sortBy, change.sortType);
   }
 
   tabSelected(itemsName) {
@@ -87,29 +118,29 @@ export class ConfigurationComponent implements OnInit {
   getTabDetail(tabIndex) {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: 'email' };
-      case 1:
+        return { index: 0, name: 'properties' };
+      case 2:
         return { index: 1, name: 'lucene' };
       default:
-        return { index: 0, name: 'email' };
+        return { index: 0, name: 'properties' };
     }
   }
 
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'email':
-        return { index: 0, name: 'email' };
+      case 'properties':
+        return { index: 0, name: 'properties' };
       case 'lucene':
         return { index: 1, name: 'lucene' };
       default:
-        return { index: 0, name: 'email' };
+        return { index: 0, name: 'properties' };
     }
   }
 
   rebuildIndex() {
     this.indexingStatus = 'start';
 
-    this.resourcesService.admin.rebuildLuceneIndexes(null).subscribe(() => {
+    this.resources.admin.rebuildLuceneIndexes(null).subscribe(() => {
         this.indexingStatus = 'success';
       },
       error => {

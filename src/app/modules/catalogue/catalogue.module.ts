@@ -174,6 +174,8 @@ import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loadin
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
 import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
+import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-property-table.component';
+import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 
 @NgModule({
   declarations: [
@@ -319,7 +321,9 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
     HtmlEditorComponent,
     ContentEditorComponent,
     ConstraintsRulesComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    ApiPropertyTableComponent,
+    ApiPropertyComponent
   ],
   imports: [
     AdminModule,
@@ -482,7 +486,8 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
     HtmlEditorComponent,
     ContentEditorComponent,
     ConstraintsRulesComponent,
-    LoadingIndicatorComponent
+    LoadingIndicatorComponent,
+    ApiPropertyTableComponent
   ]
 })
 export class CatalogueModule { }

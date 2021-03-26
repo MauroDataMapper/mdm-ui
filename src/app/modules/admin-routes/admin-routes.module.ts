@@ -25,10 +25,11 @@ import { UserComponent } from '@mdm/admin/user/user.component';
 import { GroupsComponent } from '@mdm/admin/groups/groups.component';
 import { PendingUsersComponent } from '@mdm/admin/pending-users/pending-users.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
-import { UIRouterModule } from '@uirouter/angular';
+import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { GroupComponent } from '@mdm/admin/group/group.component';
+import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 
-export const pageRoutes = {
+export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
     {
       name: 'appContainer.adminArea',
@@ -73,16 +74,28 @@ export const pageRoutes = {
       component: GroupComponent
     },
     {
-        name: 'appContainer.adminArea.pendingUsers',
-        url: '/pendingUsers',
-        component: PendingUsersComponent
+      name: 'appContainer.adminArea.pendingUsers',
+      url: '/pendingUsers',
+      component: PendingUsersComponent
     },
     {
-        name: 'appContainer.adminArea.configuration',
-        url: '/configuration',
-        component: ConfigurationComponent
+      name: 'appContainer.adminArea.configuration',
+      url: '/configuration/{tabView:string}',
+      component: ConfigurationComponent,
+      params: {
+        tabView: { dynamic: true, value: null, squash: true}
+      }
+    },
+    {
+      name: 'appContainer.adminArea.apiPropertyAdd',
+      url: '/property/add',
+      component: ApiPropertyComponent
+    },
+    {
+      name: 'appContainer.adminArea.apiPropertyEdit',
+      url: '/property/edit/:id',
+      component: ApiPropertyComponent
     }
-
   ]
 };
 
@@ -90,4 +103,4 @@ export const pageRoutes = {
   declarations: [],
   imports: [UIRouterModule.forChild({ states: pageRoutes.states })]
 })
-export class AdminRoutesModule {}
+export class AdminRoutesModule { }

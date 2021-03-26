@@ -15,16 +15,143 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="row" style="margin-right:0px !important;margin-left:0px !important;">
-    <div class="col-md-12">
-        <div style="text-align: left;margin: 10px;">
-            <h3>Profile Dashboard </h3>
-        </div>
-    </div>
-</div>
-<div class="table-responsive">
-<table mat-table #tableDataElements matSort class="mdm--mat-table table-striped">
-   
-  </table>
-</div>
+<div class="mdm--shadow-block">
+  <div class="heading-container">
+    <h4 class="marginless">
+      Profiles
+      <span class="mdm--badge mdm--element-count">{{ totalProfileCount }}</span>
+    </h4>
+  </div>
+  <div class="table-responsive">
+    <table
+      mat-table
+      matSort
+      [dataSource]="dynamicProfileRecords"
+      class="mdm--mat-table table-striped"
+    >
+      <ng-container matColumnDef="displayName">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="displayName"
+          [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 35%; width: 35%"
+          columnName="displayName"
+        >
+          <span [hidden]="!hideFilters">Name</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Name</mat-label>
+              <input
+                #filters
+                matInput
+                name="displayName"
+                (keyup)="applyFilter()"
+              />
+            </mat-form-field>
+          </div>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="
+            max-width: 35%;
+            width: 35%;
+            text-align: left;
+            word-wrap: break-word;
+          "
+        >
+          <div>
+            <!-- <mdm-element-link
+              [element]="record.dataModel"
+              [parentDataModel]="{ id: record.dataModel.id }"
+            ></mdm-element-link> -->
+            {{ record.displayName }}
+          </div>
+        </td>
+      </ng-container>
 
+      <ng-container matColumnDef="namespace">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="namespace"
+          [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 35%; width: 35%"
+          columnName="namespace"
+        >
+          <span [hidden]="!hideFilters">Namespace</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Namespace</mat-label>
+              <input
+                #filters
+                matInput
+                name="namespace"
+                (keyup)="applyFilter()"
+              />
+            </mat-form-field>
+          </div>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="
+            max-width: 35%;
+            width: 35%;
+            text-align: left;
+            word-wrap: break-word;
+          "
+        >
+          <div>
+            {{ record.namespace }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="version">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="version"
+          [disabled]="!hideFilters"
+          style="cursor: pointer; max-width: 35%; width: 35%"
+          columnName="version"
+        >
+          <span [hidden]="!hideFilters">Version</span>
+          <div [hidden]="hideFilters">
+            <mat-form-field class="filter" floatLabel="never">
+              <mat-label>Version</mat-label>
+              <input #filters matInput name="version" (keyup)="applyFilter()" />
+            </mat-form-field>
+          </div>
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let record"
+          style="
+            max-width: 35%;
+            width: 35%;
+            text-align: left;
+            word-wrap: break-word;
+          "
+        >
+          <div>
+            {{ record.version }}
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <div
+    class="mdm--mat-pagination"
+    [ngClass]="{ 'is-hidden': totalProfileCount < 6 }"
+  >
+    <mdm-paginator
+      [length]="totalProfileCount"
+      showFirstLastButtons
+    ></mdm-paginator>
+  </div>
+</div>

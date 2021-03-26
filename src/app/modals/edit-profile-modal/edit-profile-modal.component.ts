@@ -1,4 +1,3 @@
-
 /*
 Copyright 2020 University of Oxford
 
@@ -19,7 +18,11 @@ SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable id-blacklist */
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from '@angular/material/dialog';
 import { ProfileModalDataModel } from '@mdm/model/profilerModalDataModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementSelectorComponent } from '@mdm/utility/element-selector.component';
@@ -34,6 +37,7 @@ export class EditProfileModalComponent implements OnInit {
   profileData: any;
   elementDialogue: any;
   selectedElement: any;
+  errors: any;
 
   saveInProgress = false;
 
@@ -56,16 +60,17 @@ export class EditProfileModalComponent implements OnInit {
     protected resourcesSvc: MdmResourcesService,
     private dialog: MatDialog
   ) {
-
-    data.profile.sections.forEach(section => {
-      section.fields.forEach(field => {
-        if(field.dataType === 'folder')
-        {
-          if(field.currentValue === '[]' || field.currentValue === '""' || field.currentValue === '')
-          {
+    data.profile.sections.forEach((section) => {
+      section.fields.forEach((field) => {
+        field.dataType = field.dataType.toLowerCase();
+        if (field.dataType === 'folder') {
+          if (
+            field.currentValue === '[]' ||
+            field.currentValue === '""' ||
+            field.currentValue === ''
+          ) {
             field.currentValue = null;
-          }
-          else{
+          } else {
             field.currentValue = JSON.parse(field.currentValue);
           }
         }
@@ -80,13 +85,16 @@ export class EditProfileModalComponent implements OnInit {
   save() {
     // Save Changes
 
-    const returnData =JSON.parse(JSON.stringify(this.profileData));
+    const returnData = JSON.parse(JSON.stringify(this.profileData));
 
-    returnData.sections.forEach(section => {
-      section.fields.forEach(field => {
-        if(field.dataType === 'folder'  && field.currentValue && field.currentValue.length > 0)
-        {
-         field.currentValue = JSON.stringify(field.currentValue);
+    returnData.sections.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (
+          field.dataType === 'folder' &&
+          field.currentValue &&
+          field.currentValue.length > 0
+        ) {
+          field.currentValue = JSON.stringify(field.currentValue);
         }
       });
     });
@@ -107,15 +115,35 @@ export class EditProfileModalComponent implements OnInit {
     });
   }
 
+  validate() {
+    const data = JSON.parse(JSON.stringify(this.profileData));
+    this.resourcesSvc.profile
+      .validateProfile(
+        this.data.profile.namespace,
+        this.data.profile.name,
+        this.data.catalogueItem.domainType,
+        this.data.catalogueItem.id,
+        data
+      )
+      .subscribe((result) => {
+        result.body.sections.forEach((section) => {
+          section.fields.forEach((field) => {
+            field.dataType = field.dataType.toLowerCase();
+          });
+        });
+        this.profileData = result.body;
+      });
+  }
+
   showAddElementToMarkdown = (field) => {
-   const dg = this.dialog.open(ElementSelectorComponent, {
-      data: { validTypesToSelect : ['DataModel'], notAllowedToSelectIds : []},
+    const dg = this.dialog.open(ElementSelectorComponent, {
+      data: { validTypesToSelect: ['DataModel'], notAllowedToSelectIds: [] },
       panelClass: 'element-selector-modal'
     });
 
     dg.afterClosed().subscribe((dgData) => {
       this.markdownParser.createMarkdownLink(dgData).then((mkData) => {
-         field.currentValue = mkData;
+        field.currentValue = mkData;
       });
     });
   };

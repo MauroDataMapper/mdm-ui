@@ -186,42 +186,15 @@ SPDX-License-Identifier: Apache-2.0
                   </td>
                   <td style="text-align: left; word-wrap: break-word">
                     <div *ngIf="diff.deleted || diff.created">
-                      <div>
-                        <span>
-                          <strong style="font-style: italic">Enum:</strong>
-                          {{
-                            diff.value.breadcrumbs[
-                              diff.value.breadcrumbs.length - 1
-                            ].label
-                          }}</span
-                        >
-                      </div>
-                      <div>
-                        <span>
-                          <strong style="font-style: italic">Value:</strong>
-                          {{ diff.value.label }}</span
-                        >
-                      </div>
-             
-                    </div>
-                    <div *ngIf="diff.modified">   
-                      <div>
-                        <span>
-                          <strong style="font-style: italic">Enum:</strong>
-                          {{
-                            diff.value.breadcrumbs[
-                              diff.value.breadcrumbs.length - 1
-                            ].label
-                          }}</span
-                        >
-                      </div>
-                      <div>
-                        <span>
-                          <strong style="font-style: italic">Value:</strong>
-                          {{ diff.value.label }}</span
-                        >
-                      </div>
-                    </div>
+                      <div>                     
+                          <strong style="font-style: italic">Enumeration:</strong>
+                          <div>
+                            <span style="border-bottom: 1px dashed #000">{{
+                              diff.label
+                            }}</span>
+                          </div>                        
+                      </div>                       
+                    </div>   
                   </td>
                 </tr>
               </tbody>
@@ -496,44 +469,15 @@ SPDX-License-Identifier: Apache-2.0
                   }"
                 >
                 </td>
-                <td style="text-align: left; word-wrap: break-word">
-                  <div *ngIf="diff.deleted || diff.created">
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Enum:</strong>
-                        {{
-                          diff.value.breadcrumbs[
-                            diff.value.breadcrumbs.length - 1
-                          ].label
-                        }}</span
-                      >
-                    </div>
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Value:</strong>
-                        {{ diff.value.label }}</span
-                      >
-                    </div>
-           
-                  </div>
-                  <div *ngIf="diff.modified">   
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Enum:</strong>
-                        {{
-                          diff.value.breadcrumbs[
-                            diff.value.breadcrumbs.length - 1
-                          ].label
-                        }}</span
-                      >
-                    </div>
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Value:</strong>
-                        {{ diff.value.label }}</span
-                      >
-                    </div>
-                  </div>
+                <td style="text-align: left; word-wrap: break-word">                       
+                    <div>                     
+                        <strong style="font-style: italic">Enumeration:</strong>
+                        <div>
+                          <span style="border-bottom: 1px dashed #000">{{
+                            diff.label
+                          }}</span>
+                        </div>                        
+                    </div>                             
                 </td>
               </tr>
             </tbody>
@@ -851,43 +795,14 @@ SPDX-License-Identifier: Apache-2.0
                   >&nbsp;
                 </td>
                 <td style="text-align: left; word-wrap: break-word">
-                  <div *ngIf="diff.deleted || diff.created">
+                  <div>                     
+                    <strong style="font-style: italic">Enumeration:</strong>
                     <div>
-                      <span>
-                        <strong style="font-style: italic">Enum:</strong>
-                        {{
-                          diff.value.breadcrumbs[
-                            diff.value.breadcrumbs.length - 1
-                          ].label
-                        }}</span
-                      >
-                    </div>
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Value:</strong>
-                        {{ diff.value.label }}</span
-                      >
-                    </div>
-           
-                  </div>
-                  <div *ngIf="diff.modified">   
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Enum:</strong>
-                        {{
-                          diff.value.breadcrumbs[
-                            diff.value.breadcrumbs.length - 1
-                          ].label
-                        }}</span
-                      >
-                    </div>
-                    <div>
-                      <span>
-                        <strong style="font-style: italic">Value:</strong>
-                        {{ diff.value.label }}</span
-                      >
-                    </div>
-                  </div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>                        
+                </div>     
                 </td>
               </tr>
             </tbody>

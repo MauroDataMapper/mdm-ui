@@ -50,6 +50,8 @@ export class ProfileBaseComponent extends BaseComponent {
               () => {
                 this.messageHandler.showSuccess('Profile deleted successfully');
                 this.descriptionView = 'default';
+                this.UsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
+                this.UnUsedProfiles(this.catalogueItem.domainType, this.catalogueItem.id);
                 this.changeProfile();
               },
               (error) => {
@@ -76,7 +78,8 @@ export class ProfileBaseComponent extends BaseComponent {
     const dialog = this.dialog.open(EditProfileModalComponent, {
       data: {
         profile: this.currentProfileDetails,
-        profileName: prof.display
+        profileName: prof.display,
+        catalogueItem: this.catalogueItem
       },
       disableClose: true,
       panelClass: 'full-width-dialog'

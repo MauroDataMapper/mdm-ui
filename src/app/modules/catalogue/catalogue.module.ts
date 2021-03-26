@@ -32,7 +32,6 @@ import { ExportModelsComponent } from '@mdm/export-models/export-models.componen
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
@@ -198,7 +197,6 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     DiagramToolbarComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    ElementLinkComponent,
     HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
@@ -379,7 +377,6 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     ExportModelsComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    ElementLinkComponent,
     HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,

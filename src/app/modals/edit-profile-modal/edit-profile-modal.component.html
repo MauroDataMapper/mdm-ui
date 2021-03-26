@@ -69,7 +69,7 @@ SPDX-License-Identifier: Apache-2.0
             />
             <input
               *ngIf="
-                field.dataType !== 'Folder' &&
+                field.dataType !== 'folder' &&
                 field.dataType !== 'datamodel' &&
                 field.dataType != 'text' &&
                 field.dataType != 'date' &&
@@ -164,6 +164,13 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-model-selector-tree>
             </div>
+            <div *ngIf="field.validationErrors.length > 0">
+              <ul>
+                <li *ngFor="let error of field.validationErrors;">
+                  <span class="help-block">{{error}}</span>
+                </li>
+              </ul>              
+            </div>            
           </td>
         </tr>
       </tbody>
@@ -190,6 +197,15 @@ SPDX-License-Identifier: Apache-2.0
       Cancel
     </button>
     <button
+    mat-flat-button
+    color="primary"
+    type="submit"
+    class="custom"
+    (click)="validate()"   
+  >
+    Validate Profile
+  </button>
+    <button
       mat-flat-button
       color="primary"
       type="submit"
@@ -197,7 +213,7 @@ SPDX-License-Identifier: Apache-2.0
       (click)="save()"
       [disabled]="userForm.invalid || saveInProgress"
     >
-      Save Changes
+      Save
     </button>
   </div>
 </mat-dialog-actions>

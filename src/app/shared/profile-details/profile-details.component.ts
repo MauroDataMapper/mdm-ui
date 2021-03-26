@@ -1,5 +1,5 @@
 /* eslint-disable id-blacklist */
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MarkupDisplayModalComponent } from '@mdm/modals/markup-display-modal/markup-display-modal.component';
 
@@ -8,8 +8,23 @@ import { MarkupDisplayModalComponent } from '@mdm/modals/markup-display-modal/ma
   templateUrl: './profile-details.component.html',
   styleUrls: ['./profile-details.component.scss']
 })
-export class ProfileDetailsComponent implements OnInit {
-  @Input() currentProfileDetails: any;
+export class ProfileDetailsComponent implements AfterViewInit {
+  _currentProfileDetails: any;
+
+  get currentProfileDetails(): any {
+    return this._currentProfileDetails;
+  }
+
+  @Input() set currentProfileDetails(value: any) {
+    if(value.sections){
+    value.sections.forEach((section) => {
+      section.fields.forEach((field) => {
+        field.dataType = field.dataType.toLowerCase();
+      });
+    });
+  }
+    this._currentProfileDetails = value;
+  }
 
   formOptionsMap = {
     Integer: 'number',
@@ -25,7 +40,8 @@ export class ProfileDetailsComponent implements OnInit {
 
   constructor(private dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngAfterViewInit(): void {
+  }
 
   showInfo(field: any) {
     this.dialog.open(MarkupDisplayModalComponent, {

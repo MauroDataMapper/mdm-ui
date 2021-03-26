@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 export const environment = {
   production: true,
-  version: '5.2.0',
+  version: '5.3.0-SNAPSHOT',
   apiEndpoint: 'api',
   HDFLink: '',
   appTitle: 'Mauro Data Mapper',

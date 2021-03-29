@@ -134,7 +134,6 @@ Temporary Items
 
 .idea/*
 .gradle
-package-lock.json
 build
 
 .vs/

@@ -19,7 +19,7 @@ import { EventEmitter } from '@angular/core';
 import {
   Component,
   ElementRef,
-  
+
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -83,6 +83,7 @@ export class ProfilesDashboardComponent implements AfterViewInit {
         })
       )
       .subscribe((data) => {
+        data.forEach((res) => res.dataModel['domainType'] = 'DataModel');
         this.dynamicProfileRecords = data;
       });
   }

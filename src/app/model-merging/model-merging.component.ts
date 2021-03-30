@@ -489,9 +489,9 @@ export class ModelMergingComponent implements OnInit {
       rightId,
       modified: true,
       left:
-        !labelDiff.left || labelDiff.left === 'null' ? "' '" : labelDiff.left,
+        !labelDiff.left || labelDiff.left === 'null' ? '\' \'' : labelDiff.left,
       right:
-        !labelDiff.right || labelDiff.right === 'null' ? "' '" : labelDiff.right
+        !labelDiff.right || labelDiff.right === 'null' ? '\' \'' : labelDiff.right
     };
 
     if (!labelDiff.isMergeConflict) {
@@ -1551,8 +1551,7 @@ export class ModelMergingComponent implements OnInit {
 
   updatedTreeStyle(children: any[]) {
     if (children) {
-      for (let index = 0; index < children.length; index++) {
-        const child = children[index];
+      for (const child of children) {
         if (this.diffMap[child.id]) {
           child.deleted = this.diffMap[child.id].deleted;
           child.created = this.diffMap[child.id].created;

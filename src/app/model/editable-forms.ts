@@ -20,7 +20,6 @@ import { Subject } from 'rxjs';
 /**
  * Interface to define a type as resetable.
  *
- * @typedef T The type of the object to reset state to.
  */
 export interface Resetable<T> {
 
@@ -33,8 +32,6 @@ export interface Resetable<T> {
 /**
  * Represents the state of a form that can be edited.
  *
- * @typedef T The type of the original data object.
- * @typedef F The type representing the form data to edit. Must implement the `Resetable<T>` interface.
  */
 export class Editable<T, F extends Resetable<T>> {
   private onShowSource = new Subject<void>();

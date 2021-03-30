@@ -105,20 +105,22 @@ export class ProfilesDashboardComponent implements AfterViewInit {
     this.hideFilters = !this.hideFilters;
   };
 
+  // TODO update when paging is added
+
   dynamicProfilesFetch(
-    pageSize?,
-    pageIndex?,
-    sortBy?,
-    sortType?,
-    filters?
+    // pageSize?,
+    // pageIndex?,
+    // sortBy?,
+    // sortType?,
+    // filters?
   ): Observable<any> {
-    const options = this.gridService.constructOptions(
-      pageSize,
-      pageIndex,
-      sortBy,
-      sortType,
-      filters
-    );
+    // const options = this.gridService.constructOptions(
+    //   pageSize,
+    //   pageIndex,
+    //   sortBy,
+    //   sortType,
+    //   filters
+    // );
 
     return this.resourcesService.profile.providerDynamic();
   }

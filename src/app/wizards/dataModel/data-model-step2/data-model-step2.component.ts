@@ -57,5 +57,5 @@ export class DataModelStep2Component implements OnInit {
       items: this.step.scope.model.selectedDataTypeProvider.dataTypes
     };
     this.loadingData = false;
-  };
+  }
 }

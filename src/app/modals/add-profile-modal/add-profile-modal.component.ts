@@ -10,7 +10,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 })
 export class AddProfileModalComponent implements OnInit {
   allUnusedProfiles: Array<any> = [];
-  showProfileSelector:Boolean = false;
+  showProfileSelector = false;
 
   constructor(
     public dialogRef: MatDialogRef<AddProfileModalComponent>,

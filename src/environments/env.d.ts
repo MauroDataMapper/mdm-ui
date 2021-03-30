@@ -20,4 +20,4 @@ interface EnvironmentVariables {
   themeName: string;
 }
 
-declare var $ENV: EnvironmentVariables;
+declare let $ENV: EnvironmentVariables;

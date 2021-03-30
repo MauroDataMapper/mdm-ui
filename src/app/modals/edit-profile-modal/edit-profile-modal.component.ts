@@ -63,6 +63,12 @@ export class EditProfileModalComponent implements OnInit {
     data.profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
         field.dataType = field.dataType.toLowerCase();
+        if (data.isNew) {
+          if (field.defaultValue) {
+            field.currentValue = field.defaultValue;
+          }
+        }
+
         if (field.dataType === 'folder') {
           if (
             field.currentValue === '[]' ||

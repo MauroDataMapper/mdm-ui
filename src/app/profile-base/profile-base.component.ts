@@ -79,7 +79,8 @@ export class ProfileBaseComponent extends BaseComponent {
       data: {
         profile: this.currentProfileDetails,
         profileName: prof.display,
-        catalogueItem: this.catalogueItem
+        catalogueItem: this.catalogueItem,
+        isNew
       },
       disableClose: true,
       panelClass: 'full-width-dialog'

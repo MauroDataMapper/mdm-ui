@@ -66,6 +66,7 @@ export class TermComponent
   isLoadingRules = true;
   showEdit = false;
   showDelete = false;
+  access:any;
 
 
   constructor(
@@ -206,10 +207,10 @@ export class TermComponent
   }
 
   watchTermObject() {
-    const access: any = this.securityHandler.elementAccess(this.term);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    this.access = this.securityHandler.elementAccess(this.term);
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 

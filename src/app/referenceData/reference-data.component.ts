@@ -62,6 +62,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
   errorMessage = '';
   showEdit = false;
   showDelete = false;
+  access:any;
 
   typesItemCount = 0;
   isLoadingTypes = true;
@@ -340,10 +341,10 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
   }
 
   watchRefDataModelObject() {
-    const access: any = this.securityHandler.elementAccess(this.referenceModel);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    this.access = this.securityHandler.elementAccess(this.referenceModel);
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 

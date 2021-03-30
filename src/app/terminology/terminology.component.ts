@@ -69,6 +69,7 @@ export class TerminologyComponent
   showEdit = false;
   showDelete = false;
   showEditDescription = false;
+  access:any;
 
 
   constructor(
@@ -117,9 +118,9 @@ export class TerminologyComponent
       const data = result.body;
       this.catalogueItem = data;
 
-      const access: any = this.securityHandler.elementAccess(data);
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+      this.access = this.securityHandler.elementAccess(data);
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
 
       this.UsedProfiles('terminology', id);
       this.UnUsedProfiles('terminology', id);

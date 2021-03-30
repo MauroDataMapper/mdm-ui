@@ -27,7 +27,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, ValidatorService } from '@mdm/services';
+import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
@@ -53,6 +53,7 @@ export class DataClassComponent
   error = '';
   editableForm: EditableDataClass;
   aliases: any[] = [];
+  access:any;
 
   newMinText: any;
   newMaxText: any;
@@ -68,6 +69,7 @@ export class DataClassComponent
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
+    private securityHandler: SecurityHandlerService,
     private title: Title,
     editingService: EditingService,
     dialog: MatDialog,
@@ -149,6 +151,9 @@ export class DataClassComponent
         .get(model, id)
         .subscribe((result: { body: DataClassResult }) => {
           this.dataClass = result.body;
+
+          this.access = this.securityHandler.elementAccess(this.dataClass);
+
           this.catalogueItem = this.dataClass;
           this.isEditable = this.dataClass['availableActions']?.includes(
             'update'

@@ -63,6 +63,7 @@ export class DataTypeComponent
   elementType: any;
   showEdit: boolean;
   showEditDescription = false;
+  access:any;
 
   allDataTypes = this.elementTypes.getAllDataTypesArray();
   allDataTypesMap = this.elementTypes.getAllDataTypesMap();
@@ -191,9 +192,9 @@ export class DataTypeComponent
   }
 
   watchDataTypeObject() {
-    const access: any = this.securityHandler.elementAccess(this.dataType);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
+    this.access = this.securityHandler.elementAccess(this.dataType);
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
     }
   }
 

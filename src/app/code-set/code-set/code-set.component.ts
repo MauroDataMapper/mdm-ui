@@ -69,6 +69,7 @@ export class CodeSetComponent
   showDelete: boolean;
   canEditDescription: boolean;
   showEditDescription = false;
+  access:any;
 
   constructor(
     resourcesService: MdmResourcesService,
@@ -225,10 +226,10 @@ export class CodeSetComponent
           }
         };
 
-        const access: any = this.securityHandler.elementAccess(
+        this.access = this.securityHandler.elementAccess(
           this.codeSetModel
         );
-        this.showEdit = access.showEdit;
+        this.showEdit = this.access.showEdit;
 
         await this.resourcesService.versionLink
           .list('codeSets', this.codeSetModel.id)

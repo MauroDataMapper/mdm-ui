@@ -113,8 +113,8 @@ SPDX-License-Identifier: Apache-2.0
                     >
                     <mat-divider></mat-divider>
                     <mat-option value="other">Other properties</mat-option>
-                    <mat-divider></mat-divider>
-                    <mat-option value="addnew">Add new profile...</mat-option>
+                    <mat-divider *ngIf="access && access.canAddMetadata"></mat-divider>
+                    <mat-option *ngIf="access && access.canAddMetadata" value="addnew">Add new profile...</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>

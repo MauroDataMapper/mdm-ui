@@ -489,9 +489,9 @@ export class ModelMergingComponent implements OnInit {
       rightId,
       modified: true,
       left:
-        !labelDiff.left || labelDiff.left === 'null' ? "' '" : labelDiff.left,
+        !labelDiff.left || labelDiff.left === 'null' ? '\' \'' : labelDiff.left,
       right:
-        !labelDiff.right || labelDiff.right === 'null' ? "' '" : labelDiff.right
+        !labelDiff.right || labelDiff.right === 'null' ? '\' \'' : labelDiff.right
     };
 
     if (!labelDiff.isMergeConflict) {

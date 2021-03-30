@@ -77,6 +77,7 @@ export class DataElementComponent
   isValid = false;
   rulesItemCount = 0;
   isLoadingRules = true;
+  access:any;
   newlyAddedDataType = {
     label: '',
     description: '',
@@ -519,12 +520,12 @@ export class DataElementComponent
   };
 
   watchDataElementObject() {
-    const access: any = this.securityHandler.elementAccess(
+    this.access = this.securityHandler.elementAccess(
       this.dataElementOutput
     );
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 

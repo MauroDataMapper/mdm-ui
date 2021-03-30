@@ -65,6 +65,7 @@ export class DataModelComponent
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
+  access:any;
 
   editableForm: EditableDataModel;
   errorMessage = '';
@@ -129,10 +130,10 @@ export class DataModelComponent
   }
 
   watchDataModelObject() {
-    const access: any = this.securityHandler.elementAccess(this.dataModel);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
+    this.access = this.securityHandler.elementAccess(this.dataModel);
+    if ( this.access !== undefined) {
+      this.showEdit =  this.access.showEdit;
+      this.showDelete =  this.access.showPermanentDelete ||  this.access.showSoftDelete;
     }
   }
 

@@ -15,65 +15,57 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ByteArrayToBase64Pipe } from '@mdm/pipes/byte-array-to-base64.pipe';
-import { ProfilePictureComponent } from '@mdm/shared/profile-picture/profile-picture.component';
 import { LoginModalComponent } from './login-modal.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
-import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BroadcastService } from '@mdm/services';
+import { SecurityHandlerService } from '@mdm/services';
+import { of } from 'rxjs';
+import { UserDetails } from '@mdm/services/handlers/security-handler.model';
 
+interface SecurityHandlerServiceStub {
+  signIn: jest.Mock;
+}
 
 describe('LoginModalComponent', () => {
   let component: LoginModalComponent;
   let fixture: ComponentFixture<LoginModalComponent>;
-  // tslint:disable: prefer-const
-  let broadcastServiceMock: BroadcastService;
-  let dialogRefMock;
-  let securityHandler;
-  let messageServiceMock;
-  let validatorServiceMock;
 
-  beforeEach(() => {
-    component = new LoginModalComponent(
-      broadcastServiceMock,
-      dialogRefMock,
-      securityHandler,
-      messageServiceMock,
-      validatorServiceMock
-    );
-    component.ngOnInit();
-  });
+  const securityHandler: SecurityHandlerServiceStub = {
+    signIn: jest.fn()
+  };  
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
         MatInputModule,
         MatFormFieldModule,
         FormsModule,
+        ReactiveFormsModule,
         UIRouterModule.forRoot({ useHash: true }),
         ToastrModule.forRoot()
       ],
       providers: [
-        { provide: MatDialogRef, useValue: {} },
+        { 
+          provide: MatDialogRef, 
+          useValue: {} 
+        },
         {
-          provide: MdmResourcesService, useValue: {}
+          provide: SecurityHandlerService, 
+          useValue: securityHandler
         }
       ],
       declarations: [
-        ProfilePictureComponent,
-        ByteArrayToBase64Pipe,
         LoginModalComponent
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginModalComponent);
@@ -85,57 +77,38 @@ describe('LoginModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Test: ngOnInit', () => {
+  describe('Test: ngOnInit', () => {  
     it('should initialize the form', () => {
-      const res = {
-        username: '',
-        password: ''
-      };
-      expect(component.resource).toEqual(res);
-    });
+      expect(component.signInForm).toBeTruthy();
+    })
   });
 
-
   describe('Test: Login form', () => {
-    it('Test: Login form SHOULD submit the login form', () => {
-      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
-      component.username = 'email@email.com';
-      component.password = 'password';
+
+    it.each([
+      ['', ''],
+      ['test', ''],
+      ['test@test.com', ''],
+      ['', 'password'],
+      ['test', 'password']
+    ])('should not submit invalid data - username: "%s", password: "%s"', (userName, password) => {
+      const spy = jest.spyOn(securityHandler, 'signIn');
+      component.signInForm.setValue({ userName, password });
       component.login();
-      expect(generateSpy).toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
 
-    it('Test: Login form SHOULD NOT submit the login form (1)', () => {
-      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
-      component.username = '';
-      component.password = '';
+    it('should submit valid data', () => {
+      securityHandler.signIn.mockImplementationOnce(() => of<UserDetails>({
+        id: '123',
+        firstName: 'test',
+        lastName: 'test',
+        userName: 'test@test.com'
+      }));
+      const spy = jest.spyOn(securityHandler, 'signIn');
+      component.signInForm.setValue({ userName: 'test@test.com', password: 'password' });
       component.login();
-      expect(generateSpy).not.toHaveBeenCalled();
-    });
-
-    it('Test: Login form SHOULD NOT submit the login form (2)', () => {
-      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
-      component.username = 'abc';
-      component.password = 'abc';
-      component.login();
-      expect(generateSpy).not.toHaveBeenCalled();
-    });
-
-
-    it('Test: Login form SHOULD NOT submit the login form (3)', () => {
-      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
-      component.username = 'email@email.com';
-      component.password = '';
-      component.login();
-      expect(generateSpy).not.toHaveBeenCalled();
-    });
-
-    it('Test: Login form SHOULD NOT submit the login form (4)', () => {
-      const generateSpy = jest.spyOn(component, 'returnSecurityHandler');
-      component.username = '';
-      component.password = 'password';
-      component.login();
-      expect(generateSpy).not.toHaveBeenCalled();
-    });
+      expect(spy).toHaveBeenCalled();
+    })    
   });
 });

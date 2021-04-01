@@ -16,8 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { HttpErrorResponse } from "@angular/common/http";
-import { MdmResourcesError, MdmResourcesResponse } from "@mdm/modules/resources/mdm-resources.models";
+import { HttpErrorResponse } from '@angular/common/http';
+import { MdmResourcesError, MdmResourcesResponse } from '@mdm/modules/resources/mdm-resources.models';
 
 /**
  * Credentials to send to `mdm-resources` for the sign-in operation.

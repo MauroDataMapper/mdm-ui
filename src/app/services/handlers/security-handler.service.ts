@@ -133,7 +133,7 @@ export class SecurityHandlerService {
               })
             ))
       );
-  }  
+  }
 
   async logout() {
     try {

@@ -26,7 +26,6 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { SignInCredentials, UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { EMPTY } from 'rxjs';
 
 interface MdmSecurityResourceStub {
   login: jest.Mock;
@@ -69,7 +68,7 @@ describe('SecurityHandlerService', () => {
         },
         ElementTypesService
       ]
-    })
+    });
 
     service = TestBed.inject(SecurityHandlerService);
   });
@@ -125,5 +124,5 @@ describe('SecurityHandlerService', () => {
     const expected$ = cold('--#');
     const actual$ = service.signIn({ username: 'fail', password: 'fail' });
     expect(actual$).toBeObservable(expected$);
-  });    
+  });
 });

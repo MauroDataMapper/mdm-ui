@@ -38,7 +38,7 @@ describe('LoginModalComponent', () => {
 
   const securityHandler: SecurityHandlerServiceStub = {
     signIn: jest.fn()
-  };  
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -52,12 +52,12 @@ describe('LoginModalComponent', () => {
         ToastrModule.forRoot()
       ],
       providers: [
-        { 
-          provide: MatDialogRef, 
-          useValue: {} 
+        {
+          provide: MatDialogRef,
+          useValue: {}
         },
         {
-          provide: SecurityHandlerService, 
+          provide: SecurityHandlerService,
           useValue: securityHandler
         }
       ],
@@ -77,10 +77,10 @@ describe('LoginModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Test: ngOnInit', () => {  
+  describe('Test: ngOnInit', () => {
     it('should initialize the form', () => {
       expect(component.signInForm).toBeTruthy();
-    })
+    });
   });
 
   describe('Test: Login form', () => {
@@ -109,6 +109,6 @@ describe('LoginModalComponent', () => {
       component.signInForm.setValue({ userName: 'test@test.com', password: 'password' });
       component.login();
       expect(spy).toHaveBeenCalled();
-    })    
+    });
   });
 });

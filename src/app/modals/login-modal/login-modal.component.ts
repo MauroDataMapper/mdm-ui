@@ -31,7 +31,7 @@ import { EMPTY } from 'rxjs';
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.sass'],
 })
-export class LoginModalComponent implements OnInit {  
+export class LoginModalComponent implements OnInit {
   message = '';
   authenticating = false;
 
@@ -99,14 +99,14 @@ export class LoginModalComponent implements OnInit {
         finalize(() => {
           this.authenticating = false;
           this.signInForm.enable();
-        })        
+        })
       )
       .subscribe(user =>  {
         this.dialogRef.close(user);
         this.securityHandler.loginModalDisplayed = false;
         this.messageService.loggedInChanged(true);
       });
-  }  
+  }
 
   forgotPassword() {
     this.dialogRef.close();

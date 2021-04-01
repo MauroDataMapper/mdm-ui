@@ -22,6 +22,10 @@ import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
 import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { AdministrationSessionResponse, SignInCredentials, SignInError, SignInResponse, UserDetails } from './security-handler.model';
+import { Observable, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -93,29 +97,43 @@ export class SecurityHandlerService {
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-  async login(resource) {
+  /**
+   * Sign in a user to the Mauro system.
+   *
+   * @param credentials The sign-in credentials to use.
+   * @returns An observable to return a `UserDetails` object representing the signed in user.
+   * @throws `SignInError` in the observable chain if sign-in failed.
+   */
+   signIn(credentials: SignInCredentials): Observable<UserDetails> {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
-    // const resource = { username, password };
-    const response = await this.resources.security.login(resource, {login:true}).toPromise();
-    const admin = await this.resources.session.isApplicationAdministration().toPromise();
-    const adminResult = admin.body;
-    const result = response.body;
-    const currentUser = {
-      id: result.id,
-      token: result.token,
-      firstName: result.firstName,
-      lastName: result.lastName,
-      username: result.emailAddress,
-      role: result.userRole ? result.userRole.toLowerCase() : '',
-      isAdmin: adminResult.applicationAdministrationSession
-        ? adminResult.applicationAdministrationSession
-        : false,
-      needsToResetPassword: result.needsToResetPassword ? true : false,
-    };
-    this.addToLocalStorage(currentUser);
-    return currentUser;
-  }
+    return this.resources.security
+      .login(credentials, { login: true })
+      .pipe(
+        catchError((error: HttpErrorResponse) => throwError(new SignInError(error))),
+        switchMap((signInResponse: SignInResponse) =>
+          this.resources.session
+            .isApplicationAdministration()
+            .pipe(
+              map((adminResponse: AdministrationSessionResponse) => {
+                const signIn = signInResponse.body;
+                const admin = adminResponse.body;
+                const user: UserDetails = {
+                  id: signIn.id,
+                  token: signIn.token,
+                  firstName: signIn.firstName,
+                  lastName: signIn.lastName,
+                  userName: signIn.emailAddress,
+                  role: signIn.userRole?.toLowerCase() ?? '',
+                  isAdmin: admin.applicationAdministrationSession ?? false,
+                  needsToResetPassword: signIn.needsToResetPassword ?? false
+                };
+                this.addToLocalStorage(user);
+                return user;
+              })
+            ))
+      );
+  }  
 
   async logout() {
     try {

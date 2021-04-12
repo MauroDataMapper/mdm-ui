@@ -22,8 +22,27 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class LoadingService {
+  loadingSubject = new BehaviorSubject<boolean>(false);
+  isLoading = this.loadingSubject.asObservable();
+  private loadingMap = new Map<string, boolean>();
 
- public isLoading  = new BehaviorSubject(false);
-  constructor() { }
+  constructor() {}
+  setHttpLoading(loading: boolean, url: string) {
+    if (!url) {
+      throw new Error(
+        'The request URL must be provided to the LoadingService.setHttpLoading() function'
+      );
+    }
 
+    if (loading === true) {
+      this.loadingMap.set(url, loading);
+      this.loadingSubject.next(true);
+    } else if (loading === false && this.loadingMap.has(url)) {
+      this.loadingMap.delete(url);
+    }
+
+    if (this.loadingMap.size === 0) {
+      this.loadingSubject.next(false);
+    }
+  }
 }

@@ -30,7 +30,6 @@ export class DataModelResult {
   type: string;
   finalised: boolean;
   author: string;
-  authority: any[];
   organisation: string;
   dateFinalised: string;
   aliases: any[];

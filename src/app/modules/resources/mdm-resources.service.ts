@@ -51,10 +51,8 @@ import {
   MdmReferenceDataValueResource,
   MdmVersioningResource,
   MdmApiPropertyResources,
-  MdmSubscribedCataloguesResource
-  MdmProfileResource,
-  MdmVersioningResource,
-  MdmSubscribedCataloguesResource
+  MdmSubscribedCataloguesResource,
+  MdmProfileResource
 } from '@maurodatamapper/mdm-resources';
 import { MdmRestHandlerService } from './mdm-rest-handler.service';
 

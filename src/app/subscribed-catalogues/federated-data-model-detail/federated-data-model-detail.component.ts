@@ -56,10 +56,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
     this.editable.onReset.subscribe(original => this.setFolderLabelToForm(original));
 
-    this.editable.onCancel.subscribe(() => {
-      this.editingService.stop();
-    });
-
     // After subscribing to the "onReset" observable, trigger a reset to get all required details
     this.editable.reset();
   }
@@ -69,16 +65,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
       // Refresh computed properties after changes
       this.editable.reset(this.dataModel);
     }
-  }
-
-  private setFolderLabelToForm(data: FederatedDataModel) {
-    if (!data.folderId) {
-      return;
-    }
-
-    this.resources.folder
-      .get(data.folderId)
-      .subscribe((response: FolderResultResponse) => this.editable.form.folderLabel = response.body.label);
   }
 
   getModelTypeIcon() {
@@ -128,26 +114,8 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         })
       )
       .subscribe(() => {
-        this.processing = false;
-          this.messageHandler.showError('There was a problem subscribing to the data model.', error);
-          return [];
-        }),
-        switchMap(() => {
         this.messageHandler.showSuccess('Successfully subscribed to data model.');
       });
-
-    // After subscribing to the "onReset" observable, trigger a reset to get all required details
-    this.editable.reset();
-  }
-
-  private setFolderLabelToForm(data: FederatedDataModel) {
-    if (!data.folderId) {
-      return;
-    }
-
-    this.resources.folder
-      .get(data.folderId)
-      .subscribe((response: FolderResultResponse) => this.editable.form.folderLabel = response.body.label);
   }
 
   unsubscribeFromModel() {
@@ -176,11 +144,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
         () => this.messageHandler.showSuccess('Successfully unsubscribed from data model.'),
         error => this.messageHandler.showError('There was a problem unsubscribing from the data model.', error));
   }
-  getModelTypeIcon() {
-    return getDomainTypeIcon(this.dataModel.modelType);
-  }
-
-  formBeforeSave() {
 
   federate() {
     this.processing = true;
@@ -195,5 +158,15 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
       .subscribe(
         () => this.messageHandler.showSuccess(`Synchronised the data model '${this.dataModel.label}' successfully.`),
         errors => this.messageHandler.showError('There was a problem synchronising a data model.', errors));
+  }
+
+  private setFolderLabelToForm(data: FederatedDataModel) {
+    if (!data.folderId) {
+      return;
+    }
+
+    this.resources.folder
+      .get(data.folderId)
+      .subscribe((response: FolderResultResponse) => this.editable.form.folderLabel = response.body.label);
   }
 }

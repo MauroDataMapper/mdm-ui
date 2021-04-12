@@ -173,8 +173,6 @@ import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loadin
 
 import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { SubscribedCatalogueDetailComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-detail/subscribed-catalogue-detail.component';
-import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
-import { SubscribedCatalogueDetailComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-detail/subscribed-catalogue-detail.component';
 import { FederatedDataModelMainComponent } from '@mdm/subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
 import { FederatedDataModelDetailComponent } from '@mdm/subscribed-catalogues/federated-data-model-detail/federated-data-model-detail.component';
 import { NewFederatedSubscriptionModalComponent } from '@mdm/subscribed-catalogues/new-federated-subscription-modal/new-federated-subscription-modal.component';
@@ -183,6 +181,7 @@ import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumer
 import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
 import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-property-table.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
+import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 
 @NgModule({
   declarations: [
@@ -329,8 +328,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     ConstraintsRulesComponent,
     LoadingIndicatorComponent,
     ApiPropertyTableComponent,
-    ApiPropertyComponent
-    ConstraintsRulesComponent,
+    ApiPropertyComponent,
     SubscribedCatalogueMainComponent,
     SubscribedCatalogueDetailComponent,
     FederatedDataModelMainComponent,
@@ -341,7 +339,7 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     SubscribedCatalogueDetailComponent,
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
-    NewFederatedSubscriptionModalComponent
+    ProfileDetailsComponent,
   ],
   imports: [
     AdminModule,

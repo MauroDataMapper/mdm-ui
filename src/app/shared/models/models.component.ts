@@ -35,8 +35,6 @@ import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component'
 import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
-import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 @Component({
   selector: 'mdm-models',
@@ -257,39 +255,6 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.reloading = false;
     });
   };
-    }
-    if (noCache) {
-      options.queryStringParams.noCache = true;
-        }
-
-        // Combine sub tree nodes with new parent nodes to build up roots
-        const localParent = this.modelTree.createLocalCatalogueNode(local);
-        const externalParent = this.modelTree.createExternalCataloguesNode(subscribed);
-        return this.modelTree.createRootNode([localParent, externalParent]);
-      })
-    )
-    .subscribe(node => {
-      this.allModels = node;
-      this.filteredModels = node;
-      this.reloading = false;
-    }, error => {
-      this.messageHandler.showError('There was a problem loading the model tree.', error);
-      this.reloading = false;
-    });
-    };
-
-    return this.resources.subscribedCatalogues
-      .list(options)
-      .pipe(
-        map((response: SubscribedCatalogueIndexResponse) => response.body.items ?? []),
-        map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, Node>({}, {
-          id: item.id,
-          domainType: DOMAIN_TYPE.SubscribedCatalogue,
-          hasChildren: true,
-          label: item.label
-        })))
-      );
-  }
 
   onNodeConfirmClick($event: NodeConfirmClickEvent) {
     const node = $event.next.node;

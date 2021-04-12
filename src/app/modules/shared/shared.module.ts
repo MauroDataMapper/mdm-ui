@@ -39,7 +39,6 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { SafePipe } from '@mdm/pipes/safe.pipe';
 import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
-import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 
@@ -59,8 +58,7 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
-    ElementLinkComponent
-    ProfileDetailsComponent
+    ElementLinkComponent 
   ],
   imports: [
     CommonModule,
@@ -98,9 +96,8 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
-    ElementLinkComponent
-    TextDiffComponent,
-    ProfileDetailsComponent
+    ElementLinkComponent,
+    TextDiffComponent
   ]
 })
 export class SharedModule {}

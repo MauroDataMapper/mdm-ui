@@ -71,7 +71,6 @@ export class TerminologyComponent
   showEditDescription = false;
   access:any;
 
-
   constructor(
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
@@ -94,6 +93,11 @@ export class TerminologyComponent
       this.stateHandler.NotFound({ location: false });
       return;
     }
+
+    // tslint:disable-next-line: deprecation
+    this.activeTab = this.getTabDetail(this.stateService.params.tabView).index;
+    this.tabSelected(this.activeTab);
+
     this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -135,9 +139,6 @@ export class TerminologyComponent
           this.editableForm.aliases.push(item);
         });
       }
-
-      // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetail(this.stateService.params.tabView);
     });
 
     this.subscription = this.messageService.changeSearch.subscribe(
@@ -270,24 +271,10 @@ export class TerminologyComponent
   tabSelected = (tabIndex) => {
     const tab = this.getTabDetailIndex(tabIndex);
     this.stateHandler.Go(
-      'terminologyNew',
+      'terminology',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
-    this[tab.name] = [];
-    this.activeTab = tab.index;
-
-    if (this.activeTab && this.activeTab.fetchUrl) {
-      this[this.activeTab.name] = [];
-      this.loadingData = true;
-      // tslint:disable-next-line: deprecation
-      this.resources.dataModel
-        .get(this.stateService.params.id, this.activeTab.fetchUrl)
-        .then((data) => {
-          this[this.activeTab.name] = data || [];
-          this.loadingData = false;
-        });
-    }
   };
 
   openEditForm = (formName) => {

@@ -36,7 +36,6 @@ import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
-import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({

@@ -311,7 +311,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
 
 
   askForPermanentDelete(): any {
-  askForPermanentDelete() {
     if (!this.showPermDelete) {
       return;
     }

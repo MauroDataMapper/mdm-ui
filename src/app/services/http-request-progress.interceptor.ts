@@ -30,15 +30,7 @@ export class HttpRequestProgressInterceptor implements HttpInterceptor {
 
   private requests: HttpRequest<any>[] = [];
 
-  constructor(private loaderService: LoadingService) { }
-
-  removeRequest(req: HttpRequest<any>) {
-    const i = this.requests.indexOf(req);
-    if (i >= 0) {
-      this.requests.splice(i, 1);
-    }
-    this.loaderService.isLoading.next(this.requests.length > 0);
-  }
+  constructor(private loading: LoadingService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.loading.setHttpLoading(true, request.url);
@@ -52,25 +44,12 @@ export class HttpRequestProgressInterceptor implements HttpInterceptor {
       )
       .pipe(
         map((event: HttpEvent<any>) => {
-            if (event instanceof HttpResponse) {
-              this.removeRequest(request);
-              observer.next(event);
-            }
-          },
-          err => {
-            this.removeRequest(request);
-            observer.error(err);
-          },
-          () => {
-            this.removeRequest(request);
-            observer.complete();
-          });
-      // remove request from queue when cancelled
-      return () => {
-        this.removeRequest(request);
-        subscription.unsubscribe();
-      };
-    });
+          if (event instanceof HttpResponse) {
+            this.loading.setHttpLoading(false, request.url);
+          }
+          return event;
+        })
+      );
   }
 
 }

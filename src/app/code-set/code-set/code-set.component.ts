@@ -249,13 +249,13 @@ export class CodeSetComponent
           !this.codeSetModel.editable ||
           this.codeSetModel.finalised;
         if (this.sharedService.isLoggedIn(true)) {
-        this.CodeSetPermissions();
+          this.CodeSetPermissions();
         } else {
           this.messageService.FolderSendMessage(this.codeSetModel);
           this.messageService.dataChanged(this.codeSetModel);
         }
 
-        this.tabGroup.realignInkBar();
+        this.tabGroup?.realignInkBar();
         // tslint:disable-next-line: deprecation
         this.activeTab = this.getTabDetailByName(
           this.stateService.params.tabView
@@ -270,7 +270,7 @@ export class CodeSetComponent
 
   CodeSetPermissions() {
     this.resourcesService.security
-      .permissions('codeSets', id)
+      .permissions('codeSets', this.codeSetModel.id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.codeSetModel[attrname] = permissions.body[attrname];

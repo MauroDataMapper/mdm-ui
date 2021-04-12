@@ -43,9 +43,7 @@ import { SecurityModalComponent } from './security-modal/security-modal.componen
 import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
 import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
-import { AceComponent, AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
-import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
-import { AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
+import {  AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
 import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
 
 const DefaultAceConfig: AceConfigInterface = {
@@ -79,7 +77,6 @@ const DefaultAceConfig: AceConfigInterface = {
     AddRuleRepresentationModalComponent,
     AddRuleModalComponent,
     ApiKeysModalComponent,
-    SecurityModalComponent
     SecurityModalComponent,
     AddProfileModalComponent,
     EditProfileModalComponent,

@@ -29,8 +29,6 @@ import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
-import { SubscribedCatalogueDataModel } from '@mdm/model/subscribed-catalogue-model';
-import { map } from 'rxjs/operators';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 /**

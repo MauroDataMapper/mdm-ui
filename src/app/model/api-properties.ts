@@ -186,21 +186,21 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     publiclyVisible: true
   },
   {
-    key: 'content.home.detail.column1',
+    key: 'content.home.detail.column_one',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'content.home.detail.column2',
+    key: 'content.home.detail.column_two',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,
     publiclyVisible: true
   },
   {
-    key: 'content.home.detail.column3',
+    key: 'content.home.detail.column_three',
     category: 'Content',
     editType: ApiPropertyEditType.Html,
     isSystem: true,

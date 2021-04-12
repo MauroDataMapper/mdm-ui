@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { DataModelResult, EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -87,7 +87,7 @@ export class DataModelComponent
     resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     private title: Title,
@@ -99,19 +99,19 @@ export class DataModelComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    if (!this.uiRouterGlobals.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+    this.parentId = this.uiRouterGlobals.params.id;
+
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
 
@@ -173,13 +173,6 @@ export class DataModelComponent
           this.messageService.FolderSendMessage(this.dataModel);
           this.messageService.dataChanged(this.dataModel);
         }
-
-        this.tabGroup.realignInkBar();
-        // tslint:disable-next-line: deprecation
-        this.activeTab = this.getTabDetailByName(
-          this.stateService.params.tabView
-        ).index;
-        this.tabSelected(this.activeTab);
 
         this.editableForm = new EditableDataModel();
         this.editableForm.visible = false;
@@ -386,13 +379,7 @@ export class DataModelComponent
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
-    this.activeTab = tab.index;
-
-    if (tab.name === 'diagram') {
-      return;
-    }
   }
 
   private setEditableFormData() {

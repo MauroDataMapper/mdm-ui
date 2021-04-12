@@ -21,17 +21,6 @@ SPDX-License-Identifier: Apache-2.0
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
 
-$custom-typography: mat-typography-config(
-  $font-family: "Nunito Sans, sans-serif",
-  $body-1: mat-typography-level(17px, 26px, 500),
-  $body-2: mat-typography-level(18px, 26px, 500),
-  $headline: mat-typography-level(36px, 42px, 600),
-  $title: mat-typography-level(32px, 38px, 600),
-  $subheading-2: mat-typography-level(26px, 32px, 600),
-  $subheading-1: mat-typography-level(22px, 28px, 600),
-  $button: mat-typography-level(20px, 26px, 600),
-  $input: mat-typography-level(16px, 1, 500)
-);
 // Include the common styles for Angular Material. Only required to include this once!
 @include mat-core();
 

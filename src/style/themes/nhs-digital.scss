@@ -27,6 +27,7 @@ $nhs-green: #009639;
 $nhs-dark-red: #8A1538;
 $nhs-dark-grey: #425563;
 $nhs-digital-background-color: #f0f4f5;
+$nhs-digital-plain-background-color: #fff;
 
 /* Primary values */
 $nhs-digital-palette-primary: (
@@ -160,7 +161,7 @@ $nhs-digital-typography: mat-typography-config(
   /* Style overrides for the NHS Digital theme */
 
   .heading-container {
-    background-color: #fff;
+    background-color: $nhs-digital-plain-background-color;
   }
 
 
@@ -177,7 +178,7 @@ $nhs-digital-typography: mat-typography-config(
 
 
   form {
-    background-color: #fff;
+    background-color: $nhs-digital-plain-background-color;
   }
 
   form.mdm--form {
@@ -192,7 +193,7 @@ $nhs-digital-typography: mat-typography-config(
   span.tree-top-actions, span.import-folder-actions {
     
     button {
-      background-color: #fff;
+      background-color: $nhs-digital-plain-background-color;
     }
   }
 
@@ -201,6 +202,16 @@ $nhs-digital-typography: mat-typography-config(
 
     a, .text-muted {
       color: #fff !important;
+    }
+  }
+
+  .mdm-diagram-tab {
+    background-color: $nhs-digital-plain-background-color;
+
+    .mdm-diagram-toolbar {
+      height: 3em;
+      margin: 0.5em 0;
+      padding: 0.5em 1em 0.5em 0.5em;
     }
   }
 }

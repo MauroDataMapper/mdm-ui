@@ -36,7 +36,13 @@
             ],
             "scripts": [
               "node_modules/jodit/build/jodit.min.js"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles",
+                "src/app"
+              ]
+            }
           },
           "configurations": {
             "production": {

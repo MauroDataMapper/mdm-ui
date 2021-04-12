@@ -22,7 +22,7 @@ import { Editable } from '@mdm/model/folderModel';
 @Component({
   selector: 'mdm-editable-form-buttons',
   templateUrl: './editable-form-buttons.component.html',
-   styleUrls: ['./editable-form-buttons.component.sass']
+   styleUrls: ['./editable-form-buttons.component.scss']
 })
 export class EditableFormButtonsComponent implements OnInit {
   @Input() deleteIcon: any;

@@ -145,16 +145,10 @@ SPDX-License-Identifier: Apache-2.0
                 </div>
                 <div class="text-muted" *ngIf="result?.authority">
                     <small>
-                        <i matTooltip="Authority" class="fas fa-key"></i>
-                        <span><strong>Authority: </strong>{{result.authority.label}}</span>
+                       <i class="far fa-building" matTooltip="Authority"></i>
+                       <span><strong>Authority: </strong>{{result.authority['label']}}</span>
                     </small>
-                </div>
-                <div class="text-muted" *ngIf="result">
-                    <small>
-                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                        <span><strong>Last update: </strong>{{ result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </small>
-                </div>
+                 </div>
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
                     <small>
                         <i class="far fa-calendar-check" matTooltip="Finalised on"></i>

@@ -202,8 +202,8 @@ export class TerminologyDetailsComponent implements OnInit {
   toggleSecuritySection = () => {
     this.dialog.open(SecurityModalComponent, {
       data: {
-        element: 'terminology',
-        domainType: 'terminology'
+        element: 'terminologies',
+        domainType: 'Terminology'
       }, panelClass: 'security-modal'
     });
   };

@@ -58,7 +58,7 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
-    ElementLinkComponent 
+    ElementLinkComponent
   ],
   imports: [
     CommonModule,

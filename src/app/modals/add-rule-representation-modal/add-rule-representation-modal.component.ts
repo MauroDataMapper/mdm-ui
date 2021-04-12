@@ -96,8 +96,7 @@ export class AddRuleRepresentationModalComponent implements OnInit {
   modeler: DmnModeler;
   supportedLanguage = RuleLanguages.supportedLanguages;
   selectedLanguage = this.supportedLanguage[0];
-  myFilename = 'Import DMN File';
-  otherFilename = 'Import File';
+  myFilename = 'Import File';
   options:any = { showPrintMargin  : false};
 
   constructor(

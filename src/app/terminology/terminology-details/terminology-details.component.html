@@ -16,42 +16,46 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-    <div class="panel panel-default mdm--shadow-block">
-        <form editable-form name="editableForm" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()"
-            onkeypress="return event.keyCode != 13;">
-            <div class="panel-body">
-
-            <div class="full-width" style="clear: both;" *ngIf="mcTerminology">
-                <!-- <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px;">
+<div class="panel panel-default mdm--shadow-block">
+  <form
+    editable-form
+    name="editableForm"
+    onaftersave="onAfterSave()"
+    (ngSubmit)="formBeforeSave()"
+    onkeypress="return event.keyCode != 13;"
+  >
+    <div class="panel-body">
+      <div class="full-width" style="clear: both" *ngIf="mcTerminology">
+        <!-- <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px;">
                    <i class="fas fa-ellipsis-v"></i>
                 </button> -->
-                <!--First level Menu-->
-                <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-                   <!-- <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
+        <!--First level Menu-->
+        <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+          <!-- <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
                       <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
                    </button> -->
-                   <!-- <button mat-menu-item type="button" *ngIf="showEdit" (click)="showForm()">
+          <!-- <button mat-menu-item type="button" *ngIf="showEdit" (click)="showForm()">
                       <i class="fas fa-pencil-alt"></i> Edit Title
                    </button> -->
-                   <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
+          <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
                    </button> -->
-                   <!-- <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
+          <!-- <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
                       <i class="fas fa-copy"></i> Create a New Version
                    </button> -->
-                   <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
+          <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
                       <i class="fas fa-code-branch"></i> Merge
                    </button>
      -->
-                   <!-- <mat-divider></mat-divider>
+          <!-- <mat-divider></mat-divider>
                    <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete" class="warning">
                       <i class="far fa-trash-alt warning"></i> Delete
                    </button> -->
-                </mat-menu>
-                <!-- End of first level menu -->
+        </mat-menu>
+        <!-- End of first level menu -->
 
-                <!--Second level sub Menu-->
-                <!-- <mat-menu #userActionsDelete="matMenu">
+        <!--Second level sub Menu-->
+        <!-- <mat-menu #userActionsDelete="matMenu">
                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
                       Mark as deleted
                    </button>
@@ -60,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
                    </button>
                 </mat-menu> -->
 
-                <!-- <mat-menu #compareMenu="matMenu">
+        <!-- <mat-menu #compareMenu="matMenu">
                    <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">
                       Compare to another Data Model
                    </button>
@@ -74,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
                    </div>
                 </mat-menu> -->
 
-                <!-- <mat-menu #mergeMenu>
+        <!-- <mat-menu #mergeMenu>
                    <button mat-menu-item (click)="merge()">
                       Merge Model
                    </button>
@@ -82,239 +86,223 @@ SPDX-License-Identifier: Apache-2.0
                       Show merge graph
                    </button>
                 </mat-menu> -->
-                <!-- End of second level sub menu -->
+        <!-- End of second level sub menu -->
 
-
-                <div *ngIf="showPermission" style="position: relative; float: right; margin-right:8px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                   <button mat-icon-button color="primary" type="button" class="paddingless" (click)="toggleSecuritySection()" matTooltip="User & Group Access" aria-label="User & Group Access">
-                      <i class="fas fa-user-lock"></i>
-                   </button>
-                </div>
-
-                <div style="position: relative; float: right; margin-right:8px;" *ngIf="!editableForm.visible && !editableForm.deletePending">
-                   <button mat-icon-button color="primary" type="button" *ngIf="isLoggedIn" class="paddingless dropdown-toggle" [disabled]="processing || deleteInProgress" [matMenuTriggerFor]="exporterList" matTooltip="Export as JSON, XML,..." aria-label="Export as JSON, XML,...">
-                      <i class="fas fa-download"></i>
-                   </button>
-                   <mat-menu #exporterList="matMenu">
-                      <div *ngIf="exportList && exportList.length > 0">
-                         <div *ngFor="let exporter of exportList">
-                            <button type="button" mat-menu-item (click)="export(exporter)">
-                               {{exporter.displayName}}
-                            </button>
-                         </div>
-                      </div>
-                   </mat-menu>
-                </div>
-                <div style="position: relative; float: right; margin-right:8px; margin-left: 8px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                   <button mat-icon-button color="primary" type="button" class="paddingless" (click)="toggleShowSearch()" [disabled]="processing" matTooltip="Search" aria-label="Search">
-                      <i class="fas fa-search"></i>
-                   </button>
-                </div>
-             </div>
-
-
-                <div *ngIf="mcTerminology">
-                    <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                        <div class="detail-icons--cta">
-                            <i class="fas fa-info-circle helpIcon" matTooltip="Help" (click)="loadHelp()"></i>
-                            <i [ngClass]="{'fas fa-star favouritesIcon':true, addedToFavourite:addedToFavourite}"
-                                (click)="toggleFavourite()" matTooltip="Favourite"></i>
-                        </div>
-                        <h4 class="inline-block marginless"
-                            [ngClass]="{'deletedDataModelTitle': mcTerminology?.deleted}">
-                            <span class="dataModelTypeIcon">
-                                <i matTooltip="Terminology" class="fas fa-book"></i>
-                            </span>
-                        <span
-                            [innerHTML]="mcTerminology.label"
-                            class="dataModelDetailsLabel">
-                                <!-- TODO ADD SEARCH CRITERIA PIPE -->
-                            </span>
-                        </h4>
-                        <mdm-element-status [result]="mcTerminology"></mdm-element-status>
-                        <span class="inline-block">
-                        <small *ngIf="mcTerminology?.deleted" class="warning">
-                            | Deleted</small>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="detail-icons">
-                    <div class="text-muted">
-                        <small>
-                            <i class="fas fa-cube" matTooltip="Item type"></i>
-                        <span><strong>Item type: </strong><span
-                                class="item-type">Terminology</span></span>
-                        </small>
-                    </div>
-                <div class="text-muted"
-                    *ngIf="mcTerminology?.readableByEveryone">
-                        <small>
-                        <i
-                            class="fas fa-globe-europe globe"
-                            aria-hidden="true"
-                            matTooltip="Availability"></i>
-                            <span><strong>Availability: </strong>Publicly Readable</span>
-                        </small>
-                    </div>
-
-                    <div class="text-muted" *ngIf="mcTerminology">
-                        <small>
-                            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
-                            <span><strong>Branch: </strong> <span
-                                    class="branch-name">{{mcTerminology.branchName}}</span></span>
-                        </small>
-                    </div>
-                    <div class="text-muted" *ngIf="mcTerminology">
-                        <small>
-                        <i matTooltip="Documentation Version" class="fas
-                            fa-copy"></i>
-                        <span><strong>Documentation Version: </strong>{{
-                            mcTerminology.documentationVersion }}</span>
-                        </small>
-                    </div>
-                    <div class="text-muted" *ngIf="mcTerminology?.authority">
-                        <small>
-                            <i matTooltip="Authority" class="fas fa-key"></i>
-                            <span><strong>Authority: </strong>{{mcTerminology.authority.label}}</span>
-                        </small>
-                    </div>
-                    <div class="text-muted" *ngIf="mcTerminology">
-                        <small>
-                            <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                            <span><strong>Last update: </strong>{{mcTerminology.lastUpdated | date:"yyyy-MM-dd HH:mm:ss"
-                                }}</span>
-                        </small>
-                    </div>
-
-                    <div class="text-muted"
-                        *ngIf="mcTerminology && mcTerminology.finalised && mcTerminology.dateFinalised">
-                        <small>
-                            <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                            <span><strong>Finalised on:</strong> {{mcTerminology.dateFinalised | date:"yyyy-MM-dd
-                                HH:mm:ss" }}</span>
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <table class="mdm--mat-table table-striped mdm--table-fixed">
-                <tbody>
-                    <tr>
-                        <td class="detailsRowHeader">Aliases</td>
-                        <td>
-                            <mdm-element-alias [readOnly]="true" [inEditMode]="editableForm.visible"
-                                [aliases]="editableForm?.aliases"></mdm-element-alias>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="detailsRowHeader">Author</td>
-                        <td>{{mcTerminology.author}}</td>
-                    </tr>
-                    <tr>
-                        <td class="detailsRowHeader">Organisation</td>
-                        <td>{{mcTerminology.organisation}}</td>
-                    </tr>
-                    <tr>
-                        <td class="detailsRowHeader">Description</td>
-                        <td class="elementDetailDescription">
-                            <mdm-content-editor [editableForm]="editableForm" [element]="mcTerminology"
-                                [property]="'description'">
-                            </mdm-content-editor>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="detailsRowHeader">Classifications</td>
-                        <td>
-                            <mdm-element-classifications [readOnly]='true' [classifications]="mcTerminology.classifiers"
-                                [editableForm]="editableForm">
-                            </mdm-element-classifications>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align: right;">
-
-                            <div style="float: right; margin-left: 5px;"
-                                [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                                <div style="float: right; margin-left: 5px;">
-                                    <button mat-stroked-button color="warn" type="button" matTooltip="Delete"
-                                        aria-label="Delete" class="paddingless dropdown-toggle"
-                                        [disabled]="deleteInProgress || exporting" [matMenuTriggerFor]="menu">
-                                        <i class="far fa-trash-alt warning"></i>
-                                    </button>
-
-                                    <mat-menu #menu="matMenu">
-                                        <button mat-menu-item (click)="askForSoftDelete()"
-                                            *ngIf="showSoftDelete && !mcTerminology?.deleted">
-                                            Mark as deleted
-                                        </button>
-                                        <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                                            Delete <span class="warning">permanently</span>
-                                        </button>
-                                    </mat-menu>
-                                </div>
-                            </div>
-
-                            <div *ngIf="showPermission" style="position: relative; float: right; margin-right: 4px;"
-                                [hidden]="editableForm.visible || editableForm.deletePending">
-                                <button mat-stroked-button color="primary" type="button" class="paddingless"
-                                    matTooltip="User & Group Access" aria-label="User & Group Access"
-                                    *ngIf="showPermission" [disabled]="deleteInProgress || processing"
-                                    (click)="toggleSecuritySection()">
-                                    <i class="fas fa-user-lock"></i>
-                                </button>
-                            </div>
-
-                            <div style="position: relative; float: right; margin-right:4px;"
-                                *ngIf="!editableForm.visible && !editableForm.deletePending">
-                                <button mat-stroked-button color="primary" type="button" *ngIf="isLoggedIn"
-                                    class="paddingless dropdown-toggle" [disabled]="processing || deleteInProgress"
-                                    [matMenuTriggerFor]="exporterList" matTooltip="Export as JSON, XML,..."
-                                    aria-label="Export as JSON, XML,...">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                                <mat-menu #exporterList="matMenu">
-                                    <div *ngIf="exportList && exportList.length > 0">
-                                        <div *ngFor="let exporter of exportList">
-                                            <button type="button" mat-menu-item (click)="export(exporter)">
-                                                {{exporter.displayName}}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </mat-menu>
-                            </div>
-
-                            <div style="position: relative; float: right; margin-right:8px;">
-                                <div id="exportFileDownload" #aLink></div>
-                            </div>
-                            <div style="clear: both;" *ngIf="processing">
-                                <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate">
-                                </mat-progress-bar>
-                            </div>
-                            <div style="text-align: left" *ngIf="exportError">
-                                <div style="padding-top: 25px;">
-                                    <div class="alert alert-danger">
-                                        <strong>Error!</strong> {{exportError}}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-<div
-    class="userAccess"
-    *ngIf="securitySection"
-    style="margin: 10px 0px 50px 0px">
-    <mdm-share-with
-        [mcElement]="mcTerminology"
-        [mcDomainType]="'Terminology'"></mdm-share-with>
-        <div>
-            <div style="margin-top: 10px">
-            <mdm-group-access-new
-                [parent]="mcTerminology"
-                [parentType]="'Terminology'"></mdm-group-access-new>
+        <div
+          *ngIf="showPermission"
+          style="position: relative; float: right; margin-right: 8px"
+          [hidden]="editableForm.visible || editableForm.deletePending"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            class="paddingless"
+            (click)="toggleSecuritySection()"
+            matTooltip="User & Group Access"
+            aria-label="User & Group Access"
+          >
+            <i class="fas fa-user-lock"></i>
+          </button>
         </div>
+
+        <div
+          style="position: relative; float: right; margin-right: 8px"
+          *ngIf="!editableForm.visible && !editableForm.deletePending"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            *ngIf="isLoggedIn"
+            class="paddingless dropdown-toggle"
+            [disabled]="processing || deleteInProgress"
+            [matMenuTriggerFor]="exporterList"
+            matTooltip="Export as JSON, XML,..."
+            aria-label="Export as JSON, XML,..."
+          >
+            <i class="fas fa-download"></i>
+          </button>
+          <mat-menu #exporterList="matMenu">
+            <div *ngIf="exportList && exportList.length > 0">
+              <div *ngFor="let exporter of exportList">
+                <button type="button" mat-menu-item (click)="export(exporter)">
+                  {{ exporter.displayName }}
+                </button>
+              </div>
+            </div>
+          </mat-menu>
+        </div>
+        <div
+          style="
+            position: relative;
+            float: right;
+            margin-right: 8px;
+            margin-left: 8px;
+          "
+          [hidden]="editableForm.visible || editableForm.deletePending"
+        >
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            class="paddingless"
+            (click)="toggleShowSearch()"
+            [disabled]="processing"
+            matTooltip="Search"
+            aria-label="Search"
+          >
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="mcTerminology">
+        <div [ngClass]="{ 'has-error': errorMessage != '' }">
+          <div class="detail-icons--cta">
+            <i
+              class="fas fa-info-circle helpIcon"
+              matTooltip="Help"
+              (click)="loadHelp()"
+            ></i>
+
+            <i
+              style="position: relative; float: right; margin-left: 8px"
+              [ngClass]="{
+                'fas fa-star favouritesIcon': true,
+                addedToFavourite: addedToFavourite
+              }"
+              (click)="toggleFavourite()"
+              matTooltip="Favorite"
+            ></i>
+          </div>
+
+          <h4
+            class="inline-block marginless"
+            [ngClass]="{ deletedDataModelTitle: mcTerminology?.deleted }"
+          >
+            <span class="dataModelTypeIcon">
+              <i matTooltip="Terminology" class="fas fa-book"></i>
+            </span>
+            <span
+              [innerHTML]="mcTerminology.label"
+              class="dataModelDetailsLabel"
+            >
+              <!-- TODO ADD SEARCH CRITERIA PIPE -->
+            </span>
+          </h4>
+          <mdm-element-status [result]="mcTerminology"></mdm-element-status>
+          <span class="inline-block">
+            <small *ngIf="mcTerminology?.deleted" class="warning">
+              | Deleted</small
+            >
+          </span>
+        </div>
+      </div>
+
+      <div class="detail-icons">
+        <div class="text-muted" *ngIf="mcTerminology?.readableByEveryone">
+          <small>
+            <i
+              class="fas fa-globe-europe globe"
+              aria-hidden="true"
+              matTooltip="Availability"
+            ></i>
+            <span><strong>Availability: </strong>Publicly Readable</span>
+          </small>
+        </div>
+
+        <div class="text-muted" *ngIf="mcTerminology">
+          <small>
+            <i class="fas fa-code-branch" matTooltip="Branch name"></i>
+            <span><strong>Branch: </strong></span>
+            <span>
+              <select
+                class="form-control"
+                style="
+                  display: inline;
+                  max-width: 120px;
+                  height: 30px;
+                  line-height: 1;
+                  padding: 0 0.35em;
+                  width: auto;
+                "
+                [(ngModel)]="currentBranch"
+                name="currentBranch"
+                (ngModelChange)="onModelChange()"
+              >
+                <option
+                  [value]="item.branchName"
+                  *ngFor="let item of branchGraph"
+                >
+                  {{ item.branchName }}
+                </option>
+              </select>
+            </span>
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="mcTerminology">
+          <small>
+            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+            <span
+              ><strong>Documentation Version: </strong
+              >{{ mcTerminology.documentationVersion }}</span
+            >
+          </small>
+        </div>
+
+        <div
+          class="text-muted"
+          *ngIf="
+            mcTerminology &&
+            mcTerminology.finalised &&
+            mcTerminology.dateFinalised
+          "
+        >
+          <small>
+            <i
+              class="far fa-calendar-check"
+              matTooltip="Finalised
+                            on"
+            ></i>
+            <span
+              ><strong>Finalised on:</strong>
+              {{
+                mcTerminology.dateFinalised
+                  | date: 'yyyy-MM-dd
+                            HH:mm:ss'
+              }}</span
+            >
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="mcTerminology?.authority">
+          <small>
+            <i class="far fa-building" matTooltip="Authority"></i>
+            <span
+              ><strong>Authority: </strong
+              >{{ mcTerminology.authority['label'] }}</span
+            >
+          </small>
+        </div>
+      </div>
     </div>
+  </form>
+</div>
+<div
+  class="userAccess"
+  *ngIf="securitySection"
+  style="margin: 10px 0px 50px 0px"
+>
+  <mdm-share-with
+    [mcElement]="mcTerminology"
+    [mcDomainType]="'Terminology'"
+  ></mdm-share-with>
+  <div>
+    <div style="margin-top: 10px">
+      <mdm-group-access-new
+        [parent]="mcTerminology"
+        [parentType]="'Terminology'"
+      ></mdm-group-access-new>
+    </div>
+  </div>
 </div>

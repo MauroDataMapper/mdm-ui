@@ -292,16 +292,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         tabView: { dynamic: true, value: null, squash: true },
         dataModel: null
       }
-    },
-    {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
-      url: '/subscribedCatalogue/:parentId/federatedDataModel/:id/{tabView:string}',
-      component: FederatedDataModelMainComponent,
-      params: {
-        tabView: { dynamic: true, value: null, squash: true },
-        dataModel: null
-      }
-    },
+    }    
   ]
 };
 

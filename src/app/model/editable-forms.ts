@@ -57,8 +57,8 @@ export class Editable<T, F extends Resetable<T>> {
   onReset = this.onResetSource.asObservable();
 
    /**
-   * Determine if form data is being deleted.
-   */
+    * Determine if form data is being deleted.
+    */
   deletePending: boolean;
 
   /**

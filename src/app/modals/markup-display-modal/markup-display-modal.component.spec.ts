@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MdmResourcesService } from '@mdm/modules/resources';
 
 import { MarkupDisplayModalComponent } from './markup-display-modal.component';
 
@@ -8,9 +10,17 @@ describe('MarkupDisplayModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MarkupDisplayModalComponent ]
+      imports: [
+        MatDialogModule
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MdmResourcesService, useValue: {} }
+      ],
+      declarations: [MarkupDisplayModalComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

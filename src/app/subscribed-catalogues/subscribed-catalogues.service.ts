@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { AvailableDataModel, AvailableDataModelIndexResponse, FederatedDataModel, SubscribedDataModel, SubscribedDataModelIndexResponse } from '@mdm/model/federated-data-model';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -40,10 +40,6 @@ export class SubscribedCataloguesService {
       this.listSubscribedModels(catalogueId)
     ])
     .pipe(
-      // catchError(error => {
-      //   this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
-      //   return [];
-      // }),
       map(([availableModels, subscribedModels]) => {
         return availableModels.map(available => {
           const subscribed = subscribedModels.find(item => item.subscribedModelId === (available.modelId ?? ''));
@@ -54,8 +50,15 @@ export class SubscribedCataloguesService {
   }
 
   listAvailableModels(catalogueId: string): Observable<AvailableDataModel[]> {
+    // Handle any HTTP errors manually. This covers the scenario where this is unable to
+    // get available models from the subscribed catalogue e.g. the subscribed catalogue instance is not 
+    // available/offline
+    const restOptions: MdmRestHandlerOptions = {
+      handleGetErrors: false
+    };
+
     return this.resources.subscribedCatalogues
-      .listAvailableModels(catalogueId)
+      .listAvailableModels(catalogueId, {}, restOptions)
       .pipe(
         map((response: AvailableDataModelIndexResponse) => response.body.items ?? [])
       );

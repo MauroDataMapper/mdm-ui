@@ -66,13 +66,13 @@ export class ModelTreeService {
       return of([]);
     }
 
-    const options = {
+    const queryParams = {
       sort: 'label',
       order: 'asc'
     };
 
     return this.resources.subscribedCatalogues
-      .list(options)
+      .list(queryParams)
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
@@ -135,7 +135,7 @@ export class ModelTreeService {
       .getFederatedDataModels(catalogueId)
       .pipe(
         catchError(error => {
-          this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
+          this.messageHandler.showError('There was a problem getting federated data models from a subscribed catalogue.', error);
           return [];
         }),
         map(models => models.map(item => Object.assign<{}, Node>({}, {

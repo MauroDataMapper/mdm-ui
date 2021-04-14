@@ -114,16 +114,16 @@ export class ProfileBaseComponent extends BaseComponent {
                   this.currentProfileDetails = body.body;
                   this.currentProfileDetails.namespace = splitDescription[0];
                   this.currentProfileDetails.name = splitDescription[1];
+                  if (isNew) {
+                    this.messageHandler.showSuccess('Profile Added');
+                    this.UsedProfiles(
+                      this.catalogueItem.domainType,
+                      this.catalogueItem.id
+                    );
+                  } else {
+                    this.messageHandler.showSuccess('Profile Edited Successfully');
+                  }
                 });
-              if (isNew) {
-                this.messageHandler.showSuccess('Profile Added');
-                this.UsedProfiles(
-                  this.catalogueItem.domainType,
-                  this.catalogueItem.id
-                );
-              } else {
-                this.messageHandler.showSuccess('Profile Edited Successfully');
-              }
             },
             (error) => {
               this.messageHandler.showError('error saving', error.message);

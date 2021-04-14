@@ -143,8 +143,8 @@ SPDX-License-Identifier: Apache-2.0
             </div>
             <div *ngIf="field.dataType === 'enumeration'">
              <mat-select [(ngModel)]="field.currentValue" name="{{ field.fieldName }} + {{ section.sectionName }}">
-                <mat-option *ngFor="let value of field.allowedValues" [value]="value.value">
-                  {{value.displayName}}
+                <mat-option *ngFor="let value of field.allowedValues" [value]="value">
+                  {{value}}
                 </mat-option>
               </mat-select>
             </div>

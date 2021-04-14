@@ -28,8 +28,8 @@ SPDX-License-Identifier: Apache-2.0
                <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
                   <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
                </button>
-               <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" [matMenuTriggerFor]="editMenu">
-                  <i class="fas fa-pencil-alt"></i> Edit Data Model
+               <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" (click)="showForm()">
+                  <i class="fas fa-pencil-alt"></i> Edit Title
                </button>
                <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                   <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
@@ -70,15 +70,6 @@ SPDX-License-Identifier: Apache-2.0
                      </button>
                   </div>
                </div>
-            </mat-menu>
-
-            <mat-menu #editMenu>
-               <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
-                  Edit Data Model details
-               </button>
-               <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
-                  Edit Description only
-               </button>
             </mat-menu>
 
             <mat-menu #mergeMenu>
@@ -134,6 +125,15 @@ SPDX-License-Identifier: Apache-2.0
                   </span>
                   <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" [styleCss]="'dataModelDetailsLabel'">
                   </mdm-inline-text-edit>
+                  <mdm-editable-form-buttons
+                  *ngIf="editableForm"
+                  [hidden]="!editableForm.visible"
+                  [onCancelEdit]="onCancelEdit"
+                  [editable]="editableForm"
+                  [textLocation]="'left'"
+                  [hideDelete]="true"
+                  [hideCancel]="false"
+                ></mdm-editable-form-buttons>
                   <sup *ngIf="result?.readableByEveryone" class="text-muted" style="margin-left: 4px;"><i class="fas fa-globe-europe globe fa-xs" aria-hidden="true" matTooltip="Publicly Available"></i></sup>
                </h4>
                <span class="inline-block" *ngIf="result?.deleted">
@@ -179,11 +179,11 @@ SPDX-License-Identifier: Apache-2.0
                </small>
             </div>
          </div>
-         <div style="text-align: right">
-            <div id="exportFileDownload" #aLink></div>
-         </div>
-      </div>      
+      </div>
    </form>
+</div>
+<div style="position: relative; float: right; margin-right:8px;">
+   <div id="exportFileDownload" #aLink></div>
 </div>
 <div style="text-align: left" *ngIf="exportError">
    <div style="padding-top: 25px;">

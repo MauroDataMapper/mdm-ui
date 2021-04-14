@@ -62,7 +62,9 @@ export class EditProfileModalComponent implements OnInit {
   ) {
     data.profile.sections.forEach((section) => {
       section.fields.forEach((field) => {
-        field.dataType = field.dataType.toLowerCase();
+        if (field.dataType !== null) {
+          field.dataType = field.dataType.toLowerCase();
+        }
         if (data.isNew) {
           if (field.defaultValue) {
             field.currentValue = field.defaultValue;
@@ -134,7 +136,9 @@ export class EditProfileModalComponent implements OnInit {
       .subscribe((result) => {
         result.body.sections.forEach((section) => {
           section.fields.forEach((field) => {
-            field.dataType = field.dataType.toLowerCase();
+            if (field.dataType !== null) {
+              field.dataType = field.dataType.toLowerCase();
+            }
           });
         });
         this.profileData = result.body;

@@ -322,7 +322,7 @@ export class DataModelComponent
   }
 
   addDataClass = () => {
-    // this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null);
+    this.stateHandler.Go('newDataClass', { parentDataModelId: this.dataModel.id, parentDataClassId: null }, null);
   };
 
   showDescription = () => {

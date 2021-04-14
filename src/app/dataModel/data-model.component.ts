@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { DataModelResult, EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -322,7 +322,7 @@ export class DataModelComponent
   }
 
   addDataClass = () => {
-    // this.stateHandler.Go('newDataClass', { parentDataModelId: this.parentDataModel.id, parentDataClassId: this.parentDataClass ? this.parentDataClass.id : null }, null);
+    this.stateHandler.Go('newDataClass', { parentDataModelId: this.dataModel.id, parentDataClassId: null }, null);
   };
 
   showDescription = () => {

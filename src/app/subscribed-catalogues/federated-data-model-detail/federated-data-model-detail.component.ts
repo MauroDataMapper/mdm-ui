@@ -86,7 +86,7 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
       )
       .afterClosed()
       .pipe(
-        filter(response => response.status === ModalDialogStatus.Ok),
+        filter(response => response?.status === ModalDialogStatus.Ok),
         switchMap(response => {
           this.processing = true;
           return this.resources.subscribedCatalogues.saveSubscribedModel(

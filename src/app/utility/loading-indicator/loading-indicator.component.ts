@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { LoadingService } from '@mdm/services/loading.service';
-import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-loading-indicator',

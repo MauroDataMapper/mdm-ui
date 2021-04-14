@@ -39,7 +39,7 @@ SPDX-License-Identifier: Apache-2.0
             <i
             style="float: right"
             (click)="showInfo(field)"
-            class="fas fa-info"
+            class="fas fa-info-circle helpIcon"
           ></i>
      
           </td>
@@ -164,13 +164,16 @@ SPDX-License-Identifier: Apache-2.0
               >
               </mdm-model-selector-tree>
             </div>
-            <div *ngIf="field.validationErrors.length > 0">
-              <ul>
+            <mat-error *ngFor="let error of field.validationErrors">{{error}}</mat-error>
+            <!-- <div *ngIf="field.validationErrors.length > 0">
+              <mat-error *ngFor="let error of field.validationErrors">{{error}}</mat-error>
+              <mat-error>Test error</mat-error> -->
+              <!-- <ul>
                 <li *ngFor="let error of field.validationErrors;">
                   <span class="help-block">{{error}}</span>
                 </li>
-              </ul>              
-            </div>            
+              </ul>               -->
+            <!-- </div>             -->
           </td>
         </tr>
       </tbody>

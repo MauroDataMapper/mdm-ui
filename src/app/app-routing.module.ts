@@ -292,7 +292,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         tabView: { dynamic: true, value: null, squash: true },
         dataModel: null
       }
-    }    
+    }
   ]
 };
 

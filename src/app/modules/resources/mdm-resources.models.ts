@@ -15,15 +15,17 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+import { IMdmRestHandlerOptions } from "@maurodatamapper/mdm-resources";
+
 /**
  * Represents a response from an `mdm-resources` API endpoint.
  *
  */
 export interface MdmResourcesResponse<T = any> {
-    /**
-     * The body of the response from the API.
-     */
-    body: T;
+  /**
+   * The body of the response from the API.
+   */
+  body: T;
 }
 
 /**
@@ -31,15 +33,15 @@ export interface MdmResourcesResponse<T = any> {
  *
  */
 export interface MdmResourcesIndexBody<T = any> {
-    /**
-     * Gets the number of items in the returned list.
-     */
-    count: number;
+  /**
+   * Gets the number of items in the returned list.
+   */
+  count: number;
 
-    /**
-     * Gets the list of items returned from the API.
-     */
-    items: T[];
+  /**
+   * Gets the list of items returned from the API.
+   */
+  items: T[];
 }
 
 /**
@@ -47,3 +49,22 @@ export interface MdmResourcesIndexBody<T = any> {
  *
  */
 export type MdmResourcesIndexResponse<T = any> = MdmResourcesResponse<MdmResourcesIndexBody<T>>;
+
+/**
+ * Interface to define standard properties/options for the `MdmRestHandlerService`.
+ * 
+ * @see MdmRestHandlerService
+ */
+export interface MdmHttpHandlerOptions {
+  /**
+   * Determine if the `MdmRestHandlerService` should automatically handle `GET` request errors.
+   * 
+   * If `true`, any `GET` request that returns a status code in the 4XX range will be automatically handled by the `MdmRestHandlerService`. 
+   * Provide a `false` value to override this behaviour and handle any HTTP error yourself.
+   * 
+   * If no value is provided or is undefined, the default value is considered to be `true`.
+   */
+  handleGetErrors?: boolean;
+}
+
+export type MdmRestHandlerOptions = IMdmRestHandlerOptions & MdmHttpHandlerOptions;

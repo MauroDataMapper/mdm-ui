@@ -66,20 +66,20 @@ export class MdmRestHandlerService implements IMdmRestHandler {
           if (options.login === undefined) {
             this.stateHandler.NotAuthorized(response);
           }
-        } 
+        }
         else if (response.status === 404) {
           this.messageService.lastError = response;
           this.stateHandler.NotFound(response);
-        } 
+        }
         else if (response.status === 501) {
           this.messageService.lastError = response;
           this.stateHandler.NotImplemented(response);
-        } 
+        }
         else if (response.status >= 400 && response.status < 500 && options.method === 'GET' && handleGetErrors) {
           this.messageService.lastError = response;
           this.stateHandler.NotFound(response);
           // this.broadcastSvc.broadcast('resourceNotFound', response);
-        } 
+        }
         else if (response.status >= 500) {
           this.messageService.lastError = response;
           this.stateHandler.ServerError(response);

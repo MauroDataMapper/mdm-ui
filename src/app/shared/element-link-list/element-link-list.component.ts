@@ -252,7 +252,7 @@ export class ElementLinkListComponent implements AfterViewInit {
         if (this.afterSave) {
           this.afterSave(resource);
         }
-        
+
         this.filterEvent.emit();
 
         const result = response.body;

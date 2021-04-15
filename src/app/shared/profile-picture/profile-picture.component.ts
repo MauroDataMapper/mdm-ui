@@ -29,7 +29,7 @@ export class ProfilePictureComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    const displayName = (this.user?.firstName ?? '') + ' ' + (this.user?.lastName ?? '');
+    const displayName = `${this.user?.firstName ?? ''} ${this.user?.lastName ?? ''}`;
     const organisation = this.user?.organisation ?? '';
     const emailAddress = this.user?.emailAddress ?? '';
 

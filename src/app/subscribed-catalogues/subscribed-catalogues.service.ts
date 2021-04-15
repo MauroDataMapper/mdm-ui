@@ -51,7 +51,7 @@ export class SubscribedCataloguesService {
 
   listAvailableModels(catalogueId: string): Observable<AvailableDataModel[]> {
     // Handle any HTTP errors manually. This covers the scenario where this is unable to
-    // get available models from the subscribed catalogue e.g. the subscribed catalogue instance is not 
+    // get available models from the subscribed catalogue e.g. the subscribed catalogue instance is not
     // available/offline
     const restOptions: MdmRestHandlerOptions = {
       handleGetErrors: false

@@ -144,7 +144,7 @@ export class ProfileBaseComponent extends BaseComponent {
         profiles.body.forEach((profile) => {
           const prof: any = [];
           prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
+          prof['value'] = `${profile.metadataNamespace}/${profile.name}`;
           this.allUsedProfiles.push(prof);
         });
       });
@@ -160,7 +160,7 @@ export class ProfileBaseComponent extends BaseComponent {
         profiles.body.forEach((profile) => {
           const prof: any = [];
           prof['display'] = profile.displayName;
-          prof['value'] = `${profile.namespace}/${profile.name}`;
+          prof['value'] = `${profile.metadataNamespace}/${profile.name}`;
           this.allUnUsedProfiles.push(prof);
         });
       });

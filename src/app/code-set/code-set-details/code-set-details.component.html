@@ -143,12 +143,6 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
                     </small>
                 </div>
-                <div class="text-muted" *ngIf="result?.authority">
-                    <small>
-                       <i class="far fa-building" matTooltip="Authority"></i>
-                       <span><strong>Authority: </strong>{{result.authority['label']}}</span>
-                    </small>
-                 </div>
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
                     <small>
                         <i class="far fa-calendar-check" matTooltip="Finalised on"></i>

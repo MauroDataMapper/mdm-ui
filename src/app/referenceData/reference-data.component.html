@@ -145,6 +145,7 @@ SPDX-License-Identifier: Apache-2.0
           name="form"
           (ngSubmit)="formBeforeSave()"
           disable-submit-on-enter
+          *ngIf="editableForm"
         >
           <table
             *ngIf="this.descriptionView === 'default'"

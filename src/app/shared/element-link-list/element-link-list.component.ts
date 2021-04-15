@@ -248,17 +248,18 @@ export class ElementLinkListComponent implements AfterViewInit {
         linkType: record.edit.linkType,
       };
 
-      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(() => {
+      this.resources.catalogueItem.updateSemanticLink(this.domainType, this.parent.id, record.id, body).subscribe(response => {
         if (this.afterSave) {
           this.afterSave(resource);
         }
-        // this.filterEvent.emit();
+        
+        this.filterEvent.emit();
 
-        // const result = res.body;
-        // record.source = result.source;
-        // record.target = Object.assign({}, result.target);
-        // record.edit.target = Object.assign({}, result.target);
-        // record.linkType = result.linkType;
+        const result = response.body;
+        record.source = result.source;
+        record.target = Object.assign({}, result.target);
+        record.edit.target = Object.assign({}, result.target);
+        record.linkType = result.linkType;
         record.inEdit = false;
         this.editingService.setFromCollection(this.records);
         this.table.renderRows();

@@ -55,7 +55,7 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.title.setTitle('Subscribed catalogues');
   }
 

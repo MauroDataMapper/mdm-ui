@@ -29,6 +29,7 @@ import { Title } from '@angular/platform-browser';
 export class DashboardComponent implements OnInit {
   activeTab: any;
   appVersion: string;
+  features = this.shared.features;
 
   constructor(
     private stateService: StateService,

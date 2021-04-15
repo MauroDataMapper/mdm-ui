@@ -39,7 +39,8 @@ export const environment = {
   name: 'development',
   appIsEditable: true,
   features: {
-    useSubscribedCatalogues: false
+    useSubscribedCatalogues: false,
+    useDynamicProfiles: false
   }
 };
 

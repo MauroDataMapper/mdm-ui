@@ -19,7 +19,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue, SubscribedCatalogueResponse } from '@mdm/model/subscribed-catalogue-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { UIRouterGlobals } from '@uirouter/core';
 
@@ -44,11 +44,17 @@ export class SubscribedCatalogueComponent implements OnInit {
     private resources: MdmResourcesService,
     private routerGobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
+    private shared: SharedService,
     private messageHandler: MessageHandlerService,
     private title: Title,
     private editingService: EditingService) { }
 
   ngOnInit(): void {
+    if (!this.shared.features.useSubscribedCatalogues) {
+      this.stateHandler.Go('alldatamodel');
+      return;
+    }
+
     this.editingService.start();
     const catalogueId = this.routerGobals.params.id;
 

@@ -27,6 +27,8 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 })
 export class AdminAppContainerComponent implements OnInit {
   pendingUsersCount = 0;
+  features = this.sharedService.features;
+
   constructor(private sharedService: SharedService, private securityHandler: SecurityHandlerService, private broadcastSvc: BroadcastService) {}
 
   ngOnInit() {

@@ -22,7 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Title } from '@angular/platform-browser';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@mdm/model/subscribed-catalogue-model';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { GridService, MessageHandlerService, StateHandlerService } from '@mdm/services';
+import { GridService, MessageHandlerService, SharedService, StateHandlerService } from '@mdm/services';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -48,17 +48,23 @@ export class SubscribedCataloguesComponent implements OnInit, AfterViewInit {
     private resources: MdmResourcesService,
     private gridService: GridService,
     private stateHandlerService: StateHandlerService,
+    private shared: SharedService,
     private messageHandler: MessageHandlerService,
     private title: Title,
     private dialog: MatDialog) {
     this.dataSource = new MatTableDataSource(this.records);
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.title.setTitle('Subscribed catalogues');
   }
 
   ngAfterViewInit(): void {
+    if (!this.shared.features.useSubscribedCatalogues) {
+      this.stateHandlerService.Go('alldatamodel');
+      return;
+    }
+
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
     this.dataSource.sort = this.sort;
 

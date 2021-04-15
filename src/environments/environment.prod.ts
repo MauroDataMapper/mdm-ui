@@ -33,5 +33,8 @@ export const environment = {
   wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
   simpleViewSupport: false,
   name: 'production',
-  appIsEditable: false
+  appIsEditable: false,
+  features: {
+    useSubscribedCatalogues: false
+  }
 };

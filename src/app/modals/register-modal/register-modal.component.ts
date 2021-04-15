@@ -106,5 +106,5 @@ export class RegisterModalComponent implements OnInit {
         this.dialogRef.close();
       }
     });
-  };
+  }
 }

@@ -23,7 +23,7 @@ import {
   ElementRef,
   ViewChild,
   EventEmitter,
-  AfterViewInit, ChangeDetectorRef
+  AfterViewInit, ChangeDetectorRef, Output
 } from '@angular/core';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -34,6 +34,7 @@ import { ElementTypesService } from '@mdm/services/element-types.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -43,6 +44,7 @@ import { GridService } from '@mdm/services/grid.service';
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   @Input() codeSet: any;
   @Input() type: any; // static, dynamic
+  @Output() totalCount = new EventEmitter<string>();
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
@@ -62,6 +64,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
   filterValue: any;
   filterName: any;
   showAddTerm: any;
+  editableForm: EditableDataModel;
 
   constructor(private messageHandler: MessageHandlerService, private gridService: GridService, private resources: MdmResourcesService, private elementTypes: ElementTypesService, private changeRef: ChangeDetectorRef, private securityHandler: SecurityHandlerService) {
   }
@@ -72,6 +75,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     } else {
       this.displayedColumns = ['terminology', 'term', 'definition'];
     }
+    this.editableForm = new EditableDataModel();
     this.isLoadingResults = false;
   }
 
@@ -92,6 +96,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     }),
       map((data: any) => {
         this.totalItemCount = data.body.count;
+        this.totalCount.emit(String(data.body.count));
         this.isLoadingResults = false;
         return data.body.items;
       }),

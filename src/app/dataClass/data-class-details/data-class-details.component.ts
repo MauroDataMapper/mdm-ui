@@ -67,6 +67,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
   exportError: any;
   canEditDescription = true;
   showEditDescription = false;
+  parentLabel = '';
 
   constructor(
     private messageService: MessageService,
@@ -162,6 +163,12 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
 
+      if(this.result.domainType === 'DataClass') {
+        this.resourcesService.dataModel.get(this.result.model).subscribe(result => {
+          this.parentLabel = result.body.label;
+        });
+      }
+
       this.editableForm.description = this.result.description;
       this.editableForm.label = this.result.label;
 
@@ -238,7 +245,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.resourcesService.dataClass.remove(this.result.model, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting this Data Class.', error);
@@ -247,7 +253,6 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.resourcesService.dataClass.removeChildDataClass(this.result.model, this.result.parentDataClass, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
-        this.broadcastSvc.broadcast('$reloadFoldersTree');
       }, error => {
         this.deleteInProgress = false;
         this.messageHandler.showError('There was a problem deleting this Data Class.', error);

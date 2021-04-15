@@ -15,10 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
 import { EditingService } from './services/editing.service';
 import { SharedService } from './services/shared.service';
+import { ThemingService } from './services/theming.service';
 
 @Component({
   selector: 'mdm-root',
@@ -28,11 +30,15 @@ import { SharedService } from './services/shared.service';
 export class AppComponent implements OnInit {
   title = 'mdm-ui';
   isLoading = false;
+  themeCssSelector: string;
 
   constructor(
     private userIdle: UserIdleService,
     private sharedService: SharedService,
-    private editingService: EditingService) {}
+    private editingService: EditingService,
+    private theming: ThemingService,
+    private overlayContainer: OverlayContainer
+  ) {}
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove() {
@@ -48,6 +54,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setTheme();
+
     // Start watching for user inactivity.
     this.userIdle.startWatching();
     this.userIdle.onTimerStart().subscribe();
@@ -62,5 +70,14 @@ export class AppComponent implements OnInit {
       }
       lastDigestRun = now;
     });
+  }
+
+  private setTheme() {
+    this.themeCssSelector = this.theming.themeCssSelector;
+
+    // Material theme is wrapped inside a CSS class but the overlay container is not part of Angular
+    // Material. Have to manually set the correct theme class to this container too
+    this.overlayContainer.getContainerElement().classList.add(this.themeCssSelector);
+    this.overlayContainer.getContainerElement().classList.add('overlay-container');
   }
 }

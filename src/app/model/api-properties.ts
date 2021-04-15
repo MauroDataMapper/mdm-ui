@@ -163,5 +163,68 @@ export const propertyMetadata: ApiPropertyMetadata[] = [
     category: 'Email',
     editType: ApiPropertyEditType.Text,
     isSystem: true
+  },
+  {
+    key: 'content.home.intro.left',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.home.intro.right',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.home.detail.heading',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.home.detail.column_one',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.home.detail.column_two',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.home.detail.column_three',
+    category: 'Content',
+    editType: ApiPropertyEditType.Html,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'content.footer.copyright',
+    category: 'Content',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'theme.logo.url',
+    category: 'Theme',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
+  },
+  {
+    key: 'theme.logo.width',
+    category: 'Theme',
+    editType: ApiPropertyEditType.Value,
+    isSystem: true,
+    publiclyVisible: true
   }
 ];

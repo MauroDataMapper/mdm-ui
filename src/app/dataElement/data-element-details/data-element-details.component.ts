@@ -76,6 +76,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   newInlineDataType = null;
   dataTypes: any;
   isValid = false;
+  parentLabel = '';
   newlyAddedDataType = {
     label: '',
     description: '',
@@ -107,11 +108,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
     this.DataElementDetails();
   }
 
-  toggleShowNewInlineDataType() {
-    this.showNewInlineDataType = !this.showNewInlineDataType;
-    this.error = '';
-    this.dataTypeErrors = '';
-  }
+
 
   ngOnInit() {
     if (this.parentDataModel && this.parentDataModel.id) {
@@ -196,6 +193,12 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   DataElementDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
+
+      if(this.result.breadcrumbs) {
+          this.parentLabel = this.result.breadcrumbs[serverResult.breadcrumbs.length - 1].label;
+      }
+
+
       this.editableForm.label = this.result.label;
       this.editableForm.description = this.result.description;
       if (this.result.classifiers) {

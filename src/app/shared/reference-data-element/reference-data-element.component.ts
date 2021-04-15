@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
 import { merge } from 'rxjs';
@@ -30,6 +30,8 @@ import { GridService } from '@mdm/services';
 export class ReferenceDataElementComponent implements AfterViewInit {
    @Input() parent: any;
    @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+   @Output() totalCount = new EventEmitter<string>();
+
    records: any[] = [];
    totalItemCount = 0;
    isLoadingResults = true;
@@ -48,6 +50,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
          return this.listDataElements(this.paginator.pageSize, this.paginator.pageOffset);
       }), map((data: any) => {
          this.totalItemCount = data.body.count;
+         this.totalCount.emit(String(data.body.count));
          this.isLoadingResults = false;
          return data.body.items;
       }), catchError(() => {

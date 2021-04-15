@@ -56,76 +56,7 @@ SPDX-License-Identifier: Apache-2.0
             </div>
         </div>
 
-        <table class="table table-bordered mdm--table-fixed">
-            <tbody>
-                <tr>
-                    <td class="detailsRowHeader">Description</td>
-                    <td class="elementDetailDescription">
-                        <div *ngIf="hasResult">
-                          <mdm-content-editor [editableForm]="editableForm" 
-                                              [element]="result" 
-                                              [property]="'description'">
-                          </mdm-content-editor>
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="showDelete || showEdit">
-                    <td colspan="2" style="text-align: right;">
-                        <div *ngIf="showDelete" style="float: right;" [hidden]="editableForm.visible">
-                          <button mat-stroked-button
-                                  color="warn"
-                                  type="button"
-                                  matTooltip="Delete Classification"
-                                  aria-label="Delete Classification"
-                                  class="paddingless"
-                                  [disabled]="deleteInProgress || exporting"
-                                  (click)="askForPermanentDelete()">
-                                  <i class="far fa-trash-alt warning"></i>
-                          </button>
-                        </div>
-
-                        <div style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                                <button mat-stroked-button
-                                        color="primary"
-                                        type="button"
-                                        class="paddingless"
-                                        [disabled]="deleteInProgress || exporting || result.finalised"
-                                        matTooltip="Edit Classification"
-                                        aria-label="Edit Classification"
-                                        (click)="showForm();">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
-                            </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                       [onCancelEdit]="onCancelEdit"
-                                                       [editable]="editableForm"
-                                                       [textLocation]="'left'"
-                                                       [hideDelete]="true"
-                                                       [hideCancel]="false"
-                                                       [processing]="deleteInProgress">
-                            </mdm-editable-form-buttons>
-                        </div>
-
-                        <!-- TODO - DB migration -->
-                        <!-- <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button
-                                    color="primary"
-                                    type="button"
-                                    class="paddingless"
-                                    (click)="toggleSecuritySection()"
-                                    *ngIf="showPermission"
-                                    [disabled]="deleteInProgress || processing"
-                                    matTooltip="User & Group Access"
-                                    aria-label="User & Group Access"
-                                    [hidden]="editableForm.visible || editableForm.deletePending">
-                                    <i class="fas fa-user-lock"></i>
-                            </button>
-                        </div> -->
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+  
     </form>
 </div>
 

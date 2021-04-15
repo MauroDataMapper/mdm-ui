@@ -29,16 +29,11 @@ export class ProfilePictureComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    /* eslint-disable @typescript-eslint/restrict-plus-operands */
-    this.dynamicTooltipText =
-      '<div>' +
-      (this.user.firstName ? this.user.firstName : '') +
-      '&nbsp;' +
-      (this.user.lastName ? this.user.lastName : '') +
-      '<br>' +
-      (this.user.organisation ? this.user.organisation + '<br>' : '') +
-      this.user.emailAddress +
-      '</div>';
+    const displayName = `${this.user?.firstName ?? ''} ${this.user?.lastName ?? ''}`;
+    const organisation = this.user?.organisation ?? '';
+    const emailAddress = this.user?.emailAddress ?? '';
+
+    this.dynamicTooltipText = [displayName.trim(), organisation.trim(), emailAddress.trim()].join(', ');
   }
 
   getImage = () => {

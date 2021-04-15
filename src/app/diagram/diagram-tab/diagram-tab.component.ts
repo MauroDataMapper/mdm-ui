@@ -24,7 +24,8 @@ import { DiagramPopupComponent } from '../diagram-popup/diagram-popup.component'
 
 @Component({
   selector: 'mdm-diagram-tab',
-  templateUrl: './diagram-tab.component.html'
+  templateUrl: './diagram-tab.component.html',
+  styleUrls: ['./diagram-tab.component.scss']
 })
 
 export class DiagramTabComponent {

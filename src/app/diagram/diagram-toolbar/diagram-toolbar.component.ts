@@ -24,7 +24,8 @@ import {
 
 @Component({
   selector: 'mdm-diagram-toolbar',
-  templateUrl: './diagram-toolbar.component.html'
+  templateUrl: './diagram-toolbar.component.html',
+  styleUrls: [ './diagram-toolbar.component.scss' ]
 })
 
 export class DiagramToolbarComponent {

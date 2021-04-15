@@ -38,6 +38,8 @@ export class TermResult {
   semanticLinks: any[];
   deleted = false;
   readableByEveryone: boolean;
+  model:any;
+  breadcrumbs: any;
 
 }
 

@@ -50,6 +50,7 @@ export class McDataSetMetadataComponent implements AfterViewInit {
   @Input() clientSide: any;
   @Input() afterSave: any;
   @Input() domainType: any;
+  @Input() isProfileView = false;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true })
@@ -155,7 +156,11 @@ export class McDataSetMetadataComponent implements AfterViewInit {
 
   metadataFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
     const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
-    return this.resources.catalogueItem.listMetadata(this.domainType, this.parent.id, options);
+    if(this.isProfileView) {
+      return this.resources.profile.otherMetadata(this.domainType, this.parent.id, options);
+    } else {
+      return this.resources.catalogueItem.listMetadata(this.domainType, this.parent.id, options);
+    }
   }
 
   applyFilter = () => {

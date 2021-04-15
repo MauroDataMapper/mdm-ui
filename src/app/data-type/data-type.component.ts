@@ -21,16 +21,25 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SharedService } from '../services/shared.service';
-import { BaseComponent } from '@mdm/shared/base/base.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
+import {
+  ElementTypesService,
+  MessageHandlerService,
+  SecurityHandlerService
+} from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-data-type',
   templateUrl: './data-type.component.html',
   styleUrls: ['./data-type.component.scss']
 })
-export class DataTypeComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class DataTypeComponent
+  extends ProfileBaseComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   dataType: any;
@@ -41,18 +50,37 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
   activeTab: any;
   showExtraTabs: boolean;
   showEditForm = false;
-  editForm = null;
 
   loadingData = false;
+
+  schemaView = 'list';
+  descriptionView = 'default';
+  contextView = 'default';
+  rulesItemCount = 0;
+  isLoadingRules = true;
+  editableForm: EditableDataModel;
+  errorMessage: any;
+  elementType: any;
+  showEdit: boolean;
+  showEditDescription = false;
+  access:any;
+
+  allDataTypes = this.elementTypes.getAllDataTypesArray();
+  allDataTypesMap = this.elementTypes.getAllDataTypesMap();
 
   constructor(
     private title: Title,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
-    private resource: MdmResourcesService,
+    resource: MdmResourcesService,
     private sharedService: SharedService,
-    private editingService: EditingService) {
-    super();
+    messageHandler: MessageHandlerService,
+    private securityHandler: SecurityHandlerService,
+    dialog: MatDialog,
+    private elementTypes: ElementTypesService,
+    editingService: EditingService
+  ) {
+    super(resource, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
@@ -72,28 +100,105 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     this.dataModel = { id: this.dataModelId };
     this.loadingData = true;
 
-    this.resource.dataType.get(this.dataModelId, this.id).subscribe(result => {
-      const data = result.body;
+    this.resourcesService.dataType.get(this.dataModelId, this.id).subscribe(
+      (result) => {
+        const data = result.body;
 
-      // If the Id is a path get the actual Id
-      this.dataModelId = data.model;
-      this.id = data.id;
+        // If the Id is a path get the actual Id
+        this.dataModelId = data.model;
+        this.id = data.id;
 
-      this.dataType = data;
-      this.dataType.classifiers = this.dataType.classifiers || [];
-      this.loadingData = false;
-      this.activeTab = this.getTabDetail(this.tabView);
-      this.showExtraTabs = !this.sharedService.isLoggedIn() || !this.dataType.editable;
-    }, () => {
-      this.loadingData = false;
-    });
+        this.UnUsedProfiles('dataType', data.id);
+        this.UsedProfiles('dataType', data.id);
+
+        this.dataType = data;
+        this.catalogueItem = this.dataType;
+
+        this.watchDataTypeObject();
+
+        this.editableForm = new EditableDataModel();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
+        this.editableForm.description = this.dataType.description;
+        this.editableForm.label = this.dataType.label;
+        this.title.setTitle(`Data Type - ${this.dataType?.label}`);
+
+        this.editableForm.cancel = () => {
+          this.editingService.stop();
+          this.editableForm.visible = false;
+          this.editableForm.validationError = false;
+          this.errorMessage = '';
+          this.editableForm.description = this.dataType.description;
+          this.editableForm.label = this.dataType.label;
+          if (this.dataType.classifiers) {
+            this.dataType.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          if (this.dataType.aliases) {
+            this.dataType.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+        };
+
+        this.editableForm.show = () => {
+          this.editableForm.visible = true;
+        };
+
+        if (
+          this.dataType.domainType === 'ModelDataType' &&
+          this.dataType.modelResourceDomainType === 'Terminology'
+        ) {
+          this.resourcesService.terminology
+            .get(this.dataModelId.modelResourceId)
+            .subscribe((termResult) => {
+              this.elementType = termResult.body;
+            });
+        } else if (
+          this.dataType.domainType === 'ModelDataType' &&
+          this.dataType.modelResourceDomainType === 'CodeSet'
+        ) {
+          this.resourcesService.codeSet
+            .get(this.dataType.modelResourceId)
+            .subscribe((elmResult) => {
+              this.elementType = elmResult.body;
+            });
+        } else if (
+          this.dataType.domainType === 'ModelDataType' &&
+          this.dataType.modelResourceDomainType === 'ReferenceDataModel'
+        ) {
+          this.resourcesService.referenceDataModel
+            .get(this.dataType.modelResourceId)
+            .subscribe((dataTypeResult) => {
+              this.elementType = dataTypeResult.body;
+            });
+        }
+
+        this.dataType.classifiers = this.dataType.classifiers || [];
+        this.loadingData = false;
+        this.activeTab = this.getTabDetail(this.tabView);
+        this.showExtraTabs =
+          !this.sharedService.isLoggedIn() || !this.dataType.editable;
+      },
+      () => {
+        this.loadingData = false;
+      }
+    );
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  tabSelected = itemsName => {
+  watchDataTypeObject() {
+    this.access = this.securityHandler.elementAccess(this.dataType);
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+    }
+  }
+
+  tabSelected = (itemsName) => {
     const tab = this.getTabDetail(itemsName);
     this.stateHandler.Go(
       'dataType',
@@ -106,14 +211,27 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     if (this.activeTab && this.activeTab.fetchUrl) {
       this[this.activeTab.name] = [];
       this.loadingData = true;
-      this.resource.dataType.get(this.dataModelId, this.id).subscribe(data => {
-        this[this.activeTab.name] = data || [];
-        this.loadingData = false;
-      });
+      this.resourcesService.dataType
+        .get(this.dataModelId, this.id)
+        .subscribe((data) => {
+          this[this.activeTab.name] = data || [];
+          this.loadingData = false;
+        });
     }
   };
 
-  getTabDetail = tabName => {
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+  };
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  getTabDetail = (tabName) => {
     switch (tabName) {
       case 'properties':
         return { index: 0, name: 'properties' };
@@ -132,8 +250,61 @@ export class DataTypeComponent extends BaseComponent implements OnInit, AfterVie
     }
   };
 
-  openEditForm = (formName: any) => {
-    this.showEditForm = true;
-    this.editForm = formName;
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
+
+  onCancelEdit = () => {
+    this.dataType.editAliases = Object.assign([], this.dataType.aliases);
+    this.showEditDescription = false;
+  };
+
+  formBeforeSave = () => {
+    const aliases = [];
+    this.editableForm.aliases.forEach((alias) => {
+      aliases.push(alias);
+    });
+
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.dataType.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        aliases,
+        domainType: this.dataType.domainType,
+        classifiers: this.dataType.classifiers.map((cls) => ({ id: cls.id }))
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.dataType.id,
+        description: this.editableForm.description || ''
+      };
+    }
+
+    this.resourcesService.dataType
+      .update(this.dataModel.id, this.dataType.id, resource)
+      .subscribe(
+        (res) => {
+          const result = res.body;
+
+          this.dataType.aliases = Object.assign([], result.aliases);
+          this.dataType.editAliases = Object.assign([], this.dataType.aliases);
+          this.dataType.label = result.label;
+          this.dataType.description = result.description;
+          this.messageHandler.showSuccess('Data Type updated successfully.');
+          this.editingService.stop();
+          this.editableForm.visible = false;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Type.',
+            error
+          );
+        }
+      );
   };
 }

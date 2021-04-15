@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, ViewChildren, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SearchResult } from '@mdm/model/folderModel';
 import { ElementTypesService } from '@mdm/services/element-types.service';
@@ -38,6 +38,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
   @Input() parentType: string;
   @Input() parentId: string;
   @Input() domainType: string;
+  @Output() totalCount = new EventEmitter<string>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public result: SearchResult;
   public dataSetResult: any[];
@@ -87,6 +88,7 @@ export class HistoryComponent implements OnInit, AfterViewInit {
       );
     }), map((data: any) => {
       this.totalItemCount = data.body.count;
+      this.totalCount.emit(String(data.body.count));
       this.isLoadingResults = false;
       return data.body.items;
     }), catchError(() => {

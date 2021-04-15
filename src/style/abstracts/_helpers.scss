@@ -25,6 +25,11 @@ SPDX-License-Identifier: Apache-2.0
 .required, .danger, .warning {
   color: #a5122a;
 }
+
+.success {
+  color: #388e3c;
+}
+
 .text-muted {
   color: #4F575F!important;
 }
@@ -190,3 +195,6 @@ button.custom, a.custom {
   display: none;
 }
 
+.has-text-green {
+   color: #0A8535!important;
+}

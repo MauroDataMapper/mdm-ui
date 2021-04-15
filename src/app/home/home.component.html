@@ -17,13 +17,15 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="bdi--hero-header mb-3">
     <div class="container">
-        <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" class="flex-block">
-            <div fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
-              <h3>Use the <strong>Mauro Data Mapper</strong> platform to create shared documentation for your data, and to collaborate on the definition of new data models</h3>
-               <p>Automatically import your existing schemas; link, annotate and share them; use these definitions in the creation of new software components.</p>
-               <p>Mauro was previously known as the Metadata Catalogue, and has been built at the University of Oxford with support from the National Institute for Health Research, and NHS Digital.</p>
+        <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
 
-                <div *ngIf="!isLoggedIn">
+        <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between"
+            class="flex-block">
+            <div fxFlex="50" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">                
+
+                <div *ngIf="!isLoadingContent" [innerHTML]="introLeftContent | safe:'html'"></div>
+
+                <div *ngIf="!isLoggedIn && !isLoadingContent">
                     <button mat-flat-button color="primary" (click)="login()" class="custom mb-1">
                         Log in
                     </button>
@@ -32,14 +34,13 @@ SPDX-License-Identifier: Apache-2.0
                         Register an account
                     </button> -->
                 </div>
-                <div *ngIf="isLoggedIn">
-                    <a mat-flat-button color="primary" class="custom" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
+                <div *ngIf="isLoggedIn && !isLoadingContent">
+                    <a mat-flat-button color="primary" class="custom"
+                        uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel">Browse our Models</a>
                 </div>
             </div>
             <div fxFlex="50" fxFlex.sm="100" fxFlex.xs="100" fxHide.sm fxHide.xs>
-                <div class="text-center bdi--hero-header__image mt-3">
-                    <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
-                </div>
+                <div *ngIf="!isLoadingContent" [innerHTML]="introRightContent | safe:'html'"></div>
             </div>
         </div>
     </div>
@@ -47,43 +48,23 @@ SPDX-License-Identifier: Apache-2.0
 
 <div class="bdi--features highlight">
     <div class="container">
-        <h5 class="text-center marginless text-muted">Features</h5>
-        <h3 class="text-center marginless">Benefits of using the Mauro Data Mapper</h3>
-        <!-- <p class="text-center marginless">The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.</p> -->
+        <ngx-skeleton-loader *ngIf="isLoadingContent" count="2"></ngx-skeleton-loader>
 
-        <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="20px" class="flex-block">
+        <div *ngIf="!isLoadingContent" [innerHTML]="detailHeading | safe:'html'"></div>
+
+        <div flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between"
+            fxLayoutGap="20px" class="flex-block">
             <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                <div class="text-center">
-                    <span class="feature-icon feature-icon--1 mt-3 mb-2">
-                        <i class="fas fa-recycle fa-2x"></i>
-                    </span>
-                    <h4><strong>Automate</strong></h4>
-                    <p>
-                       Automatically create data models from existing artefacts, such as relational databases, Excel spreadsheets, XML Schema, or definitions in OWL or UML.  Visualise your data to check for completeness and consistency.
-                    </p>
-                </div>
+                <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+                <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn1 | safe:'html'"></div>
             </div>
             <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                <div class="text-center">
-                    <span class="feature-icon feature-icon--2 mt-3 mb-2">
-                        <i class="fas fa-balance-scale-right fa-2x"></i>
-                    </span>
-                    <h4><strong>Collaborate</strong></h4>
-                    <p>
-                        Create new models, re-using existing definitions.   Manage versioning and publication lifecycles, and comment directly on parts of a model.
-                    </p>
-                </div>
+                <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+                <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn2 | safe:'html'"></div>
             </div>
             <div fxFlex="33" fxFlex.sm="100" fxFlex.xs="100">
-                <div class="text-center">
-                    <span class="feature-icon feature-icon--3 mt-3 mb-2">
-                        <i class="fas fa-cogs fa-2x"></i>
-                    </span>
-                    <h4><strong>Generate</strong></h4>
-                    <p>
-                        Create new software and configuration from existing definitions - generate forms, websites and databases - and make your documentation go further using our extensive APIs.
-                    </p>
-                </div>
+                <ngx-skeleton-loader *ngIf="isLoadingContent" count="5"></ngx-skeleton-loader>
+                <div *ngIf="!isLoadingContent" [innerHTML]="detailColumn3 | safe:'html'"></div>
             </div>
         </div>
     </div>

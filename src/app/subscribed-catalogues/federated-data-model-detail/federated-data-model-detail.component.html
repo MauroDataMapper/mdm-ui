@@ -1,0 +1,94 @@
+<!--
+Copyright 2021 University of Oxford
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+<div class="panel panel-default mdm--shadow-block">
+    <form editable-form name="form" disable-submit-on-enter>
+        <div class="panel-body">
+            <h4 class="inline-block marginless">
+                <span class="dataModelTypeIcon">
+                    <i matTooltip="Data Standard" class="fas fa-external-link-alt"></i>
+                </span>
+                <mdm-inline-text-edit [readOnly]="true" [(ngModel)]="editable.form.label" name="labelName"
+                    [inEditMode]="editable.isEditing" [styleCss]="'dataTypeDetailsLabel'">
+                </mdm-inline-text-edit>
+            </h4>
+            <small *ngIf="dataModel.isSubscribed">
+                <span class="badge badge-success ml-1">Subscribed</span>
+            </small>
+            <div class="detail-icons">
+                <div class="text-muted">
+                    <small>
+                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span><strong>Item type: </strong><span class="item-type">Federated Data Model</span></span>
+                    </small>
+                </div>
+                <div class="text-muted">
+                    <small>
+                        <i class="fas fa-file-code" matTooltip="Model type"></i>
+                        <span><strong>Model type: </strong><i class="fas {{getModelTypeIcon()}}"
+                                matTooltip="Model type"></i>{{dataModel.modelType}}</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered mdm--table-fixed">
+            <tbody>
+                <tr>
+                    <th class="detailsRowHeader">Description</th>
+                    <td class="elementDetailDescription">
+                        <mdm-content-editor [editableForm]="editable.form" [element]="dataModel"
+                            [property]="'description'">
+                        </mdm-content-editor>
+                    </td>
+                </tr>
+                <tr *ngIf="dataModel.folderId">
+                    <th class="detailsRowHeader">Folder</th>
+                    <td class="elementDetailDescription">
+                        <mdm-inline-text-edit [readOnly]="true" [inEditMode]="editable.isEditing"
+                            [(ngModel)]="editable.form.folderLabel" class="dataModelDetailsLabel" name="folder">
+                        </mdm-inline-text-edit>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right;">
+                        <div *ngIf="!dataModel.isSubscribed" class="mr-1" style="float: right;">
+                            <button mat-stroked-button color="accent" type="button" class=" warning"
+                                matTooltip="Subscribe" aria-label="Subscribe" [disabled]="processing" (click)="subscribeToModel()">
+                                <i class="fas fa-plus"></i><span class="ml-1">Subscribe</span>
+                            </button>
+                        </div>
+                        <div *ngIf="dataModel.isSubscribed" class="mr-1" style="float: right;">
+                            <button mat-stroked-button color="warn" type="button" class=" warning"
+                                matTooltip="Unsubscribe" aria-label="Unsubscribe" [disabled]="processing" (click)="unsubscribeFromModel()">
+                                <i class="fas fa-minus"></i><span class="ml-1">Unsubscribe</span>
+                            </button>
+                        </div>
+                        <div *ngIf="dataModel.isSubscribed" class="mr-1" style="float: right;">
+                            <button mat-stroked-button color="primary" type="button"
+                                matTooltip="Synchronise" aria-label="Synchronise" [disabled]="processing" (click)="federate()">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                        <div style="clear: both;" *ngIf="processing">
+                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

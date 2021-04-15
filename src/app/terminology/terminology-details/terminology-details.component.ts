@@ -29,6 +29,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -63,6 +65,9 @@ export class TerminologyDetailsComponent implements OnInit {
   showPermDelete: boolean;
   errorMessage: string;
   exporting: boolean;
+  currentBranch = '';
+  branchGraph = [];
+
 
   @Input() get openEditForm() {
     return this.openEditFormVal;
@@ -85,7 +90,10 @@ export class TerminologyDetailsComponent implements OnInit {
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private renderer: Renderer2,
-    private editingService: EditingService) {}
+    private editingService: EditingService,
+    private messageService: MessageService
+  ) {}
+
 
   ngOnInit() {
     this.editableForm = new EditableDataModel();
@@ -119,6 +127,7 @@ export class TerminologyDetailsComponent implements OnInit {
     };
 
     this.loadExporterList();
+    this.getModelGraph(this.mcTerminology.id);
     this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
     this.title.setTitle(`Terminology - ${this.mcTerminology?.label}`);
   }
@@ -126,6 +135,32 @@ export class TerminologyDetailsComponent implements OnInit {
   validateLabel = data => {
     if (!data || (data && data.trim().length === 0)) {
       return 'Terminology name can not be empty';
+    }
+  };
+
+  getModelGraph = (modelId) => {
+    this.currentBranch = this.mcTerminology.branchName;
+    this.branchGraph = [
+      {
+        branchName: 'main',
+        label: this.mcTerminology.label,
+        modelId,
+        newBranchModelVersion: false,
+        newDocumentationVersion: false,
+        newFork: false
+      }
+    ];
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go(
+          'terminology',
+          { id: this.branchGraph[val].id },
+          { reload: true, location: true }
+        );
+      }
     }
   };
 
@@ -165,7 +200,16 @@ export class TerminologyDetailsComponent implements OnInit {
   };
 
   toggleSecuritySection = () => {
-    this.securitySection = !this.securitySection;
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'terminologies',
+        domainType: 'Terminology'
+      }, panelClass: 'security-modal'
+    });
+  };
+
+  toggleShowSearch = () => {
+    this.messageService.toggleSearch();
   };
 
   export(exporter) {

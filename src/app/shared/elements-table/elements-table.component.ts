@@ -27,11 +27,11 @@ import { BulkEditModalComponent } from '@mdm/modals/bulk-edit-modal/bulk-edit-mo
 import { BulkDeleteModalComponent } from '@mdm/modals/bulk-delete-modal/bulk-delete-modal.component';
 
 @Component({
-  selector: 'mdm-content-table',
-  templateUrl: './content-table.component.html',
-  styleUrls: ['./content-table.component.sass']
+  selector: 'mdm-elements-table',
+  templateUrl: './elements-table.component.html',
+  styleUrls: ['./elements-table.component.sass']
 })
-export class ContentTableComponent implements AfterViewInit {
+export class ElementsTableComponent implements AfterViewInit {
   @Input() parentDataModel: any;
   @Input() grandParentDataClass: any;
   @Input() parentDataClass: any;
@@ -64,7 +64,7 @@ export class ContentTableComponent implements AfterViewInit {
   ) { }
   ngAfterViewInit() {
     if (this.isEditable && !this.parentDataModel.finalised) {
-      this.displayedColumns = ['checkbox', 'name', 'description', 'multiplicity', 'actions'];
+      this.displayedColumns = ['name', 'description', 'multiplicity', 'checkbox'];
     } else {
       this.displayedColumns = ['name', 'description', 'multiplicity'];
     }

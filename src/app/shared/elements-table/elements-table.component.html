@@ -19,7 +19,7 @@ SPDX-License-Identifier: Apache-2.0
   <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
       <div fxFlex  fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="start center">
           <h4 class="marginless">
-              <span>Content</span>
+              <span>Elements</span>
               <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
               <span class="mdm--badge mdm--element-count" *ngIf="!isLoadingResults">{{totalItemCount}}</span>
               <i class="fas fa-filter" (click)="filterClick()" matTooltip="Toggle search"></i>
@@ -61,18 +61,6 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div class="table-responsive">
   <table mat-table #table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
-      <ng-container matColumnDef="checkbox">
-          <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;">
-              <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
-                  <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
-              </mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let record" aria-label="Select this Checkbox">
-              <mat-checkbox [(ngModel)]="record.checked" aria-label="Select this Checkbox" (change)="listChecked();">
-                  <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
-              </mat-checkbox>
-          </td>
-      </ng-container>
       <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="label" [disabled]="!hideFilters" style="cursor:pointer;max-width: 35%;width: 35%;" columnName="name">
               <span [hidden]="!hideFilters">Name</span>
@@ -87,17 +75,14 @@ SPDX-License-Identifier: Apache-2.0
               <div>
                   <mdm-element-link [element]="record" [parentDataModel]="{id:record.dataModel}" [parentDataClass]="{id:record.dataClassParent}"></mdm-element-link>
               </div>
-              <div>
-                  <small class="item-type ml-1">{{record.domainType}}</small>
-              </div>
           </td>
       </ng-container>
       <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="description" [disabled]="!hideFilters" style="cursor:pointer;max-width: 45%;width: 45%;" columnName="description">
-              <span [hidden]="!hideFilters">Details</span>
+              <span [hidden]="!hideFilters">Description</span>
               <div [hidden]="hideFilters">
                   <mat-form-field class="filter" floatLabel="never">
-                      <mat-label>Details</mat-label>
+                      <mat-label>Description</mat-label>
                       <input #filters matInput name="description" (keyup)="applyFilter()">
                   </mat-form-field>
               </div>
@@ -106,10 +91,6 @@ SPDX-License-Identifier: Apache-2.0
               <div *ngIf="record.description && record.description.length>0" style="margin-bottom: 10px;">
                   <span style="font-style: italic;font-size:11px;">Description:</span>
                   <mdm-more-description description="{{record.description}}"></mdm-more-description>
-              </div>
-              <div *ngIf="record.domainType == 'DataElement'" style="margin-bottom:9px;">
-                  <span style="font-style: italic;font-size:13px;">Data Type:</span>
-                  <mdm-element-data-type [hideEnumList]="true" [elementDataType]="record.dataType" [mcParentDataModel]="parentDataModel"></mdm-element-data-type>
               </div>
               <div>
                   <mdm-all-links-in-paged-list [parent]="record"></mdm-all-links-in-paged-list>
@@ -130,7 +111,7 @@ SPDX-License-Identifier: Apache-2.0
               <mdm-multiplicity [min]="record.minMultiplicity" [max]="record.maxMultiplicity"></mdm-multiplicity>
           </td>
       </ng-container>
-      <ng-container matColumnDef="actions">
+      <!-- <ng-container matColumnDef="actions">
           <td mat-header-cell *matHeaderCellDef columnName="actions" style="width: 10%; max-width: 10%; text-align: center;"></td>
           <td mat-cell *matCellDef="let record" style="text-align: center;">
               <button mat-icon-button color="primary" [matMenuTriggerFor]="dataClassRowActions" aria-label="Mat menu actions"><i class="fas fa-ellipsis-v"></i></button>
@@ -144,7 +125,19 @@ SPDX-License-Identifier: Apache-2.0
                   </button>
               </mat-menu>
           </td>
-      </ng-container>
+      </ng-container> -->
+      <ng-container matColumnDef="checkbox">
+        <th mat-header-cell *matHeaderCellDef style="cursor:pointer;max-width: 3%;width: 3%;text-align: center;">
+            <mat-checkbox (change)="onChecked()" [(ngModel)]="checkAllCheckbox" aria-label="Select all Checkboxes">
+                <span class="mdm-hidden-checkbox-label">Select all Checkboxes</span>
+            </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let record" aria-label="Select this Checkbox">
+            <mat-checkbox [(ngModel)]="record.checked" aria-label="Select this Checkbox" (change)="listChecked();">
+                <span class="mdm-hidden-checkbox-label">Select this Checkbox</span>
+            </mat-checkbox>
+        </td>
+    </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'mdm--active-row ' : row.checked }"></tr>
   </table>

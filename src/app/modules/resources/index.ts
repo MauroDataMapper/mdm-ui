@@ -18,3 +18,4 @@ SPDX-License-Identifier: Apache-2.0
 export * from './mdm-resources.module';
 export * from './mdm-resources.service';
 export * from './mdm-rest-handler.service';
+export * from './mdm-resources.models';

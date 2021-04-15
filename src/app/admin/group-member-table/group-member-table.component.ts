@@ -147,7 +147,7 @@ export class GroupMemberTableComponent implements AfterViewInit {
 
   fetchUser = (text, offset, limit) => {
 
-    const options = this.gridService.constructOptions(limit, offset, 'emailAddress', 'asc');
+    const options = this.gridService.constructOptions(limit, offset, 'emailAddress', 'asc', {searchTerm : text});
     this.pagination = {
       limit: options['limit'],
       offset: options['offset'],

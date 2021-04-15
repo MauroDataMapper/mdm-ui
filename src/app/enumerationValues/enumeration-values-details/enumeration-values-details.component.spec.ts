@@ -38,6 +38,7 @@ describe('EnumerationValuesDetailsComponent', () => {
             EnumerationValuesDetailsComponent,
             ModelPathComponent,
             ElementLinkComponent
+
          ]
       })
          .compileComponents();

@@ -16,6 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
+import { DataTypeProvider } from '@mdm/model/dataModelModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
@@ -26,7 +27,7 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 })
 export class DataModelStep2Component implements OnInit {
   loadingData: any;
-  defaultDataTypeProviders: any;
+  defaultDataTypeProviders: DataTypeProvider[];
   dataTypes: any;
   step: any;
 
@@ -37,26 +38,24 @@ export class DataModelStep2Component implements OnInit {
 
   ngOnInit() {
 
-    this.resources.dataModel.defaultDataTypes().subscribe(result => {
-        this.defaultDataTypeProviders = result.body;
-      },
-      error => {
-        this.messageHandler.showError('There was a problem loading Data Type Providers', error);
-      }
-    );
+    this.resources.dataModel.defaultDataTypes()
+      .subscribe(
+        (result: { body: DataTypeProvider[]}) => this.defaultDataTypeProviders = result.body,
+        error => this.messageHandler.showError('There was a problem loading Data Type Providers', error));
   }
 
-  onSelectDataTypeProvider = dataTypeProvider => {
+  onSelectDataTypeProvider(dataTypeProvider: DataTypeProvider[]) {
     if (!dataTypeProvider) {
       this.loadingData = false;
       this.dataTypes = null;
       return;
     }
+
     this.loadingData = true;
-    this.step.scope.model.selectedDataTypeProvider = dataTypeProvider;
+    this.step.scope.model.selectedDataTypeProvider = dataTypeProvider[0];
     this.dataTypes = {
-      items: this.step.scope.model.selectedDataTypeProvider[0].dataTypes
+      items: this.step.scope.model.selectedDataTypeProvider.dataTypes
     };
     this.loadingData = false;
-  };
+  }
 }

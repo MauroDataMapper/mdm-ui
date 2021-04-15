@@ -26,23 +26,25 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { combineLatest, Subject, Subscription } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component';
 import { EditingService } from '@mdm/services/editing.service';
+import { Node } from '@mdm/folders-tree/flat-node';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 @Component({
   selector: 'mdm-models',
   templateUrl: './models.component.html',
-  styleUrls: ['./models.component.sass']
+  styleUrls: ['./models.component.scss']
 })
 export class ModelsComponent implements OnInit, OnDestroy {
   formData: any = {};
   activeTab = 0;
-  allModels = null;
+  allModels: Node = null;
   filteredModels = null;
   isAdmin = this.securityHandler.isAdmin();
   inSearchMode = false;
@@ -135,7 +137,8 @@ export class ModelsComponent implements OnInit, OnDestroy {
     private userSettingsHandler: UserSettingsHandlerService,
     protected messageHandler: MessageHandlerService,
     public dialog: MatDialog,
-    private editingService: EditingService) {
+    private editingService: EditingService,
+    private modelTree: ModelTreeService) {
   }
 
   ngOnInit() {
@@ -167,7 +170,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
 
     this.broadcastSvc.subscribe('$reloadFoldersTree', () => {
-      this.loadFolders(true);
+      this.loadModelsTree(true);
     });
 
     this.currentClassification = null;
@@ -221,50 +224,52 @@ export class ModelsComponent implements OnInit, OnDestroy {
     );
   };
 
-  loadFolders = (noCache?) => {
+  loadModelsTree = (noCache?: boolean) => {
     this.reloading = true;
 
-    let options: any = {};
-    if (this.sharedService.isLoggedIn()) {
-      options = {
-        queryStringParams: {
-          includeDocumentSuperseded: this.userSettingsHandler.get('includeDocumentSuperseded') || false,
-          // includeModelSuperseded: this.userSettingsHandler.get('includeModelSuperseded') || false,
-          includeModelSuperseded: true,
-          includeDeleted: this.userSettingsHandler.get('includeDeleted') || false
+    // Fetch tree information from two potential sources - local folder tree and possible (external)
+    // subscribed catalogues
+    combineLatest([
+      this.modelTree.getLocalCatalogueTreeNodes(noCache),
+      this.modelTree.getSubscribedCatalogueTreeNodes()
+    ])
+    .pipe(
+      map(([local, subscribed]) => {
+        if ((subscribed?.length ?? 0) === 0) {
+          // Display only local catalogue folders/models
+          return this.modelTree.createRootNode(local);
         }
-      };
-    }
-    if (noCache) {
-      options.queryStringParams.noCache = true;
-    }
 
-    this.resources.tree.list('folders', options.queryStringParams).subscribe(result => {
-      const data = result.body;
-      this.allModels = {
-        children: data,
-        isRoot: true
-      };
-      this.filteredModels = Object.assign({}, this.allModels);
+        // Combine sub tree nodes with new parent nodes to build up roots
+        const localParent = this.modelTree.createLocalCatalogueNode(local);
+        const externalParent = this.modelTree.createExternalCataloguesNode(subscribed);
+        return this.modelTree.createRootNode([localParent, externalParent]);
+      })
+    )
+    .subscribe(node => {
+      this.allModels = node;
+      this.filteredModels = node;
       this.reloading = false;
-    }, () => {
+    }, error => {
+      this.messageHandler.showError('There was a problem loading the model tree.', error);
       this.reloading = false;
-    }
-    );
+    });
   };
 
   onNodeConfirmClick($event: NodeConfirmClickEvent) {
     const node = $event.next.node;
 
     this.stateHandler.Go(node.domainType, {
-          id: node.id,
-          edit: false,
-          dataModelId: node.modelId,
-          dataClassId: node.parentId || '',
-          terminologyId: node.modelId || node.model
-        }).then(
-          () => $event.setSelectedNode($event.next),
-          () => $event.setSelectedNode($event.current));
+      id: node.id,
+      edit: false,
+      dataModelId: node.modelId,
+      dataClassId: node.parentId || '',
+      terminologyId: node.modelId || node.model,
+      dataModel: node.dataModel,
+      parentId: node.parentId
+    }).then(
+      () => $event.setSelectedNode($event.next),
+      () => $event.setSelectedNode($event.current));
   }
 
   onNodeDbClick = node => {
@@ -330,7 +335,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.resources.folder.saveChildrenOf(parentId, label );
+      endpoint = this.resources.folder.saveChildrenOf(parentId, label);
     } else {
       endpoint = this.resources.folder.save(label);
     }
@@ -350,7 +355,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.stateHandler.Go('Folder', { id: result.id, edit: false });
       this.messageHandler.showSuccess(`Folder ${label.label} created successfully.`);
       this.folder = '';
-      this.loadFolders();
+      this.loadModelsTree();
     }, error => {
       this.messageHandler.showError('There was a problem creating the Folder.', error);
     });
@@ -398,7 +403,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.userSettingsHandler.update('includeDeleted', this.includeDeleted);
       this.userSettingsHandler.saveOnServer();
     }
-    this.loadFolders();
+    this.loadModelsTree();
     this.showFilters = !this.showFilters;
   };
 
@@ -419,7 +424,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   initializeModelsTree = () => {
-    this.loadFolders();
+    this.loadModelsTree();
     this.loadClassifiers();
   };
 
@@ -430,9 +435,9 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
     if (newState) {
       if (newState === 'import') {
-        this.stateHandler.Go(newState, {importType: type});
+        this.stateHandler.Go(newState, { importType: type });
       } else if (newState === 'export') {
-        this.stateHandler.Go(newState, {exportType: type});
+        this.stateHandler.Go(newState, { exportType: type });
       }
       return;
     }
@@ -479,13 +484,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
       this.reloading = true;
       this.inSearchMode = true;
-      this.allModels = [];
+      this.allModels = null;
 
       this.resources.tree.search('folders', this.sharedService.searchCriteria).subscribe(res => {
-        const result = res.body;
+        const result: Node[] = res.body;
         this.reloading = false;
         this.allModels = {
+          id: '',
+          domainType: DOMAIN_TYPE.Root,
           children: result,
+          hasChildren: true,
           isRoot: true
         };
 
@@ -496,7 +504,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = false;
       this.sharedService.searchCriteria = '';
       this.searchText = '';
-      this.loadFolders();
+      this.loadModelsTree();
     }
   };
 
@@ -530,7 +538,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
   };
 
   reloadTree = () => {
-    this.loadFolders(true);
+    this.loadModelsTree(true);
   };
 
   onAddClassifier = () => {
@@ -553,17 +561,17 @@ export class ModelsComponent implements OnInit, OnDestroy {
               label: result.label,
             };
             this.resources.classifier.save(resource).subscribe(response => {
-                this.messageHandler.showSuccess('Classifier saved successfully.');
-                this.stateHandler.Go('classification',
-                  {
-                    id: response.body.id
-                  },
-                  { reload: true, location: true }
-                );
-                this.broadcastSvc.broadcast('$reloadClassifiers');
-              }, error => {
-                this.messageHandler.showError('There was a problem saving the Classifier.', error);
-              });
+              this.messageHandler.showSuccess('Classifier saved successfully.');
+              this.stateHandler.Go('classification',
+                {
+                  id: response.body.id
+                },
+                { reload: true, location: true }
+              );
+              this.broadcastSvc.broadcast('$reloadClassifiers');
+            }, error => {
+              this.messageHandler.showError('There was a problem saving the Classifier.', error);
+            });
 
           } else {
             const error = 'err';

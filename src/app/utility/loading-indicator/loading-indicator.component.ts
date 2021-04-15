@@ -17,7 +17,6 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { LoadingService } from '@mdm/services/loading.service';
-import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-loading-indicator',
@@ -31,8 +30,6 @@ export class LoadingIndicatorComponent implements OnInit {
   constructor(private loading: LoadingService) { }
 
   ngOnInit(): void {
-    this.loading.isLoading
-      .pipe(delay(0))
-      .subscribe((value) => this.visible = value);
+    this.loading.isLoading.subscribe((value) => this.visible = value);
   }
 }

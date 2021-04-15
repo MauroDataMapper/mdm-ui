@@ -40,6 +40,7 @@ import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -83,6 +84,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   download: any;
   downloadLink: any;
   urlText: any;
+  currentBranch = '';
+  branchGraph = [];
 
   canEditDescription = true;
   showEditDescription = false;
@@ -151,7 +154,17 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   CodeSetDetails(): any {
 
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
+
+      if(serverResult.domainType !== 'CodeSet')
+      {
+        return;
+      }
+
       this.result = serverResult;
+
+
+      this.getModelGraph(this.result.id);
+
       this.editableForm.description = this.result.description;
       if (this.result.classifiers) {
         this.result.classifiers.forEach(item => {
@@ -204,7 +217,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'result',
+        domainType: 'codeSets'
+      }, panelClass: 'security-modal'
+    });
   }
 
   toggleShowSearch() {
@@ -258,7 +276,41 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  askForPermanentDelete() {
+  getModelGraph = (codesetId) => {
+    this.currentBranch = this.result.branchName;
+    this.branchGraph = [
+      {
+        branchName: 'main',
+        label: this.result.label,
+        codesetId,
+        newBranchModelVersion: false,
+        newDocumentationVersion: false,
+        newFork: false
+      }
+    ];
+
+    this.resourcesService.codeSet.modelVersionTree(codesetId).subscribe(res => {
+      this.currentBranch = this.result.branchName;
+      this.branchGraph = res.body;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
+    });
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go(
+          'codeset',
+          { id: this.branchGraph[val].modelId },
+          { reload: true, location: true }
+        );
+      }
+    }
+  };
+
+
+  askForPermanentDelete(): any {
     if (!this.showPermDelete) {
       return;
     }

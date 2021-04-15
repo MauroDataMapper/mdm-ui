@@ -73,7 +73,7 @@ export class DownloadService {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     svg.parentElement.append(canvas);
     // const img = new Image();
-    const img = new Image() as HTMLImageElement;
+    const img = new Image();
     svg.parentElement.append(img);
     img.setAttribute('style', 'display: block');
     img.width = width * (scale + 1);

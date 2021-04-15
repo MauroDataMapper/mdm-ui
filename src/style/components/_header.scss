@@ -18,7 +18,6 @@ SPDX-License-Identifier: Apache-2.0
 /* header & navbar specific styling */
 header#mdm--header {
   position: relative;
-  background-color: $defaultThemeColour;
   width: 100%;
   margin-bottom: 24px;
   z-index: 1000;
@@ -35,7 +34,6 @@ header#mdm--header {
   }
   .mdm--navbar-items {
     display: flex;
-    margin-left: 72px;
     align-items: center;
     @include respond-to($tablet) {
       display: none !important;
@@ -43,20 +41,6 @@ header#mdm--header {
   }
   .mdm--navbar-brand {
     z-index: 100;
-    #mdm-logo {
-      image-rendering: -webkit-optimize-contrast;
-      @include size(255px, auto);
-      @include respond-to($mobile-xs) {
-        position: relative;
-        display: block;
-        @include size(160px, 40px);
-      }
-    }
-    img {
-      @include respond-to ($mobile-xs){
-        max-width: 100%;
-      }
-    }
   }
   .nav-link {
     display: inline-block;
@@ -131,7 +115,6 @@ header#mdm--header {
 }
 #mdm--navbar-mobile .mdm--navbar-user {
   display: block;
-  background: #002147;
     color: #fff;
     padding-bottom: 10px;
   .profile-img {

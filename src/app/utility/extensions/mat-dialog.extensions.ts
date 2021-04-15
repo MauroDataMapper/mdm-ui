@@ -105,7 +105,7 @@ MatDialog.prototype.openConfirmationAsync = function (
     .openConfirmation(config)
     .afterClosed()
     .pipe(
-      filter(result => result.status === ModalDialogStatus.Ok),
+      filter(result => (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok),
       map(() => { })
     );
 };
@@ -118,7 +118,7 @@ MatDialog.prototype.openDoubleConfirmationAsync = function (
     .openConfirmation(firstConfig)
     .afterClosed()
     .pipe(
-      filter(result => result.status === ModalDialogStatus.Ok),
+      filter(result => (result?.status ?? ModalDialogStatus.Close) === ModalDialogStatus.Ok),
       mergeMap(() => {
         return this
           .openConfirmation(finalConfig)

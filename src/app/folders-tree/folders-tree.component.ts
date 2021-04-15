@@ -23,12 +23,13 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { of, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { DOMAIN_TYPE, FlatNode, Node } from './flat-node';
+import { DOMAIN_TYPE, FlatNode, getDomainTypeIcon, Node } from './flat-node';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderService } from './folder.service';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
 import { MessageService, SecurityHandlerService, FavouriteHandlerService, StateHandlerService, BroadcastService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 /**
  * Event arguments for confirming a click of a node in the FoldersTreeComponent.
@@ -136,7 +137,8 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       protected messageHandler: MessageHandlerService,
       private broadcastSvc: BroadcastService,
       public dialog: MatDialog,
-      private editingService: EditingService) {
+      private editingService: EditingService,
+      private modelTree: ModelTreeService) {
       this.loadFavourites();
       this.subscriptions.add(this.messages.on('favourites', () => {
          this.loadFavourites();
@@ -202,29 +204,11 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
    /** Determine which tree node icon to use based on given node's domain type */
    getIcon(fnode: FlatNode) {
-      switch (fnode.domainType) {
-         case DOMAIN_TYPE.Folder:
-            return this.treeControl.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder';
-         case DOMAIN_TYPE.DataModel:
-            if (fnode.type === 'Data Standard') {
-               return 'fa-file-alt';
-            } else if (fnode.type === 'Data Asset') {
-               return 'fa-database';
-            }
-            break;
-         case DOMAIN_TYPE.Terminology:
-            return 'fa-book';
-         case DOMAIN_TYPE.CodeSet:
-            return 'fa-list';
-         case DOMAIN_TYPE.Classification:
-            return 'fa-tags';
-         case DOMAIN_TYPE.Term:
-            return 'fa-code';  // Not currently used in html template
-         case DOMAIN_TYPE.ReferenceDataModel:
-            return 'fa-file-contract';
-         default:
-            return null;
-      }
+      return getDomainTypeIcon(fnode.domainType, fnode, this.treeControl);
+   }
+
+   hasIcon(fnode: FlatNode) {
+      return getDomainTypeIcon(fnode.domainType, fnode, this.treeControl) !== null;
    }
 
    /** Additional CSS classes to add to the tree node. fa-lg is required to make sure fa icon is properly sized. */
@@ -275,10 +259,6 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    }
 
    async expand(node: Node) {
-      let dataModelResponse;
-      let dataClassResponse;
-      let terminologyResponse;
-      let termResponse;
       try {
          switch (node.domainType) {
             case DOMAIN_TYPE.Folder:
@@ -288,18 +268,24 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
                } else {
                   return node.children;
                }
-            case DOMAIN_TYPE.DataModel:
-               dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
+            case DOMAIN_TYPE.DataModel: {
+               const dataModelResponse = await this.resources.tree.get('folders', 'dataModels', node.id).toPromise();
                return dataModelResponse.body;
-            case DOMAIN_TYPE.DataClass:
-               dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
+            }
+            case DOMAIN_TYPE.DataClass: {
+               const dataClassResponse = await this.resources.tree.get('folders', 'dataClasses', node.id).toPromise();
                return dataClassResponse.body;
-            case DOMAIN_TYPE.Terminology:
-               terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
+            }
+            case DOMAIN_TYPE.Terminology: {
+               const terminologyResponse = await this.resources.tree.get('folders', 'terminologies', node.id).toPromise();
                return terminologyResponse.body;
-            case DOMAIN_TYPE.Term:
-               termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
+            }
+            case DOMAIN_TYPE.Term: {
+               const termResponse = await this.resources.tree.get('folders', 'terms', node.id).toPromise();
                return termResponse.body;
+            }
+            case DOMAIN_TYPE.SubscribedCatalogue:
+               return await this.modelTree.getFederatedDataModelNodes(node.id).toPromise();
             default:
                return [];
          }

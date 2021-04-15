@@ -44,6 +44,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { SecurityModalComponent } from '../modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
@@ -87,7 +88,8 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   urlText: any;
   canEditDescription = true;
   showEditDescription = false;
-
+  branchGraph = [];
+  currentBranch = '';
 
   constructor(
     private renderer: Renderer2,
@@ -113,7 +115,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.loadExporterList();
     this.DataModelDetails();
 
-   this.editableForm = new EditableDataModel();
+    this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
 
@@ -168,7 +170,9 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
       this.result = serverResult;
       this.setEditableFormData();
-
+      if(this.result.domainType === 'DataModel') {
+         this.getModelGraph(this.result.id);
+      }
       if (this.result.classifiers) {
         this.result.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
@@ -219,8 +223,14 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'dataModel',
+        domainType: 'DataModel'
+      }, panelClass: 'security-modal'
+    });
   }
+
   toggleShowSearch() {
     this.messageService.toggleSearch();
   }
@@ -229,6 +239,23 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     // unsubscribe to ensure no memory leaks
     this.subscription.unsubscribe();
   }
+
+  getModelGraph = modelId => {
+    this.resourcesService.dataModel.modelVersionTree(modelId).subscribe(res => {
+      this.currentBranch = this.result.branchName;
+      this.branchGraph = res.body;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
+    });
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go('datamodel', { id: this.branchGraph[val].modelId }, { reload: true, location: true });
+      }
+    }
+  };
 
   delete(permanent) {
     if (!this.showDelete) {
@@ -430,7 +457,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   merge = () => {
-    this.stateHandler.NewWindow('modelsmerging',
+    this.stateHandler.Go('modelsmerging',
       {
         sourceId: this.result.id,
         targetId: null
@@ -440,7 +467,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
 
   showMergeGraph = () => {
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(VersioningGraphModalComponent, {
         data: { parentDataModel: this.result.id },
         panelClass: 'versioning-graph-modal'

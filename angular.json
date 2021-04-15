@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "custom-webpack.config.js"
+            },
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -33,7 +36,13 @@
             ],
             "scripts": [
               "node_modules/jodit/build/jodit.min.js"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles",
+                "src/app"
+              ]
+            }
           },
           "configurations": {
             "production": {

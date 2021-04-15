@@ -16,51 +16,186 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
-    <mdm-classification-details [mcClassification]="classifier" [afterSave]="afterSave"></mdm-classification-details>
+  <mdm-classification-details
+    [mcClassification]="classifier"
+    [afterSave]="afterSave"
+  ></mdm-classification-details>
 </div>
 
 <div *ngIf="showSearch">
-    <div class="mdm--shadow-block">
-        <div class="panel">
-            <div class="panel-heading">
-                <div class="heading-container">
-                    <h4 class="marginless">Search</h4>
-                </div>
-                <div style="float:right;">
-                    <button mat-button color="warn" type="button" class="paddingless" (click)="toggleShowSearch()" aria-disabled="false" matTooltip="Close" aria-label="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="panel-body panel-table">
-                <mdm-advanced-search-bar [parent]="result"
-                                         [showRestrictTo]="false"
-                                         [doNotShowDataModelInModelPath]="false"
-                                         [doNotDisplayModelPathStatus]="false"
-                                         [showDomainTypes]="['Folder', 'DataModel', 'DataClass', 'DataType', 'DataElement']">
-                </mdm-advanced-search-bar>
-            </div>
-        </div>
+  <div class="mdm--shadow-block">
+    <div class="panel">
+      <div class="panel-heading">
+        <div class="heading-container">
+          <h4 class="marginless">Search</h4>
+          <div style="float: right">
+            <button
+              mat-button
+              color="warn"
+              type="button"
+              class="paddingless"
+              (click)="toggleShowSearch()"
+              aria-disabled="false"
+              matTooltip="Close"
+              aria-label="Close"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>        
+      </div>
+      <div class="panel-body panel-table">
+        <mdm-advanced-search-bar
+          [parent]="result"
+          [showRestrictTo]="false"
+          [doNotShowDataModelInModelPath]="false"
+          [doNotDisplayModelPathStatus]="false"
+          [showDomainTypes]="[
+            'Folder',
+            'DataModel',
+            'DataClass',
+            'DataType',
+            'DataElement'
+          ]"
+        >
+        </mdm-advanced-search-bar>
+      </div>
     </div>
+  </div>
 </div>
 
-
-<mat-tab-group #tab [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-    <mat-tab label="Classified Elements">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'catalogueItems'"></mdm-classified-elements-list>
+<mat-tab-group
+  #tab
+  [selectedIndex]="activeTab"
+  (selectedIndexChange)="tabSelected($event)"
+>
+  <mat-tab label="Description">
+    <ng-template matTabContent>
+      <div class="mb-2 full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 430px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="descriptionView"
+                  name="descriptionView"
+                  (ngModelChange)="changeProfile()"
+                >
+                  <mat-option value="default">Default profile</mat-option>
+                  <!-- <mat-divider></mat-divider>
+                        <mat-option
+                          *ngFor="let option of allUsedProfiles"
+                          [value]="option.value"
+                          >{{ option.display }}</mat-option
+                        >
+                        <mat-divider></mat-divider>
+                        <mat-option value="other">Other properties</mat-option>
+                        <mat-divider></mat-divider>
+                        <mat-option value="addnew">Add new profile...</mat-option> -->
+                </mat-select>
+              </mat-form-field>
             </div>
-        </ng-template>
-    </mat-tab>
-    <!-- <mat-tab label="Classified Terminologies">
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <button
+                mat-flat-button
+                color="primary"
+                type="button"
+                (click)="edit()"
+                class="mr-1"
+              >
+                <i class="fas fa-pencil-alt"></i>
+                Edit
+              </button>
+            </div>
+          </div>
+        </div>
+        <form
+          editable-form
+          name="form"
+          (ngSubmit)="formBeforeSave()"
+          disable-submit-on-enter
+        >
+          <table
+            *ngIf="this.descriptionView === 'default'"
+            class="table table-bordered mdm--table-fixed"
+          >
+            <tbody>
+              <tr>
+                <td class="detailsRowHeader">Description</td>
+                <td class="elementDetailDescription">
+                  <div *ngIf="result">
+                    <mdm-markdown-text-area
+                      [editableForm]="editableForm"
+                      [element]="result"
+                      [property]="'description'"
+                    >
+                    </mdm-markdown-text-area>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <mdm-editable-form-buttons
+            [hidden]="!editableForm.visible"
+            [onCancelEdit]="onCancelEdit"
+            [editable]="editableForm"
+            [textLocation]="'left'"
+            [hideDelete]="true"
+            [hideCancel]="false"
+          >
+          </mdm-editable-form-buttons>
+        </form>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Classified Elements">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-classified-elements-list
+          *ngIf="result"
+          [parent]="result"
+          [classifiedElementType]="'catalogueItems'"
+        ></mdm-classified-elements-list>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <!-- <mat-tab label="Classified Terminologies">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'terminologies'"></mdm-classified-elements-list>
             </div>
         </ng-template>
     </mat-tab> -->
-    <!-- <mat-tab label="Classified Terms" *ngIf="termsCount">
+  <!-- <mat-tab label="Classified Terms" *ngIf="termsCount">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'terms'"></mdm-classified-elements-list>
@@ -68,7 +203,7 @@ SPDX-License-Identifier: Apache-2.0
         </ng-template>
     </mat-tab> -->
 
-    <!-- <mat-tab label="Classified CodeSets" *ngIf="codeSetsCount">
+  <!-- <mat-tab label="Classified CodeSets" *ngIf="codeSetsCount">
         <ng-template matTabContent>
             <div class="full-width">
                 <mdm-classified-elements-list *ngIf="result" [parent]="result" [classifiedElementType]="'codeSets'"></mdm-classified-elements-list>
@@ -76,11 +211,17 @@ SPDX-License-Identifier: Apache-2.0
         </ng-template>
     </mat-tab> -->
 
-    <mat-tab label="History">
-        <ng-template matTabContent>
-            <div class="full-width">
-                <mdm-history *ngIf="result" [parent]="result" [parentType]="'Classifier'" [parentId]=parentId [domainType]="'classifiers'"></mdm-history>
-            </div>
-        </ng-template>
-    </mat-tab>
-</mat-tab-group>
+  <mat-tab label="History">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-history
+          *ngIf="result"
+          [parent]="result"
+          [parentType]="'Classifier'"
+          [parentId]="parentId"
+          [domainType]="'classifiers'"
+        ></mdm-history>
+      </div>
+    </ng-template>
+  </mat-tab>
+ </mat-tab-group>

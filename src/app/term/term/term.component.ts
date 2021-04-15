@@ -25,22 +25,26 @@ import {
 import { Subscription, forkJoin } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
-import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { TermResult } from '@mdm/model/termModel';
+import { EditableTerm, TermResult } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-term',
   templateUrl: './term.component.html',
   styleUrls: ['./term.component.scss']
 })
-export class TermComponent implements OnInit, AfterViewInit {
+export class TermComponent
+  extends ProfileBaseComponent
+  implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   terminology = null;
   term: TermResult;
@@ -55,18 +59,31 @@ export class TermComponent implements OnInit, AfterViewInit {
   result: TermResult;
   hasResult = false;
   showEditForm = false;
-  editForm = null;
+  editableForm: EditableTerm;
+  descriptionView = 'default';
+  showEditDescription = false;
+  rulesItemCount = 0;
+  isLoadingRules = true;
+  showEdit = false;
+  showDelete = false;
+  access:any;
+
 
   constructor(
-    private resources: MdmResourcesService,
+    resources: MdmResourcesService,
     private messageService: MessageService,
-    private sharedService: SharedService,
     private stateService: StateService,
+    messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
     private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
-    private editingService: EditingService) { }
+    dialog: MatDialog,
+    editingService: EditingService,
+    private securityHandler: SecurityHandlerService
+  ) {
+    super(resources, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -82,31 +99,55 @@ export class TermComponent implements OnInit, AfterViewInit {
     this.parentId = this.stateService.params.id;
     this.title.setTitle('Term');
     this.termDetails(this.parentId);
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
-    this.afterSave = (result: { body: { id: any } }) => this.termDetails(result.body.id);
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
   }
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  termDetails = id => {
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
+
+
+  termDetails = (id) => {
     const terms = [];
 
     // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.get(this.stateService.params.terminologyId));
+    terms.push(
+      this.resourcesService.terminology.get(
+        this.stateService.params.terminologyId
+      )
+    );
     // tslint:disable-next-line: deprecation
-    terms.push(this.resources.terminology.terms.get(this.stateService.params.terminologyId, id));
+    terms.push(
+      this.resourcesService.terminology.terms.get(
+        this.stateService.params.terminologyId,
+        id
+      )
+    );
 
     forkJoin(terms).subscribe((results: any) => {
       this.terminology = results[0].body;
       this.term = results[1].body;
 
-      this.resources.catalogueItem.listSemanticLinks(DOMAIN_TYPE.Term, this.term.id).subscribe(resp => {
-        this.term.semanticLinks = resp.body.items;
-      });
+      this.resourcesService.catalogueItem
+        .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
+        .subscribe((resp) => {
+          this.term.semanticLinks = resp.body.items;
+        });
+
+      this.catalogueItem = this.term;
+      this.watchTermObject();
+
+      this.UsedProfiles('term', this.term.id);
+      this.UnUsedProfiles('term', this.term.id);
 
       this.term.finalised = this.terminology.finalised;
       this.term.editable = this.terminology.editable;
@@ -117,69 +158,147 @@ export class TermComponent implements OnInit, AfterViewInit {
         // tslint:disable-next-line: deprecation
         this.stateService.params.tabView
       );
+
+      this.editableForm = new EditableTerm();
+      this.editableForm.visible = false;
+      this.editableForm.deletePending = false;
+      this.setEditableForm();
+
+      this.editableForm.show = () => {
+        this.editableForm.visible = true;
+      };
+
+      this.editableForm.cancel = () => {
+        this.editingService.stop();
+        this.setEditableForm();
+      };
+
       this.result = this.term;
-      if (this.result.terminology) { this.hasResult = true; }
+      if (this.result.terminology) {
+        this.hasResult = true;
+      }
       this.messageService.FolderSendMessage(this.result);
       this.messageService.dataChanged(this.result);
       this.changeRef.detectChanges();
     });
 
     // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
+    this.activeTab = this.getTabDetailByName(
+      this.stateService.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
   };
 
+   setEditableForm() {
+    this.editableForm.visible = false;
+    this.editableForm.validationError = false;
+    this.editableForm.description = this.term.description;
+    this.editableForm.url = this.term.url;
+    if (this.term.classifiers) {
+      this.term.classifiers.forEach((item) => {
+        this.editableForm.classifiers.push(item);
+      });
+    }
+    if (this.term.aliases) {
+      this.term.aliases.forEach((item) => {
+        this.editableForm.aliases.push(item);
+      });
+    }
+  }
+
+  watchTermObject() {
+    this.access = this.securityHandler.elementAccess(this.term);
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+    }
+  }
+
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
-      case 'comments':
-        return { index: 1, name: 'comments' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'links':
-        return { index: 2, name: 'links' };
+        return { index: 1, name: 'links' };
       case 'attachments':
-        return { index: 3, name: 'attachments' };
+        return { index: 2, name: 'attachments' };
+        case 'rules':
+          return { index: 3, name: 'rules' };
 
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   }
 
   Save(updatedResource) {
     this.broadcast.broadcast('$elementDetailsUpdated', updatedResource);
   }
-  openEditForm = (formName) => {
-    this.showEditForm = true;
-    this.editForm = formName;
-  };
-
-  closeEditForm = () => {
-    this.showEditForm = false;
-    this.editForm = null;
-  };
 
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'comments' };
+        return { index: 1, name: 'links' };
       case 2:
-        return { index: 2, name: 'links' };
+        return { index: 2, name: 'attachments' };
       case 3:
-        return { index: 3, name: 'attachments' };
+        return { index: 3, name: 'rules' };
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   }
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-    this.stateHandler.Go(
-      'term',
-      { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
-    );
-    this.activeTab = tab.index;
+    this.stateHandler.Go('term', { tabView: tab.name }, { notify: false });
   }
+
+  onCancelEdit() {
+    this.editMode = false; // Use Input editor whe adding a new folder.
+  }
+
+  formBeforeSave = () => {
+    this.editMode = false;
+
+    const classifiers = [];
+    this.editableForm.classifiers.forEach((cls) => {
+      classifiers.push(cls);
+    });
+    const aliases = [];
+    this.editableForm.aliases.forEach((alias) => {
+      aliases.push(alias);
+    });
+
+    this.term['aliases'] = aliases;
+    this.term['classifiers'] = classifiers;
+    this.term['description'] = this.editableForm.description;
+
+    this.resourcesService.term
+      .update(this.term.terminology.id, this.term.id, this.term)
+      .subscribe(
+        () => {
+          this.messageHandler.showSuccess('Term updated successfully.');
+          this.editingService.stop();
+          this.editableForm.visible = false;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Term.',
+            error
+          );
+        }
+      );
+  };
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+   };
 }

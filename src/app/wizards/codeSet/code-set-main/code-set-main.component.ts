@@ -78,5 +78,5 @@ export class CodeSetMainComponent implements OnInit {
                this.messageHandler.showError('There was a problem creating the Code Set.', error);
             }
         }
-    };
+    }
 }

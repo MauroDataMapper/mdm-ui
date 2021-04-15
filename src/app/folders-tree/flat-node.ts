@@ -15,6 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+import { FlatTreeControl } from '@angular/cdk/tree';
+
 /** (Partial) Structure of source node */
 export interface Node {
     children?: Node[];
@@ -200,5 +203,36 @@ export enum DOMAIN_TYPE {
     CodeSet = 'CodeSet',
     Classification = 'Classification',
     ReferenceDataModel = 'ReferenceDataModel',
-    EnumerationType = 'EnumerationType'
+    EnumerationType = 'EnumerationType',
+
+    // TODO: UI only domains for prototyping, consider making them part of backend
+    Root = 'Root',
+    LocalCatalogue = 'LocalCatalogue',
+    ExternalCatalogues = 'ExternalCatalogues',
+    SubscribedCatalogue = 'SubscribedCatalogue',
+    FederatedDataModel = 'FederatedDataModel'
 }
+
+type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
+
+const domainTypeIcons = new Map<DOMAIN_TYPE, FlatNodeIconCallback>([
+    [DOMAIN_TYPE.Folder, (fnode, treeControl) => treeControl?.isExpanded(fnode) ? 'fa-folder-open' : 'fa-folder'],
+    [DOMAIN_TYPE.DataModel, (fnode, _) => fnode?.type === 'Data Standard' ? 'fa-file-alt' : 'fa-database'],
+    [DOMAIN_TYPE.Terminology, () => 'fa-book'],
+    [DOMAIN_TYPE.CodeSet, () => 'fa-list'],
+    [DOMAIN_TYPE.Classification, () => 'fa-tags'],
+    // [DOMAIN_TYPE.Term, () => 'fa-code'],
+    [DOMAIN_TYPE.ReferenceDataModel, () => 'fa-file-contract'],
+    [DOMAIN_TYPE.LocalCatalogue, () => 'fa-desktop'],
+    [DOMAIN_TYPE.ExternalCatalogues, () => 'fa-network-wired'],
+    [DOMAIN_TYPE.SubscribedCatalogue, () => 'fa-rss'],
+    [DOMAIN_TYPE.FederatedDataModel, () => 'fa-external-link-alt']
+ ]);
+
+ export const getDomainTypeIcon = (type: DOMAIN_TYPE, fnode?: FlatNode, treeControl?: FlatTreeControl<FlatNode>) => {
+    if (!domainTypeIcons.has(type)) {
+        return null;
+     }
+
+     return domainTypeIcons.get(type)(fnode, treeControl);
+ };

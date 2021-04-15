@@ -51,6 +51,7 @@ export class NavbarComponent implements OnInit {
   pendingUsersCount = 0;
   isLoggedIn = this.securityHandler.isLoggedIn();
   subscription: Subscription;
+  features = this.sharedService.features;
 
   constructor(
     private sharedService: SharedService,

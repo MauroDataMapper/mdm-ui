@@ -28,6 +28,7 @@ export class UsersAppContainerComponent implements OnInit {
   deleteInProgress: boolean;
   pendingUsersCount = 0;
   isAdmin = this.securityHandler.isAdmin();
+  features = this.sharedService.features;
 
   constructor(private sharedService: SharedService, private securityHandler: SecurityHandlerService) {}
 

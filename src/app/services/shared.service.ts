@@ -21,6 +21,7 @@ import { SecurityHandlerService } from './handlers/security-handler.service';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { Features } from './shared.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,7 @@ export class SharedService {
   wiki = environment.wiki;
   simpleViewSupport = environment.simpleViewSupport;
   HDFLink = environment.HDFLink;
+  features: Features = environment.features;
   isAdmin;
   applicationOffline = new Subject<any>();
   current;

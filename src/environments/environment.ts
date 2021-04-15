@@ -37,7 +37,10 @@ export const environment = {
   wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
   simpleViewSupport: false,
   name: 'development',
-  appIsEditable: true
+  appIsEditable: true,
+  features: {
+    useSubscribedCatalogues: false
+  }
 };
 
 /*

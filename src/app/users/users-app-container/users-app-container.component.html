@@ -62,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
                   </a>
               </li>
               <li>
-                <a role="menuitem" uiSref="appContainer.adminArea.subscribedCatalogues" uiSrefActive="active">
+                <a role="menuitem" *ngIf="features.useSubscribedCatalogues" uiSref="appContainer.adminArea.subscribedCatalogues" uiSrefActive="active">
                     <i class="fas fa-rss" aria-hidden="true"></i>
                     <span>Subscribed catalogues</span>
                 </a>

@@ -62,7 +62,7 @@ export class ModelTreeService {
   }
 
   getSubscribedCatalogueTreeNodes(): Observable<Node[]> {
-    if (!this.sharedService.isLoggedIn(true)) {
+    if (!this.sharedService.isLoggedIn(true) || !this.sharedService.features.useSubscribedCatalogues) {
       return of([]);
     }
 

@@ -16,6 +16,7 @@ export class ProfileBaseComponent extends BaseComponent {
   allUnUsedProfiles: any[] = [];
   currentProfileDetails: any = {};
   descriptionView = 'default';
+  lastDescriptionView: string;
 
   catalogueItem: any;
 
@@ -144,7 +145,7 @@ export class ProfileBaseComponent extends BaseComponent {
         profiles.body.forEach((profile) => {
           const prof: any = [];
           prof['display'] = profile.displayName;
-          prof['value'] = `${profile.metadataNamespace}/${profile.name}`;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
           this.allUsedProfiles.push(prof);
         });
       });
@@ -160,7 +161,7 @@ export class ProfileBaseComponent extends BaseComponent {
         profiles.body.forEach((profile) => {
           const prof: any = [];
           prof['display'] = profile.displayName;
-          prof['value'] = `${profile.metadataNamespace}/${profile.name}`;
+          prof['value'] = `${profile.namespace}/${profile.name}`;
           this.allUnUsedProfiles.push(prof);
         });
       });
@@ -172,6 +173,7 @@ export class ProfileBaseComponent extends BaseComponent {
       this.descriptionView !== 'other' &&
       this.descriptionView !== 'addnew'
     ) {
+      this.lastDescriptionView = this.descriptionView;
       const splitDescription =  this.descriptionView.split('/');
       const response = await this.resourcesService.profile.profile(
         this.catalogueItem.domainType,
@@ -219,10 +221,16 @@ export class ProfileBaseComponent extends BaseComponent {
               }
             );
         }
+        else{
+          this.descriptionView = this.lastDescriptionView;
+          this.changeProfile();
+        }
       });
     } else {
       this.currentProfileDetails = null;
+      this.lastDescriptionView = this.descriptionView;
     }
+
   }
 
 }

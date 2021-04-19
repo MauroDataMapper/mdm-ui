@@ -115,6 +115,7 @@ export class CodeSetComponent
 
   formBeforeSave = async () => {
     this.editMode = false;
+    this.editingService.stop();
 
     const classifiers = [];
     this.editableForm.classifiers.forEach((cls) => {
@@ -207,6 +208,7 @@ export class CodeSetComponent
 
         this.editableForm.show = () => {
           this.editableForm.visible = true;
+          this.editingService.start();
         };
 
         this.editableForm.cancel = () => {

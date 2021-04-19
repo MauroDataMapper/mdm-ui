@@ -23,24 +23,106 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { SignInCredentials, UserDetails } from './security-handler.model';
+import { cold } from 'jest-marbles';
+import { HttpErrorResponse } from '@angular/common/http';
+
+interface MdmSecurityResourceStub {
+  login: jest.Mock;
+  logout: jest.Mock;
+}
+
+interface MdmSessionResourceStub {
+  isApplicationAdministration: jest.Mock;
+  isAuthenticated: jest.Mock;
+}
+
+interface MdmResourcesServiceStub {
+  security: MdmSecurityResourceStub;
+  session: MdmSessionResourceStub;
+}
 
 describe('SecurityHandlerService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [
-      HttpClientTestingModule,
-      UIRouterModule.forRoot({ useHash: true }),
-      ToastrModule.forRoot()
-    ],
-    providers: [
-      {
-        provide: MdmResourcesService, useValue: {}
-      },
-      ElementTypesService
-    ]
-  }));
+  let service: SecurityHandlerService;
+  const resourcesStub: MdmResourcesServiceStub = {
+    security: {
+      login: jest.fn(),
+      logout: jest.fn()
+    },
+    session: {
+      isApplicationAdministration: jest.fn(),
+      isAuthenticated: jest.fn()
+    }
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        UIRouterModule.forRoot({ useHash: true }),
+        ToastrModule.forRoot()
+      ],
+      providers: [
+        {
+          provide: MdmResourcesService, useValue: resourcesStub
+        },
+        ElementTypesService
+      ]
+    });
+
+    service = TestBed.inject(SecurityHandlerService);
+  });
 
   it('should be created', () => {
-    const service: SecurityHandlerService = TestBed.inject(SecurityHandlerService);
     expect(service).toBeTruthy();
+  });
+
+  it.each([
+    ['123', 'user@test.com', false],
+    ['456', 'admin@test.com', true]
+  ])('should sign in user %s %s when admin = %o', (id, userName, isAdmin) => {
+    const credentials: SignInCredentials = { username: userName, password: 'test' };
+    const expectedUser: UserDetails = {
+      id,
+      userName,
+      firstName: 'first',
+      lastName: 'last',
+      isAdmin,
+      needsToResetPassword: false,
+      role: '',
+      token: undefined
+    };
+
+    resourcesStub.security.login.mockImplementationOnce(() => cold('--a|', {
+      a: {
+        body: {
+          id: expectedUser.id,
+          emailAddress: expectedUser.userName,
+          firstName: expectedUser.firstName,
+          lastName: expectedUser.lastName
+        }
+      }
+    }));
+
+    resourcesStub.session.isApplicationAdministration.mockImplementationOnce(() => cold('--a|', {
+      a: {
+        body: {
+          applicationAdministrationSession: expectedUser.isAdmin
+        }
+      }
+    }));
+
+    const expected$ = cold('----a|', { a: expectedUser });
+    const actual$ = service.signIn(credentials);
+
+    expect(actual$).toBeObservable(expected$);
+  });
+
+  it('should throw error if sign in fails', () => {
+    resourcesStub.security.login.mockImplementationOnce(() => cold('--#', null, new HttpErrorResponse({})));
+
+    const expected$ = cold('--#');
+    const actual$ = service.signIn({ username: 'fail', password: 'fail' });
+    expect(actual$).toBeObservable(expected$);
   });
 });

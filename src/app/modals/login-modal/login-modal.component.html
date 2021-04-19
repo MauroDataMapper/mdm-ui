@@ -15,40 +15,47 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<form class="mdm--form mdm--form-modal" (keyup)="$event.keyCode != 13;" role="form" autocomplete="on" name="loginForm">
+<form class="mdm--form mdm--form-modal" [formGroup]="signInForm" (keyup)="$event.keyCode != 13;" role="form" autocomplete="on" name="loginForm">
     <button mat-icon-button color="warn" type="button" (click)="close()" class="close-modal paddingless"> <i class="fas fa-times"></i> </button>
-    <h3 class='modal-title text-center'>Login</h3>
-    <p class="mb-2 text-center">Please log in to continue using our Catalogue</p>
+    <h3 class="modal-title text-center">Login</h3>
+    <p class="mb-2 text-center">Please login to continue using Mauro</p>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput type="email" name="email" [(ngModel)]='username' autocomplete="on" placeholder="Enter your email" required>
-            <mat-error *ngIf="errors && errors['email']">
-                {{errors['email']}}
+            <input matInput type="email" name="email" formControlName="userName" autocomplete="on" placeholder="Enter your email" required>
+            <mat-error *ngIf="userName?.errors?.required">
+                Email is required
+            </mat-error>
+            <mat-error *ngIf="userName?.errors?.pattern">
+                Invalid email address
             </mat-error>
         </mat-form-field>
     </div>
     <div class="mdm--form-input">
         <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
-            <input matInput type="password" name="password" [(ngModel)]='password' autocomplete="on" placeholder="Enter your password" required>
-            <mat-error *ngIf="errors && errors['password']">
-              {{errors['password']}}
+            <input matInput type="password" name="password" formControlName="password" autocomplete="on" placeholder="Enter your password" required>
+            <mat-error *ngIf="password?.errors?.required">
+                Password is required
             </mat-error>
         </mat-form-field>
     </div>
     <div class="mb-2 text-center">
-        <button type="submit" (click)="login()" mat-flat-button class="custom mdm--form-button" color="primary"> Log in </button>
+        <button type="submit" (click)="login()" mat-flat-button class="custom mdm--form-button" color="primary" [disabled]="authenticating">
+            Login
+        </button>
     </div>
     <div class="text-center marginless">
-        <button (click)="forgotPassword()" mat-button color="primary"> Forgot Password </button>
+        <button (click)="forgotPassword()" mat-button color="primary" [disabled]="authenticating">Forgot Password</button>
     </div>
     <!-- <div class="text-center marginless">
         <span>Don't have an account?</span>
         <button mat-button color="primary" (click)="signUp()">Sign up</button>
     </div> -->
 
-    <div *ngIf='message' class='alert alert-danger'>
+    <mat-progress-bar *ngIf="authenticating" color="accent" mode="indeterminate"></mat-progress-bar>
+
+    <div *ngIf="message" class="alert alert-danger">
       {{message}}
     </div>
 </form>

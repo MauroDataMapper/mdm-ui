@@ -16,7 +16,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { IMdmRestHandlerOptions } from '@maurodatamapper/mdm-resources';
-import { HttpErrorResponse } from "@angular/common/http";
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Represents a response from an `mdm-resources` API endpoint.

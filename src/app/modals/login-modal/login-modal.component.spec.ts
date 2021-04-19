@@ -103,7 +103,8 @@ describe('LoginModalComponent', () => {
         id: '123',
         firstName: 'test',
         lastName: 'test',
-        userName: 'test@test.com'
+        userName: 'test@test.com',
+        email: 'test@test.com'
       }));
       const spy = jest.spyOn(securityHandler, 'signIn');
       component.signInForm.setValue({ userName: 'test@test.com', password: 'password' });

@@ -25,7 +25,7 @@ import { BroadcastService } from '@mdm/services/broadcast.service';
 import { AdministrationSessionResponse, AuthenticatedSessionError, AuthenticatedSessionResponse, SignInCredentials, SignInError, SignInResponse, UserDetails } from './security-handler.model';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -67,7 +67,7 @@ export class SecurityHandlerService {
       userName,
       email: userName,
       firstName: localStorage.getItem('firstName'),
-      lastName: localStorage.getItem('lastName'),      
+      lastName: localStorage.getItem('lastName'),
       role: localStorage.getItem('role'),
       needsToResetPassword: Boolean(localStorage.getItem('needsToResetPassword')),
       isAdmin: JSON.parse(localStorage.getItem('isAdmin')),
@@ -168,7 +168,7 @@ export class SecurityHandlerService {
 
   isLoggedIn() {
     return !!this.getUserFromLocalStorage();
-  }  
+  }
 
   isAdmin() {
     if (this.getCurrentUser()) {
@@ -231,7 +231,7 @@ export class SecurityHandlerService {
 
           return response.body.authenticatedSession;
         })
-      );   
+      );
   }
 
   dataModelAccess(element) {

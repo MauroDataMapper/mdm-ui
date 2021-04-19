@@ -108,7 +108,7 @@ export interface UserDetails {
   id: string;
   token?: string;
   firstName: string;
-  lastName: string;    
+  lastName: string;
   userName: string;
   email: string;
   role?: string;

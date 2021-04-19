@@ -85,6 +85,7 @@ describe('SecurityHandlerService', () => {
     const expectedUser: UserDetails = {
       id,
       userName,
+      email: userName,
       firstName: 'first',
       lastName: 'last',
       isAdmin,

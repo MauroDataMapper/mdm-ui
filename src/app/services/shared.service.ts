@@ -85,7 +85,7 @@ export class SharedService {
       .subscribe(() => {
         if (!firstTime) {
           this.toaster.info('You have been automatically logged out due to inactivity. Please log in again to continue.');
-        }        
+        }
 
         this.securityHandler.logout();
       });

@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private theming: ThemingService,
     private overlayContainer: OverlayContainer
   ) { }
-  
+
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove() {
@@ -63,14 +63,14 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.setTheme();    
-    this.setupIdleTimer();    
+    this.setTheme();
+    this.setupIdleTimer();
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }    
+  }
 
   private setupIdleTimer() {
     this.userIdle.startWatching();
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.lastUserIdleCheck = now;
       });
-  }  
+  }
 
   private setTheme() {
     this.themeCssSelector = this.theming.themeCssSelector;

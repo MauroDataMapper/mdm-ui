@@ -186,6 +186,10 @@ export class ProfileBaseComponent extends BaseComponent {
       this.currentProfileDetails.namespace = splitDescription[0];
       this.currentProfileDetails.name = splitDescription[1];
     } else if ( this.descriptionView === 'addnew') {
+      if(!this.lastDescriptionView)
+      {
+        this.lastDescriptionView = 'default';
+      }
       const dialog = this.dialog.open(AddProfileModalComponent, {
         data: {
           domainType:  this.catalogueItem.domainType,

@@ -83,7 +83,10 @@ export class SharedService {
       .isCurrentSessionExpired()
       .pipe(filter(authenticated => !authenticated))
       .subscribe(() => {
-        this.toaster.error('Your session has expired! Please log in.');
+        if (!firstTime) {
+          this.toaster.info('You have been automatically logged out due to inactivity. Please log in again to continue.');
+        }        
+
         this.securityHandler.logout();
       });
   };

@@ -224,10 +224,12 @@ export class SecurityHandlerService {
 
           return of(false);
         }),
-        tap((response: AuthenticatedSessionResponse) => {
+        map((response: AuthenticatedSessionResponse) => {
           if (!response.body.authenticatedSession) {
             this.removeUserFromLocalStorage();
           }
+
+          return response.body.authenticatedSession;
         })
       );   
   }

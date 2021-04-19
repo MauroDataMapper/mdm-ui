@@ -145,6 +145,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
         this.watchRefDataModelObject();
 
         this.editableForm.show = () => {
+          this.editingService.start();
           this.editableForm.visible = true;
         };
 
@@ -205,6 +206,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
   onCancelEdit() {
     this.errorMessage = '';
     this.showEditDescription = false;
+    this.editingService.stop();
   }
 
   showDescription = () => {
@@ -222,6 +224,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
 
   formBeforeSave = () => {
     this.errorMessage = '';
+    this.editingService.stop();
 
     const classifiers = [];
     this.editableForm.classifiers.forEach((cls) => {

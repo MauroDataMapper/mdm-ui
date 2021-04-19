@@ -180,6 +180,7 @@ export class DataModelComponent
         this.setEditableFormData();
 
         this.editableForm.show = () => {
+          this.editingService.start();
           this.editForm.forEach((x) =>
             x.edit({
               editing: true,
@@ -193,6 +194,7 @@ export class DataModelComponent
           this.editForm.forEach((x) => x.edit({ editing: false }));
           this.editableForm.visible = false;
           this.editableForm.validationError = false;
+          this.editingService.stop();
           this.errorMessage = '';
           this.setEditableFormData();
           if (this.dataModel.classifiers) {
@@ -236,6 +238,7 @@ export class DataModelComponent
   formBeforeSave = () => {
     this.editMode = false;
     this.errorMessage = '';
+    this.editingService.stop();
 
     const classifiers = [];
     this.editableForm.classifiers.forEach(cls => {

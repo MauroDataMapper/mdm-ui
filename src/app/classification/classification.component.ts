@@ -100,6 +100,7 @@ export class ClassificationComponent
     this.editableForm.deletePending = false;
 
     this.editableForm.show = () => {
+      this.editingService.start();
       this.editableForm.visible = true;
     };
 
@@ -208,6 +209,7 @@ export class ClassificationComponent
 
   formBeforeSave = () => {
     this.editMode = false;
+    this.editingService.stop();
 
     const resource = {
       description: this.editableForm.description

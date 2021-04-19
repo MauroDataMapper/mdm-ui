@@ -255,6 +255,7 @@ export class DataElementComponent
       return;
     }
 
+    this.editingService.stop();
     this.editMode = false;
     const classifiers = [];
     this.editableForm.classifiers.forEach((cls) => {
@@ -366,6 +367,7 @@ export class DataElementComponent
         this.setValues();
 
         this.editableForm.show = () => {
+          this.editingService.start();
           this.editableForm.visible = true;
           if (this.min === '*') {
             this.min = '-1';

@@ -104,7 +104,7 @@ export class TerminologyComponent
 
     this.editableForm.show = () => {
       this.setEditableForm();
-
+      this.editingService.start();
       this.editableForm.visible = true;
     };
 
@@ -166,6 +166,7 @@ export class TerminologyComponent
 
   formBeforeSave = () => {
     let resource: any = {};
+    this.editingService.stop();
 
     if (!this.showEditDescription) {
       const aliases = [];

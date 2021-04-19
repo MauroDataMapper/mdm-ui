@@ -16,16 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-<!--<div *ngIf="min && max">-->
-    <span class="multiplicity" *ngIf ="!((min == null && max == null) || (min == undefined && max == undefined) || (min.toString().trim().length == 0 && max.toString().trim().length == 0))">
-        <span *ngIf="min != null && min != -1">{{min}}</span>
-        <span *ngIf="min != null && min == -1">
-            <span class="unboundMultiplicity">*</span>
-        </span>
-        <span>..</span>
-        <span *ngIf="max != null && max != -1">{{max}}</span>
-        <span *ngIf="max != null && max == -1">
-            <span class="unboundMultiplicity">*</span>
-        </span>
+<span class="multiplicity" *ngIf="isValid">
+    <span *ngIf="min != null && min != -1">{{min}}</span>
+    <span *ngIf="min != null && min == -1">
+        <span class="unboundMultiplicity">*</span>
     </span>
-<!--</div>-->
+    <span>..</span>
+    <span *ngIf="max != null && max != -1">{{max}}</span>
+    <span *ngIf="max != null && max == -1">
+        <span class="unboundMultiplicity">*</span>
+    </span>
+</span>

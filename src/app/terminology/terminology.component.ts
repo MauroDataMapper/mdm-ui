@@ -310,7 +310,7 @@ export class TerminologyComponent
   };
 
   onTermSelect = (term) => {
-    this.stateHandler.NewWindow(
+    this.stateHandler.Go(
       'term',
       { terminologyId: term.model, id: term.id },
       null

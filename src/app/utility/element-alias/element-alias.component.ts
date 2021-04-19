@@ -69,6 +69,6 @@ export class ElementAliasComponent {
       this.add();
       event.preventDefault();
       event.stopPropagation();
-    }  
+    }
   }
 }

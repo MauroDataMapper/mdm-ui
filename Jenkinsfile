@@ -101,6 +101,7 @@ pipeline {
          ])
          outputTestResults()
          slackNotification()
+        zulipNotification(topic: 'mdm-ui')
       }
    }
 }

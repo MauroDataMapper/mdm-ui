@@ -417,18 +417,12 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
           }
         });
 
-        dialog.afterClosed().subscribe(result => {
-          if (result?.status !== 'ok') {
+        dialog.afterClosed().subscribe(dialogResult => {
+          if (dialogResult?.status !== 'ok') {
             return;
           }
           this.processing = true;
-          const data = {};
-          if (result.data.versionList !== 'Custom') {
-            data['versionChangeType'] = result.data.versionList;
-          } else {
-            data['version'] = result.data.versionNumber;
-          }
-          this.resourcesService.dataModel.finalise(this.result.id, data).subscribe(() => {
+          this.resourcesService.dataModel.finalise(this.result.id, dialogResult.request).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Data Model finalised successfully.');
             this.stateHandler.Go('datamodel', { id: this.result.id }, { reload: true });

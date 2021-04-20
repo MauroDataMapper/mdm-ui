@@ -437,18 +437,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
           }
         });
 
-        dialog.afterClosed().subscribe(result => {
-          if (result?.status !== 'ok') {
+        dialog.afterClosed().subscribe(dialogResult => {
+          if (dialogResult?.status !== 'ok') {
             return;
           }
           this.processing = true;
-          const data = {};
-          if (result.data.versionList !== 'Custom') {
-            data['versionChangeType'] = result.data.versionList;
-          } else {
-            data['version'] = result.data.versionNumber;
-          }
-          this.resourcesService.codeSet.finalise(this.result.id, data).subscribe(() => {
+          this.resourcesService.codeSet.finalise(this.result.id, dialogResult.request).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', { id: this.result.id }, { reload: true });

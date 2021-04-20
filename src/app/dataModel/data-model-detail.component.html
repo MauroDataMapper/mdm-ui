@@ -158,6 +158,10 @@ SPDX-License-Identifier: Apache-2.0
                <small>
                   <i matTooltip="Model Version" class="fas fa-file-alt"></i>
                   <span><strong>Version: </strong>{{result.modelVersion}}</span>
+                  <span *ngIf="result.modelVersionTag" class="tag-name">
+                     <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+                     <span>{{result.modelVersionTag}}</span>
+                   </span>
                </small>
             </div>
             <!-- <div class="text-muted" *ngIf="result && !result?.finalised"> TO DO waiting for back-end -->

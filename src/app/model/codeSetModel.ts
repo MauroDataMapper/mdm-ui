@@ -37,7 +37,8 @@ export class CodeSetResult {
   deleted = false;
   readableByEveryone: any;
   branchName: string;
-
+  modelVersion?: string;
+  modelVersionTag?: string;
 }
 
 

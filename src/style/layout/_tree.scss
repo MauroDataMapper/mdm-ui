@@ -84,6 +84,21 @@ mat-tree-node.mat-tree-node {
   background-color: #eaf5ff;
   border-radius: 6px;
 }
+
+.tag-name {
+  margin-left: 8px;
+  display: inline-flex;
+  padding: 0px 4px;
+  color: #4F575F !important;
+  border: 1px solid #b7d4ef;
+  background-color: #eaf5ff;
+  border-radius: 6px;
+
+  i {
+    margin: auto 4px;
+  }
+}
+
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
   vertical-align: 0.09em;

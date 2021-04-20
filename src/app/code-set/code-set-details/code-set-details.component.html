@@ -20,43 +20,46 @@ SPDX-License-Identifier: Apache-2.0
         <div class="panel-body">
 
             <div class="full-width" style="clear: both;" *ngIf="result">
-                <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px;">
-                   <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+                <button type="button" mat-icon-button [matMenuTriggerFor]="userActions"
+                    style="position: relative; float: right; margin-right:4px;">
+                    <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
                 </button>
                 <!--First level Menu-->
                 <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-                   <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
-                      <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
-                   </button>
-                   <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" (click)="showForm()">
-                    <i class="fas fa-pencil-alt"></i> Edit Title
-                 </button>
-                   <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
-                      <i class="fas fa-copy"></i> Create a New Version
-                   </button>
-                   <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
+                    <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green"
+                        (click)="finalise()">
+                        <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
+                    </button>
+                    <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" (click)="showForm()">
+                        <i class="fas fa-pencil-alt"></i> Edit Title
+                    </button>
+                    <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
+                        <i class="fas fa-copy"></i> Create a New Version
+                    </button>
+                    <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
                       <i class="fas fa-code-branch"></i> Merge
                    </button> -->
 
-                   <mat-divider></mat-divider>
-                   <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete" class="warning">
-                      <i class="far fa-trash-alt warning"></i> Delete
-                   </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete"
+                        class="warning">
+                        <i class="far fa-trash-alt warning"></i> Delete
+                    </button>
                 </mat-menu>
                 <!-- End of first level menu -->
 
                 <!--Second level sub Menu-->
                 <mat-menu #userActionsDelete="matMenu">
-                   <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
-                      Mark as deleted
-                   </button>
-                   <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                      Delete <span class="warning">permanently</span>
-                   </button>
+                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
+                        Mark as deleted
+                    </button>
+                    <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
+                        Delete <span class="warning">permanently</span>
+                    </button>
                 </mat-menu>
 
 
-<!--
+                <!--
                 <mat-menu #mergeMenu>
                    <button mat-menu-item (click)="merge()">
                       Merge Model
@@ -68,13 +71,16 @@ SPDX-License-Identifier: Apache-2.0
                 <!-- End of second level sub menu -->
 
 
-                <div *ngIf="showPermission" style="position: relative; float: right; margin-right:8px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                   <button mat-icon-button color="primary" type="button" class="paddingless" (click)="toggleSecuritySection()" matTooltip="User & Group Access" aria-label="User & Group Access">
-                      <i class="fas fa-user-lock"></i>
-                   </button>
+                <div *ngIf="showPermission" style="position: relative; float: right; margin-right:8px;"
+                    [hidden]="editableForm.visible || editableForm.deletePending">
+                    <button mat-icon-button color="primary" type="button" class="paddingless"
+                        (click)="toggleSecuritySection()" matTooltip="User & Group Access"
+                        aria-label="User & Group Access">
+                        <i class="fas fa-user-lock"></i>
+                    </button>
                 </div>
 
-                  </div>
+            </div>
 
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
@@ -86,23 +92,13 @@ SPDX-License-Identifier: Apache-2.0
                         <span class="dataModelTypeIcon" *ngIf="result?.domainType == 'CodeSet'">
                             <i matTooltip="Code Set" class="fas fa-list"></i>
                         </span>
-                        <mdm-inline-text-edit [readOnly]='showEditDescription'
-                                              [inEditMode]="editableForm.visible"
-                                              [(ngModel)]="result.label"
-                                              [name]="'moduleName'"
-                                              size="20"
-                                              (input)="onLabelChange($event.target.value)"
-                                              [styleCss]="'dataModelDetailsLabel'">
+                        <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm.visible"
+                            [(ngModel)]="result.label" [name]="'moduleName'" size="20"
+                            (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'">
                         </mdm-inline-text-edit>
-                        <mdm-editable-form-buttons
-                        *ngIf="editableForm"
-                        [hidden]="!editableForm.visible"
-                        [onCancelEdit]="onCancelEdit"
-                        [editable]="editableForm"
-                        [textLocation]="'left'"
-                        [hideDelete]="true"
-                        [hideCancel]="false"
-                      ></mdm-editable-form-buttons>
+                        <mdm-editable-form-buttons *ngIf="editableForm" [hidden]="!editableForm.visible"
+                            [onCancelEdit]="onCancelEdit" [editable]="editableForm" [textLocation]="'left'"
+                            [hideDelete]="true" [hideCancel]="false"></mdm-editable-form-buttons>
                     </h4>
                     <mdm-element-status [result]="result"></mdm-element-status>
                     <span class="inline-block"><small *ngIf="result?.deleted" class="warning"> | Deleted</small></span>
@@ -130,23 +126,31 @@ SPDX-License-Identifier: Apache-2.0
                     <small>
                         <i class="fas fa-code-branch" matTooltip="Branch name"></i>
                         <span><strong>Branch: </strong></span>
-                            <span>
-                                  <select class="form-control" style="display: inline; max-width: 120px; height: 30px; line-height: 1; padding: 0 .35em; width: auto;" [(ngModel)]="currentBranch" name="currentBranch" (ngModelChange)="onModelChange()">
-                                    <option [value]="item.branchName" *ngFor="let item of branchGraph">{{item.branchName}}</option>
-                                 </select>
-                           </span>
-                     </small>
+                        <span>
+                            <select class="form-control"
+                                style="display: inline; max-width: 120px; height: 30px; line-height: 1; padding: 0 .35em; width: auto;"
+                                [(ngModel)]="currentBranch" name="currentBranch" (ngModelChange)="onModelChange()">
+                                <option [value]="item.branchName" *ngFor="let item of branchGraph">{{item.branchName}}
+                                </option>
+                            </select>
+                        </span>
+                    </small>
                 </div>
                 <div class="text-muted" *ngIf="result">
                     <small>
                         <i matTooltip="Documentation Version" class="fas fa-copy"></i>
                         <span><strong>Documentation Version: </strong>{{result.documentationVersion}}</span>
+                        <span *ngIf="result.modelVersionTag" class="tag-name">
+                            <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
+                            <span>{{result.modelVersionTag}}</span>
+                        </span>
                     </small>
                 </div>
                 <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
                     <small>
                         <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                        <span><strong>Finalised on:</strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                        <span><strong>Finalised on:</strong> {{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss"
+                            }}</span>
                     </small>
                 </div>
             </div>

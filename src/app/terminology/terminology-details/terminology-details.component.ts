@@ -322,19 +322,12 @@ export class TerminologyDetailsComponent implements OnInit {
             message: `<p class='marginless'>Please select the version you would like this Terminology</p>
                       <p>to be finalised with: </p>`
           }
-        }).afterClosed().subscribe(result => {
-          if (result?.status !== 'ok') {
+        }).afterClosed().subscribe(dialogResult => {
+          if (dialogResult?.status !== 'ok') {
             return;
           }
           this.processing = true;
-          const data = {};
-          if (result.data.versionList !== 'Custom') {
-            data['versionChangeType'] = result.data.versionList;
-          } else {
-            data['version'] = result.data.versionNumber;
-          }
-
-          this.resources.terminology.finalise(this.mcTerminology.id, data).subscribe(() => {
+          this.resources.terminology.finalise(this.mcTerminology.id, dialogResult.request).subscribe(() => {
               this.processing = false;
               this.messageHandler.showSuccess('Terminology finalised successfully.');
               this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });

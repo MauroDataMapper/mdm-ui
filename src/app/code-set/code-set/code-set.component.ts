@@ -92,7 +92,7 @@ export class CodeSetComponent
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    
+
     if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }

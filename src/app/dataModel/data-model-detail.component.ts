@@ -29,7 +29,7 @@ import {
   ViewEncapsulation,
   AfterViewInit, OnDestroy
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { EMPTY, Subscription } from 'rxjs';
 import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
@@ -46,6 +46,7 @@ import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-moda
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { SecurityModalComponent } from '../modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -322,6 +323,31 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         }
       })
       .subscribe(() => this.delete(true));
+  }
+
+  restore() {
+    if (!this.isAdminUser || !this.result.deleted) {
+      return;
+    }
+
+    this.processing = true;
+
+    this.resourcesService.dataModel
+      .undoSoftDelete(this.result.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem restoring the Data Model.', error);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(`The Data Model "${this.result.label}" has been restored.`);
+        this.stateHandler.reload();
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      });
   }
 
   formBeforeSave = async () => {

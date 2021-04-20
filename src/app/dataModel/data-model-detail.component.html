@@ -42,6 +42,9 @@ SPDX-License-Identifier: Apache-2.0
                </button>
 
                <mat-divider></mat-divider>
+               <button mat-menu-item type="button" class="has-text-green" *ngIf="result.deleted && isAdminUser" (click)="restore()">
+                  <i class="fas fa-trash-restore has-text-green"></i> Restore
+              </button>
                <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete" class="warning">
                   <i class="far fa-trash-alt warning"></i> Delete
                </button>

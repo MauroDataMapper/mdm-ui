@@ -34,6 +34,7 @@ export const environment = {
   simpleViewSupport: false,
   name: 'production',
   appIsEditable: false,
+  checkSessionExpiryTimeout: 300000,
   features: {
     useSubscribedCatalogues: false,
     useDynamicProfiles: false

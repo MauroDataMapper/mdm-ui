@@ -110,6 +110,7 @@ export interface UserDetails {
   firstName: string;
   lastName: string;
   userName: string;
+  email: string;
   role?: string;
   isAdmin?: boolean;
   needsToResetPassword?: boolean;

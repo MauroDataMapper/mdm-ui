@@ -16,8 +16,10 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { UserIdleService } from 'angular-user-idle';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { EditingService } from './services/editing.service';
 import { SharedService } from './services/shared.service';
 import { ThemingService } from './services/theming.service';
@@ -27,10 +29,16 @@ import { ThemingService } from './services/theming.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'mdm-ui';
   isLoading = false;
   themeCssSelector: string;
+  lastUserIdleCheck: Date = new Date();
+
+  /**
+   * Signal to attach to subscriptions to trigger when they should be unsubscribed.
+   */
+  private unsubscribe$ = new Subject();
 
   constructor(
     private userIdle: UserIdleService,
@@ -38,7 +46,8 @@ export class AppComponent implements OnInit {
     private editingService: EditingService,
     private theming: ThemingService,
     private overlayContainer: OverlayContainer
-  ) {}
+  ) { }
+
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove() {
@@ -55,21 +64,34 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.setTheme();
+    this.setupIdleTimer();
+  }
 
-    // Start watching for user inactivity.
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  private setupIdleTimer() {
     this.userIdle.startWatching();
-    this.userIdle.onTimerStart().subscribe();
+    this.userIdle
+      .onTimerStart()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => { });
 
-    // Start watch when time is up.
-    let lastDigestRun: any = new Date();
-    this.userIdle.onTimeout().subscribe(() => {
-      const now: any = new Date();
-      if (now - lastDigestRun > 300000) {// 5 min
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        this.sharedService.handleExpiredSession(), this.userIdle.resetTimer();
-      }
-      lastDigestRun = now;
-    });
+    this.userIdle
+      .onTimeout()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        const now = new Date();
+
+        if (now.valueOf() - this.lastUserIdleCheck.valueOf() > this.sharedService.checkSessionExpiryTimeout) {
+          this.sharedService.handleExpiredSession();
+          this.userIdle.resetTimer();
+        }
+
+        this.lastUserIdleCheck = now;
+      });
   }
 
   private setTheme() {

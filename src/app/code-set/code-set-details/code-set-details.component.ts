@@ -25,7 +25,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
-import { Subscription } from 'rxjs';
+import { EMPTY, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -42,6 +42,7 @@ import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -273,6 +274,31 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
         this.processing = true;
         this.delete(false);
         this.processing = false;
+      });
+  }
+
+  restore() {
+    if (!this.isAdminUser || !this.result.deleted) {
+      return;
+    }
+
+    this.processing = true;
+
+    this.resourcesService.codeSet
+      .undoSoftDelete(this.result.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem restoring the Code Set.', error);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(`The Code Set "${this.result.label}" has been restored.`);
+        this.stateHandler.reload();
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
       });
   }
 

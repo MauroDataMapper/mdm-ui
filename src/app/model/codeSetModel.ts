@@ -1,3 +1,4 @@
+import { MdmResourcesResponse } from '@mdm/modules/resources';
 import { Authority } from './common';
 
 /*
@@ -41,6 +42,7 @@ export class CodeSetResult {
   modelVersionTag?: string;
 }
 
+export type CodeSetResultResponse = MdmResourcesResponse<CodeSetResult>;
 
 export class Classifiers {
   id: string;

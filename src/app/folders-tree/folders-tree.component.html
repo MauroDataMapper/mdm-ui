@@ -74,6 +74,10 @@ SPDX-License-Identifier: Apache-2.0
             <mat-divider></mat-divider>
             <button mat-menu-item class="tree-context-menu-item" [matMenuTriggerFor]="compareMenu" [matMenuTriggerData] = "{node: node}">Compare...</button>
         </ng-container>
+        <ng-container *ngIf="node.domainType === 'ReferenceDataModel'">
+            <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
+            <button mat-menu-item class="tree-context-menu-item" (click)="handleFavourites(node)">{{isFavourited(node) ? 'Remove from' : 'Add to'}} Favourites</button>
+        </ng-container>
         <ng-container *ngIf="node.domainType === 'DataClass'">
             <button mat-menu-item class="tree-context-menu-item" (click)="openWindow(node)">Open in New Window</button>
             <ng-container *ngIf="!node.deleted && !isNodeFinalised(node)">

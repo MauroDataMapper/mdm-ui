@@ -169,42 +169,44 @@ export class ReferenceDataDetailsComponent
   ReferenceModelDetails(): any {
     this.subscription = this.messageService.dataChanged$.subscribe(
       (serverResult) => {
-        this.result = serverResult;
-        this.setEditableFormData();
+        if (serverResult.domainType === 'ReferenceDataModel') {
+          this.result = serverResult;
+          this.setEditableFormData();
 
-        this.getModelGraph(this.result.id);
+          this.getModelGraph(this.result.id);
 
-        if (this.result.classifiers) {
-          this.result.classifiers.forEach((item) => {
-            this.editableForm.classifiers.push(item);
-          });
-        }
-        if (this.result.aliases) {
-          this.result.aliases.forEach((item) => {
-            this.editableForm.aliases.push(item);
-          });
-        }
-        if (this.result.semanticLinks) {
-          this.result.semanticLinks.forEach(link => {
-            if (link.linkType === 'New Version Of') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
+          if (this.result.classifiers) {
+            this.result.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
+          }
+          if (this.result.aliases) {
+            this.result.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+          if (this.result.semanticLinks) {
+            this.result.semanticLinks.forEach((link) => {
+              if (link.linkType === 'New Version Of') {
+                this.compareToList.push(link.target);
+              }
+            });
+          }
 
-        if (this.result.semanticLinks) {
-          this.result.semanticLinks.forEach(link => {
-            if (link.linkType === 'Superseded By') {
-              this.compareToList.push(link.target);
-            }
-          });
-        }
+          if (this.result.semanticLinks) {
+            this.result.semanticLinks.forEach((link) => {
+              if (link.linkType === 'Superseded By') {
+                this.compareToList.push(link.target);
+              }
+            });
+          }
 
-        if (this.result != null) {
-          this.hasResult = true;
-          this.watchReferenceDataModelObject();
+          if (this.result != null) {
+            this.hasResult = true;
+            this.watchReferenceDataModelObject();
+          }
+          this.title.setTitle(`${this.result?.type} - ${this.result?.label}`);
         }
-        this.title.setTitle(`${this.result?.type} - ${this.result?.label}`);
       }
     );
   }
@@ -224,7 +226,7 @@ export class ReferenceDataDetailsComponent
     this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
   }
 
-   restore() {
+  restore() {
     if (!this.isAdminUser || !this.result.deleted) {
       return;
     }
@@ -234,8 +236,11 @@ export class ReferenceDataDetailsComponent
     this.resourcesService.referenceDataModel
       .undoSoftDelete(this.result.id)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem restoring the Reference Data Model.', error);
+        catchError((error) => {
+          this.messageHandler.showError(
+            'There was a problem restoring the Reference Data Model.',
+            error
+          );
           return EMPTY;
         }),
         finalize(() => {
@@ -243,7 +248,9 @@ export class ReferenceDataDetailsComponent
         })
       )
       .subscribe(() => {
-        this.messageHandler.showSuccess(`The Reference Data Model "${this.result.label}" has been restored.`);
+        this.messageHandler.showSuccess(
+          `The Reference Data Model "${this.result.label}" has been restored.`
+        );
         this.stateHandler.reload();
         this.broadcastSvc.broadcast('$reloadFoldersTree');
       });
@@ -359,12 +366,20 @@ export class ReferenceDataDetailsComponent
       }
     ];
 
-    this.resourcesService.referenceDataModel.modelVersionTree(modelId).subscribe(res => {
-      this.currentBranch = this.result.branchName;
-      this.branchGraph = res.body;
-    }, error => {
-      this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
-    });
+    this.resourcesService.referenceDataModel
+      .modelVersionTree(modelId)
+      .subscribe(
+        (res) => {
+          this.currentBranch = this.result.branchName;
+          this.branchGraph = res.body;
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem getting the Model Version Tree.',
+            error
+          );
+        }
+      );
   };
 
   onModelChange = () => {
@@ -594,11 +609,16 @@ export class ReferenceDataDetailsComponent
   };
 
   newVersion() {
-    this.stateHandler.Go('newVersionReferenceDataModel', { referenceDataModelId: this.result.id }, { location: true });
+    this.stateHandler.Go(
+      'newVersionReferenceDataModel',
+      { referenceDataModelId: this.result.id },
+      { location: true }
+    );
   }
 
   compare(referenceDataModel = null) {
-    this.stateHandler.NewWindow('modelscomparison',
+    this.stateHandler.NewWindow(
+      'modelscomparison',
       {
         sourceId: this.result.id,
         targetId: referenceDataModel ? referenceDataModel.id : null
@@ -608,16 +628,17 @@ export class ReferenceDataDetailsComponent
   }
 
   merge() {
-    this.stateHandler.Go('modelsmerging',
+    this.stateHandler.Go(
+      'modelsmerging',
       {
         sourceId: this.result.id,
         targetId: null
       },
-      null);
-  };
+      null
+    );
+  }
 
   showMergeGraph = () => {
-
     const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(VersioningGraphModalComponent, {
         data: { parentDataModel: this.result.id },
@@ -632,8 +653,7 @@ export class ReferenceDataDetailsComponent
         }
       });
     });
-    promise.then(() => {
-    }).catch(() => { });
+    promise.then(() => {}).catch(() => {});
   };
 
   private setEditableFormData() {

@@ -43,7 +43,6 @@ import '@mdm/utility/extensions/mat-dialog.extensions';
 import { HttpRequestProgressInterceptor } from './services/http-request-progress.interceptor';
 import { ProfileBaseComponent } from './profile-base/profile-base.component';
 
-
 @NgModule({
   declarations: [AppComponent, ProfileBaseComponent],
   imports: [

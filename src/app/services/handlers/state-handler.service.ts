@@ -53,6 +53,7 @@ export class StateHandlerService {
         newdatatype: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataType',
         newclassification: 'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
         newversiondatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
+        newversionreferencedatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionReferenceDataModel',
         newversionterminology: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
         newversioncodeset: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
                 modelsmerginggraph: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',

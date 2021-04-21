@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 interface EnvironmentVariables {
   themeName: string;
+  useFeaureSubscribedCatalogues: boolean;
 }
 
 declare let $ENV: EnvironmentVariables;

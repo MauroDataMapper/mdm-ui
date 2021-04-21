@@ -21,7 +21,8 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       $ENV: {
-        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME'])
+        themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME']),
+        useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES']))
       }
     })
   ]

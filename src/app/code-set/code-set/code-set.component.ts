@@ -24,11 +24,11 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { CodeSetResult } from '@mdm/model/codeSetModel';
+import { CodeSetResult, CodeSetResultResponse } from '@mdm/model/codeSetModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
@@ -76,6 +76,7 @@ export class CodeSetComponent
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
     dialog: MatDialog,
@@ -87,17 +88,16 @@ export class CodeSetComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    if (!this.uiRouterGlobals.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+
+    this.parentId = this.uiRouterGlobals.params.id;
 
     this.title.setTitle('Code Set');
     this.codeSetDetails(this.parentId);
@@ -163,7 +163,7 @@ export class CodeSetComponent
     let arr = [];
     this.resourcesService.codeSet
       .get(id)
-      .subscribe(async (result: { body: CodeSetResult }) => {
+      .subscribe(async (result: CodeSetResultResponse) => {
         // Get the guid
         this.codeSetModel = result.body;
         // this.parentId = this.codeSetModel.id;

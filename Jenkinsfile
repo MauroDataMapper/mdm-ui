@@ -13,6 +13,8 @@ pipeline {
       stage('Tool Versions') {
          steps {
             nvm('') {
+              // Currently npm v6 is packaged with node and we need v7+
+               sh 'npm install -g npm@^7.10.0'
                sh 'node --version'
                sh 'npm --version'
             }
@@ -31,14 +33,14 @@ pipeline {
             nvm('') {
                sh 'npm install -g npm-check'
                sh 'npm install -g @angular/cli'
-               sh 'npm install'
+               sh 'npm ci'
             }
          }
       }
       stage('Test') {
          steps {
             nvm('') {
-               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+               catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                   sh 'npm run test-with-coverage'
                }
             }
@@ -52,7 +54,7 @@ pipeline {
       stage('Lint') {
          steps {
             nvm('') {
-               catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+               catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                   sh 'npm run eslint-report'
                }
             }
@@ -66,27 +68,13 @@ pipeline {
          steps {
             withSonarQubeEnv('JenkinsQube') {
                nvm('') {
-                  catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                  catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                      sh 'npm run sonar'
                   }
                }
             }
          }
       }
-      //    stage('Archive Build') {
-      //      when {
-      //        allOf {
-      //          branch 'master'
-      //          expression {
-      //            currentBuild.currentResult == 'SUCCESS'
-      //          }
-      //        }
-      //
-      //      }
-      //      steps {
-      //        archiveArtifacts artifacts: '**/build/**/*.tgz'
-      //      }
-      //    }
    }
    post {
       always {

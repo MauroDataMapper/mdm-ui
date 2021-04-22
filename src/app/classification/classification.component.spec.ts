@@ -118,7 +118,6 @@ describe('ClassificationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ClassificationComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

@@ -22,6 +22,9 @@ import { Injectable } from '@angular/core';
 })
 export class ValidatorService {
 
+  // eslint-disable-next-line no-useless-escape
+  readonly emailPattern = /^[_A-Za-z0-9-'!#%&=\/~\`\+\$\*\?\^\{\|\}]+(\.[_A-Za-z0-9-'!#%&=\/~\`\+\$\*\?\^\{\|\}]+)*@[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-\+]+)*(\.[A-Za-z]{2,})$/;
+
   constructor() { }
 
   index(obj, i) {
@@ -39,10 +42,7 @@ export class ValidatorService {
   }
 
   validateEmail(email): boolean {
-    // const pattern = /^[A-Z0-9._%+-]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
-    // eslint-disable-next-line no-useless-escape
-    const pattern = /^[_A-Za-z0-9-'!#%&=\/~\`\+\$\*\?\^\{\|\}]+(\.[_A-Za-z0-9-'!#%&=\/~\`\+\$\*\?\^\{\|\}]+)*@[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-\+]+)*(\.[A-Za-z]{2,})$/;
-    return pattern.test(email);
+    return this.emailPattern.test(email);
   }
 
   isDate(date: any): boolean {

@@ -23,8 +23,24 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./multiplicity.component.sass']
 })
 export class MultiplicityComponent {
-  @Input() min: any;
-  @Input() max: any;
+  @Input() min: number | string;
+  @Input() max: number | string;
+
+  get isValid(): boolean {
+    if (this.min === null || this.min === undefined || this.max === null || this.max === undefined) {
+      return false;
+    }
+
+    if (typeof this.min === 'string' && this.min.trim().length === 0) {
+      return false;
+    }
+
+    if (typeof this.max === 'string' && this.max.trim().length === 0) {
+      return false;
+    }
+
+    return true;
+  }
 
   constructor() {}
 }

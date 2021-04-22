@@ -1,3 +1,6 @@
+import { MdmResourcesResponse } from '@mdm/modules/resources';
+import { Authority } from './common';
+
 /*
 Copyright 2020 University of Oxford
 
@@ -18,6 +21,7 @@ SPDX-License-Identifier: Apache-2.0
 export class CodeSetResult {
   id: string;
   domainType: string;
+  authority?: Authority;
   label: string;
   documentationVersion: any[];
   description: string;
@@ -34,9 +38,11 @@ export class CodeSetResult {
   deleted = false;
   readableByEveryone: any;
   branchName: string;
-
+  modelVersion?: string;
+  modelVersionTag?: string;
 }
 
+export type CodeSetResultResponse = MdmResourcesResponse<CodeSetResult>;
 
 export class Classifiers {
   id: string;

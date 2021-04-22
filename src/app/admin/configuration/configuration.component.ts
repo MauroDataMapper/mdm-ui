@@ -131,7 +131,7 @@ export class ConfigurationComponent implements OnInit {
       case 'properties':
         return { index: 0, name: 'properties' };
       case 'lucene':
-        return { index: 1, name: 'lucene' };
+        return { index: 2, name: 'lucene' };
       default:
         return { index: 0, name: 'properties' };
     }

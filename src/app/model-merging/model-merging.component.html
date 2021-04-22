@@ -106,8 +106,7 @@ SPDX-License-Identifier: Apache-2.0
   <div *ngIf="diffs" class="row" style="margin-top: 10px">
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
-      style="min-height: 375px; text-align: center; overflow: auto;"
-      
+      style="min-height: 375px; text-align: center; overflow: auto"
     >
       <table class="table table-bordered">
         <thead>
@@ -148,9 +147,54 @@ SPDX-License-Identifier: Apache-2.0
                     <div>
                       <span
                         [innerHTML]="diff.right"
-                        style="border-bottom: 1px dashed #000"
+                        style="word-break: break-word"
                       ></span>
                     </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </tr>
+          <tr
+            *ngIf="
+              diffs.enumerationValues && diffs.enumerationValues.length > 0
+            "
+          >
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                  <th style="cursor: pointer">Diffs Enumerations</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let diff of diffs.enumerationValues">
+                  <td
+                    style="min-width: 18px; width: 18px"
+                    [ngClass]="{
+                      comparisonRow: true,
+                      deleted: diff.deleted,
+                      modified: diff.modified,
+                      created: diff.created
+                    }"
+                  >
+                    &nbsp;<mat-checkbox
+                      (change)="onAcceptPress(diff, 'source', 'enumeration')"
+                      [(ngModel)]="diff.acceptSource"
+                    ></mat-checkbox
+                    >&nbsp;
+                  </td>
+                  <td style="text-align: left; word-wrap: break-word">
+                    <div *ngIf="diff.deleted || diff.created">
+                      <div>                     
+                          <strong style="font-style: italic">Enumeration:</strong>
+                          <div>
+                            <span style="border-bottom: 1px dashed #000">{{
+                              diff.label
+                            }}</span>
+                          </div>                        
+                      </div>                       
+                    </div>   
                   </td>
                 </tr>
               </tbody>
@@ -254,7 +298,7 @@ SPDX-License-Identifier: Apache-2.0
                   </td>
 
                   <td style="text-align: left; word-wrap: break-word">
-                    <strong style="font-style: italic">Label:</strong>
+                    <strong style="font-style: italic">Data Element:</strong>
                     <div>
                       <span style="border-bottom: 1px dashed #000">{{
                         diff.label
@@ -291,7 +335,7 @@ SPDX-License-Identifier: Apache-2.0
                     >&nbsp;
                   </td>
                   <td style="text-align: left; word-wrap: break-word">
-                    <strong style="font-style: italic">Label:</strong>
+                    <strong style="font-style: italic">Data Type:</strong>
                     <div>
                       <span style="border-bottom: 1px dashed #000">{{
                         diff.label
@@ -345,7 +389,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
-      style="text-align: center; overflow: auto;"
+      style="text-align: center; overflow: auto"
     >
       <table class="table table-bordered">
         <thead>
@@ -380,29 +424,65 @@ SPDX-License-Identifier: Apache-2.0
                       >{{ diff.title }}:</strong
                     >
                     <div>
-                      <span
+                      <mdm-text-diff
                         *ngIf="diff.acceptSource && !diff.acceptTarget"
-                        style="border-bottom: 1px dashed #000"
-                        [innerHTML]="diff.right"
-                      ></span>
-
-                      <span
+                        [left]="diff.right"
+                        [right]="diff.left"
+                      ></mdm-text-diff>
+                      <mdm-text-diff
                         *ngIf="diff.acceptTarget && !diff.acceptSource"
-                        style="border-bottom: 1px dashed #000"
-                        [innerHTML]="diff.left"
-                      ></span>
-
-                      <span
+                        [left]="diff.left"
+                        [right]="diff.left"
+                      ></mdm-text-diff>
+                      <mdm-text-diff
                         *ngIf="diff.acceptTarget && diff.acceptSource"
-                        style="border-bottom: 1px dashed #000"
-                        [innerHTML]="diff.left"
-                      ></span>
+                        [left]="diff.right"
+                        [right]="diff.left"
+                      ></mdm-text-diff>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </tr>
+          <tr
+          *ngIf="
+          diffsMerged.enumerationValues && diffsMerged.enumerationValues.length > 0
+          "
+        >
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                <th style="cursor: pointer">Diffs Enumerations</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let diff of diffsMerged.enumerationValues">
+                <td
+                  style="min-width: 18px; width: 18px"
+                  [ngClass]="{
+                    comparisonRow: true,
+                    deleted: diff.deleted,
+                    modified: diff.modified,
+                    created: diff.created
+                  }"
+                >
+                </td>
+                <td style="text-align: left; word-wrap: break-word">                       
+                    <div>                     
+                        <strong style="font-style: italic">Enumeration:</strong>
+                        <div>
+                          <span style="border-bottom: 1px dashed #000">{{
+                            diff.label
+                          }}</span>
+                        </div>                        
+                    </div>                             
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </tr>
           <tr *ngIf="diffsMerged.metadata && diffsMerged.metadata.length > 0">
             <table class="table table-bordered">
               <thead>
@@ -460,23 +540,23 @@ SPDX-License-Identifier: Apache-2.0
                         <span>
                           <strong style="font-style: italic">Value:</strong>
                           <span
-                          *ngIf="diff.acceptSource && !diff.acceptTarget"
-                          style="border-bottom: 1px dashed #000"
-                          [innerHTML]="diff.right"
+                            *ngIf="diff.acceptSource && !diff.acceptTarget"
+                            style="border-bottom: 1px dashed #000"
+                            [innerHTML]="diff.right"
+                          ></span>
+
+                          <span
+                            *ngIf="diff.acceptTarget && !diff.acceptSource"
+                            style="border-bottom: 1px dashed #000"
+                            [innerHTML]="diff.left"
+                          ></span>
+
+                          <span
+                            *ngIf="diff.acceptTarget && diff.acceptSource"
+                            style="border-bottom: 1px dashed #000"
+                            [innerHTML]="diff.left"
+                          ></span
                         ></span>
-  
-                        <span
-                          *ngIf="diff.acceptTarget && !diff.acceptSource"
-                          style="border-bottom: 1px dashed #000"
-                          [innerHTML]="diff.left"
-                        ></span>
-  
-                        <span
-                          *ngIf="diff.acceptTarget && diff.acceptSource"
-                          style="border-bottom: 1px dashed #000"
-                          [innerHTML]="diff.left"
-                        ></span></span
-                        >
                       </div>
                     </div>
                   </td>
@@ -508,7 +588,7 @@ SPDX-License-Identifier: Apache-2.0
                     }"
                   ></td>
                   <td style="text-align: left; word-wrap: break-word">
-                    <strong style="font-style: italic">Label:</strong>
+                    <strong style="font-style: italic">Data Element :</strong>
 
                     <div>
                       <span style="border-bottom: 1px dashed #000">{{
@@ -540,7 +620,7 @@ SPDX-License-Identifier: Apache-2.0
                     }"
                   ></td>
                   <td style="text-align: left; word-wrap: break-word">
-                    <strong style="font-style: italic">Label:</strong>
+                    <strong style="font-style: italic">Data Type :</strong>
 
                     <div>
                       <span style="border-bottom: 1px dashed #000">{{
@@ -592,7 +672,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
     <div
       class="col-lg-4 col-md-4 col-sm-12 col-xs-12"
-      style="float: right; overflow: auto;"
+      style="float: right; overflow: auto"
       style="text-align: center"
     >
       <table class="table table-bordered">
@@ -632,7 +712,10 @@ SPDX-License-Identifier: Apache-2.0
                       >{{ diff.title }}:</strong
                     >
                     <div>
-                      <span [innerHTML]="diff.left" style="border-bottom: 1px dashed #000"></span>
+                      <span
+                        [innerHTML]="diff.left"
+                        style="word-break: break-word"
+                      ></span>
                     </div>
                   </td>
                 </tr>
@@ -682,6 +765,49 @@ SPDX-License-Identifier: Apache-2.0
               </tbody>
             </table>
           </tr>
+          <tr
+          *ngIf="
+          diffs.filteredEnumeration && diffs.filteredEnumeration.length > 0
+          "
+        >
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="min-width: 18px; width: 18px">&nbsp;&nbsp;</th>
+                <th style="cursor: pointer">Diffs Enumerations</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let diff of diffs.filteredEnumeration">
+                <td
+                  style="min-width: 18px; width: 18px"
+                  [ngClass]="{
+                    comparisonRow: true,
+                    deleted: diff.deleted,
+                    modified: diff.modified,
+                    created: diff.created
+                  }"
+                >
+                  &nbsp;<mat-checkbox
+                    (change)="onAcceptPress(diff, 'source', 'enumeration')"
+                    [(ngModel)]="diff.acceptSource"
+                  ></mat-checkbox
+                  >&nbsp;
+                </td>
+                <td style="text-align: left; word-wrap: break-word">
+                  <div>                     
+                    <strong style="font-style: italic">Enumeration:</strong>
+                    <div>
+                      <span style="border-bottom: 1px dashed #000">{{
+                        diff.label
+                      }}</span>
+                    </div>                        
+                </div>     
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </tr>
           <tr
             *ngIf="diffs.filteredMetadata && diffs.filteredMetadata.length > 0"
           >

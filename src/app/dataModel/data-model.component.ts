@@ -15,71 +15,113 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { DataModelResult } from '../model/dataModelModel';
+import { DataModelResult, EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-data-model',
   templateUrl: './data-model.component.html',
   styleUrls: ['./data-model.component.scss']
 })
-export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DataModelComponent
+  extends ProfileBaseComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
+  @ViewChildren('editableText') editForm: QueryList<any>;
   dataModel: DataModelResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
   parentId: string;
+
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   isEditable: boolean;
   showExtraTabs = false;
+  showEdit = false;
+  showDelete = false;
   activeTab: any;
   dataModel4Diagram: any;
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
+  access:any;
+
+  editableForm: EditableDataModel;
+  errorMessage = '';
+
+  schemaView = 'list';
+
+  contextView = 'default';
+  schemaItemCount = 0;
+  typesItemCount = 0;
+  isLoadingSchema = true;
+  isLoadingTypes = true;
+  rulesItemCount = 0;
+  isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
+  showEditDescription = false;
 
   constructor(
-    private resourcesService: MdmResourcesService,
+    resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
+    private securityHandler: SecurityHandlerService,
     private title: Title,
-    private editingService: EditingService) { }
+    dialog: MatDialog,
+    messageHandler: MessageHandlerService,
+    editingService: EditingService
+  ) {
+    super(resourcesService, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    if (!this.uiRouterGlobals.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
     this.showExtraTabs = this.sharedService.isLoggedIn();
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+    this.parentId = this.uiRouterGlobals.params.id;
+
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView).index;
+    this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
 
     this.dataModelDetails(this.parentId);
 
-    this.subscription = this.messageService.changeSearch.subscribe((message: boolean) => {
-      this.showSearch = message;
-    });
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
     // this.afterSave = (result: { body: { id: any } }) => this.dataModelDetails(result.body.id);
   }
 
@@ -87,50 +129,168 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
+  watchDataModelObject() {
+    this.access = this.securityHandler.elementAccess(this.dataModel);
+    if ( this.access !== undefined) {
+      this.showEdit =  this.access.showEdit;
+      this.showDelete =  this.access.showPermanentDelete ||  this.access.showSoftDelete;
+    }
+  }
+
   dataModelDetails(id: any) {
     let arr = [];
-    this.resourcesService.dataModel.get(id).subscribe(async (result: { body: DataModelResult }) => {
-      this.dataModel = result.body;
 
-      id = result.body.id;
+    this.resourcesService.dataModel
+      .get(id)
+      .subscribe(async (result: { body: DataModelResult }) => {
+        console.log(result.body);
+        this.dataModel = result.body;
+        this.catalogueItem = this.dataModel;
+        this.watchDataModelObject();
+        id = result.body.id;
 
-      this.isEditable = this.dataModel['availableActions'].includes('update');
-      this.parentId = this.dataModel.id;
+        this.isEditable = this.dataModel['availableActions'].includes('update');
+        this.parentId = this.dataModel.id;
 
-      await this.resourcesService.versionLink.list('dataModels', this.dataModel.id).subscribe(response => {
-        if (response.body.count > 0) {
-          arr = response.body.items;
-          for (const val in arr) {
-            if (this.dataModel.id !== arr[val].targetModel.id) {
-              this.semanticLinks.push(arr[val]);
+        await this.resourcesService.versionLink
+          .list('dataModels', this.dataModel.id)
+          .subscribe((response) => {
+            if (response.body.count > 0) {
+              arr = response.body.items;
+              for (const val in arr) {
+                if (this.dataModel.id !== arr[val].targetModel.id) {
+                  this.semanticLinks.push(arr[val]);
+                }
+              }
             }
+          });
+
+        if (this.sharedService.isLoggedIn(true)) {
+          this.DataModelPermissions(id);
+          this.UsedProfiles('dataModels', id);
+          this.UnUsedProfiles('dataModels', id);
+        } else {
+          this.messageService.FolderSendMessage(this.dataModel);
+          this.messageService.dataChanged(this.dataModel);
+        }
+
+        this.editableForm = new EditableDataModel();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
+        this.setEditableFormData();
+
+        this.editableForm.show = () => {
+          this.editingService.start();
+          this.editForm.forEach((x) =>
+            x.edit({
+              editing: true,
+              focus: x.name === 'moduleName' ? true : false
+            })
+          );
+          this.editableForm.visible = true;
+        };
+
+        this.editableForm.cancel = () => {
+          this.editForm.forEach((x) => x.edit({ editing: false }));
+          this.editableForm.visible = false;
+          this.editableForm.validationError = false;
+          this.editingService.stop();
+          this.errorMessage = '';
+          this.setEditableFormData();
+          if (this.dataModel.classifiers) {
+            this.dataModel.classifiers.forEach((item) => {
+              this.editableForm.classifiers.push(item);
+            });
           }
+          if (this.dataModel.aliases) {
+            this.dataModel.aliases.forEach((item) => {
+              this.editableForm.aliases.push(item);
+            });
+          }
+        };
+
+        if (this.dataModel.classifiers) {
+          this.dataModel.classifiers.forEach((item) => {
+            this.editableForm.classifiers.push(item);
+          });
+        }
+        if (this.dataModel.aliases) {
+          this.dataModel.aliases.forEach((item) => {
+            this.editableForm.aliases.push(item);
+          });
         }
       });
-
-      if (this.sharedService.isLoggedIn(true)) {
-        this.DataModelPermissions(id);
-      } else {
-        this.messageService.FolderSendMessage(this.dataModel);
-        this.messageService.dataChanged(this.dataModel);
-      }
-
-      this.tabGroup.realignInkBar();
-      // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetailByName(this.stateService.params.tabView).index;
-      this.tabSelected(this.activeTab);
-    });
   }
 
   async DataModelPermissions(id: any) {
-   await this.resourcesService.security.permissions('dataModels', id).subscribe((permissions: { body: { [x: string]: any } }) => {
-      Object.keys(permissions.body).forEach(attrname => {
-        this.dataModel[attrname] = permissions.body[attrname];
+    await this.resourcesService.security
+      .permissions('dataModels', id)
+      .subscribe((permissions: { body: { [x: string]: any } }) => {
+        Object.keys(permissions.body).forEach((attrname) => {
+          this.dataModel[attrname] = permissions.body[attrname];
+        });
+        // Send it to message service to receive in child components
+        this.messageService.FolderSendMessage(this.dataModel);
+        this.messageService.dataChanged(this.dataModel);
       });
-      // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.dataModel);
-      this.messageService.dataChanged(this.dataModel);
+  }
+
+  formBeforeSave = () => {
+    this.editMode = false;
+    this.errorMessage = '';
+    this.editingService.stop();
+
+    const classifiers = [];
+    this.editableForm.classifiers.forEach(cls => {
+      classifiers.push(cls);
     });
+    const aliases = [];
+    this.editableForm.aliases.forEach(alias => {
+      aliases.push(alias);
+    });
+
+    let resource = {};
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.dataModel.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description || '',
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.dataModel.type,
+        domainType: this.dataModel.domainType,
+        aliases,
+        classifiers
+      };
+    }
+
+    if (this.showEditDescription) {
+      resource = {
+        id: this.dataModel.id,
+        description: this.editableForm.description || ''
+      };
+    }
+
+      this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe(res => {
+        this.messageHandler.showSuccess('Data Model updated successfully.');
+        this.editableForm.visible = false;
+        this.dataModel.description = res.body.description;
+          this.editForm.forEach((x) => x.edit({ editing: false }));
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Model.',
+            error
+          );
+        }
+      );
+  };
+
+
+  onCancelEdit() {
+    this.errorMessage = '';
+    this.editMode = false; // Use Input editor whe adding a new folder.
+    this.showEditDescription = false;
   }
 
   toggleShowSearch() {
@@ -144,83 +304,91 @@ export class DataModelComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  schemaCountEmitter($event) {
+    this.isLoadingSchema = false;
+    this.schemaItemCount = $event;
+  }
+
+  typesCountEmitter($event) {
+    this.isLoadingTypes = false;
+    this.typesItemCount = $event;
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
+  }
+
+  addDataClass = () => {
+    this.stateHandler.Go('newDataClass', { parentDataModelId: this.dataModel.id, parentDataClassId: null }, null);
+  };
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+   };
+
   getTabDetailByName(tabName) {
     switch (tabName) {
-      case 'dataClasses':
-        return { index: 0, name: 'dataClasses' };
+      case 'description':
+        return { index: 0, name: 'description' };
+      case 'schema':
+        return { index: 1, name: 'schema' };
       case 'types':
-        return { index: 1, name: 'types' };
-      case 'properties':
-        return { index: 2, name: 'properties' };
-      case 'summaryMetadata':
-        return { index: 3, name: 'summaryMetadata' };
-      case 'comments':
-        return { index: 4, name: 'comments' };
+        return { index: 2, name: 'types' };
+      case 'context':
+        return { index: 3, name: 'context' };
       case 'history':
-        return { index: 5, name: 'history' };
-      case 'diagram':
-        return { index: 6, name: 'diagram' };
-      case 'links':
-        return { index: 7, name: 'links' };
-      case 'attachments':
-        return { index: 8, name: 'attachments' };
-      case 'dataflow': {
-        if (this.dataModel.type === 'Data Asset') {
-          return { index: 9, name: 'dataflows' };
-        } else {
-          return { index: 0, name: 'dataClasses' };
-        }
-      }
+        return { index: 4, name: 'history' };
       case 'rulesConstraints' : {
-        return { index: 10, name: 'rulesConstraints' };
+        return { index: 5, name: 'rulesConstraints' };
       }
       default:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'description' };
     }
   }
 
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'types' };
+        return { index: 1, name: 'schema' };
       case 2:
-        return { index: 2, name: 'properties' };
+        return { index: 2, name: 'types' };
       case 3:
-        return { index: 3, name: 'summaryMetadata' };
-      case 4:
-        return { index: 4, name: 'comments' };
-      case 5:
-        return { index: 5, name: 'history' };
-      case 6:
-        return { index: 6, name: 'diagram' };
-      case 7:
-        return { index: 7, name: 'links' };
-      case 8:
-        return { index: 8, name: 'attachments' };
-      case 9: {
-        if (this.dataModel.type === 'Data Asset') {
-          return { index: 9, name: 'dataflow' };
-        }
-        return { index: 0, name: 'dataClasses' };
+        return { index: 3, name: 'context' };
+      case 4: {
+        return { index: 4, name: 'history' };
       }
-      case 10 : {
-        return { index: 10, name: 'rulesConstraints' };
+      case 5 : {
+        return { index: 5, name: 'rulesConstraints' };
       }
       default:
-        return { index: 0, name: 'dataClasses' };
+        return { index: 0, name: 'description' };
     }
   }
 
   tabSelected(index) {
     const tab = this.getTabDetailByIndex(index);
-
     this.stateHandler.Go('dataModel', { tabView: tab.name }, { notify: false });
-    this.activeTab = tab.index;
+  }
 
-    if (tab.name === 'diagram') {
-      return;
-    }
+  private setEditableFormData() {
+    this.editableForm.description = this.dataModel.description;
+    this.editableForm.label = this.dataModel.label;
+    this.editableForm.organisation = this.dataModel.organisation;
+    this.editableForm.author = this.dataModel.author;
   }
 }

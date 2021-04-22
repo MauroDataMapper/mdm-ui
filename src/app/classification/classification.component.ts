@@ -15,8 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Input, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { FolderResult } from '../model/folderModel';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+import { Editable, FolderResult } from '../model/folderModel';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
@@ -26,13 +33,18 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
+import { MessageHandlerService } from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-classification',
   templateUrl: './classification.component.html',
   styleUrls: ['./classification.component.sass']
 })
-export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ClassificationComponent
+  extends ProfileBaseComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   @Input() afterSave: any;
@@ -54,14 +66,22 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
   loading = false;
   catalogueItems: any;
 
+  descriptionView = 'default';
+  editableForm: Editable;
+
   constructor(
-    private resourcesService: MdmResourcesService,
+    resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
     private stateService: StateService,
     private stateHandler: StateHandlerService,
     private title: Title,
-    private editingService: EditingService) { }
+    editingService: EditingService,
+    messageHandler: MessageHandlerService,
+    dialog: MatDialog
+  ) {
+    super(resourcesService, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -74,47 +94,33 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.stateService.params.edit === 'true') {
       this.editMode = true;
     }
+
+    this.editableForm = new Editable();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.editingService.start();
+      this.editableForm.visible = true;
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.label = this.result.label;
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.editableForm.description = this.result.description;
+    };
+
     this.title.setTitle('Classifier');
     // tslint:disable-next-line: deprecation
     this.classifierDetails(this.stateService.params.id);
 
-    // const promises = [];
-    // promises.push(this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id))
-    // this.resourcesService.classifier.get(
-    //   this.stateService.params.id,
-    //   'catalogueItems',
-    //   null
-    // )
-    // );
-    // promises.push([]
-    // this.resourcesService.classifier.listForCatalogueItem('terminologies', this.stateService.params.id)
-    // this.resourcesService.classifier.get(
-    //   this.stateService.params.id,
-    //   'terminologies',
-    //   null
-    // )
-    // );
-    // promises.push(this.resourcesService.classifier.listForCatalogueItem('terms', this.stateService.params.id));
-    // this.resourcesService.classifier.get(this.stateService.params.id, 'terms', null)
-    // promises.push(
-    //   // this.resourcesService.classifier.listForCatalogueItem('codeSets', this.stateService.params.id)
-    //   // this.resourcesService.classifier.get(this.stateService.params.id, 'codeSets', null)
-    // );
-
-    // forkJoin(promises).subscribe((results: any) => {
-    //   console.log(results);
-    //   this.catalogueItemsCount = results[0].body.count;
-    //   this.terminologiesCount = results[1].body.count;
-    //   this.termsCount = results[2].body.count;
-    //   this.codeSetsCount = results[3].body.count;
-
-    //   this.loading = false;
-    //   this.activeTab = this.getTabDetail('classifiedElements');
-    // });
-
-    // this.resourcesService.classifier.listCatalogueItemsFor(this.stateService.params.id).subscribe(result => {
-
-    // });
+    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
+      (message: boolean) => {
+        this.showSecuritySection = message;
+      }
+    );
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
@@ -126,7 +132,8 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
         this.showSearch = message;
       }
     );
-    this.afterSave = (result: { body: { id: any } }) => this.classifierDetails(result.body.id);
+    this.afterSave = (result: { body: { id: any } }) =>
+      this.classifierDetails(result.body.id);
 
     // tslint:disable-next-line: deprecation
     this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
@@ -136,28 +143,48 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  classifierDetails(id: any) {
-    this.resourcesService.classifier.get(id).subscribe((response: { body: FolderResult }) => {
-      this.result = response.body;
+  showForm() {
+    this.editingService.start();
+    this.editableForm.show();
+  }
 
-      this.parentId = this.result.id;
-      if (this.sharedService.isLoggedIn(true)) {
-        this.classifierPermissions(id);
-      } else {
-        this.messageService.FolderSendMessage(this.result);
-        this.messageService.dataChanged(this.result);
-      }
-    });
+  onCancelEdit() {
+    this.editMode = false; // Use Input editor whe adding a new folder.
+  }
+
+  classifierDetails(id: any) {
+    this.resourcesService.classifier
+      .get(id)
+      .subscribe((response: { body: FolderResult }) => {
+        this.result = response.body;
+        this.catalogueItem = this.result;
+
+        this.parentId = this.result.id;
+        this.editableForm.description = this.result.description;
+
+        // Will Be added later
+        // this.ClassifierUsedProfiles(this.result.id);
+        // this.ClassifierUnUsedProfiles(this.result.id);
+
+        if (this.sharedService.isLoggedIn(true)) {
+          this.classifierPermissions(id);
+        } else {
+          this.messageService.FolderSendMessage(this.result);
+          this.messageService.dataChanged(this.result);
+        }
+      });
   }
   classifierPermissions(id: any) {
-    this.resourcesService.security.permissions('classifiers', id).subscribe((permissions: { body: { [x: string]: any } }) => {
-      Object.keys(permissions.body).forEach(attrname => {
-        this.result[attrname] = permissions.body[attrname];
+    this.resourcesService.security
+      .permissions('classifiers', id)
+      .subscribe((permissions: { body: { [x: string]: any } }) => {
+        Object.keys(permissions.body).forEach((attrname) => {
+          this.result[attrname] = permissions.body[attrname];
+        });
+        // Send it to message service to receive in child components
+        this.messageService.FolderSendMessage(this.result);
+        this.messageService.dataChanged(this.result);
       });
-      // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.result);
-      this.messageService.dataChanged(this.result);
-    });
   }
 
   toggleShowSearch() {
@@ -176,12 +203,42 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
     // this.stateHandler.Go("folder", { tabView: tab.name }, { notify: false, location: tab.index !== 0 });
   }
 
+  edit = () => {
+     this.editableForm.show();
+  };
+
+  formBeforeSave = () => {
+    this.editMode = false;
+    this.editingService.stop();
+
+    const resource = {
+      description: this.editableForm.description
+    };
+
+    this.resourcesService.classifier.update(this.result.id, resource).subscribe(
+      (result) => {
+        this.messageHandler.showSuccess('Classifier updated successfully.');
+        this.editingService.stop();
+        this.editableForm.visible = false;
+        this.result = result.body;
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Classifier.',
+          error
+        );
+      }
+    );
+  };
+
   getTabDetail(tabIndex) {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: 'access' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'history' };
+        return { index: 1, name: 'classifiedElements' };
+      case 2:
+        return { index: 2, name: 'history' };
       default:
         return { index: 0, name: 'access' };
     }
@@ -189,44 +246,27 @@ export class ClassificationComponent implements OnInit, AfterViewInit, OnDestroy
 
   getTabDetailByName(tabName) {
     switch (tabName) {
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'classifiedElements':
-        return { index: 0, name: 'classifiedElements' };
-      case 'classifiedTerminologies':
-        return { index: 1, name: 'classifiedTerminologies' };
-      case 'classifiedTerms':
-        return { index: 2, name: 'classifiedTerms' };
-      case 'classifiedCodeSets':
-        return { index: 3, name: 'classifiedCodeSets' };
-      case 'history': {
-        let index = 4;
-        if (this.terminologiesCount === 0) {
-          index--;
-        }
-        if (this.termsCount === 0) {
-          index--;
-        }
-        if (this.codeSetsCount === 0) {
-          index--;
-        }
-        return { index, name: 'history' };
-      }
+        return { index: 1, name: 'classifiedElements' };
+      case 'history':
+        return { index: 2, name: 'history' };
+      default:
+        return { index: 0, name: 'description' };
     }
   }
 
   getTabDetailByIndex(index) {
     switch (index) {
       case 0:
-        return { index: 0, name: 'classifiedElements' };
+        return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'classifiedTerminologies' };
+        return { index: 1, name: 'classifiedElements' };
       case 2:
-        return { index: 2, name: 'classifiedTerms' };
-      case 3:
-        return { index: 3, name: 'classifiedCodeSets' };
-      case 4:
-        return { index: 4, name: 'history' };
+        return { index: 2, name: 'history' };
       default:
-        return { index: 0, name: 'classifiedElements' };
+        return { index: 0, name: 'description' };
     }
   }
 }

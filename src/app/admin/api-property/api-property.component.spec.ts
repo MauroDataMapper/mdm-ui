@@ -43,7 +43,7 @@ describe('ApiPropertyComponent', () => {
       providers: [
         {
           provide: MdmResourcesService,
-          useValue: { 
+          useValue: {
             apiProperties: {
               list: jest.fn(() => of())
             }
@@ -60,7 +60,7 @@ describe('ApiPropertyComponent', () => {
       ],
       declarations: [ ApiPropertyComponent ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

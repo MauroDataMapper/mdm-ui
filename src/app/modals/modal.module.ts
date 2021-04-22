@@ -39,6 +39,15 @@ import { SharedModule } from '@mdm/modules/shared/shared.module';
 import { AddRuleRepresentationModalComponent } from './add-rule-representation-modal/add-rule-representation-modal.component';
 import { AddRuleModalComponent } from './add-rule-modal/add-rule-modal.component';
 import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component';
+import { SecurityModalComponent } from './security-modal/security-modal.component';
+import { AddProfileModalComponent } from './add-profile-modal/add-profile-modal.component';
+import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';
+import { CatalogueModule } from '@mdm/modules/catalogue/catalogue.module';
+import {  AceConfigInterface, AceModule, ACE_CONFIG } from 'ngx-ace-wrapper';
+import { MarkupDisplayModalComponent } from './markup-display-modal/markup-display-modal.component';
+
+const DefaultAceConfig: AceConfigInterface = {
+};
 
 @NgModule({
   imports: [
@@ -51,7 +60,9 @@ import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component
     MatButtonModule,
     MatPasswordStrengthModule,
     MaterialModule,
-    SharedModule
+    SharedModule,
+    AceModule,
+    CatalogueModule
   ],
   declarations: [
     RegisterModalComponent,
@@ -65,10 +76,22 @@ import { ApiKeysModalComponent } from './api-keys-modal/api-keys-modal.component
     ResolveMergeConflictModalComponent,
     AddRuleRepresentationModalComponent,
     AddRuleModalComponent,
-    ApiKeysModalComponent
+    ApiKeysModalComponent,
+    SecurityModalComponent,
+    AddProfileModalComponent,
+    EditProfileModalComponent,
+    ResolveMergeConflictModalComponent,
+    AddRuleRepresentationModalComponent,
+    AddRuleModalComponent,
+    ApiKeysModalComponent,
+    MarkupDisplayModalComponent
   ],
   providers: [
-    ModalService
+    ModalService,
+    {
+      provide: ACE_CONFIG,
+      useValue: DefaultAceConfig
+    }
   ],
   exports: [
     RegisterModalComponent,

@@ -42,7 +42,7 @@ import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/adva
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { AnnotationListComponent } from '@mdm/shared/annotation-list/annotation-list.component';
 import { AttachmentListComponent } from '@mdm/shared/attachment-list/attachment-list.component';
-import { ContentTableComponent } from '@mdm/shared/content-table/content-table.component';
+import { ElementsTableComponent } from '@mdm/shared/elements-table/elements-table.component';
 import { ElementDataTypeComponent } from '@mdm/shared/element-data-type/element-data-type.component';
 import { ElementLinkListComponent } from '@mdm/shared/element-link-list/element-link-list.component';
 import { InlineTextEditComponent } from '@mdm/shared/inline-text-edit/inline-text-edit.component';
@@ -121,7 +121,7 @@ describe('DataClassComponent', () => {
       ],
       declarations: [
         ProfilePictureComponent,
-        ContentTableComponent,
+        ElementsTableComponent,
         McDataSetMetadataComponent,
         AnnotationListComponent,
         ElementLinkListComponent,

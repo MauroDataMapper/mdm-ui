@@ -16,193 +16,68 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-    <form name="form" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
-        <div class="panel-body">
-            <div *ngIf="result">
-                <div [ngClass]="{ 'has-error': errorMessage != ''}">
-                    <h4 class="inline-block marginless">
-                        <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label"
-                            [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"></mdm-inline-text-edit>
-                    </h4>
-                </div>
-                <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
-                    <span class="help-block">{{errorMessage}}</span>
-                </div>
+   <form name="form" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
+      <div class="panel-body">
+         <div class="full-width" style="clear: both;" *ngIf="result">
+            <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px; bottom: 6px;">
+               <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+            </button>
+
+            <!--First level Menu-->
+            <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+               <button mat-menu-item type="button" *ngIf="showEdit || canEditDescription" [matMenuTriggerFor]="editMenu">
+                  <i class="fas fa-pencil-alt"></i> Edit Data Model
+               </button>
+               <mat-divider></mat-divider>
+               <button mat-menu-item *ngIf="showDelete" color="warn" type="button" (click)="askForPermanentDelete()" class="warning">
+                  <i class="far fa-trash-alt warning"></i> Delete
+               </button>
+            </mat-menu>
+            <!-- End of first level menu -->
+
+            <!--Second level sub Menu-->
+            <mat-menu #editMenu>
+               <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
+                  Edit Data Class details
+               </button>
+               <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
+                  Edit Description only
+               </button>
+            </mat-menu>
+            <!-- End of second level menu -->
+
+            <div style="position: relative; float: right; margin-right:8px; margin-left: 8px; bottom: 6px;" [hidden]="editableForm.visible || editableForm.deletePending">
+               <button mat-icon-button color="primary" type="button" class="paddingless" matTooltipPosition="below" matTooltip="Search" aria-label="Search" [disabled]="processing" (click)="toggleShowSearch()">
+                  <i class="fas fa-search"></i>
+               </button>
             </div>
+         </div>
 
-            <div class="detail-icons">
-                <div class="text-muted">
-                  <small>
-                      <i class="fas fa-cube" matTooltip="Item type"></i>
-                      <span><strong>Item type: </strong><span class="item-type">Data Class</span></span>
-                  </small>
-                </div>
-                <div class="text-muted" *ngIf="result">
-                    <small>
-                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
-                        <span><strong>Last update: </strong>{{ result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </small>
-                </div>
-                <div class="text-muted" *ngIf="result && result.finalised && result.dateFinalised">
-                    <small>
-                        <i class="far fa-calendar-check" matTooltip="Finalised on"></i>
-                        <span><strong>Finalised on:</strong>{{result.dateFinalised | date:"yyyy-MM-dd HH:mm:ss" }}</span>
-                    </small>
-                </div>
+         <div *ngIf="result">
+            <div [ngClass]="{ 'has-error': errorMessage != ''}">
+               <h4 class="inline-block marginless">
+                 {{ parentLabel }}:
+                  <mdm-inline-text-edit [readOnly]='showEditDescription' [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [styleCss]="'dataModelDetailsLabel'" name="moduleName" size="20"> </mdm-inline-text-edit>
+               </h4>
+               <td *ngIf="result">
+                  <mdm-model-path [path]="result.breadcrumbs"></mdm-model-path>
+                </td>
             </div>
-        </div>
-        <table class="table table-bordered mdm--table-fixed">
-            <tbody>
-                <tr>
-                    <td class="detailsRowHeader">Aliases</td>
-                    <td>
-                        <mdm-element-alias [readOnly]='showEditDescription'
-                                           [inEditMode]="editableForm.visible"
-                                           [aliases]="aliases"
-                                           [element]="result"
-                                           [editableForm]="editableForm"
-                                           [property]="'aliases'">
-                        </mdm-element-alias>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detailsRowHeader">Description</td>
-                    <td class="elementDetailDescription">
-                        <div *ngIf="result">
-                            <mdm-content-editor [editableForm]="editableForm" 
-                                                [element]="result" 
-                                                [property]="'description'">
-                            </mdm-content-editor>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detailsRowHeader">Parent Hierarchy</td>
-                    <td *ngIf="result">
-                        <mdm-model-path [path]="result.breadcrumbs"></mdm-model-path>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="detailsRowHeader">Multiplicity</th>
-                    <td class="dataClassDetailsModelPath">
-                        <div *ngIf="(!editableForm.visible && result) || (editableForm.visible && showEditDescription)">
-                            <mdm-multiplicity [min]="result.minMultiplicity" [max]="result.maxMultiplicity"></mdm-multiplicity>
-                        </div>
-                        <div *ngIf="result && !showEditDescription">
-                            <div style="float: left;">
-                                <div *ngIf="editableForm.visible">
-                                  <div *ngIf="editableForm.visible" style="padding-left: 8px">Min</div>
-                                    <mdm-inline-text-edit [readOnly]='showEditDescription'
-                                                          [inEditMode]="editableForm.visible"
-                                                          [(ngModel)]="min"
-                                                          [styleCss]="'dataModelDetailsLabel'"
-                                                          name="moduleNameMinText" size="20"
-                                                          size="5">
-                                    </mdm-inline-text-edit>
-                                    <small class="block">
-                                      Use numbers only
-                                    </small>
-                                </div>
-                                <span *ngIf="!editableForm.visible && (result.minMultiplicity && result.minMultiplicity == 0)">..</span>
-                                <span *ngIf="editableForm.visible" style="padding-right: 10px"></span>
-                            </div>
+            <div [ngClass]="{'form-group':true, 'has-error': true }" *ngIf="errorMessage != ''">
+               <span class="help-block">{{errorMessage}}</span>
+            </div>
+         </div>
+      </div>
+   </form>
+</div>
 
-                            <div style="float: left;margin-right: 13px;">
-                                <div *ngIf="editableForm.visible" style="padding-left: 6px">
-                                    Max
-                                    <mdm-inline-text-edit [readOnly]='showEditDescription'
-                                                          [inEditMode]="editableForm.visible"
-                                                          [(ngModel)]="max"
-                                                          [styleCss]="'dataModelDetailsLabel'"
-                                                          name="moduleNameMaxText">
-                                    </mdm-inline-text-edit>
-                                    <small class="block">
-                                      User numbers or <strong>*</strong> for unbound multiplicity
-                                    </small>
-                                </div>
-                            </div>
-                            <div style="clear: both;" [ngClass]="{'has-error': true }" *ngIf="error != ''">
-                                <small class="warning">{{error}}</small>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="detailsRowHeader">Classifications</td>
-                    <td *ngIf="result">
-                        <mdm-element-classifications [readOnly]='showEditDescription'
-                                                     [classifications]="result.classifiers"
-                                                     [editableForm]="editableForm"
-                                                     [element]="result"
-                                                     [property]="'classifiers'">
-                        </mdm-element-classifications>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: right;">
-                        <div *ngIf="result" style="float: right;margin-bottom: 3px">
-                            <div *ngIf="showDelete" style="float: right" [hidden]="editableForm.visible">
-                                <button mat-stroked-button
-                                        color="warn"
-                                        type="button"
-                                        matTooltip="Delete Data Class"
-                                        aria-label="Delete Data Class"
-                                        class="paddingless"
-                                        (click)="askForPermanentDelete()">
-                                        <i class="far fa-trash-alt warning"></i>
-                                </button>
-                            </div>
-                            <div *ngIf="showEdit || canEditDescription" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; float: right; margin-right:4px;">
-                              <button mat-stroked-button
-                                      color="primary"
-                                      type="button"
-                                      class="paddingless dropdown-toggle warning"
-                                      matTooltip="Edit Data Class"
-                                      aria-label="Edit Data Class"
-                                      [matMenuTriggerFor]="editMenu"
-                                      [hidden]="editableForm.visible">
-                                  <i class="fas fa-pencil-alt"></i>
-                              </button>
-
-                              <mat-menu #editMenu>
-                                  <button mat-menu-item (click)="showForm()" *ngIf="showEdit">
-                                      Edit Data Class details
-                                  </button>
-                                  <button mat-menu-item (click)="showDescription()" *ngIf="canEditDescription">
-                                      Edit Description only
-                                  </button>
-                              </mat-menu>
-                            </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible"
-                                                       [onCancelEdit]="onCancelEdit"
-                                                       [editable]="editableForm"
-                                                       [textLocation]="'left'"
-                                                       [hideDelete]="true"
-                                                       [hideCancel]="false"
-                                                       [processing]="deleteInProgress">
-                            </mdm-editable-form-buttons>
-                        </div>
-
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-                            <button mat-stroked-button color="primary" type="button" class="paddingless" matTooltipPosition="below" matTooltip="Search" aria-label="Search" [disabled]="processing" (click)="toggleShowSearch()">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-
-                        <div style="clear: both;" *ngIf="processing">
-                            <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
-                        </div>
-                        <div style="text-align: left" *ngIf="exportError">
-                            <div style="padding-top: 25px;">
-                                <div class="alert alert-danger">
-                                    <strong>Error!</strong> {{exportError}}
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
+<div style="clear: both;" *ngIf="processing">
+   <mat-progress-bar value="50" bufferValue="75" color="accent" mode="indeterminate"></mat-progress-bar>
+</div>
+<div style="text-align: left" *ngIf="exportError">
+   <div style="padding-top: 25px;">
+      <div class="alert alert-danger">
+         <strong>Error!</strong> {{exportError}}
+      </div>
+   </div>
 </div>

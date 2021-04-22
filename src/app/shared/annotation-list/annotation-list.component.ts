@@ -133,7 +133,7 @@ export class AnnotationListComponent implements AfterViewInit {
 
       this.editingService.setFromCollection(this.records);
     });
-  };
+  }
 
   saveParent = (record) => {
     const resource = {

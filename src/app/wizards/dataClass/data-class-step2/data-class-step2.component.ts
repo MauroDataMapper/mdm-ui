@@ -24,7 +24,7 @@ import {
   EventEmitter,
   AfterViewInit,
   OnDestroy,
-  QueryList,
+  QueryList
 } from '@angular/core';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { NgForm } from '@angular/forms';
@@ -39,7 +39,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'mdm-data-class-step2',
   templateUrl: './data-class-step2.component.html',
-  styleUrls: ['./data-class-step2.component.sass'],
+  styleUrls: ['./data-class-step2.component.sass']
 })
 export class DataClassStep2Component
   implements OnInit, AfterViewInit, OnDestroy {
@@ -95,13 +95,7 @@ export class DataClassStep2Component
     );
   }
 
-  ngAfterViewInit() {
-    this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
-      (x) => {
-        this.validate(x);
-      }
-    );
-  }
+  ngAfterViewInit() {}
 
   onLoad() {
     this.defaultCheckedMap = this.model.selectedDataClassesMap;
@@ -113,17 +107,35 @@ export class DataClassStep2Component
       this.paginator !== undefined &&
       this.paginator.toArray().length > 0
     ) {
-      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
-      this.filterEvent.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+          () => (this.paginator.toArray()[0].pageIndex = 0)
+        );
+      this.filterEvent.subscribe(
+        () => (this.paginator.toArray()[0].pageIndex = 0)
+      );
 
       // Selected Data Class table
       this.dataSource.sort = this.sort.toArray()[0];
-      this.sort.toArray()[0].sortChange.subscribe(() => (this.paginator.toArray()[0].pageIndex = 0));
+      this.sort
+        .toArray()[0]
+        .sortChange.subscribe(
+          () => (this.paginator.toArray()[0].pageIndex = 0)
+        );
       this.dataSource.paginator = this.paginator.toArray()[0];
     }
     if (this.model.selectedDataClassesMap) {
       this.createSelectedArray();
       this.validate();
+    }
+
+    if (this.myForm) {
+      this.formChangesSubscription = this.myForm.form.valueChanges.subscribe(
+        (x) => {
+          this.validate(x);
+        }
+      );
     }
 
     this.loaded = true;
@@ -200,28 +212,41 @@ export class DataClassStep2Component
     let promise = Promise.resolve();
 
     this.model.selectedDataClasses.forEach((dc: any) => {
-      promise = promise.then((result: any) => {
-        this.successCount++;
-        this.finalResult[dc.id] = { result, hasError: false };
-        if (this.model.parent.domainType === 'DataClass') {
-          return this.resources.dataClass.copyChildDataClass(this.model.parent.model, this.model.parent.id, dc.modelId, dc.id, null).toPromise();
-        } else {
-          return this.resources.dataClass.copyDataClass(this.model.parent.id, dc.modelId, dc.id, null).toPromise();
-        }
-      }).catch((error) => {
-        this.failCount++;
-        const errorText = this.messageHandler.getErrorText(error);
-        this.finalResult[dc.id] = { result: errorText, hasError: true };
-      });
+      promise = promise
+        .then((result: any) => {
+          this.successCount++;
+          this.finalResult[dc.id] = { result, hasError: false };
+          if (this.model.parent.domainType === 'DataClass') {
+            return this.resources.dataClass
+              .copyChildDataClass(
+                this.model.parent.model,
+                this.model.parent.id,
+                dc.modelId,
+                dc.id,
+                null
+              )
+              .toPromise();
+          } else {
+            return this.resources.dataClass
+              .copyDataClass(this.model.parent.id, dc.modelId, dc.id, null)
+              .toPromise();
+          }
+        })
+        .catch((error) => {
+          this.failCount++;
+          const errorText = this.messageHandler.getErrorText(error);
+          this.finalResult[dc.id] = { result: errorText, hasError: true };
+        });
     });
 
-    promise.then(() => {
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-    }).catch(() => console.warn('error')).finally(() => {
-      this.processing = false;
-      this.step.submitBtnDisabled = false;
-      this.isProcessComplete = true;
-    });
+    promise
+      .then(() => {})
+      .catch(() => console.warn('error'))
+      .finally(() => {
+        this.processing = false;
+        this.step.submitBtnDisabled = false;
+        this.isProcessComplete = true;
+      });
 
     return promise;
   };

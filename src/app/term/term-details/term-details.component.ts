@@ -76,6 +76,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   editableForm: EditableTerm;
   errorMessage = '';
   showEditMode = false;
+  parentLabel = '';
 
   showNewVersion = false;
   compareToList = [];
@@ -102,12 +103,6 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     this.editableForm.deletePending = false;
 
     this.editableForm.show = () => {
-      this.editForm.forEach(x =>
-        x.edit({
-          editing: true,
-          focus: x._name === 'moduleName' ? true : false
-        })
-      );
       this.editableForm.visible = true;
     };
 
@@ -138,6 +133,13 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
 
       this.editableForm.url = this.mcTerm.url;
       this.editableForm.description = this.mcTerm.description;
+
+      if(this.mcTerm.domainType === 'Term') {
+        this.resourcesService.terminology.get(this.mcTerm.model).subscribe(result => {
+          this.parentLabel = result.body.label;
+        });
+      }
+
       if (this.mcTerm.classifiers) {
         this.mcTerm.classifiers.forEach(item => {
           this.editableForm.classifiers.push(item);
@@ -171,6 +173,11 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
       this.title.setTitle(`Term - ${this.mcTerm?.label}`);
     }
     );
+  }
+
+  onCancelEdit() {
+    this.errorMessage = '';
+    this.editMode = false; // Use Input editor whe adding a new folder.
   }
 
   watchDataModelObject() {
@@ -214,17 +221,11 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-    const resource = {
-      id: this.mcTerm.id,
-      code: this.mcTerm.code,
-      definition: this.mcTerm.definition,
-      description: this.editableForm.description,
-      terminology: this.mcTerm.terminology,
-      aliases,
-      classifiers
-    };
 
-    this.resourcesService.term.update(this.mcTerm.terminology.id, resource.id, resource).subscribe(() => {
+    this.mcTerm['aliases'] = aliases;
+    this.mcTerm['classifiers'] = classifiers;
+
+    this.resourcesService.term.update(this.mcTerm.terminology.id, this.mcTerm.id, this.mcTerm).subscribe(() => {
       if (this.afterSave) {
         this.afterSave(this.mcTerm);
       }
@@ -242,6 +243,9 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   showForm() {
     this.editingService.start();
     this.editableForm.show();
+  }
+
+  askForPermanentDelete(){
   }
 
   toggleFavourite() {

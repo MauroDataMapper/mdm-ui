@@ -21,6 +21,8 @@ import { SecurityHandlerService } from './handlers/security-handler.service';
 import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { Features } from './shared.model';
+import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +34,9 @@ export class SharedService {
   youTrack = environment.youTrack;
   wiki = environment.wiki;
   simpleViewSupport = environment.simpleViewSupport;
+  checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
+  features: Features = environment.features;
   isAdmin;
   applicationOffline = new Subject<any>();
   current;
@@ -47,10 +51,7 @@ export class SharedService {
     private resources: MdmResourcesService
   ) {
     this.isAdmin = this.securityHandler.isAdmin();
-    this.applicationOffline.subscribe(() => {
-      this.toaster.warning('Application is offline!');
-    });
-  }
+   }
 
   logout = () => {
     this.securityHandler.logout();
@@ -67,20 +68,27 @@ export class SharedService {
     return this.securityHandler.isAdmin();
   };
 
-  handleExpiredSession = (firstTime?) => {
+  handleExpiredSession(firstTime?) {
     // if 'event:auth-loginRequired' event is fired, then do not check as
     // the event handler will check the status
     if (this.securityHandler.in_AuthLoginRequiredCheck && !firstTime) {
       return;
     }
 
-    this.securityHandler.isCurrentSessionExpired().then(result => {
-      if (result === true) {
-        this.toaster.error('Your session has expired! Please log in.');
+    if (!this.securityHandler.isLoggedIn()) {
+      return;
+    }
+
+    this.securityHandler
+      .isCurrentSessionExpired()
+      .pipe(filter(authenticated => !authenticated))
+      .subscribe(() => {
+        if (!firstTime) {
+          this.toaster.info('You have been automatically logged out due to inactivity. Please log in again to continue.');
+        }
 
         this.securityHandler.logout();
-      }
-    });
+      });
   };
 
   pendingUsersCount = () => {

@@ -28,12 +28,10 @@ import { UsersModule } from '../users/users.module';
 import { FolderComponent } from '@mdm/folder/folder.component';
 import { FolderDetailComponent } from '@mdm/folder/folder-detail.component';
 import { AdvancedSearchBarComponent } from '@mdm/search/advanced-search-bar/advanced-search-bar.component';
-import { ShareWithComponent } from '@mdm/access/share-with/share-with.component';
 import { ExportModelsComponent } from '@mdm/export-models/export-models.component';
-import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
+
 import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
 import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
@@ -80,9 +78,9 @@ import { DataClassStep2Component } from '@mdm/wizards/dataClass/data-class-step2
 import { DataTypeMainComponent } from '@mdm/wizards/dataType/data-type-main/data-type-main.component';
 import { DataTypeStep1Component } from '@mdm/wizards/dataType/data-type-step1/data-type-step1.component';
 import { DataTypeStep2Component } from '@mdm/wizards/dataType/data-type-step2/data-type-step2.component';
-import { ContentTableComponent } from '@mdm/shared/content-table/content-table.component';
 import { DataClassesListComponent } from '@mdm/shared/data-classes-list/data-classes-list.component';
 import { DataElementsListComponent } from '@mdm/shared/data-elements-list/data-elements-list.component';
+import { ElementsTableComponent } from '@mdm/shared/elements-table/elements-table.component';
 import { AllLinksInPagedListComponent } from '@mdm/utility/all-links-in-paged-list/all-links-in-paged-list.component';
 import { McPagedListComponent } from '@mdm/utility/mc-paged-list/mc-paged-list.component';
 import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.component';
@@ -92,6 +90,8 @@ import { GroupsComponent } from '@mdm/admin/groups/groups.component';
 import { GroupsTableComponent } from '@mdm/admin/groups-table/groups-table.component';
 import { PendingUsersComponent } from '@mdm/admin/pending-users/pending-users.component';
 import { PendingUsersTableComponent } from '@mdm/admin/pending-users-table/pending-users-table.component';
+import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
+import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/subscribed-catalogues.component';
 import { DashboardComponent } from '@mdm/admin/home/home.component';
 import { ModulesComponent } from '@mdm/admin/home/modules/modules.component';
 import { PluginsComponent } from '@mdm/admin/home/plugins/plugins.component';
@@ -171,11 +171,17 @@ import { HtmlEditorComponent } from '@mdm/utility/html-editor/html-editor.compon
 import { ContentEditorComponent } from '@mdm/utility/content-editor/content-editor.component';
 import { LoadingIndicatorComponent } from '@mdm/utility/loading-indicator/loading-indicator.component';
 
+import { SubscribedCatalogueMainComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
+import { SubscribedCatalogueDetailComponent } from '@mdm/subscribed-catalogues/subscribed-catalogue-detail/subscribed-catalogue-detail.component';
+import { FederatedDataModelMainComponent } from '@mdm/subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
+import { FederatedDataModelDetailComponent } from '@mdm/subscribed-catalogues/federated-data-model-detail/federated-data-model-detail.component';
+import { NewFederatedSubscriptionModalComponent } from '@mdm/subscribed-catalogues/new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
 import { EnumerationValuesDetailsComponent } from '@mdm/enumerationValues/enumeration-values-details/enumeration-values-details.component';
 import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-rules.component';
 import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-property-table.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
+import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 
 @NgModule({
   declarations: [
@@ -183,16 +189,13 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     FolderComponent,
     FolderDetailComponent,
     AdvancedSearchBarComponent,
-    ShareWithComponent,
     ExportModelsComponent,
     DiagramComponent,
     DiagramTabComponent,
     DiagramPopupComponent,
     DiagramToolbarComponent,
-    GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    ElementLinkComponent,
     HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
@@ -241,9 +244,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    ContentTableComponent,
     DataElementsListComponent,
     DataClassesListComponent,
+    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -253,6 +256,8 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     GroupsTableComponent,
     PendingUsersComponent,
     PendingUsersTableComponent,
+    SubscribedCatalogueComponent,
+    SubscribedCataloguesComponent,
     DashboardComponent,
     ModulesComponent,
     PluginsComponent,
@@ -323,7 +328,18 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     ConstraintsRulesComponent,
     LoadingIndicatorComponent,
     ApiPropertyTableComponent,
-    ApiPropertyComponent
+    ApiPropertyComponent,
+    SubscribedCatalogueMainComponent,
+    SubscribedCatalogueDetailComponent,
+    FederatedDataModelMainComponent,
+    FederatedDataModelDetailComponent,
+    NewFederatedSubscriptionModalComponent,
+    ApiPropertyComponent,
+    SubscribedCatalogueMainComponent,
+    SubscribedCatalogueDetailComponent,
+    FederatedDataModelMainComponent,
+    FederatedDataModelDetailComponent,
+    ProfileDetailsComponent,
   ],
   imports: [
     AdminModule,
@@ -356,12 +372,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     FolderDetailComponent,
     AdvancedSearchBarComponent,
     SummaryMetadataPopupComponent,
-    ShareWithComponent,
     ExportModelsComponent,
-    GroupAccessNewComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    ElementLinkComponent,
     HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
@@ -409,9 +422,9 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     DataTypeMainComponent,
     DataTypeStep1Component,
     DataTypeStep2Component,
-    ContentTableComponent,
     DataClassesListComponent,
     DataElementsListComponent,
+    ElementsTableComponent,
     AllLinksInPagedListComponent,
     McPagedListComponent,
     ConfigurationComponent,
@@ -421,6 +434,8 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     GroupsTableComponent,
     PendingUsersComponent,
     PendingUsersTableComponent,
+    SubscribedCatalogueComponent,
+    SubscribedCataloguesComponent,
     DashboardComponent,
     ModulesComponent,
     PluginsComponent,
@@ -486,8 +501,18 @@ import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.compo
     HtmlEditorComponent,
     ContentEditorComponent,
     ConstraintsRulesComponent,
+    SubscribedCatalogueMainComponent,
+    SubscribedCatalogueDetailComponent,
+    ConstraintsRulesComponent,
     LoadingIndicatorComponent,
-    ApiPropertyTableComponent
+    ApiPropertyTableComponent,
+    SubscribedCatalogueMainComponent,
+    SubscribedCatalogueDetailComponent,
+    ApiPropertyTableComponent,
+    FederatedDataModelMainComponent,
+    FederatedDataModelDetailComponent,
+    NewFederatedSubscriptionModalComponent,
+    ProfileDetailsComponent
   ]
 })
 export class CatalogueModule { }

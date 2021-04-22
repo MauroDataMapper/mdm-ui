@@ -45,7 +45,11 @@ export class ModelPathComponent implements OnInit {
         this.path.forEach((p, index) => {
             if(p.domainType === 'ReferenceDataModel') {
                 p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'ReferenceDataModel' });
-            } else {
+            }
+            else if(p.domainType === 'Terminology'){
+                p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'Terminology' });
+            }
+            else {
               if (index === 0) {
                   p.link = this.elementTypes.getLinkUrl({ id: p.id, domainType: 'DataModel' });
               } else if (index === 1) {

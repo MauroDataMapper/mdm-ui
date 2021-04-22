@@ -18,23 +18,22 @@ SPDX-License-Identifier: Apache-2.0
 <header id="mdm--header">
     <div class="container">
         <mat-toolbar id="mdm--navbar" color="primary" class="mb-0">
-            <div class="mdm--navbar-brand">
-                <a id="mdm-logo" uiSref="appContainer.mainApp.home">
-                    <img src="assets/images/logo.png" alt="Mauro Data Mapper logo">
-                </a>
-            </div>
-
             <nav id="mdm--navbar-desktop" flex fxLayout="row" fxLayoutAlign="space-between">
+                <div class="mdm--navbar-brand">
+                    <a id="mdm-logo" class="mdm-navbar__brand--logo" uiSref="appContainer.mainApp.home">
+                        <img [src]="logoUrl" [style.width]="logoWidth" alt="logo">
+                    </a>
+                </div>
                 <div class="mdm--navbar-items">
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.home" uiSrefActive="active">Home</a>
-                    <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel" uiSrefActive="active">Browse models</a>
+                    <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel" uiSrefActive="active">Browse</a>
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.twoSidePanel.catalogue.search" uiSrefActive="active">Search</a>
                     <a class="nav-item nav-link" uiSref="appContainer.mainApp.about" uiSrefActive="active">About</a>
                 </div>
                 <div class="mdm--navbar-user">
                     <div *ngIf="!isLoggedIn">
-                        <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary">Register</button> TODO -->
-                        <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary">Log in</button>
+                        <!-- <button (click)="register()" mat-button class="custom inverted-button" color="primary-A700">Register</button> TODO -->
+                        <button (click)="login()" mat-stroked-button class="custom inverted-button" color="primary-A700">Log in</button>
                     </div>
                     <div *ngIf="isLoggedIn">
                         <div *ngIf="profile" [matMenuTriggerFor]="menu" flex fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between" fxLayoutGap="8px" fxLayoutAlign="center center" style="width: 185px;">
@@ -78,6 +77,10 @@ SPDX-License-Identifier: Apache-2.0
                                 <a mat-menu-item uiSref="appContainer.adminArea.modelManagement">
                                     <i class="fas fa-list" aria-hidden="true"></i>
                                     <span>Model management</span>
+                                </a>
+                                <a mat-menu-item *ngIf="features.useSubscribedCatalogues" uiSref="appContainer.adminArea.subscribedCatalogues">
+                                    <i class="fas fa-rss" aria-hidden="true"></i>
+                                    <span>Subscribed catalogues</span>
                                 </a>
                                 <a mat-menu-item uiSref="appContainer.adminArea.emails">
                                     <i class="fas fa-envelope" aria-hidden="true"></i>
@@ -143,7 +146,7 @@ SPDX-License-Identifier: Apache-2.0
                 </a>
                 <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.allDataModel"  (click)="sidenav.toggle()"uiSrefActive="active">
                     <i class="fas fa-folder-open"></i>
-                    <span>Browse Models</span>
+                    <span>Browse</span>
                 </a>
                 <a mat-menu-item uiSref="appContainer.mainApp.twoSidePanel.catalogue.search" (click)="sidenav.toggle()" uiSrefActive="active">
                     <i class="fas fa-search"></i>

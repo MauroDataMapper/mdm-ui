@@ -19,11 +19,14 @@ SPDX-License-Identifier: Apache-2.0
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const packageFile = require('../../package.json');
+
 export const environment = {
   production: false,
-  version: '5.2.3',
+  version: packageFile?.version ?? '',
   apiEndpoint: 'http://localhost:8080/api',
   HDFLink: '',
+  themeName: 'default',
   appTitle: 'Mauro Data Mapper',
   appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',
@@ -34,7 +37,12 @@ export const environment = {
   wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
   simpleViewSupport: false,
   name: 'development',
-  appIsEditable: true
+  appIsEditable: true,
+  checkSessionExpiryTimeout: 300000,
+  features: {
+    useSubscribedCatalogues: false,
+    useDynamicProfiles: false
+  }
 };
 
 /*

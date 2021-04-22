@@ -28,6 +28,8 @@ import { ConfigurationComponent } from '@mdm/admin/configuration/configuration.c
 import { Ng2StateDeclaration, UIRouterModule } from '@uirouter/angular';
 import { GroupComponent } from '@mdm/admin/group/group.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
+import { SubscribedCataloguesComponent } from '@mdm/admin/subscribed-catalogues/subscribed-catalogues.component';
+import { SubscribedCatalogueComponent } from '@mdm/admin/subscribed-catalogue/subscribed-catalogue.component';
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
   states: [
@@ -50,6 +52,17 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.adminArea.modelManagement',
       url: '/modelManagement',
       component: ModelManagementComponent
+    },
+    {
+      name: 'appContainer.adminArea.subscribedCatalogues',
+      url: '/subscribedCatalogues',
+      component: SubscribedCataloguesComponent
+    },
+    {
+      name: 'appContainer.adminArea.subscribedCatalogue',
+      url: '/subscribedCatalogue/{id}',
+      params: { id: { value: null, squash: true} },
+      component: SubscribedCatalogueComponent
     },
     {
       name: 'appContainer.adminArea.users',

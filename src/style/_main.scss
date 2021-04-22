@@ -640,3 +640,8 @@ mat-tab-label {
 	font-size: 12px;
 	font-weight: bold;
 }
+
+.full-width-dialog .mat-dialog-container {
+  max-width: 100vw !important;
+  width: 100vw;
+}

@@ -20,9 +20,11 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MatDialogRef } from '@angular/material/dialog';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MessageService } from '@mdm/services/message.service';
-import { LoginModel } from './loginModel';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { catchError, finalize } from 'rxjs/operators';
+import { SignInError, SignInErrorType } from '@mdm/services/handlers/security-handler.model';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'mdm-login-modal',
@@ -30,17 +32,18 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./login-modal.component.sass'],
 })
 export class LoginModalComponent implements OnInit {
-  // @ViewChild('form', { static: false }) form: NgForm;
-  public form: FormGroup;
-  username = '';
-  errors = {
-    email: '',
-    password: ''
-  };
-  password = '';
-  passwordError = '';
   message = '';
-  resource: LoginModel;
+  authenticating = false;
+
+  signInForm!: FormGroup;
+
+  get userName() {
+    return this.signInForm.get('userName');
+  }
+
+  get password() {
+    return this.signInForm.get('password');
+  }
 
   constructor(
     private broadcastService: BroadcastService,
@@ -51,48 +54,59 @@ export class LoginModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resource = {
-      username: this.username,
-      password: this.password
-    };
+    this.signInForm = new FormGroup({
+      userName: new FormControl('', [
+        Validators.required,  // eslint-disable-line @typescript-eslint/unbound-method
+        Validators.pattern(this.validator.emailPattern)
+      ]),
+      password: new FormControl('', [
+        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      ])
+    });
   }
 
-  async login() {
+  login() {
     this.message = '';
-    if (this.validator.validateEmail(this.username)) {
-      if (this.password) {
-        try {
-          this.resource = {
-            username: this.username,
-            password: this.password
-          };
-          const user = await this.returnSecurityHandler(this.resource);
-          this.dialogRef.close(user);
-          this.securityHandler.loginModalDisplayed = false;
-          this.messageService.loggedInChanged(true);
-          this.errors.password = '';
-          this.errors.email = '';
-        } catch (error) {
-          this.securityHandler.loginModalDisplayed = true;
-          if (error.status === 401) {
-            this.message = 'Invalid username or password!';
-          } else if (error.status === 409) {
-            this.message = 'A user is already logged in, logout first';
-          } else if (error.status === -1) {
-            this.message = 'Unable to log in. Please try again later.';
-          }
-        }
-      } else {
-        this.errors.password = 'Invalid password';
-      }
-    } else {
-      this.errors.email = 'Invalid email address';
-    }
-  }
 
-  returnSecurityHandler = resource => {
-    return this.securityHandler.login(resource);
-  };
+    if (this.signInForm.invalid) {
+      return;
+    }
+
+    this.authenticating = true;
+    this.signInForm.disable();
+
+    this.securityHandler
+      .signIn({
+        username: this.userName?.value,
+        password: this.password?.value
+      })
+      .pipe(
+        catchError((error: SignInError) => {
+          switch (error.type) {
+            case SignInErrorType.InvalidCredentials:
+              this.message = 'Invalid username or password!';
+              break;
+            case SignInErrorType.AlreadySignedIn:
+              this.message = 'A user is already signed in, please sign out first.';
+              break;
+            default:
+              this.message = 'Unable to sign in. Please try again later.';
+              break;
+          }
+
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.authenticating = false;
+          this.signInForm.enable();
+        })
+      )
+      .subscribe(user =>  {
+        this.dialogRef.close(user);
+        this.securityHandler.loginModalDisplayed = false;
+        this.messageService.loggedInChanged(true);
+      });
+  }
 
   forgotPassword() {
     this.dialogRef.close();

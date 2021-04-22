@@ -151,7 +151,6 @@ export class DiagramComponent implements OnInit {
       el: this.jointjsDiv.nativeElement,
       width: '100%',
       height: '100%',
-      background: { color: '#FFFFFF' },
       model: this.diagramService.graph,
       gridSize: 1,
       attributes: {

@@ -15,22 +15,39 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  OnDestroy,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { StateService } from '@uirouter/core';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService } from '../services/broadcast.service';
 import { McSelectPagination } from '../utility/mc-select/mc-select.component';
+import { Subscription } from 'rxjs';
+import {
+  MessageHandlerService,
+  MessageService,
+  SecurityHandlerService
+} from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
+import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
   selector: 'mdm-terminology',
   templateUrl: './terminology.component.html',
   styleUrls: ['./terminology.component.sass']
 })
-export class TerminologyComponent implements OnInit, AfterViewInit {
+export class TerminologyComponent
+  extends ProfileBaseComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
   terminology: any;
@@ -41,14 +58,33 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
   pagination: McSelectPagination;
   showEditForm = false;
   editForm = null;
+  descriptionView = 'default';
+  editableForm: EditableDataModel;
+  showSearch = false;
+  subscription: Subscription;
+  rulesItemCount = 0;
+  isLoadingRules = true;
+  historyItemCount = 0;
+  isLoadingHistory = true;
+  showEdit = false;
+  showDelete = false;
+  showEditDescription = false;
+  access:any;
 
   constructor(
     private stateHandler: StateHandlerService,
+    private securityHandler: SecurityHandlerService,
     private stateService: StateService,
     private title: Title,
-    private resources: MdmResourcesService,
+    resources: MdmResourcesService,
     private broadcastSvc: BroadcastService,
-    private editingService: EditingService) { }
+    private messageService: MessageService,
+    dialog: MatDialog,
+    messageHandler: MessageHandlerService,
+    editingService: EditingService
+  ) {
+    super(resources, dialog, editingService, messageHandler);
+  }
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
@@ -57,49 +93,177 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
       this.stateHandler.NotFound({ location: false });
       return;
     }
+
+    // tslint:disable-next-line: deprecation
+    this.activeTab = this.getTabDetail(this.stateService.params.tabView).index;
+    this.tabSelected(this.activeTab);
+
+    this.editableForm = new EditableDataModel();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.setEditableForm();
+      this.editingService.start();
+      this.editableForm.visible = true;
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.setEditableForm();
+    };
+
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resources.terminology.get(id).subscribe(result => {
+    this.resourcesService.terminology.get(id).subscribe((result) => {
       const data = result.body;
+      this.catalogueItem = data;
+
+      this.access = this.securityHandler.elementAccess(data);
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+
+      this.UsedProfiles('terminology', id);
+      this.UnUsedProfiles('terminology', id);
+
       this.terminology = data;
       this.terminology.classifiers = this.terminology.classifiers || [];
-      // tslint:disable-next-line: deprecation
-      this.activeTab = this.getTabDetail(this.stateService.params.tabView);
+
+      this.editableForm.description = this.terminology.description;
+
+      if (this.terminology.aliases) {
+        this.terminology.aliases.forEach((item) => {
+          this.editableForm.aliases.push(item);
+        });
+      }
+      this.messageService.FolderSendMessage(data);
+      this.messageService.dataChanged(data);
     });
+
+    this.subscription = this.messageService.changeSearch.subscribe(
+      (message: boolean) => {
+        this.showSearch = message;
+      }
+    );
   }
+
+  edit = () => {
+    this.showEditDescription = false;
+    this.editableForm.show();
+  };
+
+  setEditableForm() {
+    this.editableForm.description = this.terminology.description;
+    if (this.terminology.classifiers) {
+      this.terminology.classifiers.forEach((item) => {
+        this.editableForm.classifiers.push(item);
+      });
+    }
+  }
+
+  formBeforeSave = () => {
+    let resource: any = {};
+    this.editingService.stop();
+
+    if (!this.showEditDescription) {
+      const aliases = [];
+      this.editableForm.aliases.forEach((alias) => {
+        aliases.push(alias);
+      });
+      resource = {
+        id: this.terminology.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description,
+        author: this.editableForm.author,
+        organisation: this.editableForm.organisation,
+        type: this.terminology.type,
+        domainType: this.terminology.domainType,
+        classifiers: this.terminology.classifiers.map((cls) => {
+          return { id: cls.id };
+        }),
+        aliases
+      };
+    } else {
+      resource = {
+        id: this.terminology.id,
+        description: this.editableForm.description || ''
+      };
+    }
+
+    this.resourcesService.terminology.update(resource.id, resource).subscribe(
+      (res) => {
+        const result = res.body;
+
+        this.terminology = result;
+        this.terminology.aliases = Object.assign({}, result.aliases || []);
+        this.terminology.editAliases = Object.assign(
+          {},
+          this.terminology.aliases
+        );
+
+        this.editableForm.visible = false;
+        this.editingService.stop();
+
+        this.messageHandler.showSuccess('Terminology updated successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Terminology.',
+          error
+        );
+      }
+    );
+  };
+
+  onCancelEdit = () => {
+    if (this.terminology) {
+      this.terminology.editAliases = Object.assign(
+        {},
+        this.terminology.aliases
+      );
+      this.showEditDescription = false;
+    }
+  };
 
   ngAfterViewInit(): void {
     this.editingService.setTabGroupClickEvent(this.tabGroup);
   }
 
-  getTabDetail = tabName => {
+  getTabDetail = (tabName) => {
     switch (tabName) {
-      case 'properties':
-        return { index: 0, name: 'properties' };
+      case 'description':
+        return { index: 0, name: 'description' };
       case 'comments':
         return { index: 1, name: 'comments' };
       case 'attachments':
         return { index: 2, name: 'attachments' };
       case 'history':
         return { index: 3, name: 'history' };
+      case 'rules':
+        return { index: 4, name: 'rules' };
       default:
         return { index: 0, name: 'properties' };
     }
   };
 
-  getTabDetailIndex = tabIndex => {
+  getTabDetailIndex = (tabIndex) => {
     switch (tabIndex) {
       case 0:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
       case 1:
         return { index: 1, name: 'comments' };
       case 2:
         return { index: 2, name: 'attachments' };
       case 3:
         return { index: 3, name: 'history' };
+      case 4:
+        return { index: 4, name: 'rules' };
       default:
-        return { index: 0, name: 'properties' };
+        return { index: 0, name: 'description' };
     }
   };
 
@@ -107,31 +271,23 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
     this.broadcastSvc.broadcast('$elementDetailsUpdated', updatedResource);
   };
 
-  tabSelected = tabIndex => {
+  tabSelected = (tabIndex) => {
     const tab = this.getTabDetailIndex(tabIndex);
     this.stateHandler.Go(
-      'terminologyNew',
+      'terminology',
       { tabView: tab.name },
-      { notify: false, location: tab.index !== 0 }
+      { notify: false }
     );
-    this[tab.name] = [];
-    this.activeTab = tab.index;
-
-    if (this.activeTab && this.activeTab.fetchUrl) {
-      this[this.activeTab.name] = [];
-      this.loadingData = true;
-      // tslint:disable-next-line: deprecation
-      this.resources.dataModel.get(this.stateService.params.id, this.activeTab.fetchUrl).then(data => {
-        this[this.activeTab.name] = data || [];
-        this.loadingData = false;
-      });
-    }
   };
 
-  openEditForm = formName => {
+  openEditForm = (formName) => {
     this.showEditForm = true;
     this.editForm = formName;
   };
+
+  toggleShowSearch() {
+    this.messageService.toggleSearch();
+  }
 
   closeEditForm = () => {
     this.showEditForm = false;
@@ -147,10 +303,41 @@ export class TerminologyComponent implements OnInit, AfterViewInit {
     };
 
     this.searchTerm = text;
-    return this.resources.terminology.terms.search(this.terminology.id, { search: encodeURIComponent(text), limit, offset });
+    return this.resourcesService.terminology.terms.search(this.terminology.id, {
+      search: encodeURIComponent(text),
+      limit,
+      offset
+    });
   };
 
-  onTermSelect = term => {
-    this.stateHandler.NewWindow('term', { terminologyId: term.terminology, id: term.id }, null);
+  onTermSelect = (term) => {
+    this.stateHandler.Go(
+      'term',
+      { terminologyId: term.model, id: term.id },
+      null
+    );
+  };
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      // unsubscribe to ensure no memory leaks
+      this.subscription.unsubscribe();
+    }
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
+  }
+
+  showDescription = () => {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
   };
 }

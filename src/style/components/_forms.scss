@@ -15,11 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+
+@import "style/abstracts/variables";
+
 /* Form specific style */
 form.mdm--form {
   background-color: #fff;
   border-radius: 5px;
-  max-width: 800px;
+  max-width: $forms-max-width;
   .form-row div.mdm--form-input, .mat-form-field {
       width: 100%;
   }

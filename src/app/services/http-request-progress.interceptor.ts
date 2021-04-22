@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 
@@ -27,6 +27,8 @@ import { LoadingService } from './loading.service';
  */
 @Injectable()
 export class HttpRequestProgressInterceptor implements HttpInterceptor {
+
+  private requests: HttpRequest<any>[] = [];
 
   constructor(private loading: LoadingService) { }
 
@@ -37,7 +39,7 @@ export class HttpRequestProgressInterceptor implements HttpInterceptor {
       .pipe(
         catchError(error => {
           this.loading.setHttpLoading(false, request.url);
-          return error;
+          return throwError(error);
         })
       )
       .pipe(

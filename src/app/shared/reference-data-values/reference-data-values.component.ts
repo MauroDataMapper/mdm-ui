@@ -15,12 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, ElementRef, ViewChildren } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, ElementRef, ViewChildren, Output } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
    selector: 'mdm-reference-data-values',
@@ -29,8 +30,10 @@ import { GridService } from '@mdm/services/grid.service';
 })
 export class ReferenceDataValuesComponent implements AfterViewInit {
    @Input() parent: any;
+   @Output() totalCount = new EventEmitter<string>();
    @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
    @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+   dataSource = new MatTableDataSource<any>();
    records: any[] = [];
    displayedColumns: string[];
    totalItemCount = 0;
@@ -44,7 +47,9 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       private changeRef: ChangeDetectorRef,
       private resources: MdmResourcesService,
       private gridService: GridService
-   ) { }
+   ) {
+      this.dataSource = new MatTableDataSource(this.records);
+   }
 
    ngAfterViewInit() {
       this.displayReferenceDataValues();
@@ -58,13 +63,22 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
          return this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
       }), map((data: any) => {
          this.totalItemCount = data.body.count;
+         this.totalCount.emit(String(data.body.count));
          this.isLoadingResults = false;
          return data.body.rows;
       }), catchError(() => {
          this.isLoadingResults = false;
          return [];
-      })).subscribe(values => {
-         this.records = values;
+      })).subscribe((values: any[]) => {
+         // Flatten the endpoint response to make the table rows tabular and not an object hierarchy
+         this.records = values.map(row => {
+            const flattened = { };
+            row.columns.forEach(column => {
+               flattened[column.referenceDataElement.label] = column.value;
+            });
+            return flattened;
+         });
+
          const arr = [];
          if (values[0]) {
             for (const val in values[0].columns) {
@@ -74,6 +88,8 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
             }
             this.displayedColumns = arr;
          }
+
+         this.dataSource.data = this.records;
       });
       this.changeRef.detectChanges();
    };

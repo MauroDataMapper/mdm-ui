@@ -24,7 +24,8 @@ import {
   EventEmitter,
   AfterViewInit,
   ChangeDetectorRef,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -50,13 +51,12 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
   @Input() isEditable: any;
 
   @Input() childOwnedDataTypes: any;
-
   @Input() loadingData: boolean;
-
   @Input() clientSide: boolean;
   @ViewChildren('filters') filters: QueryList<MatInput>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+  @Output() totalCount = new EventEmitter<string>();
 
   allDataTypes: any;
   allDataTypesMap: any;
@@ -94,7 +94,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       this.dataSource.paginator = this.paginator;
     }
     if (this.isEditable && !this.parent.finalised) {
-      this.displayedColumns = ['checkbox', 'name', 'description', 'type', 'actions'];
+      this.displayedColumns = ['name', 'description', 'type', 'checkbox'];
     } else {
       this.displayedColumns = ['name', 'description', 'type'];
     }
@@ -122,6 +122,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
       }),
         map((data: any) => {
           this.totalItemCount = data.body.count;
+          this.totalCount.emit(String(data.body.count));
           this.isLoadingResults = false;
           return data.body.items;
         }),
@@ -229,7 +230,7 @@ export class ElementOwnedDataTypeListComponent implements AfterViewInit, OnInit 
         });
       }
     });
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       const dialog = this.dialog.open(BulkDeleteModalComponent, {
         data: { dataElementIdLst, parentDataModel: this.parent },
         panelClass: 'bulk-delete-modal'

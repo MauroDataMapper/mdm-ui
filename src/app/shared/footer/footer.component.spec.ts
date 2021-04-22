@@ -25,6 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { of } from 'rxjs';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -40,7 +41,12 @@ describe('FooterComponent', () => {
       ],
       providers: [
         {
-          provide: MdmResourcesService, useValue: {}
+          provide: MdmResourcesService,
+          useValue: {
+            apiProperties: {
+              listPublic: () => of()
+            }
+          }
         }
       ],
       declarations: [

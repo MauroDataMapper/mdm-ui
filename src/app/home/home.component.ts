@@ -23,6 +23,66 @@ import { ForgotPasswordModalComponent } from '../modals/forgot-password-modal/fo
 import { BroadcastService } from '../services/broadcast.service';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { MessageHandlerService } from '@mdm/services';
+import { ApiProperty, ApiPropertyIndexResponse } from '@mdm/model/api-properties';
+import { catchError } from 'rxjs/operators';
+
+const defaultHtmlContent = [
+  {
+    key: 'content.home.intro.left',
+    value: `<h3>Use the <strong>Mauro Data Mapper</strong> platform to create shared documentation for your data, and to collaborate on the definition of new data models</h3>
+    <p>Automatically import your existing schemas; link, annotate and share them; use these definitions in the creation of new software components.</p>
+    <p>Mauro was previously known as the Metadata Catalogue, and has been built at the University of Oxford with support from the National Institute for Health Research, and NHS Digital.</p>`
+  },
+  {
+    key: 'content.home.intro.right',
+    value: `<div class="text-center bdi--hero-header__image mt-3">
+    <img src="assets/images/img.svg" alt="Mauro Data Mapper - Create, Share and Update life cycle">
+</div>`
+  },
+  {
+    key: 'content.home.detail.heading',
+    value: `<h5 class="text-center marginless text-muted">Features</h5>
+    <h3 class="text-center marginless">Benefits of using the Mauro Data Mapper</h3>`
+  },
+  {
+    key: 'content.home.detail.column_one',
+    value: `<div class="text-center">
+    <span class="feature-icon feature-icon--1 mt-3 mb-2">
+        <i class="fas fa-recycle fa-2x"></i>
+    </span>
+    <h4><strong>Automate</strong></h4>
+    <p>
+       Automatically create data models from existing artefacts, such as relational databases, Excel spreadsheets, XML Schema, or definitions in OWL or UML.  Visualise your data to check for completeness and consistency.
+    </p>
+</div>`
+  },
+  {
+    key: 'content.home.detail.column_two',
+    value: `<div class="text-center">
+    <span class="feature-icon feature-icon--2 mt-3 mb-2">
+        <i class="fas fa-balance-scale-right fa-2x"></i>
+    </span>
+    <h4><strong>Collaborate</strong></h4>
+    <p>
+        Create new models, re-using existing definitions. Manage versioning and publication lifecycles, and comment directly on parts of a model.
+    </p>
+</div>`
+  },
+  {
+    key: 'content.home.detail.column_three',
+    value: `<div class="text-center">
+    <span class="feature-icon feature-icon--3 mt-3 mb-2">
+        <i class="fas fa-cogs fa-2x"></i>
+    </span>
+    <h4><strong>Generate</strong></h4>
+    <p>
+        Create new software and configuration from existing definitions - generate forms, websites and databases - and make your documentation go further using our extensive APIs.
+    </p>
+</div>`
+  }
+];
 
 @Component({
   selector: 'mdm-home',
@@ -33,11 +93,21 @@ export class HomeComponent implements OnInit {
   profilePictureReloadIndex = 0;
   profile: any;
   isLoggedIn = false;
+  isLoadingContent = false;
+
+  introLeftContent: string;
+  introRightContent: string;
+  detailHeading: string;
+  detailColumn1: string;
+  detailColumn2: string;
+  detailColumn3: string;
 
   constructor(
     public dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
+    private resources: MdmResourcesService,
+    private messageHandler: MessageHandlerService,
     private title: Title
   ) {
     this.broadcastSvc.subscribe('userLoggedOut', () => {
@@ -52,8 +122,37 @@ export class HomeComponent implements OnInit {
       this.profile = this.securityHandler.getCurrentUser();
     }
     this.title.setTitle('Mauro Data Mapper - Home');
+
+    this.isLoadingContent = true;
+
+    this.resources.apiProperties
+      .listPublic()
+      .pipe(
+        catchError(errors => {
+          this.messageHandler.showError('There was a problem getting the configuration properties.', errors);
+          this.loadContent(null);
+          this.isLoadingContent = false;
+          return [];
+        })
+      )
+      .subscribe((response: ApiPropertyIndexResponse) => {
+        this.loadContent(response.body.items);
+        this.isLoadingContent = false;
+      });
   }
 
+  private loadContent(properties: ApiProperty[]) {
+    this.introLeftContent = this.getContentProperty(properties, 'content.home.intro.left');
+    this.introRightContent = this.getContentProperty(properties, 'content.home.intro.right');
+    this.detailHeading = this.getContentProperty(properties, 'content.home.detail.heading');
+    this.detailColumn1 = this.getContentProperty(properties, 'content.home.detail.column_one');
+    this.detailColumn2 = this.getContentProperty(properties, 'content.home.detail.column_two');
+    this.detailColumn3 = this.getContentProperty(properties, 'content.home.detail.column_three');
+  }
+
+  private getContentProperty(properties: ApiProperty[], key: string): string {
+    return properties?.find(p => p.key === key)?.value ?? defaultHtmlContent.find(p => p.key === key).value;
+  }
 
   login = () => {
     this.dialog.open(LoginModalComponent, { }).afterClosed().subscribe((user) => {

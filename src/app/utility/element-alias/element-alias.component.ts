@@ -64,11 +64,11 @@ export class ElementAliasComponent {
     this.alias.nativeElement.focus();
   }
 
-  keyup = (event) => {
+  onKeyPress(event: any) {
     if (event.keyCode && event.keyCode === 13) {
       this.add();
+      event.preventDefault();
+      event.stopPropagation();
     }
-    event.preventDefault();
-    return false;
-  };
+  }
 }

@@ -23,20 +23,23 @@ import { SharedModule } from '../shared/shared.module';
 import { EmailsComponent } from '@mdm/admin/emails/emails.component';
 import { GroupMemberTableComponent } from '@mdm/admin/group-member-table/group-member-table.component';
 import { UserComponent } from '@mdm/admin/user/user.component';
+import { ProfilesDashboardComponent } from '@mdm/profiles-dashboard/profiles-dashboard.component';
 
 @NgModule({
   declarations: [
     AdminAppContainerComponent,
     EmailsComponent,
     GroupMemberTableComponent,
-    UserComponent
+    UserComponent,
+    ProfilesDashboardComponent
   ],
   imports: [CommonModule, AdminRoutesModule, SharedModule],
   exports: [
     AdminAppContainerComponent,
     EmailsComponent,
     GroupMemberTableComponent,
-    UserComponent
+    UserComponent,
+    ProfilesDashboardComponent
   ]
 })
 export class AdminModule {}

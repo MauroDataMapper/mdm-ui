@@ -17,57 +17,359 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
   <mdm-reference-data-details></mdm-reference-data-details>
-
 </div>
 
-<mat-tab-group #tab  animationDuration="0ms" [selectedIndex]="activeTab" (selectedIndexChange)="tabSelected($event)">
-  <mat-tab label="Elements">
+<mat-tab-group
+  #tab
+  animationDuration="0ms"
+  [selectedIndex]="activeTab"
+  (selectedIndexChange)="tabSelected($event)"
+>
+  <mat-tab label="Description">
     <ng-template matTabContent>
-        <div class="full-width">
-            <mdm-reference-data-element *ngIf="referenceModel" [parent]="referenceModel"></mdm-reference-data-element>
+      <div class="mb-2 full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 430px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="descriptionView"
+                  name="descriptionView"
+                  (ngModelChange)="changeProfile()"
+                >
+                  <mat-option value="default">Default profile</mat-option>
+                  <mat-divider></mat-divider>
+                  <mat-option
+                    *ngFor="let option of allUsedProfiles"
+                    [value]="option.value"
+                    >{{ option.display }}</mat-option
+                  >
+                  <mat-divider></mat-divider>
+                  <mat-option value="other">Other properties</mat-option>
+                  <mat-divider *ngIf="access && access.canAddMetadata"></mat-divider>
+                  <mat-option *ngIf="access && access.canAddMetadata" value="addnew">Add new profile...</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+            <button
+            mat-flat-button
+            *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew' && showEdit"
+            color="primary"
+            type="button"
+            class="mr-1"
+            (click)="editProfile(false)"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit
+          </button>
+
+          <button
+          mat-flat-button
+          *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew' && showDelete"
+          color="warn"
+          type="button"
+          class="mr-1"
+          (click)="deleteProfile()"
+        >
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
+
+          <button
+            mat-flat-button
+            *ngIf="this.descriptionView === 'default' && showEdit"
+            color="primary"
+            type="button"
+            class="mr-1"
+            [matMenuTriggerFor]="editMenu"
+          >
+            Edit
+          </button>
+
+          <mat-menu #editMenu="matMenu">
+            <button mat-menu-item (click)="showDescription()">
+              <i class="fas fa-pencil-alt"></i> Edit Description
+            </button>
+            <button mat-menu-item (click)="edit()">
+              <i class="fas fa-pencil-alt"></i>Edit
+            </button>
+          </mat-menu>
+            </div>
+          </div>
         </div>
+
+        <mdm-profile-details
+          *ngIf="this.currentProfileDetails"
+          [currentProfileDetails]="this.currentProfileDetails"
+        ></mdm-profile-details>
+
+        <div class="full-width">
+          <mdm-data-set-metadata
+            *ngIf="this.descriptionView === 'other'"
+            [parent]="referenceModel"
+            [type]="'dynamic'"
+            [domainType]="'referenceDataModels'"
+            [isProfileView]="true"
+          ></mdm-data-set-metadata>
+        </div>
+        <form
+          editable-form
+          name="form"
+          (ngSubmit)="formBeforeSave()"
+          disable-submit-on-enter
+          *ngIf="editableForm"
+        >
+          <table
+            *ngIf="this.descriptionView === 'default'"
+            class="table table-bordered mdm--table-fixed"
+          >
+            <tbody>
+              <tr>
+                <td class="detailsRowHeader">Aliases</td>
+                <td>
+                  <mdm-element-alias
+                    [readOnly]="showEditDescription"
+                    [inEditMode]="editableForm?.visible"
+                    [aliases]="referenceModel?.aliases"
+                    [editableForm]="editableForm"
+                    [property]="'aliases'"
+                  >
+                  </mdm-element-alias>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Author</td>
+                <td>
+                  <mdm-inline-text-edit
+                    [readOnly]="showEditDescription"
+                    [inEditMode]="editableForm.visible"
+                    [(ngModel)]="editableForm.author"
+                    class="dataModelDetailsLabel"
+                    name="moduleNameAuthor"
+                  ></mdm-inline-text-edit>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Organisation</td>
+                <td>
+                  <mdm-inline-text-edit
+                    [readOnly]="showEditDescription"
+                    [inEditMode]="editableForm.visible"
+                    [(ngModel)]="editableForm.organisation"
+                    class="dataModelDetailsLabel"
+                    name="moduleNameOrganisation"
+                    size="20"
+                  ></mdm-inline-text-edit>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Description</td>
+                <td class="elementDetailDescription">
+                  <div *ngIf="referenceModel">
+                    <mdm-markdown-text-area
+                      [editableForm]="editableForm"
+                      [element]="referenceModel"
+                      [property]="'description'"
+                    ></mdm-markdown-text-area>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Type</td>
+                <td *ngIf="referenceModel">
+                  <span [innerHTML]="referenceModel?.type"></span>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Classifications</td>
+                <td *ngIf="referenceModel">
+                  <mdm-element-classifications
+                    [readOnly]="showEditDescription"
+                    [classifications]="referenceModel.classifiers"
+                    [editableForm]="editableForm"
+                    [element]="referenceModel"
+                    [property]="'classifiers'"
+                  ></mdm-element-classifications>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <mdm-editable-form-buttons
+            *ngIf="editableForm"
+            [hidden]="!editableForm.visible"
+            (onCancelEdit)="onCancelEdit"
+            [editable]="editableForm"
+            [textLocation]="'left'"
+            [hideDelete]="true"
+            [hideCancel]="false"
+          ></mdm-editable-form-buttons>
+        </form>
+      </div>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Types">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-reference-data-type *ngIf="referenceModel" [parent]="referenceModel"></mdm-reference-data-type>
-          </div>
-      </ng-template>
-  </mat-tab>
-  <mat-tab label="Data">
-    <ng-template matTabContent>
-        <div class="full-width">
-          <mdm-reference-data-values *ngIf="referenceModel" [parent]="referenceModel"></mdm-reference-data-values>
-        </div>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Elements
+      <span *ngIf="isLoadingElements" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ elementsItemCount }})
     </ng-template>
+    <div class="full-width">
+      <mdm-reference-data-element
+        *ngIf="referenceModel"
+        [parent]="referenceModel"
+        (totalCount)="elementsCountEmitter($event)"
+      ></mdm-reference-data-element>
+    </div>
   </mat-tab>
-  <mat-tab label="Properties">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-data-set-metadata *ngIf="referenceModel" [parent]="referenceModel" [type]="'dynamic'" [domainType]="'referenceDataModels'"></mdm-data-set-metadata>
-          </div>
-      </ng-template>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Types
+      <span *ngIf="isLoadingTypes" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ typesItemCount }})
+    </ng-template>
+    <div class="full-width">
+      <mdm-reference-data-type
+        *ngIf="referenceModel"
+        [parent]="referenceModel"
+        (totalCount)="typesCountEmitter($event)"
+      ></mdm-reference-data-type>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Data
+      <span *ngIf="isLoadingData" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ dataItemCount }})
+    </ng-template>
+    <div class="full-width">
+      <mdm-reference-data-values
+        *ngIf="referenceModel"
+        [parent]="referenceModel"
+        (totalCount)="dataCountEmitter($event)"
+      >
+      </mdm-reference-data-values>
+    </div>
   </mat-tab>
   <mat-tab label="Comments">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-annotation-list *ngIf="referenceModel" [parent]="referenceModel" [domainType]="'referenceDataModels'"></mdm-annotation-list>
-          </div>
-      </ng-template>
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-annotation-list
+          *ngIf="referenceModel"
+          [parent]="referenceModel"
+          [domainType]="'referenceDataModels'"
+        ></mdm-annotation-list>
+      </div>
+    </ng-template>
   </mat-tab>
   <mat-tab label="History">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-history *ngIf="referenceModel" [parent]="'dataModel'" [parentType]="'ReferenceDataModel'" [parentId]="parentId" [domainType]="'referenceDataModels'"></mdm-history>
-          </div>
-      </ng-template>
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-history
+          *ngIf="referenceModel"
+          [parent]="'dataModel'"
+          [parentType]="'ReferenceDataModel'"
+          [parentId]="parentId"
+          [domainType]="'referenceDataModels'"
+        ></mdm-history>
+      </div>
+    </ng-template>
   </mat-tab>
   <mat-tab label="Attachments" *ngIf="showExtraTabs">
-      <ng-template matTabContent>
-          <div class="full-width">
-              <mdm-attachment-list *ngIf="referenceModel" [parent]="referenceModel" [domainType]="'referenceDataModels'"></mdm-attachment-list>
-          </div>
-      </ng-template>
+    <ng-template matTabContent>
+      <div class="full-width">
+        <mdm-attachment-list
+          *ngIf="referenceModel"
+          [parent]="referenceModel"
+          [domainType]="'referenceDataModels'"
+        ></mdm-attachment-list>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Rules
+      <span *ngIf="isLoadingRules" class="mdm--skeleton-badge">
+        <ngx-skeleton-loader
+          count="1"
+          appearance="circle"
+          [theme]="{
+            'border-radius': '5px',
+            height: '31px',
+            width: '28px',
+            'background-color': '#b7bbc5'
+          }"
+        ></ngx-skeleton-loader>
+      </span>
+      ({{ rulesItemCount }})
+    </ng-template>
+    <div class="full-width">
+      <mdm-constraints-rules
+        *ngIf="referenceModel"
+        [parent]="referenceModel"
+        [domainType]="'referenceDataModels'"
+        (totalCount)="rulesCountEmitter($event)"
+      ></mdm-constraints-rules>
+    </div>
   </mat-tab>
 </mat-tab-group>

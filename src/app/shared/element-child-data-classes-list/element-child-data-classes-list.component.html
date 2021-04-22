@@ -15,16 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 -->
-<div class="heading-container">
+<div class="heading-container" *ngIf="bulkActionsVisible > 0">
     <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-        <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-            <h4 class="marginless">
-                Data Classes
-                <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
-                <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-            </h4>
-        </div>
-        <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+        <div fxFlex fxLayout="row" fxFlex="100" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100" fxLayoutAlign="flex-start center" fxLayoutAlign.xs="flex-start center">
             <div *ngIf="isEditable && !parentDataModel.finalised" class="mt-1">
                 <button mat-stroked-button color="primary" type="button" [matMenuTriggerFor]="contentBulkActions" *ngIf="bulkActionsVisible > 0">
                     Bulk actions
@@ -35,11 +28,6 @@ SPDX-License-Identifier: Apache-2.0
                         <i class="far fa-trash-alt"></i> Delete selected rows
                     </button>
                 </mat-menu>
-
-                <button mat-flat-button color="primary" type="button" class="ml-1" (click)="addDataClass()">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
-                    Add Data Class
-                </button>
             </div>
         </div>
     </div>

@@ -15,7 +15,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, EventEmitter, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  ChangeDetectorRef,
+  AfterViewInit
+} from '@angular/core';
 import { Step } from '@mdm/model/stepModel';
 import { DataClassStep2Component } from '../data-class-step2/data-class-step2.component';
 import { DataClassStep1Component } from '../data-class-step1/data-class-step1.component';
@@ -54,9 +59,8 @@ export class DataClassMainComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private broadcastSvc: BroadcastService,
-    private changeRef: ChangeDetectorRef,
-  ) { }
-
+    private changeRef: ChangeDetectorRef
+  ) {}
 
   ngAfterViewInit(): void {
     // Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -89,22 +93,32 @@ export class DataClassMainComponent implements AfterViewInit {
     step2.invalid = true;
 
     if (this.parentDataClassId) {
-      this.resources.dataClass.getChildDataClass(this.parentDataModelId, this.grandParentDataClassId, this.parentDataClassId).toPromise().then(result => {
-        result.body.breadcrumbs.push(Object.assign([], result.body));
-        this.model.parent = result.body;
-        this.steps.push(step1);
-        this.steps.push(step2);
-        this.changeRef.detectChanges();
-      });
+      this.resources.dataClass
+        .getChildDataClass(
+          this.parentDataModelId,
+          this.grandParentDataClassId,
+          this.parentDataClassId
+        )
+        .toPromise()
+        .then((result) => {
+          result.body.breadcrumbs.push(Object.assign([], result.body));
+          this.model.parent = result.body;
+          this.steps.push(step1);
+          this.steps.push(step2);
+          this.changeRef.detectChanges();
+        });
     } else {
-      this.resources.dataModel.get(this.parentDataModelId).toPromise().then(result => {
-        result.body.breadcrumbs = [];
-        result.body.breadcrumbs.push(Object.assign({}, result.body));
-        this.model.parent = result.body;
-        this.steps.push(step1);
-        this.steps.push(step2);
-        this.changeRef.detectChanges();
-      });
+      this.resources.dataModel
+        .get(this.parentDataModelId)
+        .toPromise()
+        .then((result) => {
+          result.body.breadcrumbs = [];
+          result.body.breadcrumbs.push(Object.assign({}, result.body));
+          this.model.parent = result.body;
+          this.steps.push(step1);
+          this.steps.push(step2);
+          this.changeRef.detectChanges();
+        });
     }
   }
 
@@ -151,14 +165,13 @@ export class DataClassMainComponent implements AfterViewInit {
   };
 
   saveNewDataClass = () => {
-
     const resource = {
       label: this.model.label,
       description: this.model.description,
-      classifiers: this.model.classifiers.map(cls => {
+      classifiers: this.model.classifiers.map((cls) => {
         return { id: cls.id };
       }),
-      metadata: this.model.metadata.map(m => {
+      metadata: this.model.metadata.map((m) => {
         return {
           key: m.key,
           value: m.value,
@@ -174,25 +187,34 @@ export class DataClassMainComponent implements AfterViewInit {
 
     let deferred;
     if (this.model.parent.domainType === 'DataClass') {
-      deferred = this.resources.dataClass.addChildDataClass(this.model.parent.model, this.model.parent.id, resource);
+      deferred = this.resources.dataClass.addChildDataClass(
+        this.model.parent.model,
+        this.model.parent.id,
+        resource
+      );
     } else {
       deferred = this.resources.dataClass.save(this.model.parent.id, resource);
     }
 
-    deferred.subscribe(response => {
-      this.messageHandler.showSuccess('Data Class saved successfully.');
-      this.broadcastSvc.broadcast('$reloadFoldersTree');
-      this.stateHandler.Go(
-        'dataClass',
-        {
-          dataModelId: response.body.model || '',
-          dataClassId: response.body.parentDataClass || '',
-          id: response.body.id
-        },
-        { reload: true, location: true }
-      );
-    }, error => {
-      this.messageHandler.showError('There was a problem saving the Data Class.', error);
-    });
+    deferred.subscribe(
+      (response) => {
+        this.messageHandler.showSuccess('Data Class saved successfully.');
+        this.stateHandler.Go(
+          'dataClass',
+          {
+            dataModelId: response.body.model || '',
+            dataClassId: response.body.parentDataClass || '',
+            id: response.body.id
+          },
+          { reload: true, location: true }
+        );
+       },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem saving the Data Class.',
+          error
+        );
+      }
+    );
   };
 }

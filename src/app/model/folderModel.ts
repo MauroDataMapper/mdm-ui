@@ -1,3 +1,5 @@
+import { MdmResourcesResponse } from '@mdm/modules/resources';
+
 /*
 Copyright 2020 University of Oxford
 
@@ -30,6 +32,8 @@ export class FolderResult {
   parentDataClass: string;
   availableActions: any[];
 }
+
+export type FolderResultResponse = MdmResourcesResponse<FolderResult>;
 
 export class SearchResult {
   count: number;

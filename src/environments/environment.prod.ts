@@ -15,11 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+const packageFile = require('../../package.json');
+
 export const environment = {
   production: true,
-  version: '5.2.3',
+  version: packageFile?.version ?? '',
   apiEndpoint: 'api',
   HDFLink: '',
+  themeName: $ENV.themeName ?? 'default',
   appTitle: 'Mauro Data Mapper',
   appDescription: 'The Mauro Data Mapper is a toolkit for creating, sharing, and updating data models.',
   catalogueDisplayName: 'Mauro Data Mapper',
@@ -30,5 +33,10 @@ export const environment = {
   wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
   simpleViewSupport: false,
   name: 'production',
-  appIsEditable: false
+  appIsEditable: false,
+  checkSessionExpiryTimeout: 300000,
+  features: {
+    useSubscribedCatalogues: $ENV.useFeaureSubscribedCatalogues ?? false,
+    useDynamicProfiles: false
+  }
 };

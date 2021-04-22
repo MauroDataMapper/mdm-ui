@@ -84,6 +84,21 @@ mat-tree-node.mat-tree-node {
   background-color: #eaf5ff;
   border-radius: 6px;
 }
+
+.tag-name {
+  margin-left: 8px;
+  display: inline-flex;
+  padding: 0px 4px;
+  color: #4F575F !important;
+  border: 1px solid #b7d4ef;
+  background-color: #eaf5ff;
+  border-radius: 6px;
+
+  i {
+    margin: auto 4px;
+  }
+}
+
 .foldersTree.folderTreeIcon {
   margin-right: 8px;
   vertical-align: 0.09em;
@@ -103,6 +118,9 @@ mat-tree-node.mat-tree-node {
 }
 i.favouritesIcon.addedToFavourite {
   color: #ffa743;
+}
+i.subscribedIcon {
+  color: #028821;
 }
 .mat-tree-node-content .deleted, .node-title.deleted, .deleted-folder {
   opacity: 0.5;
@@ -124,7 +142,6 @@ span.tree-top-actions button, .import-folder-actions button {
     padding: 0;
     min-width: 44px;
     height: 44px;
-    color: $defaultThemeColour;
 }
 .date-from-actions .input-group-btn button {
   padding: 0;

@@ -104,7 +104,7 @@
         "@typescript-eslint/no-parameter-properties": "off",
         "@typescript-eslint/no-unused-expressions": "error",
 
-        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
         "@typescript-eslint/no-use-before-define": "error",
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-floating-promises": "off",

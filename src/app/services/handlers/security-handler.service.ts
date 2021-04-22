@@ -22,6 +22,10 @@ import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
 import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { AdministrationSessionResponse, AuthenticatedSessionError, AuthenticatedSessionResponse, SignInCredentials, SignInError, SignInResponse, UserDetails } from './security-handler.model';
+import { Observable, of, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -37,9 +41,9 @@ export class SecurityHandlerService {
     private stateHandler: StateHandlerService,
     private messageService: MessageService,
     private broadcastService: BroadcastService
-  ) {}
+  ) { }
 
-  removeLocalStorage() {
+  private removeUserFromLocalStorage() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('firstName');
@@ -51,24 +55,23 @@ export class SecurityHandlerService {
     localStorage.removeItem('userSettings');
   }
 
-  getUserFromLocalStorage() {
-    if (
-      localStorage.getItem('username') &&
-      localStorage.getItem('username').length > 0
-    ) {
-      return {
-        id: localStorage.getItem('userId'),
-        token: localStorage.getItem('token'),
-        username: localStorage.getItem('username'),
-        email: localStorage.getItem('username'),
-        firstName: localStorage.getItem('firstName'),
-        lastName: localStorage.getItem('lastName'),
-        role: localStorage.getItem('role'),
-        needsToResetPassword: localStorage.getItem('needsToResetPassword'),
-        isAdmin: JSON.parse(localStorage.getItem('isAdmin')),
-      };
+  getUserFromLocalStorage(): UserDetails | null {
+    const userName = localStorage.getItem('username');
+    if (!userName || userName.length === 0) {
+      return null;
     }
-    return null;
+
+    return {
+      id: localStorage.getItem('userId'),
+      token: localStorage.getItem('token'),
+      userName,
+      email: userName,
+      firstName: localStorage.getItem('firstName'),
+      lastName: localStorage.getItem('lastName'),
+      role: localStorage.getItem('role'),
+      needsToResetPassword: Boolean(localStorage.getItem('needsToResetPassword')),
+      isAdmin: JSON.parse(localStorage.getItem('isAdmin')),
+    };
   }
 
   getEmailFromStorage() {
@@ -83,38 +86,53 @@ export class SecurityHandlerService {
     localStorage.setItem('token', user.token);
     localStorage.setItem('firstName', user.firstName);
     localStorage.setItem('lastName', user.lastName);
-    localStorage.setItem('username',  JSON.stringify({username: user.username, expiry : expireDate}));
+    localStorage.setItem('username', JSON.stringify({ username: user.username, expiry: expireDate }));
     localStorage.setItem('userId', user.id);
     localStorage.setItem('isAdmin', user.isAdmin);
 
 
-    localStorage.setItem('email', JSON.stringify({email: user.username, expiry : expireDate}));
+    localStorage.setItem('email', JSON.stringify({ email: user.username, expiry: expireDate }));
     localStorage.setItem('role', user.role);
     localStorage.setItem('needsToResetPassword', user.needsToResetPassword);
   }
 
-  async login(resource) {
+  /**
+   * Sign in a user to the Mauro system.
+   *
+   * @param credentials The sign-in credentials to use.
+   * @returns An observable to return a `UserDetails` object representing the signed in user.
+   * @throws `SignInError` in the observable chain if sign-in failed.
+   */
+  signIn(credentials: SignInCredentials): Observable<UserDetails> {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
-    // const resource = { username, password };
-    const response = await this.resources.security.login(resource, {login:true}).toPromise();
-    const admin = await this.resources.session.isApplicationAdministration().toPromise();
-    const adminResult = admin.body;
-    const result = response.body;
-    const currentUser = {
-      id: result.id,
-      token: result.token,
-      firstName: result.firstName,
-      lastName: result.lastName,
-      username: result.emailAddress,
-      role: result.userRole ? result.userRole.toLowerCase() : '',
-      isAdmin: adminResult.applicationAdministrationSession
-        ? adminResult.applicationAdministrationSession
-        : false,
-      needsToResetPassword: result.needsToResetPassword ? true : false,
-    };
-    this.addToLocalStorage(currentUser);
-    return currentUser;
+    return this.resources.security
+      .login(credentials, { login: true })
+      .pipe(
+        catchError((error: HttpErrorResponse) => throwError(new SignInError(error))),
+        switchMap((signInResponse: SignInResponse) =>
+          this.resources.session
+            .isApplicationAdministration()
+            .pipe(
+              map((adminResponse: AdministrationSessionResponse) => {
+                const signIn = signInResponse.body;
+                const admin = adminResponse.body;
+                const user: UserDetails = {
+                  id: signIn.id,
+                  token: signIn.token,
+                  firstName: signIn.firstName,
+                  lastName: signIn.lastName,
+                  email: signIn.emailAddress,
+                  userName: signIn.emailAddress,
+                  role: signIn.userRole?.toLowerCase() ?? '',
+                  isAdmin: admin.applicationAdministrationSession ?? false,
+                  needsToResetPassword: signIn.needsToResetPassword ?? false
+                };
+                this.addToLocalStorage(user);
+                return user;
+              })
+            ))
+      );
   }
 
   async logout() {
@@ -134,7 +152,7 @@ export class SecurityHandlerService {
     }
 
     // Clear everything on client side whether server acknowledge or not.
-    this.removeLocalStorage();
+    this.removeUserFromLocalStorage();
     this.broadcastService.broadcast('userLoggedOut');
     this.messageService.loggedInChanged(false);
     this.stateHandler.Go('appContainer.mainApp.home');
@@ -149,7 +167,7 @@ export class SecurityHandlerService {
   }
 
   isLoggedIn() {
-    return this.getUserFromLocalStorage() != null;
+    return !!this.getUserFromLocalStorage();
   }
 
   isAdmin() {
@@ -159,7 +177,7 @@ export class SecurityHandlerService {
     return false;
   }
 
-  getCurrentUser() {
+  getCurrentUser(): UserDetails | null {
     return this.getUserFromLocalStorage();
   }
 
@@ -191,33 +209,29 @@ export class SecurityHandlerService {
     return false;
   }
 
-  isCurrentSessionExpired(): any {
-    return new Promise((resolve) => {
-      if (this.getCurrentUser()) {
-        this.isAuthenticated().subscribe(
-          (result) => {
-            const res = result.body;
-            if (!res.authenticatedSession) {
-              this.removeLocalStorage();
-              resolve(true);
-            }
-            resolve(false);
-          },
-          (err) => {
-            if (
-              err.status === 500 &&
-              err.message === 'Session has been invalidated'
-            ) {
-              resolve(true);
-              this.removeLocalStorage();
-            }
-            resolve(false);
+  isCurrentSessionExpired(): Observable<boolean> {
+    if (!this.getCurrentUser()) {
+      return of(false);
+    }
+
+    return this.isAuthenticated()
+      .pipe(
+        catchError((error: AuthenticatedSessionError) => {
+          if (error.invalidated) {
+            this.removeUserFromLocalStorage();
+            return of(true);
           }
-        );
-      } else {
-        resolve(false);
-      }
-    });
+
+          return of(false);
+        }),
+        map((response: AuthenticatedSessionResponse) => {
+          if (!response.body.authenticatedSession) {
+            this.removeUserFromLocalStorage();
+          }
+
+          return response.body.authenticatedSession;
+        })
+      );
   }
 
   dataModelAccess(element) {

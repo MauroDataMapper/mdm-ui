@@ -25,7 +25,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
-import { Subscription } from 'rxjs';
+import { EMPTY, Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -40,7 +40,9 @@ import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -83,6 +85,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   download: any;
   downloadLink: any;
   urlText: any;
+  currentBranch = '';
+  branchGraph = [];
 
   canEditDescription = true;
   showEditDescription = false;
@@ -151,7 +155,17 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   CodeSetDetails(): any {
 
     this.subscription = this.messageService.dataChanged$.subscribe(serverResult => {
+
+      if(serverResult.domainType !== 'CodeSet')
+      {
+        return;
+      }
+
       this.result = serverResult;
+
+
+      this.getModelGraph(this.result.id);
+
       this.editableForm.description = this.result.description;
       if (this.result.classifiers) {
         this.result.classifiers.forEach(item => {
@@ -204,7 +218,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'result',
+        domainType: 'codeSets'
+      }, panelClass: 'security-modal'
+    });
   }
 
   toggleShowSearch() {
@@ -258,7 +277,66 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  askForPermanentDelete() {
+  restore() {
+    if (!this.isAdminUser || !this.result.deleted) {
+      return;
+    }
+
+    this.processing = true;
+
+    this.resourcesService.codeSet
+      .undoSoftDelete(this.result.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem restoring the Code Set.', error);
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.processing = false;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess(`The Code Set "${this.result.label}" has been restored.`);
+        this.stateHandler.reload();
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      });
+  }
+
+  getModelGraph = (codesetId) => {
+    this.currentBranch = this.result.branchName;
+    this.branchGraph = [
+      {
+        branchName: 'main',
+        label: this.result.label,
+        codesetId,
+        newBranchModelVersion: false,
+        newDocumentationVersion: false,
+        newFork: false
+      }
+    ];
+
+    this.resourcesService.codeSet.modelVersionTree(codesetId).subscribe(res => {
+      this.currentBranch = this.result.branchName;
+      this.branchGraph = res.body;
+    }, error => {
+      this.messageHandler.showError('There was a problem getting the Model Version Tree.', error);
+    });
+  };
+
+  onModelChange = () => {
+    for (const val in this.branchGraph) {
+      if (this.branchGraph[val].branchName === this.currentBranch) {
+        this.stateHandler.Go(
+          'codeset',
+          { id: this.branchGraph[val].modelId },
+          { reload: true, location: true }
+        );
+      }
+    }
+  };
+
+
+  askForPermanentDelete(): any {
     if (!this.showPermDelete) {
       return;
     }
@@ -385,18 +463,12 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
           }
         });
 
-        dialog.afterClosed().subscribe(result => {
-          if (result?.status !== 'ok') {
+        dialog.afterClosed().subscribe(dialogResult => {
+          if (dialogResult?.status !== 'ok') {
             return;
           }
           this.processing = true;
-          const data = {};
-          if (result.data.versionList !== 'Custom') {
-            data['versionChangeType'] = result.data.versionList;
-          } else {
-            data['version'] = result.data.versionNumber;
-          }
-          this.resourcesService.codeSet.finalise(this.result.id, data).subscribe(() => {
+          this.resourcesService.codeSet.finalise(this.result.id, dialogResult.request).subscribe(() => {
             this.processing = false;
             this.messageHandler.showSuccess('Code Set finalised successfully!');
             this.stateHandler.Go('codeset', { id: this.result.id }, { reload: true });

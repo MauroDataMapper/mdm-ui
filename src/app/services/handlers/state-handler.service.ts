@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { UIRouter } from '@uirouter/angular';
+import { TransitionOptions, UIRouter } from '@uirouter/angular';
 import { ToastrService } from 'ngx-toastr';
 import { Location } from '@angular/common';
 
@@ -43,6 +43,9 @@ export class StateHandlerService {
         terminology: 'appContainer.mainApp.twoSidePanel.catalogue.terminology',
         term: 'appContainer.mainApp.twoSidePanel.catalogue.term',
 
+        subscribedcatalogue: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',
+        federateddatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.federatedDataModel',
+
         newcodeset: 'appContainer.mainApp.twoSidePanel.catalogue.NewCodeSet',
         newdatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataModel',
         newdataclass: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataClass',
@@ -60,6 +63,7 @@ export class StateHandlerService {
 
         'admin.group': 'appContainer.adminArea.group',
         'admin.groups': 'appContainer.adminArea.groups',
+
         dataflowtransformation: 'appContainer.mainApp.dataFlowTransformation',
         dataflowdm2dm: 'appContainer.mainApp.dataFlowDM2DM',
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
@@ -133,7 +137,7 @@ export class StateHandlerService {
 
   }
 
-  Go(name, params = {}, option = null) {
+  Go(name: string, params: any = {}, option: TransitionOptions = null) {
     const state = this.getStateName(name, params);
     return this.router.stateService.go(state, params, option);
   }
@@ -142,11 +146,6 @@ export class StateHandlerService {
     this.router.stateService.reload();
   }
 
-  ApplicationOffline() {
-    // messageHandler should show a proper message on the main pag
-    this.ngToast.warning('Application is offline!');
-
-  }
   ConnectionError() {
     this.ngToast.warning('Server connection failed');
   }

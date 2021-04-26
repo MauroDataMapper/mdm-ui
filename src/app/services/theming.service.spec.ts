@@ -37,7 +37,7 @@ describe('ThemingService', () => {
           useValue: environment
         }
       ]
-    });    
+    });
   });
 
   const validThemeNames = [

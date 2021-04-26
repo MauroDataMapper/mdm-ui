@@ -43,7 +43,7 @@ export class TermRelationshipsComponent implements OnInit {
 
   ngOnInit() {
     if (this.term) {
-      let parameters: any = { };
+      const parameters: any = { };
       if (this.type) {
         parameters.type = this.type;
       }

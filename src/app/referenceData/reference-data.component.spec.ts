@@ -60,11 +60,11 @@ describe('ReferenceDataModelsComponent', () => {
             tree: {
               list: jest.fn()
             }
-          },          
+          },
         },
         {
           provide: DownloadService,
-          useValue: jest.fn()            
+          useValue: jest.fn()
         }
       ],
       declarations: [

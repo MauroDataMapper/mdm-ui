@@ -27,7 +27,7 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-  ChangeDetectorRef, HostListener, OnChanges
+  ChangeDetectorRef, HostListener
 } from '@angular/core';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { DOCUMENT } from '@angular/common';
@@ -38,7 +38,7 @@ import { DOCUMENT } from '@angular/common';
   styleUrls: ['./mc-select.component.sass'],
   host: { '(click)': 'onClick($event)' } // TODO - check if this is needed
 })
-export class McSelectComponent implements OnInit, AfterViewInit, OnChanges {
+export class McSelectComponent implements OnInit, AfterViewInit {
   @Output() paginationChanged = new EventEmitter<any>();
   @Output() defaultValueChanged = new EventEmitter<any>();
   @Input() loadAllOnClick: boolean;
@@ -101,13 +101,6 @@ export class McSelectComponent implements OnInit, AfterViewInit, OnChanges {
 
   set defaultValue(val) {
     this.defaultVal = val;
-  }
-
-  ngOnChanges() {
-    if (this.displayProperty && this.defaultVal) {
-      this.setDefaultValue();
-      this.defaultValueChanged.emit(this.defaultVal);
-    }
   }
 
   @Input()

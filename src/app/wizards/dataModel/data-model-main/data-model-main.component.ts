@@ -24,6 +24,8 @@ import { MessageHandlerService } from '@mdm/services/utility/message-handler.ser
 import { StateService } from '@uirouter/core';
 import { Step } from '@mdm/model/stepModel';
 import { Title } from '@angular/platform-browser';
+import { catchError } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'mdm-data-model-main',
@@ -34,11 +36,18 @@ export class DataModelMainComponent implements OnInit {
   isLinear = false;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
-  parentFolderId: any;
+  parentFolderId: string;
   parentFolder: any;
-  model: any = {
-    metadata: [],
-    classifiers: []
+  model : {
+    metadata: Array<any>;
+    classifiers: Array<any>;
+    label:string | undefined;
+    description: string | undefined;
+    author:string | undefined;
+    organisation :string| undefined;
+    dataModelType: any;
+    dialect:string| undefined;
+    selectedDataTypeProvider:any;
   };
   constructor(
     private stateHandler: StateHandlerService,
@@ -50,6 +59,7 @@ export class DataModelMainComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle('New Data Model');
+    this.model = { metadata :[], classifiers : [], label:undefined, description:undefined, author:undefined, organisation: undefined, dataModelType:undefined,dialect:undefined, selectedDataTypeProvider:undefined};
     // tslint:disable-next-line: deprecation
     this.parentFolderId = this.stateService.params.parentFolderId;
     this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
@@ -81,7 +91,7 @@ export class DataModelMainComponent implements OnInit {
     this.stateHandler.GoPrevious();
   };
 
-  save = async () => {
+  save() {
     const resource = {
       folder: this.parentFolderId,
       label: this.model.label,
@@ -105,19 +115,20 @@ export class DataModelMainComponent implements OnInit {
       resource.dialect = this.model.dialect;
     }
 
-    let queryStringParams = null;
+    let queryStringParams = {};
     if (this.model.selectedDataTypeProvider) {
       queryStringParams = {
         defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
       };
     }
 
-    try {
-      const response = await this.resources.dataModel.addToFolder(this.parentFolderId, resource, queryStringParams).toPromise();
+    this.resources.dataModel.addToFolder(this.parentFolderId, resource, queryStringParams).pipe(catchError(error => {
+      this.messageHandler.showError('There was a problem saving the Data Model.', error);
+      return EMPTY;
+    })).subscribe((response) => {
       this.messageHandler.showSuccess('Data Model saved successfully.');
       this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
-    } catch (error) {
-      this.messageHandler.showError('There was a problem saving the Data Model.', error);
-    }
-  };
+    });
+  }
+
 }

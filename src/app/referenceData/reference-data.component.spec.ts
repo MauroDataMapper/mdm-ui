@@ -32,6 +32,7 @@ import { EditableFormButtonsComponent } from '@mdm/utility/editable-form-buttons
 import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import '@mdm/utility/extensions/mat-dialog.extensions';
+import { DownloadService } from '@mdm/utility/download.service';
 
 describe('ReferenceDataModelsComponent', () => {
   let component: ReferenceDataComponent;
@@ -59,7 +60,11 @@ describe('ReferenceDataModelsComponent', () => {
             tree: {
               list: jest.fn()
             }
-          }
+          },
+        },
+        {
+          provide: DownloadService,
+          useValue: jest.fn()
         }
       ],
       declarations: [

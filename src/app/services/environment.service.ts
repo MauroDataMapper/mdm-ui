@@ -16,32 +16,14 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { EnvironmentService } from './environment.service';
-
-const defaultThemeName = 'default';
-const allowedThemeNames = [
-  'default',
-  'nhs-digital'
-];
+import { environment } from '@env/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ThemingService {
+export class EnvironmentService {
 
-  readonly themeName: string;
-  readonly themeCssSelector: string;
+  readonly themeName?: string = environment?.themeName;
 
-  constructor(environment: EnvironmentService) {
-    this.themeName = (environment.themeName ?? defaultThemeName).toLowerCase();
-    if (!allowedThemeNames.includes(this.themeName)) {
-      this.themeName = defaultThemeName;
-    }
-
-    this.themeCssSelector = `${this.themeName}-theme`;
-  }
-
-  getAssetPath(relativePath: string) {
-    return `assets/themes/${this.themeName}/${relativePath}`;
-  }
+  constructor() { }
 }

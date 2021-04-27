@@ -24,6 +24,7 @@ import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal
 import { MatDialog } from '@angular/material/dialog';
 import { ElementTypesService, StateHandlerService } from '@mdm/services';
 import { ResolveMergeConflictModalComponent } from '@mdm/modals/resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
+import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 
 @Component({
   selector: 'mdm-model-merging',
@@ -451,7 +452,7 @@ export class ModelMergingComponent implements OnInit {
               () => {
                 this.messageHandler.showSuccess('Commit Successful');
                 this.stateHandler.Go(
-                  this.domainType.slice(0,-1),
+                  ModelDomainRequestType[this.domainType],
                   { id: this.targetModel.id, reload: true, location: true },
                   null
                 );

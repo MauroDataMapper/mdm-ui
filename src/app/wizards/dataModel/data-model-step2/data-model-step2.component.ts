@@ -50,7 +50,6 @@ export class DataModelStep2Component implements OnInit {
       this.dataTypes = null;
       return;
     }
-
     this.loadingData = true;
     this.step.scope.model.selectedDataTypeProvider = dataTypeProvider[0];
     this.dataTypes = {

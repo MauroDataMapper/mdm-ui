@@ -47,6 +47,8 @@ import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-moda
 import { SecurityModalComponent } from '../modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
+import { ModelMergingModel } from '@mdm/model/model-merging-model';
+import { ModelDomainType } from '@mdm/model/model-domain-type';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -477,12 +479,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   merge = () => {
-    this.stateHandler.Go('modelsmerging',
-      {
-        sourceId: this.result.id,
-        targetId: null
-      },
-      null);
+    this.stateHandler.Go('modelsmerging', new ModelMergingModel(this.result.id, null, ModelDomainType.DATA_MODELS),   null);
   };
 
   showMergeGraph = () => {

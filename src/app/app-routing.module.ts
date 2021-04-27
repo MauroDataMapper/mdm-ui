@@ -259,7 +259,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.modelsMerging',
-      url: '/modelsMerging/:sourceId/:targetId',
+      url: '/modelsMerging/:catalogueDomainType/:sourceId/:targetId',
       component: ModelMergingComponent
     },
     {

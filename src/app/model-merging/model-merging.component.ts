@@ -24,6 +24,7 @@ import { CheckInModalComponent } from '@mdm/modals/check-in-modal/check-in-modal
 import { MatDialog } from '@angular/material/dialog';
 import { ElementTypesService, StateHandlerService } from '@mdm/services';
 import { ResolveMergeConflictModalComponent } from '@mdm/modals/resolve-merge-conflict-modal/resolve-merge-conflict-modal.component';
+import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 
 @Component({
   selector: 'mdm-model-merging',
@@ -73,6 +74,8 @@ export class ModelMergingComponent implements OnInit {
     dataElementFilter: null
   };
 
+  domainType: string;
+
   constructor(
     private messageHandler: MessageHandlerService,
     private validator: ValidatorService,
@@ -86,26 +89,32 @@ export class ModelMergingComponent implements OnInit {
   async ngOnInit() {
     const sourceId = this.stateService.params.sourceId;
     const targetId = this.stateService.params.targetId;
+    this.domainType = this.stateService.params.catalogueDomainType;
 
-    this.dataTypes = this.elementTypes.getAllDataTypesArray();
+    if (this.domainType) {
+      this.dataTypes = this.elementTypes.getAllDataTypesArray();
 
-    if (sourceId) {
-      this.sourceModel = await this.loadDataModelDetail(sourceId);
+      if (sourceId) {
+        this.sourceModel = await this.loadDataModelDetail(sourceId);
+      }
+
+      if (targetId) {
+        this.targetModel = await this.loadDataModelDetail(targetId);
+        this.mergedModel = Object.assign({}, this.targetModel);
+        this.mergedModel.branchName = '';
+        this.runDiff();
+      } else {
+        this.retrieveMainBranchModel();
+      }
     }
-
-    if (targetId) {
-      this.targetModel = await this.loadDataModelDetail(targetId);
-      this.mergedModel = Object.assign({}, this.targetModel);
-      this.mergedModel.branchName = '';
-      this.runDiff();
-    } else {
-      this.retrieveMainBranchModel();
+    else{
+      this.messageHandler.showError('Catalogue Domain Type is require, Please ensure it available');
     }
   }
 
   retrieveMainBranchModel = () => {
     this.resources.versioning
-      .currentMainBranch('dataModels', this.sourceModel.id)
+      .currentMainBranch(this.domainType, this.sourceModel.id)
       .subscribe(async (result) => {
         this.targetModel = await this.loadDataModelDetail(result.body.id);
         this.mergedModel = Object.assign({}, this.targetModel);
@@ -120,7 +129,7 @@ export class ModelMergingComponent implements OnInit {
     }
 
     const response = await this.resources.tree
-      .getExpandedTree('dataModels', modelId, { forDiff: true })
+      .getExpandedTree(this.domainType, modelId, { forDiff: true })
       .toPromise();
 
     const model = response.body;
@@ -443,7 +452,7 @@ export class ModelMergingComponent implements OnInit {
               () => {
                 this.messageHandler.showSuccess('Commit Successful');
                 this.stateHandler.Go(
-                  'dataModel',
+                  ModelDomainRequestType[this.domainType],
                   { id: this.targetModel.id, reload: true, location: true },
                   null
                 );
@@ -610,7 +619,7 @@ export class ModelMergingComponent implements OnInit {
     this.processing = true;
 
     this.resources.versioning
-      .mergeDiff('dataModels', this.sourceModel.id, this.targetModel.id)
+      .mergeDiff(this.domainType, this.sourceModel.id, this.targetModel.id)
       .subscribe(
         (res) => {
           this.processing = false;

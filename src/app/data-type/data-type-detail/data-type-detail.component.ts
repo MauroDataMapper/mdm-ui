@@ -34,6 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -156,26 +157,21 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       aliases.push(alias);
     });
 
-    let resource = {};
+    let resource: DataType = {
+      id: this.mcDataTypeObject.id,
+      label: this.editableForm.label,
+      domainType: this.mcDataTypeObject.domainType,
+      description: this.editableForm.description || ''
+    };
+
     if (!this.showEditDescription) {
-      resource = {
-        id: this.mcDataTypeObject.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        aliases,
-        domainType: this.mcDataTypeObject.domainType,
-        classifiers: this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }))
-      };
-    }
+      resource.description = this.editableForm.description || '';
+      resource.aliases = aliases;
+      resource.domainType = this.mcDataTypeObject.domainType,
+      resource.classifiers = this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }))      
+    }    
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.mcDataTypeObject.id,
-        description: this.editableForm.description || ''
-      };
-    }
-
-    this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res) => {
+    this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res: DataTypeDetailResponse) => {
       const result = res.body;
       if (this.afterSave) {
         this.afterSave(resource);

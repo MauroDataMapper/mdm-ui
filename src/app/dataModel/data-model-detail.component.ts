@@ -36,7 +36,6 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { SharedService } from '../services/shared.service';
-import { DataModelResult } from '../model/dataModelModel';
 import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
@@ -49,6 +48,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { ModelMergingModel } from '@mdm/model/model-merging-model';
 import { ModelDomainType } from '@mdm/model/model-domain-type';
+import { DataModelDetail, DataModelDetailResponse, DataModelUpdatePayload } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -61,7 +61,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   @Input() editMode = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  result: DataModelResult;
+  result: DataModelDetail;
   hasResult = false;
   subscription: Subscription;
   showSecuritySection: boolean;
@@ -352,7 +352,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       });
   }
 
-  formBeforeSave = async () => {
+  formBeforeSave() {
     this.editMode = false;
     this.errorMessage = '';
 
@@ -363,31 +363,25 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const aliases = [];
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
-    });
-    let resource = {};
-    if (!this.showEditDescription) {
-      resource = {
-        id: this.result.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        author: this.editableForm.author,
-        organisation: this.editableForm.organisation,
-        type: this.result.type,
-        domainType: this.result.domainType,
-        aliases,
-        classifiers
-      };
-    }
+    });    
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.result.id,
-        description: this.editableForm.description || ''
-      };
+    let resource: DataModelUpdatePayload = {
+      id: this.result.id,
+      domainType: this.result.domainType,
+      description: this.editableForm.description || ''
+    };
+
+    if (!this.showEditDescription) {
+      resource.label = this.editableForm.label;
+      resource.author = this.editableForm.author;
+      resource.organisation = this.editableForm.organisation;
+      resource.type = this.result.type;
+      resource.aliases = aliases;
+      resource.classifiers = classifiers;
     }
 
     if (this.validateLabel(this.result.label)) {
-      await this.resourcesService.dataModel.update(this.result.id, resource).subscribe(res => {
+      this.resourcesService.dataModel.update(this.result.id, resource).subscribe((res: DataModelDetailResponse) => {
         this.messageHandler.showSuccess('Data Model updated successfully.');
         this.editableForm.visible = false;
         this.result.description = res.body.description;
@@ -529,7 +523,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   loadExporterList() {
     this.exportList = [];
     this.securityHandler.isAuthenticated().subscribe(result => {
-      if (result.body === false) {
+      if (!result.body.authenticatedSession) {
         return;
       }
 

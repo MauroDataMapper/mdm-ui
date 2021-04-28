@@ -1,4 +1,4 @@
-import { MdmResourcesResponse } from '@mdm/modules/resources';
+import { MdmResponse } from '@maurodatamapper/mdm-resources';
 import { Authority } from './common';
 
 /*
@@ -42,7 +42,7 @@ export class CodeSetResult {
   modelVersionTag?: string;
 }
 
-export type CodeSetResultResponse = MdmResourcesResponse<CodeSetResult>;
+export type CodeSetResultResponse = MdmResponse<CodeSetResult>;
 
 export class Classifiers {
   id: string;

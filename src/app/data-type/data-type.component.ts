@@ -31,6 +31,7 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type',
@@ -266,29 +267,24 @@ export class DataTypeComponent
       aliases.push(alias);
     });
 
-    let resource = {};
-    if (!this.showEditDescription) {
-      resource = {
-        id: this.dataType.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        aliases,
-        domainType: this.dataType.domainType,
-        classifiers: this.dataType.classifiers.map((cls) => ({ id: cls.id }))
-      };
-    }
+    let resource: DataType = {
+      id: this.dataType.id,
+      label: this.editableForm.label,
+      domainType: this.dataType.domainType,
+      description: this.editableForm.description || ''
+    };
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.dataType.id,
-        description: this.editableForm.description || ''
-      };
-    }
+    if (!this.showEditDescription) {
+      resource.description = this.editableForm.description || '';
+      resource.aliases = aliases;
+      resource.domainType = this.dataType.domainType,
+      resource.classifiers = this.dataType.classifiers.map(cls => ({ id: cls.id }))      
+    }    
 
     this.resourcesService.dataType
       .update(this.dataModel.id, this.dataType.id, resource)
       .subscribe(
-        (res) => {
+        (res: DataTypeDetailResponse) => {
           const result = res.body;
 
           this.dataType.aliases = Object.assign([], result.aliases);

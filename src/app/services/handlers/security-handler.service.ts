@@ -22,11 +22,12 @@ import { ElementTypesService } from '../element-types.service';
 import { environment } from '@env/environment';
 import { MessageService } from '@mdm/services/message.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { AdministrationSessionResponse, AuthenticatedSessionError, AuthenticatedSessionResponse, SignInCredentials, SignInError, SignInResponse, UserDetails } from './security-handler.model';
+import { AuthenticatedSessionError, SignInError, UserDetails } from './security-handler.model';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { AdminSessionResponse, AuthenticatedResponse, LoginPayload, LoginResponse } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root',
@@ -104,18 +105,18 @@ export class SecurityHandlerService {
    * @returns An observable to return a `UserDetails` object representing the signed in user.
    * @throws `SignInError` in the observable chain if sign-in failed.
    */
-  signIn(credentials: SignInCredentials): Observable<UserDetails> {
+  signIn(credentials: LoginPayload): Observable<UserDetails> {
     // This parameter is very important as we do not want to handle 401 if user credential is rejected on login modal form
     // as if the user credentials are rejected Back end server will return 401, we should not show the login modal form again
     return this.resources.security
       .login(credentials, { login: true })
       .pipe(
         catchError((error: HttpErrorResponse) => throwError(new SignInError(error))),
-        switchMap((signInResponse: SignInResponse) =>
+        switchMap((signInResponse: LoginResponse) =>
           this.resources.session
             .isApplicationAdministration()
             .pipe(
-              map((adminResponse: AdministrationSessionResponse) => {
+              map((adminResponse: AdminSessionResponse) => {
                 const signIn = signInResponse.body;
                 const admin = adminResponse.body;
                 const user: UserDetails = {
@@ -163,7 +164,7 @@ export class SecurityHandlerService {
     localStorage.removeItem('token');
   }
 
-  isAuthenticated() {
+  isAuthenticated(): Observable<AuthenticatedResponse> {
     return this.resources.session.isAuthenticated();
   }
 
@@ -225,7 +226,7 @@ export class SecurityHandlerService {
 
           return of(false);
         }),
-        map((response: AuthenticatedSessionResponse) => {
+        map((response: AuthenticatedResponse) => {
           if (!response.body.authenticatedSession) {
             this.removeUserFromLocalStorage();
           }

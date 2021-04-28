@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IMdmRestHandler, IMdmRestHandlerOptions } from '@maurodatamapper/mdm-resources';
+import { MdmRestHandler, RequestSettings } from '@maurodatamapper/mdm-resources';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MessageService } from '@mdm/services/message.service';
@@ -28,10 +28,10 @@ import { catchError } from 'rxjs/operators';
  * An IMdmRestHandler implemented using Angular's HttpClient.
  */
 @Injectable()
-export class MdmRestHandlerService implements IMdmRestHandler {
+export class MdmRestHandlerService implements MdmRestHandler {
   constructor(private messageService: MessageService, private http: HttpClient, private broadcastSvc: BroadcastService, private stateHandler: StateHandlerService) { }
 
-  process(url: string, options: IMdmRestHandlerOptions) {
+  process(url: string, options: RequestSettings) {
     if (options.withCredentials === undefined ||
       options.withCredentials === null ||
       (options.withCredentials !== undefined && options.withCredentials === false)) {

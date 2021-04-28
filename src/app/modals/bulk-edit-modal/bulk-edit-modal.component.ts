@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, Input, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CatalogueItemDomainType, DataClass, DataElement } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -101,7 +102,7 @@ export class BulkEditModalComponent implements AfterViewInit {
     });
   };
 
-  saveChanges = () => {
+  saveChanges() {
     this.processing = true;
     this.isProcessComplete = false;
     let promise = Promise.resolve();
@@ -113,16 +114,23 @@ export class BulkEditModalComponent implements AfterViewInit {
           hasError: false
         };
 
-        const resource = {
-          id: item.id,
-          label: item.label,
-          description: item.description
-        };
         if (item.domainType === 'DataElement') {
-          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).toPromise();
+          const dataElement: DataElement = {
+            id: item.id,
+            label: item.label,
+            description: item.description,
+            domainType: CatalogueItemDomainType.DataElement
+          };
+          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, dataElement!.id, dataElement).toPromise();
         }
         if (item.domainType === 'DataClass') {
-          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, resource.id, resource).toPromise();
+          const dataClass: DataClass = {
+            id: item.id,
+            label: item.label,
+            description: item.description,
+            domainType: CatalogueItemDomainType.DataClass
+          };
+          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, dataClass!.id, dataClass).toPromise();
         }
       }).catch(() => {
         this.failCount++;

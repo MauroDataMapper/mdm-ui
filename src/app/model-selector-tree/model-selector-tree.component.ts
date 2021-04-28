@@ -31,6 +31,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { ContainerDomainType, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -132,19 +133,19 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
             return;
           }
         }
+      }     
+
+      const options: TreeItemSearchQueryParameters = {
+        searchTerm: this.searchCriteria,
+        domainType: this.treeSearchDomainType,
+        includeDocumentSuperseded: true,
+        includeModelSuperseded: true,
+        includeDeleted: true
       }
 
-      const options = {
-        queryStringParams: {
-          domainType: this.treeSearchDomainType,
-          includeDocumentSuperseded: true,
-          includeModelSuperseded: true,
-          includeDeleted: true
-        }
-      };
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.search('folders', this.searchCriteria, options).subscribe((result) => {
+        this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
           this.filteredRootNode = {
             children: result.body,
             isRoot: true
@@ -180,7 +181,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         }
         if (this.searchCriteria.trim().length > 0) {
           this.inSearchMode = true;
-          this.resources.tree.search('folders', this.searchCriteria).subscribe((result) => {
+          this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
             this.filteredRootNode = {
               children: result.body,
               isRoot: true

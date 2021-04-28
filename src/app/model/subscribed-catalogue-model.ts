@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { MdmResourcesIndexResponse, MdmResourcesResponse } from '@mdm/modules/resources/mdm-resources.models';
+import { MdmIndexResponse, MdmResponse } from '@maurodatamapper/mdm-resources';
 import { Resetable } from './editable-forms';
 
 export interface SubscribedCatalogue {
@@ -35,7 +35,7 @@ export interface SubscribedCatalogue {
  *
  * @see SubscribedCatalogueIndexResponse
  */
-export type SubscribedCatalogueResponse = MdmResourcesResponse<SubscribedCatalogue>;
+export type SubscribedCatalogueResponse = MdmResponse<SubscribedCatalogue>;
 
 /**
  * Type alias for an index/list operation for the Subscribed Catalogues API endpoint.
@@ -44,7 +44,7 @@ export type SubscribedCatalogueResponse = MdmResourcesResponse<SubscribedCatalog
  *
  * @see SubscribedCatalogueResponse
  */
-export type SubscribedCatalogueIndexResponse = MdmResourcesIndexResponse<SubscribedCatalogue>;
+export type SubscribedCatalogueIndexResponse = MdmIndexResponse<SubscribedCatalogue>;
 
 /**
  * Represents the editable form state of a `SubscribedCatalogue`

@@ -25,6 +25,7 @@ import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
+import { ContainerDomainType, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -449,11 +450,12 @@ export class ElementSelectorComponent implements OnInit {
     }
     this.formData.inSearchMode = true;
     this.reloading = true;
-    const options = {
+    const options: TreeItemSearchQueryParameters = {
+      searchTerm: this.formData.treeSearchText,
       domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.search('folders', this.formData.treeSearchText, options).subscribe(result => {
+    this.resourceService.tree.search(ContainerDomainType.FOLDERS, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
       this.reloading = false;
       this.rootNode = {
         children: result.body,

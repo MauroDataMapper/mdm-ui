@@ -15,41 +15,41 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { IMdmRestHandlerOptions } from '@maurodatamapper/mdm-resources';
+import { RequestSettings } from '@maurodatamapper/mdm-resources';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Represents a response from an `mdm-resources` API endpoint.
  *
  */
-export interface MdmResourcesResponse<T = any> {
-  /**
-   * The body of the response from the API.
-   */
-  body: T;
-}
+// export interface MdmResourcesResponse<T = any> {
+//   /**
+//    * The body of the response from the API.
+//    */
+//   body: T;
+// }
 
 /**
  * Represents the body of a `mdm-resources` response for an index/list request.
  *
  */
-export interface MdmResourcesIndexBody<T = any> {
-  /**
-   * Gets the number of items in the returned list.
-   */
-  count: number;
+// export interface MdmResourcesIndexBody<T = any> {
+//   /**
+//    * Gets the number of items in the returned list.
+//    */
+//   count: number;
 
-  /**
-   * Gets the list of items returned from the API.
-   */
-  items: T[];
-}
+//   /**
+//    * Gets the list of items returned from the API.
+//    */
+//   items: T[];
+// }
 
 /**
  * Type alias for an `mdm-resources` API endpoint response for an index/list request.
  *
  */
-export type MdmResourcesIndexResponse<T = any> = MdmResourcesResponse<MdmResourcesIndexBody<T>>;
+//export type MdmResourcesIndexResponse<T = any> = MdmResourcesResponse<MdmResourcesIndexBody<T>>;
 
 /**
  * Interface to define standard properties/options for the `MdmRestHandlerService`.
@@ -68,7 +68,7 @@ export interface MdmHttpHandlerOptions {
   handleGetErrors?: boolean;
 }
 
-export type MdmRestHandlerOptions = IMdmRestHandlerOptions & MdmHttpHandlerOptions;
+export type MdmRestHandlerOptions = RequestSettings & MdmHttpHandlerOptions;
 
 /**
  * Represents a generic error from an `mdm-resources` operation.

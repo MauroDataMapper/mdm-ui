@@ -34,6 +34,7 @@ import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
+import { DataElement } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-child-data-elements-list',
@@ -128,13 +129,13 @@ export class ElementChildDataElementsListComponent implements AfterViewInit {
     this.table.renderRows();
   }
 
-  updateDataElementsOrder = async (item, newPosition) => {
-    const resource = {
-      id: item.data.id,
+  updateDataElementsOrder(item, newPosition) {
+    const resource: DataElement = {
+      ...item,
       index: newPosition
     };
 
-    await this.resources.dataElement.update(this.parentDataModel.id, item.data.dataClass, item.data.id, resource).subscribe(() => {
+    this.resources.dataElement.update(this.parentDataModel.id, item.data.dataClass, item.data.id, resource).subscribe(() => {
       this.messageHandler.showSuccess('Data Element reorderedsuccessfully.');
     }, error => {
       this.messageHandler.showError('There was a problem updating the Data Element.', error);

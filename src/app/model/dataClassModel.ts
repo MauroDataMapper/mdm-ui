@@ -15,68 +15,70 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class DataClassResult {
-  id: string;
-  domainType: string;
-  label: string;
-  model: string;
-  breadcrumbs: Breadcrumb[];
-  aliases: any[] = [];
-  semanticLinks: SemanticLink[];
-  classifiers: Classifiers[];
-  editable: boolean;
-  lastUpdated: Date;
-  maxMultiplicity: number;
-  minMultiplicity: number;
-  parentDataModel: string;
-  parentDataClass: string;
-  finalised: boolean;
-  dateFinalised: string;
-  description: string;
-}
+// export class DataClassResult {
+//   id: string;
+//   domainType: string;
+//   label: string;
+//   model: string;
+//   breadcrumbs: Breadcrumb[];
+//   aliases: any[] = [];
+//   semanticLinks: SemanticLink[];
+//   classifiers: Classifiers[];
+//   editable: boolean;
+//   lastUpdated: Date;
+//   maxMultiplicity: number;
+//   minMultiplicity: number;
+//   parentDataModel: string;
+//   parentDataClass: string;
+//   finalised: boolean;
+//   dateFinalised: string;
+//   description: string;
+// }
 
-export class Breadcrumb {
-  id: string;
-  label: string;
-  domainType: string;
-  finalised: boolean;
-}
+import { Classifier } from "@maurodatamapper/mdm-resources";
 
-export class SemanticLink {
-  id: string;
-  linkType: string;
-  domainType: string;
-  source: Source;
-  target: Target;
-}
+// export class Breadcrumb {
+//   id: string;
+//   label: string;
+//   domainType: string;
+//   finalised: boolean;
+// }
 
-export class Source {
-  id: string;
-  domainType: string;
-  label: string;
-  dataModel: boolean;
-  breadcrumbs: Breadcrumb[];
-}
+// export class SemanticLink {
+//   id: string;
+//   linkType: string;
+//   domainType: string;
+//   source: Source;
+//   target: Target;
+// }
 
-export class Target {
-  id: string;
-  domainType: string;
-  label: string;
-  dataModel: boolean;
-  breadcrumbs: Breadcrumb[];
-}
+// export class Source {
+//   id: string;
+//   domainType: string;
+//   label: string;
+//   dataModel: boolean;
+//   breadcrumbs: Breadcrumb[];
+// }
 
-export class Classifiers {
-  id: string;
-  label: string;
-  lastUpdated: string;
-}
+// export class Target {
+//   id: string;
+//   domainType: string;
+//   label: string;
+//   dataModel: boolean;
+//   breadcrumbs: Breadcrumb[];
+// }
+
+// export class Classifiers {
+//   id: string;
+//   label: string;
+//   lastUpdated: string;
+// }
 
 export class EditableDataClass {
   deletePending: boolean;
   label: string;
   description: string;
-  classifiers: Classifiers[] = [];
+  classifiers: Classifier[] = [];
   aliases: any[] = [];
   visible: boolean;
   waiting: boolean;

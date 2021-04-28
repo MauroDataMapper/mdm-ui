@@ -26,6 +26,7 @@ import { Step } from '@mdm/model/stepModel';
 import { Title } from '@angular/platform-browser';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { Classifier, DataModelCreatePayload, DataModelDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model-main',
@@ -92,7 +93,7 @@ export class DataModelMainComponent implements OnInit {
   };
 
   save() {
-    const resource = {
+    const resource: DataModelCreatePayload = {
       folder: this.parentFolderId,
       label: this.model.label,
       description: this.model.description,
@@ -111,9 +112,9 @@ export class DataModelMainComponent implements OnInit {
         };
       })
     };
-    if (resource.type === 'Database') {
-      resource.dialect = this.model.dialect;
-    }
+    // if (resource.type === 'Database') {
+    //   resource.dialect = this.model.dialect;
+    // }
 
     let queryStringParams = {};
     if (this.model.selectedDataTypeProvider) {
@@ -125,7 +126,7 @@ export class DataModelMainComponent implements OnInit {
     this.resources.dataModel.addToFolder(this.parentFolderId, resource, queryStringParams).pipe(catchError(error => {
       this.messageHandler.showError('There was a problem saving the Data Model.', error);
       return EMPTY;
-    })).subscribe((response) => {
+    })).subscribe((response: DataModelDetailResponse) => {
       this.messageHandler.showSuccess('Data Model saved successfully.');
       this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
     });

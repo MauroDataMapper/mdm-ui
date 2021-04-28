@@ -36,6 +36,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-code-set',
@@ -272,7 +273,7 @@ export class CodeSetComponent
 
   CodeSetPermissions() {
     this.resourcesService.security
-      .permissions('codeSets', this.codeSetModel.id)
+      .permissions(SecurableDomainType.CodeSets, this.codeSetModel.id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.codeSetModel[attrname] = permissions.body[attrname];

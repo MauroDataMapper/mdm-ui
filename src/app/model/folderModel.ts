@@ -1,4 +1,4 @@
-import { MdmResourcesResponse } from '@mdm/modules/resources';
+import { MdmResponse } from "@maurodatamapper/mdm-resources";
 
 /*
 Copyright 2020 University of Oxford
@@ -33,7 +33,7 @@ export class FolderResult {
   availableActions: any[];
 }
 
-export type FolderResultResponse = MdmResourcesResponse<FolderResult>;
+export type FolderResultResponse = MdmResponse<FolderResult>;
 
 export class SearchResult {
   count: number;

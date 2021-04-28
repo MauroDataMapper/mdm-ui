@@ -37,6 +37,7 @@ import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -192,7 +193,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
 
   ReferenceModelPermissions(id: any) {
     this.resourcesService.security
-      .permissions('referenceDataModels', id)
+      .permissions(SecurableDomainType.ReferenceDataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.referenceModel[attrname] = permissions.body[attrname];

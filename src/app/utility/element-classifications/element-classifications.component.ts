@@ -16,9 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { DataModelResult } from '@mdm/model/dataModelModel';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
+import { DataModelDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-classifications',
@@ -31,7 +31,7 @@ export class ElementClassificationsComponent implements OnInit {
   @Input() readOnly = true;
   @Input() inEditMode: boolean;
   @Input() property: string;
-  @Input() element: DataModelResult;
+  @Input() element: DataModelDetail;
   @Input() newWindow = false;
 
   @Output() classificationsChanged = new EventEmitter<any[]>();

@@ -95,7 +95,7 @@ export class GroupAccessNewComponent implements OnInit {
   loadAllGroups(text, offset, limit) {
     this.allGroups = [];
     this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (result.body === false) {
+      if (!result.body.authenticatedSession) {
         return;
       }
       limit = limit ? limit : 10;

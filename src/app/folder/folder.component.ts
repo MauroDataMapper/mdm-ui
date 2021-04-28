@@ -28,6 +28,7 @@ import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
+import { PermissionsResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-folder',
@@ -135,7 +136,7 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
   }
 
   folderPermissions(id: any) {
-    this.resources.security.permissions('folders', id).subscribe((permissions: { body: { [x: string]: any } }) => {
+    this.resourcesService.security.permissions(SecurableDomainType.Folders, id).subscribe((permissions: PermissionsResponse) => {
       Object.keys(permissions.body).forEach((attrname) => {
         this.folder[attrname] = permissions.body[attrname];
       });

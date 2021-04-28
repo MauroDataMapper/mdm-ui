@@ -442,8 +442,8 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (result.body === false) {
+    this.securityHandler.isAuthenticated().subscribe(result => {
+      if (!result.body.authenticatedSession) {
         return;
       }
       this.resources.terminology.exporters().subscribe(

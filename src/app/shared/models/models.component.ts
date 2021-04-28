@@ -35,6 +35,7 @@ import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component'
 import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
+import { ContainerDomainType, MdmTreeItemListResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-models',
@@ -486,7 +487,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = null;
 
-      this.resources.tree.search('folders', this.sharedService.searchCriteria).subscribe(res => {
+      this.resources.tree.search(ContainerDomainType.FOLDERS, this.sharedService.searchCriteria).subscribe(res => {
         const result: Node[] = res.body;
         this.reloading = false;
         this.allModels = {

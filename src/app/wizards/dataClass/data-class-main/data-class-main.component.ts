@@ -30,6 +30,8 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
+import { CatalogueItemDomainType, DataClass, DataClassDetailResponse } from '@maurodatamapper/mdm-resources';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'mdm-data-class-main',
@@ -165,7 +167,8 @@ export class DataClassMainComponent implements AfterViewInit {
   };
 
   saveNewDataClass = () => {
-    const resource = {
+    const resource: DataClass = {
+      domainType: CatalogueItemDomainType.DataClass,
       label: this.model.label,
       description: this.model.description,
       classifiers: this.model.classifiers.map((cls) => {
@@ -185,7 +188,7 @@ export class DataClassMainComponent implements AfterViewInit {
     this.getMultiplicity(resource, 'minMultiplicity');
     this.getMultiplicity(resource, 'maxMultiplicity');
 
-    let deferred;
+    let deferred: Observable<DataClassDetailResponse>;
     if (this.model.parent.domainType === 'DataClass') {
       deferred = this.resources.dataClass.addChildDataClass(
         this.model.parent.model,

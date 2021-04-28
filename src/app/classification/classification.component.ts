@@ -36,6 +36,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-classification',
@@ -176,7 +177,7 @@ export class ClassificationComponent
   }
   classifierPermissions(id: any) {
     this.resourcesService.security
-      .permissions('classifiers', id)
+      .permissions(SecurableDomainType.Classifiers, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.result[attrname] = permissions.body[attrname];

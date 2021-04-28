@@ -575,7 +575,7 @@ export class ReferenceDataDetailsComponent
   loadExporterList() {
     this.exportList = [];
     this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (result.body === false) {
+      if (!result.body.authenticatedSession) {
         return;
       }
 

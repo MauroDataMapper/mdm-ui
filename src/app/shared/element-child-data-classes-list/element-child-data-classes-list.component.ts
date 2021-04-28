@@ -39,6 +39,7 @@ import { GridService } from '@mdm/services/grid.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatTable } from '@angular/material/table';
 import { MessageHandlerService } from '@mdm/services';
+import { DataClass } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-child-data-classes-list',
@@ -211,8 +212,9 @@ export class ElementChildDataClassesListComponent implements AfterViewInit, OnIn
     this.table.renderRows();
   }
 
-  updateOrder = (item, newPosition) => {
-    const resource = {
+  updateOrder(item, newPosition) {
+    const resource: DataClass = {
+      ...item,
       index: newPosition
     };
 

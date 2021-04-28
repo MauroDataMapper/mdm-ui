@@ -27,7 +27,11 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  SecurityHandlerService,
+  ValidatorService
+} from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 
 @Component({
@@ -53,11 +57,10 @@ export class DataClassComponent
   error = '';
   editableForm: EditableDataClass;
   aliases: any[] = [];
-  access:any;
+  access: any;
 
   newMinText: any;
   newMaxText: any;
-
 
   descriptionView = 'default';
 
@@ -159,60 +162,15 @@ export class DataClassComponent
             'update'
           );
 
-          this.editableForm = new EditableDataClass();
-          this.editableForm.visible = false;
-          this.editableForm.deletePending = false;
-
-          this.editableForm.show = () => {
-            this.editableForm.visible = true;
-            if (this.min === '*') {
-              this.min = '-1';
-            }
-
-            if (this.max === '*') {
-              this.max = '-1';
-            }
-          };
-
-          this.editableForm.cancel = () => {
-            this.editingService.stop();
-            this.editableForm.visible = false;
-            this.editableForm.validationError = false;
-
-            this.error = '';
-
-            this.setEditableForm();
-
-            if (this.dataClass.classifiers) {
-              this.dataClass.classifiers.forEach((item) => {
-                this.editableForm.classifiers.push(item);
-              });
-            }
-            this.editableForm.aliases = [];
-            this.aliases = [];
-            if (this.dataClass.aliases) {
-              this.dataClass.aliases.forEach((item) => {
-                this.aliases.push(item);
-                this.editableForm.aliases.push(item);
-              });
-            }
-
-            if (this.min === '-1') {
-              this.min = '*';
-            }
-
-            if (this.max === '-1') {
-              this.max = '*';
-            }
-          };
+          this.createEditableForm();
 
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
 
-          this.UsedProfiles('dataClass',id);
-          this.UnUsedProfiles('dataClass',id);
+          this.UsedProfiles('dataClass', id);
+          this.UnUsedProfiles('dataClass', id);
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
 
@@ -252,14 +210,13 @@ export class DataClassComponent
           } else {
             this.max = this.dataClass.maxMultiplicity;
           }
-
-
         });
     } else {
       this.resourcesService.dataClass
         .getChildDataClass(model, parentDataClass, id)
         .subscribe((result: { body: DataClassResult }) => {
           this.dataClass = result.body;
+          this.createEditableForm();
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
@@ -282,7 +239,7 @@ export class DataClassComponent
     }
   }
 
- createEditableForm() {
+  createEditableForm() {
     this.editableForm = new EditableDataClass();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -497,5 +454,5 @@ export class DataClassComponent
   edit = () => {
     this.showEditDescription = false;
     this.editableForm.show();
-   };
+  };
 }

@@ -277,6 +277,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   delete() {
     this.resourcesService.dataElement.remove(this.result.model, this.result.dataClass, this.result.id).subscribe(() => {
       this.messageHandler.showSuccess('Data Class deleted successfully.');
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     }, error => {
       this.deleteInProgress = false;

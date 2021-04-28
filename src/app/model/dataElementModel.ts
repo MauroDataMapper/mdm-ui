@@ -15,74 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// export class DataElementResult {
-//   // model(model: any, dataClass: any, id: string) {
-//   //   throw new Error("Method not implemented.");
-//   // }
-//   id: string;
-//   domainType: string;
-//   label: string;
-//   model: string;
-//   description: string;
-//   breadcrumbs: Breadcrumb[];
-//   aliases: any[] = [];
-//   semanticLinks: SemanticLink[];
-//   classifiers: Classifiers[];
-//   editable: boolean;
-//   lastUpdated: Date;
-//   maxMultiplicity: number;
-//   minMultiplicity: number;
-//   dataClass: string;
-//   finalised: boolean;
-//   dateFinalised: string;
-//   dataType: string;
-
 import { Classifier } from "@maurodatamapper/mdm-resources";
-
-// }
-
-
-// export class Breadcrumb {
-//   id: string;
-//   label: string;
-//   domainType: string;
-//   finalised: boolean;
-
-// }
-
-// export class SemanticLink {
-//   id: string;
-//   linkType: string;
-//   domainType: string;
-//   source: Source;
-//   target: Target;
-
-// }
-
-// export class Source {
-//   id: string;
-//   domainType: string;
-//   label: string;
-//   dataModel: boolean;
-//   breadcrumbs: Breadcrumb[];
-
-// }
-
-// export class Target {
-//   id: string;
-//   domainType: string;
-//   label: string;
-//   dataModel: boolean;
-//   breadcrumbs: Breadcrumb[];
-
-// }
-
-// export class Classifiers {
-//   id: string;
-//   label: string;
-//   lastUpdated: string;
-
-// }
 
 export class EditableDataElement {
   deletePending: boolean;

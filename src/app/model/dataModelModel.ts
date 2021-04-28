@@ -1,5 +1,4 @@
 import { Classifier } from '@maurodatamapper/mdm-resources';
-import { Authority } from './common';
 
 /*
 Copyright 2020 University of Oxford
@@ -18,36 +17,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-// export class DataModelResult {
-//   id: string;
-//   domainType: string;
-//   authority?: Authority;
-//   label: string;
-//   documentationVersion: any[];
-//   description: string;
-//   editable: boolean;
-//   lastUpdated: string;
-//   classifiers: Classifiers[];
-//   type: string;
-//   finalised: boolean;
-//   author: string;
-//   organisation: string;
-//   dateFinalised: string;
-//   aliases: any[];
-//   semanticLinks: any[];
-//   readableByEveryone: boolean;
-//   deleted: boolean;
-//   branchName: string;
-//   modelVersion: any;
-//   modelVersionTag?: string;
-// }
-
-// export class Classifiers {
-//   id: string;
-//   label: string;
-//   lastUpdated: string;
-// }
-
 export class EditableDataModel {
   deletePending: boolean;
   label: string;
@@ -73,17 +42,4 @@ export class Categories {
   key: string;
   value: string;
   category: string;
-}
-
-export interface DataType {
-  domainType: string;
-  label: string;
-  description?: string;
-}
-
-export interface DataTypeProvider {
-  name: string;
-  displayName: string;
-  version: string;
-  dataTypes: DataType[];
 }

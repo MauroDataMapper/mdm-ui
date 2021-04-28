@@ -1,5 +1,4 @@
-import { MdmResponse } from '@maurodatamapper/mdm-resources';
-import { Authority } from './common';
+import { Authority, MdmResponse } from '@maurodatamapper/mdm-resources';
 
 /*
 Copyright 2020 University of Oxford

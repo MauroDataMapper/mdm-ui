@@ -23,11 +23,12 @@ import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
 import { StateService } from '@uirouter/core/';
+import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 
 @Component({
   selector: 'mdm-import',
   templateUrl: './import-models.component.html',
-  styleUrls: ['./import-models.component.sass'],
+  styleUrls: ['./import-models.component.sass']
 })
 export class ImportModelsComponent implements OnInit {
   importers: any;
@@ -69,40 +70,54 @@ export class ImportModelsComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
     private stateService: StateService
-  ) { }
+  ) {}
 
   ngOnInit() {
     // tslint:disable-next-line: deprecation
-    this.importType = this.stateService.params.importType ? this.stateService.params.importType : 'dataModels';
+    this.importType = this.stateService.params.importType
+      ? this.stateService.params.importType
+      : 'dataModels';
     this.title.setTitle('Import');
     this.loadImporters();
   }
 
   loadImporters() {
     if (this.importType === 'dataModels') {
-      this.resources.dataModel.importers().subscribe(result => {
-        this.importers = result.body;
-      }, error => {
-        this.messageHandler.showError('Can not load importers!', error);
-      });
+      this.resources.dataModel.importers().subscribe(
+        (result) => {
+          this.importers = result.body;
+        },
+        (error) => {
+          this.messageHandler.showError('Can not load importers!', error);
+        }
+      );
     } else if (this.importType === 'terminologies') {
-      this.resources.terminology.importers().subscribe(result => {
-        this.importers = result.body;
-      }, error => {
-        this.messageHandler.showError('Can not load importers!', error);
-      });
+      this.resources.terminology.importers().subscribe(
+        (result) => {
+          this.importers = result.body;
+        },
+        (error) => {
+          this.messageHandler.showError('Can not load importers!', error);
+        }
+      );
     } else if (this.importType === 'codeSets') {
-      this.resources.codeSet.importers().subscribe(result => {
-        this.importers = result.body;
-      }, error => {
-        this.messageHandler.showError('Can not load importers!', error);
-      });
-   } else if (this.importType === 'referenceDataModels') {
-      this.resources.referenceDataModel.importers().subscribe(result => {
-        this.importers = result.body;
-      }, error => {
-        this.messageHandler.showError('Can not load importers!', error);
-      });
+      this.resources.codeSet.importers().subscribe(
+        (result) => {
+          this.importers = result.body;
+        },
+        (error) => {
+          this.messageHandler.showError('Can not load importers!', error);
+        }
+      );
+    } else if (this.importType === 'referenceDataModels') {
+      this.resources.referenceDataModel.importers().subscribe(
+        (result) => {
+          this.importers = result.body;
+        },
+        (error) => {
+          this.messageHandler.showError('Can not load importers!', error);
+        }
+      );
     }
   }
 
@@ -113,10 +128,12 @@ export class ImportModelsComponent implements OnInit {
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(selectedItem.name);
+    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
+      selectedItem.name
+    );
 
     const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
-    this.resources.importer.get(action).subscribe(res => {
+    this.resources.importer.get(action).subscribe((res) => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 
@@ -183,48 +200,58 @@ export class ImportModelsComponent implements OnInit {
       });
     });
 
-    let method = this.resources.dataModel.importModels(namespace, name, version, this.formData);
+    let method = this.resources.dataModel.importModels(
+      namespace,
+      name,
+      version,
+      this.formData
+    );
     if (this.importType === 'terminologies') {
-      method = this.resources.terminology.importModels(namespace, name, version, this.formData);
+      method = this.resources.terminology.importModels(
+        namespace,
+        name,
+        version,
+        this.formData
+      );
     } else if (this.importType === 'referenceDataModels') {
-      method = this.resources.referenceDataModel.importModels(namespace, name, version, this.formData);
+      method = this.resources.referenceDataModel.importModels(
+        namespace,
+        name,
+        version,
+        this.formData
+      );
     }
 
-    method.subscribe((result: any) => {
-      this.importingInProgress = false;
-      this.importCompleted = true;
-      this.importResult = result;
-      this.importHasError = false;
-      this.importErrors = [];
-      this.messageHandler.showSuccess('Models imported successfully!');
-      this.broadcastSvc.broadcast('$reloadDataModels');
-      if (result && result.body.count === 1) {
-        if (this.importType === 'dataModels') {
+    method.subscribe(
+      (result: any) => {
+        this.importingInProgress = false;
+        this.importCompleted = true;
+        this.importResult = result;
+        this.importHasError = false;
+        this.importErrors = [];
+        this.messageHandler.showSuccess('Models imported successfully!');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+        if (result && result.body.count === 1) {
           this.stateHandler.Go(
-            'datamodel',
-            { id: result.body.items[0].id },
-            { reload: true, location: true }
-          );
-        } else if (this.importType === 'terminologies') {
-          this.stateHandler.Go(
-            'terminology',
+            ModelDomainRequestType[this.importType],
             { id: result.body.items[0].id },
             { reload: true, location: true }
           );
         }
-      }
-    }, (error) => {
-      if (error.status === 422) {
-        this.importHasError = true;
-        if (error.error.validationErrors) {
-          this.importErrors = error.error.validationErrors.errors;
-        } else if (error.error.errors) {
-          this.importErrors = error.error.errors;
+      },
+      (error) => {
+        if (error.status === 422) {
+          this.importHasError = true;
+          if (error.error.validationErrors) {
+            this.importErrors = error.error.validationErrors.errors;
+          } else if (error.error.errors) {
+            this.importErrors = error.error.errors;
+          }
         }
+        this.importingInProgress = false;
+        this.messageHandler.showError('Error in import process', '');
       }
-      this.importingInProgress = false;
-      this.messageHandler.showError('Error in import process', '');
-    });
+    );
   };
 
   getFile = (paramName) => {

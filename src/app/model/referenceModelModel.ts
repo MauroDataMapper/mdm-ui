@@ -1,5 +1,3 @@
-import { Authority } from './common';
-
 /*
 Copyright 2020 University of Oxford
 
@@ -17,6 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { Authority } from "@maurodatamapper/mdm-resources";
+
 export class ReferenceModelResult {
   id: string;
   domainType: string;

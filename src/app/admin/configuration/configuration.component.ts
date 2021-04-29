@@ -21,10 +21,11 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
-import { ApiPropertyEditableState, ApiPropertyEditType, ApiPropertyIndexResponse, propertyMetadata } from '@mdm/model/api-properties';
+import { ApiPropertyEditableState, ApiPropertyEditType, propertyMetadata } from '@mdm/model/api-properties';
 import { catchError, map } from 'rxjs/operators';
 import { GridService } from '@mdm/services';
 import { ApiPropertyTableViewChange } from '../api-property-table/api-property-table.component';
+import { ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-configuration',

@@ -20,6 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-inline',
@@ -47,7 +48,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   allDataTypes;
   isValid = false;
   reloading = false;
-  terminologies: any;
+  terminologies: Terminology[];
   codesets: any;
   referenceDataModels: any;
 
@@ -140,7 +141,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
 
   loadTerminologies() {
     this.reloading = true;
-    this.resourceService.terminology.list().subscribe(data => {
+    this.resourceService.terminology.list().subscribe((data: TerminologyIndexResponse) => {
       this.terminologies = data.body.items;
       this.reloading = false;
     }, () => {

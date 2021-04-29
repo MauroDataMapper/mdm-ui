@@ -39,10 +39,11 @@ import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handle
 import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -452,7 +453,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   finalise() {
     const promise = new Promise(() => {
       this.resourcesService.codeSet.latestModelVersion(this.result.id).subscribe(response => {
-        const dialog = this.dialog.open(FinaliseModalComponent, {
+        const dialog = this.dialog.open<FinaliseModalComponent, any, FinaliseModalResponse>(FinaliseModalComponent, {
           data: {
             title: 'Finalise Code Set',
             modelVersion: response.body.modelVersion,
@@ -464,7 +465,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
         });
 
         dialog.afterClosed().subscribe(dialogResult => {
-          if (dialogResult?.status !== 'ok') {
+          if (dialogResult?.status !== ModalDialogStatus.Ok) {
             return;
           }
           this.processing = true;

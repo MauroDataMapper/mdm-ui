@@ -41,7 +41,7 @@ import { ExportHandlerService } from '../services/handlers/export-handler.servic
 import { BroadcastService } from '../services/broadcast.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { SecurityModalComponent } from '../modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
@@ -49,6 +49,7 @@ import { catchError, finalize } from 'rxjs/operators';
 import { ModelMergingModel } from '@mdm/model/model-merging-model';
 import { ModelDomainType } from '@mdm/model/model-domain-type';
 import { DataModelDetail, DataModelDetailResponse, DataModelUpdatePayload } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-data-model-detail',
@@ -428,7 +429,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
   finalise() {
     const promise = new Promise(() => {
       this.resourcesService.dataModel.latestModelVersion(this.result.id).subscribe(response => {
-        const dialog = this.dialog.open(FinaliseModalComponent, {
+        const dialog = this.dialog.open<FinaliseModalComponent, any, FinaliseModalResponse>(FinaliseModalComponent, {
           data: {
             modelVersion: response.body.modelVersion,
             title: 'Finalise Data Model',
@@ -440,7 +441,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
         });
 
         dialog.afterClosed().subscribe(dialogResult => {
-          if (dialogResult?.status !== 'ok') {
+          if (dialogResult?.status !== ModalDialogStatus.Ok) {
             return;
           }
           this.processing = true;

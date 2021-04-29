@@ -34,7 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -120,7 +120,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'Terminology') {
-      this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+      this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe((result: TerminologyDetailResponse) => {
         this.elementType = result.body;
       });
     } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'CodeSet') {

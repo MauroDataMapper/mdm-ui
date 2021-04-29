@@ -31,7 +31,7 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataType, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type',
@@ -153,7 +153,7 @@ export class DataTypeComponent
         ) {
           this.resourcesService.terminology
             .get(this.dataModelId.modelResourceId)
-            .subscribe((termResult) => {
+            .subscribe((termResult: TerminologyDetailResponse) => {
               this.elementType = termResult.body;
             });
         } else if (

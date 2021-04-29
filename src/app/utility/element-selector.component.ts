@@ -25,7 +25,7 @@ import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
-import { ContainerDomainType, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { ContainerDomainType, MdmTreeItemListResponse, Terminology, TerminologyIndexResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -84,7 +84,7 @@ export class ElementSelectorComponent implements OnInit {
     inSearchMode: false
   };
   showPrevBtn = false;
-  public terminologies: any[];
+  public terminologies: Terminology[];
   public termsList: any[];
   options;
   dataSource = new MatTableDataSource();
@@ -187,7 +187,7 @@ export class ElementSelectorComponent implements OnInit {
 
   loadTerminologies = () => {
     this.reloading = true;
-    this.resourceService.terminology.list({ all: true }).subscribe(res => {
+    this.resourceService.terminology.list({ all: true }).subscribe((res: TerminologyIndexResponse) => {
       if (this.data.notAllowedToSelectIds && this.data.notAllowedToSelectIds.length > 0) {
         let i = res.body.items.length - 1;
         while (i >= 0) {
@@ -420,7 +420,7 @@ export class ElementSelectorComponent implements OnInit {
   }
   loadAllTerms(terminology, pageSize, pageIndex) {
     const options = this.gridService.constructOptions(pageSize, pageIndex);
-    return this.resourceService.terminology.terms.list(terminology.id, options);
+    return this.resourceService.terms.list(terminology.id, options);
   }
   calculateDisplayedSoFar(result) {
     this.formData.searchResultTotal = result.count;

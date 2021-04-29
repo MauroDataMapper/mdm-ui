@@ -25,7 +25,7 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { TermResult, EditableTerm } from '@mdm/model/termModel';
+import { EditableTerm } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
@@ -37,6 +37,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { CatalogueItemDomainType, TermDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-term-details',
@@ -55,7 +56,7 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
   downloadLink: any;
   urlText: any;
 
-  mcTerm: TermResult;
+  mcTerm: TermDetail;
   securitySection = false;
   processing = false;
   exportError = null;
@@ -134,8 +135,8 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
       this.editableForm.url = this.mcTerm.url;
       this.editableForm.description = this.mcTerm.description;
 
-      if(this.mcTerm.domainType === 'Term') {
-        this.resourcesService.terminology.get(this.mcTerm.model).subscribe(result => {
+      if(this.mcTerm.domainType === CatalogueItemDomainType.Term) {
+        this.resourcesService.terminology.get(this.mcTerm.model).subscribe((result: TerminologyDetailResponse) => {
           this.parentLabel = result.body.label;
         });
       }

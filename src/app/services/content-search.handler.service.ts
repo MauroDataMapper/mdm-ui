@@ -153,7 +153,7 @@ export class ContentSearchHandlerService {
                 pageIndex: offset * limit
             });
         } else if (contextElement.domainType === 'Terminology') {
-            return this.resources.terminology.terms.search(contextElement.id, {
+            return this.resources.terms.search(contextElement.id, {
                           search: encodeURIComponent(searchText),
                           limit,
                           offset,

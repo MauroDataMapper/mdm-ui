@@ -69,6 +69,7 @@ export class MdmResourcesService {
 
   classifier = new MdmClassifierResource(this.resourcesConfig, this.restHandler);
   terminology = new MdmTerminologyResource(this.resourcesConfig, this.restHandler);
+  terms = new MdmTermResource(this.resourcesConfig, this.restHandler);
   term = new MdmTermResource(this.resourcesConfig, this.restHandler);
   folder = new MdmFolderResource(this.resourcesConfig, this.restHandler);
   catalogueUser = new MdmCatalogueUserResource(this.resourcesConfig, this.restHandler);

@@ -43,9 +43,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { catchError, finalize } from 'rxjs/operators';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-reference-data-details',
@@ -260,7 +261,7 @@ export class ReferenceDataDetailsComponent
     this.resourcesService.referenceDataModel
       .latestModelVersion(this.result.id)
       .subscribe((response) => {
-        const dialog = this.dialog.open(FinaliseModalComponent, {
+        const dialog = this.dialog.open<FinaliseModalComponent, any, FinaliseModalResponse>(FinaliseModalComponent, {
           data: {
             modelVersion: response.body.modelVersion,
             title: 'Finalise Reference Data Model',
@@ -272,7 +273,7 @@ export class ReferenceDataDetailsComponent
         });
 
         dialog.afterClosed().subscribe((dialogResult) => {
-          if (dialogResult?.status !== 'ok') {
+          if (dialogResult?.status !== ModalDialogStatus.Ok) {
             return;
           }
           this.processing = true;

@@ -16,7 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
-import { AvailableDataModel, AvailableDataModelIndexResponse, FederatedDataModel, SubscribedDataModel, SubscribedDataModelIndexResponse } from '@mdm/model/federated-data-model';
+import { AvailableDataModel, AvailableDataModelIndexResponse, SubscribedDataModel, SubscribedDataModelIndexResponse } from '@maurodatamapper/mdm-resources';
+import { FederatedDataModel } from '@mdm/model/federated-data-model';
 import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

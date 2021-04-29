@@ -17,6 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 
 /** (Partial) Structure of source node */
 export interface Node {
@@ -212,6 +213,20 @@ export enum DOMAIN_TYPE {
     SubscribedCatalogue = 'SubscribedCatalogue',
     FederatedDataModel = 'FederatedDataModel'
 }
+
+const catalogueItemDomainTypeToDomainType = new Map<CatalogueItemDomainType, DOMAIN_TYPE>([
+    [CatalogueItemDomainType.CodeSetType, DOMAIN_TYPE.CodeSet],
+    [CatalogueItemDomainType.DataClass, DOMAIN_TYPE.DataClass],
+    [CatalogueItemDomainType.DataElement, DOMAIN_TYPE.DataElement],
+    [CatalogueItemDomainType.DataModel, DOMAIN_TYPE.DataModel],
+    [CatalogueItemDomainType.EnumerationType, DOMAIN_TYPE.EnumerationType],
+    [CatalogueItemDomainType.Folder, DOMAIN_TYPE.Folder],
+    [CatalogueItemDomainType.ReferenceDataModel, DOMAIN_TYPE.ReferenceDataModel],
+    [CatalogueItemDomainType.Term, DOMAIN_TYPE.Term],
+    [CatalogueItemDomainType.Terminology, DOMAIN_TYPE.Terminology]
+]);
+
+export const convertCatalogueItemDomainType = (source: CatalogueItemDomainType): DOMAIN_TYPE => catalogueItemDomainTypeToDomainType[source];
 
 type FlatNodeIconCallback = (fnode: FlatNode, treeControl: FlatTreeControl<FlatNode>) => string;
 

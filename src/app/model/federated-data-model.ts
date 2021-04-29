@@ -15,28 +15,15 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MdmIndexResponse, MdmResponse } from '@maurodatamapper/mdm-resources';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { AvailableDataModel, CatalogueItemDomainType, SubscribedDataModel } from '@maurodatamapper/mdm-resources';
 import { Resetable } from '@mdm/model/editable-forms';
 
-export interface AvailableDataModel {
-  modelId?: string;
-  label: string;
-  description?: string;
-  modelType: DOMAIN_TYPE;
-}
-
-export interface SubscribedDataModel {
-  id?: string;
-  subscribedModelId: string;
-  folderId: string;
-}
 export class FederatedDataModel {
   catalogueId: string;
   modelId?: string;
   label: string;
   description?: string;
-  modelType?: DOMAIN_TYPE;
+  modelType?: CatalogueItemDomainType;
   subscriptionId?: string;
   folderId?: string;
 
@@ -57,25 +44,6 @@ export class FederatedDataModel {
     return this.subscriptionId !== undefined;
   }
 }
-
-/**
- * Type alias for an index/list operation for the Subscribed Catalogues available models API endpoint.
- *
- * This type alias represents a response with a multiple `AvailableDataModel` elements in.
- */
-export type AvailableDataModelIndexResponse = MdmIndexResponse<AvailableDataModel>;
-
-/**
- * Type alias for an operation for the Subscribed Catalogues subscribed models API endpoint.
- */
-export type SubscribedDataModelResponse = MdmResponse<SubscribedDataModel>;
-
-/**
- * Type alias for an index/list operation for the Subscribed Catalogues subscribed models API endpoint.
- *
- * This type alias represents a response with a multiple `SubscribedDataModel` elements in.
- */
-export type SubscribedDataModelIndexResponse = MdmIndexResponse<SubscribedDataModel>;
 
 /**
  * Represents the editable form state of a `FederatedDataModel`

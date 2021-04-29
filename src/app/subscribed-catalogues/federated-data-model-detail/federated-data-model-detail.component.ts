@@ -17,9 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { FederatedDataModel, FederatedDataModelForm, SubscribedDataModelResponse } from '@mdm/model/federated-data-model';
+import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated-data-model';
 import { Editable } from '@mdm/model/editable-forms';
-import { getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
+import { convertCatalogueItemDomainType, getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { FolderResultResponse } from '@mdm/model/folderModel';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,6 +27,7 @@ import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { SubscribedDataModelResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
@@ -68,7 +69,7 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
   }
 
   getModelTypeIcon() {
-    return getDomainTypeIcon(this.dataModel.modelType);
+    return getDomainTypeIcon(convertCatalogueItemDomainType(this.dataModel.modelType));
   }
 
   subscribeToModel() {
@@ -93,8 +94,7 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
             this.dataModel.catalogueId,
             {
               subscribedModelId: this.dataModel.modelId,
-              folderId: response.folder.id,
-              subscribedModelType: this.dataModel.modelType
+              folderId: response.folder.id
             });
         }),
         catchError(error => {

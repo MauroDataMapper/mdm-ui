@@ -39,7 +39,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CatalogueItemDomainType, TerminologyDetail, TerminologyDetailResponse, TerminologyUpdatePayload } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-terminology',
@@ -166,7 +166,7 @@ export class TerminologyComponent
   }
 
   formBeforeSave = () => {
-    let resource: TerminologyUpdatePayload = {
+    let resource: ModelUpdatePayload = {
       id: this.terminology.id,
       domainType: CatalogueItemDomainType.Terminology,
       description: this.editableForm.description || ''

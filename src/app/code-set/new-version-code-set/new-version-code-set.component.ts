@@ -16,12 +16,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { StateService, UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
+import { CodeSetDetail, CodeSetDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-new-version-code-set',
@@ -30,7 +31,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class NewVersionCodeSetComponent implements OnInit {
   step = 1;
-  codeSet: any;
+  codeSet: CodeSetDetail;
   errors: any;
   versionType: any;
   processing: any;
@@ -40,25 +41,24 @@ export class NewVersionCodeSetComponent implements OnInit {
     copyDataFlows: false,
     moveDataFlows: false
   };
-  constructor(private stateService: StateService,
-              private stateHandler: StateHandlerService,
-              private resources: MdmResourcesService,
-              private validator: ValidatorService,
-              private messageHandler: MessageHandlerService,
-              private title: Title) {
+  constructor(
+    private uiRouterGlobals: UIRouterGlobals,
+    private stateHandler: StateHandlerService,
+    private resources: MdmResourcesService,
+    private validator: ValidatorService,
+    private messageHandler: MessageHandlerService,
+    private title: Title) {
   }
 
   ngOnInit() {
     this.title.setTitle('New Version');
 
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.codeSetId) {
+    if (!this.uiRouterGlobals.params.codeSetId) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    this.resources.codeSet.get(this.stateService.params.codeSetId).subscribe(response => {
+    this.resources.codeSet.get(this.uiRouterGlobals.params.codeSetId).subscribe((response: CodeSetDetailResponse) => {
       this.codeSet = response.body;
     });
   }

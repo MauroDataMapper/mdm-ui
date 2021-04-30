@@ -36,7 +36,6 @@ import { ElementSelectorDialogueService } from '@mdm/services/element-selector-d
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
-import { CodeSetResult } from '@mdm/model/codeSetModel';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
@@ -44,6 +43,7 @@ import { SecurityModalComponent } from '@mdm/modals/security-modal/security-moda
 import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { CatalogueItemDomainType, CodeSetDetail, CodeSetDetailResponse, ModelUpdatePayload } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-code-set-details',
@@ -58,7 +58,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
 
-  result: CodeSetResult;
+  result: CodeSetDetail;
   hasResult = false;
   subscription: Subscription;
   showSecuritySection: boolean;
@@ -385,28 +385,23 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
     });
-    let resource = {};
-    if (!this.showEditDescription) {
-      resource = {
-        id: this.result.id,
-        label: this.result.label,
-        description: this.editableForm.description || '',
-        author: this.result.author,
-        organisation: this.result.organisation,
-        aliases,
-        classifiers
-      };
-    }
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.result.id,
-        description: this.editableForm.description || ''
-      };
-    }
+    let resource: ModelUpdatePayload = {
+      id: this.result.id,
+      domainType: CatalogueItemDomainType.CodeSet,
+      description: this.editableForm.description || ''
+    };
+
+    if (!this.showEditDescription) {
+      resource.label = this.result.label;
+      resource.author = this.result.author;
+      resource.organisation = this.result.organisation;
+      resource.aliases = aliases;
+      resource.classifiers = classifiers;      
+    }    
 
     if (this.validateLabel(this.result.label)) {
-      await this.resourcesService.codeSet.update(this.result.id, resource).subscribe(res => {
+      await this.resourcesService.codeSet.update(this.result.id, resource).subscribe((res: CodeSetDetailResponse) => {
         this.editingService.stop();
         this.messageHandler.showSuccess('Code Set updated successfully.');
         this.editableForm.visible = false;

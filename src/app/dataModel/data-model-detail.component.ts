@@ -48,7 +48,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { ModelMergingModel } from '@mdm/model/model-merging-model';
 import { ModelDomainType } from '@mdm/model/model-domain-type';
-import { DataModelDetail, DataModelDetailResponse, DataModelUpdatePayload } from '@maurodatamapper/mdm-resources';
+import { DataModelDetail, DataModelDetailResponse, ModelUpdatePayload } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
@@ -366,7 +366,7 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
       aliases.push(alias);
     });    
 
-    let resource: DataModelUpdatePayload = {
+    let resource: ModelUpdatePayload = {
       id: this.result.id,
       domainType: this.result.domainType,
       description: this.editableForm.description || ''

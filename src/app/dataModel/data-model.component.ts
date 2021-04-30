@@ -37,7 +37,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataModelDetail, DataModelDetailResponse, DataModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { DataModelDetail, DataModelDetailResponse, ModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model',
@@ -250,7 +250,7 @@ export class DataModelComponent
       aliases.push(alias);
     });
 
-    let resource: DataModelUpdatePayload = {
+    let resource: ModelUpdatePayload = {
       id: this.dataModel.id,
       domainType: this.dataModel.domainType,
       description: this.editableForm.description || ''

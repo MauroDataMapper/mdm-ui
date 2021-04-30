@@ -34,7 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
-import { DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -124,7 +124,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
         this.elementType = result.body;
       });
     } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'CodeSet') {
-      this.resources.codeSet.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+      this.resources.codeSet.get(this.mcDataTypeObject.modelResourceId).subscribe((result: CodeSetDetailResponse) => {
         this.elementType = result.body;
       });
     } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'ReferenceDataModel') {

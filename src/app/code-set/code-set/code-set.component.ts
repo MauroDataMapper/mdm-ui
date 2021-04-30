@@ -24,7 +24,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { CodeSetResult, CodeSetResultResponse } from '@mdm/model/codeSetModel';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -36,7 +35,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, CodeSetDetail, CodeSetDetailResponse, ModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-code-set',
@@ -47,7 +46,7 @@ export class CodeSetComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  codeSetModel: CodeSetResult;
+  codeSetModel: CodeSetDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -127,8 +126,9 @@ export class CodeSetComponent
       aliases.push(alias);
     });
 
-    const resource = {
+    const resource: ModelUpdatePayload = {
       id: this.codeSetModel.id,
+      domainType: CatalogueItemDomainType.CodeSet,
       label: this.codeSetModel.label,
       description: this.editableForm.description || '',
       author: this.codeSetModel.author,
@@ -160,11 +160,11 @@ export class CodeSetComponent
     this.editableForm.show();
   };
 
-  codeSetDetails(id: any) {
+  codeSetDetails(id: string) {
     let arr = [];
     this.resourcesService.codeSet
       .get(id)
-      .subscribe(async (result: CodeSetResultResponse) => {
+      .subscribe(async (result: CodeSetDetailResponse) => {
         // Get the guid
         this.codeSetModel = result.body;
         // this.parentId = this.codeSetModel.id;
@@ -259,9 +259,8 @@ export class CodeSetComponent
         }
 
         this.tabGroup?.realignInkBar();
-        // tslint:disable-next-line: deprecation
         this.activeTab = this.getTabDetailByName(
-          this.stateService.params.tabView
+          this.uiRouterGlobals.params.tabView
         ).index;
         this.tabSelected(this.activeTab);
       });

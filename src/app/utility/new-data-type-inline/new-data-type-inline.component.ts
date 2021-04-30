@@ -20,7 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
+import { CodeSet, CodeSetIndexResponse, Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-inline',
@@ -49,7 +49,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   isValid = false;
   reloading = false;
   terminologies: Terminology[];
-  codesets: any;
+  codesets: CodeSet[];
   referenceDataModels: any;
 
   constructor(
@@ -158,7 +158,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
 
   loadCodeSets() {
    this.reloading = true;
-   this.resourceService.codeSet.list().subscribe(data => {
+   this.resourceService.codeSet.list().subscribe((data: CodeSetIndexResponse) => {
      this.codesets = data.body.items;
      this.reloading = false;
    }, () => {

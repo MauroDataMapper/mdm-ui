@@ -31,7 +31,7 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type',
@@ -162,7 +162,7 @@ export class DataTypeComponent
         ) {
           this.resourcesService.codeSet
             .get(this.dataType.modelResourceId)
-            .subscribe((elmResult) => {
+            .subscribe((elmResult: CodeSetDetailResponse) => {
               this.elementType = elmResult.body;
             });
         } else if (

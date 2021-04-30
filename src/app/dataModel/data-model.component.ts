@@ -150,7 +150,7 @@ export class DataModelComponent
         this.watchDataModelObject();
         id = result.body.id;
 
-        this.isEditable = this.dataModel['availableActions'].includes('update');
+        this.isEditable = this.dataModel.availableActions?.includes('update');
         this.parentId = this.dataModel.id;
 
         await this.resourcesService.versionLink

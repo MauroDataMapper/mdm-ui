@@ -27,7 +27,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
-import { AdminSessionResponse, AuthenticatedResponse, LoginPayload, LoginResponse } from '@maurodatamapper/mdm-resources';
+import { AdminSessionResponse, AuthenticatedResponse, Finalisable, LoginPayload, LoginResponse, Securable } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root',
@@ -183,7 +183,7 @@ export class SecurityHandlerService {
     return this.getUserFromLocalStorage();
   }
 
-  showIfRoleIsWritable(element) {
+  showIfRoleIsWritable(element: Securable & Finalisable) {
     // if this app is NOT 'editable', return false
     const isEditable = environment.appIsEditable;
     if (isEditable !== null && isEditable === false) {
@@ -236,7 +236,7 @@ export class SecurityHandlerService {
       );
   }
 
-  dataModelAccess(element) {
+  dataModelAccess(element: Securable & Finalisable) {
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -252,7 +252,7 @@ export class SecurityHandlerService {
     };
   }
 
-  termAccess(element) {
+  termAccess(element: Securable & Finalisable) {
     return {
       showEdit: element.availableActions.includes('update') && !element.finalised,
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -269,7 +269,7 @@ export class SecurityHandlerService {
     };
   }
 
-  dataElementAccess(element) {
+  dataElementAccess(element: Securable) {
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -283,7 +283,7 @@ export class SecurityHandlerService {
     };
   }
 
-  dataClassAccess(element) {
+  dataClassAccess(element: Securable) {
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -296,7 +296,7 @@ export class SecurityHandlerService {
     };
   }
 
-  dataTypeAccess(element) {
+  dataTypeAccess(element: Securable) {
     return {
       showEdit: element.availableActions.includes('update'),
       canEditDescription: element.availableActions.includes('editDescription'),
@@ -310,7 +310,7 @@ export class SecurityHandlerService {
     };
   }
 
-  datFlowAccess(dataFlow) {
+  datFlowAccess(dataFlow: Securable) {
     return {
       showEdit: dataFlow.availableActions.includes('update'),
       canAddAnnotation: dataFlow.availableActions.includes('comment'),
@@ -352,7 +352,7 @@ export class SecurityHandlerService {
     }
   }
 
-  folderAccess(folder) {
+  folderAccess(folder: Securable) {
     return {
       showEdit: folder.availableActions.includes('update'),
       showPermission: folder.availableActions.includes('update') || this.isAdmin(),

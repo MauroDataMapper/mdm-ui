@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Authority } from "@maurodatamapper/mdm-resources";
+import { Authority, Classifier } from "@maurodatamapper/mdm-resources";
 
 export class ReferenceModelResult {
   id: string;
@@ -26,7 +26,7 @@ export class ReferenceModelResult {
   description: string;
   editable: boolean;
   lastUpdated: string;
-  classifiers: Classifiers[];
+  classifiers: Classifier[];
   type: string;
   finalised: boolean;
   author: string;
@@ -40,17 +40,11 @@ export class ReferenceModelResult {
   modelVersion: any;
 }
 
-export class Classifiers {
-  id: string;
-  label: string;
-  lastUpdated: string;
-}
-
 export class EditableReferenceModel {
   deletePending: boolean;
   label: string;
   description: string;
-  classifiers: Classifiers[] = [];
+  classifiers: Classifier[] = [];
   aliases: any[] = [];
   visible: boolean;
   waiting: boolean;

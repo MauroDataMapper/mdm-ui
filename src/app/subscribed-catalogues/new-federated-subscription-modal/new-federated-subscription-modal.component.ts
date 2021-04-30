@@ -17,8 +17,8 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FolderDetail } from '@maurodatamapper/mdm-resources';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { FolderResult } from '@mdm/model/folderModel';
 
 export interface NewFederatedSubscriptionModalConfig {
   okBtn?: string;
@@ -31,7 +31,7 @@ export interface NewFederatedSubscriptionModalConfig {
 
 export interface NewFederatedSubscriptionModalResponse {
   status: ModalDialogStatus;
-  folder?: FolderResult;
+  folder?: FolderDetail;
 }
 
 @Component({
@@ -47,9 +47,9 @@ export class NewFederatedSubscriptionModalComponent implements OnInit {
   modalTitle: string;
   message: string;
   inputLabel: string;
-  selectedFolders: FolderResult[];
+  selectedFolders: FolderDetail[];
 
-  get folder(): FolderResult {
+  get folder(): FolderDetail {
     if (this.selectedFolders && this.selectedFolders[0]) {
       return this.selectedFolders[0];
     }

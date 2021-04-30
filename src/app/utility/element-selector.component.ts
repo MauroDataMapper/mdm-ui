@@ -25,7 +25,7 @@ import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
-import { ContainerDomainType, MdmTreeItemListResponse, Terminology, TerminologyIndexResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, Terminology, TerminologyIndexResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -174,7 +174,7 @@ export class ElementSelectorComponent implements OnInit {
   }
   loadAllFolders = () => {
     this.loading = true;
-    this.resourceService.folder.list().subscribe((data) => {
+    this.resourceService.folder.list().subscribe((data: FolderIndexResponse) => {
       this.loading = false;
       this.rootNode = {
         children: data.body.items,

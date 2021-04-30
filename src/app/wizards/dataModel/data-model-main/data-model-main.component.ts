@@ -21,12 +21,12 @@ import { DataModelStep2Component } from '../data-model-step2/data-model-step2.co
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { Step } from '@mdm/model/stepModel';
 import { Title } from '@angular/platform-browser';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { Classifier, DataModelCreatePayload, DataModelDetailResponse } from '@maurodatamapper/mdm-resources';
+import { DataModelCreatePayload, DataModelDetailResponse, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model-main',
@@ -52,19 +52,18 @@ export class DataModelMainComponent implements OnInit {
   };
   constructor(
     private stateHandler: StateHandlerService,
+    private uiRouterGlobals: UIRouterGlobals,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private stateService: StateService,
     private title: Title
   ) { }
 
   ngOnInit() {
     this.title.setTitle('New Data Model');
     this.model = { metadata :[], classifiers : [], label:undefined, description:undefined, author:undefined, organisation: undefined, dataModelType:undefined,dialect:undefined, selectedDataTypeProvider:undefined};
-    // tslint:disable-next-line: deprecation
-    this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
-      result.domainType = 'Folder';
+    this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
+    this.resources.folder.get(this.parentFolderId).toPromise().then((result: FolderDetailResponse) => {
+
       this.parentFolder = result.body;
 
       const step1 = new Step();

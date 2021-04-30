@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { DataModelDetail } from '@maurodatamapper/mdm-resources';
+import { Classifier, ClassifierIndexResponse, DataModelDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-classifications',
@@ -53,7 +53,7 @@ export class ElementClassificationsComponent implements OnInit {
     showMarkDownPreview: Boolean,
     classifiers: []
   };
-  allClassifications: any;
+  allClassifications: Classifier[];
   selectedClassification = [];
   constructor(private elementTypes: ElementTypesService, private resourceService: MdmResourcesService) { }
 
@@ -76,7 +76,7 @@ export class ElementClassificationsComponent implements OnInit {
 
   }
   getAllClassifications() {
-    this.resourceService.classifier.list().subscribe(result => {
+    this.resourceService.classifier.list().subscribe((result: ClassifierIndexResponse) => {
       this.allClassifications = result.body.items;
       const selectedList: any[] = [];
       if (this.classifications !== undefined) {

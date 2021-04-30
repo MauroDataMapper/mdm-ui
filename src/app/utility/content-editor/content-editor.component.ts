@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FolderResult } from '@mdm/model/folderModel';
 import { HtmlButtonMode } from '../html-editor/html-editor.component';
 
 export enum ContentEditorFormat {
@@ -49,7 +48,7 @@ export class ContentEditorComponent implements OnInit {
 
   /* Inputs for model binding */
   @Input() editableForm: any;
-  @Input() element: FolderResult;
+  @Input() element: any;
   @Input() property: string;
 
   @Input() markdownOptions: ContentEditorMarkdownOptions;

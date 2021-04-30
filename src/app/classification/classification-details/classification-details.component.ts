@@ -32,13 +32,14 @@ import { FolderHandlerService } from '@mdm/services/handlers/folder-handler.serv
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
-import { Editable, FolderResult } from '@mdm/model/folderModel';
+import { Editable } from '@mdm/model/folderModel';
 import { Subscription } from 'rxjs';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { DialogPosition } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
+import { ClassifierDetail, ClassifierDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-classification-details',
@@ -50,7 +51,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   @Input() editMode = false;
   @Input() mcClassification = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  result: FolderResult;
+  result: ClassifierDetail;
   hasResult = false;
   subscription: Subscription;
   showSecuritySection: boolean;
@@ -229,12 +230,13 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
     this.editForm.forEach(x => (this.result.label = x.getHotState().value));
 
     const resource = {
+      id: this.result.id,
       label: this.editableForm.label,
       description: this.editableForm.description
     };
 
     if (this.validateLabel(this.editableForm.label)) {
-      this.resourcesService.classifier.update(this.result.id, resource).subscribe(result => {
+      this.resourcesService.classifier.update(this.result.id, resource).subscribe((result: ClassifierDetailResponse) => {
         if (this.afterSave) {
           this.afterSave(result);
         }
@@ -276,7 +278,7 @@ export class ClassificationDetailsComponent implements OnInit, AfterViewInit, On
   }
 
   delete() {
-    this.resourcesService.classifier.remove(this.result.id).subscribe(() => {
+    this.resourcesService.classifier.remove(this.result.id, { permanent: true }).subscribe(() => {
       this.messageHandler.showSuccess('Classifier deleted successfully.');
       this.broadcaseSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go('allDataModel', { reload: true, location: true }, null);

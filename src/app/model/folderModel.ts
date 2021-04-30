@@ -17,23 +17,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class FolderResult {
-  id: string;
-  label: string;
-  domainType: string;
-  description: string;
-  finalised: boolean;
-  deleted: boolean;
-  writeableByUsers: any[];
-  readableByUsers: any[];
-  readableByEveryone: boolean;
-  lastUpdated: any;
-  parentDataModel: string;
-  parentDataClass: string;
-  availableActions: any[];
-}
-
-export type FolderResultResponse = MdmResponse<FolderResult>;
 
 export class SearchResult {
   count: number;

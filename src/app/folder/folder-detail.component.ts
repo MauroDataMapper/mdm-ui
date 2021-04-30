@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { FolderResult, Editable } from '../model/folderModel';
+import { Editable } from '../model/folderModel';
 import {
   Component,
   OnInit,
@@ -39,6 +39,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -49,7 +50,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  result: FolderResult;
+  result: FolderDetail;
   hasResult = false;
   subscription: Subscription;
   showSecuritySection: boolean;
@@ -220,7 +221,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.folder.update(resource.id, resource).subscribe(result => {
+      this.resourcesService.folder.update(resource.id, resource).subscribe((result: FolderDetailResponse) => {
           if (this.afterSave) {
             this.afterSave(result);
           }

@@ -21,13 +21,12 @@ import { FederatedDataModel, FederatedDataModelForm } from '@mdm/model/federated
 import { Editable } from '@mdm/model/editable-forms';
 import { convertCatalogueItemDomainType, getDomainTypeIcon } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { FolderResultResponse } from '@mdm/model/folderModel';
 import { MatDialog } from '@angular/material/dialog';
 import { catchError, filter, finalize, switchMap } from 'rxjs/operators';
 import { MessageHandlerService } from '@mdm/services';
 import { NewFederatedSubscriptionModalComponent, NewFederatedSubscriptionModalConfig, NewFederatedSubscriptionModalResponse } from '../new-federated-subscription-modal/new-federated-subscription-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { SubscribedDataModelResponse } from '@maurodatamapper/mdm-resources';
+import { FolderDetailResponse, SubscribedDataModelResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-federated-data-model-detail',
@@ -167,6 +166,6 @@ export class FederatedDataModelDetailComponent implements OnInit, OnChanges {
 
     this.resources.folder
       .get(data.folderId)
-      .subscribe((response: FolderResultResponse) => this.editable.form.folderLabel = response.body.label);
+      .subscribe((response: FolderDetailResponse) => this.editable.form.folderLabel = response.body.label);
   }
 }

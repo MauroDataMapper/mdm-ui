@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { Editable, FolderResult } from '../model/folderModel';
+import { Editable } from '../model/folderModel';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UIRouterGlobals } from '@uirouter/core';
 import { MessageService } from '../services/message.service';
@@ -28,7 +28,7 @@ import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { EditingService } from '@mdm/services/editing.service';
-import { PermissionsResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import { FolderDetail, FolderDetailResponse, PermissionsResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-folder',
@@ -39,7 +39,7 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
 
   readonly domainType = 'folders';
 
-  folder: FolderResult;
+  folder: FolderDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -116,7 +116,7 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
   }
 
   folderDetails(id: string) {
-    this.resources.folder.get(id).subscribe((result: { body: FolderResult }) => {
+    this.resources.folder.get(id).subscribe((result: FolderDetailResponse) => {
       this.folder = result.body;
       this.catalogueItem = this.folder;
 

@@ -244,6 +244,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     if (!this.result.parentDataClass) {
       this.resourcesService.dataClass.remove(this.result.model, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       }, error => {
         this.deleteInProgress = false;
@@ -252,6 +253,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
     } else {
       this.resourcesService.dataClass.removeChildDataClass(this.result.model, this.result.parentDataClass, this.result.id).subscribe(() => {
         this.messageHandler.showSuccess('Data Class deleted successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
         this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
       }, error => {
         this.deleteInProgress = false;

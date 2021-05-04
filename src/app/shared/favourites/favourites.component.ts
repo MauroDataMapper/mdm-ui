@@ -1,5 +1,5 @@
 /*
-Copyright 2020 University of Oxford
+Copyright 2021 University of Oxford
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,12 +15,19 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  ViewChild
+} from '@angular/core';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-favourites',
@@ -33,8 +40,9 @@ export class FavouritesComponent implements OnInit {
   @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
 
   reloading = false;
-  allFavourites: any;
-  selectedFavourite: any;
+  allFavourites: Array<Favorite>;
+  storedFavourites :  Array<Favorite>;
+  selectedFavourite:  any;
   menuOptions = [];
 
   favourites = [];
@@ -43,7 +51,6 @@ export class FavouritesComponent implements OnInit {
   };
 
   contextMenuPosition = { x: '0px', y: '0px' };
-
 
   constructor(
     private resources: MdmResourcesService,
@@ -58,30 +65,40 @@ export class FavouritesComponent implements OnInit {
   loadFavourites = () => {
     this.reloading = true;
     const queries = [];
-    this.allFavourites = this.favouriteHandler.get();
+    this.allFavourites = [];
+    this.storedFavourites = this.favouriteHandler.get();
 
     const domainTypes = this.elementTypes.getBaseTypes();
 
-    this.allFavourites.forEach(favourite => {
+    this.storedFavourites.forEach((favourite) => {
       const resourceName = domainTypes[favourite.domainType].resourceName;
       // make sure we have a resource name for it
       if (!this.resources[resourceName]) {
         return;
       }
 
-      queries.push(this.resources[resourceName].get(favourite.id));
+      queries.push(
+        this.resources[resourceName]
+          .get(favourite.id, {}, { handleGetErrors: false })
+          .pipe(
+            map((res) => res),
+            catchError(() => of('Not Found'))
+          )
+      );
     });
 
     if (queries.length === 0) {
       this.reloading = false;
     }
 
-    forkJoin(queries).subscribe(results => {
+    forkJoin(queries).subscribe((results) => {
       let index = 0;
       results.forEach((res: any) => {
-        const result = res.body;
-        this.allFavourites[index] = result;
-        index++;
+        if (res !== 'Not Found') {
+          const result = res.body;
+          this.allFavourites[index] = result;
+          index++;
+        }
       });
       this.reloading = false;
       this.favourites = this.filter(
@@ -153,7 +170,7 @@ export class FavouritesComponent implements OnInit {
     this.contextMenu.openMenu();
   };
 
-  onSearchInputKeyDown = () => {
+  onSearchInputKeyDown() {
     this.search();
   };
 
@@ -163,4 +180,10 @@ export class FavouritesComponent implements OnInit {
       this.formData.filterCriteria
     );
   };
+}
+
+export interface Favorite
+{
+  id:string;
+  domainType:string;
 }

@@ -67,7 +67,7 @@ export class MdmRestHandlerService implements IMdmRestHandler {
             this.stateHandler.NotAuthorized(response);
           }
         }
-        else if (response.status === 404) {
+        else if (response.status === 404 && options.method === 'GET' && handleGetErrors) {
           this.messageService.lastError = response;
           this.stateHandler.NotFound(response);
         }

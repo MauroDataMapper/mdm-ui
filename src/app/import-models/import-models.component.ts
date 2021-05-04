@@ -22,7 +22,7 @@ import { MessageHandlerService } from '../services/utility/message-handler.servi
 import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { BroadcastService } from '../services/broadcast.service';
-import { StateService } from '@uirouter/core/';
+import { UIRouterGlobals } from '@uirouter/core/';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
 
 @Component({
@@ -69,13 +69,12 @@ export class ImportModelsComponent implements OnInit {
     private helpDialogueHandler: HelpDialogueHandlerService,
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
-    private stateService: StateService
+    private uiRouterGlobals: UIRouterGlobals,
   ) {}
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    this.importType = this.stateService.params.importType
-      ? this.stateService.params.importType
+    this.importType = this.uiRouterGlobals.params.importType
+      ? this.uiRouterGlobals.params.importType
       : 'dataModels';
     this.title.setTitle('Import');
     this.loadImporters();

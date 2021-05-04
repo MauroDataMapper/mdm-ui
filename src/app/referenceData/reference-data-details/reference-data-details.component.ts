@@ -35,7 +35,6 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { ReferenceModelResult } from '@mdm/model/referenceModelModel';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '@mdm/services/handlers/export-handler.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -47,6 +46,7 @@ import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/final
 import { catchError, finalize } from 'rxjs/operators';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+import { CatalogueItemDomainType, Classifier, ModelUpdatePayload, ReferenceDataModelDetail, ReferenceDataModelDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-reference-data-details',
@@ -59,7 +59,7 @@ export class ReferenceDataDetailsComponent
   @Input() editMode = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
   @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  result: ReferenceModelResult;
+  result: ReferenceDataModelDetail;
   hasResult = false;
   subscription: Subscription;
   showSecuritySection: boolean;
@@ -322,7 +322,7 @@ export class ReferenceDataDetailsComponent
     this.subscription.unsubscribe();
   }
 
-  delete(permanent) {
+  delete(permanent: boolean) {
     if (!this.showDelete) {
       return;
     }
@@ -450,41 +450,35 @@ export class ReferenceDataDetailsComponent
     this.editMode = false;
     this.errorMessage = '';
 
-    const classifiers = [];
+    const classifiers: Classifier[] = [];
     this.editableForm.classifiers.forEach((cls) => {
       classifiers.push(cls);
     });
-    const aliases = [];
+    const aliases: string[] = [];
     this.editableForm.aliases.forEach((alias) => {
       aliases.push(alias);
     });
-    let resource = {};
-    if (!this.showEditDescription) {
-      resource = {
-        id: this.result.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        author: this.editableForm.author,
-        organisation: this.editableForm.organisation,
-        type: this.result.type,
-        domainType: this.result.domainType,
-        aliases,
-        classifiers
-      };
-    }
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.result.id,
-        description: this.editableForm.description || ''
-      };
-    }
+    let resource: ModelUpdatePayload = {
+      id: this.result.id,
+      domainType: CatalogueItemDomainType.ReferenceDataModel,
+      description: this.editableForm.description || ''
+    };
+
+    if (!this.showEditDescription) {
+      resource.label = this.editableForm.label;
+      resource.author = this.editableForm.author;
+      resource.organisation = this.editableForm.organisation;
+      resource.type = this.result.type;
+      resource.aliases = aliases;
+      resource.classifiers = classifiers;      
+    }  
 
     if (this.validateLabel(this.result.label)) {
       this.resourcesService.referenceDataModel
         .update(this.result.id, resource)
         .subscribe(
-          (res) => {
+          (res: ReferenceDataModelDetailResponse) => {
             if (this.afterSave) {
               this.afterSave(res);
             }

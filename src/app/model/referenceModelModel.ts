@@ -15,30 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Authority, Classifier } from "@maurodatamapper/mdm-resources";
-
-export class ReferenceModelResult {
-  id: string;
-  domainType: string;
-  authority?: Authority;
-  label: string;
-  documentationVersion: any[];
-  description: string;
-  editable: boolean;
-  lastUpdated: string;
-  classifiers: Classifier[];
-  type: string;
-  finalised: boolean;
-  author: string;
-  organisation: string;
-  dateFinalised: string;
-  aliases: any[];
-  semanticLinks: any[];
-  readableByEveryone: boolean;
-  deleted: boolean;
-  branchName: string;
-  modelVersion: any;
-}
+import { Classifier } from "@maurodatamapper/mdm-resources";
 
 export class EditableReferenceModel {
   deletePending: boolean;
@@ -58,12 +35,4 @@ export class EditableReferenceModel {
   cancel() { }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save(parent: any) { }
-}
-
-export class Categories {
-  index: number;
-  id: string;
-  key: string;
-  value: string;
-  category: string;
 }

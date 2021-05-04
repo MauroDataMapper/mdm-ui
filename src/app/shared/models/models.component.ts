@@ -315,7 +315,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         if (result) {
           if (this.validateLabel(result)) {
             this.folder = result;
-            this.onAddFolder(null, null, this.folder);
+            this.onAddFolder(null, null, result);
           } else {
             const error = 'err';
             this.messageHandler.showError('Folder name can not be empty', error);

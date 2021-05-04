@@ -31,7 +31,7 @@ import {
 } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type',
@@ -171,7 +171,7 @@ export class DataTypeComponent
         ) {
           this.resourcesService.referenceDataModel
             .get(this.dataType.modelResourceId)
-            .subscribe((dataTypeResult) => {
+            .subscribe((dataTypeResult: ReferenceDataModelDetailResponse) => {
               this.elementType = dataTypeResult.body;
             });
         }

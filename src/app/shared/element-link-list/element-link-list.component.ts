@@ -109,7 +109,7 @@ export class ElementLinkListComponent implements AfterViewInit {
       })
     ).subscribe(data => {
       data.forEach(element => {
-        element.status = element.sourceCatalogueItem.id === this.parent.id ? 'source' : 'target';
+        element.status = element.sourceMultiFacetAwareItem.id === this.parent.id ? 'source' : 'target';
       });
 
       this.records = data;
@@ -242,8 +242,8 @@ export class ElementLinkListComponent implements AfterViewInit {
     // in edit mode, we save them here
     if (record.id && record.id !== '') {
       const body = {
-        targetCatalogueItemDomainType: `${record.edit.target.domainType}`,
-        targetCatalogueItemId: `${record.edit.target.id}`,
+        targetMultiFacetAwareItemDomainType: `${record.edit.target.domainType}`,
+        targetMultiFacetAwareItemId: `${record.edit.target.id}`,
         domainType: 'SemanticLink',
         linkType: record.edit.linkType,
       };
@@ -270,8 +270,8 @@ export class ElementLinkListComponent implements AfterViewInit {
       });
     } else {
       const body = {
-        targetCatalogueItemDomainType: `${record.edit.target.domainType}`,
-        targetCatalogueItemId: `${record.edit.target.id}`,
+        targetMultiFacetAwareItemDomainType: `${record.edit.target.domainType}`,
+        targetMultiFacetAwareItemId: `${record.edit.target.id}`,
         domainType: 'SemanticLink',
         linkType: record.edit.linkType,
       };

@@ -253,6 +253,7 @@ SPDX-License-Identifier: Apache-2.0
               [hideDelete]="true"
               [hideCancel]="false"
             ></mdm-editable-form-buttons>
+            <sup *ngIf="result?.readableByEveryone" class="text-muted" style="margin-left: 4px;"><i class="fas fa-globe-europe globe fa-xs" aria-hidden="true" matTooltip="Publicly Available"></i></sup>
           </h4>
           <span class="inline-block" *ngIf="result?.deleted">
             <small class="warning"> | Deleted</small>

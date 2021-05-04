@@ -190,6 +190,7 @@ SPDX-License-Identifier: Apache-2.0
             >
               <!-- TODO ADD SEARCH CRITERIA PIPE -->
             </span>
+            <sup *ngIf="mcTerminology?.readableByEveryone" class="text-muted" style="margin-left: 4px;"><i class="fas fa-globe-europe globe fa-xs" aria-hidden="true" matTooltip="Publicly Available"></i></sup>
           </h4>
           <mdm-element-status [result]="mcTerminology"></mdm-element-status>
           <span class="inline-block">

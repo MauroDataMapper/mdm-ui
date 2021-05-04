@@ -67,6 +67,7 @@ export class ShareWithComponent implements OnInit {
     if (this.readableByEveryone) {
       this.resourcesService[this.domainType].updateReadByEveryone(this.folderResult?.id).subscribe((result) => {
         this.folderResult = result.body;
+        this.messageService.dataChanged(this.folderResult);
         this.messageHandler.showSuccess(`${this.message} updated successfully.`);
       }, (error) => {
         this.messageHandler.showError(`There was a problem updating the ${this.message}.`, error);

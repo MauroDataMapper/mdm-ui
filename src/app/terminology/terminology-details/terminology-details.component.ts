@@ -154,13 +154,13 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     this.title.setTitle(`Terminology - ${this.mcTerminology?.label}`);
   }
 
-  validateLabel = (data) => {
+  validateLabel(data) {
     if (!data || (data && data.trim().length === 0)) {
       return 'Terminology name can not be empty';
     }
   };
 
-  getModelGraph = (modelId) => {
+  getModelGraph(modelId) {
     this.currentBranch = this.mcTerminology.branchName;
     this.branchGraph = [
       {
@@ -174,7 +174,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     ];
   };
 
-  onModelChange = () => {
+  onModelChange() {
     for (const val in this.branchGraph) {
       if (this.branchGraph[val].branchName === this.currentBranch) {
         this.stateHandler.Go(
@@ -186,7 +186,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     }
   };
 
-  formBeforeSave = () => {
+  formBeforeSave() {
     const resource = {
       id: this.mcTerminology.id,
       label: this.editableForm.label,
@@ -229,7 +229,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     );
   };
 
-  toggleSecuritySection = () => {
+  toggleSecuritySection() {
     this.dialog.open(SecurityModalComponent, {
       data: {
         element: 'terminologies',
@@ -239,7 +239,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     });
   };
 
-  toggleShowSearch = () => {
+  toggleShowSearch() {
     this.messageService.toggleSearch();
   };
 
@@ -281,11 +281,11 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       );
   }
 
-  resetExportError = () => {
+  resetExportError() {
     this.exportError = null;
   };
 
-  delete = (permanent) => {
+  delete(permanent) {
     if (!this.showDelete) {
       return;
     }
@@ -316,7 +316,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       );
   };
 
-  askForSoftDelete = () => {
+  askForSoftDelete() {
     if (!this.showSoftDelete) {
       return;
     }
@@ -334,7 +334,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       .subscribe(() => this.delete(false));
   };
 
-  askForPermanentDelete = () => {
+  askForPermanentDelete() {
     if (!this.showPermDelete) {
       return;
     }
@@ -363,13 +363,13 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       .subscribe(() => this.delete(true));
   };
 
-  openEditClicked = (formName) => {
+  openEditClicked(formName) {
     if (this.openEditForm) {
       this.openEditForm(formName);
     }
   };
 
-  newVersion = () => {
+  newVersion() {
     this.stateHandler.Go(
       'newVersionTerminology',
       { id: this.mcTerminology.id },
@@ -377,7 +377,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     );
   };
 
-  finalise = () => {
+  finalise() {
     this.resources.terminology
       .latestModelVersion(this.mcTerminology.id)
       .subscribe((response) => {
@@ -424,14 +424,14 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       });
   };
 
-  onCancelEdit = () => {
+  onCancelEdit()  {
     this.mcTerminology.editAliases = Object.assign(
       {},
       this.mcTerminology.aliases
     );
   };
 
-  loadExporterList = () => {
+  loadExporterList() {
     this.exportList = [];
     this.securityHandler.isAuthenticated().subscribe((result) => {
       if (result.body === false) {
@@ -451,13 +451,13 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     });
   };
 
-  toggleFavourite = () => {
+  toggleFavourite() {
     if (this.favouriteHandler.toggle(this.mcTerminology)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
     }
   };
 
-  loadHelp = () => {
+  loadHelp() {
     this.helpDialogueHandler.open('Terminology_details');
   };
 

@@ -229,7 +229,7 @@ export class FolderComponent extends ProfileBaseComponent implements OnInit, OnD
 
     this.resourcesService.folder.update(resource.id, resource).subscribe(
       (res) => {
-        this.folder = res.body;        
+        this.folder = res.body;
 
         this.editableForm.visible = false;
         this.editingService.stop();

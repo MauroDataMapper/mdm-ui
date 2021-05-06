@@ -16,12 +16,12 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
-import { EMPTY, merge, Observable } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { EMPTY, merge, Observable, Subject } from 'rxjs';
+import { catchError, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { BroadcastEvent, BroadcastService, GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor, ReferenceModelResult, ReferenceDataTypeIndexResponse, ReferenceDataType } from '@mdm/model/referenceModelModel';
@@ -34,7 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './reference-data-element.component.html',
   styleUrls: ['./reference-data-element.component.scss']
 })
-export class ReferenceDataElementComponent implements AfterViewInit {
+export class ReferenceDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() parent: ReferenceModelResult;
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @Output() totalCount = new EventEmitter<string>();
@@ -48,6 +48,11 @@ export class ReferenceDataElementComponent implements AfterViewInit {
 
   access: any;
 
+  /**
+   * Signal to attach to subscriptions to trigger when they should be unsubscribed.
+   */
+  private unsubscribe$ = new Subject();
+
   constructor(
     private resources: MdmResourcesService,
     private changeRef: ChangeDetectorRef,
@@ -55,8 +60,21 @@ export class ReferenceDataElementComponent implements AfterViewInit {
     private securityHandler: SecurityHandlerService,
     private editingService: EditingService,
     private messageHandler: MessageHandlerService,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private broadcast: BroadcastService
+  ) { }  
+
+  ngOnInit(): void {
+    this.broadcast
+      .on(BroadcastEvent.ReferenceDataTypesChanged)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.loadReferenceDataTypes());
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   ngAfterViewInit(): void {
     this.access = this.securityHandler.elementAccess(this.parent);
@@ -73,18 +91,18 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   loadReferenceDataElements() {
     merge(this.paginator.page)
       .pipe(
-        startWith({}), 
+        startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
           this.changeRef.detectChanges();
           return this.listDataElements(this.paginator.pageSize, this.paginator.pageOffset);
-        }), 
+        }),
         map(data => {
           this.totalItemCount = data.body.count;
           this.totalCount.emit(String(data.body.count));
           this.isLoadingResults = false;
           return data.body.items;
-        }), 
+        }),
         catchError(() => {
           this.isLoadingResults = false;
           this.changeRef.detectChanges();
@@ -93,7 +111,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       )
       .subscribe((data: ReferenceDataElement[]) => {
         this.records = data.map(item => new EditableRecord(
-          item, 
+          item,
           {
             label: item.label,
             description: item.description,
@@ -129,13 +147,13 @@ export class ReferenceDataElementComponent implements AfterViewInit {
     record.edit.referenceDataType = select;
   }
 
-  add() {    
+  add() {
     const newRecord = new EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>(
       {
         id: '',
-        domainType: DOMAIN_TYPE.ReferencePrimitiveType,
+        domainType: DOMAIN_TYPE.ReferenceDataElement,
         label: '',
-        description: ''        
+        description: ''
       },
       {
         label: '',
@@ -156,7 +174,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   delete(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>, index: number) {
     if (record.isNew) {
       return;
-    }     
+    }
 
     this.dialog
       .openConfirmationAsync({
@@ -177,7 +195,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       .subscribe(() => {
         this.messageHandler.showSuccess('Reference Data Element removed successfully.');
         this.loadReferenceDataElements();
-      });    
+      });
   }
 
   onEdit(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>, index: number) {
@@ -196,7 +214,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
         referenceDataType: record.source.referenceDataType,
         errors: []
       };
-    }    
+    }
 
     this.editingService.setFromCollection(this.records);
   };
@@ -227,7 +245,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       referenceDataType: record.edit.referenceDataType
     };
 
-    if (record.isNew) {      
+    if (record.isNew) {
       this.resources.referenceDataElement
         .save(this.parent.id, resource)
         .pipe(
@@ -254,6 +272,6 @@ export class ReferenceDataElementComponent implements AfterViewInit {
           this.messageHandler.showSuccess('Reference Data Element updated successfully.');
           this.loadReferenceDataElements();
         });
-    }   
+    }
   }
 }

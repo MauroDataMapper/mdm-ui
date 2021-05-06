@@ -54,7 +54,6 @@ SPDX-License-Identifier: Apache-2.0
         </div>
         <div *ngIf="record.inEdit">
           <div class="form-group" [ngClass]="{'has-error': record.edit.errors && record.edit.errors['label'] }">
-            <!-- <input type="text" [(ngModel)]="record.edit.label" /> -->
             <mdm-inline-text-edit [readOnly]="false" [inEditMode]="record.inEdit" [(ngModel)]="record.edit.label"></mdm-inline-text-edit>
             <small *ngIf="record.edit.errors && record.edit.errors['label']"
               class="errorMessage">{{record.edit.errors['label']}}</small>

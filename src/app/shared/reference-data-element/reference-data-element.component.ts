@@ -19,14 +19,15 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
-import { merge, Observable } from 'rxjs';
+import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { GridService, SecurityHandlerService } from '@mdm/services';
+import { GridService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor, ReferenceModelResult } from '@mdm/model/referenceModelModel';
+import { ReferenceDataElement, ReferenceDataElementIndexResponse, ReferenceDataElementEditor, ReferenceModelResult, ReferenceDataTypeIndexResponse, ReferenceDataType } from '@mdm/model/referenceModelModel';
 import { EditableRecord } from '@mdm/model/editable-forms';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'mdm-reference-data-element',
@@ -43,6 +44,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   totalItemCount = 0;
   isLoadingResults = true;
   displayedColumns = ['name', 'description', 'type', 'other'];
+  referenceDataTypes: ReferenceDataType[] = [];
 
   access: any;
 
@@ -51,12 +53,24 @@ export class ReferenceDataElementComponent implements AfterViewInit {
     private changeRef: ChangeDetectorRef,
     private gridService: GridService,
     private securityHandler: SecurityHandlerService,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private messageHandler: MessageHandlerService,
+    private dialog: MatDialog
   ) { }
 
   ngAfterViewInit(): void {
     this.access = this.securityHandler.elementAccess(this.parent);
 
+    this.loadReferenceDataTypes();
+    this.loadReferenceDataElements();    
+  }
+
+  listDataElements(pageSize?: number, pageIndex?: number): Observable<ReferenceDataElementIndexResponse> {
+    const options = this.gridService.constructOptions(pageSize, pageIndex);
+    return this.resources.referenceDataElement.list(this.parent?.id, options);
+  }
+
+  loadReferenceDataElements() {
     merge(this.paginator.page)
       .pipe(
         startWith({}), 
@@ -65,7 +79,7 @@ export class ReferenceDataElementComponent implements AfterViewInit {
           this.changeRef.detectChanges();
           return this.listDataElements(this.paginator.pageSize, this.paginator.pageOffset);
         }), 
-        map((data) => {
+        map(data => {
           this.totalItemCount = data.body.count;
           this.totalCount.emit(String(data.body.count));
           this.isLoadingResults = false;
@@ -82,7 +96,9 @@ export class ReferenceDataElementComponent implements AfterViewInit {
           item, 
           {
             label: item.label,
-            description: item.description
+            description: item.description,
+            referenceDataType: item.referenceDataType,
+            errors: []
           },
           {
             isNew: false,
@@ -90,13 +106,27 @@ export class ReferenceDataElementComponent implements AfterViewInit {
           }));
         this.dataSource.data = this.records;
         this.isLoadingResults = false;
+        this.editingService.setFromCollection(this.records);
         this.changeRef.detectChanges();
       });
   }
 
-  listDataElements(pageSize?: number, pageIndex?: number): Observable<ReferenceDataElementIndexResponse> {
-    const options = this.gridService.constructOptions(pageSize, pageIndex);
-    return this.resources.referenceDataElement.list(this.parent?.id, options);
+  loadReferenceDataTypes() {
+    this.resources.referenceDataType
+      .list(this.parent.id)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the Reference Data Types.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe((response: ReferenceDataTypeIndexResponse) => {
+        this.referenceDataTypes = response.body.items;
+      })
+  }
+
+  referenceDataTypeSelected(select: ReferenceDataType, record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>) {
+    record.edit.referenceDataType = select;
   }
 
   add() {    
@@ -109,7 +139,8 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       },
       {
         label: '',
-        description: ''
+        description: '',
+        errors: []
       },
       {
         inEdit: true,
@@ -123,6 +154,30 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   }
 
   delete(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>, index: number) {
+    if (record.isNew) {
+      return;
+    }     
+
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Confirm',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `Are you sure you want to delete the Reference Data Element '${record.source.label}'?`
+        }
+      })
+      .pipe(
+        switchMap(() => this.resources.referenceDataElement.remove(this.parent.id, record.source.id)),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem removing the Reference Data Element.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Reference Data Element removed successfully.');
+        this.loadReferenceDataElements();
+      });    
   }
 
   onEdit(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>, index: number) {
@@ -139,9 +194,47 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   };
 
   validate(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>) {
-    return true;
+    let isValid = true;
+    record.edit.errors = [];
+
+    if ((record.edit.label?.length ?? 0) === 0) {
+      record.edit.errors.label = 'Name cannot be empty.';
+      isValid = false;
+    }
+
+    if (!record.edit.referenceDataType) {
+      record.edit.errors.referenceDataType = 'Please select a type.';
+      isValid = false;
+    }
+
+    return isValid;
   }
 
   save(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>, index: number) {
+    if (record.isNew) {
+      const resource: ReferenceDataElement = {
+        id: record.source.id,
+        domainType: record.source.domainType,
+        label: record.edit.label,
+        description: record.edit.description,
+        referenceDataType: record.edit.referenceDataType
+      };
+
+      this.resources.referenceDataElement
+        .save(this.parent.id, resource)
+        .pipe(
+          catchError(error => {
+            this.messageHandler.showError('There was a problem creating the Reference Data Element.', error);
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          this.messageHandler.showSuccess('Reference Data Element created successfully.');
+          this.loadReferenceDataElements();
+        });
+    }
+    else {
+
+    }   
   }
 }

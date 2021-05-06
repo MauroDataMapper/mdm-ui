@@ -18,82 +18,139 @@ SPDX-License-Identifier: Apache-2.0
 -->
 <div class="heading-container">
   <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
-      <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100" fxLayoutAlign="flex-start center">
-          <h4 class="marginless">
-              Elements
-              <span *ngIf="isLoadingResults" class="mdm--skeleton-badge"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}"></ngx-skeleton-loader></span>
-              <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
-          </h4>
+    <div fxFlex fxLayout="row" fxFlex="40" fxFlex.md="40" fxFlex.sm="40" fxFlex.xs="100"
+      fxLayoutAlign="flex-start center">
+      <h4 class="marginless">
+        Elements
+        <span *ngIf="isLoadingResults" class="mdm--skeleton-badge">
+          <ngx-skeleton-loader count="1" appearance="circle"
+            [theme]="{'border-radius': '5px', 'height':'31px', 'width':'28px', 'background-color': '#b7bbc5'}">
+          </ngx-skeleton-loader>
+        </span>
+        <span *ngIf="!isLoadingResults" class="mdm--badge mdm--element-count">{{totalItemCount}}</span>
+      </h4>
+    </div>
+    <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center"
+      fxLayoutAlign.xs="flex-start center">
+      <div *ngIf="access && access.canAddLink" class="mt-1">
+        <button mat-flat-button color="primary" (click)="add()">
+          <i class="fas fa-plus" aria-hidden="true"></i>
+          Add Element
+        </button>
       </div>
-      <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="60" fxFlex.sm="60" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-        <div *ngIf="access && access.canAddLink" class="mt-1">          
-          <button mat-flat-button color="primary" (click)="add()">
-              <i class="fas fa-plus" aria-hidden="true"></i>
-              Add Element
-          </button>
-      </div>
-      </div>
+    </div>
   </div>
 </div>
 <div class="table-responsive" *ngIf="!isLoadingResults">
   <table mat-table [dataSource]="dataSource" class="mdm--mat-table mat-elevation-z3 table-striped">
-      <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="label">
-              Name
-          </th>
-          <td mat-cell *matCellDef="let record" style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
-               {{ record.source.label }}
-          </td>
-      </ng-container>
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef style="max-width: 40%;width: 40%;" columnName="description">
-            Description
-        </th>
-        <td mat-cell *matCellDef="let record">
-            <div *ngIf="record.source.description && record.source.description.length > 0" style="margin-bottom: 10px;">
-                <mdm-more-description [description]="record.source.description"></mdm-more-description>
-            </div>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="domainType">
-          Type
-        </th>
-        <td mat-cell *matCellDef="let record">
-            <div>
-                {{[record.source.domainType]}}
-            </div>
-            <div class="full-width">
-                <mdm-element-data-type [elementDataType]="record.source.referenceDataType" [hideName]="false" [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
-            </div>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="other">
-        <td mat-header-cell *matHeaderCellDef style=" max-width: 8%; width: 8%;"></td>
-        <td mat-cell *matCellDef="let record; let i = index; " style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
-            <div *ngIf="access && access.canAddLink">
-                <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0], $event[1])" (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])" (edit)="onEdit($event[0],$event[1])"></mdm-table-buttons>
-            </div>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="label">
+        Name
+      </th>
+      <td mat-cell *matCellDef="let record"
+        style="max-width: 25%;width: 25%;text-align: left; overflow-wrap: break-word; word-break: break-word;">
+        <div *ngIf="!record.inEdit">
+          {{ record.source.label }}
+        </div>
+        <div *ngIf="record.inEdit">
+          <div class="form-group" [ngClass]="{'has-error': record.edit.errors && record.edit.errors['label'] }">
+            <input type="text" [(ngModel)]="record.edit.label" />
+            <small *ngIf="record.edit.errors && record.edit.errors['label']"
+              class="errorMessage">{{record.edit.errors['label']}}</small>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef style="max-width: 40%;width: 40%;" columnName="description">
+        Description
+      </th>
+      <td mat-cell *matCellDef="let record">
+        <div *ngIf="!record.inEdit && record.source.description && record.source.description.length > 0"
+          style="margin-bottom: 10px;">
+          <mdm-more-description [description]="record.source.description"></mdm-more-description>
+        </div>
+        <div *ngIf="record.inEdit">
+          <div class="form-group" [ngClass]="{'has-error': record.edit.errors && record.edit.errors['description'] }">
+            <mdm-content-editor [(description)]="record.edit.description" [inEditMode]="true"
+              [markdownOptions]="{ showHelpText: false }" [htmlOptions]="{ useBasicButtons: true }">
+            </mdm-content-editor>
+            <small *ngIf="record.edit.errors && record.edit.errors['description']"
+              class="errorMessage">{{record.edit.errors['description']}}</small>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef style="max-width: 25%;width: 25%;" columnName="domainType">
+        Type
+      </th>
+      <td mat-cell *matCellDef="let record">
+        <div *ngIf="!record.inEdit">
+          <div>
+            {{[record.source.domainType]}}
+          </div>
+          <div class="full-width">
+            <mdm-element-data-type [elementDataType]="record.source.referenceDataType" [hideName]="false"
+              [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
+          </div>
+        </div>
+        <div *ngIf="record.inEdit">
+          <mdm-select [width]="'100%'" [acceptTypedInput]="false" [valueType]="'static'"
+            [staticValues]="referenceDataTypes" [defaultValue]="record.referenceDataType"
+            [hasError]="record.edit.errors && record.edit.errors['referenceDataType']" [record]="record" [minInputLength]="0"
+            [idProperty]="'id'" [displayProperty]="'label'" [searchProperty]="'label'"
+            (selectEvent)="referenceDataTypeSelected($event[0],$event[1])">
+            <ng-template #lineContent let-item>
+              <div>{{item.label}}</div>
+            </ng-template>
+          </mdm-select>
+          <small *ngIf="record.edit.errors && record.edit.errors['referenceDataType']"
+            class="errorMessage">{{record.edit.errors['referenceDataType']}}</small>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="other">
+      <td mat-header-cell *matHeaderCellDef style=" max-width: 8%; width: 8%;"></td>
+      <td mat-cell *matCellDef="let record; let i = index; "
+        style="max-width: 8%; width: 8%; text-align: left; word-wrap: break-word;">
+        <div *ngIf="access && access.canAddLink">
+          <mdm-table-buttons [record]="record" [index]="i" [confirmDelete]="false" (save)="save($event[0], $event[1])"
+            (delete)="delete($event[0],$event[1])" [validate]="validate" (cancelEdit)="cancelEdit($event[0],$event[1])"
+            (edit)="onEdit($event[0],$event[1])"></mdm-table-buttons>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
 <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
-<p class="marginless">There are no Data Elements in this repository.</p>
+  <p class="marginless">There are no Data Elements in this repository.</p>
 </div>
 <div *ngIf="isLoadingResults">
   <table class="mdm--mat-table mdm--skeleton-table">
     <tr>
-      <th style="width: 25%"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 40%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 25%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-  </tr>
-  <tr>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
+      <th style="width: 25%">
+        <ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader>
+      </th>
+      <th style="width: 40%;">
+        <ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader>
+      </th>
+      <th style="width: 25%;">
+        <ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader>
+      </th>
+    </tr>
+    <tr>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
+      <td>
+        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+      </td>
     </tr>
   </table>
 </div>

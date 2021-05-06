@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
                 {{[record.source.domainType]}}
             </div>
             <div class="full-width">
-                <mdm-element-data-type [elementDataType]="record" [hideName]="true" [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
+                <mdm-element-data-type [elementDataType]="record.source.referenceDataType" [hideName]="false" [onlyShowRefDataClass]="true" [hideEnumList]="false"></mdm-element-data-type>
             </div>
         </td>
       </ng-container>

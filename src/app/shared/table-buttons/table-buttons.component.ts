@@ -30,6 +30,7 @@ export class TableButtonsComponent {
   @Input() hideDelete: boolean;
   @Input() hideEdit: any;
   @Input() confirmDelete = true;
+  @Input() setupEdit = true;
 
   @Input() validate: (record: any, index: any) => boolean;
   @Input() records: any;
@@ -54,7 +55,11 @@ export class TableButtonsComponent {
 
   editClicked(record, index) {
     record.inEdit = true;
-    record.edit = Object.assign({}, record);
+
+    if (this.setupEdit) {
+      record.edit = Object.assign({}, record);
+    }
+
     if (this.edit) {
       this.edit.emit([record, index]);
     }
@@ -67,7 +72,10 @@ export class TableButtonsComponent {
       }
 
       record.inEdit = undefined;
-      record.edit = undefined;
+
+      if (this.setupEdit) {
+        record.edit = undefined;
+      }
 
       if (this.cancelEdit) {
         this.cancelEdit.emit([record, index]);

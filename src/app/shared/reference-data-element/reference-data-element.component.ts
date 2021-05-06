@@ -189,6 +189,14 @@ export class ReferenceDataElementComponent implements AfterViewInit {
       this.records.splice(index, 1);
       this.dataSource.data = this.records;
     }
+    else {
+      record.edit = {
+        label: record.source.label,
+        description: record.source.description,
+        referenceDataType: record.source.referenceDataType,
+        errors: []
+      };
+    }    
 
     this.editingService.setFromCollection(this.records);
   };
@@ -211,15 +219,15 @@ export class ReferenceDataElementComponent implements AfterViewInit {
   }
 
   save(record: EditableRecord<ReferenceDataElement, ReferenceDataElementEditor>, index: number) {
-    if (record.isNew) {
-      const resource: ReferenceDataElement = {
-        id: record.source.id,
-        domainType: record.source.domainType,
-        label: record.edit.label,
-        description: record.edit.description,
-        referenceDataType: record.edit.referenceDataType
-      };
+    const resource: ReferenceDataElement = {
+      id: record.source.id,
+      domainType: record.source.domainType,
+      label: record.edit.label,
+      description: record.edit.description,
+      referenceDataType: record.edit.referenceDataType
+    };
 
+    if (record.isNew) {      
       this.resources.referenceDataElement
         .save(this.parent.id, resource)
         .pipe(
@@ -234,7 +242,18 @@ export class ReferenceDataElementComponent implements AfterViewInit {
         });
     }
     else {
-
+      this.resources.referenceDataElement
+        .update(this.parent.id, record.source.id, resource)
+        .pipe(
+          catchError(error => {
+            this.messageHandler.showError('There was a problem updating the Reference Data Element.', error);
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          this.messageHandler.showSuccess('Reference Data Element updated successfully.');
+          this.loadReferenceDataElements();
+        });
     }   
   }
 }

@@ -18,11 +18,15 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, ViewChild, AfterViewInit, ChangeDetectorRef, EventEmitter, ElementRef, ViewChildren, Output } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { merge, Observable } from 'rxjs';
+import { forkJoin, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MdmPaginatorComponent } from '@mdm/shared/mdm-paginator/mdm-paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ReferenceDataValueIndexResponse, ReferenceDataValueRow } from '@mdm/model/referenceModelModel';
+import { ReferenceDataElement, ReferenceDataValueColumn, ReferenceDataValueIndexResponse, ReferenceDataValueRow, ReferenceDataElementIndexResponse } from '@mdm/model/referenceModelModel';
+
+interface ReferenceDataTableRow {
+  [key: string]: ReferenceDataValueColumn;
+}
 
 @Component({
   selector: 'mdm-reference-data-values',
@@ -35,8 +39,8 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
 
-  dataSource = new MatTableDataSource<any>();
-  records: any[] = [];
+  dataSource = new MatTableDataSource<ReferenceDataTableRow>();
+  records: ReferenceDataTableRow[] = [];
   displayedColumns: string[];
   totalItemCount = 0;
   isLoadingResults = true;
@@ -64,47 +68,35 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter);
+
+          return forkJoin([
+            this.elementsFetch(),
+            this.contentFetch(this.paginator.pageSize, this.paginator.pageOffset, this.filter)
+          ]);
         }),
-        map(data => {
-          this.totalItemCount = data.body.count;
-          this.totalCount.emit(String(data.body.count));
+        map(([elements, values]) => {
+          this.setDisplayColumns(elements.body.items);          
+
+          this.totalItemCount = values.body.count;
+          this.totalCount.emit(String(values.body.count));
           this.isLoadingResults = false;
-          return data.body.rows;
+          return values.body.rows;
         }),
         catchError(() => {
           this.isLoadingResults = false;
           return [];
         })
       ).subscribe((rows: ReferenceDataValueRow[]) => {
-        // Flatten the endpoint response to make the table rows tabular and not an object hierarchy
-        this.records = rows.map(row => {
-          const flattened = {};
-          row.columns.forEach(column => {
-            flattened[column.referenceDataElement.label] = column.value;
-          });
-          return flattened;
-        });
-
-        const arr = [];
-        if (rows[0]) {
-          for (const val in rows[0].columns) {
-            if (rows[0].columns[val]) {
-              arr.push(rows[0].columns[val].referenceDataElement.label);
-            }
-          }
-          this.displayedColumns = arr;
-        }
-
-        this.dataSource.data = this.records;
+        this.setValuesToDataSource(rows);        
       });
+      
     this.changeRef.detectChanges();
-  };  
+  }
 
   toggleSearch() {
     this.hideFilters = !this.hideFilters;
     this.loadReferenceDataValues();
-  };
+  }
 
   applyFilter() {
     const filter = {};
@@ -117,7 +109,7 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
     });
     this.filter = filter;
     this.filterEvent.emit(filter);
-  };
+  }
 
   contentFetch(pageSize?: number, pageIndex?: number, filters?: any): Observable<ReferenceDataValueIndexResponse> {
     const options = {
@@ -130,10 +122,32 @@ export class ReferenceDataValuesComponent implements AfterViewInit {
       options['search'] = this.searchTerm;
     }
 
-    if (this.hideFilters) {
+    if (this.hideFilters) {      
       return this.resources.referenceDataValue.list(this.parent.id, options);
     } 
 
     return this.resources.referenceDataValue.search(this.parent.id, { search: this.searchTerm, max: pageSize, offset: pageIndex });
+  }
+
+  elementsFetch(): Observable<ReferenceDataElementIndexResponse> {
+    return this.resources.referenceDataElement.list(this.parent.id, { all: true });
+  }
+
+  private setDisplayColumns(elements: ReferenceDataElement[]) {
+    this.displayedColumns = elements.map(element => element.label);
+  }
+
+  private setValuesToDataSource(rows: ReferenceDataValueRow[]) {
+    this.records = rows.map(row => {
+      // Flatten each endpoint item to make the table rows tabular and not an object hierarchy
+      return row.columns.reduce<ReferenceDataTableRow>((acc, column) => {        
+        return {
+          ...acc, 
+          [column.referenceDataElement.label]: column
+        };
+      }, {});
+    });
+
+    this.dataSource.data = this.records;
   }
 }

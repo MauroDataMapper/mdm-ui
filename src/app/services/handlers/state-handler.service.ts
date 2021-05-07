@@ -155,6 +155,10 @@ export class StateHandlerService {
     return this.router.stateService.go('appContainer.mainApp.twoSidePanel.catalogue.serverError', {}, option);
 
   }
+  ServerTimeout() {
+    return this.router.stateService.go('appContainer.mainApp.twoSidePanel.catalogue.serverTimeout', {});
+
+  }
   NotImplemented(option = null) {
     return this.router.stateService.go('appContainer.mainApp.twoSidePanel.catalogue.notImplemented', {}, option);
 

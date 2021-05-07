@@ -183,6 +183,7 @@ import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-pro
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
 import { NewVersionReferenceDataModelComponent } from '@mdm/referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
+import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 
 @NgModule({
   declarations: [
@@ -207,6 +208,7 @@ import { NewVersionReferenceDataModelComponent } from '@mdm/referenceData/new-ve
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
+    ServerTimeoutComponent,
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
@@ -387,6 +389,7 @@ import { NewVersionReferenceDataModelComponent } from '@mdm/referenceData/new-ve
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
+    ServerTimeoutComponent,
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,

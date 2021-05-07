@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { ModelDomainType } from "@maurodatamapper/mdm-resources";
+import { ModelDomainType } from '@maurodatamapper/mdm-resources';
 
 export class ModelMergingModel {
   constructor(public sourceId : string, public targetId : string, public catalogueDomainType : ModelDomainType) {}

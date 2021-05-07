@@ -16,55 +16,93 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { FolderResult } from '../model/folderModel';
+import { Editable, FolderResult } from '../model/folderModel';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { MessageService } from '../services/message.service';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../services/shared.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
-import { BaseComponent } from '@mdm/shared/base/base.component';
+import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { BroadcastService, MessageHandlerService, SecurityHandlerService } from '@mdm/services';
+import { MatDialog } from '@angular/material/dialog';
+import { EditingService } from '@mdm/services/editing.service';
 
 @Component({
   selector: 'mdm-folder',
   templateUrl: './folder.component.html',
   styleUrls: ['./folder.component.css'],
 })
-export class FolderComponent extends BaseComponent implements OnInit, OnDestroy {
-  result: FolderResult;
+export class FolderComponent extends ProfileBaseComponent implements OnInit, OnDestroy {
+
+  readonly domainType = 'folders';
+
+  folder: FolderResult;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
   parentId: string;
+  editableForm: Editable;
   afterSave: (result: { body: { id: any } }) => void;
   editMode = false;
   activeTab: any;
+  showExtraTabs = false;
+  showEdit = false;
+  showDelete = false;
+  showEditDescription = false;
+  historyItemCount = 0;
+  isLoadingHistory = true;
+  rulesItemCount = 0;
+  isLoadingRules = true;
+  access: any;
 
   constructor(
-    private resourcesService: MdmResourcesService,
+    private resources: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
-    private title: Title
+    private securityHandler: SecurityHandlerService,
+    private broadcastSvc: BroadcastService,
+    private title: Title,
+    dialog: MatDialog,
+    editingService: EditingService,
+    messageHandler: MessageHandlerService
   ) {
-    super();
+    super(resources, dialog, editingService, messageHandler);
   }
 
   ngOnInit() {
-    if (this.isGuid(this.stateService.params.id) && !this.stateService.params.id) {
+    if (this.isGuid(this.uiRouterGlobals.params.id) && !this.uiRouterGlobals.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
     this.title.setTitle('Folder');
-    // tslint:disable-next-line: deprecation
-    this.folderDetails(this.stateService.params.id);
+    this.showExtraTabs = this.sharedService.isLoggedIn();
+
+    this.editableForm = new Editable();
+    this.editableForm.visible = false;
+    this.editableForm.deletePending = false;
+
+    this.editableForm.show = () => {
+      this.setEditableForm();
+      this.editingService.start();
+      this.editableForm.visible = true;
+    };
+
+    this.editableForm.cancel = () => {
+      this.editingService.stop();
+      this.editableForm.visible = false;
+      this.editableForm.validationError = false;
+      this.setEditableForm();
+    };
+
+    this.folderDetails(this.uiRouterGlobals.params.id);
     this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
       this.showSecuritySection = message;
     });
@@ -73,32 +111,37 @@ export class FolderComponent extends BaseComponent implements OnInit, OnDestroy 
     });
     this.afterSave = (result: { body: { id: any } }) => this.folderDetails(result.body.id);
 
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
   }
 
-  folderDetails(id: any) {
-    this.resourcesService.folder.get(id).subscribe((result: { body: FolderResult }) => {
-      this.result = result.body;
+  folderDetails(id: string) {
+    this.resources.folder.get(id).subscribe((result: { body: FolderResult }) => {
+      this.folder = result.body;
+      this.catalogueItem = this.folder;
 
-      this.parentId = this.result.id;
+      this.parentId = this.folder.id;
+
+      this.access = this.securityHandler.elementAccess(this.folder);
+      this.showEdit = this.access.showEdit;
+      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+
       if (this.sharedService.isLoggedIn(true)) {
         this.folderPermissions(id);
       } else {
-        this.messageService.FolderSendMessage(this.result);
-        this.messageService.dataChanged(this.result);
+        this.messageService.FolderSendMessage(this.folder);
+        this.messageService.dataChanged(this.folder);
       }
     });
   }
 
   folderPermissions(id: any) {
-    this.resourcesService.security.permissions('folders', id).subscribe((permissions: { body: { [x: string]: any } }) => {
+    this.resources.security.permissions('folders', id).subscribe((permissions: { body: { [x: string]: any } }) => {
       Object.keys(permissions.body).forEach((attrname) => {
-        this.result[attrname] = permissions.body[attrname];
+        this.folder[attrname] = permissions.body[attrname];
       });
       // Send it to message service to receive in child components
-      this.messageService.FolderSendMessage(this.result);
-      this.messageService.dataChanged(this.result);
+      this.messageService.FolderSendMessage(this.folder);
+      this.messageService.dataChanged(this.folder);
     });
   }
 
@@ -142,6 +185,75 @@ export class FolderComponent extends BaseComponent implements OnInit, OnDestroy 
       default:
         return { index: 0, name: 'access' };
     }
+  }
+
+  setEditableForm() {
+    this.editableForm.description = this.folder.description;
+  }
+
+  showDescription() {
+    this.editingService.start();
+    this.showEditDescription = true;
+    this.editableForm.show();
+  };
+
+  edit() {
+    this.showEditDescription = false;
+    this.editableForm.show();
+  };
+
+  onCancelEdit() {
+    if (this.folder) {
+      this.showEditDescription = false;
+    }
+  };
+
+  formBeforeSave() {
+    let resource: any = {};
+    this.editingService.stop();
+
+    if (!this.showEditDescription) {
+      resource = {
+        id: this.folder.id,
+        label: this.editableForm.label,
+        description: this.editableForm.description,
+        domainType: this.folder.domainType
+      };
+    }
+    else {
+      resource = {
+        id: this.folder.id,
+        description: this.editableForm.description || ''
+      };
+    }
+
+    this.resourcesService.folder.update(resource.id, resource).subscribe(
+      (res) => {
+        this.folder = res.body;
+
+        this.editableForm.visible = false;
+        this.editingService.stop();
+
+        this.messageHandler.showSuccess('Folder updated successfully.');
+        this.broadcastSvc.broadcast('$reloadFoldersTree');
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the folder.',
+          error
+        );
+      }
+    );
+  }
+
+  historyCountEmitter($event) {
+    this.isLoadingHistory = false;
+    this.historyItemCount = $event;
+  }
+
+  rulesCountEmitter($event) {
+    this.isLoadingRules = false;
+    this.rulesItemCount = $event;
   }
 }
 

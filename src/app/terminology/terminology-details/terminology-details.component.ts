@@ -120,7 +120,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     this.dataChangedSub = this.messageService.dataChanged$.subscribe(
       (serverResult) => {
         if(serverResult.domainType.toLowerCase() === ModelDomainRequestType.terminologies.toLowerCase()){
-          this.mcTerminology = serverResult;          
+          this.mcTerminology = serverResult;
         }
         this.setEditableFormData();
       }

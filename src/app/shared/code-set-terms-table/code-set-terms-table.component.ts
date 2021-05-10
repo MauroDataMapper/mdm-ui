@@ -187,7 +187,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
       id: this.codeSet.id,
       domainType: CatalogueItemDomainType.CodeSet,
       terms: allTermIds
-    }
+    };
 
     this.resources.codeSet.update(this.codeSet.id, resource).subscribe(() => {
       this.messageHandler.showSuccess('Terms added successfully.');

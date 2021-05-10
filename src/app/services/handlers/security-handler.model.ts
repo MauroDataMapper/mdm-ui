@@ -97,9 +97,9 @@ export class SignInError extends MdmResourcesError {
 //   applicationAdministrationSession: boolean;
 // }
 
-//export type SignInResponse = MdmResourcesResponse<SignInResult>;
-//export type AdministrationSessionResponse = MdmResourcesResponse<AdministrationSessionResult>;
-//export type AuthenticatedSessionResponse = MdmResourcesResponse<AuthenticatedSessionResult>;
+// export type SignInResponse = MdmResourcesResponse<SignInResult>;
+// export type AdministrationSessionResponse = MdmResourcesResponse<AdministrationSessionResult>;
+// export type AuthenticatedSessionResponse = MdmResourcesResponse<AuthenticatedSessionResult>;
 
 /**
  * Represents the common details of a signed in user.

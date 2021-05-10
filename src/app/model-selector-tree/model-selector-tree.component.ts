@@ -31,7 +31,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { ContainerDomainType, FolderDetailResponse, FolderIndexResponse, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -133,7 +133,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
             return;
           }
         }
-      }     
+      }
 
       const options: TreeItemSearchQueryParameters = {
         searchTerm: this.searchCriteria,
@@ -141,7 +141,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         includeDocumentSuperseded: true,
         includeModelSuperseded: true,
         includeDeleted: true
-      }
+      };
 
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;

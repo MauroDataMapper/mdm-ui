@@ -287,7 +287,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         }
       }
 
-      let resource: DataClass = {
+      const resource: DataClass = {
         id: this.result.id,
         label: this.editableForm.label,
         domainType: this.result.domainType,
@@ -298,8 +298,8 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
         resource.aliases = aliases;
         resource.classifiers = classifiers;
         resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);        
-      }     
+        resource.maxMultiplicity = parseInt(this.max, 10);
+      }
 
       if (!this.result.parentDataClass) {
         this.resourcesService.dataClass.update(this.result.model, this.result.id, resource).subscribe((result: DataClassDetailResponse) => {

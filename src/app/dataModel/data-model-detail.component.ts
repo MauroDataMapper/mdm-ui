@@ -364,9 +364,9 @@ export class DataModelDetailComponent implements OnInit, AfterViewInit, OnDestro
     const aliases = [];
     this.editableForm.aliases.forEach(alias => {
       aliases.push(alias);
-    });    
+    });
 
-    let resource: ModelUpdatePayload = {
+    const resource: ModelUpdatePayload = {
       id: this.result.id,
       domainType: this.result.domainType,
       description: this.editableForm.description || ''

@@ -250,7 +250,7 @@ export class DataModelComponent
       aliases.push(alias);
     });
 
-    let resource: ModelUpdatePayload = {
+    const resource: ModelUpdatePayload = {
       id: this.dataModel.id,
       domainType: this.dataModel.domainType,
       description: this.editableForm.description || ''

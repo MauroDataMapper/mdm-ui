@@ -35,7 +35,7 @@ import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component'
 import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
-import { CatalogueItemDomainType, Classifier, ClassifierDetailResponse, ClassifierIndexResponse, ContainerDomainType, FolderDetailResponse, MdmTreeItemListResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItemDomainType, Classifier, ClassifierDetailResponse, ClassifierIndexResponse, ContainerDomainType, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-models',
@@ -70,7 +70,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   currentClassification: any;
   allClassifications: any;
-  classifiers: { children: Classifier[]; isRoot: boolean; };
+  classifiers: { children: Classifier[]; isRoot: boolean };
 
   searchText: any;
 
@@ -343,12 +343,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
     endpoint.subscribe((res: FolderDetailResponse) => {
       const result = res.body;
       if (folder) {
-        //result.domainType = 'Folder';
+        // result.domainType = 'Folder';
         folder.children = folder.children || [];
         folder.children.push(result);
       } else {
-        //result.domainType = 'Folder';
-        //this.allModels.children.push(result);
+        // result.domainType = 'Folder';
+        // this.allModels.children.push(result);
         this.filteredModels.children.push(result);
       }
 

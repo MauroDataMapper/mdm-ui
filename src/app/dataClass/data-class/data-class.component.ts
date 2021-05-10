@@ -373,7 +373,7 @@ export class DataClassComponent
         }
       }
 
-      let resource: DataClass = {
+      const resource: DataClass = {
         id: this.dataClass.id,
         label: this.editableForm.label,
         domainType: this.dataClass.domainType,
@@ -384,8 +384,8 @@ export class DataClassComponent
         resource.aliases = aliases;
         resource.classifiers = classifiers;
         resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);        
-      }      
+        resource.maxMultiplicity = parseInt(this.max, 10);
+      }
 
       if (!this.dataClass.parentDataClass) {
         this.resourcesService.dataClass

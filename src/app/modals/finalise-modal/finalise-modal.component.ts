@@ -93,7 +93,7 @@ export class FinaliseModalComponent implements OnInit {
 
   ok() {
     const useCustomVersion = this.data.versionList === 'Custom';
-    const request: FinalisePayload = {       
+    const request: FinalisePayload = {
       version: useCustomVersion ? this.version : undefined,
       versionChangeType: !useCustomVersion ? this.data.versionList : undefined,
       versionTag: this.versionTag

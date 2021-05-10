@@ -129,14 +129,14 @@ export class DataTypeMainComponent implements OnInit {
   };
 
   saveNewDataType() {
-    let resource: DataType = {
+    const resource: DataType = {
       domainType: this.model.domainType,
       label: this.model.label,
       description: this.model.description,
       classifiers: this.model.classifiers.map((cls) => {
         return { id: cls.id };
       })
-    }
+    };
 
     if (this.model.domainType === CatalogueItemDomainType.TerminologyType
       || this.model.domainType === CatalogueItemDomainType.CodeSetType

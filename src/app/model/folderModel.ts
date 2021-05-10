@@ -1,5 +1,3 @@
-import { MdmResponse } from "@maurodatamapper/mdm-resources";
-
 /*
 Copyright 2020 University of Oxford
 

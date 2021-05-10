@@ -322,7 +322,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         dataType = this.newlyAddedDataType;
       }
 
-      let resource: DataElement = {
+      const resource: DataElement = {
         id: this.result.id,
         label: this.editableForm.label,
         domainType: this.result.domainType,
@@ -334,9 +334,9 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
         resource.dataType = dataType;
         resource.classifiers = classifiers;
         resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);        
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
-      
+
       this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(() => {
         this.editingService.stop();
         this.messageHandler.showSuccess('Data Element updated successfully.');

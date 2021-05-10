@@ -267,7 +267,7 @@ export class DataTypeComponent
       aliases.push(alias);
     });
 
-    let resource: DataType = {
+    const resource: DataType = {
       id: this.dataType.id,
       label: this.editableForm.label,
       domainType: this.dataType.domainType,
@@ -277,9 +277,9 @@ export class DataTypeComponent
     if (!this.showEditDescription) {
       resource.description = this.editableForm.description || '';
       resource.aliases = aliases;
-      resource.domainType = this.dataType.domainType,
-      resource.classifiers = this.dataType.classifiers.map(cls => ({ id: cls.id }))      
-    }    
+      resource.domainType = this.dataType.domainType;
+      resource.classifiers = this.dataType.classifiers.map(cls => ({ id: cls.id }));
+    }
 
     this.resourcesService.dataType
       .update(this.dataModel.id, this.dataType.id, resource)

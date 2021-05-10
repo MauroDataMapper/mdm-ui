@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { Classifier } from "@maurodatamapper/mdm-resources";
+import { Classifier } from '@maurodatamapper/mdm-resources';
 
 export class EditableTerm {
   id: string;

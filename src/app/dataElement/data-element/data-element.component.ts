@@ -287,9 +287,9 @@ export class DataElementComponent
         dataType = { id: this.dataElementOutput.dataType['id'] };
       } else {
         dataType = this.newlyAddedDataType;
-      }     
+      }
 
-      let resource: DataElement = {
+      const resource: DataElement = {
         id: this.dataElementOutput.id,
         label: this.editableForm.label,
         domainType: this.dataElementOutput.domainType,
@@ -301,7 +301,7 @@ export class DataElementComponent
         resource.dataType = dataType;
         resource.classifiers = classifiers;
         resource.minMultiplicity = parseInt(this.min, 10);
-        resource.maxMultiplicity = parseInt(this.max, 10);        
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
 
       this.resourcesService.dataElement

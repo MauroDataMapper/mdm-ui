@@ -49,7 +49,7 @@ import { HttpErrorResponse } from '@angular/common/http';
  * Type alias for an `mdm-resources` API endpoint response for an index/list request.
  *
  */
-//export type MdmResourcesIndexResponse<T = any> = MdmResourcesResponse<MdmResourcesIndexBody<T>>;
+// export type MdmResourcesIndexResponse<T = any> = MdmResourcesResponse<MdmResourcesIndexBody<T>>;
 
 /**
  * Interface to define standard properties/options for the `MdmRestHandlerService`.

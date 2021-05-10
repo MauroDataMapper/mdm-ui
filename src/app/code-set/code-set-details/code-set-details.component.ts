@@ -386,7 +386,7 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       aliases.push(alias);
     });
 
-    let resource: ModelUpdatePayload = {
+    const resource: ModelUpdatePayload = {
       id: this.result.id,
       domainType: CatalogueItemDomainType.CodeSet,
       description: this.editableForm.description || ''
@@ -397,8 +397,8 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       resource.author = this.result.author;
       resource.organisation = this.result.organisation;
       resource.aliases = aliases;
-      resource.classifiers = classifiers;      
-    }    
+      resource.classifiers = classifiers;
+    }
 
     if (this.validateLabel(this.result.label)) {
       await this.resourcesService.codeSet.update(this.result.id, resource).subscribe((res: CodeSetDetailResponse) => {

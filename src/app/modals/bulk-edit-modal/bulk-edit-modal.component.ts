@@ -121,7 +121,7 @@ export class BulkEditModalComponent implements AfterViewInit {
             description: item.description,
             domainType: CatalogueItemDomainType.DataElement
           };
-          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, dataElement!.id, dataElement).toPromise();
+          return this.resources.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, dataElement.id, dataElement).toPromise();
         }
         if (item.domainType === 'DataClass') {
           const dataClass: DataClass = {
@@ -130,7 +130,7 @@ export class BulkEditModalComponent implements AfterViewInit {
             description: item.description,
             domainType: CatalogueItemDomainType.DataClass
           };
-          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, dataClass!.id, dataClass).toPromise();
+          return this.resources.dataClass.updateChildDataClass(this.parentDataModel.id, this.parentDataClass.id, dataClass.id, dataClass).toPromise();
         }
       }).catch(() => {
         this.failCount++;

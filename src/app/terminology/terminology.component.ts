@@ -166,7 +166,7 @@ export class TerminologyComponent
   }
 
   formBeforeSave = () => {
-    let resource: ModelUpdatePayload = {
+    const resource: ModelUpdatePayload = {
       id: this.terminology.id,
       domainType: CatalogueItemDomainType.Terminology,
       description: this.editableForm.description || ''
@@ -180,8 +180,8 @@ export class TerminologyComponent
       resource.organisation = this.editableForm.organisation;
       resource.type = this.terminology.type;
       resource.classifiers = this.terminology.classifiers;
-      resource.aliases = this.editableForm.aliases;      
-    }     
+      resource.aliases = this.editableForm.aliases;
+    }
 
     this.resourcesService.terminology.update(resource.id, resource).subscribe(
       (res: TerminologyDetailResponse) => {

@@ -157,7 +157,7 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       aliases.push(alias);
     });
 
-    let resource: DataType = {
+    const resource: DataType = {
       id: this.mcDataTypeObject.id,
       label: this.editableForm.label,
       domainType: this.mcDataTypeObject.domainType,
@@ -167,9 +167,9 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
     if (!this.showEditDescription) {
       resource.description = this.editableForm.description || '';
       resource.aliases = aliases;
-      resource.domainType = this.mcDataTypeObject.domainType,
-      resource.classifiers = this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }))      
-    }    
+      resource.domainType = this.mcDataTypeObject.domainType;
+      resource.classifiers = this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }));
+    }
 
     this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res: DataTypeDetailResponse) => {
       const result = res.body;

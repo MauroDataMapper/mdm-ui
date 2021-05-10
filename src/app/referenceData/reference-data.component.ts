@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { MatTabGroup } from '@angular/material/tabs';
 import { SharedService } from '@mdm/services/shared.service';
 import { MessageService } from '@mdm/services/message.service';
-import { StateService, UIRouterGlobals } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
@@ -232,7 +232,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
       aliases.push(alias);
     });
 
-    let resource: ModelUpdatePayload = {
+    const resource: ModelUpdatePayload = {
       id: this.referenceModel.id,
       domainType: CatalogueItemDomainType.ReferenceDataModel,
       description: this.editableForm.description || ''
@@ -245,7 +245,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
       resource.type = this.referenceModel.type;
       resource.aliases = aliases;
       resource.classifiers = classifiers;
-    }    
+    }
 
     this.resourcesService.referenceDataModel
       .update(this.referenceModel.id, resource)

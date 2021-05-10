@@ -115,7 +115,7 @@ export class TermComponent
   }
 
 
-  termDetails(id: string) {  
+  termDetails(id: string) {
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
 
     forkJoin([

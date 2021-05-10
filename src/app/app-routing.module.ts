@@ -125,7 +125,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.serverTimeout',
-      url: '/serverError',
+      url: '/serverTimeout',
       component: ServerTimeoutComponent
     },
     {

@@ -80,6 +80,8 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
   currentBranch = '';
   branchGraph = [];
   dataChangedSub: Subscription;
+  canEditDescription = true;
+  showEditDescription = false;
 
   @Input() get openEditForm() {
     return this.openEditFormVal;
@@ -113,12 +115,14 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     this.editableForm = new EditableDataModel();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
+    this.setEditableFormData();
 
     this.dataChangedSub = this.messageService.dataChanged$.subscribe(
       (serverResult) => {
         if(serverResult.domainType.toLowerCase() === ModelDomainRequestType.terminologies.toLowerCase()){
-        this.mcTerminology = serverResult;
+          this.mcTerminology = serverResult;          
         }
+        this.setEditableFormData();
       }
     );
 
@@ -130,6 +134,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     this.showDelete = access.showSoftDelete || access.showPermanentDelete;
     this.showSoftDelete = access.showSoftDelete;
     this.showPermDelete = access.showPermanentDelete;
+    this.canEditDescription = access.canEditDescription;
 
     this.editableForm.show = () => {
       this.editableForm.visible = true;
@@ -140,10 +145,15 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       this.editableForm.visible = false;
       this.editableForm.validationError = false;
       this.errorMessage = '';
-      this.editableForm.description = this.mcTerminology.description;
+      this.setEditableFormData();
       if (this.mcTerminology.classifiers) {
         this.mcTerminology.classifiers.forEach((item) => {
           this.editableForm.classifiers.push(item);
+        });
+      }
+      if (this.mcTerminology.aliases) {
+        this.mcTerminology.aliases.forEach(item => {
+          this.editableForm.aliases.push(item);
         });
       }
     };
@@ -215,6 +225,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
           this.mcTerminology.aliases
         );
 
+        this.editableForm.visible = false;
         this.editingService.stop();
 
         this.messageHandler.showSuccess('Terminology updated successfully.');
@@ -425,10 +436,8 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
   };
 
   onCancelEdit()  {
-    this.mcTerminology.editAliases = Object.assign(
-      {},
-      this.mcTerminology.aliases
-    );
+    this.errorMessage = '';
+    this.showEditDescription = false;
   };
 
   loadExporterList() {
@@ -462,7 +471,20 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
   };
 
   showForm() {
+    this.showEditDescription = true;
     this.editingService.start();
     this.editableForm.show();
+  }
+
+  private setEditableFormData() {
+    this.editableForm.description = this.mcTerminology.description;
+    this.editableForm.label = this.mcTerminology.label;
+    this.editableForm.organisation = this.mcTerminology.organisation;
+    this.editableForm.author = this.mcTerminology.author;
+    if (this.mcTerminology.aliases) {
+      this.mcTerminology.aliases.forEach(item => {
+        this.editableForm.aliases.push(item);
+      });
+    }
   }
 }

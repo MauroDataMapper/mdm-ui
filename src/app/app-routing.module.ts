@@ -61,6 +61,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
 import { NewVersionReferenceDataModelComponent } from './referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
+import { ServerTimeoutComponent } from './errors/server-timeout/server-timeout.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -121,6 +122,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.serverError',
       url: '/serverError',
       component: ServerErrorComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.serverTimeout',
+      url: '/serverTimeout',
+      component: ServerTimeoutComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.notFound',

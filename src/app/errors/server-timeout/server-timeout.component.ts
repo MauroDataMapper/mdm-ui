@@ -35,7 +35,7 @@ export class ServerTimeoutComponent extends ErrorComponent implements OnInit {
         super(messageService, clipboardService, sharedService, youtrackService);
         this.errorHeader = 'Server Timeout Error';
         this.errorMessage = 'We\'re sorry, but the server responded with an error message.';
-        this.errorResolution = 'The request may of succeeded, please allow sometime and then select the catalogue item you were on from the tree.';
+        this.errorResolution = 'The request may have succeeded. Please allow some time and then select the catalogue item you were on from the model tree to refresh the view.';
         this.errorReportMessage = 'Alternatively, if the error persists, please report the issue to us by using the link below:';
 
         this.dataSource.push({field: 'Reason', value: 'Server Timeout', code: false});

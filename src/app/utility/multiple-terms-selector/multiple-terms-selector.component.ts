@@ -30,6 +30,7 @@ import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridService } from '@mdm/services/grid.service';
+import { TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-multiple-terms-selector',
@@ -110,7 +111,7 @@ export class MultipleTermsSelectorComponent {
   }
 
   loadTerminologies = () => {
-    this.resources.terminology.list().subscribe(data => {
+    this.resources.terminology.list().subscribe((data: TerminologyIndexResponse) => {
       this.selectorSection.terminologies = data.body.items;
     });
   };
@@ -133,7 +134,7 @@ export class MultipleTermsSelectorComponent {
     const options = this.gridService.constructOptions(pageSize, offset);
     this.selectorSection.loading = true;
 
-    this.resources.terminology.terms.list(terminology.id, options).subscribe(result => {
+    this.resources.terms.list(terminology.id, options).subscribe(result => {
       // make check=true if element is already selected
       result.body.items.forEach(item => {
         item.terminology = terminology;

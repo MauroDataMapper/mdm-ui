@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { DataClassResult } from '@mdm/model/dataClassModel';
+import { DataClassDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-alias',
@@ -28,7 +28,7 @@ export class ElementAliasComponent {
   @Input() readOnly = true;
   @Input() editableForm: any;
   @Input() property: string;
-  @Input() element: DataClassResult;
+  @Input() element: DataClassDetail;
   @Input() inEditMode: false;
   @ViewChild('typedAliasId', { static: false }) alias: ElementRef;
   typedAlias: string;

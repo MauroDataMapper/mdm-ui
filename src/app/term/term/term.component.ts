@@ -22,12 +22,12 @@ import {
   ChangeDetectorRef,
   AfterViewInit
 } from '@angular/core';
-import { Subscription, forkJoin } from 'rxjs';
+import { Subscription, forkJoin, Observable } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '@mdm/services/message.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { EditableTerm, TermResult } from '@mdm/model/termModel';
+import { EditableTerm } from '@mdm/model/termModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -36,6 +36,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { TermDetail, TermDetailResponse, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-term',
@@ -46,8 +47,8 @@ export class TermComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  terminology = null;
-  term: TermResult;
+  terminology: TerminologyDetail = null;
+  term: TermDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -56,7 +57,7 @@ export class TermComponent
   editMode = false;
   showExtraTabs = false;
   activeTab: any;
-  result: TermResult;
+  result: TermDetail;
   hasResult = false;
   showEditForm = false;
   editableForm: EditableTerm;
@@ -66,15 +67,15 @@ export class TermComponent
   isLoadingRules = true;
   showEdit = false;
   showDelete = false;
-  access:any;
+  access: any;
 
 
   constructor(
     resources: MdmResourcesService,
     private messageService: MessageService,
-    private stateService: StateService,
     messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
+    private uiRouterGlobals: UIRouterGlobals,
     private broadcast: BroadcastService,
     private changeRef: ChangeDetectorRef,
     private title: Title,
@@ -86,17 +87,15 @@ export class TermComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    if (!this.uiRouterGlobals.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+
+    this.parentId = this.uiRouterGlobals.params.id;
     this.title.setTitle('Term');
     this.termDetails(this.parentId);
     this.subscription = this.messageService.changeSearch.subscribe(
@@ -116,80 +115,68 @@ export class TermComponent
   }
 
 
-  termDetails = (id) => {
-    const terms = [];
+  termDetails(id: string) {
+    const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
 
-    // tslint:disable-next-line: deprecation
-    terms.push(
-      this.resourcesService.terminology.get(
-        this.stateService.params.terminologyId
-      )
-    );
-    // tslint:disable-next-line: deprecation
-    terms.push(
-      this.resourcesService.terminology.terms.get(
-        this.stateService.params.terminologyId,
-        id
-      )
-    );
+    forkJoin([
+      this.resourcesService.terminology.get(terminologyId) as Observable<TerminologyDetailResponse>,
+      this.resourcesService.terms.get(terminologyId, id) as Observable<TermDetailResponse>
+    ])
+      .subscribe(([terminology, term]) => {
+        this.terminology = terminology.body;
+        this.term = term.body;
 
-    forkJoin(terms).subscribe((results: any) => {
-      this.terminology = results[0].body;
-      this.term = results[1].body;
+        this.resourcesService.catalogueItem
+          .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
+          .subscribe((resp) => {
+            this.term.semanticLinks = resp.body.items;
+          });
 
-      this.resourcesService.catalogueItem
-        .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
-        .subscribe((resp) => {
-          this.term.semanticLinks = resp.body.items;
-        });
+        this.catalogueItem = this.term;
+        this.watchTermObject();
 
-      this.catalogueItem = this.term;
-      this.watchTermObject();
+        this.UsedProfiles('term', this.term.id);
+        this.UnUsedProfiles('term', this.term.id);
 
-      this.UsedProfiles('term', this.term.id);
-      this.UnUsedProfiles('term', this.term.id);
+        this.term.finalised = this.terminology.finalised;
+        this.term.editable = this.terminology.editable;
 
-      this.term.finalised = this.terminology.finalised;
-      this.term.editable = this.terminology.editable;
+        this.term.classifiers = this.term.classifiers || [];
+        this.term.terminology = this.terminology;
+        this.activeTab = this.getTabDetailByName(
+          this.uiRouterGlobals.params.tabView
+        );
 
-      this.term.classifiers = this.term.classifiers || [];
-      this.term.terminology = this.terminology;
-      this.activeTab = this.getTabDetailByName(
-        // tslint:disable-next-line: deprecation
-        this.stateService.params.tabView
-      );
-
-      this.editableForm = new EditableTerm();
-      this.editableForm.visible = false;
-      this.editableForm.deletePending = false;
-      this.setEditableForm();
-
-      this.editableForm.show = () => {
-        this.editableForm.visible = true;
-      };
-
-      this.editableForm.cancel = () => {
-        this.editingService.stop();
+        this.editableForm = new EditableTerm();
+        this.editableForm.visible = false;
+        this.editableForm.deletePending = false;
         this.setEditableForm();
-      };
 
-      this.result = this.term;
-      if (this.result.terminology) {
-        this.hasResult = true;
-      }
-      this.messageService.FolderSendMessage(this.result);
-      this.messageService.dataChanged(this.result);
-      this.changeRef.detectChanges();
-    });
+        this.editableForm.show = () => {
+          this.editableForm.visible = true;
+        };
 
-    // tslint:disable-next-line: deprecation
+        this.editableForm.cancel = () => {
+          this.editingService.stop();
+          this.setEditableForm();
+        };
+
+        this.result = this.term;
+        if (this.result.terminology) {
+          this.hasResult = true;
+        }
+        this.messageService.FolderSendMessage(this.result);
+        this.messageService.dataChanged(this.result);
+        this.changeRef.detectChanges();
+      });
+
     this.activeTab = this.getTabDetailByName(
-      this.stateService.params.tabView
+      this.uiRouterGlobals.params.tabView
     ).index;
     this.tabSelected(this.activeTab);
   };
 
-   setEditableForm() {
+  setEditableForm() {
     this.editableForm.visible = false;
     this.editableForm.validationError = false;
     this.editableForm.description = this.term.description;
@@ -222,8 +209,8 @@ export class TermComponent
         return { index: 1, name: 'links' };
       case 'attachments':
         return { index: 2, name: 'attachments' };
-        case 'rules':
-          return { index: 3, name: 'rules' };
+      case 'rules':
+        return { index: 3, name: 'rules' };
 
       default:
         return { index: 0, name: 'description' };
@@ -300,5 +287,5 @@ export class TermComponent
   edit = () => {
     this.showEditDescription = false;
     this.editableForm.show();
-   };
+  };
 }

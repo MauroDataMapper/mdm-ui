@@ -390,7 +390,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             if (result) {
                if (this.validateLabel(result)) {
                   this.folder = result;
-                  this.handleAddFolder(fnode, this.folder);
+                  this.handleAddFolder(fnode, result);
                } else {
                   const error = 'err';
                   this.messageHandler.showError('Data Model name can not be empty', error);
@@ -404,7 +404,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       return promise;
    };
 
-   async handleAddFolder(fnode: FlatNode, label?: string) {
+   async handleAddFolder(fnode: FlatNode, payload?: { label: string; groups: any[] }) {
       if (this.selectedNode) {
          this.selectedNode.selected = false;
       }
@@ -413,7 +413,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
          let newNode: FlatNode;
          if (!fnode) {
             // Create new top level folder
-            result = await this.resources.folder.save(label).toPromise();
+            result = await this.resources.folder.save({ label: payload.label, groups: payload.groups }).toPromise();
             result.body.domainType = DOMAIN_TYPE.Folder;
             this.node.children.push(result.body);
 
@@ -421,7 +421,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
             this.treeControl.dataNodes.push(newNode);
          } else {
             // Add new folder to existing folder
-            result = await this.resources.folder.saveChildrenOf(fnode.id, label).toPromise();
+            result = await this.resources.folder.saveChildrenOf(fnode.id, { label: payload.label, groups: payload.groups }).toPromise();
             result.body.domainType = DOMAIN_TYPE.Folder;
             if (!fnode.children) {
                fnode.children = [];
@@ -643,7 +643,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
 
       try {
          switch (currentNode.domainType) {
-            case DOMAIN_TYPE.Folder: await this.resources.folder.update(currentNode.id, { parentFolder: parentFolder?.id }).toPromise(); break;
+            case DOMAIN_TYPE.Folder: await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: parentFolder?.id }).toPromise(); break;
             case DOMAIN_TYPE.DataModel: await this.resources.dataModel.moveDataModelToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
             case DOMAIN_TYPE.CodeSet: await this.resources.codeSet.moveCodeSetToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
             case DOMAIN_TYPE.Terminology: await this.resources.terminology.moveTerminologyToFolder(currentNode.id, parentFolder.id, {}).toPromise(); break;
@@ -719,7 +719,7 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
       if (currentNode.domainType === DOMAIN_TYPE.Folder) {
          try {
             // Top level tree node has no parent
-            await this.resources.folder.update(currentNode.id, { parentFolder: null }).toPromise();
+            await this.resources.folder.update(currentNode.id, { id: currentNode.id, parentFolder: null }).toPromise();
 
             if (this.rememberExpandedStates) {
                this.expandedPaths = this.expandedPaths.map((p: string) => {

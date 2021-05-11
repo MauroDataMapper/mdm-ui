@@ -15,29 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { MdmResourcesIndexResponse, MdmResourcesResponse } from '@mdm/modules/resources/mdm-resources.models';
 
-/**
- * Represents an API property.
- */
-export interface ApiProperty {
-  id?: string;
-  key: string;
-  value: string;
-  publiclyVisible?: boolean;
-  category?: string;
-  lastUpdated?: string;
-}
-
-/**
- * Type alias for an endpoint response returning a single `ApiProperty` object.
- */
-export type ApiPropertyResponse = MdmResourcesResponse<ApiProperty>;
-
-/**
- * Type alias for an endpoint response returning a list of `ApiProperty` objects.
- */
-export type ApiPropertyIndexResponse = MdmResourcesIndexResponse<ApiProperty>;
+import { ApiProperty } from '@maurodatamapper/mdm-resources';
 
 export enum ApiPropertyEditType {
   Value,

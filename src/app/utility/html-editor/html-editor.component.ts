@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FolderResult } from '@mdm/model/folderModel';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MessageService } from '@mdm/services/message.service';
@@ -90,7 +89,7 @@ export class HtmlEditorComponent implements OnInit {
 
   /* Inputs for model binding */
   @Input() editableForm: any;
-  @Input() element: FolderResult;
+  @Input() element: any;
   @Input() property: string;
 
   @Input() buttonMode: HtmlButtonMode;

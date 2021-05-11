@@ -1,5 +1,3 @@
-import { Authority } from './common';
-
 /*
 Copyright 2020 University of Oxford
 
@@ -17,40 +15,13 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class ReferenceModelResult {
-  id: string;
-  domainType: string;
-  authority?: Authority;
-  label: string;
-  documentationVersion: any[];
-  description: string;
-  editable: boolean;
-  lastUpdated: string;
-  classifiers: Classifiers[];
-  type: string;
-  finalised: boolean;
-  author: string;
-  organisation: string;
-  dateFinalised: string;
-  aliases: any[];
-  semanticLinks: any[];
-  readableByEveryone: boolean;
-  deleted: boolean;
-  branchName: string;
-  modelVersion: any;
-}
-
-export class Classifiers {
-  id: string;
-  label: string;
-  lastUpdated: string;
-}
+import { Classifier } from '@maurodatamapper/mdm-resources';
 
 export class EditableReferenceModel {
   deletePending: boolean;
   label: string;
   description: string;
-  classifiers: Classifiers[] = [];
+  classifiers: Classifier[] = [];
   aliases: any[] = [];
   visible: boolean;
   waiting: boolean;
@@ -64,12 +35,4 @@ export class EditableReferenceModel {
   cancel() { }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save(parent: any) { }
-}
-
-export class Categories {
-  index: number;
-  id: string;
-  key: string;
-  value: string;
-  category: string;
 }

@@ -39,6 +39,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { EditingService } from '@mdm/services/editing.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { CatalogueItemDomainType, ModelUpdatePayload, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-terminology',
@@ -50,7 +51,7 @@ export class TerminologyComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
 
-  terminology: any;
+  terminology: TerminologyDetail;
   diagram: any;
   activeTab: any;
   loadingData: boolean;
@@ -118,7 +119,7 @@ export class TerminologyComponent
     this.terminology = null;
     this.diagram = null;
     this.title.setTitle('Terminology');
-    this.resourcesService.terminology.get(id).subscribe((result) => {
+    this.resourcesService.terminology.get(id).subscribe((result: TerminologyDetailResponse) => {
       const data = result.body;
       this.catalogueItem = data;
 
@@ -165,36 +166,25 @@ export class TerminologyComponent
   }
 
   formBeforeSave = () => {
-    let resource: any = {};
+    const resource: ModelUpdatePayload = {
+      id: this.terminology.id,
+      domainType: CatalogueItemDomainType.Terminology,
+      description: this.editableForm.description || ''
+    };
+
     this.editingService.stop();
 
     if (!this.showEditDescription) {
-      const aliases = [];
-      this.editableForm.aliases.forEach((alias) => {
-        aliases.push(alias);
-      });
-      resource = {
-        id: this.terminology.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description,
-        author: this.editableForm.author,
-        organisation: this.editableForm.organisation,
-        type: this.terminology.type,
-        domainType: this.terminology.domainType,
-        classifiers: this.terminology.classifiers.map((cls) => {
-          return { id: cls.id };
-        }),
-        aliases
-      };
-    } else {
-      resource = {
-        id: this.terminology.id,
-        description: this.editableForm.description || ''
-      };
+      resource.label = this.editableForm.label;
+      resource.author = this.editableForm.author;
+      resource.organisation = this.editableForm.organisation;
+      resource.type = this.terminology.type;
+      resource.classifiers = this.terminology.classifiers;
+      resource.aliases = this.editableForm.aliases;
     }
 
     this.resourcesService.terminology.update(resource.id, resource).subscribe(
-      (res) => {
+      (res: TerminologyDetailResponse) => {
         const result = res.body;
 
         this.terminology = result;
@@ -303,7 +293,7 @@ export class TerminologyComponent
     };
 
     this.searchTerm = text;
-    return this.resourcesService.terminology.terms.search(this.terminology.id, {
+    return this.resourcesService.terms.search(this.terminology.id, {
       search: encodeURIComponent(text),
       limit,
       offset

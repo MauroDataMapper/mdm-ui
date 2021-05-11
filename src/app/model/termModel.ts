@@ -15,42 +15,8 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class TermResult {
-  terminology: any;
-  terminologyLabel: string;
-  code: string;
-  definition: string;
-  id: string;
-  domainType: string;
-  url: string;
-  dateCreated: string;
-  label: string;
-  description: string;
-  editable: boolean;
-  lastUpdated: string;
-  classifiers: Classifiers[];
-  type: string;
-  finalised: boolean;
-  author: string;
-  organisation: string;
-  dateFinalised: string;
-  aliases: any[];
-  semanticLinks: any[];
-  deleted = false;
-  readableByEveryone: boolean;
-  model:any;
-  breadcrumbs: any;
 
-}
-
-
-export class Classifiers {
-  id: string;
-  label: string;
-  lastUpdated: string;
-
-}
-
+import { Classifier } from '@maurodatamapper/mdm-resources';
 
 export class EditableTerm {
   id: string;
@@ -65,7 +31,7 @@ export class EditableTerm {
   domainType: string;
   editable: boolean;
   deletePending: boolean;
-  classifiers: Classifiers[] = [];
+  classifiers: Classifier[] = [];
   aliases: any[] = [];
   finalised: boolean;
   visible: boolean;

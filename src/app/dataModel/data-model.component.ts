@@ -30,13 +30,14 @@ import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
 import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { DataModelResult, EditableDataModel } from '../model/dataModelModel';
+import { EditableDataModel } from '../model/dataModelModel';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataModelDetail, DataModelDetailResponse, ModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model',
@@ -48,7 +49,7 @@ export class DataModelComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  dataModel: DataModelResult;
+  dataModel: DataModelDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -142,14 +143,14 @@ export class DataModelComponent
 
     this.resourcesService.dataModel
       .get(id)
-      .subscribe(async (result: { body: DataModelResult }) => {
+      .subscribe(async (result: DataModelDetailResponse) => {
         console.log(result.body);
         this.dataModel = result.body;
         this.catalogueItem = this.dataModel;
         this.watchDataModelObject();
         id = result.body.id;
 
-        this.isEditable = this.dataModel['availableActions'].includes('update');
+        this.isEditable = this.dataModel.availableActions?.includes('update');
         this.parentId = this.dataModel.id;
 
         await this.resourcesService.versionLink
@@ -224,7 +225,7 @@ export class DataModelComponent
 
   async DataModelPermissions(id: any) {
     await this.resourcesService.security
-      .permissions('dataModels', id)
+      .permissions(SecurableDomainType.DataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.dataModel[attrname] = permissions.body[attrname];
@@ -249,41 +250,34 @@ export class DataModelComponent
       aliases.push(alias);
     });
 
-    let resource = {};
+    const resource: ModelUpdatePayload = {
+      id: this.dataModel.id,
+      domainType: this.dataModel.domainType,
+      description: this.editableForm.description || ''
+    };
+
     if (!this.showEditDescription) {
-      resource = {
-        id: this.dataModel.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        author: this.editableForm.author,
-        organisation: this.editableForm.organisation,
-        type: this.dataModel.type,
-        domainType: this.dataModel.domainType,
-        aliases,
-        classifiers
-      };
+      resource.label = this.editableForm.label;
+      resource.author = this.editableForm.author;
+      resource.organisation = this.editableForm.organisation;
+      resource.type = this.dataModel.type;
+      resource.aliases = aliases;
+      resource.classifiers = classifiers;
     }
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.dataModel.id,
-        description: this.editableForm.description || ''
-      };
-    }
-
-      this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe(res => {
-        this.messageHandler.showSuccess('Data Model updated successfully.');
-        this.editableForm.visible = false;
-        this.dataModel.description = res.body.description;
-          this.editForm.forEach((x) => x.edit({ editing: false }));
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem updating the Data Model.',
-            error
-          );
-        }
-      );
+    this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe((res: DataModelDetailResponse) => {
+      this.messageHandler.showSuccess('Data Model updated successfully.');
+      this.editableForm.visible = false;
+      this.dataModel.description = res.body.description;
+        this.editForm.forEach((x) => x.edit({ editing: false }));
+      },
+      (error) => {
+        this.messageHandler.showError(
+          'There was a problem updating the Data Model.',
+          error
+        );
+      }
+    );
   };
 
 

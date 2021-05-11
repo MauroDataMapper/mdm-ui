@@ -21,7 +21,7 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
+import { EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
@@ -33,6 +33,7 @@ import {
   ValidatorService
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataClass, DataClassDetail, DataClassDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-class',
@@ -43,7 +44,7 @@ export class DataClassComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  dataClass: DataClassResult;
+  dataClass: DataClassDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -152,13 +153,13 @@ export class DataClassComponent
     if (!parentDataClass) {
       this.resourcesService.dataClass
         .get(model, id)
-        .subscribe((result: { body: DataClassResult }) => {
+        .subscribe((result: DataClassDetailResponse) => {
           this.dataClass = result.body;
 
           this.access = this.securityHandler.elementAccess(this.dataClass);
 
           this.catalogueItem = this.dataClass;
-          this.isEditable = this.dataClass['availableActions']?.includes(
+          this.isEditable = this.dataClass.availableActions?.includes(
             'update'
           );
 
@@ -214,16 +215,19 @@ export class DataClassComponent
     } else {
       this.resourcesService.dataClass
         .getChildDataClass(model, parentDataClass, id)
-        .subscribe((result: { body: DataClassResult }) => {
+        .subscribe((result: DataClassDetailResponse) => {
           this.dataClass = result.body;
           this.createEditableForm();
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
-          this.isEditable = this.dataClass['availableActions']?.includes(
+          this.isEditable = this.dataClass.availableActions?.includes(
             'update'
           );
+
+          this.createEditableForm();
+
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
 
@@ -369,31 +373,25 @@ export class DataClassComponent
         }
       }
 
-      let resource = {};
-      if (!this.showEditDescription) {
-        resource = {
-          id: this.dataClass.id,
-          label: this.editableForm.label,
-          description: this.editableForm.description,
-          aliases,
-          classifiers,
-          minMultiplicity: parseInt(this.min, 10),
-          maxMultiplicity: parseInt(this.max, 10)
-        };
-      }
+      const resource: DataClass = {
+        id: this.dataClass.id,
+        label: this.editableForm.label,
+        domainType: this.dataClass.domainType,
+        description: this.editableForm.description || ''
+      };
 
-      if (this.showEditDescription) {
-        resource = {
-          id: this.dataClass.id,
-          description: this.editableForm.description || ''
-        };
+      if (!this.showEditDescription) {
+        resource.aliases = aliases;
+        resource.classifiers = classifiers;
+        resource.minMultiplicity = parseInt(this.min, 10);
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
 
       if (!this.dataClass.parentDataClass) {
         this.resourcesService.dataClass
           .update(this.dataClass.model, this.dataClass.id, resource)
           .subscribe(
-            (result) => {
+            (result: DataClassDetailResponse) => {
               this.dataClass = result.body;
               this.messageHandler.showSuccess(
                 'Data Class updated successfully.'
@@ -419,7 +417,7 @@ export class DataClassComponent
             resource
           )
           .subscribe(
-            (result) => {
+            (result: DataClassDetailResponse) => {
               this.dataClass = result.body;
               this.messageHandler.showSuccess(
                 'Data Class updated successfully.'

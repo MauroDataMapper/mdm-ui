@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ReferenceDataModelDetail, ReferenceDataModelDetailResponse } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import {
   StateHandlerService,
@@ -34,7 +35,7 @@ import { finalize } from 'rxjs/operators';
 })
 export class NewVersionReferenceDataModelComponent implements OnInit {
   step = 1;
-  referenceDataModel: any;
+  referenceDataModel: ReferenceDataModelDetail;
   errors: { label: string } | undefined;
   versionType: 'Fork' | 'Branch' | 'Version' | undefined;
   processing: boolean;
@@ -63,7 +64,7 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
 
     this.resources.referenceDataModel
       .get(this.uiRouterGlobals.params.referenceDataModelId)
-      .subscribe((response) => {
+      .subscribe((response: ReferenceDataModelDetailResponse) => {
         this.referenceDataModel = response.body;
       });
   }

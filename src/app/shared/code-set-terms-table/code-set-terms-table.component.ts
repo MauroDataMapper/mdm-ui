@@ -35,6 +35,7 @@ import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { GridService } from '@mdm/services/grid.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
+import { CatalogueItemDomainType, CodeSetDetail, ModelUpdatePayload } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-code-set-terms-table',
@@ -42,7 +43,7 @@ import { EditableDataModel } from '@mdm/model/dataModelModel';
   styleUrls: ['./code-set-terms-table.component.scss']
 })
 export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
-  @Input() codeSet: any;
+  @Input() codeSet: CodeSetDetail;
   @Input() type: any; // static, dynamic
   @Output() totalCount = new EventEmitter<string>();
   @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
@@ -170,7 +171,7 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
     return;
   };
 
-  addTerms = (terms) => {
+  addTerms(terms) {
     this.codeSet.terms = this.records;
     // current terms
     const currentTerms = this.codeSet.terms.map((term) => {
@@ -182,7 +183,13 @@ export class CodeSetTermsTableComponent implements OnInit, AfterViewInit {
 
     const allTermIds = [].concat(newTermIds).concat(currentTerms);
 
-    this.resources.codeSet.update(this.codeSet.id, { terms: allTermIds }).subscribe(() => {
+    const resource: ModelUpdatePayload = {
+      id: this.codeSet.id,
+      domainType: CatalogueItemDomainType.CodeSet,
+      terms: allTermIds
+    };
+
+    this.resources.codeSet.update(this.codeSet.id, resource).subscribe(() => {
       this.messageHandler.showSuccess('Terms added successfully.');
       const options = this.gridService.constructOptions(40, 0);
 

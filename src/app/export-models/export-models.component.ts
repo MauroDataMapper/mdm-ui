@@ -78,7 +78,7 @@ export class ExportModelsComponent implements OnInit {
   loadExporterList() {
     this.exportersList = [];
     this.securityHandler.isAuthenticated().subscribe(result => {
-      if (result.body === false) {
+      if (!result.body.authenticatedSession) {
         return;
       }
 

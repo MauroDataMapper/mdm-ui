@@ -25,6 +25,7 @@ import { of, fromEvent } from 'rxjs';
 import { debounceTime, switchMap, map, filter, distinctUntilChanged } from 'rxjs/operators';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GridService } from '@mdm/services/grid.service';
+import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, Terminology, TerminologyIndexResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-selector',
@@ -83,7 +84,7 @@ export class ElementSelectorComponent implements OnInit {
     inSearchMode: false
   };
   showPrevBtn = false;
-  public terminologies: any[];
+  public terminologies: Terminology[];
   public termsList: any[];
   options;
   dataSource = new MatTableDataSource();
@@ -173,7 +174,7 @@ export class ElementSelectorComponent implements OnInit {
   }
   loadAllFolders = () => {
     this.loading = true;
-    this.resourceService.folder.list().subscribe((data) => {
+    this.resourceService.folder.list().subscribe((data: FolderIndexResponse) => {
       this.loading = false;
       this.rootNode = {
         children: data.body.items,
@@ -186,7 +187,7 @@ export class ElementSelectorComponent implements OnInit {
 
   loadTerminologies = () => {
     this.reloading = true;
-    this.resourceService.terminology.list({ all: true }).subscribe(res => {
+    this.resourceService.terminology.list({ all: true }).subscribe((res: TerminologyIndexResponse) => {
       if (this.data.notAllowedToSelectIds && this.data.notAllowedToSelectIds.length > 0) {
         let i = res.body.items.length - 1;
         while (i >= 0) {
@@ -419,7 +420,7 @@ export class ElementSelectorComponent implements OnInit {
   }
   loadAllTerms(terminology, pageSize, pageIndex) {
     const options = this.gridService.constructOptions(pageSize, pageIndex);
-    return this.resourceService.terminology.terms.list(terminology.id, options);
+    return this.resourceService.terms.list(terminology.id, options);
   }
   calculateDisplayedSoFar(result) {
     this.formData.searchResultTotal = result.count;
@@ -449,11 +450,12 @@ export class ElementSelectorComponent implements OnInit {
     }
     this.formData.inSearchMode = true;
     this.reloading = true;
-    const options = {
+    const options: TreeItemSearchQueryParameters = {
+      searchTerm: this.formData.treeSearchText,
       domainType: treeSearchDomainType
     };
 
-    this.resourceService.tree.search('folders', this.formData.treeSearchText, options).subscribe(result => {
+    this.resourceService.tree.search(ContainerDomainType.FOLDERS, this.formData.treeSearchText, options).subscribe((result: MdmTreeItemListResponse) => {
       this.reloading = false;
       this.rootNode = {
         children: result.body,

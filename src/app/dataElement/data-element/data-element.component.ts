@@ -22,7 +22,6 @@ import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import {
-  DataElementResult,
   EditableDataElement
 } from '@mdm/model/dataElementModel';
 import { Subscription } from 'rxjs';
@@ -38,6 +37,7 @@ import {
 } from '@mdm/services';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataElement, DataElementDetail, DataElementDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-element',
@@ -48,7 +48,7 @@ export class DataElementComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  dataElementOutput: DataElementResult;
+  dataElementOutput: DataElementDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -288,27 +288,22 @@ export class DataElementComponent
       } else {
         dataType = this.newlyAddedDataType;
       }
-      let resource = {};
+
+      const resource: DataElement = {
+        id: this.dataElementOutput.id,
+        label: this.editableForm.label,
+        domainType: this.dataElementOutput.domainType,
+        description: this.editableForm.description || ''
+      };
+
       if (!this.showEditDescription) {
-        resource = {
-          id: this.dataElementOutput.id,
-          label: this.editableForm.label,
-          description: this.editableForm.description || '',
-          domainType: this.dataElementOutput.domainType,
-          aliases,
-          dataType,
-          classifiers,
-          minMultiplicity: parseInt(this.min, 10),
-          maxMultiplicity: parseInt(this.max, 10)
-        };
+        resource.aliases = aliases;
+        resource.dataType = dataType;
+        resource.classifiers = classifiers;
+        resource.minMultiplicity = parseInt(this.min, 10);
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
 
-      if (this.showEditDescription) {
-        resource = {
-          id: this.dataElementOutput.id,
-          description: this.editableForm.description || ''
-        };
-      }
       this.resourcesService.dataElement
         .update(
           this.dataModel.id,
@@ -317,7 +312,7 @@ export class DataElementComponent
           resource
         )
         .subscribe(
-          (result: any) => {
+          (result: DataElementDetailResponse) => {
             this.editingService.stop();
             this.dataElementOutput = result.body;
             this.setValues();
@@ -357,7 +352,7 @@ export class DataElementComponent
   dataElementDetails(dataModelId: any, dataClassId, id) {
     this.resourcesService.dataElement
       .get(dataModelId, dataClassId, id)
-      .subscribe((result: { body: DataElementResult }) => {
+      .subscribe((result: DataElementDetailResponse) => {
         this.dataElementOutput = result.body;
 
         this.editableForm = new EditableDataElement();

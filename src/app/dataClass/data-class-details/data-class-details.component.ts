@@ -24,7 +24,7 @@ import {
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
+import { EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -36,6 +36,7 @@ import { Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { DataClass, DataClassDetail, DataClassDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-class-details',
@@ -45,7 +46,7 @@ import { EditingService } from '@mdm/services/editing.service';
 export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('editableText') editForm: QueryList<any>;
   @Input() editMode = false;
-  result: DataClassResult;
+  result: DataClassDetail;
   hasResult = false;
   subscription: Subscription;
   editableForm: EditableDataClass;
@@ -285,28 +286,23 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.max = -1;
         }
       }
-      let resource = {};
-      if (!this.showEditDescription) {
-        resource = {
-          id: this.result.id,
-          label: this.editableForm.label,
-          description: this.editableForm.description,
-          aliases,
-          classifiers,
-          minMultiplicity: parseInt(this.min, 10),
-          maxMultiplicity: parseInt(this.max, 10)
-        };
-      }
 
-      if (this.showEditDescription) {
-        resource = {
-          id: this.result.id,
-          description: this.editableForm.description || ''
-        };
+      const resource: DataClass = {
+        id: this.result.id,
+        label: this.editableForm.label,
+        domainType: this.result.domainType,
+        description: this.editableForm.description || ''
+      };
+
+      if (!this.showEditDescription) {
+        resource.aliases = aliases;
+        resource.classifiers = classifiers;
+        resource.minMultiplicity = parseInt(this.min, 10);
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
 
       if (!this.result.parentDataClass) {
-        this.resourcesService.dataClass.update(this.result.model, this.result.id, resource).subscribe(result => {
+        this.resourcesService.dataClass.update(this.result.model, this.result.id, resource).subscribe((result: DataClassDetailResponse) => {
           this.messageHandler.showSuccess('Data Class updated successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;
@@ -317,7 +313,7 @@ export class DataClassDetailsComponent implements OnInit, AfterViewInit, OnDestr
           this.messageHandler.showError('There was a problem updating the Data Class.', error);
         });
       } else {
-        this.resourcesService.dataClass.updateChildDataClass(this.result.model, this.result.parentDataClass, this.result.id, resource).subscribe(result => {
+        this.resourcesService.dataClass.updateChildDataClass(this.result.model, this.result.parentDataClass, this.result.id, resource).subscribe((result: DataClassDetailResponse) => {
           this.messageHandler.showSuccess('Data Class updated successfully.');
           this.broadcastSvc.broadcast('$reloadFoldersTree');
           this.editableForm.visible = false;

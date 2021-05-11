@@ -31,6 +31,7 @@ import { SecurityHandlerService } from '../services/handlers/security-handler.se
 import { UserSettingsHandlerService } from '../services/utility/user-settings-handler.service';
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -134,17 +135,17 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         }
       }
 
-      const options = {
-        queryStringParams: {
-          domainType: this.treeSearchDomainType,
-          includeDocumentSuperseded: true,
-          includeModelSuperseded: true,
-          includeDeleted: true
-        }
+      const options: TreeItemSearchQueryParameters = {
+        searchTerm: this.searchCriteria,
+        domainType: this.treeSearchDomainType,
+        includeDocumentSuperseded: true,
+        includeModelSuperseded: true,
+        includeDeleted: true
       };
+
       if (this.searchCriteria.trim().length > 0) {
         this.inSearchMode = true;
-        this.resources.tree.search('folders', this.searchCriteria, options).subscribe((result) => {
+        this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria, options).subscribe((result: MdmTreeItemListResponse) => {
           this.filteredRootNode = {
             children: result.body,
             isRoot: true
@@ -180,7 +181,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         }
         if (this.searchCriteria.trim().length > 0) {
           this.inSearchMode = true;
-          this.resources.tree.search('folders', this.searchCriteria).subscribe((result) => {
+          this.resources.tree.search(ContainerDomainType.FOLDERS, this.searchCriteria).subscribe((result: MdmTreeItemListResponse) => {
             this.filteredRootNode = {
               children: result.body,
               isRoot: true
@@ -200,7 +201,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
     const id = (folder && folder.id) ? folder.id : null;
     this.loading = true;
     if (folder?.id) {
-      this.resources.folder.get(id).subscribe(data => {
+      this.resources.folder.get(id).subscribe((data: FolderIndexResponse) => {
         this.loading = false;
         this.rootNode = {
           children: data.body.items,
@@ -211,7 +212,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
         this.loading = false;
       });
     } else {
-      this.resources.tree.list('folders', {foldersOnly: true}).subscribe(data => {
+      this.resources.tree.list('folders', {foldersOnly: true}).subscribe((data: MdmTreeItemListResponse) => {
         this.loading = false;
         this.rootNode = {
           children: data.body,

@@ -16,9 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
+import { TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
-import { TermResult } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,7 +27,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./term-relationships.component.scss']
 })
 export class TermRelationshipsComponent implements OnInit {
-  @Input() term: TermResult;
+  @Input() term: TermDetail;
   @Input() type?: string;
   subscription: Subscription;
   totalItems = 0;

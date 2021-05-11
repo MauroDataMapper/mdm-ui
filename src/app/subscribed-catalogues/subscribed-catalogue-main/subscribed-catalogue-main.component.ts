@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { SubscribedCatalogue, SubscribedCatalogueResponse } from '@mdm/model/subscribed-catalogue-model';
+import { SubscribedCatalogue, SubscribedCatalogueResponse } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService, StateHandlerService } from '@mdm/services';
 import { BaseComponent } from '@mdm/shared/base/base.component';

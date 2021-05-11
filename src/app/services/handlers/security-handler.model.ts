@@ -17,31 +17,31 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { MdmResourcesError, MdmResourcesResponse } from '@mdm/modules/resources/mdm-resources.models';
+import { MdmResourcesError } from '@mdm/modules/resources/mdm-resources.models';
 
-/**
- * Credentials to send to `mdm-resources` for the sign-in operation.
- */
-export interface SignInCredentials {
-  username: string;
-  password: string;
-}
+// /**
+//  * Credentials to send to `mdm-resources` for the sign-in operation.
+//  */
+// export interface SignInCredentials {
+//   username: string;
+//   password: string;
+// }
 
-/**
- * The result of a successful sign-in operation.
- */
- export interface SignInResult {
-  id: string;
-  token?: string;
-  emailAddress: string;
-  firstName: string;
-  lastName: string;
-  pending?: boolean;
-  disabled?: boolean;
-  createdBy?: string;
-  userRole?: string;
-  needsToResetPassword?: boolean;
-}
+// /**
+//  * The result of a successful sign-in operation.
+//  */
+//  export interface SignInResult {
+//   id: string;
+//   token?: string;
+//   emailAddress: string;
+//   firstName: string;
+//   lastName: string;
+//   pending?: boolean;
+//   disabled?: boolean;
+//   createdBy?: string;
+//   userRole?: string;
+//   needsToResetPassword?: boolean;
+// }
 
 export enum SignInErrorType {
   UnknownError,
@@ -89,17 +89,17 @@ export class SignInError extends MdmResourcesError {
   }
 }
 
-export interface AuthenticatedSessionResult {
-  authenticatedSession: boolean;
-}
+// export interface AuthenticatedSessionResult {
+//   authenticatedSession: boolean;
+// }
 
-export interface AdministrationSessionResult {
-  applicationAdministrationSession: boolean;
-}
+// export interface AdministrationSessionResult {
+//   applicationAdministrationSession: boolean;
+// }
 
-export type SignInResponse = MdmResourcesResponse<SignInResult>;
-export type AdministrationSessionResponse = MdmResourcesResponse<AdministrationSessionResult>;
-export type AuthenticatedSessionResponse = MdmResourcesResponse<AuthenticatedSessionResult>;
+// export type SignInResponse = MdmResourcesResponse<SignInResult>;
+// export type AdministrationSessionResponse = MdmResourcesResponse<AdministrationSessionResult>;
+// export type AuthenticatedSessionResponse = MdmResourcesResponse<AuthenticatedSessionResult>;
 
 /**
  * Represents the common details of a signed in user.

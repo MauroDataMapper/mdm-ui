@@ -38,12 +38,14 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
-import { FinaliseModalComponent } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { MessageService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { Subscription } from 'rxjs';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
+import { ModelUpdatePayload, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
 
 @Component({
   selector: 'mdm-terminology-details',
@@ -196,8 +198,8 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     }
   };
 
-  formBeforeSave() {
-    const resource = {
+  formBeforeSave = () => {
+    const resource: ModelUpdatePayload = {
       id: this.mcTerminology.id,
       label: this.editableForm.label,
       description: this.editableForm.description,
@@ -212,8 +214,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
       })
     };
 
-    this.resources.terminology.update(resource.id, resource).subscribe(
-      (res) => {
+    this.resources.terminology.update(resource.id, resource).subscribe((res: TerminologyDetailResponse) => {
         const result = res.body;
 
         if (this.afterSave) {
@@ -296,7 +297,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     this.exportError = null;
   };
 
-  delete(permanent) {
+  delete(permanent: boolean) {
     if (!this.showDelete) {
       return;
     }
@@ -389,61 +390,42 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
   };
 
   finalise() {
-    this.resources.terminology
-      .latestModelVersion(this.mcTerminology.id)
-      .subscribe((response) => {
-        this.dialog
-          .open(FinaliseModalComponent, {
-            data: {
-              title: 'Finalise Terminology',
-              modelVersion: response.body.modelVersion,
-              okBtnTitle: 'Finalise Terminology',
-              btnType: 'accent',
-              message: `<p class='marginless'>Please select the version you would like this Terminology</p>
+    this.resources.terminology.latestModelVersion(this.mcTerminology.id).subscribe(response => {
+      this.dialog.open<FinaliseModalComponent, any, FinaliseModalResponse>(FinaliseModalComponent, {
+          data: {
+            title: 'Finalise Terminology',
+            modelVersion: response.body.modelVersion,
+            okBtnTitle: 'Finalise Terminology',
+            btnType: 'accent',
+            message: `<p class='marginless'>Please select the version you would like this Terminology</p>
                       <p>to be finalised with: </p>`
-            }
-          })
-          .afterClosed()
-          .subscribe((dialogResult) => {
-            if (dialogResult?.status !== 'ok') {
-              return;
-            }
-            this.processing = true;
-            this.resources.terminology
-              .finalise(this.mcTerminology.id, dialogResult.request)
-              .subscribe(
-                () => {
-                  this.processing = false;
-                  this.messageHandler.showSuccess(
-                    'Terminology finalised successfully.'
-                  );
-                  this.stateHandler.Go(
-                    'terminology',
-                    { id: this.mcTerminology.id },
-                    { reload: true }
-                  );
-                },
-                (error) => {
-                  this.processing = false;
-                  this.messageHandler.showError(
-                    'There was a problem finalising the Terminology.',
-                    error
-                  );
-                }
-              );
+          }
+        }).afterClosed().subscribe(dialogResult => {
+          if (dialogResult?.status !== ModalDialogStatus.Ok) {
+            return;
+          }
+          this.processing = true;
+          this.resources.terminology.finalise(this.mcTerminology.id, dialogResult.request).subscribe(() => {
+              this.processing = false;
+              this.messageHandler.showSuccess('Terminology finalised successfully.');
+              this.stateHandler.Go('terminology', { id: this.mcTerminology.id }, { reload: true });
+            }, error => {
+              this.processing = false;
+              this.messageHandler.showError('There was a problem finalising the Terminology.', error);
           });
       });
-  };
+    });
+  }
 
-  onCancelEdit()  {
+  onCancelEdit() {
     this.errorMessage = '';
     this.showEditDescription = false;
   };
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (result.body === false) {
+    this.securityHandler.isAuthenticated().subscribe(result => {
+      if (!result.body.authenticatedSession) {
         return;
       }
       this.resources.terminology.exporters().subscribe(

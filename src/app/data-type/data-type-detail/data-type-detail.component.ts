@@ -34,6 +34,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { CodeSetDetailResponse, DataType, DataTypeDetailResponse, ReferenceDataModelDetailResponse, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-detail',
@@ -119,15 +120,15 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'Terminology') {
-      this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+      this.resources.terminology.get(this.mcDataTypeObject.modelResourceId).subscribe((result: TerminologyDetailResponse) => {
         this.elementType = result.body;
       });
     } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'CodeSet') {
-      this.resources.codeSet.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+      this.resources.codeSet.get(this.mcDataTypeObject.modelResourceId).subscribe((result: CodeSetDetailResponse) => {
         this.elementType = result.body;
       });
     } else if (this.mcDataTypeObject.domainType === 'ModelDataType' && this.mcDataTypeObject.modelResourceDomainType === 'ReferenceDataModel') {
-      this.resources.referenceDataModel.get(this.mcDataTypeObject.modelResourceId).subscribe(result => {
+      this.resources.referenceDataModel.get(this.mcDataTypeObject.modelResourceId).subscribe((result: ReferenceDataModelDetailResponse) => {
         this.elementType = result.body;
       });
     }
@@ -156,26 +157,21 @@ export class DataTypeDetailComponent implements OnInit, AfterViewInit {
       aliases.push(alias);
     });
 
-    let resource = {};
+    const resource: DataType = {
+      id: this.mcDataTypeObject.id,
+      label: this.editableForm.label,
+      domainType: this.mcDataTypeObject.domainType,
+      description: this.editableForm.description || ''
+    };
+
     if (!this.showEditDescription) {
-      resource = {
-        id: this.mcDataTypeObject.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        aliases,
-        domainType: this.mcDataTypeObject.domainType,
-        classifiers: this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }))
-      };
+      resource.description = this.editableForm.description || '';
+      resource.aliases = aliases;
+      resource.domainType = this.mcDataTypeObject.domainType;
+      resource.classifiers = this.mcDataTypeObject.classifiers.map(cls => ({ id: cls.id }));
     }
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.mcDataTypeObject.id,
-        description: this.editableForm.description || ''
-      };
-    }
-
-    this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res) => {
+    this.resources.dataType.update(this.mcParentDataModel.id, this.mcDataTypeObject.id, resource).subscribe((res: DataTypeDetailResponse) => {
       const result = res.body;
       if (this.afterSave) {
         this.afterSave(resource);

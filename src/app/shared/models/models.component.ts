@@ -35,6 +35,7 @@ import { NodeConfirmClickEvent } from '@mdm/folders-tree/folders-tree.component'
 import { EditingService } from '@mdm/services/editing.service';
 import { Node } from '@mdm/folders-tree/flat-node';
 import { ModelTreeService } from '@mdm/services/model-tree.service';
+import { CatalogueItemDomainType, Classifier, ClassifierDetailResponse, ClassifierIndexResponse, ContainerDomainType, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-models',
@@ -64,12 +65,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   currentTab = 'dataModels';
   classifierLoading = false;
-  allClassifiers: any;
+  allClassifiers: Classifier[];
   reloading = false;
 
   currentClassification: any;
   allClassifications: any;
-  classifiers: any;
+  classifiers: { children: Classifier[]; isRoot: boolean };
 
   searchText: any;
 
@@ -160,10 +161,10 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.initializeModelsTree();
 
     this.broadcastSvc.subscribe('$reloadClassifiers', () => {
-      this.resources.classifier.list().subscribe(data => {
-        this.allClassifiers = data.items;
+      this.resources.classifier.list().subscribe((data: ClassifierIndexResponse) => {
+        this.allClassifiers = data.body.items;
         this.classifiers = {
-          children: data,
+          children: data.body.items,
           isRoot: true
         };
       });
@@ -204,17 +205,16 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  loadClassifiers = () => {
+  loadClassifiers() {
     this.classifierLoading = true;
-    this.resources.classifier.list().subscribe(result => {
-      const data = result.body;
-      this.allClassifiers = data.items;
-      data.items.forEach(x => {
-        x.hasChildren = false;
-        x.domainType = 'Classification';
+    this.resources.classifier.list().subscribe((result: ClassifierIndexResponse) => {
+      const data = result.body.items;
+      this.allClassifiers = data;
+      data.forEach(classifier => {
+        classifier.domainType = CatalogueItemDomainType.Classification;
       });
       this.classifiers = {
-        children: data.items,
+        children: data,
         isRoot: true
       };
       this.classifierLoading = false;
@@ -315,7 +315,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
         if (result) {
           if (this.validateLabel(result)) {
             this.folder = result;
-            this.onAddFolder(null, null, this.folder);
+            this.onAddFolder(null, null, result);
           } else {
             const error = 'err';
             this.messageHandler.showError('Folder name can not be empty', error);
@@ -328,32 +328,33 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
     return promise;
   };
-  onAddFolder = (event?, folder?, label?) => {
+
+  onAddFolder(event?, folder?, payload?: { label: string; groups: any[] }) {
     let parentId;
     if (folder) {
       parentId = folder.id;
     }
     let endpoint;
     if (parentId) {
-      endpoint = this.resources.folder.saveChildrenOf(parentId, label);
+      endpoint = this.resources.folder.saveChildrenOf(parentId, { label: payload.label, groups: payload.groups });
     } else {
-      endpoint = this.resources.folder.save(label);
+      endpoint = this.resources.folder.save({ label: payload.label, groups: payload.groups });
     }
-    endpoint.subscribe(res => {
+    endpoint.subscribe((res: FolderDetailResponse) => {
       const result = res.body;
       if (folder) {
-        result.domainType = 'Folder';
+        // result.domainType = 'Folder';
         folder.children = folder.children || [];
         folder.children.push(result);
       } else {
-        result.domainType = 'Folder';
-        this.allModels.children.push(result);
+        // result.domainType = 'Folder';
+        // this.allModels.children.push(result);
         this.filteredModels.children.push(result);
       }
 
       // go to folder
       this.stateHandler.Go('Folder', { id: result.id, edit: false });
-      this.messageHandler.showSuccess(`Folder ${label.label} created successfully.`);
+      this.messageHandler.showSuccess(`Folder ${result.label} created successfully.`);
       this.folder = '';
       this.loadModelsTree();
     }, error => {
@@ -486,7 +487,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       this.inSearchMode = true;
       this.allModels = null;
 
-      this.resources.tree.search('folders', this.sharedService.searchCriteria).subscribe(res => {
+      this.resources.tree.search(ContainerDomainType.FOLDERS, this.sharedService.searchCriteria).subscribe(res => {
         const result: Node[] = res.body;
         this.reloading = false;
         this.allModels = {
@@ -560,7 +561,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
             const resource = {
               label: result.label,
             };
-            this.resources.classifier.save(resource).subscribe(response => {
+            this.resources.classifier.save(resource).subscribe((response: ClassifierDetailResponse) => {
               this.messageHandler.showSuccess('Classifier saved successfully.');
               this.stateHandler.Go('classification',
                 {

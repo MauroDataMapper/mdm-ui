@@ -243,6 +243,34 @@ SPDX-License-Identifier: Apache-2.0
                 </td>
               </tr>
               <tr>
+                <td class="detailsRowHeader">Author</td>
+                <td *ngIf="dataModel">
+                  <mdm-inline-text-edit
+                    [readOnly]="showEditDescription"
+                    [inEditMode]="editableForm.visible"
+                    [(ngModel)]="dataModel.author"
+                    [name]="'moduleNameAuthor'"
+                    size="20"
+                    [styleCss]="'dataModelDetailsLabel'"
+                  >
+                  </mdm-inline-text-edit>
+                </td>
+              </tr>
+              <tr>
+                <td class="detailsRowHeader">Organisation</td>
+                <td *ngIf="dataModel">
+                  <mdm-inline-text-edit
+                    [readOnly]="showEditDescription"
+                    [inEditMode]="editableForm.visible"
+                    [(ngModel)]="dataModel.organisation"
+                    [name]="'moduleNameOrganisation'"
+                    size="20"
+                    [styleCss]="'dataModelDetailsLabel'"
+                  >
+                  </mdm-inline-text-edit>
+                </td>
+              </tr>
+              <tr>
                 <td class="detailsRowHeader">Description</td>
                 <td class="elementDetailDescription">
                   <div *ngIf="dataModel">

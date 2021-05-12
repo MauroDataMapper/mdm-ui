@@ -218,6 +218,32 @@ SPDX-License-Identifier: Apache-2.0
           </small>
         </div>
 
+        
+        <div class="text-muted">
+          <small>
+              <i class="fas fa-cube" matTooltip="Item type"></i>
+              <span><strong>Item type: </strong><span class="item-type">{{mcTerminology.domainType}}</span></span>
+          </small>
+      </div>
+
+        <div class="text-muted" *ngIf="mcTerminology?.authority">
+          <small>
+            <i class="far fa-building" matTooltip="Authority"></i>
+            <span
+              ><strong>Authority: </strong
+              >{{ mcTerminology.authority['label'] }}</span
+            >
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="mcTerminology">
+          <small>
+            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+            <span
+              ><strong>Documentation Version: </strong
+              >{{ mcTerminology.documentationVersion }}</span
+            >
+          </small>
+        </div>
         <div class="text-muted" *ngIf="mcTerminology">
           <small>
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
@@ -245,49 +271,6 @@ SPDX-License-Identifier: Apache-2.0
                 </option>
               </select>
             </span>
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology">
-          <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-            <span
-              ><strong>Documentation Version: </strong
-              >{{ mcTerminology.documentationVersion }}</span
-            >
-          </small>
-        </div>
-
-        <div
-          class="text-muted"
-          *ngIf="
-            mcTerminology &&
-            mcTerminology.finalised &&
-            mcTerminology.dateFinalised
-          "
-        >
-          <small>
-            <i
-              class="far fa-calendar-check"
-              matTooltip="Finalised
-                            on"
-            ></i>
-            <span
-              ><strong>Finalised on:</strong>
-              {{
-                mcTerminology.dateFinalised
-                  | date: 'yyyy-MM-dd
-                            HH:mm:ss'
-              }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology?.authority">
-          <small>
-            <i class="far fa-building" matTooltip="Authority"></i>
-            <span
-              ><strong>Authority: </strong
-              >{{ mcTerminology.authority['label'] }}</span
-            >
           </small>
         </div>
       </div>

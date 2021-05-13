@@ -62,6 +62,7 @@ export class AttachmentListComponent implements AfterViewInit {
   records: any[] = [];
   dataSource = new MatTableDataSource<any>();
   apiEndpoint: any;
+
   constructor(
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
@@ -109,7 +110,7 @@ export class AttachmentListComponent implements AfterViewInit {
       });
   }
 
-  applyFilter = () => {
+  applyFilter() {
     const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
@@ -122,7 +123,7 @@ export class AttachmentListComponent implements AfterViewInit {
     this.filterEvent.emit(filter);
   };
 
-  filterClick = () => {
+  filterClick() {
     this.hideFilters = !this.hideFilters;
   };
 
@@ -146,7 +147,7 @@ export class AttachmentListComponent implements AfterViewInit {
     );
   };
 
-  cancelEdit = (record, index) => {
+  cancelEdit(record, index) {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.records = [].concat(this.records);
@@ -155,16 +156,16 @@ export class AttachmentListComponent implements AfterViewInit {
     this.editingService.setFromCollection(this.records);
   };
 
-  getFile = (inputFileName) => {
+  getFile(inputFileName) {
     const element: any = document.getElementById(inputFileName);
     return element && element.files ? element.files[0] : '';
   };
 
-  download = (record) => {
+  download(record) {
     return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
   };
 
-  delete = (record) => {
+  delete(record) {
     this.resources.catalogueItem.removeReferenceFile(this.domainType, this.parent.id, record.id).subscribe(() => {
       this.messageHandler.showSuccess('Attachment deleted successfully.');
       this.filterEvent.emit();
@@ -173,7 +174,7 @@ export class AttachmentListComponent implements AfterViewInit {
     });
   };
 
-  add = () => {
+  add() {
     const newRecord = {
       id: '',
       fileName: '',
@@ -190,7 +191,7 @@ export class AttachmentListComponent implements AfterViewInit {
   };
 
 
-  save = (record, index) => {
+  save(record, index) {
     const fileName = `File${index}`;
     const file = this.getFile(fileName);
     const reader = new FileReader();

@@ -48,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0
                         </mdm-content-editor>
                     </div>
                     <div *ngIf="canAddAnnotation">
-                        <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
+                        <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && !canAddAnnotation">
                             <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
                         </button>
                     </div>
@@ -66,12 +66,12 @@ SPDX-License-Identifier: Apache-2.0
                                 </div>
                             </div>
                             <div>
-                                <div class="annotation-item-bottom-line" *ngIf="access && access.canAddAnnotation">
+                                <div class="annotation-item-bottom-line" *ngIf="canAddAnnotation">
                                     &nbsp;
                                 </div>
                             </div>
                         </div>
-                        <div class="annotation-item" *ngIf="record.show && access && access.canAddAnnotation">
+                        <div class="annotation-item" *ngIf="record.show && canAddAnnotation">
                             <div class="annotation-child-item-header">
                                 <span *ngIf="currentUser">
                                     <span class="annotation-username">{{currentUser.firstName}}&nbsp;{{currentUser.lastName}}</span>

@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
-            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.showEdit" class="mt-1">
+            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="canEdit" class="mt-1">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Add Attachment
             </button>
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
         <ng-container matColumnDef="other">
             <td *matHeaderCellDef style="width: 70px;" columnName="other"></td>
             <td *matCellDef="let record;  let i = index " mat-cell style="width: 70px; text-align: left;">
-                <div *ngIf="access && access.showEdit">
+                <div *ngIf="canEdit">
                     <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0], $event[1])" (delete)="delete($event[0])" (cancelEdit)="cancelEdit($event[0], $event[1])" [hideEdit]="true"></mdm-table-buttons>
                 </div>
             </td>

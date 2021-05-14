@@ -28,7 +28,7 @@ export class TableButtonsComponent {
   @Input() index: any;
   @Input() hideDelete: boolean;
   @Input() hideEdit: any;
-  @Input() confirmDelete: boolean = true;
+  @Input() confirmDelete = true;
 
   @Input() validate: (record: any, index: any) => boolean;
   @Input() records: any;

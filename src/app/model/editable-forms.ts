@@ -110,7 +110,7 @@ export class EditableRecord<T, E> implements EditableObject {
   constructor(
     public source: T,
     public edit: E,
-    settings: { isNew: boolean, inEdit: boolean }) {
+    settings: { isNew: boolean; inEdit: boolean }) {
       this.isNew = settings.isNew;
       this.inEdit = settings.inEdit;
     }

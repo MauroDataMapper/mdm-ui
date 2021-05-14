@@ -26,8 +26,8 @@ import { SharedService } from '@mdm/services/shared.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { UserSettingsHandlerService } from '@mdm/services/utility/user-settings-handler.service';
 import { ValidatorService } from '@mdm/services/validator.service';
-import { combineLatest, Subject, Subscription } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { EMPTY, of, Subject, Subscription } from 'rxjs';
+import { catchError, debounceTime, finalize, map, switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
 import { NewFolderModalComponent } from '@mdm/modals/new-folder-modal/new-folder-modal.component';
@@ -165,7 +165,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private editingService: EditingService,
     private modelTree: ModelTreeService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.title.setTitle('Models');
@@ -225,7 +225,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
   loadClassifiers() {
     this.classifierLoading = true;
-    this.resources.classifier.list({all:true}).subscribe(
+    this.resources.classifier.list({ all: true }).subscribe(
       (result: ClassifierIndexResponse) => {
         const data = result.body.items;
         this.allClassifiers = data;
@@ -249,39 +249,46 @@ export class ModelsComponent implements OnInit, OnDestroy {
 
     // Fetch tree information from two potential sources - local folder tree and possible (external)
     // subscribed catalogues
-    combineLatest([
-      this.modelTree.getLocalCatalogueTreeNodes(noCache),
-      this.modelTree.getSubscribedCatalogueTreeNodes()
-    ])
+    //
+    // Fetch one resource at a time to avoid any 404s
+    this.modelTree
+      .getLocalCatalogueTreeNodes(noCache)
       .pipe(
-        map(([local, subscribed]) => {
-          if ((subscribed?.length ?? 0) === 0) {
-            // Display only local catalogue folders/models
-            return this.modelTree.createRootNode(local);
-          }
+        catchError(error => {
+          this.messageHandler.showError('There was a problem loading the model tree.', error);
+          return EMPTY;
+        }),
+        switchMap(local => {
+          return this.modelTree
+            .getSubscribedCatalogueTreeNodes()
+            .pipe(
+              map(subscribed => {
+                if ((subscribed?.length ?? 0) === 0) {
+                  // Display only local catalogue folders/models
+                  return this.modelTree.createRootNode(local);
+                }
 
-          // Combine sub tree nodes with new parent nodes to build up roots
-          const localParent = this.modelTree.createLocalCatalogueNode(local);
-          const externalParent = this.modelTree.createExternalCataloguesNode(
-            subscribed
-          );
-          return this.modelTree.createRootNode([localParent, externalParent]);
-        })
+                // Combine sub tree nodes with new parent nodes to build up roots
+                const localParent = this.modelTree.createLocalCatalogueNode(local);
+                const externalParent = this.modelTree.createExternalCataloguesNode(
+                  subscribed
+                );
+                return this.modelTree.createRootNode([localParent, externalParent]);
+              }),
+              catchError(() => {
+                this.messageHandler.showWarning('There was a problem loading the model tree with subscribed catalogues. Showing only local instance models.');
+
+                // Display only local catalogue folders/models
+                return of(this.modelTree.createRootNode(local));
+              }),
+            );
+        }),
+        finalize(() => this.reloading = false)
       )
-      .subscribe(
-        (node) => {
-          this.allModels = node;
-          this.filteredModels = node;
-          this.reloading = false;
-        },
-        (error) => {
-          this.messageHandler.showError(
-            'There was a problem loading the model tree.',
-            error
-          );
-          this.reloading = false;
-        }
-      );
+      .subscribe(node => {
+        this.allModels = node;
+        this.filteredModels = node;
+      });
   }
 
   onNodeConfirmClick($event: NodeConfirmClickEvent) {
@@ -303,7 +310,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       );
   }
 
-  onNodeDbClick(node : Node ){
+  onNodeDbClick(node: Node) {
     // if the element if a dataModel, load it
     if (
       [DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(
@@ -315,7 +322,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.levels.focusedElement(node);
   };
 
-  loadModelsToCompare(dataModel : any){
+  loadModelsToCompare(dataModel: any) {
     this.resources.catalogueItem
       .listSemanticLinks(dataModel.domainType, dataModel.id, { all: true })
       .subscribe((result) => {
@@ -416,15 +423,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
     );
   }
 
-  onAddDataModel(folder : any) {
+  onAddDataModel(folder: any) {
     this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
   }
 
-  onAddCodeSet(folder : any) {
+  onAddCodeSet(folder: any) {
     this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
   };
 
-  onAddChildDataClass(element : any){
+  onAddChildDataClass(element: any) {
     this.stateHandler.Go('NewDataClassNew', {
       grandParentDataClassId:
         element.domainType === 'DataClass' ? element.parentDataClass : null,
@@ -434,7 +441,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataElement (element : any) {
+  onAddChildDataElement(element: any) {
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: element.parentDataClass
         ? element.parentDataClass
@@ -444,7 +451,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataType(element : any) {
+  onAddChildDataType(element: any) {
     this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
   };
 
@@ -452,7 +459,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.showFilters = !this.showFilters;
   };
 
-  toggleFilters(filerName : string) {
+  toggleFilters(filerName: string) {
     this[filerName] = !this[filerName];
     this.reloading = true;
 
@@ -472,7 +479,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.showFilters = !this.showFilters;
   };
 
-  onDeleteFolder(event : any){
+  onDeleteFolder(event: any) {
     if (!this.securityHandler.isAdmin()) {
       return;
     }
@@ -497,7 +504,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.loadClassifiers();
   };
 
-  changeState(newState : string, type? : string, newWindow? : boolean) {
+  changeState(newState: string, type?: string, newWindow?: boolean) {
     if (newWindow) {
       this.stateHandler.NewWindow(newState);
       return;
@@ -550,7 +557,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  search(){
+  search() {
     if (this.formData.filterCriteria?.trim().length > 2) {
       this.formData.ClassificationFilterCriteria = '';
       this.sharedService.searchCriteria = this.formData.filterCriteria;
@@ -583,11 +590,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  classifierTreeOnSelect(node : Node){
+  classifierTreeOnSelect(node: Node) {
     this.stateHandler.Go('classification', { id: node.id });
   };
 
-  classificationFilterChange(val : string){
+  classificationFilterChange(val: string) {
     if (val && val.length !== 0 && val.trim().length === 0) {
       this.filterClassifications();
     } else {
@@ -604,11 +611,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  onFavouriteDbClick(node : Node) {
+  onFavouriteDbClick(node: Node) {
     this._onFavouriteClick(node);
   };
 
-  onFavouriteClick(node : Node) {
+  onFavouriteClick(node: Node) {
     this._onFavouriteClick(node);
   };
 
@@ -676,7 +683,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  private _onFavouriteClick(node : Node) {
+  private _onFavouriteClick(node: Node) {
     this.stateHandler.Go(node.domainType, {
       id: node.id,
       dataModelId: node.dataModel,

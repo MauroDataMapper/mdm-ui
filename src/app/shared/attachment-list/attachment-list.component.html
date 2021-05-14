@@ -47,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 50%; width: 50%; text-align: left; ">
                 <div *ngIf="!record.inEdit">
                     <div>
-                        <a href="{{apiEndpoint}}/{{domainType}}/{{parent.id}}/referenceFiles/{{record.id}}">{{record.fileName}}</a>
+                        <a href="{{apiEndpoint}}/{{domainType}}/{{parent.id}}/referenceFiles/{{record.source.id}}">{{record.source.fileName}}</a>
                     </div>
                 </div>
                 <div *ngIf="record.isNew">
@@ -63,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
             <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 20%;width: 20%;" columnName="fileSize">Size</th>
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 20%; width: 20%; text-align: left;">
                 <div *ngIf="!record.inEdit">
-                    {{record.fileSize | fileSize}}
+                    {{record.source.fileSize | fileSize}}
                 </div>
             </td>
         </ng-container>
@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0
             <th *matHeaderCellDef mat-sort-header style="cursor:pointer;max-width: 20%;width: 20%;" columnName="lastUpdated">Uploaded</th>
             <td *matCellDef="let record;  let i = index " mat-cell style="max-width: 20%; width: 20%; text-align: left;">
                 <div *ngIf="!record.inEdit">
-                    {{record.lastUpdated  | date:"dd/MM/yyyy h:mm a" }}
+                    {{record.source.lastUpdated  | date:"dd/MM/yyyy h:mm a" }}
                 </div>
             </td>
         </ng-container>
@@ -79,7 +79,7 @@ SPDX-License-Identifier: Apache-2.0
             <td *matHeaderCellDef style="width: 70px;" columnName="other"></td>
             <td *matCellDef="let record;  let i = index " mat-cell style="width: 70px; text-align: left;">
                 <div *ngIf="canEdit">
-                    <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0], $event[1])" (delete)="delete($event[0])" (cancelEdit)="cancelEdit($event[0], $event[1])" [hideEdit]="true"></mdm-table-buttons>
+                    <mdm-table-buttons [record]="record" [index]="i" [confirmDelete]="false" (save)="save($event[0], $event[1])" (delete)="delete($event[0])" (cancelEdit)="cancelEdit($event[0], $event[1])" [hideEdit]="true"></mdm-table-buttons>
                 </div>
             </td>
         </ng-container>

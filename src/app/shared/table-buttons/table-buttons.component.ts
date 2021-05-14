@@ -28,6 +28,7 @@ export class TableButtonsComponent {
   @Input() index: any;
   @Input() hideDelete: boolean;
   @Input() hideEdit: any;
+  @Input() confirmDelete: boolean = true;
 
   @Input() validate: (record: any, index: any) => boolean;
   @Input() records: any;
@@ -74,7 +75,12 @@ export class TableButtonsComponent {
   }
 
   deleteClicked(record) {
-    record.inDelete = true;
+    if (this.confirmDelete) {
+      record.inDelete = true;
+    }
+    else {
+      this.delete.emit([record, this.index]);
+    }
   }
 
   deleteCancelled(record) {

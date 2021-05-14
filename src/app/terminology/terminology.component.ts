@@ -60,6 +60,7 @@ export class TerminologyComponent
   showEditForm = false;
   editForm = null;
   descriptionView = 'default';
+  annotationsView = 'default';
   editableForm: EditableDataModel;
   showSearch = false;
   subscription: Subscription;
@@ -227,14 +228,12 @@ export class TerminologyComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
-      case 'comments':
-        return { index: 1, name: 'comments' };
-      case 'attachments':
-        return { index: 2, name: 'attachments' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'history':
-        return { index: 3, name: 'history' };
+        return { index: 2, name: 'history' };
       case 'rules':
-        return { index: 4, name: 'rules' };
+        return { index: 3, name: 'rules' };
       default:
         return { index: 0, name: 'properties' };
     }
@@ -245,13 +244,11 @@ export class TerminologyComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'comments' };
+        return { index: 1, name: 'annotations' };
       case 2:
-        return { index: 2, name: 'attachments' };
+        return { index: 2, name: 'history' };
       case 3:
-        return { index: 3, name: 'history' };
-      case 4:
-        return { index: 4, name: 'rules' };
+        return { index: 3, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }

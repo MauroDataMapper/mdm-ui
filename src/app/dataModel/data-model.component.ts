@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import {
-AfterViewInit,
+  AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
@@ -37,7 +37,12 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataModelDetail, DataModelDetailResponse, ModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  DataModelDetail,
+  DataModelDetailResponse,
+  ModelUpdatePayload,
+  SecurableDomainType
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model',
@@ -66,7 +71,7 @@ export class DataModelComponent
   cells: any;
   rootCell: any;
   semanticLinks: any[] = [];
-  access:any;
+  access: any;
 
   editableForm: EditableDataModel;
   errorMessage = '';
@@ -112,7 +117,9 @@ export class DataModelComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.parentId = this.uiRouterGlobals.params.id;
 
-    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView).index;
+    this.activeTab = this.getTabDetailByName(
+      this.uiRouterGlobals.params.tabView
+    ).index;
     this.tabSelected(this.activeTab);
 
     this.title.setTitle('Data Model');
@@ -133,9 +140,10 @@ export class DataModelComponent
 
   watchDataModelObject() {
     this.access = this.securityHandler.elementAccess(this.dataModel);
-    if ( this.access !== undefined) {
-      this.showEdit =  this.access.showEdit;
-      this.showDelete =  this.access.showPermanentDelete ||  this.access.showSoftDelete;
+    if (this.access !== undefined) {
+      this.showEdit = this.access.showEdit;
+      this.showDelete =
+        this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 
@@ -243,11 +251,11 @@ export class DataModelComponent
     this.editingService.stop();
 
     const classifiers = [];
-    this.editableForm.classifiers.forEach(cls => {
+    this.editableForm.classifiers.forEach((cls) => {
       classifiers.push(cls);
     });
     const aliases = [];
-    this.editableForm.aliases.forEach(alias => {
+    this.editableForm.aliases.forEach((alias) => {
       aliases.push(alias);
     });
 
@@ -266,21 +274,23 @@ export class DataModelComponent
       resource.classifiers = classifiers;
     }
 
-    this.resourcesService.dataModel.update(this.dataModel.id, resource).subscribe((res: DataModelDetailResponse) => {
-      this.messageHandler.showSuccess('Data Model updated successfully.');
-      this.editableForm.visible = false;
-      this.dataModel.description = res.body.description;
-        this.editForm.forEach((x) => x.edit({ editing: false }));
-      },
-      (error) => {
-        this.messageHandler.showError(
-          'There was a problem updating the Data Model.',
-          error
-        );
-      }
-    );
+    this.resourcesService.dataModel
+      .update(this.dataModel.id, resource)
+      .subscribe(
+        (res: DataModelDetailResponse) => {
+          this.messageHandler.showSuccess('Data Model updated successfully.');
+          this.editableForm.visible = false;
+          this.dataModel.description = res.body.description;
+          this.editForm.forEach((x) => x.edit({ editing: false }));
+        },
+        (error) => {
+          this.messageHandler.showError(
+            'There was a problem updating the Data Model.',
+            error
+          );
+        }
+      );
   };
-
 
   onCancelEdit() {
     this.errorMessage = '';
@@ -320,7 +330,11 @@ export class DataModelComponent
   }
 
   addDataClass = () => {
-    this.stateHandler.Go('newDataClass', { parentDataModelId: this.dataModel.id, parentDataClassId: null }, null);
+    this.stateHandler.Go(
+      'newDataClass',
+      { parentDataModelId: this.dataModel.id, parentDataClassId: null },
+      null
+    );
   };
 
   showDescription = () => {
@@ -332,22 +346,24 @@ export class DataModelComponent
   edit = () => {
     this.showEditDescription = false;
     this.editableForm.show();
-   };
+  };
 
   getTabDetailByName(tabName) {
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'schema':
-        return { index: 1, name: 'schema' };
+        return { index: 2, name: 'schema' };
       case 'types':
-        return { index: 2, name: 'types' };
+        return { index: 3, name: 'types' };
       case 'context':
-        return { index: 3, name: 'context' };
+        return { index: 4, name: 'context' };
       case 'history':
-        return { index: 4, name: 'history' };
-      case 'rulesConstraints' : {
-        return { index: 5, name: 'rulesConstraints' };
+        return { index: 5, name: 'history' };
+      case 'rulesConstraints': {
+        return { index: 6, name: 'rulesConstraints' };
       }
       default:
         return { index: 0, name: 'description' };
@@ -359,16 +375,18 @@ export class DataModelComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'schema' };
+        return { index: 1, name: 'annotations' };
       case 2:
-        return { index: 2, name: 'types' };
+        return { index: 2, name: 'schema' };
       case 3:
-        return { index: 3, name: 'context' };
-      case 4: {
-        return { index: 4, name: 'history' };
+        return { index: 3, name: 'types' };
+      case 4:
+        return { index: 4, name: 'context' };
+      case 5: {
+        return { index: 5, name: 'history' };
       }
-      case 5 : {
-        return { index: 5, name: 'rulesConstraints' };
+      case 6: {
+        return { index: 6, name: 'rulesConstraints' };
       }
       default:
         return { index: 0, name: 'description' };

@@ -36,14 +36,22 @@ import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CatalogueItemDomainType, Classifier, ModelUpdatePayload, ReferenceDataModelDetail, ReferenceDataModelDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  Classifier,
+  ModelUpdatePayload,
+  ReferenceDataModelDetail,
+  ReferenceDataModelDetailResponse,
+  SecurableDomainType
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-reference-data',
   templateUrl: './reference-data.component.html',
   styleUrls: ['./reference-data.component.scss']
 })
-export class ReferenceDataComponent  extends ProfileBaseComponent
+export class ReferenceDataComponent
+  extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
   referenceModel: ReferenceDataModelDetail;
@@ -57,11 +65,12 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
   schemaView = 'list';
   descriptionView = 'default';
   contextView = 'default';
+  annotationsView = 'default';
   editableForm: EditableDataModel;
   errorMessage = '';
   showEdit = false;
   showDelete = false;
-  access:any;
+  access: any;
 
   typesItemCount = 0;
   isLoadingTypes = true;
@@ -166,8 +175,8 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
           }
         };
 
-        this.UsedProfiles('referenceDataModels',this.referenceModel.id);
-        this.UnUsedProfiles('referenceDataModels',this.referenceModel.id);
+        this.UsedProfiles('referenceDataModels', this.referenceModel.id);
+        this.UnUsedProfiles('referenceDataModels', this.referenceModel.id);
 
         if (this.sharedService.isLoggedIn(true)) {
           this.ReferenceModelPermissions(id);
@@ -281,20 +290,18 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'elements':
-        return { index: 1, name: 'elements' };
+        return { index: 2, name: 'elements' };
       case 'types':
-        return { index: 2, name: 'types' };
+        return { index: 3, name: 'types' };
       case 'data':
-        return { index: 3, name: 'data' };
-      case 'comments':
-        return { index: 4, name: 'comments' };
+        return { index: 4, name: 'data' };
       case 'history':
         return { index: 5, name: 'history' };
-      case 'attachments':
-        return { index: 6, name: 'attachments' };
       case 'rules':
-        return { index: 7, name: 'rules' };
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -305,19 +312,17 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'elements' };
+        return { index: 1, name: 'annotations' };
       case 2:
-        return { index: 2, name: 'types' };
+        return { index: 2, name: 'elements' };
       case 3:
-        return { index: 3, name: 'data' };
+        return { index: 3, name: 'types' };
       case 4:
-        return { index: 4, name: 'comments' };
+        return { index: 4, name: 'data' };
       case 5:
         return { index: 5, name: 'history' };
       case 6:
-        return { index: 6, name: 'attachments' };
-      case 7:
-        return { index: 7, name: 'rules' };
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -337,12 +342,13 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
     this.access = this.securityHandler.elementAccess(this.referenceModel);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete =
+        this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 
   edit = () => {
     this.showEditDescription = false;
     this.editableForm.show();
-   };
+  };
 }

@@ -263,7 +263,78 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </ng-template>
   </mat-tab>
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 230px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="annotationsView"
+                  name="annotationsView"
+                >
+                  <mat-option value="default">Comments</mat-option>
+                  <mat-option value="attachments">Attachments</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            ></div>
+          </div>
+        </div>
 
+        <div *ngIf="annotationsView === 'default'">
+          <mdm-annotation-list
+            *ngIf="term"
+            [parent]="term"
+            [domainType]="'terms'"
+          ></mdm-annotation-list>
+        </div>
+
+        <div
+          class="mdm--shadow-block bordered"
+          *ngIf="annotationsView === 'attachments'"
+        >
+          <div class="pxy-2">
+            <mdm-attachment-list
+              *ngIf="term"
+              [parent]="term"
+              [domainType]="'terms'"
+            ></mdm-attachment-list>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </mat-tab>
   <mat-tab label="Links">
     <ng-template matTabContent>
       <div class="full-width">
@@ -272,17 +343,6 @@ SPDX-License-Identifier: Apache-2.0
           [parent]="term"
           [domainType]="'terms'"
         ></mdm-element-link-list>
-      </div>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Attachments">
-    <ng-template matTabContent>
-      <div class="full-width">
-        <mdm-attachment-list
-          *ngIf="term"
-          [parent]="term"
-          [domainType]="'terms'"
-        ></mdm-attachment-list>
       </div>
     </ng-template>
   </mat-tab>

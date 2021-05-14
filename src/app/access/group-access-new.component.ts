@@ -20,7 +20,6 @@ import { MessageService } from '../services/message.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
-import { FolderResult } from '../model/folderModel';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -47,7 +46,7 @@ export class GroupAccessNewComponent implements OnInit {
   accessLevels = [];
   isLoadingResults = true;
 
-  folderResult: FolderResult;
+  folderResult: any;
 
   dataSource: MatTableDataSource<any>;
   // MatPaginator Output
@@ -95,7 +94,7 @@ export class GroupAccessNewComponent implements OnInit {
   loadAllGroups(text, offset, limit) {
     this.allGroups = [];
     this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (result.body === false) {
+      if (!result.body.authenticatedSession) {
         return;
       }
       limit = limit ? limit : 10;

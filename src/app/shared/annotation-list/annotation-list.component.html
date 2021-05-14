@@ -20,11 +20,13 @@ SPDX-License-Identifier: Apache-2.0
         <div fxFlex  fxLayout="row" fxFlex="40" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="start center">
             <h4 class="marginless">Comments</h4>
         </div>
-        <div *ngIf="canAddAnnotation" fxFlex fxLayout="row" fxFlex="60" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
-            <button mat-flat-button color="primary" type="button" (click)="add()" class="mt-1">
-                <i class="fas fa-plus" aria-hidden="true"></i>
-                Add Comment
-            </button>
+        <div fxFlex fxLayout="row" fxFlex="60" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="flex-end center" fxLayoutAlign.xs="flex-start center">
+            <div *ngIf="canAddAnnotation" class="mt-1">
+                <button mat-flat-button color="primary" type="button" (click)="add()" class="mt-1">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    Add Comment
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -46,7 +48,7 @@ SPDX-License-Identifier: Apache-2.0
                         </mdm-content-editor>
                     </div>
                     <div *ngIf="canAddAnnotation">
-                        <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && access && !access.canAddAnnotation">
+                        <button mat-button color="primary"  (click)="showChildren(record)" [hidden]="(!record.childAnnotations || record.childAnnotations.length === 0) && !canAddAnnotation">
                             <i class="fas fa-comment"></i>&nbsp;<span *ngIf="record.childAnnotations">{{record.childAnnotations.length}}</span> ...
                         </button>
                     </div>
@@ -64,12 +66,12 @@ SPDX-License-Identifier: Apache-2.0
                                 </div>
                             </div>
                             <div>
-                                <div class="annotation-item-bottom-line" *ngIf="access && access.canAddAnnotation">
+                                <div class="annotation-item-bottom-line" *ngIf="canAddAnnotation">
                                     &nbsp;
                                 </div>
                             </div>
                         </div>
-                        <div class="annotation-item" *ngIf="record.show && access && access.canAddAnnotation">
+                        <div class="annotation-item" *ngIf="record.show && canAddAnnotation">
                             <div class="annotation-child-item-header">
                                 <span *ngIf="currentUser">
                                     <span class="annotation-username">{{currentUser.firstName}}&nbsp;{{currentUser.lastName}}</span>
@@ -121,7 +123,7 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <div class="bordered is-hidden pxy-2" [ngClass]="{'block':!totalItemCount && !isLoadingResults}">
     <p class="marginless">
-      There are no comments in this table. You can add comments by clicking the button above.
+      There are no comments in this table. <span *ngIf="canAddAnnotation">You can add comments by clicking the button above.</span>
     </p>
 </div>
 <div class="item" *ngIf="isLoadingResults">

@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { DataTypeProvider } from '@mdm/model/dataModelModel';
+import { DataModelDefaultDataTypesResponse, DataTypeProvider } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 
@@ -40,7 +40,7 @@ export class DataModelStep2Component implements OnInit {
 
     this.resources.dataModel.defaultDataTypes()
       .subscribe(
-        (result: { body: DataTypeProvider[]}) => this.defaultDataTypeProviders = result.body,
+        (result: DataModelDefaultDataTypesResponse) => this.defaultDataTypeProviders = result.body,
         error => this.messageHandler.showError('There was a problem loading Data Type Providers', error));
   }
 
@@ -50,7 +50,6 @@ export class DataModelStep2Component implements OnInit {
       this.dataTypes = null;
       return;
     }
-
     this.loadingData = true;
     this.step.scope.model.selectedDataTypeProvider = dataTypeProvider[0];
     this.dataTypes = {

@@ -23,17 +23,23 @@ import {
   ViewChild,
   ElementRef,
   EventEmitter,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { merge } from 'rxjs';
+import { EMPTY, merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
-import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
-import { SharedService } from '@mdm/services';
+import { GridService, SharedService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { CatalogueItem, CatalogueItemDomainType, ModelDomainType, ReferenceFile, ReferenceFileCreatePayload, ReferenceFileIndexResponse, Securable } from '@maurodatamapper/mdm-resources';
+import { EditableRecord } from '@mdm/model/editable-forms';
+import { MatDialog } from '@angular/material/dialog';
+
+export interface ReferenceFileEditor {
+  fileName: string;
+}
 
 @Component({
   selector: 'mdm-attachment-list',
@@ -41,49 +47,57 @@ import { EditingService } from '@mdm/services/editing.service';
   styleUrls: ['./attachment-list.component.sass'],
 })
 export class AttachmentListComponent implements AfterViewInit {
-  @Input() parent: any;
-  @Input() domainType: any;
-  @ViewChildren('filters', { read: ElementRef })
-  filters: ElementRef[];
-  @ViewChild(MatSort, { static: false })
-  sort: MatSort;
-  @ViewChild(MdmPaginatorComponent, { static: true })
-  paginator: MdmPaginatorComponent;
-  reloadEvent = new EventEmitter<any>();
+  @Input() parent: CatalogueItem & Securable;
+  @Input() domainType: ModelDomainType;
+
+  @ViewChildren('filters', { read: ElementRef }) filters: ElementRef[];
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
+
+  filterEvent = new EventEmitter<any>();
   hideFilters = true;
   displayedColumns: string[] = ['fileName', 'fileSize', 'lastUpdated', 'other'];
   loading: boolean;
   totalItemCount = 0;
   isLoadingResults = true;
   filter: {};
-  currentUser: any;
-  access: any;
-  records: any[] = [];
-  apiEndpoint: any;
+  canEdit: boolean;
+  records: EditableRecord<ReferenceFile, ReferenceFileEditor>[] = [];
+  dataSource = new MatTableDataSource<EditableRecord<ReferenceFile, ReferenceFileEditor>>();
+  apiEndpoint: string;
+
   constructor(
-    private changeRef: ChangeDetectorRef,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private securityHandler: SecurityHandlerService,
     private sharedService: SharedService,
-    private editingService: EditingService) { }
+    private editingService: EditingService,
+    private gridService: GridService,
+    private dialog: MatDialog) { }
 
   ngAfterViewInit() {
-    this.currentUser = this.securityHandler.getCurrentUser();
-    this.access = this.securityHandler.elementAccess(this.parent);
     this.apiEndpoint = this.sharedService.backendURL;
 
+    this.canEdit = this.parent.availableActions.includes('update');
+
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page, this.reloadEvent)
+    this.dataSource.sort = this.sort;
+
+    this.filterEvent.subscribe(() => (this.paginator.pageIndex = 0));
+
+    merge(this.sort.sortChange, this.paginator.page, this.filterEvent)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
 
-          return this.attachmentFetch();
+          return this.attachmentFetch(
+            this.paginator.pageSize,
+            this.paginator.pageOffset,
+            this.sort.active,
+            this.sort.direction,
+            this.filter);
         }),
-        map((data: any) => {
+        map(data => {
           this.totalItemCount = data.body.count;
           this.isLoadingResults = false;
           return data.body.items;
@@ -93,14 +107,22 @@ export class AttachmentListComponent implements AfterViewInit {
           return [];
         })
       )
-      .subscribe((data) => {
-        this.records = data;
-      });
+      .subscribe((data: ReferenceFile[]) => {
+        this.records = data.map(item => new EditableRecord<ReferenceFile, ReferenceFileEditor>(
+          item,
+          {
+            fileName: item.fileName
+          },
+          {
+            isNew: false,
+            inEdit: false
+          }));
 
-    this.changeRef.detectChanges();
+        this.dataSource.data = this.records;
+      });
   }
 
-  applyFilter = () => {
+  applyFilter() {
     const filter = {};
     this.filters.forEach((x: any) => {
       const name = x.nativeElement.name;
@@ -110,65 +132,93 @@ export class AttachmentListComponent implements AfterViewInit {
       }
     });
     this.filter = filter;
-    this.reloadEvent.emit(filter);
+    this.filterEvent.emit(filter);
   };
 
-  filterClick = () => {
+  filterClick() {
     this.hideFilters = !this.hideFilters;
   };
 
-  attachmentFetch = () => {
+  attachmentFetch(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,
+    filters?: any): Observable<ReferenceFileIndexResponse> {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType,
+      filters);
+
     return this.resources.catalogueItem.listReferenceFiles(
       this.domainType,
-      this.parent.id
+      this.parent.id,
+      options
     );
   };
 
-  cancelEdit = (record, index) => {
+  cancelEdit(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {
     if (record.isNew) {
       this.records.splice(index, 1);
       this.records = [].concat(this.records);
+      this.dataSource.data = this.records;
     }
 
     this.editingService.setFromCollection(this.records);
   };
 
-  getFile = (inputFileName) => {
+  getFile(inputFileName: string) {
     const element: any = document.getElementById(inputFileName);
     return element && element.files ? element.files[0] : '';
   };
 
-  download = (record) => {
-    return this.resources.catalogueItem.getReferenceFile(this.domainType, this.parent.id, record.id);
+  delete(record: EditableRecord<ReferenceFile, ReferenceFileEditor>) {
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Confirm',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `Are you sure you want to delete the attachment '${record.source.fileName}'?`
+        }
+      })
+      .pipe(
+        switchMap(() => this.resources.catalogueItem.removeReferenceFile(this.domainType, this.parent.id, record.source.id)),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem deleting the attachment.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.messageHandler.showSuccess('Attachment deleted successfully.');
+        this.filterEvent.emit();
+      });
   };
 
-  delete = (record) => {
-    this.resources.catalogueItem.removeReferenceFile(this.domainType, this.parent.id, record.id).subscribe(() => {
-      this.messageHandler.showSuccess('Attachment deleted successfully.');
-      this.reloadEvent.emit();
-    }, (error) => {
-      this.messageHandler.showError('There was a problem deleting the attachment.', error);
-    });
-  };
-
-  add = () => {
-    const newRecord = {
-      id: '',
-      fileName: '',
-      edit: {
+  add() {
+    const newRecord = new EditableRecord<ReferenceFile, ReferenceFileEditor>(
+      {
         id: '',
-        fileName: '',
-        formData: new FormData(),
+        domainType: CatalogueItemDomainType.ReferenceFile,
+        fileName: ''
       },
-      inEdit: true,
-      isNew: true,
-    };
+      {
+        fileName: ''
+      },
+      {
+        isNew: true,
+        inEdit: true
+      });
+
     this.records = [].concat([newRecord]).concat(this.records);
+    this.dataSource.data = this.records;
     this.editingService.setFromCollection(this.records);
   };
 
 
-  save = (record, index) => {
+  save(record: EditableRecord<ReferenceFile, ReferenceFileEditor>, index: number) {
     const fileName = `File${index}`;
     const file = this.getFile(fileName);
     const reader = new FileReader();
@@ -176,32 +226,31 @@ export class AttachmentListComponent implements AfterViewInit {
     reader.readAsArrayBuffer(file);
 
     reader.onload = () => {
-      const res: any = reader.result;
-      const array: any = new Int8Array(res);
-      const fileByteArray = [];
+      const fileBytes = new Int8Array(reader.result as ArrayBuffer);
 
-      // tslint:disable-next-line: prefer-for-of
-      for (let i = 0; i < array.length; i++) {
-        fileByteArray.push(array[i]);
-      }
-
-      const data = {
+      const data: ReferenceFileCreatePayload = {
         fileName: file.name,
         fileType: file.type,
         fileSize: file.size,
-        fileContents: fileByteArray
+        fileContents: Array.from(fileBytes)
       };
 
-      this.resources.catalogueItem.saveReferenceFiles(this.domainType, this.parent.id, data).subscribe(() => {
-        this.messageHandler.showSuccess('Attachment uploaded successfully.');
+      this.resources.catalogueItem
+        .saveReferenceFiles(this.domainType, this.parent.id, data)
+        .pipe(
+          catchError(error => {
+            this.messageHandler.showError('There was a problem saving the attachment.', error);
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          this.messageHandler.showSuccess('Attachment uploaded successfully.');
 
-        record.inEdit = false;
-        this.editingService.setFromCollection(this.records);
+          record.inEdit = false;
+          this.editingService.setFromCollection(this.records);
 
-        this.reloadEvent.emit();
-      }, (error) => {
-        this.messageHandler.showError('There was a problem saving the attachment.', error);
-      });
+          this.filterEvent.emit();
+        });
     };
   };
 }

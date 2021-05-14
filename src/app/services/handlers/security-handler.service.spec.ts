@@ -23,9 +23,10 @@ import { UIRouterModule } from '@uirouter/angular';
 import { ToastrModule } from 'ngx-toastr';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { SignInCredentials, UserDetails } from './security-handler.model';
+import { UserDetails } from './security-handler.model';
 import { cold } from 'jest-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoginPayload } from '@maurodatamapper/mdm-resources';
 
 interface MdmSecurityResourceStub {
   login: jest.Mock;
@@ -81,7 +82,7 @@ describe('SecurityHandlerService', () => {
     ['123', 'user@test.com', false],
     ['456', 'admin@test.com', true]
   ])('should sign in user %s %s when admin = %o', (id, userName, isAdmin) => {
-    const credentials: SignInCredentials = { username: userName, password: 'test' };
+    const credentials: LoginPayload = { username: userName, password: 'test' };
     const expectedUser: UserDetails = {
       id,
       userName,

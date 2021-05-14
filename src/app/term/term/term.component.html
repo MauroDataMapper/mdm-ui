@@ -22,7 +22,7 @@ SPDX-License-Identifier: Apache-2.0
 <div *ngIf="hasResult">
   <mdm-term-relationships
     [term]="result"
-    type="'dynamic'"
+    type="source"
   ></mdm-term-relationships>
 </div>
 
@@ -164,7 +164,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <table
             class="table table-bordered mdm--table-fixed"
-            *ngIf="this.descriptionView === 'default'"
+            *ngIf="this.descriptionView === 'default' && editableForm"
           >
             <tbody>
               <tr>

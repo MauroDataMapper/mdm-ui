@@ -18,13 +18,59 @@ SPDX-License-Identifier: Apache-2.0
 <div class="panel panel-default mdm--shadow-block">
     <form editable-form name="form" onaftersave="onAfterSave()" (ngSubmit)="formBeforeSave()" disable-submit-on-enter>
         <div class="panel-body">
+
+            <div class="full-width" style="clear: both;" *ngIf="result">
+                <button type="button" mat-icon-button [matMenuTriggerFor]="userActions"
+                    style="position: relative; float: right; margin-right:4px;">
+                    <i class="fas fa-ellipsis-v"></i> <span style="display: none;">Menu</span>
+                </button>
+                <!--First level Menu-->
+                <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
+                    <button mat-menu-item type="button" *ngIf="showEdit" (click)="showForm()">
+                        <i class="fas fa-pencil-alt"></i> Edit Title
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete"
+                        class="warning">
+                        <i class="far fa-trash-alt warning"></i> Delete
+                    </button>
+                </mat-menu>
+                <!-- End of first level menu -->
+
+                <!--Second level sub Menu-->
+                <mat-menu #userActionsDelete="matMenu">
+                    <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
+                        Mark as deleted
+                    </button>
+                    <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
+                        Delete <span class="warning">permanently</span>
+                    </button>
+                </mat-menu>
+
+                <div *ngIf="showPermission" style="position: relative; float: right; margin-right:8px;"
+                    [hidden]="editableForm.visible || editableForm.deletePending">
+                    <button mat-icon-button color="primary" type="button" class="paddingless"
+                        (click)="toggleSecuritySection()" matTooltip="User & Group Access"
+                        aria-label="User & Group Access">
+                        <i class="fas fa-user-lock"></i>
+                    </button>
+                </div>
+
+            </div>
+
             <div *ngIf="result">
                 <div [ngClass]="{ 'has-error': errorMessage != ''}">
                     <h4 class="inline-block marginless" [ngClass]="{'deletedDataModelTitle': result?.deleted}">
                         <span class="dataModelTypeIcon">
                             <i matTooltip="Folder" class="fas fa-folder"></i>
                         </span>
-                        <mdm-inline-text-edit [readOnly]="false" [inEditMode]="editableForm.visible" [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20" (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'"></mdm-inline-text-edit>
+                        <mdm-inline-text-edit [readOnly]="false" [inEditMode]="editableForm.visible"
+                            [(ngModel)]="editableForm.label" [name]="'moduleName'" size="20"
+                            (input)="onLabelChange($event.target.value)" [styleCss]="'dataModelDetailsLabel'">
+                        </mdm-inline-text-edit>
+                        <mdm-editable-form-buttons *ngIf="editableForm" [hidden]="!editableForm.visible"
+                            [onCancelEdit]="onCancelEdit" [editable]="editableForm" [textLocation]="'left'"
+                            [hideDelete]="true" [hideCancel]="false"></mdm-editable-form-buttons>
                     </h4>
                     <span class="inline-block">
                         <small *ngIf="result?.deleted" class="warning"> | Deleted</small>
@@ -37,10 +83,10 @@ SPDX-License-Identifier: Apache-2.0
 
             <div class="detail-icons">
                 <div class="text-muted">
-                  <small>
-                      <i class="fas fa-cube" matTooltip="Item type"></i>
-                      <span><strong>Item type: </strong><span class="item-type">Folder</span></span>
-                  </small>
+                    <small>
+                        <i class="fas fa-cube" matTooltip="Item type"></i>
+                        <span><strong>Item type: </strong><span class="item-type">Folder</span></span>
+                    </small>
                 </div>
                 <div class="text-muted" *ngIf="result?.readableByEveryone">
                     <small>
@@ -48,92 +94,26 @@ SPDX-License-Identifier: Apache-2.0
                         <span><strong>Availability: </strong>Publicly Readable</span>
                     </small>
                 </div>
+                <div class="text-muted" *ngIf="result">
+                    <small>
+                        <i class="far fa-calendar-alt" matTooltip="Last update"></i>
+                        <span><strong>Last update: </strong> {{result.lastUpdated | date:"yyyy-MM-dd HH:mm:ss" }}</span>
+                    </small>
+                </div>
             </div>
         </div>
-
-        <div class="table-responsive-md">
-        <table class="table table-bordered mdm--table-fixed">
-            <tbody>
-                <tr>
-                    <th class="detailsRowHeader">Description</th>
-                    <td class="elementDetailDescription">
-                        <div *ngIf="hasResult">
-                            <mdm-content-editor [editableForm]="editableForm" 
-                                                [element]="result" 
-                                                [property]="'description'">
-                            </mdm-content-editor>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="text-align: right;">
-                        <div style="float: right;margin-left: 5px;" [hidden]="editableForm.visible || editableForm.deletePending" *ngIf="showDelete">
-                            <button mat-stroked-button
-                                    color="warn"
-                                    type="button"
-                                    matTooltip="Delete Folder"
-                                    aria-label="Delete Folder"
-                                    class="paddingless dropdown-toggle"
-                                    [disabled]="deleteInProgress || exporting"
-                                    [matMenuTriggerFor]="menu">
-                                    <i class="far fa-trash-alt warning"></i>
-                            </button>
-
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result?.deleted">
-                                    Mark as deleted
-                                </button>
-                                <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                                    Delete <span class="warning">permanently</span>
-                                </button>
-                            </mat-menu>
-                        </div>
-
-                        <div style="float: right;">
-                            <div *ngIf="showEdit" [hidden]="editableForm.visible || editableForm.deletePending" style="position: relative; margin-right:4px;">
-                                <button mat-stroked-button
-                                        color="primary"
-                                        type="button"
-                                        [disabled]="deleteInProgress || exporting || result.finalised"
-                                        matTooltip="Edit Folder"
-                                        aria-label="Edit Folder"
-                                        (click)="showForm();">
-                                        <i class="fas fa-pencil-alt"></i>
-                                </button>
-                            </div>
-                            <mdm-editable-form-buttons [hidden]="!editableForm.visible" [onCancelEdit]="onCancelEdit"
-                                [editable]="editableForm" [textLocation]="'left'" [hideDelete]="true"
-                                [hideCancel]="false" [processing]="deleteInProgress"></mdm-editable-form-buttons>
-                        </div>
-
-                        <div style="position: relative; float: right; margin-right:4px;" [hidden]="editableForm.visible || editableForm.deletePending">
-
-                         <button mat-stroked-button
-                                    color="primary"
-                                    type="button"
-                                    class="paddingless"
-                                    matTooltip="Search"
-                                    aria-label="Search"
-                                    [disabled]="processing"
-                                    (click)="toggleShowSearch()" >
-                                <i class="fas fa-search"></i>
-                            </button>
-                             <button mat-stroked-button
-                                    color="primary"
-                                    type="button"
-                                    class="paddingless"
-                                    matTooltip="User & Group Access"
-                                    aria-label="User & Group Access"
-                                    *ngIf="showPermission"
-                                    [disabled]="deleteInProgress || processing"
-                                    (click)="toggleSecuritySection()">
-                                    <i class="fas fa-user-lock"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
     </form>
+</div>
+
+<div *ngIf="showSecuritySection && !editableForm.visible && !editableForm.deletePending">
+    <div style="width:100%;">
+        <div class="userAccess" style="margin: 10px 0px 50px 0px">
+            <mdm-share-with [mcElement]="'result'" [mcDomainType]="'Folder'"></mdm-share-with>
+            <div colspan="2">
+                <div style="margin-top: 10px">
+                    <mdm-group-access-new [parent]="'result'" [parentType]="'Folder'"></mdm-group-access-new>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

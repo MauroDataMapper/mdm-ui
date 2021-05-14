@@ -53,6 +53,7 @@ export class StateHandlerService {
         newdatatype: 'appContainer.mainApp.twoSidePanel.catalogue.NewDataType',
         newclassification: 'appContainer.mainApp.twoSidePanel.catalogue.NewClassifier',
         newversiondatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
+        newversionreferencedatamodel: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionReferenceDataModel',
         newversionterminology: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionTerminology',
         newversioncodeset: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
                 modelsmerginggraph: 'appContainer.mainApp.twoSidePanel.catalogue.modelsMergingGraph',
@@ -68,7 +69,7 @@ export class StateHandlerService {
         dataflowdm2dm: 'appContainer.mainApp.dataFlowDM2DM',
         dataflowchain: 'appContainer.mainApp.dataFlowChain',
         modelscomparison: 'appContainer.mainApp.modelsComparison',
-                modelsmerging: 'appContainer.mainApp.modelsMerging',
+        modelsmerging: 'appContainer.mainApp.modelsMerging',
         linksuggestion: 'appContainer.mainApp.linkSuggestion',
         export: 'appContainer.mainApp.twoSidePanel.catalogue.export',
         import: 'appContainer.mainApp.twoSidePanel.catalogue.import',
@@ -152,6 +153,10 @@ export class StateHandlerService {
 
   ServerError(option = null) {
     return this.router.stateService.go('appContainer.mainApp.twoSidePanel.catalogue.serverError', {}, option);
+
+  }
+  ServerTimeout() {
+    return this.router.stateService.go('appContainer.mainApp.twoSidePanel.catalogue.serverTimeout', {});
 
   }
   NotImplemented(option = null) {

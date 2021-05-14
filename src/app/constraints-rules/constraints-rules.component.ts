@@ -19,21 +19,21 @@ SPDX-License-Identifier: Apache-2.0
 export class BaseDataGrid {
   displayedColumns: string[];
   records: Array<any>;
-  totalItemCount: any;
+  totalItemCount: number;
 }
 
 export class RuleRepresentation {
-  id: any;
+  id: string;
   rule: RuleModel;
-  language: any;
+  language: string;
   representation: any;
 }
 
 export class RuleModel {
   ruleRepresentations: Array<RuleRepresentation>;
-  name: any;
-  description: any;
-  id: any;
+  name: string;
+  description: string;
+  id: string;
 
   constructor(rule: Array<RuleRepresentation>, name: any, description: any) {
     this.ruleRepresentations = rule;
@@ -92,12 +92,14 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
 
   isLoadingResults: boolean;
   expandedElement: any;
-  isEditable: boolean;
   languages: Array<RuleLanguage>;
   selectedLanguage: RuleLanguage;
 
   clickButton = false;
   filteredOpen = false;
+
+  canAddRules: boolean;
+  canDeleteRules: boolean;
 
   fileExtensions = {
     'c#': 'cs',
@@ -122,12 +124,13 @@ export class ConstraintsRulesComponent extends BaseDataGrid implements OnInit {
     this.languages.push({ displayName: 'All', value: 'all' });
     this.isLoadingResults = true;
     this.displayedColumns = ['name', 'description', 'rule', 'actions'];
-    this.isEditable = true;
     this.selectedLanguage = this.languages.find((x) => x.value === 'all');
   }
 
   ngOnInit(): void {
     this.loadRules();
+    this.canAddRules = !this.parent.finalised;
+    this.canDeleteRules =  !this.parent.finalised;
   }
 
   expandRow = (record: RuleModel) => {

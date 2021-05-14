@@ -22,6 +22,7 @@ import { StateService } from '@uirouter/core';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
+import { DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
    selector: 'mdm-enumeration-values',
@@ -69,7 +70,7 @@ export class EnumerationValuesComponent implements OnInit, AfterViewInit {
       // tslint:disable-next-line: deprecation
       this.id = this.stateService.params.id;
 
-      await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe(result => {
+      await this.resource.dataType.get(this.parentDataModel, this.parentDataType).subscribe((result: DataTypeDetailResponse) => {
          this.breadCrumbs = result.body.breadcrumbs;
          this.dataModelId = result.body.model;
 

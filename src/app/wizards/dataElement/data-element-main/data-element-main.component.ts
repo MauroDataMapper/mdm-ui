@@ -29,6 +29,7 @@ import { DataElementStep1Component } from '../data-element-step1/data-element-st
 import { DataElementStep2Component } from '../data-element-step2/data-element-step2.component';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { Title } from '@angular/platform-browser';
+import { CatalogueItemDomainType, DataElement, DataElementDetailResponse, DataType, DataTypeDetail, DataTypeDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-element-main',
@@ -46,7 +47,7 @@ export class DataElementMainComponent implements OnInit {
   finalResult = {};
   successCount = 0;
   failCount = 0;
-  datatype: any;
+  datatype: DataTypeDetail;
 
   model = {
     metadata: [],
@@ -67,7 +68,7 @@ export class DataElementMainComponent implements OnInit {
       label: '',
       description: '',
       metadata: [],
-      domainType: 'PrimitiveType',
+      domainType: CatalogueItemDomainType.PrimitiveType,
       enumerationValues: [],
       classifiers: [],
       organisation: '',
@@ -178,7 +179,7 @@ export class DataElementMainComponent implements OnInit {
       dataType = { id: this.model.dataType.id };
       this.saveDataElement(dataType);
     } else {
-      const res = {
+      const res: DataType = {
         label: this.model.newlyAddedDataType.label,
         description: this.model.newlyAddedDataType.description,
         organisation: this.model.newlyAddedDataType.organisation,
@@ -209,7 +210,7 @@ export class DataElementMainComponent implements OnInit {
         }))
       };
 
-      this.resources.dataType.save(this.parentDataModelId, res).subscribe(response => {
+      this.resources.dataType.save(this.parentDataModelId, res).subscribe((response: DataTypeDetailResponse) => {
           dataType = response.body;
           this.saveDataElement(response.body);
         }, error => {
@@ -218,8 +219,8 @@ export class DataElementMainComponent implements OnInit {
     }
   };
 
-  saveNewDataType = () => {
-    const resource = {
+  saveNewDataType() {
+    const resource: DataType = {
       label: this.model.newlyAddedDataType.label,
       description: this.model.newlyAddedDataType.description,
       organisation: this.model.newlyAddedDataType.organisation,
@@ -251,7 +252,7 @@ export class DataElementMainComponent implements OnInit {
     };
 
     // deferred
-    this.resources.dataType.save(this.parentDataModelId, resource).subscribe(response => {
+    this.resources.dataType.save(this.parentDataModelId, resource).subscribe((response: DataTypeDetailResponse) => {
         this.datatype = response.body;
       },
       error => {
@@ -259,8 +260,9 @@ export class DataElementMainComponent implements OnInit {
       });
   };
 
-  saveDataElement = (dataType: any) => {
-    const resource = {
+  saveDataElement(dataType: any) {
+    const resource: DataElement = {
+      domainType: CatalogueItemDomainType.DataElement,
       label: this.model.label,
       description: this.model.description,
       dataType: {
@@ -284,7 +286,7 @@ export class DataElementMainComponent implements OnInit {
     this.getMultiplicity(resource, 'maxMultiplicity');
 
     // deferred
-    this.resources.dataElement.save(this.parentDataModelId, this.parentDataClassId, resource).subscribe(response => {
+    this.resources.dataElement.save(this.parentDataModelId, this.parentDataClassId, resource).subscribe((response: DataElementDetailResponse) => {
         this.messageHandler.showSuccess('Data Element saved successfully.');
 
         this.stateHandler.Go(
@@ -314,16 +316,16 @@ export class DataElementMainComponent implements OnInit {
       isValid = false;
     }
     // Check if for EnumerationType, at least one value is added
-    if (this.model.newlyAddedDataType.domainType === 'EnumerationType' && this.model.newlyAddedDataType.enumerationValues.length === 0) {
+    if (this.model.newlyAddedDataType.domainType === CatalogueItemDomainType.EnumerationType && this.model.newlyAddedDataType.enumerationValues.length === 0) {
       isValid = false;
     }
     // Check if for ReferenceType, the dataClass is selected
-    if (this.model.newlyAddedDataType.domainType === 'ReferenceType' && !this.model.newlyAddedDataType.referencedDataClass) {
+    if (this.model.newlyAddedDataType.domainType === CatalogueItemDomainType.ReferenceType && !this.model.newlyAddedDataType.referencedDataClass) {
       isValid = false;
     }
 
     // Check if for TerminologyType, the terminology is selected
-    if (this.model.newlyAddedDataType.domainType === 'TerminologyType' && !this.model.newlyAddedDataType.referencedTerminology) {
+    if (this.model.newlyAddedDataType.domainType === CatalogueItemDomainType.TerminologyType && !this.model.newlyAddedDataType.referencedTerminology) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       isValid = false;
     }

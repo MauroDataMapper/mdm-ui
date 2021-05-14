@@ -16,12 +16,12 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { BroadcastService } from '@mdm/services/broadcast.service';
 import { Title } from '@angular/platform-browser';
+import { CodeSetCreatePayload } from '@maurodatamapper/mdm-resources';
 
 @Component({
     selector: 'mdm-code-set-main',
@@ -41,17 +41,15 @@ export class CodeSetMainComponent implements OnInit {
         terms: [],
     };
     constructor(
-        private stateService: StateService,
+        private uiRouterGlobals: UIRouterGlobals,
         private stateHandler: StateHandlerService,
         private resources: MdmResourcesService,
         private messageHandler: MessageHandlerService,
-        private broadcastSvc: BroadcastService,
         private title: Title
     ) { }
 
     ngOnInit() {
-      // tslint:disable-next-line: deprecation
-        this.model.parentFolderId = this.stateService.params.parentFolderId;
+        this.model.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
         if (!this.model.parentFolderId) {
             this.stateHandler.NotFound({ location: false });
         }
@@ -60,7 +58,7 @@ export class CodeSetMainComponent implements OnInit {
 
     async save() {
         if (this.model.label && this.model.author && this.model.organisation && this.model.terms.length > 0) {
-            const resource = {
+            const resource: CodeSetCreatePayload = {
                 label: this.model.label,
                 author: this.model.author,
                 organisation: this.model.organisation,
@@ -71,7 +69,7 @@ export class CodeSetMainComponent implements OnInit {
             };
 
             try {
-               const result = await this.resources.folder.addCondeSets(this.model.parentFolderId, resource).toPromise();
+               const result = await this.resources.codeSet.addToFolder(this.model.parentFolderId, resource).toPromise();
                this.messageHandler.showSuccess('Code Set created successfully.');
                this.stateHandler.Go('codeset', { id: result.body.id }, { reload: true });
             } catch (error) {

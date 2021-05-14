@@ -36,7 +36,7 @@ export const environment = {
   appIsEditable: false,
   checkSessionExpiryTimeout: 300000,
   features: {
-    useSubscribedCatalogues: $ENV.useFeaureSubscribedCatalogues ?? false,
-    useDynamicProfiles: false
+    useSubscribedCatalogues: $ENV.useFeaureSubscribedCatalogues ?? true,
+    useDynamicProfiles: true
   }
 };

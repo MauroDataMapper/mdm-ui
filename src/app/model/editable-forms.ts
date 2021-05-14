@@ -15,6 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { EditableObject } from '@mdm/services/editing.service';
 import { Subject } from 'rxjs';
 
 /**
@@ -99,4 +100,18 @@ export class Editable<T, F extends Resetable<T>> {
     this.reset();
     this.onCancelSource.next();
   }
+}
+
+export class EditableRecord<T, E> implements EditableObject {
+
+  isNew: boolean;
+  inEdit: boolean;
+
+  constructor(
+    public source: T,
+    public edit: E,
+    settings: { isNew: boolean; inEdit: boolean }) {
+      this.isNew = settings.isNew;
+      this.inEdit = settings.inEdit;
+    }
 }

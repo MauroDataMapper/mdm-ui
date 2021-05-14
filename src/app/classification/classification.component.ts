@@ -23,12 +23,12 @@ import {
   ViewChild,
   AfterViewInit
 } from '@angular/core';
-import { Editable, FolderResult } from '../model/folderModel';
+import { Editable } from '../model/folderModel';
 import { Subscription } from 'rxjs';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageService } from '../services/message.service';
 import { SharedService } from '../services/shared.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -36,6 +36,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MessageHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { ClassifierDetail, ClassifierDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-classification',
@@ -53,7 +54,7 @@ export class ClassificationComponent
   @Input() mcClassification;
   classifier = null;
 
-  result: FolderResult;
+  result: ClassifierDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -73,7 +74,7 @@ export class ClassificationComponent
     resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private sharedService: SharedService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private title: Title,
     editingService: EditingService,
@@ -84,14 +85,12 @@ export class ClassificationComponent
   }
 
   ngOnInit() {
-    // tslint:disable-next-line: deprecation
-    if (!this.stateService.params.id) {
+    if (!this.uiRouterGlobals.params.id) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    // tslint:disable-next-line: deprecation
-    if (this.stateService.params.edit === 'true') {
+    if (this.uiRouterGlobals.params.edit === 'true') {
       this.editMode = true;
     }
 
@@ -113,8 +112,7 @@ export class ClassificationComponent
     };
 
     this.title.setTitle('Classifier');
-    // tslint:disable-next-line: deprecation
-    this.classifierDetails(this.stateService.params.id);
+    this.classifierDetails(this.uiRouterGlobals.params.id);
 
     this.subscription = this.messageService.changeUserGroupAccess.subscribe(
       (message: boolean) => {
@@ -135,8 +133,7 @@ export class ClassificationComponent
     this.afterSave = (result: { body: { id: any } }) =>
       this.classifierDetails(result.body.id);
 
-    // tslint:disable-next-line: deprecation
-    this.activeTab = this.getTabDetailByName(this.stateService.params.tabView);
+    this.activeTab = this.getTabDetailByName(this.uiRouterGlobals.params.tabView);
   }
 
   ngAfterViewInit(): void {
@@ -155,7 +152,7 @@ export class ClassificationComponent
   classifierDetails(id: any) {
     this.resourcesService.classifier
       .get(id)
-      .subscribe((response: { body: FolderResult }) => {
+      .subscribe((response: ClassifierDetailResponse) => {
         this.result = response.body;
         this.catalogueItem = this.result;
 
@@ -176,7 +173,7 @@ export class ClassificationComponent
   }
   classifierPermissions(id: any) {
     this.resourcesService.security
-      .permissions('classifiers', id)
+      .permissions(SecurableDomainType.Classifiers, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.result[attrname] = permissions.body[attrname];
@@ -212,11 +209,12 @@ export class ClassificationComponent
     this.editingService.stop();
 
     const resource = {
+      id: this.result.id,
       description: this.editableForm.description
     };
 
     this.resourcesService.classifier.update(this.result.id, resource).subscribe(
-      (result) => {
+      (result: ClassifierDetailResponse) => {
         this.messageHandler.showSuccess('Classifier updated successfully.');
         this.editingService.stop();
         this.editableForm.visible = false;

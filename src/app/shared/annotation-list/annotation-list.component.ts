@@ -38,7 +38,6 @@ export class AnnotationListComponent implements AfterViewInit {
   @ViewChild(MdmPaginatorComponent, { static: true }) paginator: MdmPaginatorComponent;
   @ViewChild('childEditor', { static: false })
 
-  access: any;
   currentUser: any;
   displayedColumns: string[] = ['lastUpdated'];
   totalItemCount = 0;
@@ -63,9 +62,7 @@ export class AnnotationListComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.reloadEvent.subscribe(() => (this.paginator.pageIndex = 0));
-
-    this.access = this.securityHandler.elementAccess(this.parent);
-    this.canAddAnnotation = this.access.canAddAnnotation;
+    this.canAddAnnotation = this.parent.availableActions.includes('comment');
     this.changeRef.detectChanges();
     this.currentUser = this.securityHandler.getCurrentUser();
 
@@ -86,8 +83,6 @@ export class AnnotationListComponent implements AfterViewInit {
     ).subscribe(data => {
       this.records = data;
     });
-
-    this.changeRef.detectChanges();
   }
 
   // annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {

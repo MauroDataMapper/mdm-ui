@@ -21,14 +21,19 @@ import { MessageService } from '@mdm/services/message.service';
 import { SharedService } from '@mdm/services/shared.service';
 import { StateService } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { DataClassResult, EditableDataClass } from '@mdm/model/dataClassModel';
+import { EditableDataClass } from '@mdm/model/dataClassModel';
 import { Subscription } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageHandlerService, SecurityHandlerService, ValidatorService } from '@mdm/services';
+import {
+  MessageHandlerService,
+  SecurityHandlerService,
+  ValidatorService
+} from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { DataClass, DataClassDetail, DataClassDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-class',
@@ -39,7 +44,7 @@ export class DataClassComponent
   extends ProfileBaseComponent
   implements OnInit, AfterViewInit {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  dataClass: DataClassResult;
+  dataClass: DataClassDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   showSearch = false;
@@ -53,11 +58,10 @@ export class DataClassComponent
   error = '';
   editableForm: EditableDataClass;
   aliases: any[] = [];
-  access:any;
+  access: any;
 
   newMinText: any;
   newMaxText: any;
-
 
   descriptionView = 'default';
 
@@ -149,70 +153,25 @@ export class DataClassComponent
     if (!parentDataClass) {
       this.resourcesService.dataClass
         .get(model, id)
-        .subscribe((result: { body: DataClassResult }) => {
+        .subscribe((result: DataClassDetailResponse) => {
           this.dataClass = result.body;
 
           this.access = this.securityHandler.elementAccess(this.dataClass);
 
           this.catalogueItem = this.dataClass;
-          this.isEditable = this.dataClass['availableActions']?.includes(
+          this.isEditable = this.dataClass.availableActions?.includes(
             'update'
           );
 
-          this.editableForm = new EditableDataClass();
-          this.editableForm.visible = false;
-          this.editableForm.deletePending = false;
-
-          this.editableForm.show = () => {
-            this.editableForm.visible = true;
-            if (this.min === '*') {
-              this.min = '-1';
-            }
-
-            if (this.max === '*') {
-              this.max = '-1';
-            }
-          };
-
-          this.editableForm.cancel = () => {
-            this.editingService.stop();
-            this.editableForm.visible = false;
-            this.editableForm.validationError = false;
-
-            this.error = '';
-
-            this.setEditableForm();
-
-            if (this.dataClass.classifiers) {
-              this.dataClass.classifiers.forEach((item) => {
-                this.editableForm.classifiers.push(item);
-              });
-            }
-            this.editableForm.aliases = [];
-            this.aliases = [];
-            if (this.dataClass.aliases) {
-              this.dataClass.aliases.forEach((item) => {
-                this.aliases.push(item);
-                this.editableForm.aliases.push(item);
-              });
-            }
-
-            if (this.min === '-1') {
-              this.min = '*';
-            }
-
-            if (this.max === '-1') {
-              this.max = '*';
-            }
-          };
+          this.createEditableForm();
 
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
 
-          this.UsedProfiles('dataClass',id);
-          this.UnUsedProfiles('dataClass',id);
+          this.UsedProfiles('dataClass', id);
+          this.UnUsedProfiles('dataClass', id);
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
 
@@ -252,21 +211,23 @@ export class DataClassComponent
           } else {
             this.max = this.dataClass.maxMultiplicity;
           }
-
-
         });
     } else {
       this.resourcesService.dataClass
         .getChildDataClass(model, parentDataClass, id)
-        .subscribe((result: { body: DataClassResult }) => {
+        .subscribe((result: DataClassDetailResponse) => {
           this.dataClass = result.body;
+          this.createEditableForm();
           this.parentDataModel = {
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
-          this.isEditable = this.dataClass['availableActions']?.includes(
+          this.isEditable = this.dataClass.availableActions?.includes(
             'update'
           );
+
+          this.createEditableForm();
+
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
 
@@ -282,7 +243,7 @@ export class DataClassComponent
     }
   }
 
- createEditableForm() {
+  createEditableForm() {
     this.editableForm = new EditableDataClass();
     this.editableForm.visible = false;
     this.editableForm.deletePending = false;
@@ -412,31 +373,25 @@ export class DataClassComponent
         }
       }
 
-      let resource = {};
-      if (!this.showEditDescription) {
-        resource = {
-          id: this.dataClass.id,
-          label: this.editableForm.label,
-          description: this.editableForm.description,
-          aliases,
-          classifiers,
-          minMultiplicity: parseInt(this.min, 10),
-          maxMultiplicity: parseInt(this.max, 10)
-        };
-      }
+      const resource: DataClass = {
+        id: this.dataClass.id,
+        label: this.editableForm.label,
+        domainType: this.dataClass.domainType,
+        description: this.editableForm.description || ''
+      };
 
-      if (this.showEditDescription) {
-        resource = {
-          id: this.dataClass.id,
-          description: this.editableForm.description || ''
-        };
+      if (!this.showEditDescription) {
+        resource.aliases = aliases;
+        resource.classifiers = classifiers;
+        resource.minMultiplicity = parseInt(this.min, 10);
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
 
       if (!this.dataClass.parentDataClass) {
         this.resourcesService.dataClass
           .update(this.dataClass.model, this.dataClass.id, resource)
           .subscribe(
-            (result) => {
+            (result: DataClassDetailResponse) => {
               this.dataClass = result.body;
               this.messageHandler.showSuccess(
                 'Data Class updated successfully.'
@@ -462,7 +417,7 @@ export class DataClassComponent
             resource
           )
           .subscribe(
-            (result) => {
+            (result: DataClassDetailResponse) => {
               this.dataClass = result.body;
               this.messageHandler.showSuccess(
                 'Data Class updated successfully.'
@@ -497,5 +452,5 @@ export class DataClassComponent
   edit = () => {
     this.showEditDescription = false;
     this.editableForm.show();
-   };
+  };
 }

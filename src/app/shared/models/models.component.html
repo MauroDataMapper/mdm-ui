@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0
                         <div style="float: left;" class="full-width">
                             <div class="input-group">
                                 <label for="search-models-input" class="sr-only">Search models</label>
-                                <input #searchbox type="search" id="search-models-input" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)">
+                                <input #searchbox type="search" id="search-models-input" class="form-control outlined-input" [(ngModel)]="formData.filterCriteria" placeholder="Search models..." (keyup)="onSearchInputKeyDown($event)" (search)="onSearchInputKeyDown($event)">
                                 <span class="tree-top-actions">
 
                                     <button type="button" mat-stroked-button [disabled]="levels.current === 1" matTooltipPosition="below" matTooltip="Search" (click)="search()" aria-label="Search">
@@ -132,7 +132,6 @@ SPDX-License-Identifier: Apache-2.0
                                         [rememberExpandedStates]="true"
                                         [node]="filteredModels"
                                         [searchCriteria]="searchText"
-                                        (compareToEvent)="onCompareTo()"
                                         (loadModelsToCompareEvent)="loadModelsToCompare($event)"
                                         [enableDragAndDrop]="true"
                                         [enableContextMenu]="true"

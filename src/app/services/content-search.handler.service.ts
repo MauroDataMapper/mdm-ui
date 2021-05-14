@@ -21,6 +21,7 @@ import { ValidatorService } from './validator.service';
 import { ElementTypesService } from './element-types.service';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { ContainerDomainType } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
     providedIn: 'root'
@@ -96,7 +97,7 @@ export class ContentSearchHandlerService {
                    pageIndex: offset * limit
                 });
         } else if (contextElement.domainType === 'Folder') {
-          return this.resources.tree.search('folders', searchText,
+          return this.resources.tree.search(ContainerDomainType.FOLDERS, searchText,
               {
                   searchTerm: searchText,
                   limit,
@@ -152,7 +153,7 @@ export class ContentSearchHandlerService {
                 pageIndex: offset * limit
             });
         } else if (contextElement.domainType === 'Terminology') {
-            return this.resources.terminology.terms.search(contextElement.id, {
+            return this.resources.terms.search(contextElement.id, {
                           search: encodeURIComponent(searchText),
                           limit,
                           offset,

@@ -1,6 +1,3 @@
-import { MdmResourcesResponse } from '@mdm/modules/resources';
-import { Authority } from './common';
-
 /*
 Copyright 2020 University of Oxford
 
@@ -18,46 +15,14 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export class CodeSetResult {
-  id: string;
-  domainType: string;
-  authority?: Authority;
-  label: string;
-  documentationVersion: any[];
-  description: string;
-  editable: boolean;
-  lastUpdated: string;
-  classifiers: Classifiers[];
-  type: string;
-  finalised: boolean;
-  author: string;
-  organisation: string;
-  dateFinalised: string;
-  aliases: any[];
-  semanticLinks: any[];
-  deleted = false;
-  readableByEveryone: any;
-  branchName: string;
-  modelVersion?: string;
-  modelVersionTag?: string;
-}
-
-export type CodeSetResultResponse = MdmResourcesResponse<CodeSetResult>;
-
-export class Classifiers {
-  id: string;
-  label: string;
-  lastUpdated: string;
-
-}
-
+import { Classifier } from '@maurodatamapper/mdm-resources';
 
 export class EditableDataModel {
 
   deletePending: boolean;
   label: string;
   description: string;
-  classifiers: Classifiers[] = [];
+  classifiers: Classifier[] = [];
   aliases: any[] = [];
   visible: boolean;
   waiting: boolean;

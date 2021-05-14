@@ -24,12 +24,11 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { MdmResourcesService } from '@mdm/modules/resources/mdm-resources.service';
-import { ReferenceModelResult } from '@mdm/model/referenceModelModel';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { MatTabGroup } from '@angular/material/tabs';
 import { SharedService } from '@mdm/services/shared.service';
 import { MessageService } from '@mdm/services/message.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { Title } from '@angular/platform-browser';
 import { EditingService } from '@mdm/services/editing.service';
@@ -37,6 +36,7 @@ import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
+import { CatalogueItemDomainType, Classifier, ModelUpdatePayload, ReferenceDataModelDetail, ReferenceDataModelDetailResponse, SecurableDomainType } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-reference-data',
@@ -46,7 +46,7 @@ import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
 export class ReferenceDataComponent  extends ProfileBaseComponent
   implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('tab', { static: false }) tabGroup: MatTabGroup;
-  referenceModel: ReferenceModelResult;
+  referenceModel: ReferenceDataModelDetail;
   showSecuritySection: boolean;
   subscription: Subscription;
   parentId: string;
@@ -77,7 +77,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
     resourcesService: MdmResourcesService,
     private sharedService: SharedService,
     private messageService: MessageService,
-    private stateService: StateService,
+    private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
     private securityHandler: SecurityHandlerService,
     editingService: EditingService,
@@ -89,8 +89,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
   }
 
   ngOnInit(): void {
-    // tslint:disable-next-line: deprecation
-    this.parentId = this.stateService.params.id;
+    this.parentId = this.uiRouterGlobals.params.id;
     if (!this.parentId) {
       this.stateHandler.NotFound({ location: false });
       return;
@@ -99,7 +98,6 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
     this.showExtraTabs = this.sharedService.isLoggedIn();
     this.title.setTitle('Reference Data Model');
 
-    // tslint:disable-next-line: deprecation
     this.referenceModelDetails(this.parentId);
   }
 
@@ -127,13 +125,13 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
     this.rulesItemCount = $event;
   }
 
-  referenceModelDetails(id: any) {
+  referenceModelDetails(id: string) {
     this.resourcesService.referenceDataModel
       .get(id)
-      .subscribe((result: { body: ReferenceModelResult }) => {
+      .subscribe((result: ReferenceDataModelDetailResponse) => {
         this.referenceModel = result.body;
         this.catalogueItem = this.referenceModel;
-        this.isEditable = this.referenceModel['availableActions'].includes(
+        this.isEditable = this.referenceModel.availableActions.includes(
           'update'
         );
         this.parentId = this.referenceModel.id;
@@ -182,9 +180,8 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
         if (this.tabGroup) {
           this.tabGroup.realignInkBar();
         }
-        // tslint:disable-next-line: deprecation
         this.activeTab = this.getTabDetailByName(
-          this.stateService.params.tabView
+          this.uiRouterGlobals.params.tabView
         ).index;
         this.tabSelected(this.activeTab);
       });
@@ -192,7 +189,7 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
 
   ReferenceModelPermissions(id: any) {
     this.resourcesService.security
-      .permissions('referenceDataModels', id)
+      .permissions(SecurableDomainType.ReferenceDataModels, id)
       .subscribe((permissions: { body: { [x: string]: any } }) => {
         Object.keys(permissions.body).forEach((attrname) => {
           this.referenceModel[attrname] = permissions.body[attrname];
@@ -226,34 +223,28 @@ export class ReferenceDataComponent  extends ProfileBaseComponent
     this.errorMessage = '';
     this.editingService.stop();
 
-    const classifiers = [];
+    const classifiers: Classifier[] = [];
     this.editableForm.classifiers.forEach((cls) => {
       classifiers.push(cls);
     });
-    const aliases = [];
+    const aliases: string[] = [];
     this.editableForm.aliases.forEach((alias) => {
       aliases.push(alias);
     });
-    let resource = {};
-    if (!this.showEditDescription) {
-      resource = {
-        id: this.referenceModel.id,
-        label: this.editableForm.label,
-        description: this.editableForm.description || '',
-        author: this.editableForm.author,
-        organisation: this.editableForm.organisation,
-        type: this.referenceModel.type,
-        domainType: this.referenceModel.domainType,
-        aliases,
-        classifiers
-      };
-    }
 
-    if (this.showEditDescription) {
-      resource = {
-        id: this.referenceModel.id,
-        description: this.editableForm.description || ''
-      };
+    const resource: ModelUpdatePayload = {
+      id: this.referenceModel.id,
+      domainType: CatalogueItemDomainType.ReferenceDataModel,
+      description: this.editableForm.description || ''
+    };
+
+    if (!this.showEditDescription) {
+      resource.label = this.editableForm.label;
+      resource.author = this.editableForm.author;
+      resource.organisation = this.editableForm.organisation;
+      resource.type = this.referenceModel.type;
+      resource.aliases = aliases;
+      resource.classifiers = classifiers;
     }
 
     this.resourcesService.referenceDataModel

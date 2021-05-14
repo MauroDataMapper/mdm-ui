@@ -21,9 +21,12 @@ import { DataModelStep2Component } from '../data-model-step2/data-model-step2.co
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { StateService } from '@uirouter/core';
+import { UIRouterGlobals } from '@uirouter/core';
 import { Step } from '@mdm/model/stepModel';
 import { Title } from '@angular/platform-browser';
+import { catchError } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { DataModelCreatePayload, DataModelDetailResponse, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-model-main',
@@ -34,26 +37,33 @@ export class DataModelMainComponent implements OnInit {
   isLinear = false;
   steps: Step[] = [];
   doneEvent = new EventEmitter<any>();
-  parentFolderId: any;
+  parentFolderId: string;
   parentFolder: any;
-  model: any = {
-    metadata: [],
-    classifiers: []
+  model : {
+    metadata: Array<any>;
+    classifiers: Array<any>;
+    label:string | undefined;
+    description: string | undefined;
+    author:string | undefined;
+    organisation :string| undefined;
+    dataModelType: any;
+    dialect:string| undefined;
+    selectedDataTypeProvider:any;
   };
   constructor(
     private stateHandler: StateHandlerService,
+    private uiRouterGlobals: UIRouterGlobals,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
-    private stateService: StateService,
     private title: Title
   ) { }
 
   ngOnInit() {
     this.title.setTitle('New Data Model');
-    // tslint:disable-next-line: deprecation
-    this.parentFolderId = this.stateService.params.parentFolderId;
-    this.resources.folder.get(this.parentFolderId).toPromise().then(result => {
-      result.domainType = 'Folder';
+    this.model = { metadata :[], classifiers : [], label:undefined, description:undefined, author:undefined, organisation: undefined, dataModelType:undefined,dialect:undefined, selectedDataTypeProvider:undefined};
+    this.parentFolderId = this.uiRouterGlobals.params.parentFolderId;
+    this.resources.folder.get(this.parentFolderId).toPromise().then((result: FolderDetailResponse) => {
+
       this.parentFolder = result.body;
 
       const step1 = new Step();
@@ -81,8 +91,8 @@ export class DataModelMainComponent implements OnInit {
     this.stateHandler.GoPrevious();
   };
 
-  save = async () => {
-    const resource = {
+  save() {
+    const resource: DataModelCreatePayload = {
       folder: this.parentFolderId,
       label: this.model.label,
       description: this.model.description,
@@ -101,23 +111,24 @@ export class DataModelMainComponent implements OnInit {
         };
       })
     };
-    if (resource.type === 'Database') {
-      resource.dialect = this.model.dialect;
-    }
+    // if (resource.type === 'Database') {
+    //   resource.dialect = this.model.dialect;
+    // }
 
-    let queryStringParams = null;
+    let queryStringParams = {};
     if (this.model.selectedDataTypeProvider) {
       queryStringParams = {
         defaultDataTypeProvider: this.model.selectedDataTypeProvider.name
       };
     }
 
-    try {
-      const response = await this.resources.dataModel.addToFolder(this.parentFolderId, resource, queryStringParams).toPromise();
+    this.resources.dataModel.addToFolder(this.parentFolderId, resource, queryStringParams).pipe(catchError(error => {
+      this.messageHandler.showError('There was a problem saving the Data Model.', error);
+      return EMPTY;
+    })).subscribe((response: DataModelDetailResponse) => {
       this.messageHandler.showSuccess('Data Model saved successfully.');
       this.stateHandler.Go('datamodel', { id: response.body.id }, { reload: true, location: true });
-    } catch (error) {
-      this.messageHandler.showError('There was a problem saving the Data Model.', error);
-    }
-  };
+    });
+  }
+
 }

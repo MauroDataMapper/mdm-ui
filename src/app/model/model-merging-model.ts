@@ -15,8 +15,9 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-export interface Authority {
-    id: string;
-    label: string;
-    url: string;
+
+import { ModelDomainType } from '@maurodatamapper/mdm-resources';
+
+export class ModelMergingModel {
+  constructor(public sourceId : string, public targetId : string, public catalogueDomainType : ModelDomainType) {}
 }

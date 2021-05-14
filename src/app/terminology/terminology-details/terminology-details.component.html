@@ -26,17 +26,28 @@ SPDX-License-Identifier: Apache-2.0
   >
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="mcTerminology">
-        <!-- <button type="button" mat-icon-button [matMenuTriggerFor]="userActions" style="position: relative; float: right; margin-right:4px;">
-                   <i class="fas fa-ellipsis-v"></i>
-                </button> -->
+        <button
+          type="button"
+          mat-icon-button
+          [matMenuTriggerFor]="userActions"
+          style="position: relative; float: right; margin-right: 4px"
+        >
+          <i class="fas fa-ellipsis-v"></i>
+          <span style="display: none">Menu</span>
+        </button>
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
           <!-- <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
                       <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
                    </button> -->
-          <!-- <button mat-menu-item type="button" *ngIf="showEdit" (click)="showForm()">
-                      <i class="fas fa-pencil-alt"></i> Edit Title
-                   </button> -->
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="showEdit || canEditDescription"
+            (click)="showForm()"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit Title
+          </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
                    </button> -->
@@ -184,12 +195,34 @@ SPDX-License-Identifier: Apache-2.0
             <span class="dataModelTypeIcon">
               <i matTooltip="Terminology" class="fas fa-book"></i>
             </span>
-            <span
-              [innerHTML]="mcTerminology.label"
-              class="dataModelDetailsLabel"
+            <mdm-inline-text-edit
+              [readOnly]="!showEditDescription"
+              [inEditMode]="editableForm.visible"
+              [(ngModel)]="editableForm.label"
+              [name]="'moduleName'"
+              size="20"
+              [styleCss]="'dataModelDetailsLabel'"
             >
-              <!-- TODO ADD SEARCH CRITERIA PIPE -->
-            </span>
+            </mdm-inline-text-edit>
+            <mdm-editable-form-buttons
+              *ngIf="editableForm"
+              [hidden]="!editableForm.visible"
+              [onCancelEdit]="onCancelEdit"
+              [editable]="editableForm"
+              [textLocation]="'left'"
+              [hideDelete]="true"
+              [hideCancel]="false"
+            ></mdm-editable-form-buttons>
+            <sup
+              *ngIf="mcTerminology?.readableByEveryone"
+              class="text-muted"
+              style="margin-left: 4px"
+              ><i
+                class="fas fa-globe-europe globe fa-xs"
+                aria-hidden="true"
+                matTooltip="Publicly Available"
+              ></i
+            ></sup>
           </h4>
           <mdm-element-status [result]="mcTerminology"></mdm-element-status>
           <span class="inline-block">
@@ -212,6 +245,36 @@ SPDX-License-Identifier: Apache-2.0
           </small>
         </div>
 
+        <div class="text-muted">
+          <small>
+            <i class="fas fa-cube" matTooltip="Item type"></i>
+            <span
+              ><strong>Item type: </strong
+              ><span class="item-type">{{
+                mcTerminology.domainType
+              }}</span></span
+            >
+          </small>
+        </div>
+
+        <div class="text-muted" *ngIf="mcTerminology?.authority">
+          <small>
+            <i class="far fa-building" matTooltip="Authority"></i>
+            <span
+              ><strong>Authority: </strong
+              >{{ mcTerminology.authority['label'] }}</span
+            >
+          </small>
+        </div>
+        <div class="text-muted" *ngIf="mcTerminology">
+          <small>
+            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
+            <span
+              ><strong>Documentation Version: </strong
+              >{{ mcTerminology.documentationVersion }}</span
+            >
+          </small>
+        </div>
         <div class="text-muted" *ngIf="mcTerminology">
           <small>
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
@@ -241,52 +304,27 @@ SPDX-License-Identifier: Apache-2.0
             </span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="mcTerminology">
-          <small>
-            <i matTooltip="Documentation Version" class="fas fa-copy"></i>
-            <span
-              ><strong>Documentation Version: </strong
-              >{{ mcTerminology.documentationVersion }}</span
-            >
-          </small>
-        </div>
-
-        <div
-          class="text-muted"
-          *ngIf="
-            mcTerminology &&
-            mcTerminology.finalised &&
-            mcTerminology.dateFinalised
-          "
-        >
-          <small>
-            <i
-              class="far fa-calendar-check"
-              matTooltip="Finalised
-                            on"
-            ></i>
-            <span
-              ><strong>Finalised on:</strong>
-              {{
-                mcTerminology.dateFinalised
-                  | date: 'yyyy-MM-dd
-                            HH:mm:ss'
-              }}</span
-            >
-          </small>
-        </div>
-        <div class="text-muted" *ngIf="mcTerminology?.authority">
-          <small>
-            <i class="far fa-building" matTooltip="Authority"></i>
-            <span
-              ><strong>Authority: </strong
-              >{{ mcTerminology.authority['label'] }}</span
-            >
-          </small>
-        </div>
       </div>
     </div>
   </form>
+</div>
+<div>
+  <div id="exportFileDownload" #aLink></div>
+</div>
+<div style="text-align: left" *ngIf="exportError">
+  <div style="padding-top: 25px">
+    <div class="alert alert-danger">
+      <strong>Error!</strong> {{ exportError }}
+    </div>
+  </div>
+</div>
+<div style="clear: both" *ngIf="processing">
+  <mat-progress-bar
+    value="50"
+    bufferValue="75"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
 </div>
 <div
   class="userAccess"

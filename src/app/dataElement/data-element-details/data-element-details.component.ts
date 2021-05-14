@@ -30,7 +30,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ValidatorService } from '@mdm/services/validator.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
-import { DataElementResult, EditableDataElement } from '@mdm/model/dataElementModel';
+import { EditableDataElement } from '@mdm/model/dataElementModel';
 import { McSelectPagination } from '@mdm/utility/mc-select/mc-select.component';
 import { Title } from '@angular/platform-browser';
 import { BroadcastService } from '@mdm/services/broadcast.service';
@@ -38,6 +38,7 @@ import { GridService } from '@mdm/services/grid.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { DataElement, DataElementDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-element-details',
@@ -50,7 +51,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   @Input() parentDataModel;
   @Input() parentDataClass;
   @Input() editMode = false;
-  result: DataElementResult;
+  result: DataElementDetail;
   hasResult = false;
   subscription: Subscription;
   editableForm: EditableDataElement;
@@ -277,6 +278,7 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
   delete() {
     this.resourcesService.dataElement.remove(this.result.model, this.result.dataClass, this.result.id).subscribe(() => {
       this.messageHandler.showSuccess('Data Class deleted successfully.');
+      this.broadcastSvc.broadcast('$reloadFoldersTree');
       this.stateHandler.Go('appContainer.mainApp.twoSidePanel.catalogue.allDataModel');
     }, error => {
       this.deleteInProgress = false;
@@ -319,27 +321,22 @@ export class DataElementDetailsComponent implements OnInit, AfterViewInit, OnDes
       } else {
         dataType = this.newlyAddedDataType;
       }
-      let resource = {};
+
+      const resource: DataElement = {
+        id: this.result.id,
+        label: this.editableForm.label,
+        domainType: this.result.domainType,
+        description: this.editableForm.description || ''
+      };
+
       if (!this.showEditDescription) {
-        resource = {
-          id: this.result.id,
-          label: this.editableForm.label,
-          description: this.editableForm.description || '',
-          domainType: this.result.domainType,
-          aliases,
-          dataType,
-          classifiers,
-          minMultiplicity: parseInt(this.min, 10),
-          maxMultiplicity: parseInt(this.max, 10)
-        };
+        resource.aliases = aliases;
+        resource.dataType = dataType;
+        resource.classifiers = classifiers;
+        resource.minMultiplicity = parseInt(this.min, 10);
+        resource.maxMultiplicity = parseInt(this.max, 10);
       }
 
-      if (this.showEditDescription) {
-        resource = {
-          id: this.result.id,
-          description: this.editableForm.description || ''
-        };
-      }
       this.resourcesService.dataElement.update(this.parentDataModel.id, this.parentDataClass.id, this.result.id, resource).subscribe(() => {
         this.editingService.stop();
         this.messageHandler.showSuccess('Data Element updated successfully.');

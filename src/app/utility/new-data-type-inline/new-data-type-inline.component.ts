@@ -20,6 +20,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { ElementTypesService } from '@mdm/services/element-types.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { CodeSet, CodeSetIndexResponse, ReferenceDataModel, ReferenceDataModelIndexResponse, Terminology, TerminologyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-type-inline',
@@ -47,9 +48,9 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
   allDataTypes;
   isValid = false;
   reloading = false;
-  terminologies: any;
-  codesets: any;
-  referenceDataModels: any;
+  terminologies: Terminology[];
+  codesets: CodeSet[];
+  referenceDataModels: ReferenceDataModel[];
 
   constructor(
     private resourceService: MdmResourcesService,
@@ -140,7 +141,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
 
   loadTerminologies() {
     this.reloading = true;
-    this.resourceService.terminology.list().subscribe(data => {
+    this.resourceService.terminology.list().subscribe((data: TerminologyIndexResponse) => {
       this.terminologies = data.body.items;
       this.reloading = false;
     }, () => {
@@ -157,7 +158,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
 
   loadCodeSets() {
    this.reloading = true;
-   this.resourceService.codeSet.list().subscribe(data => {
+   this.resourceService.codeSet.list().subscribe((data: CodeSetIndexResponse) => {
      this.codesets = data.body.items;
      this.reloading = false;
    }, () => {
@@ -167,7 +168,7 @@ export class NewDataTypeInlineComponent implements OnInit, AfterViewInit {
 
  loadReferenceModels() {
    this.reloading = true;
-   this.resourceService.referenceDataModel.list().subscribe(data => {
+   this.resourceService.referenceDataModel.list().subscribe((data: ReferenceDataModelIndexResponse) => {
      this.referenceDataModels = data.body.items;
      this.reloading = false;
    }, () => {

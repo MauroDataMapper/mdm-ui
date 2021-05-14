@@ -182,6 +182,8 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
 import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-property-table.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
+import { NewVersionReferenceDataModelComponent } from '@mdm/referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
+import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 
 @NgModule({
   declarations: [
@@ -206,6 +208,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
+    ServerTimeoutComponent,
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
@@ -340,6 +343,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
     ProfileDetailsComponent,
+    NewVersionReferenceDataModelComponent
   ],
   imports: [
     AdminModule,
@@ -385,6 +389,7 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
     NotFoundComponent,
     DataModelDefaultComponent,
     ServerErrorComponent,
+    ServerTimeoutComponent,
     NotImplementedComponent,
     NotAuthorizedComponent,
     DataModelComponent,
@@ -512,7 +517,8 @@ import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-det
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
     NewFederatedSubscriptionModalComponent,
-    ProfileDetailsComponent
+    ProfileDetailsComponent,
+    NewVersionReferenceDataModelComponent
   ]
 })
 export class CatalogueModule { }

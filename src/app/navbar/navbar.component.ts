@@ -29,7 +29,7 @@ import { EditingService } from '@mdm/services/editing.service';
 import { ThemingService } from '@mdm/services/theming.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { catchError, map } from 'rxjs/operators';
-import { ApiProperty, ApiPropertyIndexResponse } from '@mdm/model/api-properties';
+import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-navbar',

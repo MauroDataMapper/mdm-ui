@@ -17,8 +17,9 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
 import { Editable } from '@mdm/model/editable-forms';
-import { SubscribedCatalogue, SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
+import { SubscribedCatalogueForm } from '@mdm/model/subscribed-catalogue-model';
 
 @Component({
   selector: 'mdm-subscribed-catalogue-detail',

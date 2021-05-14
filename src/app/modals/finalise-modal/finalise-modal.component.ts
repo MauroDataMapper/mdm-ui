@@ -18,6 +18,13 @@ SPDX-License-Identifier: Apache-2.0
 
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FinalisePayload } from '@maurodatamapper/mdm-resources';
+import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
+
+export interface FinaliseModalResponse {
+  status: ModalDialogStatus;
+  request?: FinalisePayload;
+}
 
 @Component({
   selector: 'mdm-finalise-modal',
@@ -43,9 +50,10 @@ export class FinaliseModalComponent implements OnInit {
   modelVersion = '0.0.0';
   versionTag: string;
 
-  constructor(public dialogRef: MatDialogRef<FinaliseModalComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private changeRef: ChangeDetectorRef) {
+  constructor(
+    public dialogRef: MatDialogRef<FinaliseModalComponent, FinaliseModalResponse>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private changeRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -84,27 +92,22 @@ export class FinaliseModalComponent implements OnInit {
   }
 
   ok() {
-    const request: any = { };
-    if (this.data.versionList !== 'Custom') {
-      request.versionChangeType = this.data.versionList;
-    }
-    else {
-      request.version = this.version;
-    }
-
-    if (this.versionTag) {
-      request.versionTag = this.versionTag;
-    }
+    const useCustomVersion = this.data.versionList === 'Custom';
+    const request: FinalisePayload = {
+      version: useCustomVersion ? this.version : undefined,
+      versionChangeType: !useCustomVersion ? this.data.versionList : undefined,
+      versionTag: this.versionTag
+    };
 
     this.dialogRef.close({
-      status: 'ok',
+      status: ModalDialogStatus.Ok,
       request
     });
   }
   cancel() {
-    this.dialogRef.close({ status: 'cancel' });
+    this.dialogRef.close({ status: ModalDialogStatus.Cancel });
   }
   close() {
-    this.dialogRef.close({ status: 'close' });
+    this.dialogRef.close({ status: ModalDialogStatus.Close });
   }
 }

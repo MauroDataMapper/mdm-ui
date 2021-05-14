@@ -25,8 +25,8 @@ import { RegisterModalComponent } from '../modals/register-modal/register-modal.
 import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '@mdm/services';
-import { ApiProperty, ApiPropertyIndexResponse } from '@mdm/model/api-properties';
 import { catchError } from 'rxjs/operators';
+import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 
 const defaultHtmlContent = [
   {

@@ -40,8 +40,8 @@ export const environment = {
   appIsEditable: true,
   checkSessionExpiryTimeout: 300000,
   features: {
-    useSubscribedCatalogues: false,
-    useDynamicProfiles: false
+    useSubscribedCatalogues: true,
+    useDynamicProfiles: true
   }
 };
 

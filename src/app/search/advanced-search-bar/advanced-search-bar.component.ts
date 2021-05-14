@@ -19,10 +19,10 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { ContentSearchHandlerService } from '@mdm/services/content-search.handler.service';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { FolderResult } from '@mdm/model/folderModel';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable, Subject, fromEvent } from 'rxjs';
 import { debounceTime, map, filter, distinctUntilChanged } from 'rxjs/operators';
+import { Classifier, ClassifierIndexResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-advanced-search-bar',
@@ -35,7 +35,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   @Input() doNotDisplayModelPathStatus: boolean;
   @Input() doNotShowDataModelInModelPath: boolean;
   @Input() showRestrictTo: boolean;
-  @Input() parent: FolderResult;
+  @Input() parent: any;
   @Input() showDomainTypes: string[];
   @Input() doNotOpenLinkInNewWindow: boolean;
 
@@ -56,7 +56,7 @@ export class AdvancedSearchBarComponent implements OnInit {
   placeHolderText: string;
   totalItemCount = 0;
   context: any;
-  classifications: any[];
+  classifications: Classifier[];
   searchResults: any[];
 
   hideDM: boolean;
@@ -101,7 +101,7 @@ export class AdvancedSearchBarComponent implements OnInit {
     this.advancedSearch = false;
 
 
-    this.resources.classifier.list().subscribe(result => {
+    this.resources.classifier.list().subscribe((result: ClassifierIndexResponse) => {
       this.classifications = result.body.items;
     });
 

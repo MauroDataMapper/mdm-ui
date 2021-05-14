@@ -15,7 +15,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { FolderResult, Editable } from '../model/folderModel';
+import { Editable } from '../model/folderModel';
 import {
   Component,
   OnInit,
@@ -32,12 +32,14 @@ import { FolderHandlerService } from '../services/handlers/folder-handler.servic
 import { StateHandlerService } from '../services/handlers/state-handler.service';
 import { SharedService } from '../services/shared.service';
 import { BroadcastService } from '../services/broadcast.service';
-import { DialogPosition } from '@angular/material/dialog';
+import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { ElementSelectorDialogueService } from '../services/element-selector-dialogue.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { FolderDetail, FolderDetailResponse } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-folder-detail',
@@ -48,10 +50,10 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() afterSave: any;
   @Input() editMode = false;
   @ViewChildren('editableText') editForm: QueryList<any>;
-  result: FolderResult;
+  result: FolderDetail;
   hasResult = false;
   subscription: Subscription;
-
+  showSecuritySection: boolean;
   showUserGroupAccess: boolean;
   showEdit: boolean;
   showPermission: boolean;
@@ -79,7 +81,8 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementDialogueService: ElementSelectorDialogueService,
     private broadcastSvc: BroadcastService,
     private title: Title,
-    private editingService: EditingService) {
+    private editingService: EditingService,
+    private dialog: MatDialog) {
     this.isAdminUser = this.sharedService.isAdmin;
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.FolderDetails();
@@ -114,6 +117,10 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
       this.editableForm.validationError = false;
       this.editableForm.description = this.result.description;
     };
+
+    this.subscription = this.messageService.changeUserGroupAccess.subscribe((message: boolean) => {
+      this.showSecuritySection = message;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -162,7 +169,12 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleSecuritySection() {
-    this.messageService.toggleUserGroupAccess();
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'result',
+        domainType: 'Folder'
+      }, panelClass: 'security-modal'
+    });
   }
   toggleShowSearch() {
     this.messageService.toggleSearch();
@@ -209,7 +221,7 @@ export class FolderDetailComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (this.validateLabel(this.result.label)) {
-      this.resourcesService.folder.update(resource.id, resource).subscribe(result => {
+      this.resourcesService.folder.update(resource.id, resource).subscribe((result: FolderDetailResponse) => {
           if (this.afterSave) {
             this.afterSave(result);
           }

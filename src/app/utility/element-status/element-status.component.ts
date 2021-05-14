@@ -16,7 +16,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, Input } from '@angular/core';
-import { DataModelResult } from '@mdm/model/dataModelModel';
+import { DataModelDetail } from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-element-status',
@@ -25,7 +25,7 @@ import { DataModelResult } from '@mdm/model/dataModelModel';
 })
 export class ElementStatusComponent {
 
-  @Input() result: DataModelResult;
+  @Input() result: DataModelDetail;
 
   constructor() { }
 }

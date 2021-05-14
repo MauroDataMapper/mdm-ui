@@ -16,7 +16,6 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input, ViewChild, Output, ElementRef, EventEmitter } from '@angular/core';
-import { FolderResult } from '@mdm/model/folderModel';
 import { MarkdownParserService } from '@mdm/utility/markdown/markdown-parser/markdown-parser.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { MessageService } from '@mdm/services/message.service';
@@ -33,7 +32,7 @@ export class MarkdownTextAreaComponent implements OnInit {
   @Input() editableForm: any;
   @Input() rows: number;
   @Input() property: string;
-  @Input() element: FolderResult;
+  @Input() element: any;
   @ViewChild('editableTextArea', { static: false })
   editableTextArea: ElementRef;
   @ViewChild('editableText', { static: true }) editForm: any;

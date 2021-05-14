@@ -16,9 +16,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { Component, OnInit, Input } from '@angular/core';
+import { TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
-import { TermResult } from '@mdm/model/termModel';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,8 +27,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./term-relationships.component.scss']
 })
 export class TermRelationshipsComponent implements OnInit {
-  @Input() term: TermResult;
-  @Input() type: any;
+  @Input() term: TermDetail;
+  @Input() type?: string;
   subscription: Subscription;
   totalItems = 0;
 
@@ -43,19 +43,25 @@ export class TermRelationshipsComponent implements OnInit {
 
   ngOnInit() {
     if (this.term) {
-      this.resources.term.termRelationships(this.term.terminology.id, this.term.id).subscribe(data => {
-        this.totalItems = data.body.count;
-        data.body.items.forEach(item => {
-          if (!this.relations[item.relationshipType.displayLabel]) {
-            this.relationshipTypes.push(item.relationshipType.displayLabel);
-            this.relations[item.relationshipType.displayLabel] = [];
-          }
-          this.relations[item.relationshipType.displayLabel].push(item);
+      const parameters: any = { };
+      if (this.type) {
+        parameters.type = this.type;
+      }
+
+      this.resources.term.termRelationships(this.term.terminology.id, this.term.id, parameters)
+        .subscribe(data => {
+          this.totalItems = data.body.count;
+          data.body.items.forEach(item => {
+            if (!this.relations[item.relationshipType.displayLabel]) {
+              this.relationshipTypes.push(item.relationshipType.displayLabel);
+              this.relations[item.relationshipType.displayLabel] = [];
+            }
+            this.relations[item.relationshipType.displayLabel].push(item);
+          });
+          this.loading = false;
+        }, () => {
+          this.loading = false;
         });
-        this.loading = false;
-      }, () => {
-        this.loading = false;
-      });
     }
   }
 

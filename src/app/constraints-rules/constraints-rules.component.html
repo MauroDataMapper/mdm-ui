@@ -68,7 +68,7 @@ SPDX-License-Identifier: Apache-2.0
                 fxLayoutAlign.xs="flex-start center"
               >
               <div class="mt-1">
-               <button mat-flat-button color="primary" class="mr-1 mb-1 authorize-click" class="authorize-click" (click)=" $event.stopPropagation(); add()">
+               <button mat-flat-button color="primary" class="mr-1 mb-1 authorize-click" class="authorize-click" *ngIf="canAddRules" (click)=" $event.stopPropagation(); add()">
                   <i class="fas fa-plus" aria-hidden="true"></i>
                   Add Rule
                 </button>
@@ -76,8 +76,7 @@ SPDX-License-Identifier: Apache-2.0
                   mat-flat-button
                   color="primary"
                   style="margin-left: 5px; z-index: 100;"
-                  type="button"
-                  *ngIf="isEditable"
+                  type="button"             
                   (click)="exportAllRules()"
                   class="authorize-click"
                 >
@@ -198,7 +197,7 @@ SPDX-License-Identifier: Apache-2.0
                 mat-menu-item
                 color="accent"
                 type="button"
-                *ngIf="isEditable"
+                *ngIf="canAddRules"
                 (click)="openEdit(record)"
               >
                 <i class="fas fa-pencil-alt"></i> Edit
@@ -207,7 +206,7 @@ SPDX-License-Identifier: Apache-2.0
                 mat-menu-item
                 color="accent"
                 type="button"
-                *ngIf="isEditable"
+                *ngIf="canAddRules"
                 (click)="addRepresentation(record)"
               >
                 <i class="fas fa-plus"></i> Add Representation
@@ -217,15 +216,15 @@ SPDX-License-Identifier: Apache-2.0
                 mat-menu-item
                 color="accent"
                 type="button"
-                *ngIf="isEditable"
                 (click)="exportRule(record)"
               >
                 <i class="fas fa-download"></i> Export
               </button>
-              <mat-divider *ngIf="isEditable"></mat-divider>
+              <mat-divider *ngIf="canDeleteRules"></mat-divider>
               <button
                 mat-menu-item
                 color="warn"
+                *ngIf="canDeleteRules"
                 type="button"
                 (click)="deleteRule(record)"
                 class="warning"
@@ -319,7 +318,7 @@ SPDX-License-Identifier: Apache-2.0
                         mat-menu-item
                         color="accent"
                         type="button"
-                        *ngIf="isEditable"
+                        *ngIf="canAddRules"
                         (click)="openEditRepresentation(record)"
                       >
                         <i class="fas fa-pencil-alt"></i> Edit
@@ -328,19 +327,19 @@ SPDX-License-Identifier: Apache-2.0
                       <button
                         mat-menu-item
                         color="accent"
-                        type="button"
-                        *ngIf="isEditable"
+                        type="button"                
                         (click)="exportRuleRepresentation(record)"
                       >
                         <i class="fas fa-download"></i> Export
                       </button>
-                      <mat-divider *ngIf="isEditable"></mat-divider>
+                      <mat-divider *ngIf="canDeleteRules"></mat-divider>
                       <button
                         mat-menu-item
                         color="warn"
                         type="button"
                         (click)="deleteRepresentation(record)"
                         class="warning"
+                        *ngIf="canDeleteRules"
                       >
                         <i class="far fa-trash-alt"></i> Delete
                       </button>

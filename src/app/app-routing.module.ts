@@ -60,6 +60,8 @@ import { StateObject, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
+import { NewVersionReferenceDataModelComponent } from './referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
+import { ServerTimeoutComponent } from './errors/server-timeout/server-timeout.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -122,6 +124,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: ServerErrorComponent
     },
     {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.serverTimeout',
+      url: '/serverTimeout',
+      component: ServerTimeoutComponent
+    },
+    {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.notFound',
       url: '/notFound',
       component: NotFoundComponent
@@ -130,6 +137,11 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
       url: '/newVersion/dataModel/:dataModelId',
       component: NewVersionDataModelComponent
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionReferenceDataModel',
+      url: '/newVersion/referenceDataModel/:referenceDataModelId',
+      component: NewVersionReferenceDataModelComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -253,7 +265,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.modelsMerging',
-      url: '/modelsMerging/:sourceId/:targetId',
+      url: '/modelsMerging/:catalogueDomainType/:sourceId/:targetId',
       component: ModelMergingComponent
     },
     {

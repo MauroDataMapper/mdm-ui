@@ -16,35 +16,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
-import { MdmResourcesIndexResponse, MdmResourcesResponse } from '@mdm/modules/resources/mdm-resources.models';
+import { SubscribedCatalogue } from '@maurodatamapper/mdm-resources';
 import { Resetable } from './editable-forms';
-
-export interface SubscribedCatalogue {
-  id?: string;
-  url: string;
-  apiKey?: string;
-  label: string;
-  description?: string;
-  refreshPeriod?: number;
-}
-
-/**
- * Type alias for an operation for the Subscribed Catalogues API endpoint.
- *
- * This type alias represents a response with a single body `SubscribedCatalogue` element in.
- *
- * @see SubscribedCatalogueIndexResponse
- */
-export type SubscribedCatalogueResponse = MdmResourcesResponse<SubscribedCatalogue>;
-
-/**
- * Type alias for an index/list operation for the Subscribed Catalogues API endpoint.
- *
- * This type alias represents a response with a multiple `SubscribedCatalogue` elements in.
- *
- * @see SubscribedCatalogueResponse
- */
-export type SubscribedCatalogueIndexResponse = MdmResourcesIndexResponse<SubscribedCatalogue>;
 
 /**
  * Represents the editable form state of a `SubscribedCatalogue`

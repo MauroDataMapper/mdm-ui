@@ -303,7 +303,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       );
   }
 
-  onNodeDbClick = (node) => {
+  onNodeDbClick(node : Node ){
     // if the element if a dataModel, load it
     if (
       [DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(
@@ -315,11 +315,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.levels.focusedElement(node);
   };
 
-  onCompareTo = () => {
-    // this.stateHandler.NewWindow('modelscomparison', { sourceId: source.id, targetId: target ? target.id : null });
-  };
-
-  loadModelsToCompare = (dataModel) => {
+  loadModelsToCompare(dataModel : any){
     this.resources.catalogueItem
       .listSemanticLinks(dataModel.domainType, dataModel.id, { all: true })
       .subscribe((result) => {
@@ -336,7 +332,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
       });
   };
 
-  onFolderAddModal = () => {
+  onFolderAddModal() {
     const promise = new Promise(() => {
       const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
@@ -420,15 +416,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
     );
   }
 
-  onAddDataModel(folder) {
+  onAddDataModel(folder : any) {
     this.stateHandler.Go('NewDataModel', { parentFolderId: folder.id });
   }
 
-  onAddCodeSet = (folder) => {
+  onAddCodeSet(folder : any) {
     this.stateHandler.Go('NewCodeSet', { parentFolderId: folder.id });
   };
 
-  onAddChildDataClass = (element) => {
+  onAddChildDataClass(element : any){
     this.stateHandler.Go('NewDataClassNew', {
       grandParentDataClassId:
         element.domainType === 'DataClass' ? element.parentDataClass : null,
@@ -438,7 +434,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataElement = (element) => {
+  onAddChildDataElement (element : any) {
     this.stateHandler.Go('NewDataElement', {
       grandParentDataClassId: element.parentDataClass
         ? element.parentDataClass
@@ -448,15 +444,15 @@ export class ModelsComponent implements OnInit, OnDestroy {
     });
   };
 
-  onAddChildDataType = (element) => {
+  onAddChildDataType(element : any) {
     this.stateHandler.Go('NewDataType', { parentDataModelId: element.id });
   };
 
-  toggleFilterMenu = () => {
+  toggleFilterMenu() {
     this.showFilters = !this.showFilters;
   };
 
-  toggleFilters = (filerName) => {
+  toggleFilters(filerName : string) {
     this[filerName] = !this[filerName];
     this.reloading = true;
 
@@ -476,7 +472,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     this.showFilters = !this.showFilters;
   };
 
-  onDeleteFolder = (event) => {
+  onDeleteFolder(event : any){
     if (!this.securityHandler.isAdmin()) {
       return;
     }
@@ -496,12 +492,12 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  initializeModelsTree = () => {
+  initializeModelsTree() {
     this.loadModelsTree();
     this.loadClassifiers();
   };
 
-  changeState = (newState, type?, newWindow?) => {
+  changeState(newState : string, type? : string, newWindow? : boolean) {
     if (newWindow) {
       this.stateHandler.NewWindow(newState);
       return;
@@ -554,7 +550,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  search = () => {
+  search(){
     if (this.formData.filterCriteria?.trim().length > 2) {
       this.formData.ClassificationFilterCriteria = '';
       this.sharedService.searchCriteria = this.formData.filterCriteria;
@@ -587,11 +583,11 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  classifierTreeOnSelect = (node) => {
+  classifierTreeOnSelect(node : Node){
     this.stateHandler.Go('classification', { id: node.id });
   };
 
-  classificationFilterChange = (val) => {
+  classificationFilterChange(val : string){
     if (val && val.length !== 0 && val.trim().length === 0) {
       this.filterClassifications();
     } else {
@@ -599,7 +595,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  filterClassifications = () => {
+  filterClassifications() {
     if (this.formData.ClassificationFilterCriteria.length > 0) {
       this.formData.filterCriteria = '';
       this.sharedService.searchCriteria = this.formData.ClassificationFilterCriteria;
@@ -608,19 +604,19 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  onFavouriteDbClick = (node) => {
+  onFavouriteDbClick(node : Node) {
     this._onFavouriteClick(node);
   };
 
-  onFavouriteClick = (node) => {
+  onFavouriteClick(node : Node) {
     this._onFavouriteClick(node);
   };
 
-  reloadTree = () => {
+  reloadTree() {
     this.loadModelsTree(true);
   };
 
-  onAddClassifier = () => {
+  onAddClassifier() {
     const promise = new Promise(() => {
       const dialog = this.dialog.open(NewFolderModalComponent, {
         data: {
@@ -680,7 +676,7 @@ export class ModelsComponent implements OnInit, OnDestroy {
     }
   };
 
-  private _onFavouriteClick(node) {
+  private _onFavouriteClick(node : Node) {
     this.stateHandler.Go(node.domainType, {
       id: node.id,
       dataModelId: node.dataModel,

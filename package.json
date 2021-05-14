@@ -1,6 +1,6 @@
 {
   "name": "mdm-ui",
-  "version": "6.1.0",
+  "version": "6.2.0-SNAPSHOT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -34,7 +34,7 @@
     "@bpmn-io/dmn-migrate": "^0.4.3",
     "@ctrl/ngx-codemirror": "4.0.1",
     "@fortawesome/fontawesome-free": "5.15.1",
-    "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#4.5.0",
+    "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#develop",
     "@uirouter/angular": "7.0.0",
     "@uirouter/core": "6.0.6",
     "@uirouter/rx": "0.6.5",

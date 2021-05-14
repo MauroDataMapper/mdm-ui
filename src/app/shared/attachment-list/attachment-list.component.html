@@ -25,22 +25,22 @@ SPDX-License-Identifier: Apache-2.0
             </h4>
         </div>
         <div fxFlex fxLayout="row" fxFlex="50" fxFlex.md="50" fxFlex.sm="50" fxFlex.xs="100" fxLayoutAlign="end center" fxLayoutAlign.xs="start center">
-            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="access && access.showEdit" class="mt-1">
+            <button mat-flat-button color="primary" type="button" (click)="add()" *ngIf="canEdit" class="mt-1">
                 <i class="fas fa-plus" aria-hidden="true"></i>
                 Add Attachment
             </button>
         </div>
     </div>
 </div>
-<div class="table-responsive" [ngClass]="{'is-hidden':isLoadingResults}">
-    <table mat-table matSort [dataSource]="records" class="mdm--mat-table mat-elevation-z3 table-striped">
+<div class="table-responsive">
+    <table mat-table matSort [dataSource]="dataSource" class="mdm--mat-table mat-elevation-z3 table-striped">
         <ng-container matColumnDef="fileName">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header="fileName" [disabled]="!hideFilters" style="cursor:pointer;max-width: 50%;width: 50%;" columnName="fileName">
                 <span [hidden]="!hideFilters">File Name</span>
                 <div [hidden]="hideFilters">
                     <mat-form-field class="filter" floatLabel="never">
                         <mat-label>File Name</mat-label>
-                        <input #filters matInput name="description" (keyup)="applyFilter()">
+                        <input #filters matInput name="fileName" (keyup)="applyFilter()">
                     </mat-form-field>
                 </div>
             </th>
@@ -78,7 +78,7 @@ SPDX-License-Identifier: Apache-2.0
         <ng-container matColumnDef="other">
             <td *matHeaderCellDef style="width: 70px;" columnName="other"></td>
             <td *matCellDef="let record;  let i = index " mat-cell style="width: 70px; text-align: left;">
-                <div *ngIf="access && access.showEdit">
+                <div *ngIf="canEdit">
                     <mdm-table-buttons [record]="record" [index]="i" (save)="save($event[0], $event[1])" (delete)="delete($event[0])" (cancelEdit)="cancelEdit($event[0], $event[1])" [hideEdit]="true"></mdm-table-buttons>
                 </div>
             </td>
@@ -91,20 +91,6 @@ SPDX-License-Identifier: Apache-2.0
     <p class="marginless">
       There are no attachments in this table. You can add attachments by clicking the button above.
     </p>
-</div>
-<div class="item" *ngIf="isLoadingResults">
-  <table class="mdm--mat-table mdm--skeleton-table">
-    <tr>
-      <th style="width: 50%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '30%'}"></ngx-skeleton-loader></th>
-      <th style="width: 22%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '25%'}"></ngx-skeleton-loader></th>
-      <th style="width: 28%;"><ngx-skeleton-loader count="1" [theme]="{'background-color': '#b7bbc5', 'width': '40%'}"></ngx-skeleton-loader></th>
-  </tr>
-  <tr>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-      <td><ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader></td>
-    </tr>
-  </table>
 </div>
 <div class="mdm--mat-pagination" [ngClass]="{'is-hidden':totalItemCount < 6}">
     <mdm-paginator [length]="totalItemCount" showFirstLastButtons></mdm-paginator>

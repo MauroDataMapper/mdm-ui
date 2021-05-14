@@ -38,7 +38,6 @@ SPDX-License-Identifier: Apache-2.0
             </button>
           </div>
         </div>
-        
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
@@ -144,8 +143,14 @@ SPDX-License-Identifier: Apache-2.0
                   >
                   <mat-divider></mat-divider>
                   <mat-option value="other">Other properties</mat-option>
-                  <mat-divider *ngIf="access && access.canAddMetadata"></mat-divider>
-                  <mat-option *ngIf="access && access.canAddMetadata" value="addnew">Add new profile...</mat-option>
+                  <mat-divider
+                    *ngIf="access && access.canAddMetadata"
+                  ></mat-divider>
+                  <mat-option
+                    *ngIf="access && access.canAddMetadata"
+                    value="addnew"
+                    >Add new profile...</mat-option
+                  >
                 </mat-select>
               </mat-form-field>
             </div>
@@ -161,7 +166,12 @@ SPDX-License-Identifier: Apache-2.0
             >
               <button
                 mat-flat-button
-                *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew' && showEdit"
+                *ngIf="
+                  this.descriptionView !== 'default' &&
+                  this.descriptionView !== 'other' &&
+                  this.descriptionView !== 'addNew' &&
+                  showEdit
+                "
                 color="primary"
                 type="button"
                 class="mr-1"
@@ -171,15 +181,20 @@ SPDX-License-Identifier: Apache-2.0
               </button>
 
               <button
-              mat-flat-button
-              *ngIf="this.descriptionView !== 'default' && this.descriptionView !== 'other'  && this.descriptionView !== 'addNew' && showDelete"
-              color="warn"
-              type="button"
-              class="mr-1"
-              (click)="deleteProfile()"
-            >
-              <i class="fas fa-trash-alt"></i> Delete
-            </button>
+                mat-flat-button
+                *ngIf="
+                  this.descriptionView !== 'default' &&
+                  this.descriptionView !== 'other' &&
+                  this.descriptionView !== 'addNew' &&
+                  showDelete
+                "
+                color="warn"
+                type="button"
+                class="mr-1"
+                (click)="deleteProfile()"
+              >
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
 
               <button
                 mat-flat-button
@@ -306,6 +321,78 @@ SPDX-License-Identifier: Apache-2.0
             [hideCancel]="false"
           ></mdm-editable-form-buttons>
         </form>
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Annotations">
+    <ng-template matTabContent>
+      <div class="full-width">
+        <div class="heading-container">
+          <div
+            fxFlex
+            fxLayout="row"
+            fxLayout.md="row"
+            fxLayout.sm="row"
+            fxLayout.xs="column"
+            fxLayoutAlign="space-around"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-start center"
+              fxLayoutAlign.xs="flex-start center"
+            >
+              <mat-form-field
+                appearance="outline"
+                class="paddingless"
+                style="max-width: 230px; width: 100%"
+              >
+                <mat-select
+                  [(ngModel)]="annotationsView"
+                  name="annotationsView"
+                >
+                  <mat-option value="default">Comments</mat-option>
+                  <mat-option value="attachments">Attachments</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              fxFlex
+              fxLayout="row"
+              fxFlex="50"
+              fxFlex.md="50"
+              fxFlex.sm="100"
+              fxFlex.xs="100"
+              fxLayoutAlign="flex-end center"
+              fxLayoutAlign.xs="flex-start center"
+            ></div>
+          </div>
+        </div>
+
+        <div *ngIf="annotationsView === 'default'">
+          <mdm-annotation-list
+            *ngIf="dataModel"
+            [parent]="dataModel"
+            [domainType]="'dataModels'"
+          ></mdm-annotation-list>
+        </div>
+
+        <div
+          class="mdm--shadow-block bordered"
+          *ngIf="annotationsView === 'attachments'"
+        >
+          <div class="pxy-2">
+            <mdm-attachment-list
+              *ngIf="dataModel"
+              [parent]="dataModel"
+              [domainType]="'dataModels'"
+            ></mdm-attachment-list>
+          </div>
+        </div>
       </div>
     </ng-template>
   </mat-tab>

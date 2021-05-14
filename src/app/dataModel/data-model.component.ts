@@ -74,6 +74,7 @@ export class DataModelComponent
   schemaView = 'list';
 
   contextView = 'default';
+  annotationsView = 'default';
   schemaItemCount = 0;
   typesItemCount = 0;
   isLoadingSchema = true;

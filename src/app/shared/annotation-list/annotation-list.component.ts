@@ -20,12 +20,13 @@ import { Component, AfterViewInit, Input, ViewChild, EventEmitter, ChangeDetecto
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
 import { MatSort } from '@angular/material/sort';
 import { MdmPaginatorComponent } from '../mdm-paginator/mdm-paginator';
 import { EditingService } from '@mdm/services/editing.service';
+import { GridService } from '@mdm/services';
 
 @Component({
   selector: 'mdm-annotation-list',
@@ -53,8 +54,8 @@ export class AnnotationListComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
     private changeRef: ChangeDetectorRef,
-    private editingService: EditingService) { }
-
+    private editingService: EditingService,
+    private gridService: GridService) { }
 
   set content(content: MarkdownTextAreaComponent) {
     this.childEditor = content;
@@ -71,7 +72,12 @@ export class AnnotationListComponent implements AfterViewInit {
       this.isLoadingResults = true;
       this.changeRef.detectChanges();
 
-      return this.annotationFetch();
+      return this.annotationFetch(
+        this.paginator.pageSize,
+        this.paginator.pageOffset,
+        this.sort.active,
+        this.sort.direction
+      );
     }), map((data: any) => {
       this.totalItemCount = data.body.count;
       this.isLoadingResults = false;
@@ -86,10 +92,18 @@ export class AnnotationListComponent implements AfterViewInit {
     });
   }
 
-  // annotationFetch(pageSize?, pageIndex?, sortBy?, sortType?, filters?) {
-  // const options = this.gridService.constructOptions(pageSize, pageIndex, sortBy, sortType, filters);
-  annotationFetch() {
-    return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id);
+  annotationFetch(
+    pageSize?: number,
+    pageIndex?: number,
+    sortBy?: string,
+    sortType?: string,): Observable<any> {
+    const options = this.gridService.constructOptions(
+      pageSize,
+      pageIndex,
+      sortBy,
+      sortType);
+
+    return this.resources.catalogueItem.listAnnotations(this.domainType, this.parent.id, options);
   }
 
   add = () => {

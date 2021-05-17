@@ -310,7 +310,13 @@ export class ModelsComponent implements OnInit, OnDestroy {
       );
   }
 
-  onNodeDbClick(node: Node) {
+  onNodeClick(node: Node) {
+    this.modelTree.currentNode = node;
+  }
+
+  onNodeDbClick(node: Node ){
+    this.modelTree.currentNode = node;
+
     // if the element if a dataModel, load it
     if (
       [DOMAIN_TYPE.DataModel, DOMAIN_TYPE.Terminology].indexOf(

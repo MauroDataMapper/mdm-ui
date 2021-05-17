@@ -17,11 +17,12 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Injectable } from '@angular/core';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
-import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
+import { Node, DOMAIN_TYPE, FlatNode } from '@mdm/folders-tree/flat-node';
 import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { BroadcastService } from './broadcast.service';
 import { SharedService } from './shared.service';
 import { MessageHandlerService } from './utility/message-handler.service';
 import { UserSettingsHandlerService } from './utility/user-settings-handler.service';
@@ -31,12 +32,17 @@ import { UserSettingsHandlerService } from './utility/user-settings-handler.serv
 })
 export class ModelTreeService {
 
+  currentNode?: Node;
+
   constructor(
     private resources: MdmResourcesService,
     private sharedService: SharedService,
     private userSettingsHandler: UserSettingsHandlerService,
     private subscribedCatalogues: SubscribedCataloguesService,
-    private messageHandler: MessageHandlerService) { }
+    private messageHandler: MessageHandlerService,
+    private broadcast: BroadcastService) {
+      this.broadcast.subscribe('$folderTreeNodeSelection', (fnode: FlatNode) => this.currentNode = fnode.node);
+    }
 
   getLocalCatalogueTreeNodes(noCache?: boolean): Observable<Node[]> {
     let options: any = {};

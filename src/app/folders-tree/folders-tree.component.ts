@@ -57,9 +57,9 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    @Input() searchCriteria: string;
    @Input() defaultCheckedMap: any = {};
 
-   @Output() nodeClickEvent = new EventEmitter<any>();
+   @Output() nodeClickEvent = new EventEmitter<Node>();
    @Output() nodeConfirmClickEvent = new EventEmitter<NodeConfirmClickEvent>();
-   @Output() nodeDbClickEvent = new EventEmitter<any>();
+   @Output() nodeDbClickEvent = new EventEmitter<Node>();
    @Output() nodeCheckedEvent = new EventEmitter<any>();
 
    @Output() addFolderEvent = new EventEmitter<any>();
@@ -92,12 +92,13 @@ export class FoldersTreeComponent implements OnChanges, OnDestroy {
    @Input() initialExpandedPaths: string[];
    @Input() isComparisonTree = false;
 
+   @Input() selectedNode: FlatNode = null; // Control highlighting
+
    @ViewChild(MatMenuTrigger, { static: false }) contextMenuTrigger: MatMenuTrigger;
    contextMenuPosition = { x: '0', y: '0' };
 
    favourites: { [x: string]: any };
    subscriptions: Subscription = new Subscription();
-   selectedNode = null; // Control highlighting
    checkedList = this.defaultCheckedMap || {};
 
    targetVersions = [];

@@ -33,6 +33,7 @@ import { UserSettingsHandlerService } from '../services/utility/user-settings-ha
 import { fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { ContainerDomainType, FolderIndexResponse, MdmTreeItemListResponse, TreeItemSearchQueryParameters } from '@maurodatamapper/mdm-resources';
+import { Node } from '@mdm/folders-tree/flat-node';
 
 @Component({
   selector: 'mdm-model-selector-tree',
@@ -69,7 +70,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   @Output() ngModelChange = new EventEmitter<any>();
   @ViewChild('searchInputTreeControl', { static: true })
   searchInputTreeControl: ElementRef;
-  selectedElementsVal: any;
+  selectedElementsVal: Node[];
   @Input()
   get ngModel() {
     return this.selectedElements;
@@ -91,7 +92,7 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   rootNode: any;
   filteredRootNode: any;
   markChildren: any;
-  selectedElements: any[] = [];
+  selectedElements: Node[] = [];
   searchCriteria: any;
   hasValidationError: boolean;
   inSearchMode: any;
@@ -220,6 +221,13 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
           isRoot: true
         };
         this.filteredRootNode = this.rootNode;
+
+        if ((this.selectedElements?.length ?? 0) > 0 && !this.multiple) {
+          // If a node has already been initially selected, update the input field to
+          // display it
+          this.searchCriteria = this.selectedElements[0].label;
+        }
+
       }, () => {
         this.loading = false;
       });
@@ -332,15 +340,15 @@ export class ModelSelectorTreeComponent implements OnInit, OnChanges {
   }
 
 
-  onNodeClick = (node) => {
-    this.click(node);
+  onNodeClick(node: Node) {
+    this.selectNode(node);
   };
 
-  onNodeDbClick = (node) => {
-    this.click(node);
+  onNodeDbClick(node: Node) {
+    this.selectNode(node);
   };
 
-  click = (node) => {
+  selectNode(node: Node) {
     this.hasValidationError = false;
 
     if (this.accepts && this.accepts.indexOf(node.domainType) === -1) {

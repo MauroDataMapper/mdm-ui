@@ -25,6 +25,7 @@ import { StateHandlerService } from '../services/handlers/state-handler.service'
 import { BroadcastService } from '../services/broadcast.service';
 import { UIRouterGlobals } from '@uirouter/core/';
 import { ModelDomainRequestType } from '@mdm/model/model-domain-type';
+import { ModelTreeService } from '@mdm/services/model-tree.service';
 
 @Component({
   selector: 'mdm-import',
@@ -71,6 +72,7 @@ export class ImportModelsComponent implements OnInit {
     private stateHandler: StateHandlerService,
     private broadcastSvc: BroadcastService,
     private uiRouterGlobals: UIRouterGlobals,
+    private modelTree: ModelTreeService
   ) {}
 
   ngOnInit() {
@@ -152,6 +154,11 @@ export class ImportModelsComponent implements OnInit {
           if (option.type === 'Boolean' || option.type === 'boolean') {
             option.optional = true;
             option.value = false;
+          }
+
+          // If the model tree currently has a folder selected, default to that one initially
+          if (option.type === 'Folder' && this.modelTree.currentNode && this.modelTree.currentNode.domainType === 'Folder') {
+            option.value = [this.modelTree.currentNode];
           }
         });
       });

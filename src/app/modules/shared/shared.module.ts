@@ -42,6 +42,7 @@ import { ShareWithComponent } from '@mdm/access/share-with/share-with.component'
 import { GroupAccessNewComponent } from '@mdm/access/group-access-new.component';
 import { TextDiffComponent } from '@mdm/shared/text-diff/text-diff.component';
 import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.component';
+import { DownloadLinkComponent } from '@mdm/utility/download-link/download-link.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     ShareWithComponent,
     GroupAccessNewComponent,
     TextDiffComponent,
-    ElementLinkComponent
+    ElementLinkComponent,
+    DownloadLinkComponent
   ],
   imports: [
     CommonModule,
@@ -98,7 +100,8 @@ import { ElementLinkComponent } from '@mdm/utility/element-link/element-link.com
     GroupAccessNewComponent,
     TextDiffComponent,
     ElementLinkComponent,
-    TextDiffComponent
+    TextDiffComponent,
+    DownloadLinkComponent
   ]
 })
 export class SharedModule {}

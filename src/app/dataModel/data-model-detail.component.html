@@ -391,6 +391,9 @@ SPDX-License-Identifier: Apache-2.0
 <div style="position: relative; float: right; margin-right: 8px">
   <div id="exportFileDownload" #aLink></div>
 </div>
+<div *ngIf="downloadLinks && !processing">
+  <mdm-download-link [links]="downloadLinks"></mdm-download-link>
+</div>
 <div style="text-align: left" *ngIf="exportError">
   <div style="padding-top: 25px">
     <div class="alert alert-danger">

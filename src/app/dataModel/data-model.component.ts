@@ -146,7 +146,6 @@ export class DataModelComponent
     this.resourcesService.dataModel
       .get(id)
       .subscribe(async (result: DataModelDetailResponse) => {
-        console.log(result.body);
         this.dataModel = result.body;
         this.catalogueItem = this.dataModel;
         this.watchDataModelObject();

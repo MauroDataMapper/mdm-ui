@@ -13,7 +13,13 @@
     ".nvmrc",
     "NOTICE",
     "Jenkinsfile",
-    "*.md"],
+    "*.md",
+    "*.eot",
+    "*.svg",
+    "*.ttf",
+    "*.woff",
+    "*.woff2"
+  ],
   "license": "NOTICE",
 
   "licenseFormats": {

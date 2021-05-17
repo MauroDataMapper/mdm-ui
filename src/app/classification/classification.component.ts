@@ -68,6 +68,7 @@ export class ClassificationComponent
   loading = false;
   catalogueItems: any;
 
+  annotationsView = 'default';
   descriptionView = 'default';
   editableForm: Editable;
 

@@ -36,7 +36,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { CatalogueItemDomainType, CodeSetDetail, CodeSetDetailResponse, ModelUpdatePayload, SecurableDomainType } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  CodeSetDetail,
+  CodeSetDetailResponse,
+  ModelUpdatePayload,
+  SecurableDomainType
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-code-set',
@@ -61,6 +67,7 @@ export class CodeSetComponent
   semanticLinks: any[] = [];
   editableForm: EditableDataModel;
   descriptionView = 'default';
+  annotationsView = 'default';
   compareToList = [];
   rulesItemCount = 0;
   isLoadingRules = true;
@@ -70,7 +77,7 @@ export class CodeSetComponent
   showDelete: boolean;
   canEditDescription: boolean;
   showEditDescription = false;
-  access:any;
+  access: any;
 
   constructor(
     resourcesService: MdmResourcesService,
@@ -230,9 +237,7 @@ export class CodeSetComponent
           }
         };
 
-        this.access = this.securityHandler.elementAccess(
-          this.codeSetModel
-        );
+        this.access = this.securityHandler.elementAccess(this.codeSetModel);
         this.showEdit = this.access.showEdit;
 
         await this.resourcesService.versionLink
@@ -299,18 +304,16 @@ export class CodeSetComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'terms':
-        return { index: 1, name: 'terms' };
-      case 'comments':
-        return { index: 2, name: 'comments' };
+        return { index: 2, name: 'terms' };
       case 'history':
         return { index: 3, name: 'history' };
       case 'links':
         return { index: 4, name: 'links' };
-      case 'attachments':
-        return { index: 5, name: 'attachments' };
       case 'rules':
-        return { index: 6, name: 'rules' };
+        return { index: 5, name: 'rules' };
       default:
         return { index: 0, name: 'terminology' };
     }
@@ -321,17 +324,15 @@ export class CodeSetComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'terms' };
+        return { index: 1, name: 'annotations' };
       case 2:
-        return { index: 2, name: 'comments' };
+        return { index: 2, name: 'terms' };
       case 3:
         return { index: 3, name: 'history' };
       case 4:
         return { index: 4, name: 'links' };
       case 5:
-        return { index: 5, name: 'attachments' };
-      case 6:
-        return { index: 6, name: 'rules' };
+        return { index: 5, name: 'rules' };
       default:
         return { index: 0, name: 'terminology' };
     }

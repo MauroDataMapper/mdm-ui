@@ -72,6 +72,7 @@ export class DataElementComponent
   pagination: McSelectPagination;
   editableForm: EditableDataElement;
   descriptionView = 'default';
+  annotationsView = 'default';
   showEditDescription = false;
   showNewInlineDataType = false;
   dataTypeErrors = '';
@@ -186,16 +187,14 @@ export class DataElementComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
-      case 'comments':
-        return { index: 1, name: 'comments' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'links':
         return { index: 2, name: 'links' };
       case 'summaryMetadata':
         return { index: 3, name: 'summaryMetadata' };
-      case 'attachments':
-        return { index: 4, name: 'attachments' };
       case 'rules':
-        return { index: 5, name: 'rules' };
+        return { index: 4, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -481,15 +480,13 @@ export class DataElementComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'comments' };
+        return { index: 1, name: 'annotations' };
       case 2:
         return { index: 2, name: 'links' };
       case 3:
         return { index: 3, name: 'summaryMetadata' };
       case 4:
-        return { index: 4, name: 'attachments' };
-      case 5:
-        return { index: 5, name: 'rules' };
+        return { index: 4, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }

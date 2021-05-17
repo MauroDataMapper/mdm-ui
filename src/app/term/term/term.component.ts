@@ -37,7 +37,12 @@ import { EditingService } from '@mdm/services/editing.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageHandlerService, SecurityHandlerService } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { TermDetail, TermDetailResponse, TerminologyDetail, TerminologyDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  TermDetail,
+  TermDetailResponse,
+  TerminologyDetail,
+  TerminologyDetailResponse
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-term',
@@ -63,13 +68,13 @@ export class TermComponent
   showEditForm = false;
   editableForm: EditableTerm;
   descriptionView = 'default';
+  annotationsView = 'default';
   showEditDescription = false;
   rulesItemCount = 0;
   isLoadingRules = true;
   showEdit = false;
   showDelete = false;
   access: any;
-
 
   constructor(
     resources: MdmResourcesService,
@@ -115,67 +120,69 @@ export class TermComponent
     this.rulesItemCount = $event;
   }
 
-
   termDetails(id: string) {
     const terminologyId: string = this.uiRouterGlobals.params.terminologyId;
 
     forkJoin([
-      this.resourcesService.terminology.get(terminologyId) as Observable<TerminologyDetailResponse>,
-      this.resourcesService.terms.get(terminologyId, id) as Observable<TermDetailResponse>
-    ])
-      .subscribe(([terminology, term]) => {
-        this.terminology = terminology.body;
-        this.term = term.body;
+      this.resourcesService.terminology.get(terminologyId) as Observable<
+        TerminologyDetailResponse
+      >,
+      this.resourcesService.terms.get(terminologyId, id) as Observable<
+        TermDetailResponse
+      >
+    ]).subscribe(([terminology, term]) => {
+      this.terminology = terminology.body;
+      this.term = term.body;
 
-        this.resourcesService.catalogueItem
-          .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
-          .subscribe((resp) => {
-            this.term.semanticLinks = resp.body.items;
-          });
+      this.resourcesService.catalogueItem
+        .listSemanticLinks(DOMAIN_TYPE.Term, this.term.id)
+        .subscribe((resp) => {
+          this.term.semanticLinks = resp.body.items;
+        });
 
-        this.catalogueItem = this.term;
-        this.watchTermObject();
+      this.catalogueItem = this.term;
+      this.watchTermObject();
 
-        this.UsedProfiles('term', this.term.id);
-        this.UnUsedProfiles('term', this.term.id);
+      this.UsedProfiles('term', this.term.id);
+      this.UnUsedProfiles('term', this.term.id);
 
-        this.term.finalised = this.terminology.finalised;
-        this.term.editable = this.terminology.editable;
+      this.term.finalised = this.terminology.finalised;
+      this.term.editable = this.terminology.editable;
 
-        this.term.classifiers = this.term.classifiers || [];
-        this.term.terminology = this.terminology;
-        this.activeTab = this.getTabDetailByName(
-          this.uiRouterGlobals.params.tabView
-        );
+      this.term.classifiers = this.term.classifiers || [];
+      this.term.terminology = this.terminology;
+      this.activeTab = this.getTabDetailByName(
+        this.uiRouterGlobals.params.tabView
+      );
 
-        this.editableForm = new EditableTerm();
-        this.editableForm.visible = false;
-        this.editableForm.deletePending = false;
+      this.editableForm = new EditableTerm();
+      this.editableForm.visible = false;
+      this.editableForm.deletePending = false;
+      this.setEditableForm();
+
+      this.editableForm.show = () => {
+        this.editableForm.visible = true;
+      };
+
+      this.editableForm.cancel = () => {
+        this.editingService.stop();
         this.setEditableForm();
+      };
 
-        this.editableForm.show = () => {
-          this.editableForm.visible = true;
-        };
-
-        this.editableForm.cancel = () => {
-          this.editingService.stop();
-          this.setEditableForm();
-        };
-
-        this.result = this.term;
-        if (this.result.terminology) {
-          this.hasResult = true;
-        }
-        this.messageService.FolderSendMessage(this.result);
-        this.messageService.dataChanged(this.result);
-        this.changeRef.detectChanges();
-      });
+      this.result = this.term;
+      if (this.result.terminology) {
+        this.hasResult = true;
+      }
+      this.messageService.FolderSendMessage(this.result);
+      this.messageService.dataChanged(this.result);
+      this.changeRef.detectChanges();
+    });
 
     this.activeTab = this.getTabDetailByName(
       this.uiRouterGlobals.params.tabView
     ).index;
     this.tabSelected(this.activeTab);
-  };
+  }
 
   setEditableForm() {
     this.editableForm.visible = false;
@@ -198,7 +205,8 @@ export class TermComponent
     this.access = this.securityHandler.elementAccess(this.term);
     if (this.access !== undefined) {
       this.showEdit = this.access.showEdit;
-      this.showDelete = this.access.showPermanentDelete || this.access.showSoftDelete;
+      this.showDelete =
+        this.access.showPermanentDelete || this.access.showSoftDelete;
     }
   }
 
@@ -206,10 +214,11 @@ export class TermComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'links':
-        return { index: 1, name: 'links' };
-      case 'attachments':
-        return { index: 2, name: 'attachments' };
+        return { index: 2, name: 'links' };
+
       case 'rules':
         return { index: 3, name: 'rules' };
 
@@ -227,9 +236,10 @@ export class TermComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'links' };
+        return { index: 1, name: 'annotations' };
       case 2:
-        return { index: 2, name: 'attachments' };
+        return { index: 2, name: 'links' };
+
       case 3:
         return { index: 3, name: 'rules' };
       default:

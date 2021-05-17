@@ -34,7 +34,11 @@ import {
   ValidatorService
 } from '@mdm/services';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
-import { DataClass, DataClassDetail, DataClassDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  DataClass,
+  DataClassDetail,
+  DataClassDetailResponse
+} from '@maurodatamapper/mdm-resources';
 
 @Component({
   selector: 'mdm-data-class',
@@ -65,6 +69,7 @@ export class DataClassComponent
   newMaxText: any;
 
   descriptionView = 'default';
+  annotationsView = 'default';
 
   showEditDescription = false;
 
@@ -135,16 +140,18 @@ export class DataClassComponent
     switch (tabName) {
       case 'description':
         return { index: 0, name: 'description' };
+      case 'annotations':
+        return { index: 1, name: 'annotations' };
       case 'elements':
-        return { index: 1, name: 'elements' };
+        return { index: 2, name: 'elements' };
       case 'context':
-        return { index: 2, name: 'context' };
+        return { index: 3, name: 'context' };
       case 'history':
-        return { index: 3, name: 'history' };
+        return { index: 4, name: 'history' };
       case 'data':
-        return { index: 4, name: 'data' };
+        return { index: 5, name: 'data' };
       case 'rules':
-        return { index: 5, name: 'rules' };
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }
@@ -160,9 +167,7 @@ export class DataClassComponent
           this.access = this.securityHandler.elementAccess(this.dataClass);
 
           this.catalogueItem = this.dataClass;
-          this.isEditable = this.dataClass.availableActions?.includes(
-            'update'
-          );
+          this.isEditable = this.dataClass.availableActions?.includes('update');
 
           this.createEditableForm();
 
@@ -223,9 +228,7 @@ export class DataClassComponent
             id: result.body.model,
             finalised: this.dataClass.breadcrumbs[0].finalised
           };
-          this.isEditable = this.dataClass.availableActions?.includes(
-            'update'
-          );
+          this.isEditable = this.dataClass.availableActions?.includes('update');
 
           this.createEditableForm();
 
@@ -303,15 +306,17 @@ export class DataClassComponent
       case 0:
         return { index: 0, name: 'description' };
       case 1:
-        return { index: 1, name: 'elements' };
+        return { index: 1, name: 'annotations' };
       case 2:
-        return { index: 2, name: 'context' };
+        return { index: 2, name: 'elements' };
       case 3:
-        return { index: 3, name: 'history' };
+        return { index: 3, name: 'context' };
       case 4:
-        return { index: 4, name: 'data' };
+        return { index: 4, name: 'history' };
       case 5:
-        return { index: 5, name: 'rules' };
+        return { index: 5, name: 'data' };
+      case 6:
+        return { index: 6, name: 'rules' };
       default:
         return { index: 0, name: 'description' };
     }

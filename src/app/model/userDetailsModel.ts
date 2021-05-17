@@ -16,7 +16,6 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-﻿
 export class UserDetailsResult {
   id: string;
   firstName: string;

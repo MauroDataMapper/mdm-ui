@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 import { Injectable } from '@angular/core';
 import { SubscribedCatalogue, SubscribedCatalogueIndexResponse } from '@maurodatamapper/mdm-resources';
 import { Node, DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
-import { MdmResourcesService } from '@mdm/modules/resources';
+import { MdmResourcesService, MdmRestHandlerOptions } from '@mdm/modules/resources';
 import { SubscribedCataloguesService } from '@mdm/subscribed-catalogues/subscribed-catalogues.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -71,20 +71,27 @@ export class ModelTreeService {
       order: 'asc'
     };
 
+    // Handle any HTTP errors manually. This covers the scenario where this is unable to
+    // get available subscribed catalogues e.g. the subscribed catalogue instance is not
+    // available/offline
+    const restOptions: MdmRestHandlerOptions = {
+      handleGetErrors: false
+    };
+
     return this.resources.subscribedCatalogues
-      .list(queryParams)
+      .list(queryParams, restOptions)
       .pipe(
-        catchError(error => {
-          this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
-          return of<Node[]>([]);
-        }),
         map((response: SubscribedCatalogueIndexResponse) => response.body.items ?? []),
         map((catalogues: SubscribedCatalogue[]) => catalogues.map(item => Object.assign<{}, Node>({}, {
           id: item.id,
           domainType: DOMAIN_TYPE.SubscribedCatalogue,
           hasChildren: true,
           label: item.label
-        })))
+        }))),
+        catchError(error => {
+          this.messageHandler.showError('There was a problem getting the Subscribed Catalogues.', error);
+          return of<Node[]>([]);
+        }),
       );
   }
 

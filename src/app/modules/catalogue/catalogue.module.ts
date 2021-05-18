@@ -33,7 +33,6 @@ import { ExportModelsComponent } from '@mdm/export-models/export-models.componen
 
 import { HistoryComponent } from '@mdm/shared/history/history.component';
 import { MarkdownTextAreaComponent } from '@mdm/utility/markdown/markdown-text-area/markdown-text-area.component';
-import { HelpDialogComponent } from '@mdm/search/help-dialog/help-dialog.component';
 import { DateFromToComponent } from '@mdm/search/date-from-to/date-from-to.component';
 import { MarkdownDirective } from '@mdm/directives/markdown.directive';
 import { ModelPathComponent } from '@mdm/utility/model-path/model-path.component';
@@ -199,7 +198,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     DiagramToolbarComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
     ModelPathComponent,
@@ -380,7 +378,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     ExportModelsComponent,
     HistoryComponent,
     MarkdownTextAreaComponent,
-    HelpDialogComponent,
     DateFromToComponent,
     MarkdownDirective,
     ModelPathComponent,

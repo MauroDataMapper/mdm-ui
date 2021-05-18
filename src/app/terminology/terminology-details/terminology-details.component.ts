@@ -85,6 +85,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
   dataChangedSub: Subscription;
   canEditDescription = true;
   showEditDescription = false;
+  downloadLinks = new Array<HTMLAnchorElement>();
 
   @Input() get openEditForm() {
     return this.openEditFormVal;
@@ -266,6 +267,7 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
         (result) => {
           if (result != null) {
             this.exportedFileIsReady = true;
+            const tempDownloadList = Object.assign([],this.downloadLinks);
             const label =
               [this.mcTerminology].length === 1
                 ? [this.mcTerminology][0].label
@@ -273,9 +275,10 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
             const fileName = this.exportHandler.createFileName(label, exporter);
             const file = new Blob([result.body], { type: exporter.fileType });
             const link = this.exportHandler.createBlobLink(file, fileName);
+            tempDownloadList.push(link);
+            this.downloadLinks = tempDownloadList;
 
             this.processing = false;
-            this.renderer.appendChild(this.aLink.nativeElement, link);
           } else {
             this.processing = false;
             this.messageHandler.showError(

@@ -282,9 +282,7 @@ SPDX-License-Identifier: Apache-2.0
             <small class="warning"> | Deleted</small>
           </span>
 
-          <mdm-element-status
-            [result]="result"
-          ></mdm-element-status>
+          <mdm-element-status [result]="result"></mdm-element-status>
         </div>
         <div
           [ngClass]="{ 'form-group': true, 'has-error': true }"
@@ -388,9 +386,9 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </form>
 </div>
-<div style="position: relative; float: right; margin-right: 8px">
-  <div id="exportFileDownload" #aLink></div>
-</div>
+
+    <mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
+
 <div style="text-align: left" *ngIf="exportError">
   <div style="padding-top: 25px">
     <div class="alert alert-danger">

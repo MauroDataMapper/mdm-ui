@@ -33,7 +33,7 @@ export class SharedService {
   appVersion = environment.version;
   appTitle = environment.appTitle;
   youTrack = environment.youTrack;
-  wiki = environment.wiki;
+  documentation: { url: string } = environment.documentation;
   simpleViewSupport = environment.simpleViewSupport;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;

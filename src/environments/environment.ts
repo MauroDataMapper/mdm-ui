@@ -35,7 +35,9 @@ export const environment = {
     url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
     project: 'MC'
   },
-  wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
+  documentation: {
+    url: 'https://maurodatamapper.github.io/'
+  },
   simpleViewSupport: false,
   name: 'development',
   appIsEditable: true,

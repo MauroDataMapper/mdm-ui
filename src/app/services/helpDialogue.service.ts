@@ -64,23 +64,24 @@ export class HelpDialogueHandlerService {
   }
 
   open(name: string): void {
-    if (!this.dialogueMaps[name]) {
-      return;
-    }
+    // TODO: replace with href link
+    // if (!this.dialogueMaps[name]) {
+    //   return;
+    // }
 
-    let wikiLink = environment.wiki;
-    if (wikiLink && wikiLink[wikiLink.length - 1] === '/') {
-      wikiLink = wikiLink.substr(0, name.length - 1);
-    }
-    wikiLink = `${wikiLink}/index.php?title=${this.dialogueMaps[name]}`;
-    const contentWikiLink: any = wikiLink + '&action=render';
+    // let wikiLink = environment.wiki;
+    // if (wikiLink && wikiLink[wikiLink.length - 1] === '/') {
+    //   wikiLink = wikiLink.substr(0, name.length - 1);
+    // }
+    // wikiLink = `${wikiLink}/index.php?title=${this.dialogueMaps[name]}`;
+    // const contentWikiLink: any = wikiLink + '&action=render';
 
-    const safeWikiLink: any = this.sanitizer.bypassSecurityTrustResourceUrl(contentWikiLink);
+    // const safeWikiLink: any = this.sanitizer.bypassSecurityTrustResourceUrl(contentWikiLink);
 
-    this.dialog.open(HelpDialogComponent, {
-      minHeight: '500px',
-      minWidth: '600px',
-      data: { wikiLink, contentWikiLink: safeWikiLink },
-    });
+    // this.dialog.open(HelpDialogComponent, {
+    //   minHeight: '500px',
+    //   minWidth: '600px',
+    //   data: { wikiLink, contentWikiLink: safeWikiLink },
+    // });
   }
 }

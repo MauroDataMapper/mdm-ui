@@ -345,3 +345,21 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </form>
 </div>
+
+<mdm-download-link [(links)]="downloadLinks"></mdm-download-link>
+
+<div style="text-align: left" *ngIf="exportError">
+  <div style="padding-top: 25px">
+    <div class="alert alert-danger">
+      <strong>Error!</strong> {{ exportError }}
+    </div>
+  </div>
+</div>
+<div style="clear: both" *ngIf="processing">
+  <mat-progress-bar
+    value="50"
+    bufferValue="75"
+    color="accent"
+    mode="indeterminate"
+  ></mat-progress-bar>
+</div>

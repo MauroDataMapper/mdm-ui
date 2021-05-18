@@ -91,6 +91,7 @@ export class ReferenceDataDetailsComponent
   showFinalise = false;
   showNewVersion = false;
   compareToList = [];
+  downloadLinks = new Array<HTMLAnchorElement>();
 
   constructor(
     private renderer: Renderer2,
@@ -540,6 +541,7 @@ export class ReferenceDataDetailsComponent
         (result) => {
           if (result != null) {
             this.exportedFileIsReady = true;
+            const tempDownloadList = Object.assign([],this.downloadLinks);
             const label =
               [this.result].length === 1
                 ? [this.result][0].label
@@ -547,9 +549,10 @@ export class ReferenceDataDetailsComponent
             const fileName = this.exportHandler.createFileName(label, exporter);
             const file = new Blob([result.body], { type: exporter.fileType });
             const link = this.exportHandler.createBlobLink(file, fileName);
-
+            tempDownloadList.push(link);
+            this.downloadLinks = tempDownloadList;
             this.processing = false;
-            this.renderer.appendChild(this.aLink.nativeElement, link);
+
           } else {
             this.processing = false;
             this.messageHandler.showError(

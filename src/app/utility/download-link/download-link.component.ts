@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License
 */
 
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -25,18 +25,27 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './download-link.component.html',
   styleUrls: ['./download-link.component.scss']
 })
-export class DownloadLinkComponent implements AfterViewInit {
+export class DownloadLinkComponent implements OnChanges{
 
   @Input() links: Array<HTMLAnchorElement>;
-  displayedColumns: string[] = ['link'];
+  @Output() readonly linksChange = new EventEmitter<Array<HTMLAnchorElement>>();
+
+  displayedColumns: string[] = ['link','delete'];
   dataSource = new MatTableDataSource<HTMLAnchorElement>();
 
   constructor() { }
 
-  ngAfterViewInit(): void {
-    this.dataSource = new MatTableDataSource<HTMLAnchorElement>(this.links);
+  deleteLink(link : HTMLAnchorElement)
+  {
+    const index = this.dataSource.data.indexOf(link);
+    this.dataSource.data.splice(index,1);
+    this.dataSource._updateChangeSubscription();
+    this.linksChange.emit(this.dataSource.data);
   }
 
-
-
+  ngOnChanges(): void {
+    this.dataSource = new MatTableDataSource<HTMLAnchorElement>(this.links);
+  }
 }
+
+

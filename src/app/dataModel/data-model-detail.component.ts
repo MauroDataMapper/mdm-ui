@@ -26,7 +26,6 @@ import {
   QueryList,
   ViewChild,
   ElementRef,
-  Renderer2,
   ViewEncapsulation,
   AfterViewInit,
   OnDestroy
@@ -103,7 +102,7 @@ export class DataModelDetailComponent
   showEditDescription = false;
   branchGraph = [];
   currentBranch = '';
-  downloadLinks: Array<HTMLAnchorElement>;
+  downloadLinks = new Array<HTMLAnchorElement>();
 
   constructor(
     private resourcesService: MdmResourcesService,
@@ -585,9 +584,7 @@ export class DataModelDetailComponent
         (result) => {
           if (result != null) {
             this.exportedFileIsReady = true;
-            if (!this.downloadLinks) {
-              this.downloadLinks = new Array<HTMLAnchorElement>();
-            }
+            const tempDownloadList = Object.assign([],this.downloadLinks);
             const label =
               [this.result].length === 1
                 ? [this.result][0].label
@@ -595,7 +592,8 @@ export class DataModelDetailComponent
             const fileName = this.exportHandler.createFileName(label, exporter);
             const file = new Blob([result.body], { type: exporter.fileType });
             const link = this.exportHandler.createBlobLink(file, fileName);
-            this.downloadLinks.push(link);
+            tempDownloadList.push(link);
+            this.downloadLinks = tempDownloadList;
             this.processing = false;
           } else {
             this.processing = false;

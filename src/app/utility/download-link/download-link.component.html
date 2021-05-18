@@ -16,28 +16,64 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 
-
-<div class="heading-container">
-    <div fxFlex fxLayout="row" fxLayout.md="row" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-around">
+<div *ngIf="links.length > 0">
+  <div class="mdm--shadow-block">
+    <div class="heading-container">
+      <div
+        fxFlex
+        fxLayout="row"
+        fxLayout.md="row"
+        fxLayout.sm="row"
+        fxLayout.xs="column"
+        fxLayoutAlign="space-around"
+      >
         <div fxFlex>
-            <h4 class="marginless">
-                Downloads      
-            </h4>
+          <h4 class="marginless">Downloads</h4>
         </div>
+      </div>
     </div>
-</div>
 
-<div class="table-responsive">
-    <table mat-table [dataSource]="dataSource" class="mdm--mat-table mat-elevation-z3 table-striped">
+    <div class="table-responsive">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="mdm--mat-table mat-elevation-z3 table-striped"
+      >
         <ng-container matColumnDef="link">
-            <th *matHeaderCellDef mat-header-cell style="cursor:pointer;max-width: 50%;width: 50%;" columnName="link">
-                <span>Link</span>
-            </th>
-            <td *matCellDef="let link;" mat-cell >
-                <div [innerHTML]="link.outerHTML  | safe: 'html'"></div>
-            </td>
+          <th
+            *matHeaderCellDef
+            mat-header-cell
+            style="cursor: pointer; max-width: 95%; width: 95%"
+            columnName="link"
+          >
+            <span>Link</span>
+          </th>
+          <td *matCellDef="let link" mat-cell>
+            <div [innerHTML]="link.outerHTML | safe: 'html'"></div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="delete">
+          <th
+            *matHeaderCellDef
+            mat-header-cell
+            style="cursor: pointer; max-width: 5%; width: 5%"
+            columnName="delete"
+          ></th>
+          <td *matCellDef="let link" mat-cell>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="deleteLink(link)"
+              type="button"
+              aria-label="Delete Download Link"
+            >
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
 </div>

@@ -31,7 +31,6 @@ import { Subscription } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { SharedService } from '@mdm/services/shared.service';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { Title } from '@angular/platform-browser';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -87,7 +86,6 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     private messageService: MessageService,
     private securityHandler: SecurityHandlerService,
     private sharedService: SharedService,
-    private helpDialogueService: HelpDialogueHandlerService,
     private favouriteHandler: FavouriteHandlerService,
     private title: Title,
     private messageHandler: MessageHandlerService,
@@ -254,10 +252,6 @@ export class TermDetailsComponent implements OnInit, AfterViewInit {
     if (this.favouriteHandler.toggle(this.mcTerm)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerm);
     }
-  }
-
-  public loadHelp() {
-    this.helpDialogueService.open('Term_details');
   }
 
   private invokeInlineEditor(): void {

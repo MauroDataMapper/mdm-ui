@@ -19,7 +19,6 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, OnInit, Input } from '@angular/core';
 import { TermDetail } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -38,7 +37,6 @@ export class TermRelationshipsComponent implements OnInit {
   relations = {};
   constructor(
     private resources: MdmResourcesService,
-    private helpDialogueService: HelpDialogueHandlerService,
   ) {
   }
 
@@ -64,9 +62,5 @@ export class TermRelationshipsComponent implements OnInit {
           this.loading = false;
         });
     }
-  }
-
-  public loadHelp() {
-    this.helpDialogueService.open('Editing_properties');
   }
 }

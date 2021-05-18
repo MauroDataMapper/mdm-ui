@@ -20,6 +20,36 @@ import { Injectable } from '@angular/core';
 import { SharedService } from './shared.service';
 import { MessageHandlerService } from './utility/message-handler.service';
 
+/**
+ * Service to open documentation help pages by topic.
+ *
+ * @description To provide help topics in Mauro UI:
+ *
+ * 1. Set the base URL for the documentation site in `environment.ts`.
+ * 2. Add `pages` as key-value pairs, the key being the unique topic name, the
+ * value being the relative URL to the documentation page
+ * 3. Add `importers` optionally too to have importer service names map to help topic names.
+ * 4. Finally, use `HelpDialogueHandlerService.open()` with a topic name to be navigated to that page.
+ *
+ * @example
+ *
+ * The `environment.ts` file should then look similar to this:
+ *
+ * ```ts
+ * export const environment = {
+ *  documentation: {
+ *    url: 'http://mdm.doc.site/',
+ *    pages: {
+ *      How_to_import: 'how-to-import.html',
+ *      Create_new_data_model: 'guides/create-data-model.html'
+ *    },
+ *    importers: {
+ *      XmlImportService: 'How_to_import'
+ *    }
+ *  }
+ * }
+ * ```
+ */
 @Injectable({
   providedIn: 'root'
 })

@@ -29,7 +29,6 @@ import {
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { merge } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
@@ -75,7 +74,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
     private resources: MdmResourcesService,
     private securityHandler: SecurityHandlerService,
     private messageHandler: MessageHandlerService,
-    private helpService: HelpDialogueHandlerService,
     private changeDetectorRefs: ChangeDetectorRef,
     private gridService: GridService,
     private editingService: EditingService
@@ -396,10 +394,6 @@ export class McDataSetMetadataComponent implements AfterViewInit {
         this.messageHandler.showError('There was a problem deleting the property.', error);
       });
   }
-
-  loadHelp = () => {
-    this.helpService.open('Editing_properties');
-  };
 
   filterClick() {
     this.hideFilters = !this.hideFilters;

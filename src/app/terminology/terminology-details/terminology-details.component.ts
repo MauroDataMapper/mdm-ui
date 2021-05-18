@@ -32,7 +32,6 @@ import { ExportHandlerService } from '@mdm/services/handlers/export-handler.serv
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService } from '@mdm/services/handlers/state-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { EditableDataModel } from '@mdm/model/dataModelModel';
 import { BroadcastService } from '@mdm/services/broadcast.service';
 import { SharedService } from '@mdm/services/shared.service';
@@ -96,7 +95,6 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private sharedService: SharedService,
-    private helpDialogueHandler: HelpDialogueHandlerService,
     private dialog: MatDialog,
     private messageHandler: MessageHandlerService,
     private stateHandler: StateHandlerService,
@@ -447,10 +445,6 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
     if (this.favouriteHandler.toggle(this.mcTerminology)) {
       this.addedToFavourite = this.favouriteHandler.isAdded(this.mcTerminology);
     }
-  };
-
-  loadHelp() {
-    this.helpDialogueHandler.open('Terminology_details');
   };
 
   showForm() {

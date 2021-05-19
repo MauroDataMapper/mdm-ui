@@ -31,9 +31,9 @@ const defaultFooterCopyright = 'Copyright © 2021 Clinical Informatics, NIHR Oxf
 })
 export class FooterComponent implements OnInit {
   copyright: string = defaultFooterCopyright;
-  showWikiLink = true;
+  showDocumentationLink = true;
   showYouTrackLink = true;
-  wiki = this.sharedService.wiki;
+  documentation = this.sharedService.documentation;
   youTrack = this.sharedService.youTrack;
 
   constructor(
@@ -45,7 +45,7 @@ export class FooterComponent implements OnInit {
       this.sharedService.simpleViewSupport &&
       !this.sharedService.isLoggedIn()
     ) {
-      this.showWikiLink = false;
+      this.showDocumentationLink = false;
     }
 
     if (

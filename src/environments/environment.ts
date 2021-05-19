@@ -35,7 +35,21 @@ export const environment = {
     url: 'https://metadatacatalogue.myjetbrains.com/youtrack',
     project: 'MC'
   },
-  wiki: 'https://modelcatalogue.cs.ox.ac.uk/wiki',
+  documentation: {
+    url: 'https://maurodatamapper.github.io/',
+    pages: {
+      Create_a_new_model: 'user-guides/create-a-data-model/create-a-data-model/',
+      Edit_model_details: 'user-guides/create-a-data-model/create-a-data-model/#3-complete-new-data-model-form',
+      Exporting_models: 'user-guides/exporting-data-models/exporting-data-models/',
+      Importing_DataModels_Using_Excel: 'user-guides/import-data-model-from-excel/import-data-model-from-excel/',
+      Preferences: 'user-guides/user-profile/user-profile/#3-update-preferences',
+      Search_Help: 'user-guides/how-to-search/how-to-search/',
+      User_profile: 'user-guides/user-profile/user-profile/'
+    },
+    importers: {
+      DataModelExcelImporterService: 'Importing_DataModels_Using_Excel'
+    }
+  },
   simpleViewSupport: false,
   name: 'development',
   appIsEditable: true,

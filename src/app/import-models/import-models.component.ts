@@ -130,7 +130,7 @@ export class ImportModelsComponent implements OnInit {
       return;
     }
 
-    this.importerHelp = this.helpDialogueHandler.getImporterHelp(
+    this.importerHelp = this.helpDialogueHandler.getImporterHelpTopic(
       selectedItem.name
     );
 

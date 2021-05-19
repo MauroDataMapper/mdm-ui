@@ -35,7 +35,6 @@ import { MessageService } from '../services/message.service';
 import { SecurityHandlerService } from '../services/handlers/security-handler.service';
 import { MessageHandlerService } from '../services/utility/message-handler.service';
 import { StateHandlerService } from '../services/handlers/state-handler.service';
-import { HelpDialogueHandlerService } from '../services/helpDialogue.service';
 import { SharedService } from '../services/shared.service';
 import { FavouriteHandlerService } from '../services/handlers/favourite-handler.service';
 import { ExportHandlerService } from '../services/handlers/export-handler.service';
@@ -112,7 +111,6 @@ export class DataModelDetailComponent
     private stateHandler: StateHandlerService,
     private sharedService: SharedService,
     private broadcastSvc: BroadcastService,
-    private helpDialogueService: HelpDialogueHandlerService,
     private dialog: MatDialog,
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
@@ -464,10 +462,6 @@ export class DataModelDetailComponent
     this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
     this.showEditDescription = false;
-  }
-
-  loadHelp() {
-    this.helpDialogueService.open('Edit_model_details');
   }
 
   toggleFavourite() {

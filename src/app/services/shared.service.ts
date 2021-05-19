@@ -33,7 +33,7 @@ export class SharedService {
   appVersion = environment.version;
   appTitle = environment.appTitle;
   youTrack = environment.youTrack;
-  wiki = environment.wiki;
+  documentation: { url: string; pages: { [key: string]: string }; importers: { [key: string]: string } } = environment.documentation;
   simpleViewSupport = environment.simpleViewSupport;
   checkSessionExpiryTimeout = environment.checkSessionExpiryTimeout;
   HDFLink = environment.HDFLink;
@@ -52,7 +52,7 @@ export class SharedService {
     private resources: MdmResourcesService
   ) {
     this.isAdmin = this.securityHandler.isAdmin();
-   }
+  }
 
   logout = () => {
     this.securityHandler.logout();

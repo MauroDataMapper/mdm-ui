@@ -35,7 +35,6 @@ import { StateHandlerService } from '@mdm/services/handlers/state-handler.servic
 import { SharedService } from '@mdm/services/shared.service';
 import { ElementSelectorDialogueService } from '@mdm/services/element-selector-dialogue.service';
 import { BroadcastService } from '@mdm/services/broadcast.service';
-import { HelpDialogueHandlerService } from '@mdm/services/helpDialogue.service';
 import { FavouriteHandlerService } from '@mdm/services/handlers/favourite-handler.service';
 import { DialogPosition, MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -101,7 +100,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
               private sharedService: SharedService,
               private elementDialogueService: ElementSelectorDialogueService,
               private broadcastSvc: BroadcastService,
-              private helpDialogueService: HelpDialogueHandlerService,
               private dialog: MatDialog,
               private favouriteHandler: FavouriteHandlerService,
               private title: Title,
@@ -434,10 +432,6 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.editMode = false; // Use Input editor whe adding a new folder.
     this.showEditDescription = false;
-  }
-
-  public loadHelp() {
-    this.helpDialogueService.open('Edit_model_details');
   }
 
   toggleFavourite() {

@@ -38,9 +38,9 @@ SPDX-License-Identifier: Apache-2.0
         </button>
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-          <!-- <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
+          <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
                       <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
-                   </button> -->
+                   </button>
           <button
             mat-menu-item
             type="button"
@@ -59,22 +59,36 @@ SPDX-License-Identifier: Apache-2.0
                       <i class="fas fa-code-branch"></i> Merge
                    </button>
      -->
-          <!-- <mat-divider></mat-divider>
-                   <button mat-menu-item type="button" [matMenuTriggerFor]="userActionsDelete" *ngIf="showDelete" class="warning">
-                      <i class="far fa-trash-alt warning"></i> Delete
-                   </button> -->
+          <mat-divider></mat-divider>
+          <button
+            mat-menu-item
+            type="button"
+            [matMenuTriggerFor]="userActionsDelete"
+            *ngIf="showDelete"
+            class="warning"
+          >
+            <i class="far fa-trash-alt warning"></i> Delete
+          </button>
         </mat-menu>
         <!-- End of first level menu -->
 
         <!--Second level sub Menu-->
-        <!-- <mat-menu #userActionsDelete="matMenu">
-                   <button mat-menu-item (click)="askForSoftDelete()" *ngIf="showSoftDelete && !result.deleted">
-                      Mark as deleted
-                   </button>
-                   <button mat-menu-item (click)="askForPermanentDelete()" *ngIf="showPermDelete">
-                      Delete <span class="warning">permanently</span>
-                   </button>
-                </mat-menu> -->
+        <mat-menu #userActionsDelete="matMenu">
+          <button
+            mat-menu-item
+            (click)="askForSoftDelete()"
+            *ngIf="showSoftDelete && !mcTerminology.deleted"
+          >
+            Mark as deleted
+          </button>
+          <button
+            mat-menu-item
+            (click)="askForPermanentDelete()"
+            *ngIf="showPermDelete"
+          >
+            Delete <span class="warning">permanently</span>
+          </button>
+        </mat-menu>
 
         <!-- <mat-menu #compareMenu="matMenu">
                    <button mat-menu-item (click)="compare()" *ngIf="!result?.deleted">

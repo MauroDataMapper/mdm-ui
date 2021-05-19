@@ -20,4 +20,5 @@ SPDX-License-Identifier: Apache-2.0
 export interface Features {
   useSubscribedCatalogues: boolean;
   useDynamicProfiles: boolean;
+  useVersionedFolders: boolean;
 }

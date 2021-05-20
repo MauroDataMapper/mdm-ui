@@ -23,7 +23,8 @@ module.exports = {
     new webpack.DefinePlugin({
       $ENV: {
         themeName: JSON.stringify(process.env['MDM_UI_THEME_NAME']),
-        useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES']))
+        useFeaureSubscribedCatalogues: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_SUBSCRIBED_CATALOGUES'])),
+        useVersionedFolders: Boolean(JSON.stringify(process.env['MDM_UI_FEATURE_VERSIONED_FOLDERS'])),
       }
     })
   ]

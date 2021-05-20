@@ -55,6 +55,7 @@ pipeline {
         nvm('') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'npm run test-with-coverage'
+            sh 'npm run test-clean'
           }
         }
       }

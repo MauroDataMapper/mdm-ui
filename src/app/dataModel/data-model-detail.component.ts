@@ -525,11 +525,11 @@ export class DataModelDetailComponent
 
   newVersion() {
     this.stateHandler.Go(
-      'newVersionDataModel',
-      { dataModelId: this.result.id },
+      'newVersionModel',
+      { id: this.result.id, domainType:  'dataModel'},
       { location: true }
     );
-  }
+  };
 
   compare(dataModel = null) {
     this.stateHandler.NewWindow(

@@ -64,7 +64,6 @@ import { FileSizePipe } from '@mdm/directives/file-size.pipe';
 import { SummaryMetadataTableComponent } from '@mdm/shared/summary-metadata/summary-metadata-table/summary-metadata-table.component';
 import { SummaryMetadataChartComponent } from '@mdm/shared/summary-metadata/summary-metadata-chart/summary-metadata-chart.component';
 
-import { NewVersionDataModelComponent } from '@mdm/dataModel/new-version-data-model/new-version-data-model.component';
 import { DataClassComponent } from '@mdm/dataClass/data-class/data-class.component';
 import { DataClassDetailsComponent } from '@mdm/dataClass/data-class-details/data-class-details.component';
 import { ShowIfRolesWritableDirective } from '@mdm/directives/show-if-roles-writable.directive';
@@ -182,7 +181,6 @@ import { ConstraintsRulesComponent } from '@mdm/constraints-rules/constraints-ru
 import { ApiPropertyTableComponent } from '@mdm/admin/api-property-table/api-property-table.component';
 import { ApiPropertyComponent } from '@mdm/admin/api-property/api-property.component';
 import { ProfileDetailsComponent } from '@mdm/shared/profile-details/profile-details.component';
-import { NewVersionReferenceDataModelComponent } from '@mdm/referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
 import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeout.component';
 
 @NgModule({
@@ -232,7 +230,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     ElementLinkListComponent,
     AttachmentListComponent,
     FileSizePipe,
-    NewVersionDataModelComponent,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -341,8 +338,7 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     SubscribedCatalogueDetailComponent,
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
-    ProfileDetailsComponent,
-    NewVersionReferenceDataModelComponent
+    ProfileDetailsComponent
   ],
   imports: [
     AdminModule,
@@ -411,7 +407,6 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     ElementLinkListComponent,
     AttachmentListComponent,
     FileSizePipe,
-    NewVersionDataModelComponent,
     DataClassComponent,
     DataClassDetailsComponent,
     ShowIfRolesWritableDirective,
@@ -515,8 +510,7 @@ import { ServerTimeoutComponent } from '@mdm/errors/server-timeout/server-timeou
     FederatedDataModelMainComponent,
     FederatedDataModelDetailComponent,
     NewFederatedSubscriptionModalComponent,
-    ProfileDetailsComponent,
-    NewVersionReferenceDataModelComponent
+    ProfileDetailsComponent
   ]
 })
 export class CatalogueModule { }

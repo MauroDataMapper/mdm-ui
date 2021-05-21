@@ -24,7 +24,6 @@ import { DataModelDefaultComponent } from './utility/data-model-default.componen
 import { NotImplementedComponent } from './errors/not-implemented/not-implemented.component';
 import { NotAuthorizedComponent } from './errors/not-authorized/not-authorized.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
-import { NewVersionDataModelComponent } from './dataModel/new-version-data-model/new-version-data-model.component';
 import { DataModelMainComponent } from './wizards/dataModel/data-model-main/data-model-main.component';
 import { DataClassMainComponent } from './wizards/dataClass/data-class-main/data-class-main.component';
 import { DataTypeMainComponent } from './wizards/dataType/data-type-main/data-type-main.component';
@@ -53,7 +52,6 @@ import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.compo
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-main.component';
 import { CodeSetComponent } from './code-set/code-set/code-set.component';
-import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
@@ -61,8 +59,8 @@ import { StateObject, TransitionService, UIRouter } from '@uirouter/core';
 import { EditingService } from '@mdm/services/editing.service';
 import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscribed-catalogue-main/subscribed-catalogue-main.component';
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
-import { NewVersionReferenceDataModelComponent } from './referenceData/new-version-reference-data-model/new-version-reference-data-model.component';
 import { ServerTimeoutComponent } from './errors/server-timeout/server-timeout.component';
+import { NewVersionComponent } from './shared/new-version/new-version.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -135,14 +133,9 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: NotFoundComponent
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionDataModel',
-      url: '/newVersion/dataModel/:dataModelId',
-      component: NewVersionDataModelComponent
-    },
-    {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionReferenceDataModel',
-      url: '/newVersion/referenceDataModel/:referenceDataModelId',
-      component: NewVersionReferenceDataModelComponent
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionModel',
+      url: '/:domainType/newVersion/:id',
+      component: NewVersionComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.dataModel',
@@ -285,11 +278,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
 
-    },
-    {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
-      url: '/newVersion/codeSet/:codeSetId',
-      component: NewVersionCodeSetComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',

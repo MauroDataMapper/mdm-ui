@@ -16,27 +16,24 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-
-import { Component, OnInit } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ReferenceDataModelDetail, ReferenceDataModelDetailResponse } from '@maurodatamapper/mdm-resources';
+import { CatalogueItem, Modelable, ForkModelPayload } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import {
-  StateHandlerService,
-  ValidatorService,
-  MessageHandlerService
-} from '@mdm/services';
+import { StateHandlerService, ValidatorService, MessageHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'mdm-new-version-reference-data-model',
-  templateUrl: './new-version-reference-data-model.component.html',
-  styleUrls: ['./new-version-reference-data-model.component.sass']
+  selector: 'mdm-new-version',
+  templateUrl: './new-version.component.html',
+  styleUrls: ['./new-version.component.scss']
 })
-export class NewVersionReferenceDataModelComponent implements OnInit {
+export class NewVersionComponent implements OnInit {
+
   step = 1;
-  referenceDataModel: ReferenceDataModelDetail;
+  catalogueItem: CatalogueItem & Modelable;
+  domainType: string;
   errors: { label: string } | undefined;
   versionType: 'Fork' | 'Branch' | 'Version' | undefined;
   processing: boolean;
@@ -46,6 +43,7 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
     copyDataFlows: false,
     moveDataFlows: false
   };
+
   constructor(
     private uiRouterGlobals: UIRouterGlobals,
     private stateHandler: StateHandlerService,
@@ -53,25 +51,26 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
     private validator: ValidatorService,
     private messageHandler: MessageHandlerService,
     private title: Title
-  ) {}
+  ) {
 
-  ngOnInit() {
-    this.title.setTitle('New Data Model Version');
+  }
 
-    if (!this.uiRouterGlobals.params.referenceDataModelId) {
+  ngOnInit(): void {
+    this.title.setTitle('New Model Version');
+
+    this.domainType = this.uiRouterGlobals.params.domainType;
+
+
+    if (!this.uiRouterGlobals.params.id || !this.domainType) {
       this.stateHandler.NotFound({ location: false });
       return;
     }
 
-    this.resources.referenceDataModel
-      .get(this.uiRouterGlobals.params.referenceDataModelId)
-      .subscribe((response: ReferenceDataModelDetailResponse) => {
-        this.referenceDataModel = response.body;
+    this.resources[this.domainType]
+      .get(this.uiRouterGlobals.params.id)
+      .subscribe((response: any) => {
+        this.catalogueItem = response.body;
       });
-  }
-
-  versionTypeChecked() {
-    this.step++;
   }
 
   validate() {
@@ -82,13 +81,13 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
     if (this.versionType === 'Fork') {
       if (this.validator.isEmpty(this.form.label)) {
         this.errors = this.errors || undefined;
-        this.errors.label = 'Data Model name can not be empty!';
+        this.errors.label = 'Model name can not be empty!';
       } else if (
         this.form.label.trim().toLowerCase() ===
-        this.referenceDataModel.label.trim().toLowerCase()
+        this.catalogueItem.label.trim().toLowerCase()
       ) {
         this.errors = this.errors || undefined;
-        this.errors.label = `The name should be different from the current version name ${this.referenceDataModel.label}`;
+        this.errors.label = `The name should be different from the current version name ${this.catalogueItem.label}`;
       }
     }
     if (this.versionType === 'Branch') {
@@ -100,20 +99,24 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
     return !this.errors;
   }
 
+  versionTypeChecked() {
+    this.step++;
+  }
+
   save() {
     if (!this.validate()) {
       return;
     }
     if (this.versionType === 'Fork') {
-      const resource = {
+      const resource : ForkModelPayload = {
         label: this.form.label,
         copyPermissions: this.form.copyPermissions,
         copyDataFlows: this.form.copyDataFlows
       };
       this.processing = true;
 
-      this.resources.referenceDataModel
-        .newForkModel(this.referenceDataModel.id, resource)
+      this.resources[this.domainType]
+        .newForkModel(this.catalogueItem.id, resource)
         .pipe(finalize(() => (this.processing = false)))
         .subscribe(
           (response) => {
@@ -121,7 +124,7 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
               'New Data Model version created successfully.'
             );
             this.stateHandler.Go(
-              'datamodel',
+              this.domainType,
               { id: response.body.id },
               { reload: true }
             );
@@ -136,8 +139,8 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
         );
     } else if (this.versionType === 'Version') {
       this.processing = true;
-      this.resources.referenceDataModel
-        .newBranchModelVersion(this.referenceDataModel.id, {})
+      this.resources[this.domainType]
+        .newBranchModelVersion(this.catalogueItem.id, {})
         .subscribe(
           (response) => {
             this.processing = false;
@@ -145,7 +148,7 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
               'New Document Model version created successfully.'
             );
             this.stateHandler.Go(
-              'referenceDataModel',
+              this.domainType,
               { id: response.body.id },
               { reload: true }
             );
@@ -165,14 +168,14 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
       }
 
       this.processing = true;
-      this.resources.referenceDataModel
-        .newBranchModelVersion(this.referenceDataModel.id, resources)
+      this.resources[this.domainType]
+        .newBranchModelVersion(this.catalogueItem.id, resources)
         .subscribe(
           (response) => {
             this.processing = false;
             this.messageHandler.showSuccess('New Branch created successfully.');
             this.stateHandler.Go(
-              'referenceDataModel',
+              this.domainType,
               { id: response.body.id },
               { reload: true }
             );
@@ -189,8 +192,9 @@ export class NewVersionReferenceDataModelComponent implements OnInit {
   }
 
   cancel = () => {
-    this.stateHandler.Go('referenceDataModel', {
-      id: this.referenceDataModel.id
+    this.stateHandler.Go(this.domainType, {
+      id: this.catalogueItem.id
     });
   };
+
 }

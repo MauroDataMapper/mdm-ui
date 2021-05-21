@@ -28,7 +28,7 @@ export enum ModelDomainType {
     ALL = 'all'
 }
 
-export enum ModelDomainRequestType {
+export enum  ModelDomainRequestType {
     folders = 'folder',
     dataModels = 'dataModel',
     dataClasses = 'dataClass',

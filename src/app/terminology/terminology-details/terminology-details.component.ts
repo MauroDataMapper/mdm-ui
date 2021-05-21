@@ -385,8 +385,8 @@ export class TerminologyDetailsComponent implements OnInit, OnDestroy {
 
   newVersion() {
     this.stateHandler.Go(
-      'newVersionTerminology',
-      { id: this.mcTerminology.id },
+      'newversionmodel',
+      { id: this.mcTerminology.id, domainType:  'terminology'},
       { location: true }
     );
   };

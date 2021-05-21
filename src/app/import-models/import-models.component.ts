@@ -134,8 +134,7 @@ export class ImportModelsComponent implements OnInit {
       selectedItem.name
     );
 
-    const action = `${selectedItem.namespace}/${selectedItem.name}/${selectedItem.version}`;
-    this.resources.importer.get(action).subscribe((res) => {
+    this.resources.importer.get(selectedItem.namespace,selectedItem.name,selectedItem.version).subscribe((res) => {
       const result = res.body;
       this.selectedImporterGroups = result.parameterGroups;
 

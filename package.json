@@ -15,7 +15,7 @@
     "e2e": "ng e2e",
     "postinstall": "ngcc",
     "sonar": "sonar-scanner -Dsonar.projectVersion=$npm_package_version",
-    "license-check" : "license-check-and-add -f license-check-and-add-config.json"
+    "license-check": "license-check-and-add -f license-check-and-add-config.json"
   },
   "private": true,
   "dependencies": {

@@ -607,13 +607,14 @@ export class ReferenceDataDetailsComponent
     this.editableForm.show();
   };
 
+
   newVersion() {
     this.stateHandler.Go(
-      'newVersionReferenceDataModel',
-      { referenceDataModelId: this.result.id },
+      'newversionmodel',
+      { id: this.result.id , domainType:  'referenceDataModel'},
       { location: true }
     );
-  }
+  };
 
   compare(referenceDataModel = null) {
     this.stateHandler.NewWindow(

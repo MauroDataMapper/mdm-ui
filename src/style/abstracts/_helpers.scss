@@ -35,6 +35,10 @@ SPDX-License-Identifier: Apache-2.0
   color: #4F575F!important;
 }
 
+a.no-underline {
+  text-decoration: none;
+}
+
 button.custom, a.custom {
   padding: 7px 16px;
   @include respond-to($mobile-xs) {

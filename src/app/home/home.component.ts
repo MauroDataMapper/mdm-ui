@@ -25,7 +25,7 @@ import { BroadcastService } from '../services/broadcast.service';
 import { RegisterModalComponent } from '../modals/register-modal/register-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { MessageHandlerService } from '@mdm/services';
+import { MessageHandlerService, SharedService } from '@mdm/services';
 import { catchError } from 'rxjs/operators';
 import { ApiProperty, ApiPropertyIndexResponse } from '@maurodatamapper/mdm-resources';
 
@@ -103,12 +103,15 @@ export class HomeComponent implements OnInit {
   detailColumn2: string;
   detailColumn3: string;
 
+  documentationUrl = this.shared.documentation.url;
+
   constructor(
     public dialog: MatDialog,
     private securityHandler: SecurityHandlerService,
     private broadcastSvc: BroadcastService,
     private resources: MdmResourcesService,
     private messageHandler: MessageHandlerService,
+    private shared: SharedService,
     private title: Title
   ) {
     this.broadcastSvc.subscribe('userLoggedOut', () => {

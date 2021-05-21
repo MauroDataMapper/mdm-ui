@@ -24,6 +24,7 @@ import { MdmResourcesService } from '@mdm/modules/resources';
 import { GridService } from '@mdm/services/grid.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
 import { EditingService } from '@mdm/services/editing.service';
+import { SharedService } from '@mdm/services';
 
 
 @Component({
@@ -36,12 +37,14 @@ export class NewFolderModalComponent implements OnInit {
   okBtn: string;
   cancelBtn: string;
   btnType: string;
-  inputValue: { label: string; groups: any[]};
+  newFolderData: { label: string; groups?: any[]; isVersioned? :boolean};
   modalTitle: string;
   message: string;
   inputLabel: string;
   allGroups = [];
   selectedGroups = [];
+  showVersionChbx: boolean;
+  feature = this.sharedService.features;
 
   constructor(
     private dialogRef: MatDialogRef<InputModalComponent>,
@@ -49,7 +52,8 @@ export class NewFolderModalComponent implements OnInit {
     private resourcesService: MdmResourcesService,
     private gridService: GridService,
     private messageHandler: MessageHandlerService,
-    private editingService: EditingService) {}
+    private editingService: EditingService,
+    private sharedService: SharedService) {}
 
   ngOnInit(): void {
     this.okBtn = this.data.okBtn ? this.data.okBtn : 'Save';
@@ -58,10 +62,11 @@ export class NewFolderModalComponent implements OnInit {
     this.inputLabel = this.data.inputLabel ? this.data.inputLabel : '';
     this.modalTitle = this.data.modalTitle ? this.data.modalTitle : '';
     this.message = this.data.message;
-    this.inputValue = {
-      label: '',
-      groups: []
+    this.newFolderData = {
+      label: ''
     };
+
+    this.showVersionChbx = this.feature.useVersionedFolders;
 
     const options = this.gridService.constructOptions(null, null, 'name', 'asc');
     options['all'] = true;
@@ -75,10 +80,10 @@ export class NewFolderModalComponent implements OnInit {
   }
 
   onGroupSelect = (groups) => {
-    this.inputValue.groups = [];
+    this.newFolderData.groups = [];
     for (const val of this.allGroups) {
       if (groups.value.includes(val.id)) {
-        this.inputValue.groups.push({
+        this.newFolderData.groups.push({
           id: val.id,
           // label: val.label
         });
@@ -95,6 +100,6 @@ export class NewFolderModalComponent implements OnInit {
   }
 
   confirm() {
-    this.dialogRef.close(this.inputValue);
+    this.dialogRef.close(this.newFolderData);
   }
 }

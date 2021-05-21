@@ -61,6 +61,7 @@ import { SubscribedCatalogueMainComponent } from './subscribed-catalogues/subscr
 import { FederatedDataModelMainComponent } from './subscribed-catalogues/federated-data-model-main/federated-data-model-main.component';
 import { ServerTimeoutComponent } from './errors/server-timeout/server-timeout.component';
 import { NewVersionComponent } from './shared/new-version/new-version.component';
+import { VersionedFolderComponent } from './versioned-folder/versioned-folder/versioned-folder.component';
 
 
 export const pageRoutes: { states: Ng2StateDeclaration[] } = {
@@ -96,8 +97,8 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       }
     },
     {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
       url: '/folder/:id/{tabView:string}?edit',
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.folder',
       component: FolderComponent,
       params: { tabView: { value: null, squash: true, dynamic: true } }
     },
@@ -293,6 +294,12 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
         tabView: { dynamic: true, value: null, squash: true },
         dataModel: null
       }
+    },
+    {
+      name: 'appContainer.mainApp.twoSidePanel.catalogue.versionedFolder',
+      url: '/versionedFolder/:id/{tabView:string}',
+      component: VersionedFolderComponent,
+      params: { tabView: { dynamic: true, value: null, squash: true } }
     }
   ]
 };

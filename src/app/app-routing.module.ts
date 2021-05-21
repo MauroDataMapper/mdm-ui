@@ -52,7 +52,6 @@ import { LinkSuggestionComponent } from './link-suggestion/link-suggestion.compo
 import { ModelComparisonComponent } from './model-comparison/model-comparison.component';
 import { CodeSetMainComponent } from './wizards/codeSet/code-set-main/code-set-main.component';
 import { CodeSetComponent } from './code-set/code-set/code-set.component';
-import { NewVersionCodeSetComponent } from '@mdm/code-set/new-version-code-set/new-version-code-set.component';
 import { ModelMergingComponent } from './model-merging/model-merging.component';
 import { ModelsMergingGraphComponent } from './models-merging-graph/models-merging-graph.component';
 import { EnumerationValuesComponent } from '@mdm/enumerationValues/enumeration-values/enumeration-values.component';
@@ -135,7 +134,7 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionModel',
-      url: '/newVersion/:id/:domainType',
+      url: '/:domainType/newVersion/:id',
       component: NewVersionComponent
     },
     {
@@ -279,11 +278,6 @@ export const pageRoutes: { states: Ng2StateDeclaration[] } = {
       component: CodeSetComponent,
       params: { tabView: { dynamic: true, value: null, squash: true } }
 
-    },
-    {
-      name: 'appContainer.mainApp.twoSidePanel.catalogue.newVersionCodeSet',
-      url: '/newVersion/codeSet/:codeSetId',
-      component: NewVersionCodeSetComponent
     },
     {
       name: 'appContainer.mainApp.twoSidePanel.catalogue.subscribedCatalogue',

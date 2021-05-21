@@ -15,7 +15,7 @@
     "e2e": "ng e2e",
     "postinstall": "ngcc",
     "sonar": "sonar-scanner -Dsonar.projectVersion=$npm_package_version",
-    "license-check" : "license-check-and-add -f license-check-and-add-config.json"
+    "license-check": "license-check-and-add -f license-check-and-add-config.json"
   },
   "private": true,
   "dependencies": {
@@ -35,7 +35,7 @@
     "@bpmn-io/dmn-migrate": "^0.4.3",
     "@ctrl/ngx-codemirror": "4.0.1",
     "@fortawesome/fontawesome-free": "5.15.1",
-    "@maurodatamapper/mdm-resources": "git+https://github.com/MauroDataMapper/mdm-resources.git#develop",
+    "@maurodatamapper/mdm-resources": "^4.6.0-SNAPSHOT",
     "@uirouter/angular": "7.0.0",
     "@uirouter/core": "6.0.6",
     "@uirouter/rx": "0.6.5",

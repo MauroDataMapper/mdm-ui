@@ -481,13 +481,14 @@ export class CodeSetDetailsComponent implements OnInit, OnDestroy {
       this.errorMessage = '';
     }
   }
+
   newVersion() {
     this.stateHandler.Go(
-      'newVersionCodeSet',
-      { codeSetId: this.result.id },
+      'newVersionModel',
+      { id: this.result.id, domainType:  'codeSet'},
       { location: true }
     );
-  }
+  };
 
   showDescription = () => {
     this.editingService.start();

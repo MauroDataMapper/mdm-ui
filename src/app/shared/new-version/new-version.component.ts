@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component,  OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { CatalogueItem, Modelable, ForkModelPayload } from '@maurodatamapper/mdm-resources';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { StateHandlerService, ValidatorService, MessageHandlerService } from '@mdm/services';
 import { UIRouterGlobals } from '@uirouter/core';
@@ -31,7 +32,7 @@ import { finalize } from 'rxjs/operators';
 export class NewVersionComponent implements OnInit {
 
   step = 1;
-  catalogueItem: any;
+  catalogueItem: CatalogueItem & Modelable;
   domainType: string;
   errors: { label: string } | undefined;
   versionType: 'Fork' | 'Branch' | 'Version' | undefined;
@@ -107,7 +108,7 @@ export class NewVersionComponent implements OnInit {
       return;
     }
     if (this.versionType === 'Fork') {
-      const resource = {
+      const resource : ForkModelPayload = {
         label: this.form.label,
         copyPermissions: this.form.copyPermissions,
         copyDataFlows: this.form.copyDataFlows

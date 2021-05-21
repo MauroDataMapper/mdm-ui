@@ -234,6 +234,10 @@ export class DataClassComponent
 
           this.messageService.FolderSendMessage(this.dataClass);
           this.messageService.dataChanged(this.dataClass);
+          this.UsedProfiles('dataClass', id);
+          this.UnUsedProfiles('dataClass', id);
+          this.catalogueItem = this.dataClass;
+          this.access = this.securityHandler.elementAccess(this.dataClass);
 
           if (this.dataClass) {
             this.tabGroup.realignInkBar();

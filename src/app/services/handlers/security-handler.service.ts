@@ -27,8 +27,7 @@ import { AuthenticatedSessionError, SignInError, UserDetails } from './security-
 import { Observable, of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { DOMAIN_TYPE } from '@mdm/folders-tree/flat-node';
-import { AdminSessionResponse, AuthenticatedResponse, Finalisable, LoginPayload, LoginResponse, Securable } from '@maurodatamapper/mdm-resources';
+import { AdminSessionResponse, AuthenticatedResponse, Finalisable, LoginPayload, LoginResponse, Securable, CatalogueItemDomainType } from '@maurodatamapper/mdm-resources';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +45,7 @@ export class SecurityHandlerService {
     private broadcastService: BroadcastService
   ) { }
 
-  private removeUserFromLocalStorage() {
+  removeUserFromLocalStorage() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('firstName');
@@ -320,22 +319,22 @@ export class SecurityHandlerService {
   }
 
   elementAccess(element) {
-    if (element.domainType === DOMAIN_TYPE.DataModel ||
-      element.domainType === DOMAIN_TYPE.Terminology ||
-      element.domainType === DOMAIN_TYPE.CodeSet ||
-      element.domainType === DOMAIN_TYPE.ReferenceDataModel) {
+    if (element.domainType === CatalogueItemDomainType.DataModel ||
+      element.domainType === CatalogueItemDomainType.Terminology ||
+      element.domainType === CatalogueItemDomainType.CodeSet ||
+      element.domainType === CatalogueItemDomainType.ReferenceDataModel) {
       return this.dataModelAccess(element);
     }
 
-    if (element.domainType === DOMAIN_TYPE.Term) {
+    if (element.domainType === CatalogueItemDomainType.Term) {
       return this.termAccess(element);
     }
 
-    if (element.domainType === DOMAIN_TYPE.DataElement) {
+    if (element.domainType === CatalogueItemDomainType.DataElement) {
       return this.dataElementAccess(element);
     }
 
-    if (element.domainType === DOMAIN_TYPE.DataClass) {
+    if (element.domainType === CatalogueItemDomainType.DataClass) {
       return this.dataClassAccess(element);
     }
 
@@ -344,11 +343,11 @@ export class SecurityHandlerService {
       return this.dataTypeAccess(element);
     }
 
-    if (element.domainType === 'DataFlow') {
+    if (element.domainType ===  'DataFlow') {
       return this.datFlowAccess(element);
     }
 
-    if (element.domainType === DOMAIN_TYPE.Folder) {
+    if (element.domainType === CatalogueItemDomainType.Folder) {
       return this.folderAccess(element);
     }
   }

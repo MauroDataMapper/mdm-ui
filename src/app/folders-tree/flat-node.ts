@@ -199,7 +199,7 @@ export enum DOMAIN_TYPE {
     Folder = 'Folder',
     DataModel = 'DataModel',
     DataClass = 'DataClass',
-    DataElement = 'DataClass',
+    DataElement = 'DataElement',
     Terminology = 'Terminology',
     Term = 'Term',
     CodeSet = 'CodeSet',

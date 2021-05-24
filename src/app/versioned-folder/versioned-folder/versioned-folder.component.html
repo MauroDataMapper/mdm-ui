@@ -63,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
 <mat-tab-group
   #tab
   animationDuration="0ms"
-  [selectedIndex]="activeTab"
+  [selectedIndex]="activeTab.index"
   (selectedIndexChange)="tabSelected($event)"
 >
   <mat-tab label="Description">

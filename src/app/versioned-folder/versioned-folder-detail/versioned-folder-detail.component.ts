@@ -16,18 +16,209 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ContainerUpdatePayload, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
+import { DetailViewEditor, DetailViewForm, Editable } from '@mdm/model/editable-forms';
+import { MdmResourcesService } from '@mdm/modules/resources';
+import { BroadcastService, MessageHandlerService, MessageService, SharedService, StateHandlerService } from '@mdm/services';
+import { EditingService } from '@mdm/services/editing.service';
+import { ContainerAccess } from '@mdm/services/handlers/security-handler.model';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mdm-versioned-folder-detail',
   templateUrl: './versioned-folder-detail.component.html',
   styleUrls: ['./versioned-folder-detail.component.scss']
 })
-export class VersionedFolderDetailComponent implements OnInit {
+export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  @Input() detail: VersionedFolderDetail;
+  @Input() access: ContainerAccess;
+
+  editor: DetailViewEditor<VersionedFolderDetail>;
+
+  isAdminUser = false;
+  processing = false;
+
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(
+    private resourcesService: MdmResourcesService,
+    private messages: MessageService,
+    private messageHandler: MessageHandlerService,
+    private stateHandler: StateHandlerService,
+    private shared: SharedService,
+    private broadcast: BroadcastService,
+    private dialog: MatDialog,
+    private title: Title,
+    private editing: EditingService) { }
 
   ngOnInit(): void {
+    this.isAdminUser = this.shared.isAdmin;
+
+    this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
+
+    this.editor = new Editable<VersionedFolderDetail, DetailViewForm<VersionedFolderDetail>>(
+      this.detail,
+      new DetailViewForm());
+
+    this.editor.onShow
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.editing.start());
+
+    this.editor.onCancel
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.editing.stop());
+
+    this.editor.onFinish
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.editing.stop());
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  toggleShowSearch() {
+    this.messages.toggleSearch();
+  }
+
+  showSecurityDialog() {
+    this.dialog.open(SecurityModalComponent, {
+      data: {
+        element: 'versionedFolder',
+        domainType: 'VersionedFolder'
+      },
+      panelClass: 'security-modal'
+    });
+  }
+
+  editLabel() {
+    this.editor.show();
+  }
+
+  cancelEdit() {
+    this.editor?.cancel();
+  }
+
+  submitForm() {
+    const resource: ContainerUpdatePayload = {
+      id: this.detail.id,
+      label: this.editor.form.label
+    };
+
+    if (this.validateLabel(this.editor.form.label)) {
+      this.resourcesService.versionedFolder
+        .update(this.detail.id, resource)
+        .pipe(
+          catchError(error => {
+            this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
+            return EMPTY;
+          })
+        )
+        .subscribe(
+          (response: VersionedFolderDetailResponse) => {
+            this.messageHandler.showSuccess('Versioned Folder updated successfully.');
+            this.editor.finish(response.body);
+            this.broadcast.broadcast('$reloadFoldersTree');
+          });
+    }
+  }
+
+  askForSoftDelete() {
+    if (!this.access.showSoftDelete) {
+      return;
+    }
+
+    this.dialog
+      .openConfirmationAsync({
+        data: {
+          title: 'Are you sure you want to delete this Versioned Folder?',
+          okBtnTitle: 'Yes, delete',
+          btnType: 'warn',
+          message: `<p class="marginless">This Versioned Folder will be marked as deleted and will not be viewable by users </p>
+                    <p class="marginless">except Administrators.</p>`
+        }
+      })
+      .subscribe(() => this.delete(false));
+  }
+
+  askForPermanentDelete(): any {
+    if (!this.access.showPermanentDelete) {
+      return;
+    }
+
+    this.dialog
+      .openDoubleConfirmationAsync(
+        {
+          data: {
+            title: 'Permanent deletion',
+            okBtnTitle: 'Yes, delete',
+            btnType: 'warn',
+            message:
+              'Are you sure you want to <span class=\'warning\'>permanently</span> delete this Versioned Folder?'
+          }
+        },
+        {
+          data: {
+            title: 'Confirm permanent deletion',
+            okBtnTitle: 'Confirm deletion',
+            btnType: 'warn',
+            message: `<p class='marginless'><strong>Note: </strong>All its contents
+                    <p class='marginless'>will be deleted <span class='warning'>permanently</span>.</p>`
+          }
+        }
+      )
+      .subscribe(() => this.delete(true));
+  }
+
+  validateLabel(data): any {
+    if (!data || (data && data.trim().length === 0)) {
+      //this.errorMessage = 'DataModel name can not be empty';
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private delete(permanent: boolean) {
+    if (!this.access.showSoftDelete && !this.access.showPermanentDelete) {
+      return;
+    }
+
+    this.processing = true;
+    this.editor.deletePending = true;
+
+    this.resourcesService.versionedFolder
+      .remove(this.detail.id, { permanent })
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError(
+            'There was a problem deleting the Versioned Folder.',
+            error
+          );
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.processing = false;
+          this.editor.deletePending = false;
+        })
+      )
+      .subscribe(
+        () => {
+          this.broadcast.broadcast('$reloadFoldersTree');
+          if (permanent) {
+            this.stateHandler.Go(
+              'appContainer.mainApp.twoSidePanel.catalogue.allDataModel'
+            );
+          } else {
+            this.stateHandler.reload();
+          }
+        });
+  }
 }

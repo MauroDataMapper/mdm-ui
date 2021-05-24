@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="full-width">
-  <!-- <mdm-data-model-detail [afterSave]="afterSave"></mdm-data-model-detail> -->
+  <mdm-versioned-folder-detail *ngIf="detail" [detail]="detail" [access]="access"></mdm-versioned-folder-detail>
 </div>
 <div *ngIf="showSearch" style="clear: both">
   <div class="mdm--shadow-block">
@@ -42,7 +42,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
       <div class="panel-body panel-table">
         <mdm-advanced-search-bar
-          [parent]="versionedFolder"
+          [parent]="detail"
           [showRestrictTo]="false"
           [doNotShowDataModelInModelPath]="false"
           [doNotDisplayModelPathStatus]="false"
@@ -177,7 +177,7 @@ SPDX-License-Identifier: Apache-2.0
         <div class="full-width">
           <mdm-data-set-metadata
             *ngIf="this.descriptionView === 'other'"
-            [parent]="versionedFolder"
+            [parent]="detail"
             [type]="'dynamic'"
             [domainType]="'versionedFolders'"
             [isProfileView]="true"
@@ -197,10 +197,10 @@ SPDX-License-Identifier: Apache-2.0
               <tr>
                 <td class="detailsRowHeader">Description</td>
                 <td class="elementDetailDescription">
-                  <div *ngIf="versionedFolder">
+                  <div *ngIf="detail">
                     <mdm-markdown-text-area
                       [editableForm]="editor"
-                      [element]="versionedFolder"
+                      [element]="detail"
                       [property]="'description'"
                     ></mdm-markdown-text-area>
                   </div>
@@ -272,8 +272,8 @@ SPDX-License-Identifier: Apache-2.0
 
         <div *ngIf="annotationsView === 'default'">
           <mdm-annotation-list
-            *ngIf="versionedFolder"
-            [parent]="versionedFolder"
+            *ngIf="detail"
+            [parent]="detail"
             [domainType]="'versionedFolders'"
           ></mdm-annotation-list>
         </div>
@@ -284,8 +284,8 @@ SPDX-License-Identifier: Apache-2.0
         >
           <div class="pxy-2">
             <mdm-attachment-list
-              *ngIf="versionedFolder"
-              [parent]="versionedFolder"
+              *ngIf="detail"
+              [parent]="detail"
               [domainType]="'versionedFolders'"
             ></mdm-attachment-list>
           </div>
@@ -314,8 +314,8 @@ SPDX-License-Identifier: Apache-2.0
     <div class="full-width">
       <mdm-history
         (totalCount)="historyCountEmitter($event)"
-        *ngIf="versionedFolder"
-        [parent]="versionedFolder"
+        *ngIf="detail"
+        [parent]="detail"
         [parentType]="'VersionedFolder'"
         [parentId]="parentId"
         [domainType]="'versionedFolders'"
@@ -341,8 +341,8 @@ SPDX-License-Identifier: Apache-2.0
     </ng-template>
     <div class="full-width">
       <mdm-constraints-rules
-        *ngIf="versionedFolder"
-        [parent]="versionedFolder"
+        *ngIf="detail"
+        [parent]="detail"
         [domainType]="'versionedFolders'"
         (totalCount)="rulesCountEmitter($event)"
       ></mdm-constraints-rules>

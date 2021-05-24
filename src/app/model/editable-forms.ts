@@ -39,6 +39,7 @@ export class Editable<T, F extends Resetable<T>> {
   private onShowSource = new Subject<void>();
   private onCancelSource = new Subject<void>();
   private onResetSource = new Subject<T>();
+  private onFinishSource = new Subject<void>();
 
   /**
    * Observable to subscribe to when the editable object state is being shown.
@@ -57,6 +58,11 @@ export class Editable<T, F extends Resetable<T>> {
    * `T` may provide an `id` property but `F` requires the data object associated with that ID.
    */
   onReset = this.onResetSource.asObservable();
+
+  /**
+   * Observable to subscribe to when the editable object state has finished editing.
+   */
+  onFinish = this.onFinishSource.asObservable();
 
    /**
     * Determine if form data is being deleted.
@@ -100,6 +106,12 @@ export class Editable<T, F extends Resetable<T>> {
     this.isEditing = false;
     this.reset();
     this.onCancelSource.next();
+  }
+
+  finish(next: T) {
+    this.isEditing = false;
+    this.reset(next);
+    this.onFinishSource.next();
   }
 }
 

@@ -88,6 +88,7 @@ export interface ContainerAccess {
   showPermanentDelete: boolean;
   canAddMetadata: boolean;
   canAddAnnotation: boolean;
+  showFinalise: boolean;
 }
 
 export interface DataModelAccess {

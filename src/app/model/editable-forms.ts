@@ -116,3 +116,33 @@ export class EditableRecord<T, E> implements EditableObject {
       this.inEdit = settings.inEdit;
     }
 }
+
+export interface Labelable {
+  label: string;
+}
+
+export interface Describable {
+  description?: string;
+}
+
+export class DetailViewForm<T extends Labelable> implements Resetable<T> {
+  label: string;
+
+  reset(original: T): void {
+    this.label = original.label;
+  }
+}
+
+export type DetailViewEditor<T extends Labelable> = Editable<T, DetailViewForm<T>>;
+
+export class DefaultContainerProfileForm<T extends Labelable & Describable> implements Resetable<T> {
+  label: string;
+  description: string;
+
+  reset(original: T): void {
+    this.label = original.label;
+    this.description = original.description;
+  }
+}
+
+export type DefaultContainerProfileEditor<T extends Labelable & Describable> = Editable<T, DefaultContainerProfileForm<T>>;

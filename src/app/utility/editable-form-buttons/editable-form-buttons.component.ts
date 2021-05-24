@@ -26,11 +26,11 @@ import { Editable } from '@mdm/model/folderModel';
    styleUrls: ['./editable-form-buttons.component.scss']
 })
 export class EditableFormButtonsComponent implements OnInit {
-  @Input() deleteIcon: any;
-  @Input() deleteTitle: any;
-  @Input() editTitle: any;
+  @Input() deleteIcon: any = null;
+  @Input() deleteTitle  = '';
+  @Input() editTitle = '';
   @Input() processing: any;
-  @Input() editable: Editable;
+  @Input() editable: any;
   @Input() onEditClicked: any;
   @Input() onDeleteClicked: any;
   @Input() onConfirmDelete: any;
@@ -48,6 +48,10 @@ export class EditableFormButtonsComponent implements OnInit {
   public displayDeleteIcon: any = this.deleteIcon;
 
   public displayEditTitle: string = this.editTitle;
+
+  get isEditorVisible(): boolean {
+    return this.editable && (this.editable.visible || this.editable.isEditing);
+  }
 
   constructor(private editingService: EditingService) {}
 
@@ -127,7 +131,7 @@ export class EditableFormButtonsComponent implements OnInit {
         return;
       }
 
-      if (this.editable) {
+      if (this.editable && this.editable.cancel) {
         this.editable.cancel();
       }
       if (this.onCancelEdit) {

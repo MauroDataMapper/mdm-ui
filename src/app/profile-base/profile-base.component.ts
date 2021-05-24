@@ -18,6 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CatalogueItem, ModelDomainType } from '@maurodatamapper/mdm-resources';
 import { AddProfileModalComponent } from '@mdm/modals/add-profile-modal/add-profile-modal.component';
 import { EditProfileModalComponent } from '@mdm/modals/edit-profile-modal/edit-profile-modal.component';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -36,7 +37,7 @@ export class ProfileBaseComponent extends BaseComponent {
   descriptionView = 'default';
   lastDescriptionView: string;
 
-  catalogueItem: any;
+  catalogueItem: CatalogueItem;
 
   constructor(protected resourcesService: MdmResourcesService,
     protected dialog: MatDialog,
@@ -155,7 +156,7 @@ export class ProfileBaseComponent extends BaseComponent {
     });
   };
 
-  async UsedProfiles(domainType: string, id: any) {
+  async UsedProfiles(domainType: ModelDomainType | string, id: any) {
     await this.resourcesService.profile
       .usedProfiles(domainType, id)
       .subscribe((profiles: { body: { [x: string]: any } }) => {
@@ -170,7 +171,7 @@ export class ProfileBaseComponent extends BaseComponent {
   }
 
   async UnUsedProfiles(
-    domainType: string,
+    domainType: ModelDomainType | string,
     id: any
   ) {
     await this.resourcesService.profile

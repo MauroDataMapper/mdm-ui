@@ -17,11 +17,9 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form
-    editable-form
-    name="form"
-    onaftersave="onAfterSave()"
-    (ngSubmit)="formBeforeSave()"
+  <form    
+    name="form"   
+    (ngSubmit)="save()"
     disable-submit-on-enter
   >
     <div class="panel-body">
@@ -43,9 +41,9 @@ SPDX-License-Identifier: Apache-2.0
 
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-                  <button
+          <button
             mat-menu-item
-            *ngIf="showDelete"
+            *ngIf="access.showDelete && access.showPermanentDelete"
             color="warn"
             type="button"
             (click)="askForPermanentDelete()"
@@ -53,9 +51,16 @@ SPDX-License-Identifier: Apache-2.0
           >
             <i class="far fa-trash-alt warning"></i> Delete
           </button>
+          <button
+            mat-menu-item
+            type="button"
+            *ngIf="access.showEdit || access.canEditDescription"
+            (click)="showForm()"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit Title
+          </button>
         </mat-menu>
         <!-- End of first level menu -->
-
 
         <div
           style="
@@ -65,9 +70,8 @@ SPDX-License-Identifier: Apache-2.0
             margin-left: 8px;
             bottom: 6px;
           "
-          [hidden]="editableForm.visible || editableForm.deletePending"
-        >
-        </div>
+          [hidden]="editMode || deleteInProgress"
+        ></div>
       </div>
 
       <div *ngIf="result">
@@ -75,11 +79,13 @@ SPDX-License-Identifier: Apache-2.0
           <h4 class="inline-block marginless">
             {{ parentLabel }}:
             <mdm-inline-text-edit
-              [readOnly]="showEditDescription"
-              [inEditMode]="editableForm.visible"
-              [(ngModel)]="editableForm.label"
+              [readOnly]="false"
+              [inEditMode]="editMode"
+              [showButtons]="true"
+              (saveClicked)="save()"
+              (cancelClicked)="cancel()"
+              [(ngModel)]="result.label"
               [styleCss]="'dataModelDetailsLabel'"
-              (input)="onLabelChange($event.target.value)"
               name="moduleName"
               size="20"
             >
@@ -95,20 +101,4 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </div>
   </form>
-</div>
-
-<div style="clear: both" *ngIf="processing">
-  <mat-progress-bar
-    value="50"
-    bufferValue="75"
-    color="accent"
-    mode="indeterminate"
-  ></mat-progress-bar>
-</div>
-<div style="text-align: left" *ngIf="exportError">
-  <div style="padding-top: 25px">
-    <div class="alert alert-danger">
-      <strong>Error!</strong> {{ exportError }}
-    </div>
-  </div>
 </div>

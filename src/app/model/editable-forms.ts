@@ -67,7 +67,7 @@ export class FormState<T, F extends FormGroupState<T>> {
    */
   onFinish = this.onFinishSource.asObservable();
 
-  isEditing: boolean = false;
+  isEditing = false;
 
   /**
    * Helper property to get the {@link FormGroup} to use for rendering.
@@ -78,6 +78,7 @@ export class FormState<T, F extends FormGroupState<T>> {
 
   /**
    * Creates a new FormState object.
+   *
    * @param original The original object state.
    * @param form The form definition to map to the original object state and track changes made.
    */
@@ -88,11 +89,11 @@ export class FormState<T, F extends FormGroupState<T>> {
   }
 
   /**
- * Reset the form state of this object.
- *
- * @param next The next `T` object to set to `original` if overriding the original value. If not provided, the value
- * currently stored in `original` will be used.
- */
+   * Reset the form state of this object.
+   *
+   * @param next The next `T` object to set to `original` if overriding the original value. If not provided, the value
+   * currently stored in `original` will be used.
+   */
   reset(next?: T) {
     if (next) {
       this.original = next;
@@ -121,6 +122,7 @@ export class FormState<T, F extends FormGroupState<T>> {
 
   /**
    * Finish editing the form after saving, setting the current form state to the new object state.
+   *
    * @param next The new object state after saving.
    */
   finish(next: T) {
@@ -149,12 +151,14 @@ export abstract class FormGroupState<T> implements Resetable<T> {
 
   /**
    * Creates a new `FormGroupState`.
+   *
    * @param formGroup The {@link FormGroup} to track.
    */
   constructor(public formGroup: FormGroup) { }
 
   /**
    * Resets the form group to a new object state.
+   *
    * @param state The object state to reset the form to.
    *
    * The property keys in `state` should match the form control names.

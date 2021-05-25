@@ -17,12 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form
-    editable-form
-    name="form"
-    (ngSubmit)="submitForm()"
-    disable-submit-on-enter
-  >
+  <form name="form" (ngSubmit)="save()" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="detail">
         <button
@@ -39,8 +34,10 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="access.showEdit && !editor.isEditing && !editor.deletePending"
-            (click)="editLabel()"
+            *ngIf="
+              access.showEdit && !editor.isEditing && !editor.deletePending
+            "
+            (click)="showForm()"
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
           </button>
@@ -130,19 +127,32 @@ SPDX-License-Identifier: Apache-2.0
                 class="fas fa-project-diagram"
               ></i>
             </span>
-            <mdm-inline-text-edit
-              [readOnly]="!access.showEdit"
-              [inEditMode]="editor.isEditing"
-              [(ngModel)]="editor.form.label"
-              [name]="'moduleName'"
-              size="20"
-              [styleCss]="'dataModelDetailsLabel'"
+            <span
+              *ngIf="!editor.isEditing"
+              class="dataModelDetailsLabel"
+              style="font-weight: 500"
+              >{{ editor.form.label }}</span
             >
-            </mdm-inline-text-edit>
+            <mat-form-field
+              *ngIf="editor.isEditing"
+              appearance="outline"
+              style="width: 100%"
+            >
+              <mat-label>Label</mat-label>
+              <input
+                matInput
+                name="label"
+                [(ngModel)]="editor.form.label"
+                required
+              />
+              <mat-error *ngIf="editor.form.errors && editor.form.errors.label">
+                {{ editor.form.errors.label }}
+              </mat-error>
+            </mat-form-field>
             <mdm-editable-form-buttons
               *ngIf="editor"
               [hidden]="!editor.isEditing"
-              [onCancelEdit]="cancelEdit"
+              [onCancelEdit]="cancel"
               [editable]="editor"
               [textLocation]="'left'"
               [hideDelete]="true"
@@ -192,9 +202,7 @@ SPDX-License-Identifier: Apache-2.0
         >
           <small>
             <i matTooltip="Model Version" class="fas fa-file-alt"></i>
-            <span>
-              <strong>Version: </strong>{{ detail.modelVersion }}
-            </span>
+            <span> <strong>Version: </strong>{{ detail.modelVersion }} </span>
             <span *ngIf="detail.modelVersionTag" class="tag-name">
               <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
               <span>{{ detail.modelVersionTag }}</span>

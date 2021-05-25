@@ -137,11 +137,43 @@ export interface Describable {
   description?: string;
 }
 
-export class DetailViewForm<T extends Labelable> implements Resetable<T> {
+export type Errors<T> = {
+  [key in keyof Partial<T>]: string;
+}
+
+export interface Validatable<T> {
+  isValid: boolean;
+  errors: Errors<T>;
+
+  validate(): boolean;
+}
+
+export class DetailViewForm<T extends Labelable> implements Resetable<T>, Validatable<DetailViewForm<T>> {
+  isValid: boolean;
+  errors: Errors<DetailViewForm<T>>;
+
   label: string;
 
   reset(original: T): void {
     this.label = original.label;
+    this.validate();
+  }
+
+  validate(): boolean {
+    this.errors = { };
+
+    if (!this.label || (this.label && this.label.trim().length === 0)) {
+      this.errors.label = 'Please enter a label';
+    }
+
+    if (Object.keys(this.errors).length === 0) {
+      this.isValid = true;
+    }
+    else {
+      this.isValid = false;
+    }
+
+    return this.isValid;
   }
 }
 

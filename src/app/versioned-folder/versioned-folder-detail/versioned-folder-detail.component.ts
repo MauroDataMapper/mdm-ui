@@ -98,36 +98,38 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  editLabel() {
+  showForm() {
     this.editor.show();
   }
 
-  cancelEdit() {
+  cancel() {
     this.editor?.cancel();
   }
 
-  submitForm() {
+  save() {
+    if (!this.editor.form.validate()) {
+      return;
+    }
+
     const resource: ContainerUpdatePayload = {
       id: this.detail.id,
       label: this.editor.form.label
     };
 
-    if (this.validateLabel(this.editor.form.label)) {
-      this.resourcesService.versionedFolder
-        .update(this.detail.id, resource)
-        .pipe(
-          catchError(error => {
-            this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
-            return EMPTY;
-          })
-        )
-        .subscribe(
-          (response: VersionedFolderDetailResponse) => {
-            this.messageHandler.showSuccess('Versioned Folder updated successfully.');
-            this.editor.finish(response.body);
-            this.broadcast.broadcast('$reloadFoldersTree');
-          });
-    }
+    this.resourcesService.versionedFolder
+      .update(this.detail.id, resource)
+      .pipe(
+        catchError(error => {
+          this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
+          return EMPTY;
+        })
+      )
+      .subscribe(
+        (response: VersionedFolderDetailResponse) => {
+          this.messageHandler.showSuccess('Versioned Folder updated successfully.');
+          this.editor.finish(response.body);
+          this.broadcast.broadcast('$reloadFoldersTree');
+        });
   }
 
   askForSoftDelete() {
@@ -175,15 +177,6 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
         }
       )
       .subscribe(() => this.delete(true));
-  }
-
-  validateLabel(data): any {
-    if (!data || (data && data.trim().length === 0)) {
-      //this.errorMessage = 'DataModel name can not be empty';
-      return false;
-    } else {
-      return true;
-    }
   }
 
   private delete(permanent: boolean) {

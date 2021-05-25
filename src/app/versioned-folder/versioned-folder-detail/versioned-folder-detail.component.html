@@ -17,7 +17,7 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form name="form" (ngSubmit)="save()" disable-submit-on-enter>
+  <form name="form" [formGroup]="editor.formGroup" (ngSubmit)="save()" disable-submit-on-enter>
     <div class="panel-body">
       <div class="full-width" style="clear: both" *ngIf="detail">
         <button
@@ -34,9 +34,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="
-              access.showEdit && !editor.isEditing && !editor.deletePending
-            "
+            *ngIf="access.showEdit && !editor.isEditing"
             (click)="showForm()"
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
@@ -76,7 +74,7 @@ SPDX-License-Identifier: Apache-2.0
         <div
           *ngIf="access.showPermission"
           style="position: relative; float: right; margin-right: 8px"
-          [hidden]="editor.isEditing || editor.deletePending"
+          [hidden]="editor.isEditing"
         >
           <button
             mat-icon-button
@@ -98,7 +96,7 @@ SPDX-License-Identifier: Apache-2.0
             margin-right: 8px;
             margin-left: 8px;
           "
-          [hidden]="editor.isEditing || editor.deletePending"
+          [hidden]="editor.isEditing"
         >
           <button
             mat-icon-button
@@ -131,22 +129,22 @@ SPDX-License-Identifier: Apache-2.0
               *ngIf="!editor.isEditing"
               class="dataModelDetailsLabel"
               style="font-weight: 500"
-              >{{ editor.form.label }}</span
+              >{{ detail.label }}</span
             >
             <mat-form-field
               *ngIf="editor.isEditing"
               appearance="outline"
               style="width: 100%"
             >
-              <mat-label>Label</mat-label>
               <input
                 matInput
                 name="label"
-                [(ngModel)]="editor.form.label"
+                formControlName="label"
+                placeholder="Label"
                 required
               />
-              <mat-error *ngIf="editor.form.errors && editor.form.errors.label">
-                {{ editor.form.errors.label }}
+              <mat-error *ngIf="editor.form?.label?.errors?.required">
+                 Label is required
               </mat-error>
             </mat-form-field>
             <mdm-editable-form-buttons

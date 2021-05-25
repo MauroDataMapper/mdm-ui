@@ -16,6 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EditableObject } from '@mdm/services/editing.service';
 import { Subject } from 'rxjs';
 
@@ -29,6 +30,116 @@ export interface Resetable<T> {
    * Resets this object using the original object provided.
    */
   reset(original: T): void;
+}
+
+export class FormState<T, F extends FormGroupState<T>> {
+  private onShowSource = new Subject<void>();
+  private onCancelSource = new Subject<void>();
+  private onResetSource = new Subject<T>();
+  private onFinishSource = new Subject<void>();
+
+  /**
+   * Observable to subscribe to when the editable object state is being shown.
+   */
+  onShow = this.onShowSource.asObservable();
+
+  /**
+   * Observable to subscribe to when the editable object state is being cancelled.
+   */
+  onCancel = this.onCancelSource.asObservable();
+
+  /**
+   * Observable to subscribe to when the editable object state is being reset.
+   *
+   * Use this when it is required to set further data to `F` that `T` provides only the basis of, for instance
+   * `T` may provide an `id` property but `F` requires the data object associated with that ID.
+   */
+  onReset = this.onResetSource.asObservable();
+
+  /**
+   * Observable to subscribe to when the editable object state has finished editing.
+   */
+  onFinish = this.onFinishSource.asObservable();
+
+  isEditing: boolean = false;
+
+  get formGroup(): FormGroup {
+    return this.form.formGroup;
+  }
+
+  constructor(
+    public original: T,
+    public form: F) {
+    this.reset();
+  }
+
+  /**
+ * Reset the form state of this object.
+ *
+ * @param next The next `T` object to set to `original` if overriding the original value. If not provided, the value
+ * currently stored in `original` will be used.
+ */
+  reset(next?: T) {
+    if (next) {
+      this.original = next;
+    }
+
+    this.form.reset(this.original);
+    this.onResetSource.next(this.original);
+  }
+
+  show() {
+    this.isEditing = true;
+    this.onShowSource.next();
+  }
+
+  cancel() {
+    this.isEditing = false;
+    this.reset();
+    this.onCancelSource.next();
+  }
+
+  finish(next: T) {
+    this.isEditing = false;
+    this.reset(next);
+    this.onFinishSource.next();
+  }
+}
+
+export abstract class FormGroupState<T> implements Resetable<T> {
+
+  get valid() {
+    return this.formGroup.valid;
+  }
+
+  constructor(public formGroup: FormGroup) { }
+
+  reset(original: T): void {
+    this.formGroup.reset(original);
+  }
+
+  enable() {
+    this.formGroup.enable();
+  }
+
+  disable() {
+    this.formGroup.disable();
+  }
+}
+
+export class ItemDetailForm<T extends Labelable> extends FormGroupState<T> {
+
+  get label() {
+    return this.formGroup.get('label');
+  }
+
+  constructor() {
+    super(new FormGroup({
+      label: new FormControl('', [
+        Validators.required // eslint-disable-line @typescript-eslint/unbound-method
+      ])
+    }));
+  }
 }
 
 /**
@@ -64,9 +175,9 @@ export class Editable<T, F extends Resetable<T>> {
    */
   onFinish = this.onFinishSource.asObservable();
 
-   /**
-    * Determine if form data is being deleted.
-    */
+  /**
+   * Determine if form data is being deleted.
+   */
   deletePending: boolean;
 
   /**
@@ -124,9 +235,9 @@ export class EditableRecord<T, E> implements EditableObject {
     public source: T,
     public edit: E,
     settings: { isNew: boolean; inEdit: boolean }) {
-      this.isNew = settings.isNew;
-      this.inEdit = settings.inEdit;
-    }
+    this.isNew = settings.isNew;
+    this.inEdit = settings.inEdit;
+  }
 }
 
 export interface Labelable {
@@ -136,48 +247,6 @@ export interface Labelable {
 export interface Describable {
   description?: string;
 }
-
-export type Errors<T> = {
-  [key in keyof Partial<T>]: string;
-}
-
-export interface Validatable<T> {
-  isValid: boolean;
-  errors: Errors<T>;
-
-  validate(): boolean;
-}
-
-export class DetailViewForm<T extends Labelable> implements Resetable<T>, Validatable<DetailViewForm<T>> {
-  isValid: boolean;
-  errors: Errors<DetailViewForm<T>>;
-
-  label: string;
-
-  reset(original: T): void {
-    this.label = original.label;
-    this.validate();
-  }
-
-  validate(): boolean {
-    this.errors = { };
-
-    if (!this.label || (this.label && this.label.trim().length === 0)) {
-      this.errors.label = 'Please enter a label';
-    }
-
-    if (Object.keys(this.errors).length === 0) {
-      this.isValid = true;
-    }
-    else {
-      this.isValid = false;
-    }
-
-    return this.isValid;
-  }
-}
-
-export type DetailViewEditor<T extends Labelable> = Editable<T, DetailViewForm<T>>;
 
 export class DefaultContainerProfileForm<T extends Labelable & Describable> implements Resetable<T> {
   label: string;

@@ -19,9 +19,9 @@ SPDX-License-Identifier: Apache-2.0
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { ContainerUpdatePayload, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
-import { DetailViewEditor, DetailViewForm, Editable } from '@mdm/model/editable-forms';
+import { FormState, ItemDetailForm } from '@mdm/model/editable-forms';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -39,7 +39,7 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
   @Input() detail: VersionedFolderDetail;
   @Input() access: ContainerAccess;
 
-  editor: DetailViewEditor<VersionedFolderDetail>;
+  editor: FormState<VersionedFolderDetail, ItemDetailForm<VersionedFolderDetail>>;
 
   isAdminUser = false;
   processing = false;
@@ -62,9 +62,9 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
 
-    this.editor = new Editable<VersionedFolderDetail, DetailViewForm<VersionedFolderDetail>>(
+    this.editor = new FormState(
       this.detail,
-      new DetailViewForm());
+      new ItemDetailForm<VersionedFolderDetail>());
 
     this.editor.onShow
       .pipe(takeUntil(this.unsubscribe$))
@@ -107,22 +107,25 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (!this.editor.form.validate()) {
+    if (!this.editor.form.valid) {
       return;
     }
 
-    const resource: ContainerUpdatePayload = {
-      id: this.detail.id,
-      label: this.editor.form.label
-    };
+    this.editor.form.disable();
 
     this.resourcesService.versionedFolder
-      .update(this.detail.id, resource)
+      .update(
+        this.detail.id,
+        {
+          id: this.detail.id,
+          label: this.editor.form.label?.value
+        })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
           return EMPTY;
-        })
+        }),
+        finalize(() => this.editor.form.enable())
       )
       .subscribe(
         (response: VersionedFolderDetailResponse) => {
@@ -185,7 +188,6 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
     }
 
     this.processing = true;
-    this.editor.deletePending = true;
 
     this.resourcesService.versionedFolder
       .remove(this.detail.id, { permanent })
@@ -199,7 +201,6 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
         }),
         finalize(() => {
           this.processing = false;
-          this.editor.deletePending = false;
         })
       )
       .subscribe(

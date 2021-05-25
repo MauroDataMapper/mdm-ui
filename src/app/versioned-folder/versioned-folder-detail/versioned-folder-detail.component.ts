@@ -21,7 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
-import { FormState, ItemDetailForm } from '@mdm/model/editable-forms';
+import { FormState, CatalogueItemDetailForm } from '@mdm/model/editable-forms';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { BroadcastService, MessageHandlerService, MessageService, SharedService, StateHandlerService } from '@mdm/services';
 import { EditingService } from '@mdm/services/editing.service';
@@ -41,7 +41,7 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
   @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
 
-  editor: FormState<VersionedFolderDetail, ItemDetailForm<VersionedFolderDetail>>;
+  editor: FormState<VersionedFolderDetail, CatalogueItemDetailForm<VersionedFolderDetail>>;
 
   isAdminUser = false;
   processing = false;
@@ -64,7 +64,7 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
 
-    this.editor = new FormState(this.detail, new ItemDetailForm());
+    this.editor = new FormState(this.detail, new CatalogueItemDetailForm());
 
     this.editor.onShow
       .pipe(takeUntil(this.unsubscribe$))

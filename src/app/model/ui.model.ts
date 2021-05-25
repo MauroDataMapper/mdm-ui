@@ -17,9 +17,22 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 
+/**
+ * Describes a tab in a tab group.
+ */
 export interface TabDescriptor {
+  /**
+   * The index number of the tab.
+   */
   index: number;
+
+  /**
+   * The name of the tab.
+   */
   name: string;
 }
 
+/**
+ * Defines what annotation views are available.
+ */
 export type AnnotationViewOption = 'default' | 'attachments';

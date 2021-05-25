@@ -142,6 +142,23 @@ export class ItemDetailForm<T extends Labelable> extends FormGroupState<T> {
   }
 }
 
+export class ContainerDefaultProfileForm<T extends Describable> extends FormGroupState<T> {
+
+  get description() {
+    return this.formGroup.get('description');
+  }
+
+  set descriptionValue(value: string) {
+    this.description.setValue(value);
+  }
+
+  constructor() {
+    super(new FormGroup({
+      description: new FormControl('')
+    }));
+  }
+}
+
 /**
  * Represents the state of a form that can be edited.
  *
@@ -247,15 +264,3 @@ export interface Labelable {
 export interface Describable {
   description?: string;
 }
-
-export class DefaultContainerProfileForm<T extends Labelable & Describable> implements Resetable<T> {
-  label: string;
-  description: string;
-
-  reset(original: T): void {
-    this.label = original.label;
-    this.description = original.description;
-  }
-}
-
-export type DefaultContainerProfileEditor<T extends Labelable & Describable> = Editable<T, DefaultContainerProfileForm<T>>;

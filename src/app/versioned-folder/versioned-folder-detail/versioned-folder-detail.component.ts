@@ -16,7 +16,7 @@ limitations under the License.
 
 SPDX-License-Identifier: Apache-2.0
 */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
@@ -38,6 +38,8 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
   @Input() detail: VersionedFolderDetail;
   @Input() access: ContainerAccess;
+
+  @Output() afterSave = new EventEmitter<VersionedFolderDetail>();
 
   editor: FormState<VersionedFolderDetail, ItemDetailForm<VersionedFolderDetail>>;
 
@@ -62,9 +64,7 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
 
     this.title.setTitle(`Versioned Folder - ${this.detail?.label}`);
 
-    this.editor = new FormState(
-      this.detail,
-      new ItemDetailForm<VersionedFolderDetail>());
+    this.editor = new FormState(this.detail, new ItemDetailForm());
 
     this.editor.onShow
       .pipe(takeUntil(this.unsubscribe$))
@@ -131,6 +131,7 @@ export class VersionedFolderDetailComponent implements OnInit, OnDestroy {
         (response: VersionedFolderDetailResponse) => {
           this.messageHandler.showSuccess('Versioned Folder updated successfully.');
           this.editor.finish(response.body);
+          this.afterSave.emit(response.body);
           this.broadcast.broadcast('$reloadFoldersTree');
         });
   }

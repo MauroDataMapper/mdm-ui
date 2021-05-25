@@ -21,7 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
 import { ContainerUpdatePayload, PermissionsResponse, SecurableDomainType, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
-import { DefaultContainerProfileEditor, DefaultContainerProfileForm, Editable } from '@mdm/model/editable-forms';
+import { ContainerDefaultProfileForm, FormState } from '@mdm/model/editable-forms';
 import { AnnotationViewOption, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
 import { ProfileBaseComponent } from '@mdm/profile-base/profile-base.component';
@@ -45,7 +45,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
   detail: VersionedFolderDetail;
 
   activeTab: TabDescriptor;
-  editor: DefaultContainerProfileEditor<VersionedFolderDetail>;
+  editor: FormState<VersionedFolderDetail, ContainerDefaultProfileForm<VersionedFolderDetail>>;
   access: ContainerAccess;
 
   showSearch = false;
@@ -70,8 +70,7 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
     private title: Title,
     dialog: MatDialog,
     messageHandler: MessageHandlerService,
-    editingService: EditingService
-  ) {
+    editingService: EditingService) {
     super(resources, dialog, editingService, messageHandler);
   }
 
@@ -126,22 +125,22 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
     this.messages.toggleSearch();
   }
 
-  editAll() {
+  showForm() {
     this.editor.show();
   };
 
-  cancelEdit() {
+  cancel() {
     this.editor?.cancel();
   }
 
-  submitForm() {
-    const resource: ContainerUpdatePayload = {
-      id: this.catalogueItem.id,
-      description: this.editor.form.description ?? ''
-    };
-
+  save() {
     this.resourcesService.versionedFolder
-      .update(this.catalogueItem.id, resource)
+      .update(
+        this.catalogueItem.id,
+        {
+          id: this.catalogueItem.id,
+          description: this.editor.form.description?.value ?? ''
+        })
       .pipe(
         catchError(error => {
           this.messageHandler.showError('There was a problem updating the Versioned Folder.', error);
@@ -150,10 +149,15 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
       )
       .subscribe((response: VersionedFolderDetailResponse) => {
         this.messageHandler.showSuccess('Versioned Folder updated successfully.');
+        this.detail = response.body;
         this.catalogueItem = response.body;
         this.editor.finish(this.detail);
       });
-  };
+  }
+
+  afterDetailSave(next: VersionedFolderDetail) {
+    this.setDetail(next);
+  }
 
   historyCountEmitter(value: number) {
     this.isLoadingHistory = false;
@@ -169,40 +173,43 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
     this.resourcesService.versionedFolder
       .get(id)
       .subscribe((response: VersionedFolderDetailResponse) => {
-        this.detail = response.body;
-        this.catalogueItem = this.detail;
-        this.access = this.securityHandler.defineCatalogueItemAccess(this.detail);
+        this.setDetail(response.body);
 
         if (this.shared.isLoggedIn(true)) {
           this.checkPermissions(id);
           // TODO: load profiles once backend supports it
           // this.UsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
           // this.UnUsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
-        } else {
-          this.messages.FolderSendMessage(this.catalogueItem);
-          this.messages.dataChanged(this.catalogueItem);
         }
 
-        this.editor = new Editable<VersionedFolderDetail, DefaultContainerProfileForm<VersionedFolderDetail>>(
-          this.detail,
-          new DefaultContainerProfileForm());
-
-        this.editor.onShow
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(() => {
-            this.editingService.start();
-          });
-
-        this.editor.onCancel
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(() => {
-            this.editingService.stop();
-          });
-
-        this.editor.onFinish
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(() => this.editingService.stop());
+        this.createFormState();
       });
+  }
+
+  private setDetail(value: VersionedFolderDetail) {
+    this.detail = value;
+    this.catalogueItem = this.detail;
+    this.access = this.securityHandler.defineCatalogueItemAccess(this.detail);
+  }
+
+  private createFormState() {
+    this.editor = new FormState(this.detail, new ContainerDefaultProfileForm());
+
+    this.editor.onShow
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.editingService.start();
+      });
+
+    this.editor.onCancel
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.editingService.stop();
+      });
+
+    this.editor.onFinish
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => this.editingService.stop());
   }
 
   private checkPermissions(id: Uuid) {
@@ -214,10 +221,6 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
           .forEach((attrname) => {
             this.catalogueItem[attrname] = response.body[attrname];
           });
-
-        // Send it to message service to receive in child components
-        this.messages.FolderSendMessage(this.catalogueItem);
-        this.messages.dataChanged(this.catalogueItem);
       });
   }
 

@@ -19,10 +19,8 @@ SPDX-License-Identifier: Apache-2.0
 
 <div class="panel panel-default mdm--shadow-block">
   <form
-    editable-form
-    name="editableForm"
-    onaftersave="onAfterSave()"
-    (ngSubmit)="formBeforeSave()"
+    name="form"
+    (ngSubmit)="save()"
     onkeypress="return event.keyCode != 13;"
   >
     <div class="panel-body">
@@ -38,13 +36,13 @@ SPDX-License-Identifier: Apache-2.0
         </button>
         <!--First level Menu-->
         <mat-menu #userActions="matMenu" class="mdm--mat-menu--actions">
-          <button mat-menu-item type="button" *ngIf="showFinalise" class="has-text-green" (click)="finalise()">
+          <button mat-menu-item type="button" *ngIf="access.showFinalise" class="has-text-green" (click)="finalise()">
                       <i class="fas fa-check-circle has-text-green" aria-hidden="true"></i> Finalise
                    </button>
           <button
             mat-menu-item
             type="button"
-            *ngIf="showEdit || canEditDescription"
+            *ngIf="access.showEdit || access.canEditDescription"
             (click)="showForm()"
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
@@ -52,7 +50,7 @@ SPDX-License-Identifier: Apache-2.0
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="compareMenu" *ngIf="isAdminUser">
                       <i class="fas fa-balance-scale-right" aria-hidden="true"></i> Compare
                    </button> -->
-          <button mat-menu-item type="button" *ngIf="showNewVersion" (click)="newVersion()">
+          <button mat-menu-item type="button" *ngIf="access.showNewVersion" (click)="newVersion()">
                       <i class="fas fa-copy"></i> Create a New Version
                    </button>
           <!-- <button mat-menu-item type="button" [matMenuTriggerFor]="mergeMenu">
@@ -64,7 +62,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             [matMenuTriggerFor]="userActionsDelete"
-            *ngIf="showDelete"
+            *ngIf="access.showDelete"
             class="warning"
           >
             <i class="far fa-trash-alt warning"></i> Delete
@@ -77,14 +75,14 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             (click)="askForSoftDelete()"
-            *ngIf="showSoftDelete && !mcTerminology.deleted"
+            *ngIf="access.showSoftDelete && !mcTerminology.deleted"
           >
             Mark as deleted
           </button>
           <button
             mat-menu-item
             (click)="askForPermanentDelete()"
-            *ngIf="showPermDelete"
+            *ngIf="access.showPermanentDelete"
           >
             Delete <span class="warning">permanently</span>
           </button>
@@ -115,9 +113,9 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of second level sub menu -->
 
         <div
-          *ngIf="showPermission"
+          *ngIf="access.showPermission"
           style="position: relative; float: right; margin-right: 8px"
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -134,7 +132,7 @@ SPDX-License-Identifier: Apache-2.0
 
         <div
           style="position: relative; float: right; margin-right: 8px"
-          *ngIf="!editableForm.visible && !editableForm.deletePending"
+          *ngIf="!editMode && !deleteInProgress"
         >
           <button
             mat-icon-button
@@ -166,7 +164,7 @@ SPDX-License-Identifier: Apache-2.0
             margin-right: 8px;
             margin-left: 8px;
           "
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -205,23 +203,17 @@ SPDX-License-Identifier: Apache-2.0
               <i matTooltip="Terminology" class="fas fa-book"></i>
             </span>
             <mdm-inline-text-edit
-              [readOnly]="!showEditDescription"
-              [inEditMode]="editableForm.visible"
-              [(ngModel)]="editableForm.label"
+              [readOnly]="false"
+              [inEditMode]="editMode"
+              [showButtons]="true"
+              (saveClicked)="save()"
+              (cancelClicked)="cancel()"
+              [(ngModel)]="mcTerminology.label"
               [name]="'moduleName'"
               size="20"
               [styleCss]="'dataModelDetailsLabel'"
             >
             </mdm-inline-text-edit>
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
             <sup
               *ngIf="mcTerminology?.readableByEveryone"
               class="text-muted"
@@ -333,22 +325,4 @@ SPDX-License-Identifier: Apache-2.0
     color="accent"
     mode="indeterminate"
   ></mat-progress-bar>
-</div>
-<div
-  class="userAccess"
-  *ngIf="securitySection"
-  style="margin: 10px 0px 50px 0px"
->
-  <mdm-share-with
-    [mcElement]="mcTerminology"
-    [mcDomainType]="'Terminology'"
-  ></mdm-share-with>
-  <div>
-    <div style="margin-top: 10px">
-      <mdm-group-access-new
-        [parent]="mcTerminology"
-        [parentType]="'Terminology'"
-      ></mdm-group-access-new>
-    </div>
-  </div>
 </div>

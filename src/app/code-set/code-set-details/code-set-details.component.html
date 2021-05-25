@@ -271,26 +271,3 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </form>
 </div>
-
-<div
-  *ngIf="
-    showSecuritySection && !editMode && !deleteInProgress
-  "
->
-  <div class="full-width">
-    <div class="userAccess" style="margin: 10px 0px 50px 0px">
-      <mdm-share-with
-        [mcElement]="'codeSetDetail'"
-        [mcDomainType]="'CodeSet'"
-      ></mdm-share-with>
-      <div>
-        <div style="margin-top: 10px">
-          <mdm-group-access-new
-            [parent]="'codeSetDetail'"
-            [parentType]="'CodeSet'"
-          ></mdm-group-access-new>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>

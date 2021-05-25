@@ -20,7 +20,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { Title } from '@angular/platform-browser';
-import { ContainerUpdatePayload, PermissionsResponse, SecurableDomainType, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
+import { PermissionsResponse, SecurableDomainType, Uuid, VersionedFolderDetail, VersionedFolderDetailResponse } from '@maurodatamapper/mdm-resources';
 import { ContainerDefaultProfileForm, FormState } from '@mdm/model/editable-forms';
 import { AnnotationViewOption, TabDescriptor } from '@mdm/model/ui.model';
 import { MdmResourcesService } from '@mdm/modules/resources';
@@ -100,6 +100,12 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
       this.messages.changeSearch.subscribe((show: boolean) => {
         this.showSearch = show;
       }));
+
+    // Observe when the User Access/Permissions dialog makes changes to the catalogue
+    // item permissions
+    this.messages.dataChanged$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => this.afterDetailsSaved(data));
   }
 
   ngAfterViewInit(): void {
@@ -155,8 +161,8 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
       });
   }
 
-  afterDetailSave(next: VersionedFolderDetail) {
-    this.setDetail(next);
+  afterDetailsSaved(next: VersionedFolderDetail) {
+    this.setupDetails(next);
   }
 
   historyCountEmitter(value: number) {
@@ -173,23 +179,25 @@ export class VersionedFolderComponent extends ProfileBaseComponent implements On
     this.resourcesService.versionedFolder
       .get(id)
       .subscribe((response: VersionedFolderDetailResponse) => {
-        this.setDetail(response.body);
-
-        if (this.shared.isLoggedIn(true)) {
-          this.checkPermissions(id);
-          // TODO: load profiles once backend supports it
-          // this.UsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
-          // this.UnUsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
-        }
-
+        this.setupDetails(response.body);
         this.createFormState();
       });
   }
 
-  private setDetail(value: VersionedFolderDetail) {
+  private setupDetails(value: VersionedFolderDetail) {
     this.detail = value;
     this.catalogueItem = this.detail;
     this.access = this.securityHandler.defineCatalogueItemAccess(this.detail);
+
+    if (this.shared.isLoggedIn(true)) {
+      this.checkPermissions(this.detail.id);
+      // TODO: load profiles once backend supports it
+      // this.UsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
+      // this.UnUsedProfiles(ModelDomainType.VERSIONED_FOLDERS, id);
+    }
+
+    // Send data state so that User Access/Permissions dialog has access to it
+    this.messages.FolderSendMessage(this.detail);
   }
 
   private createFormState() {

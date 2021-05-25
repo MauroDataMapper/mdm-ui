@@ -17,15 +17,13 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 -->
 <div class="panel panel-default mdm--shadow-block">
-  <form
-    editable-form
-    name="form"
-    onaftersave="onAfterSave()"
-    (ngSubmit)="formBeforeSave()"
+  <form 
+    name="form" 
+    (ngSubmit)="save()"
     disable-submit-on-enter
   >
     <div class="panel-body">
-      <div class="full-width" style="clear: both" *ngIf="result">
+      <div class="full-width" style="clear: both" *ngIf="codeSetDetail">
         <button
           type="button"
           mat-icon-button
@@ -40,7 +38,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="showFinalise"
+            *ngIf="access.showFinalise"
             class="has-text-green"
             (click)="finalise()"
           >
@@ -53,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="showEdit || canEditDescription"
+            *ngIf="access.showEdit || access.canEditDescription"
             (click)="showForm()"
           >
             <i class="fas fa-pencil-alt"></i> Edit Title
@@ -61,7 +59,7 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             type="button"
-            *ngIf="showNewVersion"
+            *ngIf="access.showNewVersion"
             (click)="newVersion()"
           >
             <i class="fas fa-copy"></i> Create a New Version
@@ -75,7 +73,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             class="has-text-green"
-            *ngIf="result.deleted && isAdminUser"
+            *ngIf="codeSetDetail.deleted && isAdminUser"
             (click)="restore()"
           >
             <i class="fas fa-trash-restore has-text-green"></i> Restore
@@ -84,7 +82,7 @@ SPDX-License-Identifier: Apache-2.0
             mat-menu-item
             type="button"
             [matMenuTriggerFor]="userActionsDelete"
-            *ngIf="showDelete"
+            *ngIf="access.showDelete"
             class="warning"
           >
             <i class="far fa-trash-alt warning"></i> Delete
@@ -97,14 +95,14 @@ SPDX-License-Identifier: Apache-2.0
           <button
             mat-menu-item
             (click)="askForSoftDelete()"
-            *ngIf="showSoftDelete && !result.deleted"
+            *ngIf="access.showSoftDelete && !codeSetDetail.deleted"
           >
             Mark as deleted
           </button>
           <button
             mat-menu-item
             (click)="askForPermanentDelete()"
-            *ngIf="showPermDelete"
+            *ngIf="access.showPermanentDelete"
           >
             Delete <span class="warning">permanently</span>
           </button>
@@ -122,9 +120,9 @@ SPDX-License-Identifier: Apache-2.0
         <!-- End of second level sub menu -->
 
         <div
-          *ngIf="showPermission"
+          *ngIf="access.showPermission"
           style="position: relative; float: right; margin-right: 8px"
-          [hidden]="editableForm.visible || editableForm.deletePending"
+          [hidden]="editMode || deleteInProgress"
         >
           <button
             mat-icon-button
@@ -140,7 +138,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
 
-      <div *ngIf="result">
+      <div *ngIf="codeSetDetail">
         <div [ngClass]="{ 'has-error': errorMessage != '' }">
           <div class="detail-icons--cta">
             <i
@@ -154,37 +152,30 @@ SPDX-License-Identifier: Apache-2.0
           </div>
           <h4
             class="inline-block marginless"
-            [ngClass]="{ deletedDataModelTitle: result?.deleted }"
+            [ngClass]="{ deletedDataModelTitle: codeSetDetail?.deleted }"
           >
             <span
               class="dataModelTypeIcon"
-              *ngIf="result?.domainType == 'CodeSet'"
+              *ngIf="codeSetDetail?.domainType == 'CodeSet'"
             >
               <i matTooltip="Code Set" class="fas fa-list"></i>
             </span>
             <mdm-inline-text-edit
-              [readOnly]="showEditDescription"
-              [inEditMode]="editableForm.visible"
-              [(ngModel)]="result.label"
+              [readOnly]="false"
+              [inEditMode]="editMode"
+              [showButtons]="true"
+              (saveClicked)="save()"
+              (cancelClicked)="cancel()"
+              [(ngModel)]="codeSetDetail.label"
               [name]="'moduleName'"
-              size="20"
-              (input)="onLabelChange($event.target.value)"
+              size="20"            
               [styleCss]="'dataModelDetailsLabel'"
             >
             </mdm-inline-text-edit>
-            <mdm-editable-form-buttons
-              *ngIf="editableForm"
-              [hidden]="!editableForm.visible"
-              [onCancelEdit]="onCancelEdit"
-              [editable]="editableForm"
-              [textLocation]="'left'"
-              [hideDelete]="true"
-              [hideCancel]="false"
-            ></mdm-editable-form-buttons>
           </h4>
-          <mdm-element-status [result]="result"></mdm-element-status>
+          <mdm-element-status [codeSetDetail]="codeSetDetail"></mdm-element-status>
           <span class="inline-block"
-            ><small *ngIf="result?.deleted" class="warning">
+            ><small *ngIf="codeSetDetail?.deleted" class="warning">
               | Deleted</small
             ></span
           >
@@ -198,7 +189,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div class="detail-icons">
-        <div class="text-muted" *ngIf="result?.domainType == 'CodeSet'">
+        <div class="text-muted" *ngIf="codeSetDetail?.domainType == 'CodeSet'">
           <small>
             <i class="fas fa-cube" matTooltip="Item type"></i>
             <span
@@ -207,15 +198,15 @@ SPDX-License-Identifier: Apache-2.0
             >
           </small>
         </div>
-        <div class="text-muted" *ngIf="result?.authority">
+        <div class="text-muted" *ngIf="codeSetDetail?.authority">
             <small>
               <i class="far fa-building" matTooltip="Authority"></i>
               <span
-                ><strong>Authority: </strong>{{ result.authority['label'] }}</span
+                ><strong>Authority: </strong>{{ codeSetDetail.authority['label'] }}</span
               >
             </small>
           </div>
-        <div class="text-muted" *ngIf="result?.readableByEveryone">
+        <div class="text-muted" *ngIf="codeSetDetail?.readableByEveryone">
           <small>
             <i
               class="fas fa-globe-europe globe"
@@ -225,29 +216,29 @@ SPDX-License-Identifier: Apache-2.0
             <span><strong>Availability: </strong>Publicly Readable</span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="result?.documentationVersion">
+        <div class="text-muted" *ngIf="codeSetDetail?.documentationVersion">
           <small>
             <i matTooltip="Documentation Version" class="fas fa-copy"></i>
             <span
               ><strong>Documentation Version: </strong
-              >{{ result.documentationVersion }}</span
+              >{{ codeSetDetail.documentationVersion }}</span
             >
           </small>
         </div>
         <div
           class="text-muted"
-          *ngIf="result?.modelVersion && result?.finalised"
+          *ngIf="codeSetDetail?.modelVersion && codeSetDetail?.finalised"
         >
           <small>
             <i matTooltip="CodeSet Version" class="fas fa-file-alt"></i>
-            <span><strong>Version: </strong>{{ result.modelVersion }}</span>
-            <span *ngIf="result.modelVersionTag" class="tag-name">
+            <span><strong>Version: </strong>{{ codeSetDetail.modelVersion }}</span>
+            <span *ngIf="codeSetDetail.modelVersionTag" class="tag-name">
               <i matTooltip="Model Version Tag" class="fas fa-tag"></i>
-              <span>{{ result.modelVersionTag }}</span>
+              <span>{{ codeSetDetail.modelVersionTag }}</span>
             </span>
           </small>
         </div>
-        <div class="text-muted" *ngIf="result">
+        <div class="text-muted" *ngIf="codeSetDetail">
           <small>
             <i class="fas fa-code-branch" matTooltip="Branch name"></i>
             <span><strong>Branch: </strong></span>
@@ -283,19 +274,19 @@ SPDX-License-Identifier: Apache-2.0
 
 <div
   *ngIf="
-    showSecuritySection && !editableForm.visible && !editableForm.deletePending
+    showSecuritySection && !editMode && !deleteInProgress
   "
 >
   <div class="full-width">
     <div class="userAccess" style="margin: 10px 0px 50px 0px">
       <mdm-share-with
-        [mcElement]="'result'"
+        [mcElement]="'codeSetDetail'"
         [mcDomainType]="'CodeSet'"
       ></mdm-share-with>
       <div>
         <div style="margin-top: 10px">
           <mdm-group-access-new
-            [parent]="'result'"
+            [parent]="'codeSetDetail'"
             [parentType]="'CodeSet'"
           ></mdm-group-access-new>
         </div>

@@ -247,7 +247,7 @@ export class SecurityHandlerService {
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),
       canAddMetadata: element.availableActions.includes('update'),
-
+      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       canAddLink: element.availableActions.includes('update'),
     };
   }
@@ -272,8 +272,8 @@ export class SecurityHandlerService {
   dataElementAccess(element: Securable) {
     return {
       showEdit: element.availableActions.includes('update'),
-      canEditDescription: element.availableActions.includes('editDescription'),
-      showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
+      canEditDescription: element.availableActions.includes('editDescription'), 
+     showDelete: element.availableActions.includes('softDelete') || element.availableActions.includes('delete'),
       showSoftDelete: element.availableActions.includes('softDelete'),
       showPermanentDelete: element.availableActions.includes('delete'),
       canAddAnnotation: element.availableActions.includes('comment'),

@@ -170,7 +170,7 @@ export class DataElementDetailsComponent
         );
     }
     else{
-      this.messageHandler.showError('The label is invalid please correct and try again');
+      this.messageHandler.showError('There is an error with the label please correct and try again');
     }
   }
 

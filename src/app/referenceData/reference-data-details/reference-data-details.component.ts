@@ -17,20 +17,8 @@ limitations under the License.
 SPDX-License-Identifier: Apache-2.0
 */
 import { MdmResourcesService } from '@mdm/modules/resources';
-import { EditableDataModel } from '@mdm/model/dataModelModel';
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChildren,
-  QueryList,
-  ViewChild,
-  ElementRef,
-  Renderer2,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
-import { EMPTY, Subscription } from 'rxjs';
+import { Component, OnInit, Input } from '@angular/core';
+import { EMPTY } from 'rxjs';
 import { MessageService } from '@mdm/services/message.service';
 import { SecurityHandlerService } from '@mdm/services/handlers/security-handler.service';
 import { MessageHandlerService } from '@mdm/services/utility/message-handler.service';
@@ -43,58 +31,47 @@ import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { SecurityModalComponent } from '@mdm/modals/security-modal/security-modal.component';
 import { EditingService } from '@mdm/services/editing.service';
-import { FinaliseModalComponent, FinaliseModalResponse } from '@mdm/modals/finalise-modal/finalise-modal.component';
+import {
+  FinaliseModalComponent,
+  FinaliseModalResponse
+} from '@mdm/modals/finalise-modal/finalise-modal.component';
 import { catchError, finalize } from 'rxjs/operators';
 import { VersioningGraphModalComponent } from '@mdm/modals/versioning-graph-modal/versioning-graph-modal.component';
 import { ModalDialogStatus } from '@mdm/constants/modal-dialog-status';
-import { CatalogueItemDomainType, Classifier, ModelUpdatePayload, ReferenceDataModelDetail, ReferenceDataModelDetailResponse } from '@maurodatamapper/mdm-resources';
+import {
+  CatalogueItemDomainType,
+  ModelUpdatePayload,
+  ReferenceDataModelDetail,
+  ReferenceDataModelDetailResponse
+} from '@maurodatamapper/mdm-resources';
+import { ValidatorService } from '@mdm/services';
+import { UIRouterGlobals } from '@uirouter/core';
 
 @Component({
   selector: 'mdm-reference-data-details',
   templateUrl: './reference-data-details.component.html',
   styleUrls: ['./reference-data-details.component.scss']
 })
-export class ReferenceDataDetailsComponent
-  implements OnInit, AfterViewInit, OnDestroy {
-  @Input() afterSave: any;
-  @Input() editMode = false;
-  @ViewChildren('editableText') editForm: QueryList<any>;
-  @ViewChild('aLink', { static: false }) aLink: ElementRef;
-  result: ReferenceDataModelDetail;
-  hasResult = false;
-  subscription: Subscription;
-  showSecuritySection: boolean;
-  showUserGroupAccess: boolean;
-  showEdit: boolean;
-  showPermission: boolean;
-  showDelete: boolean;
-  showSoftDelete: boolean;
-  showPermDelete: boolean;
+export class ReferenceDataDetailsComponent implements OnInit {
+  @Input() refDataModel: ReferenceDataModelDetail;
+  originalRefDataModel: ReferenceDataModelDetail;
+  showEdit = false;
   isAdminUser: boolean;
   isLoggedIn: boolean;
   deleteInProgress: boolean;
   exporting: boolean;
-  editableForm: EditableDataModel;
   errorMessage = '';
   processing = false;
   exportError = null;
-  exportedFileIsReady = false;
   exportList = [];
   addedToFavourite = false;
-  download: any;
-  downloadLink: any;
-  urlText: any;
-  canEditDescription = true;
-  showEditDescription = false;
   currentBranch = '';
   branchGraph = [];
-  showFinalise = false;
-  showNewVersion = false;
   compareToList = [];
   downloadLinks = new Array<HTMLAnchorElement>();
+  access: any;
 
   constructor(
-    private renderer: Renderer2,
     private resourcesService: MdmResourcesService,
     private messageService: MessageService,
     private messageHandler: MessageHandlerService,
@@ -106,7 +83,9 @@ export class ReferenceDataDetailsComponent
     private favouriteHandler: FavouriteHandlerService,
     private exportHandler: ExportHandlerService,
     private title: Title,
-    private editingService: EditingService
+    private editingService: EditingService,
+    private validatorService: ValidatorService,
+    private uiRouterGlobals: UIRouterGlobals
   ) {}
 
   ngOnInit() {
@@ -114,130 +93,43 @@ export class ReferenceDataDetailsComponent
     this.isLoggedIn = this.securityHandler.isLoggedIn();
     this.loadExporterList();
     this.ReferenceModelDetails();
-
-    this.editableForm = new EditableDataModel();
-    this.editableForm.visible = false;
-    this.editableForm.deletePending = false;
-
-    this.editableForm.show = () => {
-      this.editForm.forEach((x) =>
-        x.edit({
-          editing: true,
-          focus: x.name === 'moduleName' ? true : false
-        })
-      );
-      this.editableForm.visible = true;
-    };
-
-    this.editableForm.cancel = () => {
-      this.editingService.stop();
-      this.editForm.forEach((x) => x.edit({ editing: false }));
-      this.editableForm.visible = false;
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-      this.setEditableFormData();
-      if (this.result.classifiers) {
-        this.result.classifiers.forEach((item) => {
-          this.editableForm.classifiers.push(item);
-        });
-      }
-      if (this.result.aliases) {
-        this.result.aliases.forEach((item) => {
-          this.editableForm.aliases.push(item);
-        });
-      }
-    };
-
-    this.subscription = this.messageService.changeUserGroupAccess.subscribe(
-      (message: boolean) => {
-        this.showSecuritySection = message;
-      }
-    );
-  }
-
-  ngAfterViewInit(): void {
-    this.editForm.changes.subscribe(() => {
-      if (this.editMode) {
-        this.editForm.forEach((x) =>
-          x.edit({
-            editing: true,
-            focus: x.name === 'moduleName' ? true : false
-          })
-        );
-        this.showForm();
-      }
-    });
+    this.originalRefDataModel = Object.assign({}, this.refDataModel);
   }
 
   ReferenceModelDetails(): any {
-    this.subscription = this.messageService.dataChanged$.subscribe(
-      (serverResult) => {
-        if (serverResult.domainType === 'ReferenceDataModel') {
-          this.result = serverResult;
-          this.setEditableFormData();
+    this.getModelGraph(this.refDataModel.id);
 
-          this.getModelGraph(this.result.id);
-
-          if (this.result.classifiers) {
-            this.result.classifiers.forEach((item) => {
-              this.editableForm.classifiers.push(item);
-            });
-          }
-          if (this.result.aliases) {
-            this.result.aliases.forEach((item) => {
-              this.editableForm.aliases.push(item);
-            });
-          }
-          if (this.result.semanticLinks) {
-            this.result.semanticLinks.forEach((link) => {
-              if (link.linkType === 'New Version Of') {
-                this.compareToList.push(link.target);
-              }
-            });
-          }
-
-          if (this.result.semanticLinks) {
-            this.result.semanticLinks.forEach((link) => {
-              if (link.linkType === 'Superseded By') {
-                this.compareToList.push(link.target);
-              }
-            });
-          }
-
-          if (this.result != null) {
-            this.hasResult = true;
-            this.watchReferenceDataModelObject();
-          }
-          this.title.setTitle(`${this.result?.type} - ${this.result?.label}`);
+    if (this.refDataModel.semanticLinks) {
+      this.refDataModel.semanticLinks.forEach((link) => {
+        if (link.linkType === 'New Version Of') {
+          this.compareToList.push(link.target);
         }
-      }
+      });
+    }
+
+    if (this.refDataModel.semanticLinks) {
+      this.refDataModel.semanticLinks.forEach((link) => {
+        if (link.linkType === 'Superseded By') {
+          this.compareToList.push(link.target);
+        }
+      });
+    }
+
+    this.access = this.securityHandler.elementAccess(this.refDataModel);
+    this.title.setTitle(
+      `${this.refDataModel?.type} - ${this.refDataModel?.label}`
     );
   }
 
-  watchReferenceDataModelObject() {
-    const access: any = this.securityHandler.elementAccess(this.result);
-    if (access !== undefined) {
-      this.showEdit = access.showEdit;
-      this.showPermission = access.showPermission;
-      this.showDelete = access.showPermanentDelete || access.showSoftDelete;
-      this.showSoftDelete = access.showSoftDelete;
-      this.showPermDelete = access.showPermanentDelete;
-      this.canEditDescription = access.canEditDescription;
-      this.showFinalise = access.showFinalise;
-      this.showNewVersion = access.showNewVersion;
-    }
-    this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
-  }
-
   restore() {
-    if (!this.isAdminUser || !this.result.deleted) {
+    if (!this.isAdminUser || !this.refDataModel.deleted) {
       return;
     }
 
     this.processing = true;
 
     this.resourcesService.referenceDataModel
-      .undoSoftDelete(this.result.id)
+      .undoSoftDelete(this.refDataModel.id)
       .pipe(
         catchError((error) => {
           this.messageHandler.showError(
@@ -252,7 +144,7 @@ export class ReferenceDataDetailsComponent
       )
       .subscribe(() => {
         this.messageHandler.showSuccess(
-          `The Reference Data Model "${this.result.label}" has been restored.`
+          `The Reference Data Model "${this.refDataModel.label}" has been restored.`
         );
         this.stateHandler.reload();
         this.broadcastSvc.broadcast('$reloadFoldersTree');
@@ -261,9 +153,13 @@ export class ReferenceDataDetailsComponent
 
   finalise() {
     this.resourcesService.referenceDataModel
-      .latestModelVersion(this.result.id)
+      .latestModelVersion(this.refDataModel.id)
       .subscribe((response) => {
-        const dialog = this.dialog.open<FinaliseModalComponent, any, FinaliseModalResponse>(FinaliseModalComponent, {
+        const dialog = this.dialog.open<
+          FinaliseModalComponent,
+          any,
+          FinaliseModalResponse
+        >(FinaliseModalComponent, {
           data: {
             modelVersion: response.body.modelVersion,
             title: 'Finalise Reference Data Model',
@@ -280,7 +176,7 @@ export class ReferenceDataDetailsComponent
           }
           this.processing = true;
           this.resourcesService.referenceDataModel
-            .finalise(this.result.id, dialogResult.request)
+            .finalise(this.refDataModel.id, dialogResult.request)
             .subscribe(
               () => {
                 this.processing = false;
@@ -289,7 +185,7 @@ export class ReferenceDataDetailsComponent
                 );
                 this.stateHandler.Go(
                   'referencedatamodel',
-                  { id: this.result.id },
+                  { id: this.refDataModel.id },
                   { reload: true }
                 );
               },
@@ -315,23 +211,14 @@ export class ReferenceDataDetailsComponent
     });
   }
 
-  toggleShowSearch() {
-    this.messageService.toggleSearch();
-  }
-
-  ngOnDestroy() {
-    // unsubscribe to ensure no memory leaks
-    this.subscription.unsubscribe();
-  }
-
   delete(permanent: boolean) {
-    if (!this.showDelete) {
+    if (!this.access.showDelete) {
       return;
     }
     this.deleteInProgress = true;
 
     this.resourcesService.referenceDataModel
-      .remove(this.result.id, { permanent })
+      .remove(this.refDataModel.id, { permanent })
       .subscribe(
         () => {
           if (permanent) {
@@ -357,11 +244,11 @@ export class ReferenceDataDetailsComponent
   }
 
   getModelGraph = (modelId) => {
-    this.currentBranch = this.result.branchName;
+    this.currentBranch = this.refDataModel.branchName;
     this.branchGraph = [
       {
         branchName: 'main',
-        label: this.result.label,
+        label: this.refDataModel.label,
         modelId,
         newBranchModelVersion: false,
         newDocumentationVersion: false,
@@ -373,7 +260,7 @@ export class ReferenceDataDetailsComponent
       .modelVersionTree(modelId)
       .subscribe(
         (res) => {
-          this.currentBranch = this.result.branchName;
+          this.currentBranch = this.refDataModel.branchName;
           this.branchGraph = res.body;
         },
         (error) => {
@@ -398,7 +285,7 @@ export class ReferenceDataDetailsComponent
   };
 
   askForSoftDelete() {
-    if (!this.showSoftDelete) {
+    if (!this.access.showSoftDelete) {
       return;
     }
 
@@ -420,7 +307,7 @@ export class ReferenceDataDetailsComponent
   }
 
   askForPermanentDelete(): any {
-    if (!this.showPermDelete) {
+    if (!this.access.showPermanentDelete) {
       return;
     }
 
@@ -448,50 +335,27 @@ export class ReferenceDataDetailsComponent
       .subscribe(() => this.delete(true));
   }
 
-  formBeforeSave = () => {
-    this.editMode = false;
+  save() {
+    this.showEdit = false;
     this.errorMessage = '';
 
-    const classifiers: Classifier[] = [];
-    this.editableForm.classifiers.forEach((cls) => {
-      classifiers.push(cls);
-    });
-    const aliases: string[] = [];
-    this.editableForm.aliases.forEach((alias) => {
-      aliases.push(alias);
-    });
-
     const resource: ModelUpdatePayload = {
-      id: this.result.id,
+      id: this.refDataModel.id,
       domainType: CatalogueItemDomainType.ReferenceDataModel,
-      description: this.editableForm.description || ''
+      label: this.refDataModel.label
     };
 
-    if (!this.showEditDescription) {
-      resource.label = this.editableForm.label;
-      resource.author = this.editableForm.author;
-      resource.organisation = this.editableForm.organisation;
-      resource.type = this.result.type;
-      resource.aliases = aliases;
-      resource.classifiers = classifiers;
-    }
-
-    if (this.validateLabel(this.result.label)) {
+    if (this.validatorService.validateLabel(this.refDataModel.label)) {
       this.resourcesService.referenceDataModel
-        .update(this.result.id, resource)
+        .update(this.refDataModel.id, resource)
         .subscribe(
           (res: ReferenceDataModelDetailResponse) => {
-            if (this.afterSave) {
-              this.afterSave(res);
-            }
-            this.result.description = res.body.description;
+            this.refDataModel = res.body;
             this.ReferenceModelDetails();
             this.messageHandler.showSuccess(
               'Reference Data Model updated successfully.'
             );
             this.editingService.stop();
-            this.editableForm.visible = false;
-            this.editForm.forEach((x) => x.edit({ editing: false }));
             this.broadcastSvc.broadcast('$reloadFoldersTree');
           },
           (error) => {
@@ -502,57 +366,48 @@ export class ReferenceDataDetailsComponent
           }
         );
     }
-  };
-
-  validateLabel(data): any {
-    if (!data || (data && data.trim().length === 0)) {
-      this.errorMessage = 'Name field cannot be empty';
-      return false;
-    } else {
-      return true;
-    }
   }
 
-  showForm() {
+  enableEdit() {
     this.editingService.start();
-    this.showEditDescription = false;
-    this.editableForm.show();
+    this.showEdit = true;
   }
 
-  onCancelEdit() {
+  cancel() {
+    this.refDataModel = Object.assign({}, this.originalRefDataModel);
     this.errorMessage = '';
-    this.editMode = false; // Use Input editor whe adding a new folder.
-    this.showEditDescription = false;
+    this.editingService.stop();
+    this.showEdit = false;
   }
 
   toggleFavourite() {
-    if (this.favouriteHandler.toggle(this.result)) {
-      this.addedToFavourite = this.favouriteHandler.isAdded(this.result);
+    if (this.favouriteHandler.toggle(this.refDataModel)) {
+      this.addedToFavourite = this.favouriteHandler.isAdded(this.refDataModel);
     }
   }
 
   export(exporter) {
     this.exportError = null;
     this.processing = true;
-    this.exportedFileIsReady = false;
+
     this.exportHandler
-      .exportDataModel([this.result], exporter, 'referenceDataModels')
+      .exportDataModel([this.refDataModel], exporter, 'referenceDataModels')
       .subscribe(
-        (result) => {
-          if (result != null) {
-            this.exportedFileIsReady = true;
-            const tempDownloadList = Object.assign([],this.downloadLinks);
+        (refDataModel) => {
+          if (refDataModel != null) {
+            const tempDownloadList = Object.assign([], this.downloadLinks);
             const label =
-              [this.result].length === 1
-                ? [this.result][0].label
+              [this.refDataModel].length === 1
+                ? [this.refDataModel][0].label
                 : 'reference_models';
             const fileName = this.exportHandler.createFileName(label, exporter);
-            const file = new Blob([result.body], { type: exporter.fileType });
+            const file = new Blob([refDataModel.body], {
+              type: exporter.fileType
+            });
             const link = this.exportHandler.createBlobLink(file, fileName);
             tempDownloadList.push(link);
             this.downloadLinks = tempDownloadList;
             this.processing = false;
-
           } else {
             this.processing = false;
             this.messageHandler.showError(
@@ -573,8 +428,8 @@ export class ReferenceDataDetailsComponent
 
   loadExporterList() {
     this.exportList = [];
-    this.securityHandler.isAuthenticated().subscribe((result) => {
-      if (!result.body.authenticatedSession) {
+    this.securityHandler.isAuthenticated().subscribe((refDataModel) => {
+      if (!refDataModel.body.authenticatedSession) {
         return;
       }
 
@@ -592,35 +447,19 @@ export class ReferenceDataDetailsComponent
     });
   }
 
-  onLabelChange(value: any) {
-    if (!this.validateLabel(value)) {
-      this.editableForm.validationError = true;
-    } else {
-      this.editableForm.validationError = false;
-      this.errorMessage = '';
-    }
-  }
-
-  showDescription = () => {
-    this.editingService.start();
-    this.showEditDescription = true;
-    this.editableForm.show();
-  };
-
-
   newVersion() {
     this.stateHandler.Go(
       'newversionmodel',
-      { id: this.result.id , domainType:  'referenceDataModel'},
+      { id: this.refDataModel.id, domainType: 'referenceDataModel' },
       { location: true }
     );
-  };
+  }
 
   compare(referenceDataModel = null) {
     this.stateHandler.NewWindow(
       'modelscomparison',
       {
-        sourceId: this.result.id,
+        sourceId: this.refDataModel.id,
         targetId: referenceDataModel ? referenceDataModel.id : null
       },
       null
@@ -631,35 +470,22 @@ export class ReferenceDataDetailsComponent
     this.stateHandler.Go(
       'modelsmerging',
       {
-        sourceId: this.result.id,
+        sourceId: this.refDataModel.id,
         targetId: null
       },
       null
     );
   }
 
-  showMergeGraph = () => {
-    const promise = new Promise<void>((resolve, reject) => {
-      const dialog = this.dialog.open(VersioningGraphModalComponent, {
-        data: { parentDataModel: this.result.id },
-        panelClass: 'versioning-graph-modal'
-      });
-
-      dialog.afterClosed().subscribe((result) => {
-        if (result != null && result.status === 'ok') {
-          resolve();
-        } else {
-          reject();
-        }
-      });
+  showMergeGraph() {
+    const dialog = this.dialog.open(VersioningGraphModalComponent, {
+      data: { parentDataModel: this.refDataModel.id },
+      panelClass: 'versioning-graph-modal'
     });
-    promise.then(() => {}).catch(() => {});
-  };
 
-  private setEditableFormData() {
-    this.editableForm.description = this.result.description;
-    this.editableForm.label = this.result.label;
-    this.editableForm.organisation = this.result.organisation;
-    this.editableForm.author = this.result.author;
+    dialog.afterClosed().subscribe((refDataModel) => {
+      if (refDataModel != null && refDataModel.status === 'ok') {
+      }
+    });
   }
 }
